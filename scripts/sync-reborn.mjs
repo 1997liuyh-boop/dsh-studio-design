@@ -11,6 +11,7 @@ const commit = execFileSync('git', ['-C', source, 'rev-parse', 'HEAD'], { encodi
 execFileSync('git', ['-C', source, 'diff', '--quiet', 'HEAD'])
 const hashes = []
 async function save(path, body) {
+  body = Buffer.isBuffer(body) ? body.toString('utf8').replaceAll('\r\n', '\n') : body
   await mkdir(resolve(target, path, '..'), { recursive: true })
   await writeFile(join(target, path), body)
   hashes.push({ path: 'upstream/reborn/' + path, sha256: createHash('sha256').update(body).digest('hex') })
@@ -35,5 +36,5 @@ for (const [from, to] of [
   ['docs/authoring/component-demo.md', 'component-demo.md'],
   ['app/components/reborn/examples/reborn-button/RebornButtonDemo.vue', 'template-component-demo.vue'],
 ]) await save('spec/' + to, (await readFile(join(source, from), 'utf8')).replaceAll('\r\n', '\n'))
-await writeFile(join(root, 'REBORN-SNAPSHOT.json'), JSON.stringify({ repository: 'https://github.com/1997liuyh-boop/Reborn-UI', commit, knowledge: '由该检出的知识库生成，示例源码已内联；摘要覆盖分发内容', files: hashes }, null, 2) + '\n')
+await writeFile(join(root, 'REBORN-SNAPSHOT.json'), JSON.stringify({ repository: 'https://github.com/1997liuyh-boop/Reborn-UI', commit, knowledge: '由该检出的知识库生成，示例源码已内联；文本统一为 LF，摘要覆盖分发内容', files: hashes }, null, 2) + '\n')
 console.log('已同步 Reborn MCP、知识库与规范：' + hashes.length + ' 个文件，提交 ' + commit)

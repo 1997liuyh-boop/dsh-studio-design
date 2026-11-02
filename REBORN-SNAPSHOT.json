@@ -1,15 +1,15 @@
 {
   "repository": "https://github.com/1997liuyh-boop/Reborn-UI",
   "commit": "130c4f78a60745c77d59fe8f858d2b9430ad7feb",
-  "knowledge": "由该检出的知识库生成，示例源码已内联；摘要覆盖分发内容",
+  "knowledge": "由锁定检出的知识库生成，示例源码已内联；文本统一为 LF，摘要覆盖分发内容",
   "files": [
     {
       "path": "upstream/reborn/src/index.ts",
-      "sha256": "65e32176f4b69bd1342f58eaf6959c1cee3255bf766000db0c722b141b2913d9"
+      "sha256": "19d1fdc0f80e0018bf9abe50e165e7690b9595c0b81a549567a2dd8e0a69a9a1"
     },
     {
       "path": "upstream/reborn/src/kb.ts",
-      "sha256": "555d8134253b02f7ec7919b9a2d0ba5afe2b8e8dff40b0aeabccd356e38ee64d"
+      "sha256": "1b09268af5ab641d237c969bf200752e81dcdbd7ecf79883db2a7c3413f2b891"
     },
     {
       "path": "upstream/reborn/src/search.ts",
@@ -21,7 +21,7 @@
     },
     {
       "path": "upstream/reborn/LICENSE",
-      "sha256": "018957cfb13c0b904a1d69824e203bdd3c18338011fbbcbe06a8e4f8d717613e"
+      "sha256": "a5e7a0cfe29b0ca478d5f04e0c3ac0872325456b7993612cb1fa9bd764fbd420"
     },
     {
       "path": "upstream/reborn/knowledge/index.json",

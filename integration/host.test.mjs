@@ -11,6 +11,7 @@ if (!harness) throw new Error('请设置 DSH_HARNESS_ROOT 到已构建的 dsh �
 const { Context } = await import(pathToFileURL(join(harness, 'vendor/cordis/lib/index.js')).href)
 const { default: Tools } = await import(pathToFileURL(join(harness, 'packages/core/tools/lib/index.js')).href)
 const { default: SystemPrompt } = await import(pathToFileURL(join(harness, 'packages/core/system-prompt/lib/index.js')).href)
+const { PluginPackages, createRuntimeResolution } = await import(pathToFileURL(join(harness, 'packages/boot/app-boot/lib/index.js')).href)
 const plugin = await import(new URL('../studios/design/lib/index.js', import.meta.url))
 
 test('真实 Cordis 加载、API 拒绝跨站、内置 MCP 登记与卸载释放', async t => {
@@ -19,6 +20,8 @@ test('真实 Cordis 加载、API 拒绝跨站、内置 MCP 登记与卸载释放
   t.after(async () => { if (previous === undefined) delete process.env.DSH_HOME; else process.env.DSH_HOME = previous; await rm(dir, { recursive: true, force: true }) })
   const ctx = new Context(), pages = new Map()
   t.after(() => ctx.fiber.dispose())
+  const resolution = await createRuntimeResolution({ installAnchor: join(harness, 'apps/cli/package.json'), home: dir })
+  await ctx.plugin(PluginPackages, { resolution: { ...resolution, linkedRoots: [{ name: 'dsh-studio-design', realPath: fileURLToPath(new URL('../studios/design', import.meta.url)) }] } }).await()
   await ctx.plugin(SystemPrompt).await()
   await ctx.plugin(Tools).await()
   ctx.provide('studioProjects', { register(page) { pages.set(page.id, page); return () => pages.delete(page.id) } })
