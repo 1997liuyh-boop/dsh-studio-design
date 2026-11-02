@@ -1,0 +1,22 @@
+[
+  {
+    "name": "会话 A 在提交提及后保留参与标记",
+    "events": [
+      { "type": "user/message", "data": { "source": { "kind": "user" }, "content": [{ "type": "text", "text": "查看项目规范" }] } },
+      { "type": "user/message", "data": { "source": { "kind": "system-prompt" }, "content": [{ "type": "text", "text": "@工作室:design 是可用入口" }] } },
+      { "type": "user/message", "data": { "source": { "kind": "user" }, "content": [{ "type": "text", "text": "@工作室:design 实现设置页" }] } },
+      { "type": "turn/end", "data": { "turn": 1, "reason": { "kind": "completed" } } }
+    ],
+    "expected": [false, false, true, true]
+  },
+  {
+    "name": "会话 B 不继承 A 的参与记录",
+    "events": [{ "type": "user/message", "data": { "source": { "kind": "user" }, "content": [{ "type": "text", "text": "@工作室:travel 规划旅行" }] } }],
+    "expected": [false]
+  },
+  {
+    "name": "嵌套工具执行同样登记参与",
+    "events": [{ "type": "tool/ptc-dispatch-start", "data": { "name": "design_workspace", "arguments": { "task": "rules", "request": "生成设计规则" } } }],
+    "expected": [true]
+  }
+]

@@ -57,6 +57,8 @@ export interface ConnectionStatus {
   message: string
 }
 export interface Snapshot {
+  context?: { sessionId: string; root: string } | null
+  projectError?: string
   settings: Settings
   project: Project | null
   workspace: Workspace | null

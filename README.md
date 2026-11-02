@@ -1,43 +1,32 @@
 # 设计工作室
 
-将 MasterGo 选区、Reborn UI 组件与项目现有配置连接到 dsh 的开发会话。一个工作室对应一个仓库；本仓库只提供设计协作插件，不修改 dsh 核心。
+把 MasterGo 设计稿、Reborn UI 组件和 dsh 的项目会话连在一起。设计任务直接使用 dsh 当前会话的工作区和模型，聊天与悬浮球共享记录。
 
-## 使用
+## 开始使用
 
-1. 在 dsh 安装共享工作室容器 `dsh-worktable ^0.6.0`、运行时 `dsh-studio-projects ^0.5.0` 及与宿主同版本的 `@deepseek-ai/dsh-mcp-client`。
-2. 从本仓库 GitHub Actions 下载插件包，解压下载的 artifact，或按下方步骤构建。
-3. 退出桌面应用后，在您的 dsh 安装中运行 `dsh plugin --profile desktop add <设计工作室 tgz 的绝对路径>`，然后重新启动应用。开发源码宿主使用 `pnpm dsh plugin --profile desktop add <路径>`。不要使用 npm 安装整个源码根目录。
-4. 从工作室列表打开「设计工作室」，选择 Vue / Nuxt Web 项目文件夹，或填写绝对路径，点击「读取并保存」。
-5. 打开 MasterGo 桌面端及目标文档，在 MCP 面板确认服务地址，内置 Reborn 自动连接，点击 MasterGo 的「连接」。默认使用 `@mastergo/vibe-mcp@1.0.32` 和 `http://127.0.0.1:30678`；在“MasterGo 可视化配置”填写桌面服务地址与适配器版本并保存，无需 Token。设计资料写入所选项目的 `.mastergo`；项目切换后重新连接。旧版自定义命令及参数保留在高级模式。
-6. 选择 MasterGo 页面或根节点，点击「读取当前选区」查看真实读取摘要。组件选择与映射默认收起，可留空让 dsh 分析；已有映射继续按项目保留。
-7. 填写页面需求并交给 dsh。每个项目绑定一个普通 dsh 会话，使用主程序配置的模型；主窗口与悬浮球可查看同一会话，也可在主窗口切换模型、审批工具和停止任务。插件不保存模型密钥。
-8. 从项目已有脚本选择 dev / preview，点击「启动预览」。插件通过 dsh Shell 和 Jobs 运行，展示日志、后台任务及真实本机地址，也可停止本工作室创建的服务。手动启动的服务可以输入地址查看。
+1. 在 dsh 左侧工作区打开项目会话。
+2. 输入 `@`，选择「设计工作室」，写下需求，例如：`@设计工作室 按当前项目规范实现设置页`。
+3. 工作区会话行显示工作室图标，悬停显示名称；会话标题旁也有「设计工作室」标记。它表示该会话已使用工作室，不表示任务仍在运行；进度、工具操作和停止操作都在原会话中查看。
 
-主流程为项目与连接、实现与预览。组件映射、资料来源和高级连接默认收起。组件使用顺序为项目已有 → Reborn → 自定义；安装按需进行，主题变量、目录别名、registry 与版本优先读取目标项目配置。Vue 样式使用 Tailwind，新增代码注释使用中文。
+多个工作区分别使用各自会话的目录。页面跟随当前主会话；已提交任务始终留在原会话，不会因切换页面而改用另一个目录。没有明确工作区时提示先打开项目，不借用旧配置或后台会话。相同项目下的多个会话也各自拥有 MasterGo 连接，项目组件映射和预览按真实目录保存。
 
-## Reborn MCP 与版本
+工作室首页只显示当前工作区、组件资料与三个常用入口：实现设计稿、查看当前选区、生成设计规则。按钮将明确任务发送到当前 dsh 会话，不创建另一份聊天；自定义需求直接在聊天中输入。预览和设置默认折叠。
 
-目前 `reborn-ui-mcp` 尚未在 npm 发布。本插件内置来源锁定的官方 MCP、知识库、内联示例和写作规范，构建时打包到子进程中。首版快照包含 172 个组件，支持查询 Props、Events、Slots、平台、示例及 CLI 安装建议。安装建议不代表对应 npm CLI 已发布，生成时仍需核查实际可用的 CLI 与项目锁定版本。
+生成设计规则无需 MasterGo。模型检查项目已有配置、主题、组件和代表页面，定向更新 `docs/design-rules.md`，在 `AGENTS.md` 添加一次引用，保留人工约束并标注文件依据，不修改业务代码。规则仍需在会话中审阅。
 
-资料来源支持内置快照、本地目录及 GitHub 仓库。本地支持已生成的源码根、MCP 分发目录、完整知识包或直接选择 knowledge 文件夹；GitHub 获取仓库文件并固定实际提交，仅验证和读取知识库与源码，不安装依赖、不执行仓库脚本。仓库没有生成后的 knowledge/components 时，源码仍可供 dsh 查阅，组件参数明确继续使用内置快照；具有完整知识库时才切换查询资料。失败保留当前资料。内置 Reborn 自动连接，不依赖业务项目；只切换项目不重启它。自定义命令仍需显式连接。MCP 启动参数是命令行 argv，不是组件 Props，普通使用保持默认即可。
+## 设置
 
-## GitHub 完整知识库与项目规则
+MasterGo：在本机 MasterGo 桌面端打开文档并开启 Vibe MCP，在工作室「设置」填写服务地址。设计任务发起时自动为该会话连接，资料写入该会话项目的 `.mastergo` 目录。离线时明确报错，不伪造读取成功。默认适配器为 `@mastergo/vibe-mcp@1.0.32`，旧自定义命令保留在高级设置中。
 
-Reborn 源码仓库不提交完整的生成知识库。点击“使用完整 GitHub 知识库”，会填入本仓库和 `knowledge` 分支；点击“获取并固定版本”后使用云端构建的完整资料，页面同时显示缓存提交与对应 Reborn 源码提交。原始 Reborn GitHub 链接仍可使用；缺少生成资料时明确沿用内置快照。
+Reborn：内置 172 个组件的完整资料，支持 GitHub 和本地知识库。「使用最新完整知识库」选择本仓库 knowledge 分支，保存后更新；本机只下载数据，不执行远程仓库脚本。普通页面只显示来源、组件数量和就绪状态，仓库与提交信息放在版本详情。原始 Reborn 源码仓库缺少生成资料时沿用内置快照，来源状态可在设置中核对。
 
-[Build latest Reborn knowledge](https://github.com/1997liuyh-boop/dsh-studio-design/actions/workflows/refresh-reborn.yml) 在本仓库 main 推送、手动运行和每 6 小时执行。流程从 Reborn main 的干净检出安装锁定依赖，依次构建 registry、知识库并验证，再构建插件、发布只含数据的 knowledge 分支及下载产物。Reborn 刚推送后可手动运行此流程立即生成；不会自动升级已安装的 dsh 插件。失败不会发布半成品，工作室获取失败保留原缓存。
+Reborn 高级启动参数：`--kb-dir <目录>` 指定包含 index.json 与 components 的知识库，`--spec-dir <目录>` 指定打包后的写作规范。对应环境变量为 REBORN_KB_DIR 与 REBORN_SPEC_DIR。内置服务自动设置，无需 Token、模型或端口。自定义命令按参数数组运行。
 
-在 dsh 工作区打开目标项目会话，再点“使用当前工作区”，显式同步目录并核查路径。只读取主视图已持有会话的 cwd；没有明确项目时提示选择文件夹，不借用后台会话。切换工作区不会静默替换工作室项目。
+[Build latest Reborn knowledge](https://github.com/1997liuyh-boop/dsh-studio-design/actions/workflows/refresh-reborn.yml) 在 main 推送、手动运行和每 6 小时执行，从干净 Reborn 源码构建并验证知识库，发布数据分支和下载产物。失败不会发布半成品，更新失败保留原缓存。此流程不会自动升级已安装的工作室。
 
-也可以直接在该工作区会话输入：`@设计工作室 使用当前会话的工作区，先检查 AGENTS.md、项目主题和已有组件，再按 MasterGo 当前选区实现页面，优先复用项目组件，其次使用 Reborn，执行项目已有检查。` @ 使用的是当前会话；工作室页面按钮仍使用按项目绑定的开发会话。MasterGo 相关任务需先在相同项目目录下完成连接。
+## 开发与打包
 
-“生成项目设计规则”使用普通 dsh 会话，无需 MasterGo；支持从非 Vue 项目归纳规则，页面生成仍仅支持 Vue / Nuxt Web。模型读取真实配置、主题和代表页面，定向写入 `docs/design-rules.md`，在 `AGENTS.md` 添加一次引用，保留原约束并为规则列出文件依据，不修改业务代码。生成后可在 dsh 会话审阅改动。
-
-Reborn 高级命令只有 `--kb-dir <目录>`（环境变量 `REBORN_KB_DIR`）与 `--spec-dir <目录>`（`REBORN_SPEC_DIR`）。前者包含 index.json 和 components，后者是已打包的写作规范。stdio 无需端口、模型或 Token。内置模式自动传递路径，自定义 argv 示例：`["D:/reborn/mcp.js", "--kb-dir", "D:/reborn/knowledge", "--spec-dir", "D:/reborn/spec"]`，命令为 node。
-
-## 开发和打包
-
-需要 Node.js >=22.19。无需 Python 或独立显卡。
+需要 Node.js >=22.19，无需 Python 或独立显卡。
 
 ```sh
 npm ci
@@ -47,25 +36,23 @@ npm test
 npm run pack
 ```
 
-产物为 `artifacts/dsh-studio-design-0.3.0.tgz`，SHA256 记录在 `artifacts/manifest.json`。GitHub Actions 在 Windows 和 Linux 运行构建、类型检查、行为测试和打包，上传安装包与摘要。`npm run test:host` 需要 `DSH_HARNESS_ROOT` 指向已构建的 dsh 源码检出，用于真实 Cordis 加载、路由与 MCP 连接验证。
+产物为 `artifacts/dsh-studio-design-0.4.0.tgz`，摘要见 artifacts/manifest.json。GitHub Actions 在 Windows 和 Linux 执行以上检查；`npm run test:host` 需要 DSH_HARNESS_ROOT 指向已构建的 dsh 检出，验证真实 Cordis、MCP、两工作区隔离、取消与卸载。
 
-更新内置 Reborn：在干净的 Reborn 检出生成知识库后，运行 `node scripts/sync-reborn.mjs <Reborn-UI 目录>`。提交更新后的 `upstream/reborn` 与 `REBORN-SNAPSHOT.json`，重新检查与打包。共享 SDK 源码和摘要位于 `packages/sdk` 与 `SDK-SNAPSHOT.json`，整份同步，禁止私改协议。
+共享 SDK 与 Reborn 快照分别由 SDK-SNAPSHOT.json 和 REBORN-SNAPSHOT.json 校验；更新时整份同步，禁止私改共享协议。当前兼容声明为 dsh 0.2.1-rc.2 experimental。宿主更新后需重新验证，工作室更新与上游 dsh 同步见 [更新指南](docs/UPDATE.md)；本次入口调整见 [0.4.0 升级说明](docs/UPGRADE-0.4.md)。
 
 ## 数据与限制
 
-设置、映射、会话绑定与预览地址存放于 `DSH_HOME/studio/design`，未设置 DSH_HOME 时使用 `~/.dsh/studio/design`。按真实项目路径隔离，使用 revision 拒绝过期保存。工作室只读取目标项目的限定配置和组件路径，不执行配置文件，也不直接覆盖业务源文件；代码修改由记录在 dsh 会话中的工具执行。内置 Reborn 在启动时准备；MasterGo 和自定义命令由用户显式连接。预览任务引用保存在当前 Host 内存中，页面刷新保留；Host 重启后不冒充已恢复进程。 预览沿用宿主 Shell 权限；启动失败时展示实际日志和退出原因，没有输出时仍保留退出码。
+设置与映射保存在 DSH_HOME/studio/design，默认使用 ~/.dsh/studio/design。旧项目配置、映射和会话记录保留；0.4.0 不再以旧 projectRoot 或项目绑定会话作为任务入口。新增参与投影由已有会话日志恢复，无需迁移 Session 格式。
 
-MasterGo 必须在本机桌面端打开文档并开启 MCP。连接失败会阻止依赖设计稿的任务；没有模拟成功数据。画布回写需点击「更多」中的显式同步动作，且仅支持已验证的静态 HTML，不能把 Vue / TSX 源文件直接交给 `agent_sync_design`。隔离预览没有宿主同源权限，登录、持久存储等浏览器能力可能受限。
+页面生成当前支持 Vue / Nuxt Web；UniApp 只识别并提示。目录与配置只读检查，实际文件修改由普通 dsh 工具完成，生成依据通过工具结果记录到会话。已有组件优先，其次 Reborn，再按需求自定义；遵守 Tailwind、项目主题和中文注释规范。
 
-首版支持 Vue / Nuxt Web。UniApp 仅识别并提示，不允许套用 Web 组件生成。dsh 的兼容声明为 `0.2.1-rc.2 experimental`，升级宿主后须重新验证；不能承诺自动兼容后续预稳定 API。
-
-更新工作室包与同步 dsh 上游是两件事，操作和兼容限制见 [更新指南](docs/UPDATE.md)。
+项目预览使用项目已有脚本，沿用 dsh Shell 权限与 Jobs 服务，只停止工作室创建的任务。进程与地址均从实际状态读取；Host 重启不会假装恢复旧进程。隔离 iframe 的登录与存储能力可能受限，预览不能代替项目检查。修改 MasterGo 画布须在聊天中明确授权，且仅支持已验证的静态 HTML。
 
 ## 来源与致谢
 
-- 宿主 [1997liuyh-boop/deepseek-harness](https://github.com/1997liuyh-boop/deepseek-harness) fork 自 [deepseek-ai/deepseek-harness](https://github.com/deepseek-ai/deepseek-harness)，感谢原项目提供插件、工具与会话体系。
-- 工作室容器沿用 [dsh-studio-library](https://github.com/1997liuyh-boop/dsh-studio-library)，最初参考 [Aisland-SJL/dsh-worktable](https://github.com/Aisland-SJL/dsh-worktable)。
-- 组件知识与 MCP 来自 [1997liuyh-boop/Reborn-UI](https://github.com/1997liuyh-boop/Reborn-UI)，锁定提交、分发文件摘要及原始 MIT 许可见 `REBORN-SNAPSHOT.json` 与 `upstream/reborn/LICENSE`。原项目保留其上游作者声明。
-- MasterGo 接入依据 [官方 Vibe MCP 文档](https://mastergo.com/help/ai-features/vibe-mcp.html)，官方适配包按配置运行，不在本仓库复制其源码。
+- 宿主 [1997liuyh-boop/deepseek-harness](https://github.com/1997liuyh-boop/deepseek-harness) fork 自 [deepseek-ai/deepseek-harness](https://github.com/deepseek-ai/deepseek-harness)，感谢其插件、工具与会话体系。
+- 容器来自 [dsh-studio-library](https://github.com/1997liuyh-boop/dsh-studio-library)，最初参考 [Aisland-SJL/dsh-worktable](https://github.com/Aisland-SJL/dsh-worktable)。
+- 组件资料与 MCP 来自 [1997liuyh-boop/Reborn-UI](https://github.com/1997liuyh-boop/Reborn-UI)，锁定提交、摘要与 MIT 许可保存在 REBORN-SNAPSHOT.json 和 upstream/reborn/LICENSE。
+- MasterGo 接入依据 [官方 Vibe MCP 文档](https://mastergo.com/help/ai-features/vibe-mcp.html)，官方适配器按配置运行，不复制其源码。
 
-本仓库是新增的集成插件，非 MasterGo 的 fork。原创集成代码采用 MIT 许可，上游快照保留各自许可。
+本仓库是新增集成插件，非 MasterGo 的 fork。原创代码采用 MIT 许可，上游快照保留原许可。
