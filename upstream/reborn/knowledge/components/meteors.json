@@ -1,0 +1,78 @@
+{
+  "$schema": "../schema/component.schema.json",
+  "id": "meteors",
+  "title": "流星雨",
+  "description": "用于在卡片等容器内渲染划过的流星雨背景动画的装饰组件。",
+  "category": "effect",
+  "tags": [
+    "css",
+    "tailwind",
+    "aceternity-ui"
+  ],
+  "platforms": [
+    "web"
+  ],
+  "props": [
+    {
+      "name": "count",
+      "type": "number",
+      "required": false,
+      "description": "动画中显示的流星数量。",
+      "default": "20"
+    },
+    {
+      "name": "class",
+      "type": "string",
+      "required": false,
+      "description": "应用于流星的额外 CSS 类，便于自定义。",
+      "default": "\"\""
+    }
+  ],
+  "events": [],
+  "slots": [],
+  "exposes": [],
+  "examples": [
+    {
+      "title": "Web 演示",
+      "path": "app/components/reborn/examples/meteors/MeteorsDemo.vue",
+      "source": "demo",
+      "platform": "web",
+      "code": "<template>\n  <ClientOnly>\n    <DemoSection\n      title=\"基础用法\"\n      description=\"Meteors 会在父容器内随机生成流星轨迹，父容器需要 relative 与 overflow-hidden；深色底更能凸显拖尾效果。\"\n    >\n      <DemoBlock\n        layout=\"stack\"\n        align=\"center\"\n      >\n        <!-- 卡片本体即被演示的载体，深色表面是流星效果的一部分 -->\n        <div\n          class=\"rounded-3xl border-gray-8/40 relative flex w-full max-w-xs flex-col items-start justify-end overflow-hidden border bg-gray-10 px-4 py-8 dark:bg-gray-1\"\n        >\n          <Icon\n            name=\"lucide:arrow-up-right\"\n            class=\"text-gray-6 mb-4 size-5\"\n          />\n\n          <h3 class=\"relative z-10 mb-4 text-xl font-bold text-white\">流星划过夜空</h3>\n\n          <p class=\"text-gray-6 relative z-10 mb-4 text-base leading-relaxed\">\n            在任意深色区块上叠加一层流星动画，可用于产品首屏、活动页头图或空状态插画，无需额外的图片资源。\n          </p>\n\n          <button\n            type=\"button\"\n            class=\"rounded-sm border-gray-6 text-gray-6 hover:text-white border px-4 py-1 text-sm transition-colors hover:border-white\"\n          >\n            了解更多\n          </button>\n\n          <Meteors />\n        </div>\n      </DemoBlock>\n    </DemoSection>\n  </ClientOnly>\n</template>\n"
+    }
+  ],
+  "related": [],
+  "whenToUse": [
+    "卡片、Hero 区需要流星划过的背景点缀时。",
+    "深色背景区块需要低成本的动态氛围效果时。"
+  ],
+  "whenNotToUse": [
+    "需要闪烁粒子效果，改用 sparkles。",
+    "需要烟花庆祝动效，改用 reborn-fireworks。"
+  ],
+  "pitfalls": [
+    "仅 web 端可用。",
+    "作为装饰层放入目标容器内部，父容器需 relative 且 overflow-hidden（见示例），否则流星会溢出。",
+    "示例外层包裹了 ClientOnly，流星位置为随机生成。",
+    "count 控制流星数量（默认 20），class 追加到每颗流星上；style、data-* 等未声明属性落在根节点——一层 absolute inset-0、pointer-events-none 的盒子上，可用 style 控制整层透明度。"
+  ],
+  "dependencies": [],
+  "install": {
+    "cli": "npx reborn-ui@latest add meteors"
+  },
+  "sourceRefs": {
+    "web": [
+      "app/components/reborn/ui/meteors/Meteors.vue",
+      "app/components/reborn/ui/meteors/index.ts"
+    ]
+  },
+  "docPath": "content/2.components/special-effects/meteors.md",
+  "_meta": {
+    "contentHash": "977d165677af3a24d8f0ee2c6391078496ce503a",
+    "hasOverride": true,
+    "extractors": {
+      "web": "ok",
+      "uniapp": "absent",
+      "docs": "found"
+    }
+  }
+}

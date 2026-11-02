@@ -1,0 +1,92 @@
+{
+  "$schema": "../schema/component.schema.json",
+  "id": "sparkles-text",
+  "title": "闪光文字",
+  "description": "用于在文字周围持续生成双色闪光点缀的标题装饰组件。",
+  "category": "effect",
+  "tags": [
+    "css",
+    "tailwind",
+    "magic-ui"
+  ],
+  "platforms": [
+    "web"
+  ],
+  "props": [
+    {
+      "name": "text",
+      "type": "string",
+      "required": true,
+      "description": "要显示的文字。"
+    },
+    {
+      "name": "sparklesCount",
+      "type": "number",
+      "required": false,
+      "description": "文字上出现的闪光数量。",
+      "default": "10"
+    },
+    {
+      "name": "colors",
+      "type": "{\n    first: string;\n    second: string;\n  }",
+      "required": false,
+      "description": "闪光的颜色配置。",
+      "default": "() => ({ first: \"#9E7AFF\", second: \"#FE8BBB\" })"
+    },
+    {
+      "name": "class",
+      "type": "string",
+      "required": false,
+      "description": "应用于闪光文字的类名。"
+    }
+  ],
+  "events": [],
+  "slots": [],
+  "exposes": [],
+  "examples": [
+    {
+      "title": "Web 演示",
+      "path": "app/components/reborn/examples/sparkles-text/SparklesTextDemo.vue",
+      "source": "demo",
+      "platform": "web",
+      "code": "<template>\n  <div class=\"flex h-80 items-center justify-center\">\n    <SparklesText text=\"Reborn UI\" :colors=\"{ first: '#9E7AFF', second: '#FE8BBB' }\" :sparkles-count=\"10\"\n      class=\"my-8\" />\n  </div>\n</template>\n"
+    }
+  ],
+  "related": [],
+  "whenToUse": [
+    "落地页标题、品牌名需要星光点缀效果时。",
+    "需要通过 colors 配置两种闪光颜色、sparklesCount 控制数量的关键词强调。"
+  ],
+  "whenNotToUse": [
+    "整片区域的粒子背景，改用 sparkles。",
+    "需要文字本身的高光扫过效果，改用 radiant-text。",
+    "需要背景填充式强调，改用 text-highlight。"
+  ],
+  "pitfalls": [
+    "仅 web 端可用，依赖 motion-v。",
+    "文字通过 text prop 传入（必填），不支持插槽。",
+    "colors 为 { first, second } 双色对象，默认 #9E7AFF 与 #FE8BBB。"
+  ],
+  "dependencies": [
+    "motion-v"
+  ],
+  "install": {
+    "cli": "npx reborn-ui@latest add sparkles-text"
+  },
+  "sourceRefs": {
+    "web": [
+      "app/components/reborn/ui/sparkles-text/SparklesText.vue",
+      "app/components/reborn/ui/sparkles-text/index.ts"
+    ]
+  },
+  "docPath": "content/2.components/text-animations/sparkles-text.md",
+  "_meta": {
+    "contentHash": "ca265f2000a789fd2b6017ce14483a3e28d083b5",
+    "hasOverride": true,
+    "extractors": {
+      "web": "ok",
+      "uniapp": "absent",
+      "docs": "found"
+    }
+  }
+}

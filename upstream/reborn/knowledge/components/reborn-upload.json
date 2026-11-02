@@ -1,0 +1,349 @@
+{
+  "$schema": "../schema/component.schema.json",
+  "id": "reborn-upload",
+  "title": "Upload 上传",
+  "description": "Web 文件上传组件：负责选择文件、发起上传并展示每个文件的进度与结果，提供 text / picture / picture-card 三种列表形态，支持拖拽、选择文件夹、手动上传、自定义请求与分片断点续传，图片与视频均可显示缩略图；参数、钩子与实例方法对齐 Element Plus 的 el-upload。",
+  "category": "form",
+  "tags": [
+    "upload",
+    "file",
+    "form",
+    "web"
+  ],
+  "platforms": [
+    "web"
+  ],
+  "props": [
+    {
+      "name": "action",
+      "type": "string",
+      "required": false,
+      "description": "上传地址；使用自定义 http-request 时可以不传。",
+      "default": "'#'"
+    },
+    {
+      "name": "headers",
+      "type": "Headers | Record<string, string | number | null | undefined>",
+      "required": false,
+      "description": "上传请求头。"
+    },
+    {
+      "name": "method",
+      "type": "string",
+      "required": false,
+      "description": "上传请求方法。",
+      "default": "'post'"
+    },
+    {
+      "name": "multiple",
+      "type": "boolean",
+      "required": false,
+      "description": "是否允许一次选择多个文件。",
+      "default": "false"
+    },
+    {
+      "name": "data",
+      "type": "UploadData | Promise<UploadData> | ((rawFile: UploadRawFile) => UploadAwaitable<UploadData>)",
+      "required": false,
+      "description": "随文件一起提交的额外字段：对象、Promise，或按文件返回对象 / Promise 的函数。",
+      "default": "() => ({})"
+    },
+    {
+      "name": "name",
+      "type": "string",
+      "required": false,
+      "description": "文件在表单里的字段名。",
+      "default": "'file'"
+    },
+    {
+      "name": "withCredentials",
+      "type": "boolean",
+      "required": false,
+      "description": "是否携带 cookie 等跨域凭证。",
+      "default": "false"
+    },
+    {
+      "name": "showFileList",
+      "type": "boolean",
+      "required": false,
+      "description": "是否显示已选文件列表。",
+      "default": "true"
+    },
+    {
+      "name": "drag",
+      "type": "boolean",
+      "required": false,
+      "description": "是否启用拖拽上传。",
+      "default": "false"
+    },
+    {
+      "name": "accept",
+      "type": "string",
+      "required": false,
+      "description": "可选文件类型，写法同原生 input 的 accept；拖拽放入和选择文件夹时组件也按它过滤。",
+      "default": "''"
+    },
+    {
+      "name": "crossorigin",
+      "type": "UploadCrossorigin",
+      "required": false,
+      "description": "列表缩略图的 crossorigin 属性，原样透传给 img 与 video。"
+    },
+    {
+      "name": "listType",
+      "type": "UploadListType",
+      "required": false,
+      "description": "文件列表形态：纯文字、带缩略图的列表或照片墙卡片。",
+      "default": "'text'"
+    },
+    {
+      "name": "autoUpload",
+      "type": "boolean",
+      "required": false,
+      "description": "选择文件后是否立即上传；关闭后需调用 submit() 手动上传。",
+      "default": "true"
+    },
+    {
+      "name": "httpRequest",
+      "type": "UploadRequestHandler",
+      "required": false,
+      "description": "自定义上传实现，默认使用 XMLHttpRequest 提交 FormData。",
+      "default": "ajaxUpload"
+    },
+    {
+      "name": "chunk",
+      "type": "UploadChunkAdapter",
+      "required": false,
+      "description": "分片上传适配器，传入后改为分片上传，http-request 不再生效。 组件负责切片、并发、单片重试与跳过已传分片，列表项多出暂停 / 继续 / 重试按钮； 与服务端交互的 init、uploaded、uploadChunk、merge 由使用方实现。"
+    },
+    {
+      "name": "disabled",
+      "type": "boolean",
+      "required": false,
+      "description": "是否禁用；禁用后不能选择文件，列表也不再显示删除按钮。",
+      "default": "false"
+    },
+    {
+      "name": "limit",
+      "type": "number",
+      "required": false,
+      "description": "最多允许的文件数，本次选择会超出时触发 on-exceed，且这批文件都不加入。"
+    },
+    {
+      "name": "directory",
+      "type": "boolean",
+      "required": false,
+      "description": "只能选择文件夹，夹内文件递归展开后逐个加入列表。",
+      "default": "false"
+    },
+    {
+      "name": "onPreview",
+      "type": "(file: UploadFile) => void",
+      "required": false,
+      "description": "自定义文件预览；传入后替代内置图片预览，也可用于预览视频或其他文件。"
+    },
+    {
+      "name": "onRemove",
+      "type": "(file: UploadFile, uploadFiles: UploadFile[]) => void",
+      "required": false,
+      "description": "文件从列表移除后触发。"
+    },
+    {
+      "name": "onSuccess",
+      "type": "(response: unknown, file: UploadFile, uploadFiles: UploadFile[]) => void",
+      "required": false,
+      "description": "文件上传成功时触发。"
+    },
+    {
+      "name": "onError",
+      "type": "(error: Error, file: UploadFile, uploadFiles: UploadFile[]) => void",
+      "required": false,
+      "description": "文件上传失败时触发，失败的文件保留在列表里。"
+    },
+    {
+      "name": "onProgress",
+      "type": "(evt: UploadProgressEvent, file: UploadFile, uploadFiles: UploadFile[]) => void",
+      "required": false,
+      "description": "上传进度变化时触发。"
+    },
+    {
+      "name": "onChange",
+      "type": "(file: UploadFile, uploadFiles: UploadFile[]) => void",
+      "required": false,
+      "description": "文件状态改变时触发：添加文件、上传成功、上传失败。"
+    },
+    {
+      "name": "onExceed",
+      "type": "(files: File[], uploadFiles: UploadUserFile[]) => void",
+      "required": false,
+      "description": "选择的文件数超出 limit 时触发。"
+    },
+    {
+      "name": "beforeUpload",
+      "type": "(rawFile: UploadRawFile) => UploadAwaitable<void | undefined | null | boolean | File | Blob>",
+      "required": false,
+      "description": "上传前的钩子：返回 false 或被 reject 时中止上传并移除文件；返回 File / Blob 时改为上传它。"
+    },
+    {
+      "name": "beforeRemove",
+      "type": "(file: UploadFile, uploadFiles: UploadFile[]) => UploadAwaitable<boolean>",
+      "required": false,
+      "description": "删除前的钩子：返回 false 或被 reject 时取消删除。"
+    },
+    {
+      "name": "class",
+      "type": "ClassValue",
+      "required": false,
+      "description": "根元素样式覆盖。"
+    },
+    {
+      "name": "ui",
+      "type": "UploadUi",
+      "required": false,
+      "description": "各部位样式覆盖。 可用键（从源码抽取，以此为准）——Web：card、cardAction、cardImage、cardMask、cardStatus、dragger、item、itemAction、itemActions、itemControl、itemIcon、itemName、itemStatus、itemThumb、list、progress、root、tip、trigger。"
+    },
+    {
+      "name": "fileList",
+      "type": "UploadUserFile[]",
+      "required": false,
+      "description": "双向绑定值",
+      "vModel": true,
+      "default": "[]"
+    }
+  ],
+  "events": [
+    {
+      "name": "update:fileList",
+      "description": "fileList 变化时触发（v-model 同步）",
+      "payload": "files: UploadUserFile[]"
+    }
+  ],
+  "slots": [
+    {
+      "name": "default",
+      "props": "() => unknown",
+      "description": "触发区内容。text / picture 非拖拽形态下组件不内置按钮，需在这里放按钮；同时提供 trigger 插槽时，改为渲染在触发区之后（常用来放「开始上传」按钮）。"
+    },
+    {
+      "name": "trigger",
+      "props": "() => unknown",
+      "description": "触发文件选择的内容，优先于 default 插槽。"
+    },
+    {
+      "name": "tip",
+      "props": "() => unknown",
+      "description": "提示说明文字，拖拽模式放在拖拽框内，其他模式放在触发区下方。"
+    },
+    {
+      "name": "file",
+      "props": "(props: { file: UploadFile; index: number }) => unknown",
+      "description": "自定义单个文件的展示，替换整条列表项（照片墙下为整张卡片）的内容。"
+    }
+  ],
+  "exposes": [
+    {
+      "name": "abort",
+      "description": ""
+    },
+    {
+      "name": "submit",
+      "description": ""
+    },
+    {
+      "name": "clearFiles",
+      "description": ""
+    },
+    {
+      "name": "handleStart",
+      "description": ""
+    },
+    {
+      "name": "handleRemove",
+      "description": ""
+    },
+    {
+      "name": "pause",
+      "description": ""
+    },
+    {
+      "name": "resume",
+      "description": ""
+    }
+  ],
+  "examples": [
+    {
+      "title": "Web 演示",
+      "path": "app/components/reborn/examples/reborn-upload/RebornUploadDemo.vue",
+      "source": "demo",
+      "platform": "web",
+      "code": "<script setup lang=\"ts\">\nimport type {\n  UploadChunkAdapter,\n  UploadFile,\n  UploadListType,\n  UploadRawFile,\n  UploadRequestHandler,\n  UploadRequestOptions,\n  UploadStatus,\n  UploadUserFile,\n} from \"~/components/reborn/ui/reborn-upload/reborn-upload.config\"\nimport { DemoBlock, DemoNote, DemoSection, Icon, Playground } from \"#components\"\nimport { computed, onBeforeUnmount, ref, shallowRef, useTemplateRef, watch } from \"vue\"\nimport RebornButton from \"~/components/reborn/ui/reborn-button/RebornButton.vue\"\nimport RebornDialog from \"~/components/reborn/ui/reborn-dialog/RebornDialog.vue\"\nimport RebornSwitch from \"~/components/reborn/ui/reborn-switch/RebornSwitch.vue\"\nimport { message } from \"~/components/reborn/ui/reborn-toast/index\"\nimport { uploadListTypes, uploadStatuses } from \"~/components/reborn/ui/reborn-upload/reborn-upload.config\"\nimport { ajaxUpload } from \"~/components/reborn/ui/reborn-upload/reborn-upload.utils\"\nimport RebornUpload from \"~/components/reborn/ui/reborn-upload/RebornUpload.vue\"\n\n/** 列表形态的中英对照标签 */\nconst listTypeLabels: Record<UploadListType, string> = {\n  'text': '文字列表 text',\n  'picture': '图片列表 picture',\n  'picture-card': '照片墙 picture-card',\n}\nconst listTypeOptions = uploadListTypes.map(t => ({ label: listTypeLabels[t], value: t }))\n\n/** 文件状态的中文名 */\nconst statusLabels: Record<UploadStatus, string> = {\n  ready: '待上传',\n  uploading: '上传中',\n  paused: '已暂停',\n  success: '成功',\n  fail: '失败',\n}\n\n/** 自定义文件项里各状态的文字颜色 */\nconst statusColors: Record<UploadStatus, string> = {\n  ready: 'text-gray-6',\n  uploading: 'text-primary',\n  paused: 'text-orange-6',\n  success: 'text-green-6',\n  fail: 'text-red-6',\n}\n\n/** 把字节数换算成便于阅读的大小 */\nfunction formatSize(bytes = 0) {\n  if (bytes < 1024) return `${bytes} B`\n  if (bytes < 1024 * 1024) return `${(bytes / 1024).toFixed(1)} KB`\n  return `${(bytes / 1024 / 1024).toFixed(2)} MB`\n}\n\n/** 演示拥有的异步任务在卸载时统一取消。 */\nlet disposed = false\nconst pendingTasks = new Set<() => void>()\nlet stopRecording: (() => void) | undefined\nonBeforeUnmount(() => {\n  disposed = true\n  stopRecording?.()\n  for (const cancel of [...pendingTasks]) cancel()\n  pendingTasks.clear()\n  settleRemove(false)\n})\n\n/** 模拟上传：按固定间隔推进进度，结束时按结果回调成功或失败；返回 abort 供组件中止。 */\nfunction createMockRequest(opts: {\n  outcome?: () => 'success' | 'fail'\n  response?: (options: UploadRequestOptions) => unknown\n  interval?: number\n} = {}): UploadRequestHandler {\n  return (req) => {\n    let percent = 0\n    let timer: ReturnType<typeof setInterval>\n    const abort = () => { clearInterval(timer); pendingTasks.delete(abort) }\n    timer = setInterval(() => {\n      percent = Math.min(100, percent + 10 + Math.random() * 15)\n      req.onProgress(Object.assign(new ProgressEvent('progress'), { percent }))\n      if (percent < 100) return\n      abort()\n      if (opts.outcome?.() === 'fail') req.onError(new Error('服务器繁忙，请稍后重试'))\n      else req.onSuccess(opts.response?.(req) ?? { ok: true })\n    }, opts.interval ?? 200)\n    pendingTasks.add(abort)\n    return { abort }\n  }\n}\n\n/** 各场景共用的模拟请求：总是成功 */\nconst mockRequest = createMockRequest()\n\n// ─── 交互演练场 ─────────────────────────────────────────────────\n\n/** 演练场默认状态 */\nconst defaultState: Record<string, any> = {\n  listType: 'text',\n  drag: false,\n  multiple: true,\n  showFileList: true,\n  disabled: false,\n  autoUpload: true,\n  limit: 0,\n  mockResult: 'success',\n}\n\nconst state = shallowRef<Record<string, any>>({ ...defaultState })\n\n/** 演练场预置文件：成功的图片、带失败原因的文件、超长文件名；工厂函数保证每次重置拿到新对象 */\nfunction createPresetFiles(): UploadUserFile[] {\n  return [\n    { name: 'strata.webp', url: '/images/lithos/strata.webp', size: 204800 },\n    { name: '季度销售报表.xlsx', status: 'fail', errorMessage: '文件超过服务器允许的大小' },\n    { name: '2026 年度产品规划与里程碑排期（含各事业部资源申请与预算明细）.pdf', size: 1572864 },\n  ]\n}\n\nconst playRef = useTemplateRef<InstanceType<typeof RebornUpload>>('playRef')\nconst playFiles = ref<UploadUserFile[]>(createPresetFiles())\n\n/** 最近一次钩子回调，让预览区的交互「有回应」 */\nconst lastEvent = shallowRef('')\n\n/** 各状态的文件数，随 v-model 列表实时变化；演练场没开分片上传，不会出现已暂停，统计里略过 */\nconst statusCounts = computed(() => uploadStatuses\n  .filter(s => s !== 'paused')\n  .map(s => `${statusLabels[s]} ${playFiles.value.filter(f => (f.status ?? 'success') === s).length}`)\n  .join(' / '))\n\n/** 演练场的模拟请求：每次上传时读取「模拟结果」开关 */\nconst playRequest = createMockRequest({\n  outcome: () => {\n    if (state.value.mockResult === 'random') return Math.random() < 0.5 ? 'fail' : 'success'\n    return state.value.mockResult\n  },\n})\n\nfunction onPlayChange(file: UploadFile) {\n  lastEvent.value = `change：${file.name} → ${statusLabels[file.status]}`\n}\n\nfunction onPlayExceed(files: File[], uploadFiles: UploadUserFile[]) {\n  lastEvent.value = `exceed：本次选择 ${files.length} 个，已有 ${uploadFiles.length} 个，超出上限 ${state.value.limit}`\n}\n\nfunction onPlayRemove(file: UploadFile) {\n  lastEvent.value = `remove：${file.name}`\n}\n\n/** 重置演练场配置，连同文件列表与事件回显 */\nfunction resetState() {\n  playRef.value?.abort()\n  state.value = { ...defaultState }\n  playFiles.value = createPresetFiles()\n  lastEvent.value = ''\n}\n\nconst mockResultOptions = [\n  { label: '总是成功', value: 'success' },\n  { label: '总是失败', value: 'fail' },\n  { label: '随机成功或失败', value: 'random' },\n]\n\n/** 演练场控制面板配置 */\nconst controls: any = [\n  {\n    title: '基础属性',\n    children: [\n      { label: '列表形态', key: 'listType', component: 'select' as const, defaultValue: 'text', props: { options: listTypeOptions } },\n      { label: '拖拽上传（drag）', key: 'drag', component: 'checkbox' as const, defaultValue: false },\n      { label: '多选（multiple）', key: 'multiple', component: 'checkbox' as const, defaultValue: true },\n      { label: '显示文件列表（show-file-list）', key: 'showFileList', component: 'checkbox' as const, defaultValue: true },\n    ],\n  },\n  {\n    title: '状态',\n    children: [\n      { label: '禁用状态', key: 'disabled', component: 'checkbox' as const, defaultValue: false },\n    ],\n  },\n  {\n    title: '行为',\n    children: [\n      { label: '选择后立即上传（auto-upload）', key: 'autoUpload', component: 'checkbox' as const, defaultValue: true },\n      { label: '数量上限（limit，0 为不限）', key: 'limit', component: 'input-number' as const, defaultValue: 0, props: { min: 0, step: 1 } },\n      { label: '模拟上传结果', key: 'mockResult', component: 'select' as const, defaultValue: 'success', props: { options: mockResultOptions } },\n    ],\n  },\n]\n\n/** 演练场提示文字，与 tip 插槽内容一致 */\nconst playTip = computed(() => (state.value.limit > 0 ? `最多上传 ${state.value.limit} 个文件` : '支持任意类型的文件'))\n\n/** 演练场右上角展示的传参明细：完整列出当前所有参数（含默认值） */\nconst uploadCode = computed(() => {\n  const s = state.value\n  const props = [\n    'v-model:file-list=\"fileList\"',\n    'action=\"/api/upload\"',\n    `list-type=\"${s.listType}\"`,\n    `:drag=\"${s.drag}\"`,\n    `:multiple=\"${s.multiple}\"`,\n    `:show-file-list=\"${s.showFileList}\"`,\n    `:disabled=\"${s.disabled}\"`,\n    `:auto-upload=\"${s.autoUpload}\"`,\n  ]\n  if (s.limit > 0) props.push(`:limit=\"${s.limit}\"`, ':on-exceed=\"handleExceed\"')\n  props.push(':on-change=\"handleChange\"', ':on-remove=\"handleRemove\"')\n  if (!s.autoUpload) props.unshift('ref=\"uploadRef\"')\n  // 文字 / 图片列表的非拖拽形态不内置按钮，由 default 插槽提供，禁用时同步给按钮\n  const trigger = !s.drag && s.listType !== 'picture-card'\n    ? `  <RebornButton color=\"neutral\" variant=\"outlined\" :disabled=\"${s.disabled}\">\\n    点击上传\\n  </RebornButton>\\n`\n    : ''\n  const upload = `<RebornUpload\\n  ${props.join('\\n  ')}\\n>\\n${trigger}  <template #tip>\\n    ${playTip.value}\\n  </template>\\n</RebornUpload>`\n  if (s.autoUpload) return upload\n  return `${upload}\\n<RebornButton @click=\"uploadRef?.submit()\">\\n  开始上传\\n</RebornButton>`\n})\n\n// ─── 场景演示状态 ───────────────────────────────────────────────\n\n/** 基础用法 */\nconst basicFiles = ref<UploadUserFile[]>([])\n\n/** 文件列表形态：成功的图片、上传中、上传失败的图片、超长文件名四种情况 */\nfunction createShowcaseFiles(): UploadUserFile[] {\n  return [\n    { name: 'strata.webp', url: '/images/lithos/strata.webp' },\n    { name: '产品宣传册.pdf', status: 'uploading', percentage: 45 },\n    { name: 'living-strata.webp', url: '/images/lithos/living-strata.webp', status: 'fail', errorMessage: '网络中断，上传失败' },\n    { name: '2026 年度产品规划与里程碑排期（含各事业部资源申请与预算明细）.docx' },\n  ]\n}\nconst listTypeFiles = ref(Object.fromEntries(\n  uploadListTypes.map(t => [t, createShowcaseFiles()]),\n) as Record<UploadListType, UploadUserFile[]>)\n\n/** 拖拽上传 */\nconst dragFiles = ref<UploadUserFile[]>([])\n\n/** 照片墙与预览 */\nconst wallFiles = ref<UploadUserFile[]>([\n  { name: 'strata.webp', url: '/images/lithos/strata.webp' },\n  { name: 'living-strata.webp', url: '/images/lithos/living-strata.webp' },\n])\nconst previewOpen = shallowRef(false)\nconst previewFile = shallowRef<UploadFile>()\n/** 视频通过自定义预览回调打开播放器，图片使用组件内置预览。 */\nfunction onVideoPreview(file: UploadFile) {\n  previewFile.value = file\n  previewOpen.value = true\n}\n\n/** 视频预览 */\nconst videoListRef = useTemplateRef<InstanceType<typeof RebornUpload>>('videoListRef')\nconst videoCardRef = useTemplateRef<InstanceType<typeof RebornUpload>>('videoCardRef')\nconst videoListFiles = ref<UploadUserFile[]>([])\nconst videoCardFiles = ref<UploadUserFile[]>([])\nconst videoRecording = shallowRef(false)\nlet sampleVideoSeq = 0\n\n/**\n * 用 canvas 现录一段 2 秒的视频，手边没有视频文件时也能看到首帧缩略图。\n * 编码器冷启动要一两秒，这段时间录不进画面（首次录制只得到空壳文件），所以收到第一段数据后才开始计时。\n */\nasync function recordSampleVideo() {\n  const mimeType = ['video/webm', 'video/mp4'].find(t => MediaRecorder.isTypeSupported(t))\n  if (!mimeType) throw new Error('当前浏览器不支持录制视频')\n  const canvas = document.createElement('canvas')\n  canvas.width = 320\n  canvas.height = 180\n  const ctx = canvas.getContext('2d')\n  if (!ctx) throw new Error('当前浏览器不支持画布录制')\n  const stream = canvas.captureStream(30)\n  const recorder = new MediaRecorder(stream, { mimeType })\n  const chunks: Blob[] = []\n  let start = 0\n  recorder.ondataavailable = (e) => {\n    if (!e.data.size) return\n    chunks.push(e.data)\n    if (!start) start = performance.now()\n  }\n  let frame: number | undefined\n  const stop = () => {\n    if (frame !== undefined) cancelAnimationFrame(frame)\n    frame = undefined\n    if (recorder.state !== 'inactive') recorder.stop()\n    stream.getTracks().forEach(track => track.stop())\n  }\n  stopRecording = stop\n  const stopped = new Promise<void>((resolve, reject) => {\n    recorder.onstop = () => resolve()\n    recorder.onerror = () => { stop(); reject(new Error('视频录制失败')) }\n  })\n  const index = ++sampleVideoSeq\n  const deadline = performance.now() + 10000\n  const draw = () => {\n    frame = undefined\n    if (disposed) { stop(); return }\n    const t = start ? Math.min(1, (performance.now() - start) / 2000) : 0\n    ctx.fillStyle = `hsl(${(index * 70 + t * 90) % 360}, 65%, 45%)`\n    ctx.fillRect(0, 0, 320, 180)\n    ctx.fillStyle = 'rgba(255, 255, 255, 0.35)'\n    ctx.fillRect(0, 170, 320 * t, 10)\n    ctx.fillStyle = '#fff'\n    ctx.font = 'bold 26px sans-serif'\n    ctx.textAlign = 'center'\n    ctx.textBaseline = 'middle'\n    ctx.fillText(`示例视频 ${index}`, 160, 90)\n    if (t < 1 && performance.now() < deadline) frame = requestAnimationFrame(draw)\n    else stop()\n  }\n  // 每 100ms 交一次数据，用来判断编码器是否已经开始出画面\n  try {\n    recorder.start(100)\n    draw()\n    await stopped\n  }\n  finally {\n    stop()\n    if (stopRecording === stop) stopRecording = undefined\n    recorder.ondataavailable = null\n    recorder.onstop = null\n    recorder.onerror = null\n  }\n  if (disposed) throw new DOMException('演示已卸载', 'AbortError')\n  if (!start) throw new Error('录制超时，请直接选择本地视频')\n  return { blob: new Blob(chunks, { type: mimeType }), name: `示例视频-${index}.${mimeType === 'video/mp4' ? 'mp4' : 'webm'}` }\n}\n\n/** 录好的视频同时加入两个列表：handleStart 只入列，submit 才发起上传 */\nasync function addSampleVideo() {\n  if (typeof MediaRecorder === 'undefined') {\n    message.error('当前浏览器不支持录制视频，请直接选择本地视频')\n    return\n  }\n  videoRecording.value = true\n  try {\n    const { blob, name } = await recordSampleVideo()\n    if (disposed) return\n    for (const uploader of [videoListRef.value, videoCardRef.value]) {\n      uploader?.handleStart(new File([blob], name, { type: blob.type }) as UploadRawFile)\n      uploader?.submit()\n    }\n  }\n  catch (error) {\n    if (!disposed) message.error(error instanceof Error ? error.message : '视频录制失败')\n  }\n  finally {\n    videoRecording.value = false\n  }\n}\n\n/** 数量限制 */\nconst limitFiles = ref<UploadUserFile[]>([{ name: '合同扫描件.pdf' }])\nfunction onLimitExceed(files: File[], uploadFiles: UploadUserFile[]) {\n  message.warning(`最多上传 3 个文件，本次选择了 ${files.length} 个，列表里已有 ${uploadFiles.length} 个`)\n}\n\n/** 上传前处理：记录压缩前的大小，成功后回显「原始 → 提交」 */\nconst compressFiles = ref<UploadUserFile[]>([])\nconst originalSizes = new Map<number, number>()\ninterface UploadLogEntry { id: number, text: string }\nlet logSequence = 0\nconst compressLog = shallowRef<UploadLogEntry[]>([])\nconst compressRequest = createMockRequest({\n  response: req => ({ original: originalSizes.get(req.file.uid) ?? req.file.size, submitted: req.file.size }),\n})\n\n/** 拒绝非图片与超过 5MB 的文件；其余图片按长边 1280px 压成 jpeg，压完反而更大时上传原文件 */\nasync function compressBeforeUpload(rawFile: UploadRawFile) {\n  if (!rawFile.type.startsWith('image/')) {\n    message.error(`「${rawFile.name}」不是图片，已拒绝`)\n    return false\n  }\n  if (rawFile.size > 5 * 1024 * 1024) {\n    message.error(`「${rawFile.name}」超过 5MB，已拒绝`)\n    return false\n  }\n  originalSizes.set(rawFile.uid, rawFile.size)\n  try {\n    const bitmap = await createImageBitmap(rawFile)\n    const scale = Math.min(1, 1280 / Math.max(bitmap.width, bitmap.height))\n    const canvas = document.createElement('canvas')\n    canvas.width = Math.round(bitmap.width * scale)\n    canvas.height = Math.round(bitmap.height * scale)\n    canvas.getContext('2d')?.drawImage(bitmap, 0, 0, canvas.width, canvas.height)\n    bitmap.close()\n    const blob = await new Promise<Blob | null>(resolve => canvas.toBlob(resolve, 'image/jpeg', 0.8))\n    if (!blob || blob.size >= rawFile.size) return true\n    return new File([blob], rawFile.name.replace(/\\.[^.]+$/, '.jpg'), { type: 'image/jpeg' })\n  }\n  catch {\n    // 浏览器解不开的图片（如部分 svg）直接上传原文件\n    return true\n  }\n}\n\nfunction onCompressSuccess(response: unknown, file: UploadFile) {\n  const { original, submitted } = response as { original: number, submitted: number }\n  compressLog.value = [{ id: ++logSequence, text: `${file.name}：${formatSize(original)} → ${formatSize(submitted)}` }, ...compressLog.value].slice(0, 3)\n}\n\n/** 删除前确认：before-remove 返回 Promise，由确认弹窗决定结果 */\nconst confirmFiles = ref<UploadUserFile[]>([\n  { name: '需求评审纪要.docx' },\n  { name: '接口文档 v2.pdf' },\n])\nconst removeConfirmOpen = shallowRef(false)\nconst removeTarget = shallowRef('')\nlet resolveRemove: ((ok: boolean) => void) | null = null\n\nfunction confirmBeforeRemove(file: UploadFile) {\n  removeTarget.value = file.name\n  removeConfirmOpen.value = true\n  return new Promise<boolean>((resolve) => {\n    resolveRemove = resolve\n  })\n}\n\nfunction settleRemove(ok: boolean) {\n  resolveRemove?.(ok)\n  resolveRemove = null\n}\n\nfunction onRemoveConfirm() {\n  settleRemove(true)\n  removeConfirmOpen.value = false\n}\n\n// 取消、点遮罩、按 Esc 关闭弹窗都视为不删除\nwatch(removeConfirmOpen, (open) => {\n  if (!open) settleRemove(false)\n})\n\n/** 手动上传 */\nconst manualRef = useTemplateRef<InstanceType<typeof RebornUpload>>('manualRef')\nconst manualFiles = ref<UploadUserFile[]>([])\nconst manualRequest = createMockRequest({ interval: 400 })\nconst manualReadyCount = computed(() => manualFiles.value.filter(f => f.status === 'ready').length)\nconst manualUploadingCount = computed(() => manualFiles.value.filter(f => f.status === 'uploading').length)\n\n/** 额外参数与请求头：回显组件交给 http-request 的参数 */\nconst extraFiles = ref<UploadUserFile[]>([])\nconst extraHeaders = { Authorization: 'Bearer demo-token' }\nconst extraEcho = shallowRef('')\nconst extraRequest = createMockRequest({\n  response: req => ({ filename: req.filename, data: req.data, headers: req.headers }),\n})\n\n/** 模拟先向服务端换取签名，再随文件一起提交 */\nasync function resolveExtraData(rawFile: UploadRawFile) {\n  await wait(300)\n  return { bizType: 'contract', signature: `sig-${rawFile.uid}` }\n}\n\nfunction onExtraSuccess(response: unknown) {\n  extraEcho.value = JSON.stringify(response, null, 2)\n}\n\n/** 真实接口上传：乐淘测试环境的图片上传接口，文件字段名是 multipart，查询参数直接写在地址里 */\nconst realAction = 'https://api-admin-letaofun.test.rebornnet.cn/api/admin/upload/image?model=config&pid=0'\nconst realFiles = ref<UploadUserFile[]>([])\nconst realEcho = shallowRef('')\n\n/** 接口响应：成败看 code，HTTP 状态码不论成败都是 200 */\ninterface RealUploadResponse {\n  code: number\n  message: string\n  data: { fileName: string, extName: string, fileSize: number, url: string, type: string } | null\n}\n\n/**\n * 接口对不支持的格式（如 webp）返回 HTTP 200 + code 500，默认请求只看 HTTP 状态会把它标成成功。\n * 沿用 ajaxUpload 保留进度与中止，只在成功回调里补一道业务码判断，业务失败转交 onError，message 成为失败原因。\n */\nconst realRequest: UploadRequestHandler = options => ajaxUpload({\n  ...options,\n  onSuccess: (response) => {\n    const body = response as RealUploadResponse | undefined\n    if (body?.code === 200 && body.data) options.onSuccess(body)\n    else options.onError(new Error(body?.message || '上传失败'))\n  },\n})\n\n/** 成功后用服务端地址替换本地预览地址，表单提交时拿到的就是线上地址 */\nfunction onRealSuccess(response: unknown, file: UploadFile) {\n  const body = response as RealUploadResponse\n  if (body.data) file.url = body.data.url\n  realEcho.value = JSON.stringify(body, null, 2)\n}\n\nfunction onRealError(error: Error) {\n  realEcho.value = `上传失败：${error.message}`\n}\n\n/** 断点续传：服务端是页面里的模拟实现，记录每个上传任务已收到的分片，刷新页面即清空 */\ninterface MockChunkTask {\n  uploadId: string\n  chunkCount: number\n  received: Set<number>\n}\nconst mockChunkServer = new Map<string, MockChunkTask>()\nlet mockUploadSeq = 0\n\nconst resumeRef = useTemplateRef<InstanceType<typeof RebornUpload>>('resumeRef')\nconst resumeFiles = ref<UploadUserFile[]>([])\nconst resumeLog = shallowRef<UploadLogEntry[]>([])\nconst flakyNetwork = shallowRef(false)\nconst resumeUploadingCount = computed(() => resumeFiles.value.filter(f => f.status === 'uploading').length)\nconst resumeResumableCount = computed(() => resumeFiles.value.filter(f => f.status === 'paused' || f.status === 'fail').length)\n\nfunction logResume(line: string) {\n  resumeLog.value = [{ id: ++logSequence, text: line }, ...resumeLog.value].slice(0, 8)\n}\n\n/** 名称、大小、修改时间都相同视为同一个文件，删掉后重新选择也能接上服务端的上传任务 */\nfunction fingerprint(file: File) {\n  return `${file.name}-${file.size}-${file.lastModified}`\n}\n\n/** 模拟网络耗时；暂停、删除时 signal 触发，立即中断 */\nfunction wait(ms: number, signal?: AbortSignal) {\n  return new Promise<void>((resolve, reject) => {\n    if (disposed || signal?.aborted) { reject(signal?.reason ?? new DOMException('演示已卸载', 'AbortError')); return }\n    let timer: ReturnType<typeof setTimeout>\n    function cleanup() {\n      clearTimeout(timer)\n      pendingTasks.delete(cancel)\n      signal?.removeEventListener('abort', cancel)\n    }\n    function cancel() {\n      cleanup()\n      reject(signal?.reason ?? new DOMException('演示已卸载', 'AbortError'))\n    }\n    timer = setTimeout(() => { cleanup(); resolve() }, ms)\n    pendingTasks.add(cancel)\n    signal?.addEventListener('abort', cancel, { once: true })\n  })\n}\n\n/** 分片适配器：真实接入时把四步换成对应的接口请求，signal 交给 fetch / axios 以便暂停时中断 */\nconst resumeAdapter: UploadChunkAdapter<string> = {\n  chunkSize: 512 * 1024,\n  concurrency: 3,\n  retries: 2,\n  async init({ file, chunkCount, signal }) {\n    await wait(200, signal)\n    const key = fingerprint(file)\n    const existing = mockChunkServer.get(key)\n    if (existing) {\n      logResume(`init：${file.name} 沿用上传任务 ${existing.uploadId}`)\n      return existing.uploadId\n    }\n    const uploadId = `upload-${++mockUploadSeq}`\n    mockChunkServer.set(key, { uploadId, chunkCount, received: new Set() })\n    logResume(`init：${file.name} 新建上传任务 ${uploadId}，共 ${chunkCount} 片`)\n    return uploadId\n  },\n  async uploaded({ file, chunkCount, signal }) {\n    await wait(150, signal)\n    const received = [...(mockChunkServer.get(fingerprint(file))?.received ?? [])]\n    logResume(`uploaded：服务端已有 ${received.length} / ${chunkCount} 片，这些分片不再上传`)\n    return received\n  },\n  async uploadChunk({ file, index, onProgress, signal }) {\n    // 真实接口在这里把 part.blob 放进 FormData，连同 context（uploadId）与 index 一起提交\n    for (let step = 1; step <= 5; step++) {\n      await wait(100 + Math.random() * 100, signal)\n      if (flakyNetwork.value && step === 3 && Math.random() < 0.25) {\n        logResume(`uploadChunk：分片 ${index} 传输中断`)\n        throw new Error(`分片 ${index} 传输中断`)\n      }\n      onProgress(step * 20)\n    }\n    mockChunkServer.get(fingerprint(file))?.received.add(index)\n  },\n  async merge({ file, context, chunkCount, signal }) {\n    await wait(300, signal)\n    mockChunkServer.delete(fingerprint(file))\n    logResume(`merge：${context} 的 ${chunkCount} 片合并完成`)\n    return { uploadId: context, url: `/files/${encodeURIComponent(file.name)}` }\n  },\n}\n\n/** 生成 8MB 测试文件：修改时间写死，删掉后再生成仍算同一个文件，可以演示跳过已传分片 */\nfunction addResumeTestFile() {\n  const file = new File([new Uint8Array(8 * 1024 * 1024)], '断点续传测试-8MB.bin', {\n    type: 'application/octet-stream',\n    lastModified: 1767225600000,\n  })\n  resumeRef.value?.handleStart(file as UploadRawFile)\n  resumeRef.value?.submit()\n}\n\n/** 上传文件夹 */\nconst folderFiles = ref<UploadUserFile[]>([])\n\n/** 自定义文件项 */\nconst customRef = useTemplateRef<InstanceType<typeof RebornUpload>>('customRef')\nconst customFiles = ref<UploadUserFile[]>([\n  { name: '用户访谈录音.m4a', size: 8388608 },\n  { name: '竞品分析.key', size: 3145728 },\n])\n\n/** 禁用 */\nconst disabledFiles = ref<UploadUserFile[]>([\n  { name: 'strata.webp', url: '/images/lithos/strata.webp' },\n  { name: '项目章程.pdf' },\n])\nconst disabledCardFiles = ref<UploadUserFile[]>([\n  { name: 'strata.webp', url: '/images/lithos/strata.webp' },\n  { name: 'living-strata.webp', url: '/images/lithos/living-strata.webp' },\n])\n</script>\n\n<template>\n  <div class=\"flex w-full flex-col\">\n    <Playground\n      v-model=\"state\" :controls=\"controls\" :code=\"uploadCode\" component-name=\"RebornUpload\"\n      title=\"交互演练场\" description=\"切换列表形态与行为开关，选择文件后观察状态流转与钩子回调。\"\n    >\n      <template #tag>\n        <RebornButton size=\"sm\" variant=\"soft\" color=\"neutral\" @click=\"resetState\">\n          <template #leading>\n            <Icon name=\"lucide:rotate-ccw\" size=\"12\" />\n          </template>\n          重置配置\n        </RebornButton>\n      </template>\n\n      <div class=\"flex w-full max-w-[520px] flex-col gap-4\">\n        <RebornUpload\n          ref=\"playRef\" v-model:file-list=\"playFiles\" :list-type=\"state.listType\" :drag=\"state.drag\"\n          :multiple=\"state.multiple\" :show-file-list=\"state.showFileList\" :disabled=\"state.disabled\"\n          :auto-upload=\"state.autoUpload\" :limit=\"state.limit || undefined\" :http-request=\"playRequest\"\n          :on-change=\"onPlayChange\" :on-exceed=\"onPlayExceed\" :on-remove=\"onPlayRemove\"\n        >\n          <template v-if=\"!state.drag && state.listType !== 'picture-card'\">\n            <RebornButton color=\"neutral\" variant=\"outlined\" :disabled=\"state.disabled\">\n              <template #leading>\n                <Icon name=\"lucide:upload\" class=\"size-[16px]\" />\n              </template>\n              点击上传\n            </RebornButton>\n          </template>\n          <template #tip>\n            {{ playTip }}\n          </template>\n        </RebornUpload>\n\n        <div v-if=\"!state.autoUpload\">\n          <RebornButton :disabled=\"state.disabled\" @click=\"playRef?.submit()\">\n            开始上传\n          </RebornButton>\n        </div>\n\n        <DemoNote tone=\"dimmed\" class=\"font-mono text-xs\">\n          {{ statusCounts }}<br>\n          {{ lastEvent || '选择或删除文件后，这里显示最近一次钩子回调' }}\n        </DemoNote>\n        <DemoNote tone=\"dimmed\">\n          演示使用模拟请求，不会真正发送文件；接入时把 action 换成真实的上传地址即可。\n        </DemoNote>\n      </div>\n    </Playground>\n\n    <DemoSection title=\"基础用法\">\n      <template #description>\n        绑定 <code>v-model:file-list</code> 拿到文件列表，<code>action</code> 填上传地址；选择文件后立即上传。\n      </template>\n      <DemoBlock layout=\"stack\">\n        <RebornUpload v-model:file-list=\"basicFiles\" action=\"/api/upload\" class=\"w-full max-w-[400px]\" :http-request=\"mockRequest\">\n          <RebornButton color=\"neutral\" variant=\"outlined\">\n            <template #leading>\n              <Icon name=\"lucide:upload\" class=\"size-[16px]\" />\n            </template>\n            点击上传\n          </RebornButton>\n        </RebornUpload>\n      </DemoBlock>\n    </DemoSection>\n\n    <DemoSection title=\"文件列表形态\">\n      <template #description>\n        <code>list-type</code> 切换 <code>text</code>、<code>picture</code>、<code>picture-card</code> 三种形态；上传中显示进度条，失败项悬停图标查看原因。\n      </template>\n      <DemoBlock layout=\"stack\" class=\"gap-8\">\n        <div v-for=\"t in uploadListTypes\" :key=\"t\" class=\"flex w-full items-start gap-3\">\n          <p class=\"text-dimmed w-24 shrink-0 pt-2 text-xs italic\">{{ t }}</p>\n          <RebornUpload\n            v-model:file-list=\"listTypeFiles[t]\" :list-type=\"t\" multiple class=\"w-full min-w-0\"\n            :class=\"t === 'picture-card' ? 'max-w-[640px]' : 'max-w-[480px]'\"\n            :http-request=\"mockRequest\"\n          >\n            <template v-if=\"t !== 'picture-card'\">\n              <RebornButton color=\"neutral\" variant=\"outlined\">\n                <template #leading>\n                  <Icon name=\"lucide:upload\" class=\"size-[16px]\" />\n                </template>\n                点击上传\n              </RebornButton>\n            </template>\n          </RebornUpload>\n        </div>\n      </DemoBlock>\n    </DemoSection>\n\n    <DemoSection title=\"拖拽上传\">\n      <template #description>\n        开启 <code>drag</code> 后触发区变为拖放区，把文件拖进来或点击都能选择；配合 <code>multiple</code> 一次放入多个。\n      </template>\n      <DemoBlock layout=\"stack\">\n        <RebornUpload v-model:file-list=\"dragFiles\" drag multiple class=\"w-full max-w-[480px]\" :http-request=\"mockRequest\">\n          <template #tip>\n            支持一次拖入多个文件\n          </template>\n        </RebornUpload>\n      </DemoBlock>\n    </DemoSection>\n\n    <DemoSection title=\"照片墙与预览\">\n      <template #description>\n        <code>list-type=\"picture-card\"</code> 让卡片与上传入口排在同一行；图片默认使用 <code>RebornImage</code> 预览，支持缩放、旋转与多图切换。\n      </template>\n      <DemoBlock layout=\"stack\">\n        <RebornUpload\n          v-model:file-list=\"wallFiles\" list-type=\"picture-card\" accept=\"image/*\" multiple\n          :http-request=\"mockRequest\"\n        />\n      </DemoBlock>\n    </DemoSection>\n\n    <DemoSection title=\"视频预览\">\n      <template #description>\n        <code>list-type</code> 为 <code>picture</code> 或 <code>picture-card</code> 时，视频与图片一样生成本地预览地址，缩略图取视频首帧；浏览器无法解码的格式（如 avi）回退为文件图标。\n      </template>\n      <DemoBlock layout=\"stack\" class=\"gap-6\">\n        <div>\n          <RebornButton color=\"neutral\" variant=\"outlined\" :loading=\"videoRecording\" @click=\"addSampleVideo\">\n            <template #leading>\n              <Icon name=\"lucide:clapperboard\" class=\"size-[16px]\" />\n            </template>\n            生成示例视频\n          </RebornButton>\n        </div>\n        <RebornUpload\n          ref=\"videoListRef\" v-model:file-list=\"videoListFiles\" list-type=\"picture\" accept=\"video/*\" multiple\n          class=\"w-full max-w-[480px]\" :http-request=\"mockRequest\"\n        >\n          <RebornButton color=\"neutral\" variant=\"outlined\">\n            <template #leading>\n              <Icon name=\"lucide:upload\" class=\"size-[16px]\" />\n            </template>\n            上传视频\n          </RebornButton>\n        </RebornUpload>\n        <RebornUpload\n          ref=\"videoCardRef\" v-model:file-list=\"videoCardFiles\" list-type=\"picture-card\" accept=\"video/*\" multiple\n          :http-request=\"mockRequest\" :on-preview=\"onVideoPreview\"\n        />\n        <DemoNote tone=\"dimmed\">\n          「生成示例视频」用 canvas 现录一段 2 秒的视频，同时加入上面两个列表；也可以直接选择本地视频，照片墙悬停后点预览可播放。\n        </DemoNote>\n      </DemoBlock>\n      <RebornDialog v-model=\"previewOpen\" destroy-on-close :title=\"previewFile?.name\" width=\"640px\" :cancel-btn=\"false\" :confirm-btn=\"false\">\n        <video v-if=\"previewOpen && previewFile?.url\" :src=\"previewFile.url\" controls autoplay class=\"w-full rounded-sm\" />\n      </RebornDialog>\n    </DemoSection>\n\n    <DemoSection title=\"数量限制\">\n      <template #description>\n        <code>limit</code> 限制文件总数；本次选择会超出时整批不加入，并触发 <code>on-exceed</code>。\n      </template>\n      <DemoBlock layout=\"stack\">\n        <RebornUpload\n          v-model:file-list=\"limitFiles\" :limit=\"3\" multiple class=\"w-full max-w-[400px]\"\n          :http-request=\"mockRequest\" :on-exceed=\"onLimitExceed\"\n        >\n          <RebornButton color=\"neutral\" variant=\"outlined\">\n            <template #leading>\n              <Icon name=\"lucide:upload\" class=\"size-[16px]\" />\n            </template>\n            点击上传\n          </RebornButton>\n          <template #tip>\n            最多上传 3 个文件\n          </template>\n        </RebornUpload>\n      </DemoBlock>\n    </DemoSection>\n\n    <DemoSection title=\"上传前处理\">\n      <template #description>\n        <code>before-upload</code> 返回 <code>false</code> 时拒绝该文件；返回新的 File / Blob 时改为上传它，适合压缩、加水印。\n      </template>\n      <DemoBlock layout=\"stack\">\n        <RebornUpload\n          v-model:file-list=\"compressFiles\" list-type=\"picture\" accept=\"image/*\" multiple class=\"w-full max-w-[480px]\"\n          :http-request=\"compressRequest\" :before-upload=\"compressBeforeUpload\" :on-success=\"onCompressSuccess\"\n        >\n          <RebornButton color=\"neutral\" variant=\"outlined\">\n            <template #leading>\n              <Icon name=\"lucide:upload\" class=\"size-[16px]\" />\n            </template>\n            点击上传\n          </RebornButton>\n          <template #tip>\n            只接收 5MB 以内的图片，上传前按长边 1280px 压缩为 jpeg\n          </template>\n        </RebornUpload>\n        <DemoNote tone=\"dimmed\" class=\"font-mono text-xs\">\n          <template v-if=\"compressLog.length\">\n            <div v-for=\"line in compressLog\" :key=\"line.id\">\n              {{ line.text }}\n            </div>\n          </template>\n          <template v-else>\n            上传图片后，这里显示压缩前后的大小\n          </template>\n        </DemoNote>\n      </DemoBlock>\n    </DemoSection>\n\n    <DemoSection title=\"删除前确认\">\n      <template #description>\n        <code>before-remove</code> 可以返回 Promise，等确认弹窗关闭后再决定是否删除；返回 <code>false</code> 或 reject 时保留文件。\n      </template>\n      <DemoBlock layout=\"stack\">\n        <RebornUpload\n          v-model:file-list=\"confirmFiles\" multiple class=\"w-full max-w-[400px]\" :http-request=\"mockRequest\"\n          :before-remove=\"confirmBeforeRemove\"\n        >\n          <RebornButton color=\"neutral\" variant=\"outlined\">\n            <template #leading>\n              <Icon name=\"lucide:upload\" class=\"size-[16px]\" />\n            </template>\n            点击上传\n          </RebornButton>\n        </RebornUpload>\n      </DemoBlock>\n      <RebornDialog\n        v-model=\"removeConfirmOpen\" title=\"删除文件\" :describe=\"`确定删除「${removeTarget}」吗？`\" width=\"400px\"\n        :confirm-btn=\"{ label: '删除', color: 'error' }\" @confirm=\"onRemoveConfirm\"\n      />\n    </DemoSection>\n\n    <DemoSection title=\"手动上传\">\n      <template #description>\n        关闭 <code>auto-upload</code> 后文件先停在待上传状态，通过实例方法 <code>submit</code>、<code>abort</code>、<code>clearFiles</code> 控制。\n      </template>\n      <DemoBlock layout=\"stack\">\n        <RebornUpload\n          ref=\"manualRef\" v-model:file-list=\"manualFiles\" :auto-upload=\"false\" multiple class=\"w-full max-w-[480px]\"\n          :http-request=\"manualRequest\"\n        >\n          <template #trigger>\n            <RebornButton color=\"neutral\" variant=\"outlined\">\n              <template #leading>\n                <Icon name=\"lucide:folder-open\" class=\"size-[16px]\" />\n              </template>\n              选择文件\n            </RebornButton>\n          </template>\n          <div class=\"ml-3 inline-flex gap-2\">\n            <RebornButton :disabled=\"!manualReadyCount\" @click=\"manualRef?.submit()\">\n              开始上传\n            </RebornButton>\n            <RebornButton variant=\"outlined\" color=\"neutral\" :disabled=\"!manualUploadingCount\" @click=\"manualRef?.abort()\">\n              中止\n            </RebornButton>\n            <RebornButton variant=\"text\" color=\"neutral\" :disabled=\"!manualFiles.length\" @click=\"manualRef?.clearFiles()\">\n              清空\n            </RebornButton>\n          </div>\n        </RebornUpload>\n        <DemoNote tone=\"dimmed\" class=\"font-mono text-xs\">\n          待上传 {{ manualReadyCount }} 个，上传中 {{ manualUploadingCount }} 个；中止后文件回到待上传，可再次提交\n        </DemoNote>\n      </DemoBlock>\n    </DemoSection>\n\n    <DemoSection title=\"额外参数与请求头\">\n      <template #description>\n        <code>data</code> 可以是对象、Promise 或按文件返回的函数，<code>headers</code> 设置请求头，<code>name</code> 改文件字段名。\n      </template>\n      <DemoBlock layout=\"stack\">\n        <RebornUpload\n          v-model:file-list=\"extraFiles\" name=\"attachment\" class=\"w-full max-w-[400px]\" :data=\"resolveExtraData\"\n          :headers=\"extraHeaders\" :http-request=\"extraRequest\" :on-success=\"onExtraSuccess\"\n        >\n          <RebornButton color=\"neutral\" variant=\"outlined\">\n            <template #leading>\n              <Icon name=\"lucide:upload\" class=\"size-[16px]\" />\n            </template>\n            点击上传\n          </RebornButton>\n        </RebornUpload>\n        <DemoNote tone=\"dimmed\" class=\"font-mono text-xs whitespace-pre-wrap\">\n          {{ extraEcho || '上传一个文件，这里回显随请求提交的字段名、data 与 headers' }}\n        </DemoNote>\n      </DemoBlock>\n    </DemoSection>\n\n    <DemoSection title=\"真实接口上传\">\n      <template #description>\n        <code>name</code> 设为接口要求的字段名 <code>multipart</code>，查询参数直接写进 <code>action</code>；该接口失败时也返回 HTTP 200、靠响应里的 <code>code</code> 区分，所以用 <code>http-request</code> 包一层 <code>ajaxUpload</code> 补业务码判断，成功后在 <code>on-success</code> 里把预览图换成服务端地址。\n      </template>\n      <DemoBlock layout=\"stack\">\n        <RebornUpload\n          v-model:file-list=\"realFiles\" :action=\"realAction\" name=\"multipart\" accept=\"image/*\" list-type=\"picture\"\n          class=\"w-full max-w-[400px]\" :http-request=\"realRequest\" :on-success=\"onRealSuccess\" :on-error=\"onRealError\"\n        >\n          <RebornButton color=\"neutral\" variant=\"outlined\">\n            <template #leading>\n              <Icon name=\"lucide:upload\" class=\"size-[16px]\" />\n            </template>\n            上传图片\n          </RebornButton>\n          <template #tip>\n            接口只收 jpg / png / gif / bmp，选一张 webp 可以看到业务码失败的效果\n          </template>\n        </RebornUpload>\n        <DemoNote tone=\"dimmed\" class=\"font-mono text-xs break-all whitespace-pre-wrap\">\n          {{ realEcho || '上传一张图片，这里回显接口返回的原始响应' }}\n        </DemoNote>\n        <DemoNote tone=\"dimmed\">\n          这是测试环境的真实接口，选中的图片会实际上传；需要登录态的接口在 <code>headers</code> 里带上令牌，写法见「额外参数与请求头」。\n        </DemoNote>\n      </DemoBlock>\n    </DemoSection>\n\n    <DemoSection title=\"断点续传\">\n      <template #description>\n        传入 <code>chunk</code> 适配器后改为分片上传：组件负责切片、并发、单片重试与跳过已传分片，使用方实现 <code>init</code>、<code>uploaded</code>、<code>uploadChunk</code>、<code>merge</code> 四步对接服务端；上传中的文件可以暂停，暂停或失败后从断点继续。\n      </template>\n      <DemoBlock layout=\"stack\">\n        <div class=\"flex items-center gap-3\">\n          <RebornSwitch v-model=\"flakyNetwork\" />\n          <span class=\"text-muted text-sm\">模拟网络不稳定（每片约 25% 概率中断，组件自动重试）</span>\n        </div>\n        <RebornUpload\n          ref=\"resumeRef\" v-model:file-list=\"resumeFiles\" :chunk=\"resumeAdapter\" multiple class=\"w-full max-w-[480px]\"\n        >\n          <template #trigger>\n            <RebornButton color=\"neutral\" variant=\"outlined\">\n              <template #leading>\n                <Icon name=\"lucide:folder-open\" class=\"size-[16px]\" />\n              </template>\n              选择文件\n            </RebornButton>\n          </template>\n          <div class=\"ml-3 inline-flex gap-2\">\n            <RebornButton variant=\"outlined\" color=\"neutral\" @click=\"addResumeTestFile\">\n              生成 8MB 测试文件\n            </RebornButton>\n            <RebornButton variant=\"text\" color=\"neutral\" :disabled=\"!resumeUploadingCount\" @click=\"resumeRef?.pause()\">\n              全部暂停\n            </RebornButton>\n            <RebornButton variant=\"text\" color=\"neutral\" :disabled=\"!resumeResumableCount\" @click=\"resumeRef?.resume()\">\n              全部继续\n            </RebornButton>\n          </div>\n          <template #tip>\n            按 512KB 切片、每次同时传 3 片；暂停后删掉文件再选同一个文件，会跳过服务端已收到的分片\n          </template>\n        </RebornUpload>\n        <DemoNote tone=\"dimmed\" class=\"font-mono text-xs\">\n          <template v-if=\"resumeLog.length\">\n            <div v-for=\"line in resumeLog\" :key=\"line.id\">\n              {{ line.text }}\n            </div>\n          </template>\n          <template v-else>\n            开始上传后，这里按时间倒序显示适配器各步骤的调用\n          </template>\n        </DemoNote>\n        <DemoNote tone=\"dimmed\">\n          演示的服务端是页面里的模拟实现，分片不会离开浏览器，刷新页面后记录清空。\n        </DemoNote>\n      </DemoBlock>\n    </DemoSection>\n\n    <DemoSection title=\"上传文件夹\">\n      <template #description>\n        开启 <code>directory</code> 后只能选择文件夹，夹内文件递归展开后逐个加入列表；同样支持拖入文件夹。\n      </template>\n      <DemoBlock layout=\"stack\">\n        <RebornUpload\n          v-model:file-list=\"folderFiles\" directory drag class=\"w-full max-w-[480px]\" :http-request=\"mockRequest\"\n          :ui=\"{ list: 'max-h-[200px] overflow-auto' }\"\n        >\n          <Icon name=\"lucide:folder-up\" class=\"size-[32px] text-gray-6\" />\n          <div>拖拽文件夹到此处，或 <span class=\"text-primary\">点击选择</span></div>\n        </RebornUpload>\n        <DemoNote tone=\"dimmed\" class=\"font-mono text-xs\">\n          已加入 {{ folderFiles.length }} 个文件\n        </DemoNote>\n      </DemoBlock>\n    </DemoSection>\n\n    <DemoSection title=\"自定义文件项\">\n      <template #description>\n        <code>file</code> 插槽接收 <code>file</code> 与 <code>index</code>，替换整条列表项；删除时调用实例方法 <code>handleRemove</code>。\n      </template>\n      <DemoBlock layout=\"stack\">\n        <RebornUpload\n          ref=\"customRef\" v-model:file-list=\"customFiles\" multiple class=\"w-full max-w-[480px]\"\n          :http-request=\"mockRequest\"\n        >\n          <RebornButton color=\"neutral\" variant=\"outlined\">\n            <template #leading>\n              <Icon name=\"lucide:upload\" class=\"size-[16px]\" />\n            </template>\n            点击上传\n          </RebornButton>\n          <template #file=\"{ file }\">\n            <Icon name=\"lucide:file-text\" class=\"size-[16px] shrink-0 text-gray-6\" />\n            <span class=\"text-default min-w-0 flex-1 truncate\">{{ file.name }}</span>\n            <span class=\"shrink-0 text-xs text-gray-6\">{{ formatSize(file.size) }}</span>\n            <span class=\"w-20 shrink-0 text-right text-xs\" :class=\"statusColors[file.status]\">\n              {{ file.status === 'uploading' ? `上传中 ${Math.round(file.percentage ?? 0)}%` : statusLabels[file.status] }}\n            </span>\n            <RebornButton size=\"sm\" variant=\"text\" color=\"neutral\" @click=\"customRef?.handleRemove(file)\">\n              删除\n            </RebornButton>\n          </template>\n        </RebornUpload>\n      </DemoBlock>\n    </DemoSection>\n\n    <DemoSection title=\"禁用\">\n      <template #description>\n        <code>disabled</code> 后不能选择文件，列表也不再显示删除按钮；图片仍可使用内置预览。\n      </template>\n      <DemoBlock layout=\"grid\" :columns=\"2\" align=\"start\">\n        <RebornUpload v-model:file-list=\"disabledFiles\" disabled class=\"w-full\">\n          <RebornButton color=\"neutral\" variant=\"outlined\" disabled>\n            <template #leading>\n              <Icon name=\"lucide:upload\" class=\"size-[16px]\" />\n            </template>\n            点击上传\n          </RebornButton>\n        </RebornUpload>\n        <RebornUpload v-model:file-list=\"disabledCardFiles\" list-type=\"picture-card\" disabled />\n      </DemoBlock>\n    </DemoSection>\n  </div>\n</template>\n"
+    }
+  ],
+  "related": [
+    "reborn-image",
+    "reborn-loading",
+    "reborn-progress",
+    "reborn-text",
+    "reborn-tooltip"
+  ],
+  "whenToUse": [
+    "表单里附带合同、简历等附件——用默认 listType=\"text\"，失败原因悬停失败图标查看。",
+    "上传头像、商品图等需要先看到缩略图的图片——用 listType=\"picture\" 或 \"picture-card\"。",
+    "一次放入一批文件或整个目录——用 drag 开启拖放区，必要时加 directory。",
+    "选好一批文件后统一提交——设 :auto-upload=\"false\"，再调用实例的 submit()。",
+    "上传走 SDK 直传或需要签名——用 http-request 替换默认 XHR，或用 data 异步生成签名字段。",
+    "上传视频、安装包等大文件，需要暂停、断网后续传——用 :chunk 传入分片适配器（init / uploaded / uploadChunk / merge），后端提供分片接口。"
+  ],
+  "whenNotToUse": [
+    "只需要在本地读取所选文件（导入 Excel、读取文本），不发请求——改用原生 <input type=\"file\">。",
+    "需要带动画的整块拖放区、文件不需要逐个展示进度——改用 file-upload。",
+    "小程序或 App 端选择图片——改用 uni.chooseImage 配合 uni.uploadFile，本组件仅 Web 可用。"
+  ],
+  "pitfalls": [
+    "text / picture 非拖拽形态下组件不内置按钮：要在 default 插槽放 <RebornButton color=\"neutral\" variant=\"outlined\">，聚焦与键盘操作由按钮提供；禁用时要给按钮同步 disabled，组件只拦截点击、不改按钮外观。",
+    "picture / picture-card 下上传失败的图片仍显示缩略图（本地预览地址失败时不释放），并以红色描边标出。",
+    "钩子是 prop 不是事件：要写成 :on-success、:before-upload 等，写成 @success 不会被调用；列表变化唯一的事件是 update:fileList。",
+    "超出 limit 时整批丢弃：按「已有数量 + 本次选择数量」判断，超出就触发 on-exceed，这一批一个都不加入，不会截取前几个。",
+    "通过 file-list 回显的历史文件没有 raw，缺省状态补为 success，submit() 会跳过它们。",
+    "before-upload 返回 false 或 reject 时文件直接移出列表，不经过 before-remove，但 on-remove 仍会触发；返回 File / Blob 时改为上传它。",
+    "未开 multiple 时只取第一个文件（拖入多个也一样）；directory 视为多选。",
+    "拖入与选择文件夹时组件会按 accept 再过滤一遍；非 directory 模式下拖入的文件夹会被忽略。",
+    "abort() 让上传中的文件回到 ready 且进度归零，不会移除；要连同列表一起清掉用 clearFiles()。",
+    "自定义 http-request 只有返回带 abort 方法的对象才能被中止；返回 Promise 时其结果自动转交成功 / 失败；同步抛错直接标记失败。",
+    "默认请求只按 HTTP 状态码判断成败：后端用 HTTP 200 加业务码表示失败时，要用 http-request 包一层 ajaxUpload，在其 onSuccess 里判断业务码并转交 onError；放到 :on-success 里判断为时已晚，文件已标记为成功。",
+    "文件名只有传入 on-preview 时才可点击，picture-card 的遮罩也只有此时才出现预览按钮。",
+    "同时提供 trigger 插槽时，default 插槽改为渲染在触发区之后，常用来放「开始上传」按钮。",
+    "chunk 与 http-request 二选一：传入 chunk 后上传全部走分片适配器，http-request 与 action / method / name 不再生效；data、headers、withCredentials 解析后放进适配器各步的参数。",
+    "分片适配器的每个请求都要接上参数里的 signal，否则暂停、中止或删除文件后请求仍在后台跑完。",
+    "组件只在内存里记录本次会话传完的分片；要做到删掉文件再选同一个文件接着传，init 须按文件指纹返回同一个会话，并提供 uploaded 返回服务端已收到的分片序号。",
+    "submit() 不继续已暂停（paused）的文件，要用 resume()；resume() 不再经过 before-upload；abort() 会丢弃分片断点，之后从第一片重来。",
+    "pause() / resume() 只在开启 chunk 时生效；暂停后进度退回到已完整传完的分片处，传到一半的分片继续时整片重传。",
+    "picture / picture-card 下视频缩略图取首帧（静音 video、preload=metadata），浏览器解码不了的格式退回通用文件图标；组件不内置播放器，播放由 on-preview 自行处理。"
+  ],
+  "dependencies": [
+    "clsx",
+    "tailwind-merge",
+    "tailwind-variants"
+  ],
+  "install": {
+    "cli": "npx reborn-ui@latest add reborn-upload"
+  },
+  "sourceRefs": {
+    "web": [
+      "app/components/reborn/ui/reborn-upload/RebornUpload.vue",
+      "app/components/reborn/ui/reborn-upload/index.ts",
+      "app/components/reborn/ui/reborn-upload/reborn-upload.config.ts",
+      "app/components/reborn/ui/reborn-upload/reborn-upload.utils.ts"
+    ]
+  },
+  "docPath": "content/2.components/input-and-forms/reborn-upload.md",
+  "_meta": {
+    "contentHash": "6690a9c6c657ee9e90e54b4c0e4b6bcbc1d6d6b2",
+    "hasOverride": true,
+    "extractors": {
+      "web": "ok",
+      "uniapp": "absent",
+      "docs": "found"
+    }
+  }
+}

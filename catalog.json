@@ -1,0 +1,4 @@
+{
+  "schemaVersion": 1, "name": "dsh-studio-design", "version": "0.1.0", "kind": "studio",
+  "packages": [{ "id": "design", "path": "studios/design" }]
+}

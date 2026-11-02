@@ -1,0 +1,31 @@
+{
+  "name": "dsh-studio-design-source",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "license": "MIT",
+  "engines": { "node": ">=22.19" },
+  "scripts": {
+    "build": "node scripts/build.mjs",
+    "check": "vue-tsc --noEmit && node scripts/check.mjs",
+    "test": "node --import tsx --test tests/*.test.ts",
+    "test:host": "node --test integration/*.test.mjs",
+    "pack": "node scripts/pack.mjs"
+  },
+  "devDependencies": {
+    "@modelcontextprotocol/sdk": "1.12.0",
+    "zod": "3.25.76",
+    "@tailwindcss/postcss": "4.3.3",
+    "@types/node": "22.20.1",
+    "@types/react": "19.2.15",
+    "@vue/compiler-sfc": "3.5.42",
+    "esbuild": "0.28.2",
+    "postcss": "8.5.32",
+    "react": "19.2.6",
+    "tailwindcss": "4.3.3",
+    "tsx": "4.22.4",
+    "typescript": "6.0.3",
+    "vue": "3.5.42",
+    "vue-tsc": "3.2.5"
+  }
+}

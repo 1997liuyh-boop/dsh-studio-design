@@ -1,0 +1,262 @@
+{
+  "$schema": "../schema/component.schema.json",
+  "id": "reborn-switch",
+  "title": "Switch 开关",
+  "description": "用于在两种状态间切换的开关组件，支持自定义开关值、加载态与切换前拦截。",
+  "category": "form",
+  "tags": [
+    "css",
+    "tailwind",
+    "switch",
+    "uniapp"
+  ],
+  "platforms": [
+    "web",
+    "uniapp"
+  ],
+  "props": [
+    {
+      "name": "defaultValue",
+      "type": "any",
+      "required": false,
+      "description": "非受控模式下的初始值（缺省取 `inactiveValue`）；绑定值被父级置回 `undefined` 时也回到该值。"
+    },
+    {
+      "name": "activeValue",
+      "type": "any",
+      "required": false,
+      "description": "打开状态对应的绑定值，默认 true；配合 inactiveValue 可绑定字符串/数字等任意值",
+      "default": "true"
+    },
+    {
+      "name": "inactiveValue",
+      "type": "any",
+      "required": false,
+      "description": "关闭状态对应的绑定值，默认 false",
+      "default": "false"
+    },
+    {
+      "name": "activeLabel",
+      "type": "string",
+      "required": false,
+      "description": "开启状态一侧显示的文案，字号固定 14px（`text-base`），不随 `size` 变化。"
+    },
+    {
+      "name": "inactiveLabel",
+      "type": "string",
+      "required": false,
+      "description": "关闭状态一侧显示的文案，字号规则同 `activeLabel`。"
+    },
+    {
+      "name": "disabled",
+      "type": "boolean",
+      "required": false,
+      "description": "是否禁用：不响应点击，两态轨道置为 `bg-gray-2`；`RebornForm` 级 `disabled` 同样生效。",
+      "default": "false"
+    },
+    {
+      "name": "loading",
+      "type": "boolean",
+      "required": false,
+      "description": "是否加载中：轨道内显示加载图标且开关不可点击（与 disabled 相互独立）",
+      "default": "false"
+    },
+    {
+      "name": "inlinePrompt",
+      "type": "boolean",
+      "required": false,
+      "description": "文本显示在开关内：activeLabel / inactiveLabel 渲染进轨道内部而非两侧（line 型轨道过细，不生效）",
+      "default": "false"
+    },
+    {
+      "name": "autoWidth",
+      "type": "boolean",
+      "required": false,
+      "description": "轨道宽度是否按两态点内文本的较长者撑开，切换时保持稳定；关闭（默认）时固定宽度、超出文本省略",
+      "default": "false"
+    },
+    {
+      "name": "wave",
+      "type": "boolean",
+      "required": false,
+      "description": "切换波纹：每次切换成功后从轨道边缘向外扩散一圈开态色并淡出；默认关闭，开启后仅作视觉反馈，不影响取值与事件",
+      "default": "false"
+    },
+    {
+      "name": "type",
+      "type": "typeof switchTypes[number]",
+      "required": false,
+      "description": "形态：circle 胶囊圆形（默认）/ round 圆角方形 / line 细线轨道 + 悬浮滑块",
+      "default": "'circle'"
+    },
+    {
+      "name": "borderColor",
+      "type": "string",
+      "required": false,
+      "description": "开关轨道的边框颜色（任意 CSS 色值），1px 实线；border-box 下不改变轨道外尺寸"
+    },
+    {
+      "name": "size",
+      "type": "typeof switchSizes[number]",
+      "required": false,
+      "description": "尺寸，三档规格见「尺寸：size」；显式设置时优先于所在表单的 `size`，未设置时跟随表单。",
+      "default": "'md'"
+    },
+    {
+      "name": "color",
+      "type": "typeof switchColors[number]",
+      "required": false,
+      "description": "语义色：开启态轨道与联动文案取该色。",
+      "default": "'primary'"
+    },
+    {
+      "name": "beforeChange",
+      "type": "() => boolean | Promise<boolean>",
+      "required": false,
+      "description": "切换前拦截钩子：返回 false、Promise 解析为 false 或 Promise reject 时取消本次切换，常用于二次确认/异步校验"
+    },
+    {
+      "name": "customClass",
+      "type": "any",
+      "required": false,
+      "description": "追加到根节点（wrapper）的自定义类名"
+    },
+    {
+      "name": "ui",
+      "type": "Partial<{\n    wrapper: ClassValue\n    input: ClassValue\n    track: ClassValue\n    activeTrack: ClassValue\n    inactiveTrack: ClassValue\n    thumb: ClassValue\n    loading: ClassValue\n    wave: ClassValue\n    inlineActive: ClassValue\n    inlineInactive: ClassValue\n    activeLabel: ClassValue\n    inactiveLabel: ClassValue\n  }>",
+      "required": false,
+      "description": "覆盖内部各区域样式类：wrapper 根容器、track 通用轨道、activeTrack/inactiveTrack 两态轨道、thumb 滑块、loading 加载图标、wave 切换波纹、activeLabel/inactiveLabel 两侧文案 可用键（从源码抽取，以此为准）——UniApp：activeLabel、activeTrack、inactiveLabel、inactiveTrack、inlineActive、inlineInactive、input、loading*、thumb、track、wave、wrapper。 带 * 的键对应插槽兜底节点：填了同名插槽，组件自带的节点被替换，这个键随之失效。",
+      "platform": "uniapp"
+    },
+    {
+      "name": "modelValue",
+      "type": "any",
+      "required": false,
+      "description": "双向绑定值",
+      "vModel": true
+    },
+    {
+      "name": "class",
+      "type": "any",
+      "required": false,
+      "description": "追加到根节点的自定义类名。未声明的 attrs 分两路：`style` 与 `data-*` 落到根节点，其余（`id`、`name`、`aria-*`、原生监听等）透传到内部隐藏的原生 checkbox。"
+    },
+    {
+      "name": "ui",
+      "type": "Partial<{\n    wrapper: ClassValue;\n    input: ClassValue;\n    track: ClassValue;\n    activeTrack: ClassValue;\n    inactiveTrack: ClassValue;\n    thumb: ClassValue;\n    wave: ClassValue;\n    inlineWrap: ClassValue;\n    inlineActive: ClassValue;\n    inlineInactive: ClassValue;\n    activeLabel: ClassValue;\n    inactiveLabel: ClassValue;\n  }>",
+      "required": false,
+      "description": "覆盖内部各区域样式类：wrapper 根容器、track 通用轨道、activeTrack/inactiveTrack 两态轨道、thumb 滑块、inlineWrap 点内文案容器、inlineActive/inlineInactive 点内两态文案、activeLabel/inactiveLabel 两侧文案 可用键（从源码抽取，以此为准）——Web：activeLabel、activeTrack、inactiveLabel、inactiveTrack、inlineActive、inlineInactive、inlineWrap、input、thumb、track、wave、wrapper。",
+      "platform": "web"
+    }
+  ],
+  "events": [
+    {
+      "name": "change",
+      "payload": "(e: 'change', value: any): void",
+      "description": "状态切换后触发（beforeChange 拦截通过后才会触发），参数与 update:modelValue 相同"
+    },
+    {
+      "name": "update:modelValue",
+      "description": "modelValue 变化时触发（v-model 同步）"
+    }
+  ],
+  "slots": [
+    {
+      "name": "inactiveLabel",
+      "description": "关闭态文案：默认渲染在轨道左侧；`inlinePrompt` 生效时渲染在轨道内，替代 `inactiveLabel` 属性。"
+    },
+    {
+      "name": "thumb",
+      "description": "完全接管滑块内部内容，优先级最高：填充后 `active` / `inactive` 与默认加载图标都不再渲染，`loading` 视觉需自行处理。"
+    },
+    {
+      "name": "active",
+      "description": "滑块内开态内容：仅开态渲染（`loading` 时让位给加载图标，`thumb` 插槽填充时不渲染）。"
+    },
+    {
+      "name": "inactive",
+      "description": "滑块内关态内容：仅关态渲染，其余规则同 `active`。"
+    },
+    {
+      "name": "activeLabel",
+      "description": "开启态文案：默认渲染在轨道右侧；`inlinePrompt` 生效时渲染在轨道内，替代 `activeLabel` 属性。"
+    }
+  ],
+  "exposes": [
+    {
+      "name": "focus",
+      "description": "`() => void` 标记聚焦态（为根节点追加 is-focused 类名）；uniapp 端无原生焦点行为"
+    },
+    {
+      "name": "blur",
+      "description": "复位样式聚焦态；uniapp 端不操作原生焦点。"
+    }
+  ],
+  "examples": [
+    {
+      "title": "Web 演示",
+      "path": "app/components/reborn/examples/reborn-switch/RebornSwitchDemo.vue",
+      "source": "demo",
+      "platform": "web",
+      "code": "<script setup lang=\"ts\">\nimport type { SwitchProps } from \"~/components/reborn/ui/reborn-switch/RebornSwitch.vue\";\nimport { DemoBlock, DemoNote, DemoSection, Icon, Playground } from '#components';\nimport { computed, onBeforeUnmount, ref, shallowRef } from 'vue';\nimport RebornButton from \"~/components/reborn/ui/reborn-button/RebornButton.vue\";\nimport { switchColors, switchSizes, switchTypes } from \"~/components/reborn/ui/reborn-switch/reborn-switch.config\";\nimport RebornSwitch from \"~/components/reborn/ui/reborn-switch/RebornSwitch.vue\";\n\nconst colorOptions = switchColors.map(c => ({ label: c.charAt(0).toUpperCase() + c.slice(1), value: c }));\nconst sizeOptions = switchSizes.map(s => ({ label: s.toUpperCase(), value: s as typeof switchSizes[number] }));\nconst typeOptions = switchTypes.map(t => ({ label: t, value: t as typeof switchTypes[number] }));\n\n// ─── 交互演练场 ─────────────────────────────────────────────────\n\n/** 演练场默认状态 */\nconst defaultState: Record<string, any> = {\n  size: \"md\",\n  color: \"primary\",\n  type: \"circle\",\n  activeLabel: \"开启\",\n  inactiveLabel: \"关闭\",\n  inlinePrompt: false,\n  wave: false,\n  disabled: false,\n  loading: false,\n};\n\nconst state = ref<Record<string, any>>({ ...defaultState });\n\n/** 演练场开关绑定值 */\nconst playValue = shallowRef(true);\n\n/** change 触发次数与最近载荷，让预览区的交互「有回应」 */\nconst changeCount = shallowRef(0);\nconst lastChange = shallowRef(\"—\");\nfunction onPlayChange(value: any) {\n  changeCount.value++;\n  lastChange.value = JSON.stringify(value);\n}\n\n/** 重置演练场配置 */\nfunction resetState() {\n  state.value = { ...defaultState };\n  playValue.value = true;\n  changeCount.value = 0;\n  lastChange.value = \"—\";\n}\n\n/** 演练场控制面板配置 */\nconst controls: any = [\n  {\n    title: \"基础属性\",\n    children: [\n      { label: \"尺寸规格\", key: \"size\", component: \"select\" as const, defaultValue: \"md\", props: { options: sizeOptions } },\n      { label: \"配色方案\", key: \"color\", component: \"select\" as const, defaultValue: \"primary\", props: { options: colorOptions } },\n      { label: \"形态（type）\", key: \"type\", component: \"select\" as const, defaultValue: \"circle\", props: { options: typeOptions } },\n      { label: \"开启文案\", key: \"activeLabel\", component: \"input\" as const, defaultValue: \"开启\" },\n      { label: \"关闭文案\", key: \"inactiveLabel\", component: \"input\" as const, defaultValue: \"关闭\" },\n    ],\n  },\n  {\n    title: \"状态\",\n    children: [\n      { label: \"文本显示在开关内（line 型不生效）\", key: \"inlinePrompt\", component: \"checkbox\" as const, defaultValue: false },\n      { label: \"切换波纹\", key: \"wave\", component: \"checkbox\" as const, defaultValue: false },\n      { label: \"禁用状态\", key: \"disabled\", component: \"checkbox\" as const, defaultValue: false },\n      { label: \"加载状态\", key: \"loading\", component: \"checkbox\" as const, defaultValue: false },\n    ],\n  },\n];\n\n/** 演练场右上角展示的传参明细：完整列出当前所有参数（含默认值） */\nconst switchCode = computed(() => {\n  const s = state.value;\n  const props: string[] = [\n    `v-model=\"value\"`,\n    `size=\"${s.size}\"`,\n    `color=\"${s.color}\"`,\n    `type=\"${s.type}\"`,\n    `active-label=\"${s.activeLabel}\"`,\n    `inactive-label=\"${s.inactiveLabel}\"`,\n    `:inline-prompt=\"${s.inlinePrompt}\"`,\n    `:wave=\"${s.wave}\"`,\n    `:disabled=\"${s.disabled}\"`,\n    `:loading=\"${s.loading}\"`,\n  ];\n  return `<RebornSwitch\\n  ${props.join(\"\\n  \")}\\n/>`;\n});\n\n// ─── 场景演示状态 ───────────────────────────────────────────────\n\n/** 基础用法演示 */\nconst basicValue = shallowRef(true);\n/** 颜色矩阵演示 */\nconst colorValue = shallowRef(true);\n/** 形态演示 */\nconst typeValue = shallowRef(true);\n/** 自定义颜色演示 */\nconst customColorValue = shallowRef(true);\n/** 轨道配色：开为绿、关为红，ring 随状态一起加深 */\nconst greenRedTrackUi: SwitchProps['ui'] = { activeTrack: 'bg-[#13ce66] ring-[#0f9d4e]', inactiveTrack: 'bg-[#ff4949] ring-[#d9363e]' };\n/** 轨道配色：track 给两态通用的 ring-2，开态用主题色、关态用浅灰 */\nconst outlinedTrackUi: SwitchProps['ui'] = { track: 'ring-2', activeTrack: 'bg-primary ring-primary/40', inactiveTrack: 'bg-[#f5f7fa] ring-[#dcdfe6]' };\n/** 点内文本演示 */\nconst inlineValue = shallowRef(true);\n/** 图文混排示例：两态轨道换成深红 / 深蓝，衬托白色文字与表情 */\nconst emojiPromptUi: SwitchProps['ui'] = { activeTrack: 'bg-[#9f1422]', inactiveTrack: 'bg-[#006ba8]' };\n/** 切换波纹演示：三个开关共用一个值，点一下可同时对比三种波纹色 */\nconst waveValue = shallowRef(false);\n/** 尺寸演示 */\nconst sizeValue = shallowRef(true);\n/** 自定义取值演示：绑定 'yes' / 'no' 而非布尔 */\nconst customValue = shallowRef(\"yes\");\n/** 拦截切换演示：Promise resolve(false) 时取消切换 */\nconst beforeChangeValue = shallowRef(false);\n/** 加载与插槽演示 */\nconst loadingValue = shallowRef(true);\nconst iconValue = shallowRef(true);\n/** 样式定制演示 */\nconst styledValue = shallowRef(true);\n/** 方形轨道：轨道与滑块都改成小圆角 */\nconst squareUi: SwitchProps['ui'] = { track: 'rounded-sm', thumb: 'rounded-sm' };\n/** 超大轨道：放大轨道并同步滑块尺寸变量，选中位移自动适配 */\nconst extraLargeUi: SwitchProps['ui'] = { track: 'h-9 w-16', thumb: '[--re-switch-thumb-size:32px]' };\n\n/** 未完成的确认随页面卸载取消，并结束对应 Promise。 */\nconst pendingConfirmations = new Map<ReturnType<typeof setTimeout>, (allowed: boolean) => void>();\nonBeforeUnmount(() => {\n  pendingConfirmations.forEach((resolve, timer) => { clearTimeout(timer); resolve(false); });\n  pendingConfirmations.clear();\n});\n\n/** 模拟异步二次确认：500ms 后弹出 confirm，取消则回滚 */\nfunction handleBeforeChange() {\n  return new Promise<boolean>((resolve) => {\n    const timer = setTimeout(() => {\n      pendingConfirmations.delete(timer);\n      // demo 语境下用原生 confirm 模拟二次确认，业务中请换成对话框组件\n      // eslint-disable-next-line no-alert\n      resolve(window.confirm(\"确认切换状态吗？\"));\n    }, 500);\n    pendingConfirmations.set(timer, resolve);\n  });\n}\n</script>\n\n<template>\n  <div class=\"flex w-full min-w-0 flex-col\">\n    <Playground v-model=\"state\" :controls=\"controls\" :code=\"switchCode\" component-name=\"RebornSwitch\" title=\"交互演练场\"\n      description=\"调节上方参数，实时查看开关表现；点击开关观察 change 事件回显。\">\n      <template #tag>\n        <RebornButton size=\"sm\" variant=\"soft\" color=\"neutral\" @click=\"resetState\">\n          <template #leading>\n            <Icon name=\"lucide:rotate-ccw\" size=\"12\" />\n          </template>\n          重置配置\n        </RebornButton>\n      </template>\n\n      <div class=\"flex w-full flex-col items-center gap-6\">\n        <RebornSwitch v-model=\"playValue\" :size=\"state.size\" :color=\"state.color\" :type=\"state.type\"\n          :active-label=\"state.activeLabel\" :inactive-label=\"state.inactiveLabel\" :inline-prompt=\"state.inlinePrompt\"\n          :wave=\"state.wave\" :disabled=\"state.disabled\" :loading=\"state.loading\" @change=\"onPlayChange\" />\n        <DemoNote tone=\"dimmed\" class=\"font-mono text-xs\">\n          value: {{ playValue }} · change × {{ changeCount }} · 最近载荷: {{ lastChange }}\n        </DemoNote>\n      </div>\n    </Playground>\n\n    <DemoSection title=\"基础用法\">\n      <template #description>\n        <code>v-model</code> 绑定开关状态，<code>active-label</code> / <code>inactive-label</code>\n        放在轨道两侧，当前状态一侧的文案高亮；<code>disabled</code> 后轨道置灰且不响应点击。\n      </template>\n      <DemoBlock class=\"items-center gap-8\">\n        <RebornSwitch v-model=\"basicValue\" />\n        <RebornSwitch v-model=\"basicValue\" active-label=\"开启\" inactive-label=\"关闭\" />\n        <RebornSwitch v-model=\"basicValue\" disabled active-label=\"禁用\" />\n      </DemoBlock>\n    </DemoSection>\n\n    <DemoSection title=\"语义色：color\" description=\"开启态轨道取语义色，关闭态统一为中性灰；两侧文案跟随开关状态与语义色联动高亮。\">\n      <DemoBlock class=\"gap-6\">\n        <RebornSwitch v-for=\"c in switchColors\" :key=\"c\" v-model=\"colorValue\" :color=\"c\" />\n      </DemoBlock>\n    </DemoSection>\n\n    <DemoSection title=\"尺寸：size\">\n      <template #description>\n        三档圆形规格：<code>sm</code> 16×28 / 滑块 12px、<code>md</code> 24×44 / 滑块 20px、<code>lg</code> 32×60 / 滑块\n        28px，滑块四周留白固定 2px。\n      </template>\n      <DemoBlock class=\"items-center gap-8\">\n        <RebornSwitch v-for=\"s in switchSizes\" :key=\"s\" v-model=\"sizeValue\" :size=\"s\" :active-label=\"s\" />\n      </DemoBlock>\n    </DemoSection>\n\n    <DemoSection title=\"形态：type\">\n      <template #description>\n        <code>type</code> 提供三种形态：<code>circle</code> 胶囊圆形（默认）、<code>round</code>\n        圆角方形、<code>line</code> 细线轨道 + 悬浮滑块——轨道压成滑块直径一半的细线，滑块骑在线上居中滑动。\n      </template>\n      <DemoBlock class=\"items-center gap-8\">\n        <RebornSwitch v-model=\"typeValue\" type=\"circle\" active-label=\"circle\" />\n        <RebornSwitch v-model=\"typeValue\" type=\"round\" active-label=\"round\" />\n        <RebornSwitch v-model=\"typeValue\" type=\"line\" active-label=\"line\" />\n      </DemoBlock>\n    </DemoSection>\n\n    <DemoSection title=\"点内文本：inline-prompt 与 auto-width\">\n      <template #description>\n        <code>inline-prompt</code> 把 <code>active-label</code> / <code>inactive-label</code>\n        搬进轨道内，适合空间紧凑、不便在两侧放文案的场景；轨道宽度固定，文案超出时截断省略。需要完整展示时加\n        <code>auto-width</code>，轨道随文案撑宽；第三行用 <code>#activeLabel</code> / <code>#inactiveLabel</code>\n        插槽换成图文混排，<code>#active</code> / <code>#inactive</code> 插槽替换滑块内容。\n      </template>\n      <DemoBlock class=\"items-center gap-8\">\n        <RebornSwitch v-model=\"inlineValue\" inline-prompt active-label=\"开\" inactive-label=\"关\" />\n        <RebornSwitch v-model=\"inlineValue\" inline-prompt type=\"round\" size=\"lg\" color=\"success\" active-label=\"ON\"\n          inactive-label=\"OFF\" />\n      </DemoBlock>\n      <DemoBlock class=\"items-center gap-8 mt-8\">\n        <RebornSwitch v-model=\"inlineValue\" inline-prompt size=\"lg\" active-label=\"超出省略\" inactive-label=\"超出省略\" />\n        <RebornSwitch v-model=\"inlineValue\" inline-prompt auto-width size=\"lg\" active-label=\"完整展示多个内容\"\n          inactive-label=\"多个内容\" />\n      </DemoBlock>\n      <DemoBlock class=\"items-center gap-8 mt-8\">\n        <RebornSwitch v-model=\"inlineValue\" inline-prompt auto-width size=\"lg\"\n          :ui=\"emojiPromptUi\">\n          <template #inactiveLabel>\n            <div class=\"flex items-center gap-1 text-white\">\n              我很不开心\n              <div class=\"bg-gray-1/40 p-1 rounded-full inline-flex\">\n                <Icon name=\"noto:enraged-face\" />\n              </div>\n            </div>\n          </template>\n          <template #activeLabel>\n            <div class=\"flex items-center gap-1 text-white\">\n              <div class=\"bg-gray-1/40 p-1 rounded-full inline-flex\">\n                <Icon name=\"noto:beaming-face-with-smiling-eyes\" />\n              </div>\n              我很开心\n            </div>\n          </template>\n          <template #active>\n            <Icon name=\"noto:heart-suit\" />\n          </template>\n          <template #inactive>\n            <Icon name=\"noto:broken-heart\" />\n          </template>\n        </RebornSwitch>\n      </DemoBlock>\n    </DemoSection>\n\n    <DemoSection title=\"切换波纹：wave\">\n      <template #description>\n        <code>wave</code> 在每次切换成功后从轨道边缘向外扩散一圈开态色并淡出（0.5s），给没有文案的开关补一个「这一下点到了」的反馈；波纹色取 <code>color</code> 语义色，不跟随\n        <code>ui</code> 背景覆盖。默认关闭，开启后只是装饰，不影响取值与事件。\n      </template>\n      <DemoBlock class=\"items-center gap-8\">\n        <RebornSwitch v-model=\"waveValue\" wave active-label=\"primary\" />\n        <RebornSwitch v-model=\"waveValue\" wave color=\"success\" active-label=\"success\" />\n        <RebornSwitch v-model=\"waveValue\" wave type=\"round\" color=\"secondary\" active-label=\"secondary\" />\n      </DemoBlock>\n    </DemoSection>\n\n    <DemoSection title=\"自定义取值：active-value 与 inactive-value\">\n      <template #description>\n        后端字段不是布尔时（如 <code>'yes'</code> / <code>'no'</code>、<code>1</code> / <code>0</code>），用\n        <code>active-value</code> / <code>inactive-value</code> 直接绑定原值，省去来回转换；<code>v-model</code> 与\n        <code>change</code> 载荷都是这两个值之一。\n      </template>\n      <DemoBlock class=\"flex-col items-start gap-3\">\n        <span class=\"text-dimmed text-xs font-medium\">\n          当前值 <code class=\"text-primary font-mono\">{{ customValue }}</code>\n        </span>\n        <RebornSwitch v-model=\"customValue\" active-value=\"yes\" inactive-value=\"no\" active-label=\"Yes\"\n          inactive-label=\"No\" />\n      </DemoBlock>\n    </DemoSection>\n\n    <DemoSection title=\"切换前拦截：before-change\">\n      <template #description>\n        <code>before-change</code> 在点击后、改值前执行：返回 <code>false</code> 或 Promise 解析为\n        <code>false</code> / 被 reject 时取消本次切换，适合二次确认或等待接口结果。等待期间开关不会提前翻转。\n      </template>\n      <DemoBlock class=\"items-center gap-8\">\n        <RebornSwitch v-model=\"beforeChangeValue\" :before-change=\"handleBeforeChange\" active-label=\"需要确认\" />\n      </DemoBlock>\n    </DemoSection>\n\n    <DemoSection title=\"加载与滑块插槽：loading、thumb 与 active / inactive\">\n      <template #description>\n        <code>loading</code> 期间锁定交互并在滑块内显示旋转图标；<code>#thumb</code> 插槽（作用域\n        <code>{ checked, loading }</code>）可完全接管滑块内容，<code>#active</code> / <code>#inactive</code>\n        只按状态替换滑块内图标。\n      </template>\n      <DemoBlock layout=\"grid\" align=\"start\" class=\"lg:grid-cols-2\">\n        <div class=\"flex flex-col gap-3\">\n          <span class=\"text-dimmed text-xs font-medium\">加载中 · <code>loading</code></span>\n          <RebornSwitch v-model=\"loadingValue\" active-label=\"加载中\" loading />\n        </div>\n        <div class=\"flex flex-col gap-3\">\n          <span class=\"text-dimmed text-xs font-medium\">加载中 + 自定义加载图标</span>\n          <RebornSwitch v-model=\"loadingValue\" active-label=\"自定义 Loading 图标\" loading>\n            <template #thumb=\"{ loading }\">\n              <Icon v-if=\"loading\" name=\"lucide:loader\" class=\"text-primary size-full animate-spin p-0.5\" />\n            </template>\n          </RebornSwitch>\n        </div>\n        <div class=\"flex flex-col gap-3\">\n          <span class=\"text-dimmed text-xs font-medium\">状态图标 · <code>#active</code> / <code>#inactive</code> 插槽</span>\n          <RebornSwitch v-model=\"iconValue\" active-label=\"勾选 / 叉号\" color=\"success\">\n            <template #active>\n              <Icon name=\"lucide:check\" class=\"size-3.5 text-success\" />\n            </template>\n            <template #inactive>\n              <Icon name=\"lucide:x\" class=\"text-dimmed size-3.5\" />\n            </template>\n          </RebornSwitch>\n        </div>\n      </DemoBlock>\n    </DemoSection>\n\n    <DemoSection title=\"轨道配色：ui.activeTrack 与 ui.inactiveTrack\">\n      <template #description>\n        语义色不够用时，<code>ui.activeTrack</code> / <code>ui.inactiveTrack</code> 分别覆盖开、关状态的背景与 ring；\n        <code>ui.track</code> 写两态通用的轨道样式。状态样式在通用样式之后合并，所以同类原子类以状态样式为准。\n      </template>\n      <DemoBlock class=\"items-center gap-8\">\n        <RebornSwitch v-model=\"customColorValue\"\n          :ui=\"greenRedTrackUi\" />\n        <RebornSwitch v-model=\"customColorValue\"\n          :ui=\"outlinedTrackUi\" />\n      </DemoBlock>\n    </DemoSection>\n\n    <DemoSection title=\"样式定制：ui.track 与滑块尺寸变量\">\n      <template #description>\n        <code>ui</code> 对象可覆写 <code>track</code> / <code>thumb</code>\n        的原子类；选中位移按「右缘贴轨道右端收 2px」自动计算，改轨道宽高时只需同步\n        <code>--re-switch-thumb-size</code> 变量，不必改位移。\n      </template>\n      <DemoBlock layout=\"grid\" align=\"start\" class=\"lg:grid-cols-2\">\n        <div class=\"flex flex-col gap-3\">\n          <span class=\"text-dimmed text-xs font-medium\">方形轨道 · <code>ui.track</code> / <code>ui.thumb</code></span>\n          <RebornSwitch v-model=\"styledValue\" active-label=\"方形 UI\"\n            :ui=\"squareUi\" />\n        </div>\n        <div class=\"flex flex-col gap-3\">\n          <span class=\"text-dimmed text-xs font-medium\">超大尺寸 · 设置滑块尺寸变量，位移自动适配</span>\n          <RebornSwitch v-model=\"styledValue\" active-label=\"自定义 XL\"\n            :ui=\"extraLargeUi\" />\n        </div>\n      </DemoBlock>\n    </DemoSection>\n  </div>\n</template>\n"
+    },
+    {
+      "title": "UniApp 演示",
+      "path": "packages/uniapp-project/src/pages/reborn-switch/RebornSwitchDemo.vue",
+      "source": "demo",
+      "platform": "uniapp",
+      "code": "<script setup lang=\"ts\">\nimport { shallowRef } from 'vue'\nimport ReButton from '@/components/reborn-button/RebornButton.vue'\nimport RebornCard from '@/components/reborn-card/RebornCard.vue'\nimport RebornPage from '@/components/reborn-page/RebornPage.vue'\nimport RebornSwitch from '@/components/reborn-switch/RebornSwitch.vue'\n\nconst sizes = ['sm', 'md', 'lg'] as const\nconst colors = ['primary', 'secondary', 'success', 'warning', 'error', 'info', 'neutral'] as const\n\n// ─── 演练场状态 ─────────────────────────────────────────────────\n\n/** 演练场开关绑定值 */\nconst playValue = shallowRef(true)\nconst currentSize = shallowRef<typeof sizes[number]>('md')\nconst currentColor = shallowRef<typeof colors[number]>('primary')\nconst isDisabled = shallowRef(false)\nconst isLoading = shallowRef(false)\n\n/** change 触发次数，让交互「有回应」 */\nconst changeCount = shallowRef(0)\nfunction onPlayChange() {\n  changeCount.value++\n}\n\n// ─── 场景演示状态 ───────────────────────────────────────────────\n\n/** 颜色矩阵演示 */\nconst colorValue = shallowRef(true)\n/** 形态演示 */\nconst typeValue = shallowRef(true)\n/** 自定义颜色演示 */\nconst customColorValue = shallowRef(true)\n/** 点内文本演示 */\nconst inlineValue = shallowRef(true)\n/** 尺寸演示 */\nconst sizeValue = shallowRef(true)\n/** 自定义取值演示：绑定 'yes' / 'no' 而非布尔 */\nconst customValue = shallowRef('yes')\n/** 拦截切换演示 */\nconst beforeChangeValue = shallowRef(false)\n/** 加载与插槽演示 */\nconst loadingValue = shallowRef(true)\nconst iconValue = shallowRef(true)\n/** 样式定制演示 */\nconst styledValue = shallowRef(true)\n\n/** 二次确认：uni.showModal 取消时回滚本次切换 */\nfunction handleBeforeChange() {\n  return new Promise<boolean>((resolve) => {\n    uni.showModal({\n      title: '提示',\n      content: '确认切换状态吗？',\n      success: (res) => {\n        resolve(res.confirm)\n      },\n      fail: () => {\n        resolve(false)\n      },\n    })\n  })\n}\n</script>\n\n<template>\n  <RebornPage title=\"开关\" description=\"允许用户在两种状态之间即时切换的控件。\" custom-class=\"flex flex-col gap-y-4\">\n    <!-- 演练场 -->\n    <RebornCard title=\"自定义\" custom-class=\"space-y-4\">\n      <view class=\"flex items-center justify-between\">\n        <RebornSwitch\n          v-model=\"playValue\" :size=\"currentSize\" :color=\"currentColor\" active-label=\"开启\"\n          inactive-label=\"关闭\" :disabled=\"isDisabled\" :loading=\"isLoading\" @change=\"onPlayChange\"\n        />\n        <text class=\"text-24 text-gray-6 font-mono\">change × {{ changeCount }}</text>\n      </view>\n\n      <view class=\"flex justify-between\">\n        <text class=\"text-24 text-gray-6\">尺寸 (Size)</text>\n        <view class=\"flex flex-wrap gap-2\">\n          <view v-for=\"size in sizes\" :key=\"size\">\n            <ReButton\n              size=\"xs\" :variant=\"currentSize === size ? 'filled' : 'outlined'\"\n              :color=\"currentSize === size ? 'primary' : 'neutral'\" @tap=\"currentSize = size\"\n            >\n              {{ size }}\n            </ReButton>\n          </view>\n        </view>\n      </view>\n      <view class=\"flex justify-between\">\n        <text class=\"text-24 text-gray-6\">颜色 (Color)</text>\n        <view class=\"flex flex-wrap gap-2\">\n          <view\n            v-for=\"c in colors\" :key=\"c\"\n            class=\"\n              size-[32rpx] cursor-pointer rounded-full ring-2 ring-transparent\n              ring-offset-2 transition-all\n            \"\n            :class=\"currentColor === c ? 'scale-110 ring-gray-4' : ''\"\n            :style=\"{ backgroundColor: `var(--color-${c})` }\"\n            @click=\"currentColor = c\"\n          />\n        </view>\n      </view>\n      <view class=\"flex justify-between\">\n        <text class=\"text-24 text-gray-6\">禁用</text>\n        <RebornSwitch v-model=\"isDisabled\" size=\"sm\" />\n      </view>\n      <view class=\"flex justify-between\">\n        <text class=\"text-24 text-gray-6\">加载中</text>\n        <RebornSwitch v-model=\"isLoading\" size=\"sm\" />\n      </view>\n    </RebornCard>\n\n    <!-- 颜色 -->\n    <RebornCard title=\"颜色\" custom-class=\"space-y-4\">\n      <text class=\"text-24 text-gray-6\">开启态轨道取语义色，关闭态统一为中性灰</text>\n      <view class=\"flex flex-wrap items-center gap-4\">\n        <RebornSwitch v-for=\"c in colors\" :key=\"c\" v-model=\"colorValue\" :color=\"c\" />\n      </view>\n    </RebornCard>\n\n    <!-- 尺寸 -->\n    <RebornCard title=\"尺寸\" custom-class=\"space-y-4\">\n      <text class=\"text-24 text-gray-6\">sm 16×28 / md 24×44 / lg 32×60，滑块四周留白固定 2px</text>\n      <view class=\"flex flex-wrap items-center gap-6\">\n        <RebornSwitch v-for=\"s in sizes\" :key=\"s\" v-model=\"sizeValue\" :size=\"s\" :active-label=\"s\" />\n      </view>\n    </RebornCard>\n\n    <!-- 自定义颜色 -->\n    <RebornCard title=\"自定义颜色\" custom-class=\"space-y-4\">\n      <text class=\"text-24 text-gray-6\">ui.activeTrack / ui.inactiveTrack 分别设置两态背景与 ring，ui.track 设置通用轨道样式</text>\n      <view class=\"flex flex-wrap items-center gap-6\">\n        <RebornSwitch v-model=\"customColorValue\" :ui=\"{ activeTrack: 'bg-[#13ce66] ring-[#0f9d4e]', inactiveTrack: 'bg-[#ff4949] ring-[#d9363e]' }\" />\n        <RebornSwitch v-model=\"customColorValue\" :ui=\"{ track: 'ring-2', activeTrack: 'bg-primary ring-primary/40', inactiveTrack: 'bg-[#f5f7fa] ring-[#dcdfe6]' }\" />\n      </view>\n    </RebornCard>\n\n    <!-- 形态 -->\n    <RebornCard title=\"形态\" custom-class=\"space-y-4\">\n      <text class=\"text-24 text-gray-6\">type：circle 胶囊圆形（默认）/ round 圆角方形 / line 细线轨道 + 悬浮滑块</text>\n      <view class=\"flex flex-wrap items-center gap-6\">\n        <RebornSwitch v-model=\"typeValue\" type=\"circle\" active-label=\"circle\" />\n        <RebornSwitch v-model=\"typeValue\" type=\"round\" active-label=\"round\" />\n        <RebornSwitch v-model=\"typeValue\" type=\"line\" active-label=\"line\" />\n      </view>\n    </RebornCard>\n\n    <!-- 点内文本 -->\n    <RebornCard title=\"点内文本\" custom-class=\"space-y-4\">\n      <text class=\"text-24 text-gray-6\">inline-prompt 把两侧文案渲染进开关内部，文案建议 1-2 字；line 型不生效</text>\n      <view class=\"flex flex-wrap items-center gap-6\">\n        <RebornSwitch v-model=\"inlineValue\" inline-prompt active-label=\"开\" inactive-label=\"关\" />\n        <RebornSwitch\n          v-model=\"inlineValue\" inline-prompt type=\"round\" size=\"lg\" color=\"success\"\n          active-label=\"ON\" inactive-label=\"OFF\"\n        />\n      </view>\n      <text class=\"text-24 text-gray-6\">固定宽度下长文本超出省略；auto-width 让轨道随文本撑开完整显示</text>\n      <view class=\"flex flex-wrap items-center gap-6\">\n        <RebornSwitch v-model=\"inlineValue\" inline-prompt size=\"lg\" active-label=\"已开启通知\" inactive-label=\"已关闭通知\" />\n        <RebornSwitch\n          v-model=\"inlineValue\" inline-prompt auto-width size=\"lg\" active-label=\"已开启通知\"\n          inactive-label=\"已关闭通知\"\n        />\n      </view>\n    </RebornCard>\n\n    <!-- 取值与拦截 -->\n    <RebornCard title=\"取值与拦截\" custom-class=\"space-y-4\">\n      <view class=\"flex flex-col gap-2\">\n        <text class=\"text-24 text-gray-6\">自定义取值（当前 {{ customValue }}）</text>\n        <RebornSwitch\n          v-model=\"customValue\" active-value=\"yes\" inactive-value=\"no\" active-label=\"Yes\"\n          inactive-label=\"No\"\n        />\n      </view>\n      <view class=\"flex flex-col gap-2\">\n        <text class=\"text-24 text-gray-6\">切换前拦截（beforeChange + showModal 二次确认）</text>\n        <RebornSwitch v-model=\"beforeChangeValue\" :before-change=\"handleBeforeChange\" active-label=\"需确认\" />\n      </view>\n    </RebornCard>\n\n    <!-- 加载与插槽 -->\n    <RebornCard title=\"加载与插槽\" custom-class=\"space-y-4\">\n      <view class=\"flex flex-col gap-2\">\n        <text class=\"text-24 text-gray-6\">loading 期间锁定交互</text>\n        <RebornSwitch v-model=\"loadingValue\" active-label=\"加载中\" loading />\n      </view>\n      <view class=\"flex flex-col gap-2\">\n        <text class=\"text-24 text-gray-6\">thumb 插槽自定义加载图标</text>\n        <RebornSwitch v-model=\"loadingValue\" active-label=\"自定义 Loading 图标\" loading>\n          <template #thumb=\"{ loading }\">\n            <view v-if=\"loading\" class=\"i-lucide-loader flex size-[32rpx] animate-spin p-0.5 text-primary\" />\n          </template>\n        </RebornSwitch>\n      </view>\n      <view class=\"flex flex-col gap-2\">\n        <text class=\"text-24 text-gray-6\">active / inactive 插槽按开关状态渲染滑块内图标</text>\n        <RebornSwitch v-model=\"iconValue\" active-label=\"勾选 / 叉号\" color=\"success\">\n          <template #active>\n            <view class=\"i-lucide-check flex size-[28rpx] text-success\" />\n          </template>\n          <template #inactive>\n            <view class=\"i-lucide-x flex size-[28rpx] text-gray-5\" />\n          </template>\n        </RebornSwitch>\n      </view>\n    </RebornCard>\n\n    <!-- 样式定制 -->\n    <RebornCard title=\"样式定制\" custom-class=\"space-y-4\">\n      <view class=\"flex flex-col gap-2\">\n        <text class=\"text-24 text-gray-6\">方形轨道（ui.track / ui.thumb）</text>\n        <RebornSwitch\n          v-model=\"styledValue\" active-label=\"方形 UI\"\n          :ui=\"{ track: 'rounded-ui-2xs', thumb: 'rounded-ui-2xs' }\"\n        />\n      </view>\n      <view class=\"flex flex-col gap-2\">\n        <text class=\"text-24 text-gray-6\">超大尺寸：只覆写宽高，选中位移自动适配</text>\n        <RebornSwitch\n          v-model=\"styledValue\" active-label=\"自定义 XL\" :ui=\"{\n            track: 'h-[36px] w-[64px]',\n            thumb: '[--re-switch-thumb-size:64rpx]',\n          }\"\n        />\n      </view>\n    </RebornCard>\n  </RebornPage>\n</template>\n"
+    }
+  ],
+  "related": [],
+  "whenToUse": [
+    "设置项的启用 / 停用切换。",
+    "绑定值不是布尔时，用 activeValue / inactiveValue 自定义开与关对应的值。",
+    "切换前需要异步确认或校验：beforeChange 支持返回 boolean 或 Promise<boolean>。",
+    "需要在轨道上显示开关文案（activeLabel / inactiveLabel 属性或同名插槽）。"
+  ],
+  "whenNotToUse": [
+    "一组互斥选项改用 reborn-radio。",
+    "多项勾选组合改用 reborn-checkbox。"
+  ],
+  "pitfalls": [
+    "web 与 uniapp 双端均可用。",
+    "modelValue 为受控值，非受控场景用 defaultValue 设初始值；绑定值被置回 undefined 时同样回到 defaultValue（缺省 inactiveValue）。",
+    "loading 为加载态展示，与 disabled 是两个独立属性。",
+    "web 端未声明的 attrs 分两路：style 与 data-* 落到根节点 label，其余（id、name、aria-*、原生监听）落到隐藏的原生 checkbox；键盘聚焦后按空格切换，与点击同走 beforeChange。",
+    "UniApp的focus只设置is-focused样式标记，blur用于复位；beforeChange期间连点不会重复提交，表单禁用同样阻止切换。"
+  ],
+  "dependencies": [
+    "@weapp-tailwindcss/merge-v3",
+    "@weapp-tailwindcss/variants-v3",
+    "clsx",
+    "motion-v",
+    "tailwind-merge",
+    "tailwind-variants"
+  ],
+  "install": {
+    "cli": "npx reborn-ui@latest add reborn-switch"
+  },
+  "sourceRefs": {
+    "web": [
+      "app/components/reborn/ui/reborn-switch/RebornSwitch.vue",
+      "app/components/reborn/ui/reborn-switch/index.ts",
+      "app/components/reborn/ui/reborn-switch/reborn-switch.config.ts"
+    ],
+    "uniapp": [
+      "packages/uniapp-project/src/components/reborn-switch/RebornSwitch.vue",
+      "packages/uniapp-project/src/components/reborn-switch/index.ts",
+      "packages/uniapp-project/src/components/reborn-switch/reborn-switch.config.ts"
+    ]
+  },
+  "docPath": "content/2.components/input-and-forms/reborn-switch.md",
+  "_meta": {
+    "contentHash": "d4c162542f6cf2d0106c92708d6c84d84b545054",
+    "hasOverride": true,
+    "extractors": {
+      "web": "ok",
+      "uniapp": "ok",
+      "docs": "found"
+    }
+  }
+}

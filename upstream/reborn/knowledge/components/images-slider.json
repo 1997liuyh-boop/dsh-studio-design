@@ -1,0 +1,157 @@
+{
+  "$schema": "../schema/component.schema.json",
+  "id": "images-slider",
+  "title": "图片滑块",
+  "description": "用于全屏轮播一组背景图并叠加覆盖层内容的图片滑块组件。",
+  "category": "misc",
+  "tags": [
+    "css",
+    "tailwind",
+    "images",
+    "aceternity-ui"
+  ],
+  "platforms": [
+    "web"
+  ],
+  "props": [
+    {
+      "name": "images",
+      "type": "string[]",
+      "required": false,
+      "description": "图片地址列表，全部预加载完成后才开始切换",
+      "default": "() => []"
+    },
+    {
+      "name": "hideOverlay",
+      "type": "boolean",
+      "required": false,
+      "description": "隐藏覆盖层（默认插槽所在层）",
+      "default": "false"
+    },
+    {
+      "name": "overlayClass",
+      "type": "string",
+      "required": false,
+      "description": "覆盖层追加的类名",
+      "default": "\"\""
+    },
+    {
+      "name": "imageClass",
+      "type": "string",
+      "required": false,
+      "description": "图片元素的类名",
+      "default": "\"bg-cover bg-center bg-no-repeat\""
+    },
+    {
+      "name": "enterFromClass",
+      "type": "string",
+      "required": false,
+      "description": "进场起始类名",
+      "default": "\"scale-0 origin-center\""
+    },
+    {
+      "name": "enterActiveClass",
+      "type": "string",
+      "required": false,
+      "description": "进场过渡类名",
+      "default": "\"transition-transform duration-300 ease-in-out\""
+    },
+    {
+      "name": "leaveActiveClass",
+      "type": "string",
+      "required": false,
+      "description": "离场过渡类名",
+      "default": "\"transition-transform duration-300 ease-in-out\""
+    },
+    {
+      "name": "autoplay",
+      "type": "boolean | number | string",
+      "required": false,
+      "description": "自动播放：true 为 5000 毫秒，数字或数字字符串为间隔毫秒，false 关闭",
+      "default": "false"
+    },
+    {
+      "name": "direction",
+      "type": "\"vertical\" | \"horizontal\"",
+      "required": false,
+      "description": "切换方向，决定离场的位移方向",
+      "default": "\"vertical\""
+    },
+    {
+      "name": "perspective",
+      "type": "string",
+      "required": false,
+      "description": "容器的 CSS perspective",
+      "default": "\"1000px\""
+    },
+    {
+      "name": "modelValue",
+      "type": "number",
+      "required": false,
+      "description": "双向绑定值",
+      "vModel": true,
+      "default": "0"
+    }
+  ],
+  "events": [
+    {
+      "name": "update:modelValue",
+      "description": "modelValue 变化时触发（v-model 同步）",
+      "payload": "(value: number)"
+    }
+  ],
+  "slots": [
+    {
+      "name": "default",
+      "description": "覆盖层内容，图片加载结束后进场；外层是一个 `size-full` 容器，可放多个根节点。"
+    }
+  ],
+  "exposes": [],
+  "examples": [
+    {
+      "title": "Web 演示",
+      "path": "app/components/reborn/examples/images-slider/ImagesSliderDemo.vue",
+      "source": "demo",
+      "platform": "web",
+      "code": "<script lang=\"ts\" setup>\n/** 轮播用的示例图片，实际使用时替换为业务图即可 */\nconst images = [\n  \"https://picsum.photos/seed/waiting/1920/1080\",\n  \"https://picsum.photos/seed/full-collapse/1920/1080\",\n  \"https://picsum.photos/seed/five-stories-falling/1920/1080\",\n  \"https://picsum.photos/seed/war-all-the-time/1920/1080\",\n  \"https://picsum.photos/seed/a-city-by-the-light-divided/1920/1080\",\n  \"https://picsum.photos/seed/common-existence/1920/1080\",\n  \"https://picsum.photos/seed/no-devolucion/1920/1080\",\n];\n</script>\n\n<template>\n  <DemoSection\n    title=\"基础用法\"\n    description=\"ImagesSlider 会预加载全部图片后再开始切换，默认插槽覆盖在图片之上，可用于放置标题与行动按钮。\"\n  >\n    <DemoBlock layout=\"stack\">\n      <ImagesSlider\n        :images=\"images\"\n        autoplay\n      >\n        <!-- 内容层叠在图片之上，底部渐变仅用于保证文字可读性 -->\n        <div\n          class=\"flex size-full items-end justify-center bg-linear-to-b from-transparent via-transparent to-black/80 p-8\"\n        >\n          <div class=\"max-w-prose text-center text-white\">\n            <h3 class=\"mb-8 text-5xl max-md:text-2xl\">没人要求，但它就是很好看的图片轮播</h3>\n            <button\n              type=\"button\"\n              class=\"border-current/50 rounded-full border px-4 py-2 text-sm transition-colors hover:border-current\"\n            >\n              立即加入\n            </button>\n          </div>\n        </div>\n      </ImagesSlider>\n    </DemoBlock>\n  </DemoSection>\n</template>\n"
+    }
+  ],
+  "related": [],
+  "whenToUse": [
+    "Hero 区需要全屏图片轮播并在图上叠加标题、按钮时。",
+    "需要键盘导航或 autoplay 自动播放的图片背景切换。",
+    "需要通过 v-model 获取或控制当前图片索引时。"
+  ],
+  "whenNotToUse": [
+    "常规卡片式轮播或跨端场景，改用 reborn-carousel。",
+    "卡片内容轮播展示，改用 apple-card-carousel。"
+  ],
+  "pitfalls": [
+    "仅 web 端可用，依赖 @vueuse/core。",
+    "图片以背景图方式渲染（默认 imageClass 为 bg-cover bg-center），非 img 标签。",
+    "覆盖层内容通过默认插槽传入；hideOverlay 为 true 时插槽不渲染。",
+    "过渡方向默认 vertical，可通过 direction 与 enterFromClass 等类名自定义动画。"
+  ],
+  "dependencies": [
+    "@vueuse/core"
+  ],
+  "install": {
+    "cli": "npx reborn-ui@latest add images-slider"
+  },
+  "sourceRefs": {
+    "web": [
+      "app/components/reborn/ui/images-slider/ImagesSlider.vue",
+      "app/components/reborn/ui/images-slider/index.ts"
+    ]
+  },
+  "docPath": "content/2.components/miscellaneous/images-slider.md",
+  "_meta": {
+    "contentHash": "7dbaac345520122e5d98dc181ac3a20939c5f746",
+    "hasOverride": true,
+    "extractors": {
+      "web": "ok",
+      "uniapp": "absent",
+      "docs": "found"
+    }
+  }
+}

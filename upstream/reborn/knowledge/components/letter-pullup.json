@@ -1,0 +1,85 @@
+{
+  "$schema": "../schema/component.schema.json",
+  "id": "letter-pullup",
+  "title": "字符上提",
+  "description": "用于让一段文字逐字符错落上提进场的文字动画组件。",
+  "category": "effect",
+  "tags": [
+    "css",
+    "tailwind",
+    "magic-ui"
+  ],
+  "platforms": [
+    "web"
+  ],
+  "props": [
+    {
+      "name": "class",
+      "type": "string",
+      "required": false,
+      "description": "应用于组件的类名。"
+    },
+    {
+      "name": "words",
+      "type": "string",
+      "required": true,
+      "description": "要做动画的文字。",
+      "default": "Staggered Letter Pull Up"
+    },
+    {
+      "name": "delay",
+      "type": "number",
+      "required": false,
+      "description": "每个字符动画的延迟（秒）。",
+      "default": "0.05"
+    }
+  ],
+  "events": [],
+  "slots": [],
+  "exposes": [],
+  "examples": [
+    {
+      "title": "Web 演示",
+      "path": "app/components/reborn/examples/letter-pullup/LetterPullupDemo.vue",
+      "source": "demo",
+      "platform": "web",
+      "code": "<template>\n  <DemoSection title=\"基础用法\">\n    <DemoBlock\n      layout=\"stack\"\n      align=\"center\"\n    >\n      <LetterPullup\n        words=\"逐字上浮\"\n        :delay=\"0.05\"\n        class=\"text-highlighted\"\n      />\n    </DemoBlock>\n  </DemoSection>\n</template>\n"
+    }
+  ],
+  "related": [],
+  "whenToUse": [
+    "标题、口号需要逐字进场的强调动画时。",
+    "Hero 区文字需要轻量级错落出现效果时。"
+  ],
+  "whenNotToUse": [
+    "需要在多段文本间循环切换，改用 flip-words 或 morphing-text。",
+    "需要打字机逐字输出效果，改用 reborn-typewriter。"
+  ],
+  "pitfalls": [
+    "仅 web 端可用，依赖 motion-v。",
+    "文字通过 words prop（必填字符串）传入，不支持插槽内容。",
+    "delay 为每个字符的动画延迟，单位是秒（默认 0.05）。"
+  ],
+  "dependencies": [
+    "motion-v"
+  ],
+  "install": {
+    "cli": "npx reborn-ui@latest add letter-pullup"
+  },
+  "sourceRefs": {
+    "web": [
+      "app/components/reborn/ui/letter-pullup/LetterPullup.vue",
+      "app/components/reborn/ui/letter-pullup/index.ts"
+    ]
+  },
+  "docPath": "content/2.components/text-animations/letter-pullup.md",
+  "_meta": {
+    "contentHash": "124fd4c94166d6da99bd588f810a76ac279c065a",
+    "hasOverride": true,
+    "extractors": {
+      "web": "ok",
+      "uniapp": "absent",
+      "docs": "found"
+    }
+  }
+}

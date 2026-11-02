@@ -1,0 +1,264 @@
+{
+  "$schema": "../schema/component.schema.json",
+  "id": "reborn-rate",
+  "title": "Rate 评分",
+  "description": "用于星级评分录入与展示的双端组件，支持半星与悬停预览。",
+  "category": "form",
+  "tags": [
+    "css",
+    "tailwind",
+    "rate",
+    "rating",
+    "star",
+    "uniapp"
+  ],
+  "platforms": [
+    "web",
+    "uniapp"
+  ],
+  "props": [
+    {
+      "name": "count",
+      "type": "number",
+      "required": false,
+      "description": "星星总数",
+      "default": "5"
+    },
+    {
+      "name": "allowHalf",
+      "type": "boolean",
+      "required": false,
+      "description": "允许半星",
+      "default": "false"
+    },
+    {
+      "name": "showValue",
+      "type": "boolean",
+      "required": false,
+      "description": "显示分数",
+      "default": "false"
+    },
+    {
+      "name": "disabled",
+      "type": "boolean",
+      "required": false,
+      "description": "是否禁用",
+      "default": "false"
+    },
+    {
+      "name": "readonly",
+      "type": "boolean",
+      "required": false,
+      "description": "是否只读",
+      "default": "false"
+    },
+    {
+      "name": "icon",
+      "type": "string",
+      "required": false,
+      "description": "未选中图标 class",
+      "default": "'i-lucide-star'"
+    },
+    {
+      "name": "activeIcon",
+      "type": "string",
+      "required": false,
+      "description": "选中图标 class",
+      "default": "'i-lucide-star'"
+    },
+    {
+      "name": "halfIcon",
+      "type": "string",
+      "required": false,
+      "description": "半星选中图标 class"
+    },
+    {
+      "name": "size",
+      "type": "(typeof rateSizes)[number]",
+      "required": false,
+      "description": "尺寸",
+      "default": "'md'"
+    },
+    {
+      "name": "color",
+      "type": "(typeof rateColors)[number]",
+      "required": false,
+      "description": "颜色",
+      "default": "'warning'"
+    },
+    {
+      "name": "ui",
+      "type": "Partial<{\n    wrapper: ClassValue\n    star: ClassValue\n    icon: ClassValue\n    iconActive: ClassValue\n    value: ClassValue\n  }>",
+      "required": false,
+      "description": "样式覆盖 可用键（从源码抽取，以此为准）——两端：icon、iconActive、star、value*、wrapper。 带 * 的键对应插槽兜底节点：填了同名插槽，组件自带的节点被替换，这个键随之失效。",
+      "default": "() => ({})"
+    },
+    {
+      "name": "customClass",
+      "type": "any",
+      "required": false,
+      "description": "自定义 class"
+    },
+    {
+      "name": "modelValue",
+      "type": "number",
+      "required": false,
+      "description": "双向绑定值",
+      "vModel": true,
+      "default": "0"
+    },
+    {
+      "name": "clearable",
+      "type": "boolean",
+      "required": false,
+      "description": "再次点击当前分值时是否清零",
+      "default": "false"
+    },
+    {
+      "name": "formatText",
+      "type": "(value: number) => string",
+      "required": false,
+      "description": "分数区域的自定义文案：接收已提交的分值、返回要显示的文字，传入后无需 showValue；更复杂的内容请用 value 插槽"
+    },
+    {
+      "name": "icons",
+      "type": "RateIcons",
+      "required": false,
+      "description": "选中图标按分段自定义，所有点亮的星统一使用当前分值命中的那一段： 数组按 lowThreshold / highThreshold 分低、中、高三段； 对象以键为分段上界（含），值为 { type, url }，type 取 icon（Nuxt Icon 名）或 image（图片地址）， excluded 为 true 时该段不含上界本身"
+    },
+    {
+      "name": "colors",
+      "type": "RateColors",
+      "required": false,
+      "description": "选中图标颜色按分段自定义，分段规则同 icons： 数组为低、中、高三段颜色；对象的值为颜色字符串或 { value, excluded }。不传时沿用 color 语义色"
+    },
+    {
+      "name": "lowThreshold",
+      "type": "number",
+      "required": false,
+      "description": "低分界限（含），配合数组形式的 colors / icons",
+      "default": "2"
+    },
+    {
+      "name": "highThreshold",
+      "type": "number",
+      "required": false,
+      "description": "高分界限（不含），配合数组形式的 colors / icons",
+      "default": "4"
+    },
+    {
+      "name": "voidColor",
+      "type": "string",
+      "required": false,
+      "description": "未选中图标颜色；不传时为文字色的 30% 不透明度"
+    },
+    {
+      "name": "trigger",
+      "type": "RateTrigger",
+      "required": false,
+      "description": "切换分数的触发方式： click（默认）悬停只做预览、点击才提交，开启 clearable 后再点同一分值清零； hover 指针滑到哪颗就把分数改到哪颗，无需点击。触控端没有悬停事件，等同 click",
+      "default": "\"click\""
+    },
+    {
+      "name": "class",
+      "type": "any",
+      "required": false,
+      "description": "自定义 class"
+    }
+  ],
+  "events": [
+    {
+      "name": "change",
+      "payload": "(e: 'change', value: number): void",
+      "description": "与 `update:modelValue` 同时触发。Web 端 `trigger=\"hover\"` 下，指针每移到新分值都会触发一次，并不代表「确认」。"
+    },
+    {
+      "name": "update:modelValue",
+      "description": "modelValue 变化时触发（v-model 同步）"
+    }
+  ],
+  "slots": [
+    {
+      "name": "icon",
+      "description": "自定义图标，同时渲染在未选中层（`active: false`）与选中层（`active: true`），`index` 从 1 开始。填充后 `icon` / `activeIcon` / `halfIcon` / `icons` 不再生效。"
+    },
+    {
+      "name": "value",
+      "description": "自定义分数 / 文案区域。`value` 为已提交的分值，`text` 为 `formatText` 的返回值（未传时为空），两者都不受悬停预览影响。填充后 `ui.value` 失效。"
+    }
+  ],
+  "exposes": [
+    {
+      "name": "setCurrentValue",
+      "description": ""
+    },
+    {
+      "name": "resetCurrentValue",
+      "description": ""
+    }
+  ],
+  "examples": [
+    {
+      "title": "Web 演示",
+      "path": "app/components/reborn/examples/reborn-rate/RebornRateDemo.vue",
+      "source": "demo",
+      "platform": "web",
+      "code": "<script setup lang=\"ts\">\nimport { DemoBlock, DemoNote, DemoSection, Icon, Playground } from '#components';\nimport { ref, shallowRef, useTemplateRef } from 'vue';\nimport { rateColors, rateSizes, rateTriggers } from \"~/components/reborn/ui/reborn-rate/reborn-rate.config\";\nimport RebornRate from \"~/components/reborn/ui/reborn-rate/RebornRate.vue\";\n\n// ─── 交互演练场 ─────────────────────────────────────────────────\n\n/** 演练场绑定值 */\ninterface RatePlaygroundState {\n  size: typeof rateSizes[number];\n  color: typeof rateColors[number];\n  count: number;\n  trigger: typeof rateTriggers[number];\n  allowHalf: boolean;\n  clearable: boolean;\n  showValue: boolean;\n  disabled: boolean;\n  readonly: boolean;\n}\nconst state = ref<RatePlaygroundState>({\n  size: \"md\",\n  color: \"warning\",\n  count: 5,\n  trigger: \"click\",\n  allowHalf: false,\n  clearable: false,\n  showValue: true,\n  disabled: false,\n  readonly: false,\n});\n\nconst val1 = shallowRef(3);\n\n/** 演练场控制面板配置 */\nconst controls = [\n  {\n    title: \"外观\",\n    children: [\n      {\n        label: \"尺寸\",\n        key: \"size\",\n        component: \"select\" as const,\n        defaultValue: \"md\",\n        props: { options: rateSizes.map((s) => ({ label: s, value: s })) },\n      },\n      {\n        label: \"颜色\",\n        key: \"color\",\n        component: \"select\" as const,\n        defaultValue: \"warning\",\n        props: { options: rateColors.map((c) => ({ label: c, value: c })) },\n      },\n      {\n        label: \"数量\",\n        key: \"count\",\n        component: \"slider\" as const,\n        defaultValue: 5,\n        props: { min: 1, max: 10, step: 1 },\n      },\n    ],\n  },\n  {\n    title: \"行为\",\n    children: [\n      {\n        label: \"触发方式\",\n        key: \"trigger\",\n        component: \"select\" as const,\n        defaultValue: \"click\",\n        props: { options: rateTriggers.map((t) => ({ label: t, value: t })) },\n      },\n      { label: \"半星\", key: \"allowHalf\", component: \"checkbox\" as const, defaultValue: false },\n      { label: \"可清空\", key: \"clearable\", component: \"checkbox\" as const, defaultValue: false },\n      { label: \"显示分数\", key: \"showValue\", component: \"checkbox\" as const, defaultValue: true },\n      { label: \"禁用\", key: \"disabled\", component: \"checkbox\" as const, defaultValue: false },\n      { label: \"只读\", key: \"readonly\", component: \"checkbox\" as const, defaultValue: false },\n    ],\n  },\n];\n\n// ─── 场景演示状态 ───────────────────────────────────────────────\n\n/** 基础用法：整星、半星与只读展示 */\nconst basicScore = shallowRef(3);\nconst halfScore = shallowRef(3.5);\n\n/** 触发方式：click 悬停仅预览、点击提交；hover 悬停即改分 */\nconst clickScore = shallowRef(3);\nconst hoverScore = shallowRef(3);\n\n/** 可清空：默认再点同一分值不变，clearable 才清零 */\nconst keepScore = shallowRef(3);\nconst clearScore = shallowRef(3);\n\n/** 自定义文案：format-text 按当前分值返回要显示的文字，未评分时也能给出提示 */\nconst textScore = shallowRef(3);\nconst slotScore = shallowRef(4);\nconst levelTexts = [\"很差\", \"较差\", \"还行\", \"推荐\", \"力荐\"];\nconst formatText = (value: number) => levelTexts[Math.ceil(value) - 1] ?? \"未评分\";\n\n/** 分段颜色：数组三段 / 对象自定义分段 */\nconst colorArrayScore = shallowRef(2);\nconst colorMapScore = shallowRef(4);\nconst segmentColors = [\"#E47BF9\", \"#32EC95\", \"#1150D0\"];\nconst segmentColorMap = { 2: \"#99a9bf\", 4: { value: \"#f7ba2a\", excluded: true }, 5: \"#ff9900\" };\n\n/** 未选中颜色 */\nconst voidScore = shallowRef(3);\n\n/** 分段图标：按分值切换图标，高分段换成图片 */\nconst iconMapScore = shallowRef(2);\nconst LOGO_URL = \"https://mall.letaofun.com/static/h5/landingPage/logo.png?v=1\";\nconst segmentIcons = {\n  3: { type: \"icon\" as const, url: \"lucide:frown\" },\n  6: { type: \"icon\" as const, url: \"lucide:meh\", excluded: true },\n  8: { type: \"image\" as const, url: LOGO_URL },\n};\n\n/** 实例方法：非受控用法下 reset 会退回 modelValue */\nconst rateRef = useTemplateRef<InstanceType<typeof RebornRate>>(\"rateRef\");\nconst lastChange = shallowRef<number | null>(null);\n\n/** 自定义图标：实心爱心走 icon / activeIcon 直接传图标名，火焰与点赞走 #icon 插槽 */\nconst heartScore = shallowRef(4);\nconst flameScore = shallowRef(3);\nconst thumbScore = shallowRef(5);\n\n/** 图片图标：未选中层由组件固定为 30% 不透明度，这里再按 active 加一层灰度拉开对比 */\nconst logoScore = shallowRef(4);\nconst logoHalf = shallowRef(2.5);\n\n/** 横版图片：208×52 的品牌横标按 4:1 覆盖成 20×80，避免被默认的 20px 正方形图标层压扁 */\nconst BRAND_URL = \"https://mall.letaofun.com/static/h5/site/MERCARI.png\";\nconst brandScore = shallowRef(3);\nconst brandHalf = shallowRef(3.5);\nconst wideUi = { icon: \"h-5 w-20\", iconActive: \"h-5 w-20\" };\n</script>\n\n<template>\n  <div class=\"flex w-full min-w-0 flex-col\">\n    <Playground\n      v-model=\"state\"\n      :controls=\"controls\"\n      component-name=\"RebornRate\"\n      title=\"交互演练场\"\n      description=\"调节尺寸、颜色与颗数，下方评分实时响应；半星、可清空、禁用、只读可叠加。\"\n    >\n      <RebornRate\n        v-model=\"val1\"\n        :size=\"state.size\"\n        :color=\"state.color\"\n        :count=\"state.count\"\n        :trigger=\"state.trigger\"\n        :allow-half=\"state.allowHalf\"\n        :clearable=\"state.clearable\"\n        :show-value=\"state.showValue\"\n        :disabled=\"state.disabled\"\n        :readonly=\"state.readonly\"\n      />\n    </Playground>\n\n    <DemoSection title=\"基础用法\">\n      <template #description>\n        <code>v-model</code> 绑定分值，<code>allow-half</code> 允许半星、<code>show-value</code>\n        在末尾显示分数；<code>readonly</code> 只展示不可改，<code>disabled</code> 在此基础上整体半透明并屏蔽指针事件。\n      </template>\n      <DemoBlock layout=\"stack\">\n        <div class=\"flex items-center gap-4\">\n          <span class=\"text-dimmed w-16 text-xs\">整星</span>\n          <RebornRate\n            v-model=\"basicScore\"\n            show-value\n          />\n        </div>\n        <div class=\"flex items-center gap-4\">\n          <span class=\"text-dimmed w-16 text-xs\">半星</span>\n          <RebornRate\n            v-model=\"halfScore\"\n            allow-half\n            show-value\n          />\n        </div>\n        <div class=\"flex items-center gap-4\">\n          <span class=\"text-dimmed w-16 text-xs\">readonly</span>\n          <RebornRate\n            :model-value=\"4\"\n            readonly\n            show-value\n          />\n        </div>\n        <div class=\"flex items-center gap-4\">\n          <span class=\"text-dimmed w-16 text-xs\">disabled</span>\n          <RebornRate\n            :model-value=\"2\"\n            disabled\n            show-value\n          />\n        </div>\n      </DemoBlock>\n    </DemoSection>\n\n    <DemoSection title=\"语义色与尺寸\">\n      <template #description>\n        <code>color</code> 与全站语义色板对齐，默认 <code>warning</code>，只作用于选中图标；\n        <code>size</code> 提供 sm / md / lg 三档，图标分别为 16 / 20 / 28px，分数字号随之变化。\n      </template>\n      <DemoBlock layout=\"stack\">\n        <RebornRate\n          v-for=\"c in rateColors\"\n          :key=\"c\"\n          :model-value=\"3\"\n          :color=\"c\"\n        />\n      </DemoBlock>\n      <DemoBlock layout=\"stack\">\n        <div\n          v-for=\"s in rateSizes\"\n          :key=\"s\"\n          class=\"flex items-center gap-4\"\n        >\n          <span class=\"text-dimmed w-16 text-xs\">{{ s }}</span>\n          <RebornRate\n            :model-value=\"3\"\n            :size=\"s\"\n            show-value\n          />\n        </div>\n      </DemoBlock>\n    </DemoSection>\n\n    <DemoSection title=\"触发方式：click 与 hover\">\n      <template #description>\n        默认 <code>click</code>：悬停只做预览，点击才提交；<code>trigger=\"hover\"</code>\n        让指针滑到哪颗就改到哪颗，适合快速打分。触控端没有悬停，该值等同 <code>click</code>。\n      </template>\n      <DemoBlock layout=\"stack\">\n        <div class=\"flex items-center gap-4\">\n          <span class=\"text-dimmed w-16 text-xs\">click</span>\n          <RebornRate\n            v-model=\"clickScore\"\n            show-value\n          />\n        </div>\n        <div class=\"flex items-center gap-4\">\n          <span class=\"text-dimmed w-16 text-xs\">hover</span>\n          <RebornRate\n            v-model=\"hoverScore\"\n            trigger=\"hover\"\n            allow-half\n            show-value\n          />\n        </div>\n      </DemoBlock>\n    </DemoSection>\n\n    <DemoSection\n      title=\"可清空：clearable\"\n      description=\"默认再次点击当前分值不会有变化；开启 clearable 后再点同一分值即清零。\"\n    >\n      <DemoBlock layout=\"stack\">\n        <div class=\"flex items-center gap-4\">\n          <span class=\"text-dimmed w-16 text-xs\">默认</span>\n          <RebornRate\n            v-model=\"keepScore\"\n            show-value\n          />\n        </div>\n        <div class=\"flex items-center gap-4\">\n          <span class=\"text-dimmed w-16 text-xs\">clearable</span>\n          <RebornRate\n            v-model=\"clearScore\"\n            clearable\n            show-value\n          />\n        </div>\n      </DemoBlock>\n    </DemoSection>\n\n    <DemoSection\n      title=\"自定义文案：format-text 与 value 插槽\"\n      description=\"format-text 接收当前分值、返回要显示的文案，传入后无需 show-value；需要更复杂的内容可用 value 插槽自行渲染（会替换默认的文本节点）。不传时分数区域没有默认文案。\"\n    >\n      <DemoBlock layout=\"stack\">\n        <div class=\"flex items-center gap-4\">\n          <span class=\"text-dimmed w-20 text-xs\">format-text</span>\n          <RebornRate\n            v-model=\"textScore\"\n            :format-text=\"formatText\"\n          />\n        </div>\n        <div class=\"flex items-center gap-4\">\n          <span class=\"text-dimmed w-20 text-xs\">#value 插槽</span>\n          <RebornRate\n            v-model=\"slotScore\"\n            allow-half\n          >\n            <template #value=\"{ value }\">\n              <span class=\"text-muted ml-3 text-sm\">{{ value }} 分 · {{ formatText(value) }}</span>\n            </template>\n          </RebornRate>\n        </div>\n      </DemoBlock>\n    </DemoSection>\n\n    <DemoSection title=\"分段颜色：colors 与阈值\">\n      <template #description>\n        <code>colors</code> 传数组时按 <code>low-threshold</code>（默认 2，含）与\n        <code>high-threshold</code>（默认\n        4，不含）分低、中、高三段；传对象时键为分段上界、值为颜色，写成\n        <code>{ value, excluded: true }</code>\n        表示不含上界本身。所有点亮的星统一取当前分值命中的颜色。\n      </template>\n      <DemoBlock layout=\"stack\">\n        <div class=\"flex items-center gap-4\">\n          <span class=\"text-dimmed w-16 text-xs\">数组</span>\n          <RebornRate\n            v-model=\"colorArrayScore\"\n            :colors=\"segmentColors\"\n            show-value\n          />\n        </div>\n        <div class=\"flex items-center gap-4\">\n          <span class=\"text-dimmed w-16 text-xs\">对象</span>\n          <RebornRate\n            v-model=\"colorMapScore\"\n            :colors=\"segmentColorMap\"\n            allow-half\n            show-value\n          />\n        </div>\n      </DemoBlock>\n      <DemoNote tone=\"dimmed\">\n        对象示例：<code>{ 2: '#99a9bf', 4: { value: '#f7ba2a', excluded: true }, 5: '#ff9900' }</code>\n      </DemoNote>\n    </DemoSection>\n\n    <DemoSection\n      title=\"未选中颜色：void-color\"\n      description=\"void-color 指定未选中图标的实色；不传时未选中图标取文字色的 30% 不透明度。\"\n    >\n      <DemoBlock layout=\"stack\">\n        <div class=\"flex items-center gap-4\">\n          <span class=\"text-dimmed w-16 text-xs\">实色</span>\n          <RebornRate\n            v-model=\"voidScore\"\n            void-color=\"#FF383F\"\n            show-value\n          />\n        </div>\n        <div class=\"flex items-center gap-4\">\n          <span class=\"text-dimmed w-16 text-xs\">配分段色</span>\n          <RebornRate\n            v-model=\"voidScore\"\n            void-color=\"#000000\"\n            :colors=\"segmentColors\"\n            show-value\n          />\n        </div>\n      </DemoBlock>\n    </DemoSection>\n\n    <DemoSection title=\"分段图标：icons\">\n      <template #description>\n        <code>icons</code> 的分段规则与 <code>colors</code> 相同，值为 <code>{ type, url }</code>：\n        <code>type</code> 为 <code>icon</code> 时 <code>url</code> 是 Nuxt Icon 名，为\n        <code>image</code> 时是图片地址。未选中图标仍由 <code>icon</code> 决定。\n      </template>\n      <DemoBlock layout=\"stack\">\n        <div class=\"flex items-center gap-4\">\n          <span class=\"text-dimmed w-16 text-xs\">对象</span>\n          <RebornRate\n            v-model=\"iconMapScore\"\n            :icons=\"segmentIcons\"\n            show-value\n            :count=\"10\"\n          />\n        </div>\n      </DemoBlock>\n      <DemoNote tone=\"dimmed\">\n        0 ~ 3 分哭脸、3 ~ 6 分（不含 6）平脸、6 ~ 8 分换成图片；超过 8 分没有命中任何分段，回退到 active-icon：<code>{ 3: { type: 'icon', url: 'lucide:frown' }, 6: { type: 'icon', url: 'lucide:meh',\n          excluded: true }, 8: { type: 'image', url: '.../logo.png' } }</code>\n      </DemoNote>\n    </DemoSection>\n\n    <DemoSection\n      title=\"实例方法：setCurrentValue 与 resetCurrentValue\"\n      description=\"setCurrentValue 直接写入分数（按 count 夹取、按 allowHalf 取整，并触发 update:modelValue 与 change）；resetCurrentValue 清除悬停预览并把内部值同步回 modelValue。这里用非受控写法，重置后会退回传入的 3 分。\"\n    >\n      <DemoBlock layout=\"stack\">\n        <RebornRate\n          ref=\"rateRef\"\n          :model-value=\"3\"\n          allow-half\n          show-value\n          @change=\"lastChange = $event\"\n        />\n        <div class=\"flex flex-wrap items-center gap-2\">\n          <button\n            type=\"button\"\n            class=\"border-default hover:border-inverted text-muted w-fit cursor-pointer rounded-xl border px-3 py-1 text-xs transition-colors\"\n            @click=\"rateRef?.setCurrentValue(4.5)\"\n          >\n            setCurrentValue(4.5)\n          </button>\n          <button\n            type=\"button\"\n            class=\"border-default hover:border-inverted text-muted w-fit cursor-pointer rounded-xl border px-3 py-1 text-xs transition-colors\"\n            @click=\"rateRef?.resetCurrentValue()\"\n          >\n            resetCurrentValue()\n          </button>\n        </div>\n      </DemoBlock>\n      <DemoNote tone=\"dimmed\">\n        最近一次 change：<code>{{ lastChange ?? \"尚未触发\" }}</code>\n      </DemoNote>\n    </DemoSection>\n\n    <DemoSection\n      title=\"自定义图标：icon 属性与 icon 插槽\"\n      description=\"icon 与 activeIcon 接受任意 Nuxt Icon 名，整套换图标时最省事；#icon 插槽拿到 index 与 active，可放任意内容。选中色都由 color 决定。\"\n    >\n      <DemoBlock layout=\"stack\">\n        <!-- 直接传图标名：换成 prime 图标集的实心爱心 -->\n        <div class=\"flex items-center gap-4\">\n          <span class=\"text-dimmed w-16 text-xs\">实心爱心</span>\n          <RebornRate\n            v-model=\"heartScore\"\n            icon=\"prime:heart-fill\"\n            active-icon=\"prime:heart-fill\"\n            color=\"error\"\n            allow-half\n            show-value\n          />\n        </div>\n        <!-- 插槽写法：插槽内容同时用于未选中层与选中层 -->\n        <div class=\"flex items-center gap-4\">\n          <span class=\"text-dimmed w-16 text-xs\">火焰</span>\n          <RebornRate\n            v-model=\"flameScore\"\n            color=\"warning\"\n          >\n            <template #icon>\n              <Icon\n                name=\"lucide:flame\"\n                class=\"size-full\"\n              />\n            </template>\n          </RebornRate>\n        </div>\n        <div class=\"flex items-center gap-4\">\n          <span class=\"text-dimmed w-16 text-xs\">点赞</span>\n          <RebornRate\n            v-model=\"thumbScore\"\n            color=\"primary\"\n          >\n            <template #icon>\n              <Icon\n                name=\"lucide:thumbs-up\"\n                class=\"size-full\"\n              />\n            </template>\n          </RebornRate>\n        </div>\n      </DemoBlock>\n\n      <DemoNote tone=\"dimmed\">\n        实心爱心取自 <code>prime</code> 图标集（<code>prime:heart-fill</code>）；icon 与 activeIcon\n        通常传同一个名字，仅靠颜色区分选中态。\n      </DemoNote>\n    </DemoSection>\n\n    <DemoSection\n      title=\"图片图标：icon 插槽与半星裁切\"\n      description=\"#icon 插槽同时渲染未选中层与选中层，用 active 区分：未选中的图片压成灰度，叠加组件自带的 30% 不透明度拉开对比；半星同样按 clip-path 只露出左半边。\"\n    >\n      <DemoBlock layout=\"stack\">\n        <div class=\"flex items-center gap-4\">\n          <span class=\"text-dimmed w-16 text-xs\">整星</span>\n          <RebornRate\n            v-model=\"logoScore\"\n            show-value\n          >\n            <template #icon=\"{ active }\">\n              <img\n                :src=\"LOGO_URL\"\n                alt=\"\"\n                draggable=\"false\"\n                class=\"size-full object-contain\"\n                :class=\"{ grayscale: !active }\"\n              >\n            </template>\n          </RebornRate>\n        </div>\n        <div class=\"flex items-center gap-4\">\n          <span class=\"text-dimmed w-16 text-xs\">半星</span>\n          <RebornRate\n            v-model=\"logoHalf\"\n            allow-half\n            show-value\n          >\n            <template #icon=\"{ active }\">\n              <img\n                :src=\"LOGO_URL\"\n                alt=\"\"\n                draggable=\"false\"\n                class=\"size-full object-contain\"\n                :class=\"{ grayscale: !active }\"\n              >\n            </template>\n          </RebornRate>\n        </div>\n      </DemoBlock>\n    </DemoSection>\n\n    <DemoSection\n      title=\"横版图片：ui 覆盖图标尺寸\"\n      description=\"图标层默认是 20px 正方形，横版图片会被压扁；用 ui 的 icon 与 iconActive 按原图比例覆盖尺寸即可，星距与分数间距不受影响。\"\n    >\n      <DemoBlock layout=\"stack\">\n        <div class=\"flex items-center gap-4\">\n          <span class=\"text-dimmed w-16 text-xs\">整星</span>\n          <RebornRate\n            v-model=\"brandScore\"\n            :ui=\"wideUi\"\n            show-value\n          >\n            <template #icon=\"{ active }\">\n              <img\n                :src=\"BRAND_URL\"\n                alt=\"\"\n                draggable=\"false\"\n                class=\"size-full object-contain\"\n                :class=\"{ grayscale: !active }\"\n              >\n            </template>\n          </RebornRate>\n        </div>\n        <div class=\"flex items-center gap-4\">\n          <span class=\"text-dimmed w-16 text-xs\">半星</span>\n          <RebornRate\n            v-model=\"brandHalf\"\n            :ui=\"wideUi\"\n            allow-half\n            show-value\n          >\n            <template #icon=\"{ active }\">\n              <img\n                :src=\"BRAND_URL\"\n                alt=\"\"\n                draggable=\"false\"\n                class=\"size-full object-contain\"\n                :class=\"{ grayscale: !active }\"\n              >\n            </template>\n          </RebornRate>\n        </div>\n      </DemoBlock>\n\n      <DemoNote tone=\"dimmed\">\n        示例图原尺寸 208×52，按 4:1 覆盖成 <code>h-5 w-20</code>（20×80）。\n      </DemoNote>\n    </DemoSection>\n  </div>\n</template>\n"
+    },
+    {
+      "title": "UniApp 演示",
+      "path": "packages/uniapp-project/src/pages/reborn-rate/RebornRateDemo.vue",
+      "source": "demo",
+      "platform": "uniapp",
+      "code": "<script setup lang=\"ts\">\nimport { shallowRef } from 'vue'\nimport ReButton from '@/components/reborn-button/RebornButton.vue'\nimport RebornCard from '@/components/reborn-card/RebornCard.vue'\nimport RebornInputNumber from '@/components/reborn-input-number/RebornInputNumber.vue'\nimport RebornPage from '@/components/reborn-page/RebornPage.vue'\nimport RebornRate from '@/components/reborn-rate/RebornRate.vue'\nimport RebornSwitch from '@/components/reborn-switch/RebornSwitch.vue'\n\nconst val1 = shallowRef(3)\nconst currentSize = shallowRef<typeof sizes[number]>('md')\nconst currentColor = shallowRef<typeof colors[number]>('warning')\nconst maxCount = shallowRef(5)\nconst isAllowHalf = shallowRef(false)\nconst isShowValue = shallowRef(true)\nconst isDisabled = shallowRef(false)\nconst isReadonly = shallowRef(false)\n\nconst sizes = ['sm', 'md', 'lg'] as const\nconst colors = ['primary', 'secondary', 'success', 'warning', 'error', 'info', 'neutral'] as const\n</script>\n\n<template>\n  <RebornPage title=\"评分\" description=\"用于对事物进行评级操作的组件。\">\n    <!-- Custom Icon -->\n    <RebornCard title=\"用法\" custom-class=\"space-y-4\">\n      <view class=\"flex items-center justify-between\">\n        <text\n          class=\"\n            text-sm text-slate-600\n            dark:text-gray-5\n          \"\n        >\n          基础\n        </text>\n        <RebornRate\n          v-model=\"val1\" :size=\"currentSize\" :color=\"currentColor\" :allow-half=\"isAllowHalf\"\n          :show-value=\"isShowValue\" :disabled=\"isDisabled\" :readonly=\"isReadonly\" :count=\"maxCount\"\n        />\n      </view>\n      <view class=\"flex items-center justify-between\">\n        <text\n          class=\"\n            text-sm text-slate-600\n            dark:text-gray-5\n          \"\n        >\n          爱心\n        </text>\n        <RebornRate\n          v-model=\"val1\" icon=\"i-lucide-heart\" active-icon=\"i-lucide-heart\" :size=\"currentSize\"\n          :color=\"currentColor\" :allow-half=\"isAllowHalf\" :show-value=\"isShowValue\" :disabled=\"isDisabled\"\n          :readonly=\"isReadonly\" :count=\"maxCount\"\n        />\n      </view>\n      <view class=\"flex items-center justify-between\">\n        <text\n          class=\"\n            text-sm text-slate-600\n            dark:text-gray-5\n          \"\n        >\n          火焰\n        </text>\n        <RebornRate\n          v-model=\"val1\" icon=\"i-mdi-brightness-5\" half-icon=\"i-mdi-brightness-6\"\n          active-icon=\"i-mdi-brightness-4\" :size=\"currentSize\" :color=\"currentColor\" :allow-half=\"isAllowHalf\"\n          :show-value=\"isShowValue\" :disabled=\"isDisabled\" :readonly=\"isReadonly\" :count=\"maxCount\"\n        />\n      </view>\n      <view class=\"flex items-center justify-between\">\n        <text\n          class=\"\n            text-sm text-slate-600\n            dark:text-gray-5\n          \"\n        >\n          篮球\n        </text>\n        <RebornRate\n          v-model=\"val1\" icon=\"i-mdi-basketball\" active-icon=\"i-mdi-basketball\" :size=\"currentSize\"\n          :color=\"currentColor\" :allow-half=\"isAllowHalf\" :show-value=\"isShowValue\" :disabled=\"isDisabled\"\n          :readonly=\"isReadonly\" :count=\"maxCount\"\n        />\n      </view>\n      <view class=\"flex items-center justify-between\">\n        <text\n          class=\"\n            text-sm text-slate-600\n            dark:text-gray-5\n          \"\n        >\n          图片 URL\n        </text>\n        <RebornRate\n          v-model=\"val1\" :size=\"currentSize\" :color=\"currentColor\" :allow-half=\"isAllowHalf\"\n          :show-value=\"isShowValue\" :disabled=\"isDisabled\" :readonly=\"isReadonly\" :count=\"maxCount\"\n        >\n          <template #icon=\"{ active, style }\">\n            <image\n              src=\"https://www.leyifan.com/favicon.ico\" class=\"size-full\"\n              :class=\"!active && 'opacity-30'\" :style=\"style\" mode=\"aspectFit\"\n            />\n          </template>\n        </RebornRate>\n      </view>\n    </RebornCard>\n    <!-- Dynamic Configuration -->\n    <RebornCard title=\"自定义\" custom-class=\"flex flex-col gap-2\">\n      <view class=\"flex justify-between\">\n        <text class=\"text-sm text-slate-500\">尺寸 (Size)</text>\n        <view class=\"flex flex-wrap gap-2\">\n          <view v-for=\"size in sizes\" :key=\"size\">\n            <ReButton\n              size=\"xs\" :variant=\"currentSize === size ? 'filled' : 'outlined'\"\n              :color=\"currentSize === size ? 'primary' : 'neutral'\" @tap=\"currentSize = size\"\n            >\n              {{ size }}\n            </ReButton>\n          </view>\n        </view>\n      </view>\n      <view class=\"flex justify-between\">\n        <text class=\"text-sm text-slate-500\">颜色 (Color)</text>\n        <view class=\"flex flex-wrap gap-2\">\n          <view\n            v-for=\"c in colors\" :key=\"c\"\n            class=\"\n              size-4 cursor-pointer rounded-full ring-2 ring-transparent\n              ring-offset-2 transition-all\n            \"\n            :class=\"[\n              `\n                bg-${c}\n              `,\n              currentColor === c ? 'scale-110 ring-slate-400' : `\n                hover:scale-110\n              `,\n            ]\" :style=\"{ backgroundColor: `var(--color-${c}, ${c === 'neutral' ? '#737373' : ''})` }\"\n            @click=\"currentColor = c\"\n          />\n        </view>\n      </view>\n      <view class=\"flex justify-between\">\n        <text class=\"text-sm text-slate-500\">数量</text>\n        <RebornInputNumber v-model=\"maxCount\" size=\"sm\" />\n      </view>\n      <view class=\"flex justify-between\">\n        <text class=\"text-sm text-slate-500\">半星</text>\n        <RebornSwitch v-model=\"isAllowHalf\" size=\"sm\" />\n      </view>\n      <view class=\"flex justify-between\">\n        <text class=\"text-sm text-slate-500\">显示分数</text>\n        <RebornSwitch v-model=\"isShowValue\" size=\"sm\" />\n      </view>\n      <view class=\"flex justify-between\">\n        <text class=\"text-sm text-slate-500\">禁用</text>\n        <RebornSwitch v-model=\"isDisabled\" size=\"sm\" />\n      </view>\n      <view class=\"flex justify-between\">\n        <text class=\"text-sm text-slate-500\">只读</text>\n        <RebornSwitch v-model=\"isReadonly\" size=\"sm\" />\n      </view>\n    </RebornCard>\n  </RebornPage>\n</template>\n"
+    }
+  ],
+  "related": [],
+  "whenToUse": [
+    "商品、服务评价打分（allowHalf 支持半星）。",
+    "只读展示平均评分（readonly）。",
+    "需要在星星旁显示当前分数（showValue）时。"
+  ],
+  "whenNotToUse": [
+    "连续数值取值改用 reborn-slider。",
+    "整数数量增减改用 reborn-input-number。"
+  ],
+  "pitfalls": [
+    "web、uniapp 双端可用。",
+    "icon/activeIcon/halfIcon 仅支持 Nuxt Icon 类名（默认 i-lucide-star）。",
+    "默认主题色为 warning（而非 primary）。",
+    "disabled 与 readonly 是两个独立属性，语义不同。"
+  ],
+  "dependencies": [
+    "@weapp-tailwindcss/merge-v3",
+    "@weapp-tailwindcss/variants-v3",
+    "clsx",
+    "tailwind-merge",
+    "tailwind-variants"
+  ],
+  "install": {
+    "cli": "npx reborn-ui@latest add reborn-rate"
+  },
+  "sourceRefs": {
+    "web": [
+      "app/components/reborn/ui/reborn-rate/RebornRate.vue",
+      "app/components/reborn/ui/reborn-rate/index.ts",
+      "app/components/reborn/ui/reborn-rate/reborn-rate.config.ts"
+    ],
+    "uniapp": [
+      "packages/uniapp-project/src/components/reborn-rate/RebornRate.vue",
+      "packages/uniapp-project/src/components/reborn-rate/index.ts",
+      "packages/uniapp-project/src/components/reborn-rate/reborn-rate.config.ts"
+    ]
+  },
+  "docPath": "content/2.components/input-and-forms/reborn-rate.md",
+  "_meta": {
+    "contentHash": "b1c860b36de8a55aad84d50335f9fd12b6390f55",
+    "hasOverride": true,
+    "extractors": {
+      "web": "ok",
+      "uniapp": "ok",
+      "docs": "found"
+    }
+  }
+}

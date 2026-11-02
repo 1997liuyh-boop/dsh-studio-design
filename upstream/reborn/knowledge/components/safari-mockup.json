@@ -1,0 +1,94 @@
+{
+  "$schema": "../schema/component.schema.json",
+  "id": "safari-mockup",
+  "title": "Safari 模型",
+  "description": "用于以 Safari 浏览器外框展示产品截图的 SVG 设备模型组件。",
+  "category": "media",
+  "tags": [
+    "css",
+    "tailwind",
+    "device-mockup",
+    "magic-ui"
+  ],
+  "platforms": [
+    "web"
+  ],
+  "props": [
+    {
+      "name": "url",
+      "type": "string",
+      "required": false,
+      "description": "模型地址栏中显示的 URL。",
+      "default": "null"
+    },
+    {
+      "name": "src",
+      "type": "string",
+      "required": false,
+      "description": "在模型中显示的图片 URL。",
+      "default": "null"
+    },
+    {
+      "name": "width",
+      "type": "number",
+      "required": false,
+      "description": "模型 SVG 的宽度（像素）。",
+      "default": "1203"
+    },
+    {
+      "name": "height",
+      "type": "number",
+      "required": false,
+      "description": "模型 SVG 的高度（像素）。",
+      "default": "753"
+    }
+  ],
+  "events": [],
+  "slots": [],
+  "exposes": [],
+  "examples": [
+    {
+      "title": "Web 演示",
+      "path": "app/components/reborn/examples/safari-mockup/SafariMockupDemo.vue",
+      "source": "demo",
+      "platform": "web",
+      "code": "<template>\n  <div class=\"relative p-4\">\n    <SafariMockup url=\"reborn-ui.com\" src=\"/\" class=\"size-full\" />\n  </div>\n</template>\n"
+    }
+  ],
+  "related": [],
+  "whenToUse": [
+    "落地页展示 Web 产品界面截图时。",
+    "作品集、文档中需要浏览器窗口外观的演示图。",
+    "需要在模拟地址栏显示自定义 URL 文字的场景。"
+  ],
+  "whenNotToUse": [
+    "展示移动端 App 界面，改用 iphone-mockup。",
+    "需要嵌入真实可交互页面时不适用，src 仅接受图片 URL。"
+  ],
+  "pitfalls": [
+    "仅 web 端可用。",
+    "无插槽与事件，内容只能通过 src 图片传入。",
+    "width/height 单位为像素，默认 1203×753。",
+    "url 仅是地址栏展示文字，不会真正加载该地址。"
+  ],
+  "dependencies": [],
+  "install": {
+    "cli": "npx reborn-ui@latest add safari-mockup"
+  },
+  "sourceRefs": {
+    "web": [
+      "app/components/reborn/ui/safari-mockup/SafariMockup.vue",
+      "app/components/reborn/ui/safari-mockup/index.ts"
+    ]
+  },
+  "docPath": "content/2.components/device-mocks/safari-mockup.md",
+  "_meta": {
+    "contentHash": "ac345b1544f7082010192e7a2a4028d4d04072a2",
+    "hasOverride": true,
+    "extractors": {
+      "web": "ok",
+      "uniapp": "absent",
+      "docs": "found"
+    }
+  }
+}

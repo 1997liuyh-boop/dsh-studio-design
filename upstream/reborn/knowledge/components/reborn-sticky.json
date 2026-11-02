@@ -1,0 +1,209 @@
+{
+  "$schema": "../schema/component.schema.json",
+  "id": "reborn-sticky",
+  "title": "Sticky 吸顶",
+  "description": "用于页面滚动时将内容吸附在顶部或底部的吸顶组件。",
+  "category": "navigation",
+  "tags": [],
+  "platforms": [
+    "web",
+    "uniapp"
+  ],
+  "props": [
+    {
+      "name": "offsetTop",
+      "type": "number",
+      "required": false,
+      "description": "吸顶偏移量, 单位px",
+      "default": "0"
+    },
+    {
+      "name": "zIndex",
+      "type": "number",
+      "required": false,
+      "description": "层级",
+      "default": "100"
+    },
+    {
+      "name": "scrollTop",
+      "type": "number",
+      "required": false,
+      "description": "滚动位置",
+      "default": "0"
+    },
+    {
+      "name": "isNeedNavbarHeight",
+      "type": "boolean",
+      "required": false,
+      "description": "是否需要减去导航栏高度",
+      "default": "true"
+    },
+    {
+      "name": "navbarHeight",
+      "type": "number",
+      "required": false,
+      "description": "导航栏高度",
+      "default": "44"
+    },
+    {
+      "name": "stickyTriggerLead",
+      "type": "number",
+      "required": false,
+      "description": "吸顶判定提前 (px)，用于根节点上方还有标题等与测量 top 不对齐时",
+      "default": "0"
+    },
+    {
+      "name": "target",
+      "type": "string | HTMLElement",
+      "required": false,
+      "description": "目标容器，CSS选择器或DOM元素。吸顶元素将始终保持在该容器内，超过范围则隐藏",
+      "default": "undefined"
+    },
+    {
+      "name": "sticky",
+      "type": "boolean",
+      "required": false,
+      "description": "手动控制吸顶状态",
+      "default": "true"
+    },
+    {
+      "name": "position",
+      "type": "'top' | 'bottom'",
+      "required": false,
+      "description": "固定位置：top 吸顶，bottom 吸底",
+      "default": "'top'"
+    },
+    {
+      "name": "bottomBoundary",
+      "type": "'parent' | 'target'",
+      "required": false,
+      "description": "吸底越界后的边界基准：parent 保持旧逻辑，target 按目标容器底部向上 offsetTop 停靠",
+      "default": "'parent'"
+    },
+    {
+      "name": "bottomPlaceholder",
+      "type": "'auto' | 'keep' | 'none'",
+      "required": false,
+      "description": "吸底固定后的占位策略：auto 保持旧逻辑，keep 保留高度，none 不参与页面排版",
+      "default": "'auto'"
+    },
+    {
+      "name": "ui",
+      "type": "{ wrapper?: string, content?: string }",
+      "required": false,
+      "description": "覆盖内部节点类名：wrapper 为外层占位容器，content 为实际执行吸附定位的内容容器 可用键（从源码抽取，以此为准）——Web：content、wrapper。",
+      "default": "undefined"
+    }
+  ],
+  "events": [
+    {
+      "name": "change",
+      "payload": "[isSticky: boolean]",
+      "description": "吸顶或吸底状态改变。"
+    },
+    {
+      "name": "resize",
+      "payload": "[rect: { height: number; width: number; left: number; top: number }]",
+      "description": "测量后尺寸或文档位置改变，单位为 px。"
+    }
+  ],
+  "slots": [
+    {
+      "name": "default",
+      "props": "(props: { isSticky: boolean }) => any",
+      "description": "自定义内容，`isSticky` 表示当前是否处于吸附状态。"
+    }
+  ],
+  "exposes": [
+    {
+      "name": "getRect",
+      "description": "重新测量组件的位置与尺寸并更新内部 rect（内容或布局变化导致高度改变后可手动调用）"
+    },
+    {
+      "name": "isSticky",
+      "description": "当前是否处于吸顶状态"
+    },
+    {
+      "name": "height",
+      "description": ""
+    },
+    {
+      "name": "position",
+      "description": ""
+    },
+    {
+      "name": "rect",
+      "description": ""
+    },
+    {
+      "name": "forceUpdate",
+      "description": ""
+    }
+  ],
+  "examples": [
+    {
+      "title": "Web 演示",
+      "path": "app/components/reborn/examples/reborn-sticky/RebornStickyDemo.vue",
+      "source": "demo",
+      "platform": "web",
+      "code": "<script setup lang=\"ts\">\nimport { DemoBlock, DemoNote, DemoSection } from \"#components\";\nimport { shallowRef, useTemplateRef } from \"vue\";\nimport RebornSticky from \"~/components/reborn/ui/reborn-sticky/RebornSticky.vue\";\n\n/** 吸顶演示需要一段可滚动内容，列表本身无背景，靠分隔线区分条目 */\nconst listA = Array.from({ length: 8 }, (_, i) => i + 1);\nconst listB = Array.from({ length: 8 }, (_, i) => i + 1);\nconst listC = Array.from({ length: 16 }, (_, i) => i + 1);\n\n/** 基础用法的演示区：三条吸顶条都以它为 target，滚出演示区后停靠在底部，不会一直盖在整页上 */\nconst basicEl = useTemplateRef<HTMLElement>(\"basicEl\");\n\n// ─── 限制在目标容器内 ─────────────────────────────────────────────\n\n/** 目标父元素：直接传 DOM 元素而不是选择器，页面上同时存在多份 demo 时不会串到别的容器 */\nconst targetEl = useTemplateRef<HTMLElement>(\"targetEl\");\n/** 目标容器内的条目 */\nconst targetList = Array.from({ length: 10 }, (_, i) => i + 1);\n/** 吸附状态回显：change 事件在固定与恢复文档流之间切换时派发 */\nconst targetSticky = shallowRef(false);\n</script>\n\n<template>\n  <div class=\"flex w-full min-w-0 flex-col\">\n    <DemoSection\n      title=\"基础用法\"\n      description=\"与 CSS position: sticky 一致：组件到达预设的顶部距离后固定。下方三条吸顶条分别使用 offset 0 / 40 / 80，可叠加；三条都把 target 指向本演示区，滚出演示区后停靠在它的底部。\"\n    >\n      <DemoBlock\n        layout=\"stack\"\n        tone=\"inset\"\n      >\n        <!-- 演示区本体：作为三条吸顶条的 target，吸附范围不超出这里 -->\n        <div ref=\"basicEl\" class=\"flex w-full flex-col gap-4\">\n          <RebornSticky :target=\"basicEl ?? undefined\">\n            <div class=\"bg-primary rounded-sm flex h-10 items-center px-3 text-sm text-white\">\n              默认吸顶 · offset 0\n            </div>\n          </RebornSticky>\n\n          <div\n            v-for=\"item in listA\"\n            :key=\"`a-${item}`\"\n            class=\"border-default border-b py-3 last:border-b-0\"\n          >\n            <span class=\"text-muted text-sm\">条目 A · {{ item }}</span>\n          </div>\n\n          <RebornSticky :target=\"basicEl ?? undefined\" :offset-top=\"40\">\n            <div class=\"bg-warning rounded-sm flex h-10 items-center px-3 text-sm text-white\">\n              吸顶 · offset 40px\n            </div>\n          </RebornSticky>\n\n          <div\n            v-for=\"item in listB\"\n            :key=\"`b-${item}`\"\n            class=\"border-default border-b py-3 last:border-b-0\"\n          >\n            <span class=\"text-muted text-sm\">条目 B · {{ item }}</span>\n          </div>\n\n          <RebornSticky :target=\"basicEl ?? undefined\" :offset-top=\"80\">\n            <div class=\"bg-success rounded-sm flex h-10 items-center px-3 text-sm text-white\">\n              吸顶 · offset 80px\n            </div>\n          </RebornSticky>\n\n          <div\n            v-for=\"item in listC\"\n            :key=\"`c-${item}`\"\n            class=\"border-default border-b py-3 last:border-b-0\"\n          >\n            <span class=\"text-muted text-sm\">条目 C · {{ item }}</span>\n          </div>\n        </div>\n      </DemoBlock>\n    </DemoSection>\n\n    <DemoSection title=\"限制在目标容器内（仅 Web）\">\n      <template #description>\n        <code>target</code>\n        传 CSS 选择器或 DOM 元素后，吸附只在该容器范围内生效；页面滚动越过容器底部时，吸附条停靠在容器内侧底边，随容器一起离开视口，不会盖到容器之外的内容。\n      </template>\n      <DemoBlock layout=\"stack\" tone=\"inset\">\n        <div ref=\"targetEl\" class=\"border-success/60 w-full rounded-lg border border-dashed p-3\">\n          <RebornSticky :target=\"targetEl ?? undefined\" @change=\"targetSticky = $event\">\n            <div class=\"bg-success rounded-sm flex h-10 items-center px-3 text-sm text-white\">\n              仅在虚线框内吸顶{{ targetSticky ? \" · 已吸附\" : \"\" }}\n            </div>\n          </RebornSticky>\n          <div\n            v-for=\"item in targetList\"\n            :key=\"`t-${item}`\"\n            class=\"border-default border-b py-3 last:border-b-0\"\n          >\n            <span class=\"text-muted text-sm\">目标容器内 · {{ item }}</span>\n          </div>\n        </div>\n        <div class=\"text-dimmed flex h-40 w-full items-center justify-center text-sm\">\n          虚线框之外的内容：继续向下滚动，吸附条停在虚线框底部，不会跟到这里\n        </div>\n      </DemoBlock>\n      <DemoNote tone=\"dimmed\">\n        虚线框就是目标父元素。不传 <code>target</code> 时没有停靠边界，吸附条一旦固定就一直跟随视口，即使它所在的区域已经滚出页面。\n      </DemoNote>\n    </DemoSection>\n  </div>\n</template>\n"
+    },
+    {
+      "title": "UniApp 演示",
+      "path": "packages/uniapp-project/src/pages/reborn-sticky/RebornStickyDemo.vue",
+      "source": "demo",
+      "platform": "uniapp",
+      "code": "<script setup lang=\"ts\">\nimport type { backTopColors, backTopSizes } from '@/components/reborn-back-top/reborn-back-top.config'\nimport { onPageScroll } from '@dcloudio/uni-app'\nimport { shallowRef } from 'vue'\nimport RebornBackTop from '@/components/reborn-back-top/RebornBackTop.vue'\nimport RebornPage from '@/components/reborn-page/RebornPage.vue'\nimport RebornSticky from '@/components/reborn-sticky/RebornSticky.vue'\n\nconst items = Array.from({ length: 20 }, (_, i) => `Item ${i + 1}`)\nconst scrollTop = shallowRef(0)\n\nconst color = shallowRef<typeof backTopColors[number]>('primary')\nconst size = shallowRef<typeof backTopSizes[number]>('md')\n\nonPageScroll((e) => {\n  scrollTop.value = e.scrollTop\n})\n</script>\n\n<template>\n  <RebornPage title=\"Sticky 吸顶\"\n    description=\"该组件与CSS中position: sticky属性实现的效果一致，当组件达到预设的到顶部距离时， 就会固定在指定位置，组件位置大于预设的顶部距离时，会重新按照正常的布局排列。\"\n    custom-class=\"space-y-2\">\n    <RebornSticky :scroll-top=\"scrollTop\">\n      <view class=\"rounded flex h-[40px] flex-row items-center bg-primary p-3 text-white\">\n        Header - 1\n      </view>\n    </RebornSticky>\n\n    <view v-for=\"(item, index) in items\" :key=\"item\" class=\"\n        rounded bg-white p-3 shadow\n        dark:bg-gray-800 dark:text-white mb-2\n      \" :class=\"[index == 0 ? 'mt-2' : '']\">\n      {{ item }}\n    </view>\n\n    <RebornSticky :scroll-top=\"scrollTop\" :offset-top=\"40\">\n      <view class=\"rounded flex h-[40px] flex-row items-center bg-warning p-3 text-white\">\n        Header - 2\n      </view>\n    </RebornSticky>\n\n    <view v-for=\"(item, index) in items\" :key=\"item\" class=\"\n        rounded bg-white p-3 shadow\n        dark:bg-gray-800 dark:text-white mb-2 \n      \" :class=\"[index == 0 ? 'mt-2' : '']\">\n      {{ item }}\n    </view>\n\n    <RebornSticky :scroll-top=\"scrollTop\" :offset-top=\"80\">\n      <view class=\"rounded flex h-[40px] flex-row items-center bg-success p-3 text-white\">\n        Header - 3\n      </view>\n    </RebornSticky>\n\n    <view v-for=\"(item, index) in items\" :key=\"item\" class=\"\n        rounded bg-white p-3 shadow\n        dark:bg-gray-800 dark:text-white mb-2 \n      \" :class=\"[index == 0 ? 'mt-2' : '']\">\n      {{ item }}\n    </view>\n\n    <!-- 基础用法 -->\n    <RebornBackTop :color=\"color\" :size=\"size\" :scroll-top=\"scrollTop\" />\n  </RebornPage>\n</template>\n"
+    }
+  ],
+  "related": [],
+  "whenToUse": [
+    "列表分组标题、筛选栏等滚动到顶部后保持可见。",
+    "uniapp 页面中需要吸顶且能感知页面滚动（通过 onPageScroll 传入 scrollTop）。",
+    "需要根据吸附状态调整内容样式（default 插槽提供 isSticky 作用域参数）。"
+  ],
+  "whenNotToUse": [
+    "固定位置且可拖拽的悬浮元素改用 reborn-affix。",
+    "滚动一定距离后出现的返回顶部按钮改用 reborn-back-top。"
+  ],
+  "pitfalls": [
+    "web 与 uniapp 双端均可用。",
+    "uniapp 页面滚动场景须把 onPageScroll 的滚动距离传给 scrollTop prop，否则无法正确判断吸附。",
+    "isNeedNavbarHeight 默认 true，H5 端会自动叠加 navbarHeight（默认 44px）作为吸顶偏移。",
+    "position 支持 top / bottom，底部吸附还受 bottomBoundary 与 bottomPlaceholder 影响。",
+    "Web 暴露的 rect 为只读；通过 forceUpdate() 重新采集同帧几何快照。Sticky 通过类型化登记协调后代 Collapse 动画，动画期间暂停吸顶切换，结束后统一测量。"
+  ],
+  "dependencies": [
+    "@weapp-tailwindcss/variants-v3",
+    "clsx",
+    "tailwind-merge",
+    "tailwind-variants"
+  ],
+  "install": {
+    "cli": "npx reborn-ui@latest add reborn-sticky"
+  },
+  "sourceRefs": {
+    "web": [
+      "app/components/reborn/ui/reborn-sticky/RebornSticky.vue",
+      "app/components/reborn/ui/reborn-sticky/reborn-sticky.config.ts",
+      "app/components/reborn/ui/reborn-sticky/useStickyBottom.ts",
+      "app/components/reborn/ui/reborn-sticky/useStickyMetrics.ts",
+      "app/components/reborn/ui/reborn-sticky/useStickyTop.ts"
+    ],
+    "uniapp": [
+      "packages/uniapp-project/src/components/reborn-sticky/RebornSticky.vue",
+      "packages/uniapp-project/src/components/reborn-sticky/index.ts",
+      "packages/uniapp-project/src/components/reborn-sticky/reborn-sticky.config.ts"
+    ]
+  },
+  "docPath": "content/2.components/navigation/reborn-sticky.md",
+  "_meta": {
+    "contentHash": "64183bfcd37bbe57e86f97081fc608235be17959",
+    "hasOverride": true,
+    "extractors": {
+      "web": "ok",
+      "uniapp": "ok",
+      "docs": "found"
+    }
+  }
+}

@@ -1,0 +1,254 @@
+{
+  "$schema": "../schema/component.schema.json",
+  "id": "reborn-calendar",
+  "title": "Calendar 日历",
+  "description": "按月或按年展示事项的日历：支持公农历、直角边框、日期格插槽、时区与字符串绑定值。",
+  "category": "data-display",
+  "tags": [
+    "calendar",
+    "date",
+    "schedule",
+    "event",
+    "lunar"
+  ],
+  "platforms": [
+    "web"
+  ],
+  "props": [
+    {
+      "name": "id",
+      "type": "string",
+      "required": false,
+      "description": "SSR 根节点标识；不传时由 useId 生成。",
+      "default": "useId()"
+    },
+    {
+      "name": "range",
+      "type": "[Date, Date]",
+      "required": false,
+      "description": "只显示一段日期：[开始, 结束]。开始会补到所在周的周日、结束补到所在周的周六， 两者须同月或相邻月；不合法时在控制台警告并退回普通月视图"
+    },
+    {
+      "name": "controllerType",
+      "type": "CalendarControllerType",
+      "required": false,
+      "description": "工具栏左侧的切换控件：select 年份 / 月份下拉，button 前后翻页按钮 + 年月标题 @defaultValue 'select'",
+      "default": "\"select\""
+    },
+    {
+      "name": "formatter",
+      "type": "CalendarFormatter",
+      "required": false,
+      "description": "年份、月份下拉选项的文案；不传时为「2026 年」「10 月」"
+    },
+    {
+      "name": "events",
+      "type": "CalendarEvent[]",
+      "required": false,
+      "description": "事项数据，按 date 落到对应的日期格；年视图里按月汇总 @defaultValue []",
+      "default": "() => []"
+    },
+    {
+      "name": "color",
+      "type": "CalendarColor",
+      "required": false,
+      "description": "语义色：有事项及选中日期的浅底与顶边、日期标记、可选的本日 / 本月文字高亮、事项圆点的默认色； 同时传给工具栏的年月下拉与月 / 年切换 @defaultValue 'primary'",
+      "default": "\"primary\""
+    },
+    {
+      "name": "titleAlign",
+      "type": "CalendarTitleAlign",
+      "required": false,
+      "description": "表头星期与日期标题的水平对齐 @defaultValue 'right'",
+      "default": "\"right\""
+    },
+    {
+      "name": "border",
+      "type": "boolean",
+      "required": false,
+      "description": "边框模式：主体加外框，日期格之间画分隔线，整体成网格 @defaultValue false",
+      "default": "false"
+    },
+    {
+      "name": "highlightToday",
+      "type": "boolean",
+      "required": false,
+      "description": "强调今天（月视图）或本月（年视图），顶边使用 color 对应色板第 6 阶，日期仅高亮文字 @defaultValue false",
+      "default": "false"
+    },
+    {
+      "name": "lunar",
+      "type": "boolean",
+      "required": false,
+      "description": "农历模式：公历日期下方显示较小的农历日，节日、节气优先，初一显示月名；工具栏显示干支年与生肖 @defaultValue false",
+      "default": "false"
+    },
+    {
+      "name": "timezone",
+      "type": "string",
+      "required": false,
+      "description": "时区（IANA 名称，如 'Asia/Shanghai'）。决定「今天」是哪天、带时区的时刻落在哪天， 以及向外派发的 Date 取哪个时区的零点；不传时用运行环境的本地时区"
+    },
+    {
+      "name": "valueFormat",
+      "type": "string",
+      "required": false,
+      "description": "绑定值格式（dayjs 格式串，如 'YYYY-MM-DD'）。设置后 v-model 收发字符串， 不再经过 Date 的时区换算，提交给接口不会差一天"
+    },
+    {
+      "name": "class",
+      "type": "any",
+      "required": false,
+      "description": "追加到根容器的类名"
+    },
+    {
+      "name": "ui",
+      "type": "CalendarUI",
+      "required": false,
+      "description": "按结构键覆盖各节点样式 可用键（从源码抽取，以此为准）——Web：body、cell、cellHeader*、content*、controller*、date*、event*、eventDot*、eventList*、eventTitle*、header、lunar*、lunarYear*、navButton*、root、row、select*、title*、weekday。 带 * 的键对应插槽兜底节点：填了同名插槽，组件自带的节点被替换，这个键随之失效。",
+      "default": "() => ({})"
+    },
+    {
+      "name": "modelValue",
+      "type": "Date | string",
+      "required": false,
+      "description": "双向绑定值",
+      "vModel": true
+    },
+    {
+      "name": "mode",
+      "type": "CalendarMode",
+      "required": false,
+      "description": "双向绑定值",
+      "vModel": true,
+      "default": "'month'"
+    }
+  ],
+  "events": [
+    {
+      "name": "panelChange",
+      "payload": "[date: Date, mode: CalendarMode]",
+      "description": "显示的月份、年份或视图模式变化时触发，参数为新的视图基准日与模式，常用来按需拉取事项；模板里写 @panel-change"
+    },
+    {
+      "name": "update:modelValue",
+      "description": "modelValue 变化时触发（v-model 同步）",
+      "payload": "(value: Date | string)"
+    },
+    {
+      "name": "update:mode",
+      "description": "mode 变化时触发（v-model 同步）",
+      "payload": "(value: 'month' | 'year')"
+    }
+  ],
+  "slots": [
+    {
+      "name": "header",
+      "props": "(props: { date: string; value: Date; mode: CalendarMode; selectDate: (type: CalendarDateType) => void }) => any",
+      "description": "整个工具栏；date 是当前标题文案（如「2026 年 10 月」）"
+    },
+    {
+      "name": "date-cell",
+      "props": "(props: { data: CalendarDateCellData; events: CalendarEvent[] }) => any",
+      "description": "月视图（含区间视图）里单个日期格的内容，替换日期标题与事项区"
+    }
+  ],
+  "exposes": [
+    {
+      "name": "selectedDay",
+      "description": "当前已选日期"
+    },
+    {
+      "name": "pickDay",
+      "description": "选择一个具体日期"
+    },
+    {
+      "name": "selectDate",
+      "description": "选择日期：prev-month / next-month / prev-year / next-year / today"
+    },
+    {
+      "name": "calculateValidatedDateRange",
+      "description": "根据开始与结束日期计算验证后的日期区间"
+    }
+  ],
+  "examples": [
+    {
+      "title": "Web 演示 · RebornCalendarDemo",
+      "path": "app/components/reborn/examples/reborn-calendar/RebornCalendarDemo.vue",
+      "source": "demo",
+      "platform": "web",
+      "code": "<script setup lang=\"ts\">\nimport type { CalendarDateType, CalendarEvent, CalendarMode } from \"~/components/reborn/ui/reborn-calendar\";\nimport { DemoBlock, DemoNote, DemoSection, Icon, Playground } from \"#components\";\nimport { computed, ref, shallowRef, useTemplateRef } from \"vue\";\nimport RebornButton from \"~/components/reborn/ui/reborn-button/RebornButton.vue\";\nimport { calendarColors, calendarControllerTypes, calendarModes, calendarTitleAligns } from \"~/components/reborn/ui/reborn-calendar/reborn-calendar.config\";\nimport RebornCalendar from \"~/components/reborn/ui/reborn-calendar/RebornCalendar.vue\";\nimport RebornCheckbox from \"~/components/reborn/ui/reborn-checkbox/RebornCheckbox.vue\";\nimport RebornRadioGroup from \"~/components/reborn/ui/reborn-radio/RebornRadioGroup.vue\";\nimport RebornCalendarEventsDemo from \"./RebornCalendarEventsDemo.vue\";\n\nconst colorOptions = calendarColors.map((c) => ({ label: c.charAt(0).toUpperCase() + c.slice(1), value: c }));\nconst controllerOptions = calendarControllerTypes.map((t) => ({\n  label: t === \"select\" ? \"年月下拉 select\" : \"翻页按钮 button\",\n  value: t,\n}));\nconst modeOptions = calendarModes.map((m) => ({ label: m === \"month\" ? \"月视图 month\" : \"年视图 year\", value: m }));\nconst ALIGN_LABELS = { left: \"靠左 left\", center: \"居中 center\", right: \"靠右 right\" } as const;\nconst alignOptions = calendarTitleAligns.map((a) => ({ label: ALIGN_LABELS[a], value: a }));\n\n/** 演示数据都落在本月，任何时候打开都能看到事项 */\nconst now = new Date();\n/** 本月第 day 天 */\nconst day = (d: number) => new Date(now.getFullYear(), now.getMonth(), d);\n/** 格式化成 M月D日，用于事件回显；设置了 valueFormat 的绑定值是字符串，原样显示 */\nconst label = (date?: Date | string) =>\n  typeof date === \"string\" ? date : date ? `${date.getMonth() + 1}月${date.getDate()}日` : \"未选择\";\n\n/** 一组覆盖单条、多条、超过三条（滚动）与自定义圆点色的事项 */\nconst sampleEvents: CalendarEvent[] = [\n  { date: day(3), title: \"需求评审\" },\n  { date: day(8), title: \"版本发布\", color: \"success\" },\n  { date: day(8), title: \"发布复盘会\" },\n  { date: day(12), title: \"季度预算提交截止\", color: \"warning\" },\n  { date: day(16), title: \"设计走查\" },\n  { date: day(16), title: \"前端联调\" },\n  { date: day(16), title: \"接口冒烟测试\", color: \"info\" },\n  { date: day(16), title: \"线上故障演练\", color: \"error\" },\n  { date: day(16), title: \"周报汇总\" },\n  { date: day(22), title: \"客户回访\", color: \"secondary\" },\n  { date: day(27), title: \"团队分享：日历组件的周首计算\" },\n];\n\n// ─── 交互演练场 ─────────────────────────────────────────────────\n\n/** 演练场默认状态，与组件默认值一致 */\nconst defaultState: Record<string, any> = {\n  controllerType: \"select\",\n  color: \"primary\",\n  mode: \"month\",\n  titleAlign: \"right\",\n  border: false,\n  highlightToday: false,\n  lunar: false,\n};\n\nconst state = ref<Record<string, any>>({ ...defaultState });\nconst playgroundValue = shallowRef<Date | string>();\n/** 最近一次事件的回显 */\nconst lastEvent = shallowRef(\"尚未触发\");\n\nfunction onPanelChange(date: Date, mode: CalendarMode) {\n  lastEvent.value = `panel-change：${date.getFullYear()} 年 ${date.getMonth() + 1} 月，${mode}`;\n}\n\n/** 重置演练场配置 */\nfunction resetState() {\n  state.value = { ...defaultState };\n  playgroundValue.value = undefined;\n  lastEvent.value = \"尚未触发\";\n}\n\n/** 演练场控制面板配置 */\nconst controls: any = [\n  {\n    title: \"基础属性\",\n    children: [\n      {\n        label: \"工具栏控制器\",\n        key: \"controllerType\",\n        component: \"select\" as const,\n        defaultValue: \"select\",\n        props: { options: controllerOptions },\n      },\n      {\n        label: \"语义色\",\n        key: \"color\",\n        component: \"select\" as const,\n        defaultValue: \"primary\",\n        props: { options: colorOptions },\n      },\n      {\n        label: \"视图模式（v-model:mode）\",\n        key: \"mode\",\n        component: \"select\" as const,\n        defaultValue: \"month\",\n        props: { options: modeOptions },\n      },\n      {\n        label: \"标题对齐\",\n        key: \"titleAlign\",\n        component: \"select\" as const,\n        defaultValue: \"right\",\n        props: { options: alignOptions },\n      },\n    ],\n  },\n  {\n    title: \"外观\",\n    children: [\n      { label: \"边框模式（border）\", key: \"border\", component: \"checkbox\" as const, defaultValue: false },\n      { label: \"高亮本日 / 本月（highlightToday）\", key: \"highlightToday\", component: \"checkbox\" as const, defaultValue: false },\n      { label: \"农历模式（lunar）\", key: \"lunar\", component: \"checkbox\" as const, defaultValue: false },\n    ],\n  },\n];\n\n/** 演练场右上角展示的等价代码：完整列出当前全部参数 */\nconst calendarCode = computed(() => {\n  const s = state.value;\n  return [\n    \"<RebornCalendar\",\n    '  v-model=\"value\"',\n    '  v-model:mode=\"mode\"',\n    '  :events=\"events\"',\n    `  controller-type=\"${s.controllerType}\"`,\n    `  color=\"${s.color}\"`,\n    `  title-align=\"${s.titleAlign}\"`,\n    `  :border=\"${s.border}\"`,\n    `  :highlight-today=\"${s.highlightToday}\"`,\n    `  :lunar=\"${s.lunar}\"`,\n    '  @panel-change=\"onPanelChange\"',\n    \"/>\",\n  ].join(\"\\n\");\n});\n\n// ─── 场景演示状态 ───────────────────────────────────────────────\n\nconst basicValue = shallowRef<Date | string>();\n\n/** 事项与语义色：切换日历的 color，事项自带的 color 只影响圆点 */\nconst eventColor = shallowRef<(typeof calendarColors)[number]>(\"primary\");\n\n/** 标题对齐与边框：同一个日历切换两种外观 */\nconst alignValue = shallowRef<(typeof calendarTitleAligns)[number]>(\"right\");\nconst bordered = shallowRef(true);\n\n/** 农历模式：当月节日、节气照常显示，事项与农历并存 */\nconst lunarValue = shallowRef<Date | string>();\n\n/** 年视图 */\nconst yearValue = shallowRef<Date | string>();\nconst yearMode = shallowRef<CalendarMode>(\"year\");\n\n/** 工具栏控制器：翻页按钮 + 自定义下拉文案 */\nconst buttonValue = shallowRef<Date | string>();\nconst formatterValue = shallowRef<Date | string>();\n/** 年份显示为「2026」，月份显示为英文缩写 */\nconst MONTH_ABBR = [\"Jan\", \"Feb\", \"Mar\", \"Apr\", \"May\", \"Jun\", \"Jul\", \"Aug\", \"Sep\", \"Oct\", \"Nov\", \"Dec\"];\nfunction formatter(value: number, type: \"year\" | \"month\") {\n  return type === \"year\" ? value : MONTH_ABBR[value - 1]!;\n}\n\n/** 日期区间：本月 10 日所在周到 23 日所在周 */\nconst rangeValue = shallowRef<Date | string>();\nconst range: [Date, Date] = [day(10), day(23)];\n\n/** 时区与绑定值格式：v-model 收发 YYYY-MM-DD 字符串，「今天」与带时区的事项按纽约时间落日 */\nconst zonedValue = shallowRef<string>();\n/** 同一时刻：北京时间 9 日 8 点，纽约还是 8 日晚上 */\nconst zonedEvents: CalendarEvent[] = [\n  { date: new Date(Date.UTC(now.getFullYear(), now.getMonth(), 9, 0)), title: \"北京 9 日 8:00 的会\" },\n  { date: `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, \"0\")}-15`, title: \"不带时区的日期\" },\n];\n\n/** 自定义日期格 */\nconst cellValue = shallowRef<Date | string>();\n/** 用「周末」与「月初」两个标记示范 data 参数 */\nfunction cellBadge(date: Date, type: string) {\n  if (type !== \"current-month\") return \"\";\n  if (date.getDate() === 1) return \"月初\";\n  return date.getDay() === 0 || date.getDay() === 6 ? \"周末\" : \"\";\n}\n\n/** 自定义工具栏 */\nconst headerValue = shallowRef<Date | string>();\n\n/** 实例方法 */\nconst exposeValue = shallowRef<Date | string>();\nconst calendarRef = useTemplateRef<InstanceType<typeof RebornCalendar>>(\"calendarRef\");\nconst jumpTargets: { label: string; type: CalendarDateType }[] = [\n  { label: \"上一年\", type: \"prev-year\" },\n  { label: \"上个月\", type: \"prev-month\" },\n  { label: \"今天\", type: \"today\" },\n  { label: \"下个月\", type: \"next-month\" },\n  { label: \"下一年\", type: \"next-year\" },\n];\n</script>\n\n<template>\n  <div class=\"flex w-full flex-col\">\n    <!-- 日历需要整行宽度：控制面板放到上方，预览区占满 -->\n    <Playground\n      v-model=\"state\"\n      :controls=\"controls\"\n      :code=\"calendarCode\"\n      component-name=\"RebornCalendar\"\n      title=\"交互演练场\"\n      description=\"调节参数，查看日历在不同控制器、语义色、对齐、边框与农历模式下的表现。\"\n    >\n      <template #tag>\n        <RebornButton size=\"sm\" variant=\"soft\" color=\"neutral\" @click=\"resetState\">\n          <template #leading>\n            <Icon name=\"lucide:rotate-ccw\" size=\"12\" />\n          </template>\n          重置配置\n        </RebornButton>\n      </template>\n\n      <!-- pt-10 让出预览区右上角的「传参明细」按钮，避免压住「今天」 -->\n      <div class=\"flex w-full flex-col gap-4 pt-10\">\n        <RebornCalendar\n          v-model=\"playgroundValue\"\n          v-model:mode=\"state.mode\"\n          :events=\"sampleEvents\"\n          :controller-type=\"state.controllerType\"\n          :color=\"state.color\"\n          :title-align=\"state.titleAlign\"\n          :border=\"state.border\"\n          :highlight-today=\"state.highlightToday\"\n          :lunar=\"state.lunar\"\n          @panel-change=\"onPanelChange\"\n        />\n        <DemoNote tone=\"dimmed\" class=\"font-mono text-xs\">\n          v-model：{{ label(playgroundValue) }}；最近事件：{{ lastEvent }}\n        </DemoNote>\n      </div>\n    </Playground>\n\n    <DemoSection title=\"基础用法\" class=\"relative z-30\">\n      <template #description>\n        <code>v-model</code>\n        绑定选中日期；未选中时视图停在本月，点日期即选中，点上下月补位的日期会跟着翻到那个月。\n      </template>\n      <DemoBlock layout=\"stack\">\n        <RebornCalendar v-model=\"basicValue\" />\n        <DemoNote tone=\"dimmed\">选中：{{ label(basicValue) }}</DemoNote>\n      </DemoBlock>\n    </DemoSection>\n\n    <DemoSection title=\"事项与语义色\" class=\"relative z-20\">\n      <template #description>\n        <code>events</code>\n        按\n        <code>date</code>\n        落到日期格，超过三条在事项区内滚动；<code>color</code>\n        决定有事项日期的浅底、顶边与日期文字，并传给工具栏的年月下拉与月 / 年切换；事项自带的\n        <code>color</code>\n        只改它自己的圆点。\n      </template>\n      <DemoBlock layout=\"stack\" class=\"gap-4\">\n        <RebornRadioGroup v-model=\"eventColor\" type=\"pure-button\" size=\"sm\" :options=\"colorOptions\" />\n        <RebornCalendar :events=\"sampleEvents\" :color=\"eventColor\" />\n      </DemoBlock>\n      <DemoNote>16 日有 5 条事项，事项区高 65px 只露出 3 条，其余在格内滚动；滚到底不会带动页面。</DemoNote>\n    </DemoSection>\n\n    <DemoSection title=\"标题对齐与边框\">\n      <template #description>\n        <code>title-align</code>\n        控制表头星期与日期标题的对齐，默认\n        <code>right</code>；<code>border</code>\n        给主体加直角外框与格间分隔线，整体成网格。\n      </template>\n      <DemoBlock layout=\"stack\" class=\"gap-4\">\n        <div class=\"flex flex-wrap items-center gap-4\">\n          <RebornRadioGroup v-model=\"alignValue\" type=\"pure-button\" size=\"sm\" :options=\"alignOptions\" />\n          <RebornCheckbox v-model=\"bordered\" label=\"边框模式\" />\n        </div>\n        <RebornCalendar :events=\"sampleEvents\" :title-align=\"alignValue\" :border=\"bordered\" />\n      </DemoBlock>\n    </DemoSection>\n\n    <DemoSection title=\"农历模式\">\n      <template #description>\n        <code>lunar</code>\n        开启后公历日期在上，较小的农历在下：节日、节气优先，初一显示月名，其余显示日名；工具栏显示干支年与生肖。\n      </template>\n      <DemoBlock layout=\"stack\">\n        <RebornCalendar v-model=\"lunarValue\" :events=\"sampleEvents\" lunar />\n      </DemoBlock>\n      <DemoNote>\n        农历由浏览器内置的中国历法换算，不额外引入依赖；节气覆盖 2000–2099 年。节日与节气用语义色标出。\n      </DemoNote>\n    </DemoSection>\n\n    <DemoSection title=\"右键管理事项\" class=\"relative z-10\">\n      <template #description>\n        通过\n        <code>date-cell</code>\n        组合右键菜单与输入弹窗，支持同一天添加多条事项、逐项删除；数据由示例维护，切换年视图后按月显示日期与内容。\n      </template>\n      <DemoBlock layout=\"stack\">\n        <RebornCalendarEventsDemo />\n      </DemoBlock>\n      <DemoNote>\n        右键选择「添加事项」后，输入内容并点击「添加」；弹窗保持打开，便于连续追加。选择「删除事项」后可逐项删除，当天无事项时该菜单禁用。刷新页面会重置示例数据。\n      </DemoNote>\n    </DemoSection>\n\n    <DemoSection title=\"年视图\" class=\"relative z-1\">\n      <template #description>\n        <code>v-model:mode</code>\n        设为\n        <code>year</code>\n        时按月排成 3 行 4 列，每格按「年-月-日：内容」汇总当月事项；点月份会选中该月同一天并切回月视图。\n      </template>\n      <DemoBlock layout=\"stack\">\n        <RebornCalendar v-model=\"yearValue\" v-model:mode=\"yearMode\" :events=\"sampleEvents\" />\n        <DemoNote tone=\"dimmed\">当前模式：{{ yearMode }}</DemoNote>\n      </DemoBlock>\n    </DemoSection>\n\n    <DemoSection title=\"工具栏控制器\">\n      <template #description>\n        <code>controller-type</code>\n        默认\n        <code>select</code>\n        用年月下拉；设为\n        <code>button</code>\n        换成前后翻页按钮加年月标题。<code>formatter</code>\n        改写下拉选项的文案。\n      </template>\n      <DemoBlock layout=\"stack\" class=\"gap-8\">\n        <RebornCalendar v-model=\"buttonValue\" controller-type=\"button\" />\n        <RebornCalendar v-model=\"formatterValue\" :formatter=\"formatter\" />\n      </DemoBlock>\n    </DemoSection>\n\n    <DemoSection title=\"日期区间\">\n      <template #description>\n        <code>range</code>\n        只显示一段日期，开始补到所在周的周日、结束补到周六，最多跨相邻两个月；此时不显示年月下拉与月 /\n        年切换，今天不在区间内时「今天」置灰。\n      </template>\n      <DemoBlock layout=\"stack\">\n        <RebornCalendar v-model=\"rangeValue\" :range=\"range\" :events=\"sampleEvents\" />\n      </DemoBlock>\n    </DemoSection>\n\n    <DemoSection title=\"时区与绑定值格式\">\n      <template #description>\n        <code>value-format</code>\n        让\n        <code>v-model</code>\n        收发字符串，提交给接口不会因时区差一天；<code>timezone</code>\n        决定「今天」与带时区的时刻落在哪天。\n      </template>\n      <DemoBlock layout=\"stack\">\n        <RebornCalendar\n          v-model=\"zonedValue\"\n          value-format=\"YYYY-MM-DD\"\n          timezone=\"America/New_York\"\n          :events=\"zonedEvents\"\n        />\n        <DemoNote tone=\"dimmed\" class=\"font-mono text-xs\">\n          v-model：{{ zonedValue ?? \"未选择\" }}（字符串，原样提交）\n        </DemoNote>\n      </DemoBlock>\n      <DemoNote>\n        「北京 9 日 8:00 的会」是一个确定时刻，按纽约时间落在 8 日；「不带时区的日期」是墙上日期，不受时区影响。\n      </DemoNote>\n    </DemoSection>\n\n    <DemoSection title=\"自定义日期格\">\n      <template #description>\n        <code>date-cell</code>\n        插槽替换日期格的内容（日期标题与事项区），作用域参数\n        <code>data</code>\n        含\n        <code>type</code>\n        /\n        <code>isSelected</code>\n        /\n        <code>day</code>\n        /\n        <code>date</code>（开启\n        <code>lunar</code>\n        时还有\n        <code>lunar</code>），<code>events</code>\n        是当天事项。\n      </template>\n      <DemoBlock layout=\"stack\">\n        <RebornCalendar v-model=\"cellValue\" :events=\"sampleEvents\">\n          <template #date-cell=\"{ data, events }\">\n            <div class=\"flex h-[89px] flex-col gap-1\">\n              <div class=\"flex items-center justify-between\">\n                <span\n                  :class=\"[\n                    data.isSelected\n                      ? 'text-primary font-medium'\n                      : data.type === 'current-month'\n                        ? 'text-gray-9'\n                        : 'text-gray-5',\n                  ]\"\n                >\n                  {{ data.day.slice(5) }}\n                </span>\n                <span class=\"text-sm text-gray-6\">{{ cellBadge(data.date, data.type) }}</span>\n              </div>\n              <span v-if=\"events.length\" class=\"text-sm text-gray-7\">{{ events.length }} 条事项</span>\n            </div>\n          </template>\n        </RebornCalendar>\n      </DemoBlock>\n      <DemoNote>用了插槽后默认的日期标题和事项列表会被替换，需要时在插槽里自己渲染。</DemoNote>\n    </DemoSection>\n\n    <DemoSection title=\"自定义工具栏\">\n      <template #description>\n        <code>header</code>\n        插槽替换整个工具栏，作用域参数\n        <code>date</code>\n        是标题文案，<code>selectDate</code>\n        用来翻页。\n      </template>\n      <DemoBlock layout=\"stack\">\n        <RebornCalendar v-model=\"headerValue\">\n          <template #header=\"{ date, selectDate }\">\n            <div class=\"flex w-full items-center justify-between\">\n              <span class=\"text-lg font-medium text-gray-10\">{{ date }}</span>\n              <div class=\"flex items-center gap-2\">\n                <RebornButton size=\"sm\" variant=\"soft\" color=\"neutral\" @click=\"selectDate('prev-month')\">\n                  上个月\n                </RebornButton>\n                <RebornButton size=\"sm\" variant=\"soft\" color=\"neutral\" @click=\"selectDate('today')\">今天</RebornButton>\n                <RebornButton size=\"sm\" variant=\"soft\" color=\"neutral\" @click=\"selectDate('next-month')\">\n                  下个月\n                </RebornButton>\n              </div>\n            </div>\n          </template>\n        </RebornCalendar>\n      </DemoBlock>\n    </DemoSection>\n\n    <DemoSection title=\"实例方法\">\n      <template #description>\n        通过\n        <code>ref</code>\n        调用\n        <code>selectDate</code>\n        跳转、<code>pickDay</code>\n        选中具体日期，<code>selectedDay</code>\n        读当前选中日期。\n      </template>\n      <DemoBlock layout=\"stack\" class=\"gap-4\">\n        <div class=\"flex flex-wrap items-center gap-2\">\n          <RebornButton\n            v-for=\"t in jumpTargets\"\n            :key=\"t.type\"\n            size=\"sm\"\n            variant=\"outlined\"\n            color=\"neutral\"\n            @click=\"calendarRef?.selectDate(t.type)\"\n          >\n            {{ t.label }}\n          </RebornButton>\n          <RebornButton size=\"sm\" variant=\"outlined\" color=\"neutral\" @click=\"calendarRef?.pickDay(day(1))\">\n            本月 1 日\n          </RebornButton>\n        </div>\n        <RebornCalendar ref=\"calendarRef\" v-model=\"exposeValue\" />\n        <DemoNote tone=\"dimmed\">\n          selectedDay：{{ label(calendarRef?.selectedDay) }}；v-model：{{ label(exposeValue) }}\n        </DemoNote>\n      </DemoBlock>\n    </DemoSection>\n  </div>\n</template>\n"
+    },
+    {
+      "title": "Web 演示 · RebornCalendarEventsDemo",
+      "path": "app/components/reborn/examples/reborn-calendar/RebornCalendarEventsDemo.vue",
+      "source": "demo",
+      "platform": "web",
+      "code": "<script setup lang=\"ts\">\nimport type { CalendarEvent, CalendarMode } from \"~/components/reborn/ui/reborn-calendar\";\nimport type { RebornContextMenuItem } from \"~/components/reborn/ui/reborn-context-menu/RebornContextMenu.vue\";\nimport { computed, ref, shallowRef, useId } from \"vue\";\nimport RebornButton from \"~/components/reborn/ui/reborn-button/RebornButton.vue\";\nimport { formatDay } from \"~/components/reborn/ui/reborn-calendar/reborn-calendar.utils\";\nimport RebornCalendar from \"~/components/reborn/ui/reborn-calendar/RebornCalendar.vue\";\nimport RebornContextMenu from \"~/components/reborn/ui/reborn-context-menu/RebornContextMenu.vue\";\nimport RebornDialog from \"~/components/reborn/ui/reborn-dialog/RebornDialog.vue\";\nimport RebornInput from \"~/components/reborn/ui/reborn-input/RebornInput.vue\";\n\ninterface DemoEvent extends CalendarEvent {\n  /** 稳定标识用于删除单条事项，同名事项也能分别保留。 */\n  id: number;\n  date: string;\n}\n\n/** 事项由示例维护；日期使用字符串，避免序列化时因时区偏移一天。 */\nconst today = formatDay(new Date());\nconst selectedDay = shallowRef(today);\nconst mode = shallowRef<CalendarMode>(\"month\");\nconst events = ref<DemoEvent[]>([\n  { id: 1, date: today, title: \"团队例会\" },\n  { id: 2, date: today, title: \"整理本周计划\", color: \"success\" },\n]);\nlet nextId = 3;\nconst activeDay = shallowRef(today);\nconst action = shallowRef<\"add\" | \"delete\">(\"add\");\nconst dialogOpen = shallowRef(false);\nconst draft = shallowRef(\"\");\nconst lastAction = shallowRef(\"右键日期可添加或删除事项；切换到年视图可按月查看。\");\nconst inputId = useId();\nconst activeEvents = computed(() => events.value.filter((event) => event.date === activeDay.value));\nconst dateLabel = computed(() => {\n  const [year, month, day] = activeDay.value.split(\"-\");\n  return `${year}年${Number(month)}月${Number(day)}日`;\n});\nconst dialogTitle = computed(() => `${dateLabel.value}事项${action.value === \"add\" ? \"添加\" : \"删除\"}`);\n\n/** 右键操作只管理目标日期，不因补位格的选择行为切换月份。 */\nfunction openDialog(day: string, operation: \"add\" | \"delete\") {\n  activeDay.value = day;\n  action.value = operation;\n  draft.value = \"\";\n  dialogOpen.value = true;\n}\n\n/** 全日历共用一个菜单，只为右键命中的日期计算菜单项。 */\nconst menuDay = shallowRef(\"\");\nconst menuOpen = shallowRef(false);\nconst menuItems = computed(() =>\n  menuDay.value ? dateMenu(menuDay.value, events.value.filter((event) => event.date === menuDay.value).length) : [],\n);\n\n/** 捕获阶段先解析格子，落在工具栏或年视图时阻止菜单打开。 */\nfunction onCellContextMenu(event: MouseEvent) {\n  const target = event.target;\n  const cell = target instanceof Element ? target.closest<HTMLElement>(\"[data-event-day]\") : null;\n  menuDay.value = cell?.dataset.eventDay ?? \"\";\n  if (!menuDay.value) {\n    menuOpen.value = false;\n    event.stopPropagation();\n  }\n}\n\n/** 当天没有事项时，删除操作保持禁用。 */\nfunction dateMenu(day: string, count: number): RebornContextMenuItem[] {\n  return [\n    { label: \"添加事项\", icon: \"lucide:plus\", onSelect: () => openDialog(day, \"add\") },\n    {\n      label: \"删除事项\",\n      icon: \"lucide:trash-2\",\n      color: \"error\",\n      disabled: count === 0,\n      onSelect: () => openDialog(day, \"delete\"),\n    },\n  ];\n}\n\n/** 添加后保留弹窗并清空输入，便于为同一天连续添加多条。 */\nfunction addEvent() {\n  const title = draft.value.trim();\n  if (!title) return;\n  events.value.push({ id: nextId++, date: activeDay.value, title });\n  draft.value = \"\";\n  lastAction.value = `已为 ${activeDay.value} 添加：${title}`;\n}\n\n/** 输入法确认候选词时不提交，普通回车与添加按钮行为一致。 */\nfunction onInputKeydown(event: KeyboardEvent) {\n  if (event.key === \"Enter\" && !event.isComposing) {\n    event.preventDefault();\n    addEvent();\n  }\n}\n\n/** 按稳定标识删除单条，不影响当天或其他日期的其余事项。 */\nfunction deleteEvent(event: DemoEvent) {\n  events.value = events.value.filter((item) => item.id !== event.id);\n  lastAction.value = `已删除 ${event.date} 的事项：${event.title}`;\n}\n</script>\n\n<template>\n  <div class=\"flex w-full flex-col gap-4\">\n    <RebornContextMenu v-model:open=\"menuOpen\" :items=\"menuItems\" :ui=\"{ wrapper: 'w-full', trigger: 'w-full' }\">\n      <RebornCalendar\n        v-model=\"selectedDay\"\n        v-model:mode=\"mode\"\n        :events=\"events\"\n        value-format=\"YYYY-MM-DD\"\n        title-align=\"left\"\n        border\n        @contextmenu.capture=\"onCellContextMenu\"\n      >\n        <template #date-cell=\"{ data, events: dayEvents }\">\n          <div :data-event-day=\"data.day\" class=\"flex min-h-24 flex-col gap-1\">\n            <button\n              type=\"button\"\n              :aria-label=\"data.day\"\n              class=\"flex size-6 items-center justify-center rounded-full text-base tabular-nums\"\n              :class=\"\n                data.isSelected\n                  ? 'bg-primary text-gray-1'\n                  : data.type === 'current-month'\n                    ? 'text-gray-9'\n                    : 'text-gray-5'\n              \"\n            >\n              {{ data.date.getDate() }}\n            </button>\n            <ul class=\"flex h-16 flex-col overflow-y-auto overscroll-contain [scrollbar-width:thin]\">\n              <li\n                v-for=\"event in dayEvents\"\n                :key=\"event.id\"\n                :title=\"event.title\"\n                class=\"shrink-0 truncate text-base text-gray-8\"\n              >\n                {{ event.title }}\n              </li>\n            </ul>\n          </div>\n        </template>\n      </RebornCalendar>\n    </RebornContextMenu>\n    <p role=\"status\" class=\"text-sm text-gray-7\">{{ lastAction }}</p>\n\n    <RebornDialog\n      v-model=\"dialogOpen\"\n      :title=\"dialogTitle\"\n      :width=\"420\"\n      align-center\n      :confirm-btn=\"false\"\n      :cancel-btn=\"false\"\n      destroy-on-close\n    >\n      <div class=\"flex flex-col gap-4\">\n        <div v-if=\"action === 'add'\" class=\"flex flex-col gap-2 py-4\">\n          <label :for=\"inputId\" class=\"text-base text-gray-8\">事项内容</label>\n          <RebornInput :id=\"inputId\" v-model=\"draft\" placeholder=\"请输入事项内容\" autofocus @keydown=\"onInputKeydown\" />\n        </div>\n        <ul v-if=\"activeEvents.length\" class=\"flex max-h-64 flex-col gap-2 overflow-y-auto\">\n          <li v-for=\"event in activeEvents\" :key=\"event.id\" class=\"flex min-w-0 items-center gap-2\">\n            <span class=\"min-w-0 flex-1 break-words text-base text-gray-8\">{{ event.title }}</span>\n            <RebornButton\n              v-if=\"action === 'delete'\"\n              size=\"sm\"\n              color=\"error\"\n              variant=\"text\"\n              :aria-label=\"`删除${event.title}`\"\n              @click=\"deleteEvent(event)\"\n            >\n              删除\n            </RebornButton>\n          </li>\n        </ul>\n        <p v-else class=\"text-sm text-gray-6\">当天暂无事项</p>\n      </div>\n      <template #footer>\n        <RebornButton size=\"sm\" color=\"neutral\" variant=\"outlined\" @click=\"dialogOpen = false\">关闭</RebornButton>\n        <RebornButton\n          v-if=\"action === 'add'\"\n          size=\"sm\"\n          color=\"primary\"\n          variant=\"filled\"\n          :disabled=\"!draft.trim()\"\n          @click=\"addEvent\"\n        >\n          添加\n        </RebornButton>\n      </template>\n    </RebornDialog>\n  </div>\n</template>\n"
+    }
+  ],
+  "related": [
+    "reborn-button",
+    "reborn-radio",
+    "reborn-select"
+  ],
+  "whenToUse": [
+    "排期、值班、会议这类按天归档的事项总览：传 events，有事项的日期自动高亮。",
+    "需要在日历上新增、删除事项：在 date-cell 插槽里组合 reborn-context-menu 与 reborn-dialog，自己维护 events。",
+    "事项量大、要按可见月份分批拉取：监听 panel-change，按回传的日期与模式请求数据。",
+    "只关心某两三周（如一个迭代周期）：传 range，日历只显示这段日期。",
+    "年度规划的月份概览：v-model:mode=\"year\"，12 个月各自汇总当月事项，每条显示 YYYY-MM-DD：事项内容。",
+    "面向国内用户、需要看节日节气的排期：开 lunar，公历日期在上，较小的农历、节日或节气在下。",
+    "选中日期要提交给接口，或用户与服务端不在同一时区：value-format=\"YYYY-MM-DD\" 收发字符串，必要时加 timezone。"
+  ],
+  "whenNotToUse": [
+    "只是在表单里选一个日期或区间，改用 reborn-date-picker。",
+    "按时间先后展示一串事件、日期本身不重要，改用 reborn-timeline。",
+    "需要按小时排程、拖拽调整时长的周视图 / 日视图，本库暂无替代，需接入专门的排程库。"
+  ],
+  "pitfalls": [
+    "仅 web 端可用；UniApp 端只选日期时用 reborn-date-picker。",
+    "视图跟着 v-model 走：翻页、改年月下拉、点「今天」都会改写选中日期，没有独立的显示月份。",
+    "controller-type 默认是 select（年月下拉），与 el-calendar 的默认 button 不同。",
+    "一周固定从周日开始，没有 first-day-of-week 配置。",
+    "range 会自动补齐整周，但原始区间必须同月或相邻月，否则控制台警告并退回普通月视图。",
+    "事项按天归档，不支持跨天事项；跨天的需要按天拆成多条。",
+    "用了 date-cell 插槽后默认的日期标题、农历文字与事项列表一起被替换，相关 ui 键失效；date-cell 只作用于月视图。",
+    "默认 v-model 是 Date：东八区 10 月 20 日零点序列化后是 2026-10-19T16:00:00.000Z，提交接口会差一天；用 value-format 让 v-model 收发字符串。",
+    "timezone 传 IANA 名称，决定「今天」、带 Z / 偏移的时刻落在哪天、向外派发的 Date 取哪个时区零点；不带时区的字符串（如 2026-10-20）始终按日期落格。new Date('2026-10-20') 按 UTC 解析，西半球会变前一天，事项日期应传字符串。",
+    "未传 timezone 时通过 useId 或外部 id 对应的 SSR 根节点携带服务器时区与当天日期到客户端：水合前两端按服务器时区算「今天」与月份，挂载后切回用户本地时区并修正类名；两者不同时首屏可能与挂载后差一天，月份变化会派发一次 panel-change，需要首屏即最终结果就传 timezone。",
+    "lunar 依赖运行环境的 Intl 中国历法（zh-CN-u-ca-chinese），不支持时静默不显示；节气只覆盖 2000–2099 年。date-cell 插槽的 data.lunar 与导出的 getLunar 提供完整农历信息。",
+    "日历不内置编辑入口和新增、编辑事件；用 date-cell 自定义菜单与弹窗，并更新 events。演示的添加支持同日多条，删除按当天事项逐项处理；需要持久化时由业务自行保存。",
+    "color 同时作用于工具栏的年月下拉与月 / 年切换；「今天」与翻页按钮按设计固定为 neutral 描边，不跟随 color。",
+    "title-align 默认 right（表头、公历与下方农历靠右）；border 开启无圆角的边框网格。"
+  ],
+  "dependencies": [
+    "clsx",
+    "dayjs",
+    "motion-v",
+    "tailwind-merge",
+    "tailwind-variants"
+  ],
+  "install": {
+    "cli": "npx reborn-ui@latest add reborn-calendar"
+  },
+  "sourceRefs": {
+    "web": [
+      "app/components/reborn/ui/reborn-calendar/RebornCalendar.vue",
+      "app/components/reborn/ui/reborn-calendar/index.ts",
+      "app/components/reborn/ui/reborn-calendar/reborn-calendar.config.ts",
+      "app/components/reborn/ui/reborn-calendar/reborn-calendar.lunar.ts",
+      "app/components/reborn/ui/reborn-calendar/reborn-calendar.utils.ts"
+    ]
+  },
+  "docPath": "content/2.components/data/reborn-calendar.md",
+  "_meta": {
+    "contentHash": "01e78855e045ad530712637f7b0e95b9de749509",
+    "hasOverride": true,
+    "extractors": {
+      "web": "ok",
+      "uniapp": "absent",
+      "docs": "found"
+    }
+  }
+}

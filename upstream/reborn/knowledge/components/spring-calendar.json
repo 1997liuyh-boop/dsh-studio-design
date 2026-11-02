@@ -1,0 +1,121 @@
+{
+  "$schema": "../schema/component.schema.json",
+  "id": "spring-calendar",
+  "title": "弹性日历",
+  "description": "用于横向选择日期并以弹簧动画展开当日事件的日历条组件。",
+  "category": "effect",
+  "tags": [
+    "css",
+    "tailwind",
+    "motion-v"
+  ],
+  "platforms": [
+    "web"
+  ],
+  "props": [
+    {
+      "name": "calendarData",
+      "type": "CalendarDay[]",
+      "required": true,
+      "description": "定义每一天及可选事件的数组。_必填。_",
+      "default": "**—**"
+    },
+    {
+      "name": "initialIndex",
+      "type": "number",
+      "required": false,
+      "description": "不绑定 `activeIndex` 时的初始选中索引。",
+      "default": "0"
+    },
+    {
+      "name": "activeIndex",
+      "type": "number",
+      "required": false,
+      "description": "双向绑定值",
+      "vModel": true,
+      "default": "—"
+    },
+    {
+      "name": "class",
+      "type": "string",
+      "required": false,
+      "description": ""
+    },
+    {
+      "name": "text",
+      "type": "string",
+      "required": true,
+      "description": ""
+    },
+    {
+      "name": "morphTime",
+      "type": "number",
+      "required": false,
+      "description": "",
+      "default": "1.5"
+    },
+    {
+      "name": "coolDownTime",
+      "type": "number",
+      "required": false,
+      "description": "",
+      "default": "0.5"
+    }
+  ],
+  "events": [
+    {
+      "name": "update:activeIndex",
+      "description": "activeIndex 变化时触发（v-model 同步）"
+    }
+  ],
+  "slots": [],
+  "exposes": [],
+  "examples": [
+    {
+      "title": "Web 演示",
+      "path": "app/components/reborn/examples/spring-calendar/SpringCalendarDemo.vue",
+      "source": "demo",
+      "platform": "web",
+      "code": "<script lang=\"ts\" setup>\nconst calendarData = [\n  { month: \"APRIL\", date: 22, day: \"TUE\" },\n  { month: \"APRIL\", date: 23, day: \"WED\" },\n  {\n    month: \"APRIL\",\n    date: 24,\n    day: \"THU\",\n    events: [\n      { title: \"Team Meeting\", day: \"Today\", time: \"2:00 PM\" },\n      { title: \"Project Deliver\", day: \"Tomorrow\", time: \"4:00 PM\" },\n    ],\n  },\n  {\n    month: \"APRIL\",\n    date: 25,\n    day: \"FRI\",\n    events: [{ title: \"Party\", day: \"Tomorrow\", time: \"5:00 PM\" }],\n  },\n  { month: \"APRIL\", date: 26, day: \"SAT\" },\n  { month: \"APRIL\", date: 27, day: \"SUN\" },\n  {\n    month: \"APRIL\",\n    date: 28,\n    day: \"MON\",\n    events: [{ title: \"Cry for Monday Blue\", day: \"Next Week\", time: \"10:00 AM\" }],\n  },\n];\n</script>\n\n<template>\n  <div class=\"flex min-h-[32rem] w-full items-center justify-center py-4\">\n    <SpringCalendar :calendar-data=\"calendarData\" />\n  </div>\n</template>\n"
+    }
+  ],
+  "related": [],
+  "whenToUse": [
+    "活动、日程页横向展示若干日期并预览当日事件时。",
+    "需要点击日期后以弹性动画展开事件列表的交互。",
+    "需要通过 v-model:active-index 双向绑定或 update:activeIndex 感知选中日期的场景。"
+  ],
+  "whenNotToUse": [
+    "表单中选择日期值，改用 reborn-date-picker 或 reborn-date-picker-panel。",
+    "需要完整月视图日历时不适用，本组件仅按 calendarData 数组渲染给定的日期条目。"
+  ],
+  "pitfalls": [
+    "仅 web 端可用，依赖 motion-v。",
+    "calendarData 必填，元素含 month/date/day 与可选 events（title/day/time）。",
+    "props 中的 text/morphTime/coolDownTime 来自内部 TextMorph 子组件的提取结果，示例中无需传入，常规用法只传 calendarData 与 initialIndex（或 v-model:active-index）。",
+    "activeIndex 绑定后由外部值决定选中项，initialIndex 只在未绑定时作为初值；越界下标会夹到 calendarData 范围内。"
+  ],
+  "dependencies": [
+    "motion-v"
+  ],
+  "install": {
+    "cli": "npx reborn-ui@latest add spring-calendar"
+  },
+  "sourceRefs": {
+    "web": [
+      "app/components/reborn/ui/spring-calendar/SpringCalendar.vue",
+      "app/components/reborn/ui/spring-calendar/TextMorph.vue",
+      "app/components/reborn/ui/spring-calendar/index.ts"
+    ]
+  },
+  "docPath": "content/2.components/special-effects/spring-calendar.md",
+  "_meta": {
+    "contentHash": "bda07475cb0d0db9dc670632a0234481a77f8d66",
+    "hasOverride": true,
+    "extractors": {
+      "web": "ok",
+      "uniapp": "absent",
+      "docs": "found"
+    }
+  }
+}

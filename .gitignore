@@ -1,0 +1,13 @@
+node_modules/
+**/lib/
+**/static/
+artifacts/
+.test-build/
+.local/
+.env*
+!.env.example
+**/*.log
+**/*.tsbuildinfo
+studio-data/
+.DS_Store
+studios/design/reborn/

@@ -1,0 +1,157 @@
+{
+  "$schema": "../schema/component.schema.json",
+  "id": "reborn-countdown",
+  "title": "Countdown 倒计时",
+  "description": "基于目标时间的倒计时，支持天数与毫秒格式、标题及前后缀插槽，回传剩余毫秒并在结束时通知。",
+  "category": "data-display",
+  "tags": [
+    "css",
+    "tailwind",
+    "countdown",
+    "statistic",
+    "dayjs"
+  ],
+  "platforms": [
+    "web"
+  ],
+  "props": [
+    {
+      "name": "value",
+      "type": "number | Dayjs",
+      "required": false,
+      "description": "目标时间：毫秒时间戳或 Dayjs 对象；未传或无效时显示零且不派发 finish"
+    },
+    {
+      "name": "format",
+      "type": "string",
+      "required": false,
+      "description": "格式支持 D / H / m / s / S，重复字母补零，方括号中的内容原样输出",
+      "default": "'HH:mm:ss'"
+    },
+    {
+      "name": "prefix",
+      "type": "string",
+      "required": false,
+      "description": "倒计时前缀，同名插槽优先"
+    },
+    {
+      "name": "suffix",
+      "type": "string",
+      "required": false,
+      "description": "倒计时后缀，同名插槽优先"
+    },
+    {
+      "name": "title",
+      "type": "string",
+      "required": false,
+      "description": "倒计时标题，同名插槽优先"
+    },
+    {
+      "name": "valueStyle",
+      "type": "string | CSSProperties",
+      "required": false,
+      "description": "数字区行内样式，包含前后缀"
+    },
+    {
+      "name": "class",
+      "type": "ClassValue",
+      "required": false,
+      "description": "根容器追加类名"
+    },
+    {
+      "name": "ui",
+      "type": "StatisticUI",
+      "required": false,
+      "description": "沿用 Statistic 的结构键覆盖类名",
+      "default": "() => ({})"
+    }
+  ],
+  "events": [
+    {
+      "name": "change",
+      "payload": "[remaining: number]",
+      "description": "剩余时间改变，参数为非负毫秒数"
+    },
+    {
+      "name": "finish",
+      "payload": "[]",
+      "description": "当前目标倒计时结束，每个目标只派发一次"
+    }
+  ],
+  "slots": [
+    {
+      "name": "title",
+      "description": "倒计时标题，覆盖 `title` 文字。"
+    },
+    {
+      "name": "prefix",
+      "description": "数字区前缀，覆盖 `prefix` 文字。"
+    },
+    {
+      "name": "suffix",
+      "description": "数字区后缀，覆盖 `suffix` 文字。"
+    }
+  ],
+  "exposes": [
+    {
+      "name": "displayValue",
+      "description": ""
+    }
+  ],
+  "examples": [
+    {
+      "title": "Web 演示",
+      "path": "app/components/reborn/examples/reborn-countdown/RebornCountdownDemo.vue",
+      "source": "demo",
+      "platform": "web",
+      "code": "<script setup lang=\"ts\">\nimport type { PlaygroundControlGroup } from \"~/components/common/play-ground/Playground.vue\";\nimport { DemoBlock, DemoNote, DemoSection, Icon, Playground } from \"#components\";\nimport dayjs from \"dayjs\";\nimport { computed, onMounted, shallowRef, useTemplateRef, watch } from \"vue\";\nimport RebornButton from \"~/components/reborn/ui/reborn-button/RebornButton.vue\";\nimport RebornCountdown from \"~/components/reborn/ui/reborn-countdown/RebornCountdown.vue\";\n\n// ─── 交互演练场 ─────────────────────────────────────────────────\n\n/** 时长只是示例控制项，实际传给组件的是绝对时间戳。 */\nconst defaultState = {\n  seconds: 90,\n  format: \"HH:mm:ss\",\n  title: \"活动剩余时间\",\n  prefix: \"\",\n  suffix: \"\",\n  emphasized: false,\n};\nconst state = shallowRef({ ...defaultState });\n/** 客户端挂载后赋值，避免示例本身在服务端读取不同时钟。 */\nconst target = shallowRef<number>();\n/** 获取公开的显示文本，与组件实际显示内容一起更新。 */\nconst countdownRef = useTemplateRef<InstanceType<typeof RebornCountdown>>(\"countdownRef\");\n/** 收起原生输入框的默认字符宽度，防止控制项撑开演练场窄栏。 */\nconst inputControlProps = { ui: { input: \"w-0\" } };\n/** 回显时间变化与结束次数。 */\nconst lastRemaining = shallowRef(0);\nconst finishCount = shallowRef(0);\n/** 重新计算演练场的截止时间。 */\nfunction restartPlayground() {\n  lastRemaining.value = 0;\n  target.value = Date.now() + state.value.seconds * 1000;\n}\n/** 重置配置与事件计数，并开始新的倒计时。 */\nfunction resetState() {\n  state.value = { ...defaultState };\n  finishCount.value = 0;\n  restartPlayground();\n}\n/** 记录组件派发的剩余毫秒数。 */\nfunction handleChange(value: number) {\n  lastRemaining.value = value;\n}\n/** 演练场控制项，不把示例时长开关当作组件参数。 */\nconst controls: PlaygroundControlGroup[] = [\n  {\n    title: \"基础属性\",\n    children: [\n      {\n        label: \"从现在开始的秒数\",\n        key: \"seconds\",\n        component: \"input-number\",\n        defaultValue: 90,\n        props: { ...inputControlProps, min: 0, max: 604800 },\n        codeIgnore: true,\n      },\n      { label: \"显示格式\", key: \"format\", component: \"input\", defaultValue: \"HH:mm:ss\", props: inputControlProps },\n      { label: \"标题\", key: \"title\", component: \"input\", defaultValue: defaultState.title, props: inputControlProps },\n      { label: \"前缀\", key: \"prefix\", component: \"input\", defaultValue: \"\", props: inputControlProps },\n      { label: \"后缀\", key: \"suffix\", component: \"input\", defaultValue: \"\", props: inputControlProps },\n    ],\n  },\n  {\n    title: \"样式\",\n    children: [\n      { label: \"数字区使用主题色\", key: \"emphasized\", component: \"checkbox\", defaultValue: false, codeIgnore: true },\n    ],\n  },\n];\n/** 生成可直接运行的配置代码，时间值保持毫秒时间戳语义。 */\nconst countdownCode = computed(() => {\n  const s = state.value;\n  return `<RebornCountdown\\n  :value=\"Date.now() + ${s.seconds} * 1000\"\\n  format=\"${s.format}\"\\n  title=\"${s.title}\"\\n  prefix=\"${s.prefix}\"\\n  suffix=\"${s.suffix}\"\\n  :value-style=\"${s.emphasized ? \"{ color: 'var(--color-primary-6)' }\" : \"{}\"}\"\\n/>`;\n});\nwatch(() => state.value.seconds, restartPlayground);\n\n// ─── 场景演示状态 ───────────────────────────────────────────────\n\n/** 各场景使用独立目标，重新开始一个示例不会影响其他倒计时。 */\nconst basicTarget = shallowRef<number>();\nconst longTarget = shallowRef<dayjs.Dayjs>();\nconst millisecondTarget = shallowRef<number>();\nconst eventTarget = shallowRef<number>();\nconst eventRemaining = shallowRef(0);\nconst eventFinished = shallowRef(false);\n/** 重新开始短倒计时，便于观察完成回调。 */\nfunction restartEvent() {\n  eventFinished.value = false;\n  eventTarget.value = Date.now() + 5000;\n}\n/** 重放毫秒示例，结束后保持零。 */\nfunction restartMilliseconds() {\n  millisecondTarget.value = Date.now() + 10000;\n}\nonMounted(() => {\n  restartPlayground();\n  basicTarget.value = Date.now() + 7 * 3600000;\n  longTarget.value = dayjs().add(2, \"day\").add(3, \"hour\");\n  restartMilliseconds();\n  restartEvent();\n});\n</script>\n\n<template>\n  <div class=\"flex w-full min-w-0 flex-col\">\n    <Playground\n      v-model=\"state\"\n      :controls=\"controls\"\n      :code=\"countdownCode\"\n      component-name=\"RebornCountdown\"\n      title=\"交互演练场\"\n      description=\"调节目标时长和显示格式，观察剩余毫秒变化与倒计时结束事件。\"\n    >\n      <template #tag>\n        <RebornButton size=\"sm\" variant=\"soft\" color=\"neutral\" @click=\"resetState\">\n          <template #leading><Icon name=\"lucide:rotate-ccw\" size=\"12\" /></template>\n          重置配置\n        </RebornButton>\n      </template>\n      <div class=\"flex w-full min-w-0 flex-col items-start gap-5\">\n        <RebornCountdown\n          ref=\"countdownRef\"\n          :value=\"target\"\n          :format=\"state.format\"\n          :title=\"state.title\"\n          :prefix=\"state.prefix\"\n          :suffix=\"state.suffix\"\n          :value-style=\"state.emphasized ? { color: 'var(--color-primary-6)' } : undefined\"\n          @change=\"handleChange\"\n          @finish=\"finishCount++\"\n        />\n        <RebornButton size=\"sm\" variant=\"outlined\" @click=\"restartPlayground\">重新开始</RebornButton>\n        <DemoNote tone=\"dimmed\" class=\"font-mono text-xs\">\n          displayValue：{{ countdownRef?.displayValue }}；剩余 {{ lastRemaining }} ms；已结束 {{ finishCount }} 次\n        </DemoNote>\n      </div>\n    </Playground>\n\n    <DemoSection title=\"目标时间\">\n      <template #description>\n        <code>value</code>\n        接收毫秒时间戳或 Dayjs 对象，默认格式为\n        <code>HH:mm:ss</code>。\n      </template>\n      <DemoBlock layout=\"grid\" :columns=\"2\">\n        <RebornCountdown title=\"距离活动开始\" :value=\"basicTarget\" />\n        <RebornCountdown title=\"会员剩余时长\" :value=\"longTarget\" />\n      </DemoBlock>\n      <DemoNote tone=\"dimmed\">默认格式没有天数，超过一天时小时会累计，例如两天显示为 48 小时。</DemoNote>\n    </DemoSection>\n\n    <DemoSection title=\"显示格式\">\n      <template #description>\n        <code>format</code>\n        支持天、小时、分、秒和毫秒；方括号中的文字原样输出，不参与单位计算。\n      </template>\n      <DemoBlock layout=\"grid\" :columns=\"2\">\n        <RebornCountdown title=\"包含天数\" :value=\"longTarget\" format=\"DD [天] HH:mm:ss\" />\n        <div class=\"flex flex-col items-start gap-3\">\n          <RebornCountdown title=\"毫秒倒计时\" :value=\"millisecondTarget\" format=\"ss.SSS\" suffix=\"秒\" />\n          <RebornButton size=\"sm\" variant=\"outlined\" @click=\"restartMilliseconds\">重播 10 秒</RebornButton>\n        </div>\n      </DemoBlock>\n    </DemoSection>\n\n    <DemoSection title=\"标题与前后缀\">\n      <template #description>\n        <code>title</code>、<code>prefix</code>、<code>suffix</code>\n        的同名插槽覆盖文字，结构样式与 Statistic 一致。\n      </template>\n      <DemoBlock layout=\"grid\" :columns=\"2\">\n        <RebornCountdown\n          title=\"限时活动\"\n          :value=\"basicTarget\"\n          prefix=\"还剩\"\n          suffix=\"结束\"\n          :ui=\"{ prefix: 'text-base text-gray-8', suffix: 'text-base text-gray-8' }\"\n        />\n        <RebornCountdown :value=\"basicTarget\" :value-style=\"{ color: 'var(--color-primary-6)' }\">\n          <template #title>\n            <span class=\"inline-flex items-center gap-1\">\n              <Icon name=\"lucide:calendar-clock\" class=\"size-4\" />\n              距离开售\n            </span>\n          </template>\n          <template #prefix><Icon name=\"lucide:timer\" class=\"size-5\" /></template>\n          <template #suffix><span class=\"text-base\">后开始</span></template>\n        </RebornCountdown>\n      </DemoBlock>\n    </DemoSection>\n\n    <DemoSection title=\"事件与重置\">\n      <template #description>\n        <code>change</code>\n        回传剩余毫秒数，<code>finish</code>\n        在到零时触发一次；更新\n        <code>value</code>\n        可重新开始。\n      </template>\n      <DemoBlock layout=\"stack\">\n        <RebornCountdown\n          title=\"短倒计时\"\n          :value=\"eventTarget\"\n          @change=\"eventRemaining = $event\"\n          @finish=\"eventFinished = true\"\n        />\n        <RebornButton size=\"sm\" variant=\"outlined\" @click=\"restartEvent\">开始 5 秒倒计时</RebornButton>\n        <DemoNote tone=\"dimmed\" class=\"font-mono text-xs\">\n          剩余 {{ eventRemaining }} ms；{{ eventFinished ? \"已结束，未再重复派发 finish\" : \"进行中\" }}\n        </DemoNote>\n      </DemoBlock>\n    </DemoSection>\n  </div>\n</template>\n"
+    }
+  ],
+  "related": [
+    "reborn-statistic"
+  ],
+  "whenToUse": [
+    "活动开始或任务截止前显示剩余时长：value 传入毫秒时间戳或 Dayjs 对象。",
+    "显示天数或毫秒：用 format 组合 DD、HH、mm、ss、SSS，文字放入方括号。",
+    "到零后更新业务界面：监听 finish，change 的参数为剩余毫秒数。"
+  ],
+  "whenNotToUse": [
+    "展示静态数值指标，改用 reborn-statistic。",
+    "用户选择目标日期，改用 reborn-date-picker。",
+    "显示任务百分比，改用 reborn-progress。"
+  ],
+  "pitfalls": [
+    "value 是目标时间戳，不能直接传秒数；开始 60 秒倒计时应传 Date.now() + 60000。",
+    "默认 HH:mm:ss 累计小时；显示 DD 后才将小时限制在一天内。",
+    "每次刷新按绝对时间校准，change 不保证严格固定的调用间隔。",
+    "服务端和水合首帧显示零，客户端挂载后开始计时与派发事件。",
+    "有效的过期目标立即 finish；缺失或无效目标不 finish；更换 value 可重启。",
+    "仅 Web 实现，展示结构依赖 reborn-statistic。"
+  ],
+  "dependencies": [
+    "clsx",
+    "dayjs",
+    "tailwind-merge",
+    "tailwind-variants"
+  ],
+  "install": {
+    "cli": "npx reborn-ui@latest add reborn-countdown"
+  },
+  "sourceRefs": {
+    "web": [
+      "app/components/reborn/ui/reborn-countdown/RebornCountdown.vue",
+      "app/components/reborn/ui/reborn-countdown/index.ts",
+      "app/components/reborn/ui/reborn-countdown/reborn-countdown.utils.ts"
+    ]
+  },
+  "docPath": "content/2.components/data/reborn-countdown.md",
+  "_meta": {
+    "contentHash": "813e5b36a023db55efeee866845351baaa09207f",
+    "hasOverride": true,
+    "extractors": {
+      "web": "ok",
+      "uniapp": "absent",
+      "docs": "found"
+    }
+  }
+}

@@ -1,0 +1,202 @@
+{
+  "$schema": "../schema/component.schema.json",
+  "id": "reborn-progress",
+  "title": "Progress 进度条",
+  "description": "用于展示任务完成比例的进度组件，支持直线、圆环、仪表盘及步骤形态、渐变与分段颜色。",
+  "category": "misc",
+  "tags": [
+    "progress",
+    "feedback",
+    "status",
+    "steps"
+  ],
+  "platforms": [
+    "web"
+  ],
+  "props": [
+    {
+      "name": "percent",
+      "type": "number",
+      "required": false,
+      "description": "当前百分比，限制在 0–100，非有限数字回退为零。",
+      "default": "0"
+    },
+    {
+      "name": "type",
+      "type": "ProgressType",
+      "required": false,
+      "description": "直线、圆环或底部开口的仪表盘。",
+      "default": "'line'"
+    },
+    {
+      "name": "size",
+      "type": "ProgressSize",
+      "required": false,
+      "description": "三档尺寸，不受内嵌文字影响。",
+      "default": "'md'"
+    },
+    {
+      "name": "status",
+      "type": "ProgressStatus",
+      "required": false,
+      "description": "显式状态，不随百分比自动切换。",
+      "default": "'default'"
+    },
+    {
+      "name": "steps",
+      "type": "number",
+      "required": false,
+      "description": "步骤数量，零表示连续进度，最多 1000 个。",
+      "default": "0"
+    },
+    {
+      "name": "strokeColor",
+      "type": "ProgressStrokeColor",
+      "required": false,
+      "description": "单色、逐步骤颜色数组或渐变配置。",
+      "default": "—"
+    },
+    {
+      "name": "segments",
+      "type": "ProgressSegment[]",
+      "required": false,
+      "description": "以累计百分比终点指定固定颜色区间。",
+      "default": "() => []"
+    },
+    {
+      "name": "textInside",
+      "type": "boolean",
+      "required": false,
+      "description": "将直线进度文字放在轨道内部，不改变轨道高度。",
+      "default": "false"
+    },
+    {
+      "name": "striped",
+      "type": "boolean",
+      "required": false,
+      "description": "条纹装饰层，仅直线形态生效。",
+      "default": "false"
+    },
+    {
+      "name": "stripedFlow",
+      "type": "boolean",
+      "required": false,
+      "description": "让条纹流动起来，需同时开启 striped。",
+      "default": "false"
+    },
+    {
+      "name": "duration",
+      "type": "number",
+      "required": false,
+      "description": "条纹流动一个周期的秒数，非正数回退为 3 秒。",
+      "default": "3"
+    },
+    {
+      "name": "flowDirection",
+      "type": "ProgressFlowDirection",
+      "required": false,
+      "description": "进度条流动方向：reverse 时直线从右往左填充、圆环逆时针，分段圆角与条纹流向随之翻转。",
+      "default": "'normal'"
+    },
+    {
+      "name": "format",
+      "type": "(percentage: number) => string",
+      "required": false,
+      "description": "自定义文字内容，优先于默认状态图标。",
+      "default": "—"
+    },
+    {
+      "name": "showText",
+      "type": "boolean",
+      "required": false,
+      "description": "是否显示文字、状态图标和默认插槽。",
+      "default": "true"
+    },
+    {
+      "name": "ariaLabel",
+      "type": "string",
+      "required": false,
+      "description": "无障碍名称，也可通过原生 aria-label 覆盖。",
+      "default": "'进度'"
+    },
+    {
+      "name": "class",
+      "type": "ClassValue",
+      "required": false,
+      "description": "根元素样式覆盖。",
+      "default": "—"
+    },
+    {
+      "name": "ui",
+      "type": "ProgressUi",
+      "required": false,
+      "description": "各部位样式覆盖。 可用键（从源码抽取，以此为准）——Web：circle、fill、icon、root、step、stripes、text、track。",
+      "default": "—"
+    }
+  ],
+  "events": [],
+  "slots": [
+    {
+      "name": "default",
+      "props": "(props: { percent: number; status: ProgressStatus }) => unknown",
+      "description": "自定义进度内容，优先于格式化函数和状态图标。"
+    }
+  ],
+  "exposes": [],
+  "examples": [
+    {
+      "title": "Web 演示",
+      "path": "app/components/reborn/examples/reborn-progress/RebornProgressDemo.vue",
+      "source": "demo",
+      "platform": "web",
+      "code": "<script setup lang=\"ts\">\nimport type { PlaygroundControlGroup } from '~/components/common/play-ground/Playground.vue';\nimport type { ProgressFlowDirection, ProgressGradient, ProgressSegment, ProgressSize, ProgressStatus, ProgressType } from '~/components/reborn/ui/reborn-progress/reborn-progress.config';\nimport { computed, ref, shallowRef } from 'vue';\nimport DemoBlock from '~/components/common/demo/DemoBlock.vue';\nimport DemoNote from '~/components/common/demo/DemoNote.vue';\nimport DemoSection from '~/components/common/demo/DemoSection.vue';\nimport Playground from '~/components/common/play-ground/Playground.vue';\nimport RebornButton from '~/components/reborn/ui/reborn-button/RebornButton.vue';\nimport { progressFlowDirections, progressSizes, progressStatuses, progressTypes } from '~/components/reborn/ui/reborn-progress/reborn-progress.config';\nimport RebornProgress from '~/components/reborn/ui/reborn-progress/RebornProgress.vue';\n\n// ─── 交互演练场 ─────────────────────────────────────────────────\n\n/** 主要属性轴的默认状态。 */\nconst defaultState = {\n  percent: 60, type: 'line' as ProgressType, size: 'md' as ProgressSize,\n  status: 'default' as ProgressStatus, steps: 0, textInside: false, showText: true,\n  strokeColor: '', customFormat: false,\n  striped: false, stripedFlow: false, duration: 3, flowDirection: 'normal' as ProgressFlowDirection,\n};\nconst state = ref({ ...defaultState });\n\n/** 重置所有演练轴。 */\nfunction resetState() {\n  state.value = { ...defaultState };\n}\n\n/** 面板覆盖形态、尺寸、进度、状态、步骤、配色与文字。 */\nconst controls: PlaygroundControlGroup[] = [\n  { title: '基础属性', children: [\n    { label: '形态', key: 'type', component: 'select', defaultValue: 'line', props: { options: progressTypes.map(value => ({ label: value, value })) } },\n    { label: '尺寸', key: 'size', component: 'select', defaultValue: 'md', props: { options: progressSizes.map(value => ({ label: value.toUpperCase(), value })) } },\n    { label: '百分比', key: 'percent', component: 'slider', defaultValue: 60, props: { min: 0, max: 100, step: 1 } },\n    { label: '步骤数（0 为连续）', key: 'steps', component: 'input-number', defaultValue: 0, props: { min: 0, max: 20, step: 1 } },\n    { label: '自定义颜色（留空用状态色）', key: 'strokeColor', component: 'input', defaultValue: '' },\n    { label: '流动方向（normal 从左往右）', key: 'flowDirection', component: 'select', defaultValue: 'normal', props: { options: progressFlowDirections.map(value => ({ label: value, value })) } },\n  ] },\n  { title: '条纹（仅直线形态）', children: [\n    { label: '条纹装饰', key: 'striped', component: 'checkbox', defaultValue: false },\n    { label: '条纹流动', key: 'stripedFlow', component: 'checkbox', defaultValue: false },\n    { label: '流动周期（秒）', key: 'duration', component: 'input-number', defaultValue: 3, props: { min: 1, max: 30, step: 1 } },\n  ] },\n  { title: '状态与文字', children: [\n    { label: '状态', key: 'status', component: 'select', defaultValue: 'default', props: { options: progressStatuses.map(value => ({ label: value, value })) } },\n    { label: '显示文字', key: 'showText', component: 'checkbox', defaultValue: true },\n    { label: '直线内部文字', key: 'textInside', component: 'checkbox', defaultValue: false },\n    { label: '自定义文字格式', key: 'customFormat', component: 'checkbox', defaultValue: false },\n  ] },\n];\n\n/** 自定义文案使用当前百分比，不依赖演练场状态。 */\nfunction formatPercent(percentage: number) {\n  return `${percentage} / 100`;\n}\n\n/** 完整参数代码，可复制到真实页面。 */\nconst progressCode = computed(() => {\n  const s = state.value;\n  return `<RebornProgress\\n  :percent=\"${s.percent}\"\\n  type=\"${s.type}\"\\n  size=\"${s.size}\"\\n  status=\"${s.status}\"\\n  :steps=\"${s.steps}\"\\n  :text-inside=\"${s.textInside}\"\\n  :show-text=\"${s.showText}\"\\n  :striped=\"${s.striped}\"\\n  :striped-flow=\"${s.stripedFlow}\"\\n  :duration=\"${s.duration}\"\\n  flow-direction=\"${s.flowDirection}\"\\n  :stroke-color='${JSON.stringify(s.strokeColor || undefined) || 'undefined'}'\\n  :format=\"${s.customFormat ? `(percentage) => percentage + ' / 100'` : 'undefined'}\"\\n/>`;\n});\n\n// ─── 场景演示状态 ───────────────────────────────────────────────\n\n/** 渐变色标锚定完整轨道，与当前百分比无关。 */\nconst gradient: ProgressGradient = { angle: 90, stops: [{ offset: 0, color: '#108ee9' }, { offset: 50, color: '#6366f1' }, { offset: 100, color: '#87d068' }] };\n/** 累计终点划分三个固定颜色区间。 */\nconst segments: ProgressSegment[] = [{ percentage: 30, color: '#108ee9' }, { percentage: 65, color: '#f59e0b' }, { percentage: 100, color: '#22c55e' }];\n/** 逐步骤颜色，可少于步骤数，剩余步骤回退到状态色。 */\nconst stepColors = ['#108ee9', '#108ee9', '#ffccc7'];\n/** 模拟用户控制的上传任务。 */\nconst taskPercent = shallowRef(35);\n/** 记录任务操作，展示交互确实已响应。 */\nconst lastAction = shallowRef('等待操作');\n\n/** 手动推进任务，不创建后台定时器。 */\nfunction advanceTask() {\n  taskPercent.value = Math.min(100, taskPercent.value + 10);\n  lastAction.value = `任务推进至 ${taskPercent.value}%`;\n}\n\n/** 重新开始任务。 */\nfunction resetTask() {\n  taskPercent.value = 0;\n  lastAction.value = '任务已重置';\n}\n</script>\n\n<template>\n  <div class=\"flex w-full flex-col\">\n    <Playground v-model=\"state\" :controls=\"controls\" :code=\"progressCode\" component-name=\"RebornProgress\" title=\"交互演练场\" description=\"切换形态、步骤数、状态和文字设置，实时查看进度变化。\">\n      <template #tag>\n        <RebornButton size=\"sm\" variant=\"soft\" color=\"neutral\" @click=\"resetState\">\n          <template #leading><span class=\"icon-[lucide--rotate-ccw] size-[12px]\" /></template>\n          重置配置\n        </RebornButton>\n      </template>\n      <div class=\"flex w-full min-w-0 flex-col items-center gap-8 overflow-x-auto py-4\">\n        <RebornProgress :percent=\"state.percent\" :type=\"state.type\" :size=\"state.size\" :status=\"state.status\" :steps=\"state.steps\" :text-inside=\"state.textInside\" :show-text=\"state.showText\" :striped=\"state.striped\" :striped-flow=\"state.stripedFlow\" :duration=\"state.duration\" :flow-direction=\"state.flowDirection\" :stroke-color=\"state.strokeColor || undefined\" :format=\"state.customFormat ? formatPercent : undefined\" class=\"max-w-[360px]\" />\n        <DemoNote tone=\"dimmed\" class=\"font-mono text-xs\">当前 {{ state.percent }}% · {{ state.type }} · {{ state.status }} · {{ state.steps || '连续' }}</DemoNote>\n      </div>\n    </Playground>\n\n    <DemoSection title=\"基础用法\">\n      <template #description>\n        <code>percent</code> 传入 0–100 的完成比例，默认渲染直线形态并在右侧显示百分比；<code>status</code> 需要业务显式指定，到 100% 不会自动变为成功。\n      </template>\n      <DemoBlock layout=\"stack\" class=\"gap-4\">\n        <RebornProgress :percent=\"30\" />\n        <RebornProgress :percent=\"100\" status=\"success\" />\n        <RebornProgress :percent=\"45\" status=\"error\" />\n      </DemoBlock>\n    </DemoSection>\n\n    <DemoSection title=\"尺寸与状态：size 与 status\">\n      <template #description>\n        <code>size</code> 三档直线高度为 6px / 8px / 16px；<code>status</code> 的 <code>success</code> / <code>error</code> 切换语义色，并把右侧百分比换成状态图标。\n      </template>\n      <DemoBlock layout=\"stack\" class=\"gap-6\">\n        <div v-for=\"size in progressSizes\" :key=\"size\" class=\"flex w-full flex-col gap-4\">\n          <DemoNote tone=\"dimmed\">{{ size.toUpperCase() }}</DemoNote>\n          <RebornProgress v-for=\"status in progressStatuses\" :key=\"status\" :size=\"size\" :status=\"status\" :percent=\"status === 'success' ? 100 : 60\" />\n        </div>\n      </DemoBlock>\n    </DemoSection>\n\n    <DemoSection title=\"形态：圆环 circle\">\n      <template #description>\n        <code>type=\"circle\"</code> 渲染圆环，三档外径为 48px / 76px / 114px，成功与失败状态在中央显示对应图标。\n      </template>\n      <DemoBlock layout=\"stack\" class=\"gap-6\">\n        <div v-for=\"size in progressSizes\" :key=\"size\" class=\"flex flex-wrap items-center gap-8\">\n          <DemoNote tone=\"dimmed\" class=\"w-[30px]\">{{ size.toUpperCase() }}</DemoNote>\n          <RebornProgress v-for=\"status in progressStatuses\" :key=\"status\" type=\"circle\" :size=\"size\" :status=\"status\" :percent=\"status === 'success' ? 100 : 60\" />\n        </div>\n      </DemoBlock>\n    </DemoSection>\n\n    <DemoSection title=\"形态：仪表盘 dashboard\">\n      <template #description>\n        <code>type=\"dashboard\"</code> 只绘制 270° 圆弧，底部保留 90° 缺口；尺寸、文字和状态图标与圆环一致。\n      </template>\n      <DemoBlock layout=\"stack\" class=\"gap-6\">\n        <div v-for=\"size in progressSizes\" :key=\"size\" class=\"flex flex-wrap items-center gap-8\">\n          <DemoNote tone=\"dimmed\" class=\"w-[30px]\">{{ size.toUpperCase() }}</DemoNote>\n          <RebornProgress v-for=\"status in progressStatuses\" :key=\"status\" type=\"dashboard\" :size=\"size\" :status=\"status\" :percent=\"status === 'success' ? 100 : 60\" />\n        </div>\n      </DemoBlock>\n    </DemoSection>\n\n    <DemoSection title=\"步骤：steps 与逐节点配色\">\n      <template #description>\n        <code>steps</code> 把轨道切成等分节点，节点间隔 2px；小号节点宽 2px，中号和大号节点宽 32px 且带 2px 圆角，当前节点可部分填充。<code>stroke-color</code> 传数组时逐节点着色，缺少的节点回退到状态色。\n      </template>\n      <DemoBlock layout=\"stack\" class=\"gap-6\">\n        <div v-for=\"size in progressSizes\" :key=\"size\" class=\"flex flex-wrap items-center gap-8\">\n          <DemoNote tone=\"dimmed\" class=\"w-[30px]\">{{ size.toUpperCase() }}</DemoNote>\n          <RebornProgress :size=\"size\" :steps=\"5\" :percent=\"60\" />\n          <RebornProgress :size=\"size\" :steps=\"5\" :percent=\"60\" :stroke-color=\"stepColors\" />\n        </div>\n      </DemoBlock>\n    </DemoSection>\n\n    <DemoSection title=\"步骤圆环：circle 与 steps\">\n      <template #description>\n        圆环启用 <code>steps</code> 后环厚变为 6px / 8px / 16px，节点沿圆弧留出 2px 间距，同样支持逐节点配色。\n      </template>\n      <DemoBlock layout=\"grid\" class=\"gap-8\">\n        <RebornProgress v-for=\"size in progressSizes\" :key=\"size\" type=\"circle\" :size=\"size\" :steps=\"5\" :percent=\"60\" :stroke-color=\"stepColors\" />\n      </DemoBlock>\n    </DemoSection>\n\n    <DemoSection title=\"步骤仪表盘：dashboard 与 steps\">\n      <template #description>\n        仪表盘与 <code>steps</code> 组合，节点只分布在 270° 圆弧上，底部缺口保持不变。\n      </template>\n      <DemoBlock layout=\"grid\" class=\"gap-8\">\n        <RebornProgress v-for=\"size in progressSizes\" :key=\"size\" type=\"dashboard\" :size=\"size\" :steps=\"5\" :percent=\"60\" :stroke-color=\"stepColors\" />\n      </DemoBlock>\n    </DemoSection>\n\n    <DemoSection title=\"颜色：stroke-color 渐变\">\n      <template #description>\n        <code>stroke-color</code> 传 <code>{ angle, stops }</code> 渐变配置，色标锚定完整轨道而不随进度移动；连续、步骤、圆环和仪表盘均可使用。\n      </template>\n      <DemoBlock layout=\"stack\" class=\"gap-8\">\n        <RebornProgress :percent=\"80\" size=\"lg\" :stroke-color=\"gradient\" />\n        <RebornProgress :percent=\"80\" :steps=\"10\" :stroke-color=\"gradient\" />\n        <div class=\"flex flex-wrap items-center gap-8\">\n          <RebornProgress type=\"circle\" size=\"lg\" :percent=\"80\" :stroke-color=\"gradient\" />\n          <RebornProgress type=\"dashboard\" size=\"lg\" :percent=\"80\" :stroke-color=\"gradient\" />\n          <RebornProgress type=\"circle\" size=\"lg\" :steps=\"12\" :percent=\"80\" :stroke-color=\"gradient\" />\n          <RebornProgress type=\"dashboard\" size=\"lg\" :steps=\"12\" :percent=\"80\" :stroke-color=\"gradient\" />\n        </div>\n      </DemoBlock>\n    </DemoSection>\n\n    <DemoSection title=\"颜色：segments 分段\">\n      <template #description>\n        <code>segments</code> 按累计终点绘制固定颜色区间，只着色到当前进度；分段之间无间隔，每一段只在行进方向一侧带圆弧，流动方向反转时圆弧换边。\n      </template>\n      <DemoBlock layout=\"stack\" class=\"gap-8\">\n        <RebornProgress size=\"lg\" :percent=\"85\" :segments=\"segments\" />\n        <RebornProgress size=\"lg\" :percent=\"85\" :segments=\"segments\" flow-direction=\"reverse\" />\n        <RebornProgress :steps=\"10\" :percent=\"85\" :segments=\"segments\" />\n        <div class=\"flex flex-wrap items-center gap-8\">\n          <RebornProgress type=\"circle\" size=\"lg\" :percent=\"85\" :segments=\"segments\" />\n          <RebornProgress type=\"dashboard\" size=\"lg\" :percent=\"85\" :segments=\"segments\" />\n          <RebornProgress type=\"dashboard\" size=\"lg\" :steps=\"10\" :percent=\"85\" :segments=\"segments\" />\n        </div>\n      </DemoBlock>\n    </DemoSection>\n\n    <DemoSection title=\"方向：flow-direction 反向填充\">\n      <template #description>\n        <code>flow-direction=\"reverse\"</code> 时直线从右往左填充，圆环与仪表盘逆时针绘制，分段圆弧与条纹流向随之翻转。\n      </template>\n      <DemoBlock layout=\"stack\" class=\"gap-8\">\n        <RebornProgress size=\"lg\" :percent=\"60\" flow-direction=\"reverse\" />\n        <RebornProgress :steps=\"5\" :percent=\"60\" flow-direction=\"reverse\" />\n        <div class=\"flex flex-wrap items-center gap-8\">\n          <RebornProgress type=\"circle\" size=\"lg\" :percent=\"60\" flow-direction=\"reverse\" />\n          <RebornProgress type=\"dashboard\" size=\"lg\" :percent=\"60\" flow-direction=\"reverse\" />\n          <RebornProgress type=\"circle\" size=\"lg\" :percent=\"85\" :segments=\"segments\" flow-direction=\"reverse\" />\n        </div>\n      </DemoBlock>\n    </DemoSection>\n\n    <DemoSection title=\"条纹：striped、striped-flow 与 duration\">\n      <template #description>\n        <code>striped</code> 叠加条纹装饰，<code>striped-flow</code> 让条纹流动，<code>duration</code> 控制一个周期的秒数，流向跟随 <code>flow-direction</code>；仅直线形态生效，系统开启减少动态效果时停止流动。\n      </template>\n      <DemoBlock layout=\"stack\" class=\"gap-8\">\n        <RebornProgress size=\"lg\" :percent=\"70\" striped />\n        <RebornProgress size=\"lg\" :percent=\"70\" striped striped-flow />\n        <RebornProgress size=\"lg\" :percent=\"70\" striped striped-flow :duration=\"1\" flow-direction=\"reverse\" />\n        <RebornProgress size=\"lg\" :percent=\"85\" striped striped-flow :segments=\"segments\" />\n        <RebornProgress size=\"lg\" :steps=\"8\" :percent=\"70\" striped striped-flow />\n      </DemoBlock>\n    </DemoSection>\n\n    <DemoSection title=\"文字：text-inside 与 format\">\n      <template #description>\n        <code>text-inside</code> 把直线文字移到已完成区域内部，<code>format</code> 改写文字内容；内嵌时轨道不会自动增高，建议搭配 <code>size=\"lg\"</code>。\n      </template>\n      <DemoBlock layout=\"stack\" class=\"gap-8\">\n        <RebornProgress size=\"lg\" :percent=\"60\" text-inside />\n        <RebornProgress size=\"lg\" :percent=\"60\" text-inside :format=\"formatPercent\" />\n        <RebornProgress :percent=\"60\" :format=\"formatPercent\" />\n        <RebornProgress type=\"circle\" size=\"lg\" :percent=\"60\" :format=\"formatPercent\" />\n      </DemoBlock>\n    </DemoSection>\n\n    <DemoSection title=\"作用域插槽：上传任务\">\n      <template #description>\n        默认插槽读取 <code>percent</code> / <code>status</code> 自定义文字，优先级高于 <code>format</code> 和状态图标；进度由业务推进，组件不修改数值。\n      </template>\n      <DemoBlock layout=\"stack\" class=\"gap-6\">\n        <RebornProgress :percent=\"taskPercent\" :status=\"taskPercent === 100 ? 'success' : 'default'\" aria-label=\"文件上传进度\">\n          <template #default=\"{ percent, status }\"><span class=\"text-sm\">{{ status === 'success' ? '上传完成' : `已上传 ${percent}%` }}</span></template>\n        </RebornProgress>\n        <div class=\"flex flex-wrap gap-3\">\n          <RebornButton size=\"sm\" :disabled=\"taskPercent === 100\" @click=\"advanceTask\">推进 10%</RebornButton>\n          <RebornButton size=\"sm\" variant=\"outlined\" color=\"neutral\" @click=\"resetTask\">重新开始</RebornButton>\n        </div>\n        <DemoNote tone=\"dimmed\">{{ lastAction }}</DemoNote>\n      </DemoBlock>\n    </DemoSection>\n  </div>\n</template>\n\n"
+    }
+  ],
+  "related": [],
+  "whenToUse": [
+    "上传、下载等已知完成比例的任务。",
+    "需要圆环、仪表盘或步骤节点展示完成度。",
+    "需要逐步骤颜色、线性渐变或固定分段颜色。"
+  ],
+  "whenNotToUse": [
+    "未知完成比例的等待提示，使用加载组件。",
+    "只需要旧式圆环动画时，可使用 animated-circular-progressbar。"
+  ],
+  "pitfalls": [
+    "仅支持 Web。percent 为单向受控属性，不提供 v-model 或变化事件。",
+    "status 不随百分比自动切换；自定义颜色优先于状态色。",
+    "strokeColor 数组仅在 steps 大于零时有效，缺少的节点颜色回退到状态色。",
+    "segments 的 percentage 是累计终点，表示固定颜色区间，不是整条进度的阈值变色。",
+    "textInside 只改变直线文字位置，不改变高度，建议使用 lg。format 和默认插槽可覆盖默认状态图标。",
+    "步骤圆环间距沿描边中心线弧长计算为 2px，过密时最多占半个节点弧长。",
+    "striped 条纹仅直线形态生效；stripedFlow 需配合 striped，duration 为一个周期的秒数，系统减少动态效果时停止流动。",
+    "flowDirection 为整体流动方向：reverse 时直线从右往左、圆形逆时针，分段圆弧、内嵌文字锚定与条纹流向随之翻转。",
+    "分段之间无间隔，每段只在行进方向一侧带圆弧（后段垫底、前段叠压实现）；与步骤同时启用时仍按步骤平端绘制。"
+  ],
+  "dependencies": [
+    "clsx",
+    "tailwind-merge",
+    "tailwind-variants"
+  ],
+  "install": {
+    "cli": "npx reborn-ui@latest add reborn-progress"
+  },
+  "sourceRefs": {
+    "web": [
+      "app/components/reborn/ui/reborn-progress/RebornProgress.vue",
+      "app/components/reborn/ui/reborn-progress/index.ts",
+      "app/components/reborn/ui/reborn-progress/reborn-progress.config.ts",
+      "app/components/reborn/ui/reborn-progress/reborn-progress.utils.ts"
+    ]
+  },
+  "docPath": "content/2.components/miscellaneous/reborn-progress.md",
+  "_meta": {
+    "contentHash": "c9cf16a28f46584b2e2651dc132f3c5d8b55c214",
+    "hasOverride": true,
+    "extractors": {
+      "web": "ok",
+      "uniapp": "absent",
+      "docs": "found"
+    }
+  }
+}

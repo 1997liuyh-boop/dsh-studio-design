@@ -1,0 +1,218 @@
+{
+  "$schema": "../schema/component.schema.json",
+  "id": "reborn-header",
+  "title": "标题",
+  "description": "用于站点顶部导航的响应式头部组件，移动端可切换为弹窗菜单。",
+  "category": "navigation",
+  "tags": [
+    "vue",
+    "reborn-header"
+  ],
+  "platforms": [
+    "web"
+  ],
+  "props": [
+    {
+      "name": "title",
+      "type": "string",
+      "required": false,
+      "description": "导航栏标题文本",
+      "default": "'Nuxt UI'"
+    },
+    {
+      "name": "to",
+      "type": "string",
+      "required": false,
+      "description": "标题链接地址",
+      "default": "'/'"
+    },
+    {
+      "name": "toggleSide",
+      "type": "'left' | 'right'",
+      "required": false,
+      "description": "移动端菜单切换按钮侧边 (左/右)",
+      "default": "'right'"
+    },
+    {
+      "name": "mode",
+      "type": "HeaderMode",
+      "required": false,
+      "description": "移动端菜单模式",
+      "default": "'popup'"
+    },
+    {
+      "name": "as",
+      "type": "string",
+      "required": false,
+      "description": "自定义包装标签",
+      "default": "'header'"
+    },
+    {
+      "name": "sticky",
+      "type": "boolean",
+      "required": false,
+      "description": "是否吸顶显示",
+      "default": "false"
+    },
+    {
+      "name": "autoClose",
+      "type": "boolean",
+      "required": false,
+      "description": "路由改变时是否自动关闭菜单",
+      "default": "true"
+    },
+    {
+      "name": "beforeToggle",
+      "type": "() => boolean | Promise<boolean>",
+      "required": false,
+      "description": "菜单展开前的拦截函数"
+    },
+    {
+      "name": "appendToBody",
+      "type": "boolean",
+      "required": false,
+      "description": "移动端菜单抽屉是否挂载到 body；为 false 时在顶栏所在位置渲染， 铺满最近的定位父元素（需给父元素加 relative），适合局部预览或嵌入式页面 @defaultValue true",
+      "default": "true"
+    },
+    {
+      "name": "class",
+      "type": "any",
+      "required": false,
+      "description": "根元素的自定义类名"
+    },
+    {
+      "name": "ui",
+      "type": "Partial<{\n        root: string;\n        container: string;\n        left: string;\n        title: string;\n        center: string;\n        right: string;\n        toggle: string;\n        popup: string;\n        popupHeader: string;\n        popupBody: string;\n        popupFooter: string;\n    }>",
+      "required": false,
+      "description": "UI 插槽样式覆盖 可用键（从源码抽取，以此为准）——Web：center、container、left、popup、popupBody、popupFooter、popupHeader*、right、root、title*、toggle*。 带 * 的键对应插槽兜底节点：填了同名插槽，组件自带的节点被替换，这个键随之失效。",
+      "default": "() => ({})"
+    },
+    {
+      "name": "open",
+      "type": "boolean",
+      "required": false,
+      "description": "双向绑定值",
+      "vModel": true,
+      "default": "undefined"
+    }
+  ],
+  "events": [
+    {
+      "name": "update:open",
+      "description": "open 变化时触发（v-model 同步）",
+      "payload": "(value: boolean)"
+    }
+  ],
+  "slots": [
+    {
+      "name": "toggle",
+      "props": "(props: { open: boolean; toggle: () => void }) => any",
+      "description": "移动端菜单切换按钮；open 为菜单是否展开，toggle 切换菜单（经过 beforeToggle）"
+    },
+    {
+      "name": "left",
+      "props": "() => any",
+      "description": "左侧区域，默认渲染标题"
+    },
+    {
+      "name": "title",
+      "props": "() => any",
+      "description": "标题内容"
+    },
+    {
+      "name": "right",
+      "props": "() => any",
+      "description": "右侧区域"
+    },
+    {
+      "name": "top",
+      "props": "() => any",
+      "description": "导航栏上方的附加内容"
+    },
+    {
+      "name": "default",
+      "props": "() => any",
+      "description": "中间导航内容，移动端菜单未提供 body 时也用它"
+    },
+    {
+      "name": "bottom",
+      "props": "() => any",
+      "description": "导航栏下方的附加内容"
+    },
+    {
+      "name": "header",
+      "props": "(props: { close: () => void }) => any",
+      "description": "移动端菜单头部；close 关闭菜单"
+    },
+    {
+      "name": "content",
+      "props": "(props: { close: () => void }) => any",
+      "description": "整体替换移动端菜单内容；close 关闭菜单"
+    },
+    {
+      "name": "body",
+      "props": "() => any",
+      "description": "移动端菜单正文"
+    },
+    {
+      "name": "footer",
+      "props": "() => any",
+      "description": "移动端菜单底部"
+    }
+  ],
+  "exposes": [],
+  "examples": [
+    {
+      "title": "Web 演示",
+      "path": "app/components/reborn/examples/reborn-header/RebornHeaderDemo.vue",
+      "source": "demo",
+      "platform": "web",
+      "code": "<script setup lang=\"ts\">\nimport { DemoBlock, DemoNote, DemoSection, Icon, Playground } from \"#components\";\nimport { computed, shallowRef } from \"vue\";\nimport RebornButton from \"~/components/reborn/ui/reborn-button/RebornButton.vue\";\nimport RebornHeader from \"~/components/reborn/ui/reborn-header/RebornHeader.vue\";\n\n// ─── 交互演练场 ─────────────────────────────────────────────────\n\n/** 演练场默认状态 */\nconst defaultState: Record<string, any> = {\n  title: \"Reborn UI\",\n  toggleSide: \"right\",\n  sticky: true,\n  mountToParent: true,\n};\n\nconst state = shallowRef<Record<string, any>>({ ...defaultState });\n\n/** 演练场侧边栏的显隐，交给外部按钮也能打开，宽屏下不必依赖汉堡按钮 */\nconst playgroundOpen = shallowRef(false);\n\n/** 重置演练场配置 */\nfunction resetState() {\n  state.value = { ...defaultState };\n  playgroundOpen.value = false;\n}\n\n/** 演练场控制面板配置 */\nconst controls = [\n  {\n    title: \"基础属性\",\n    children: [\n      { label: \"站点标题\", key: \"title\", component: \"input\" as const, defaultValue: \"Reborn UI\" },\n      {\n        label: \"侧边栏方向\",\n        key: \"toggleSide\",\n        component: \"select\" as const,\n        defaultValue: \"right\",\n        props: {\n          options: [\n            { label: \"右侧展开\", value: \"right\" },\n            { label: \"左侧展开\", value: \"left\" },\n          ],\n        },\n      },\n      { label: \"滚动吸顶\", key: \"sticky\", component: \"checkbox\" as const, defaultValue: true },\n    ],\n  },\n  {\n    title: \"侧边栏\",\n    children: [\n      {\n        label: \"挂载到父元素（append-to-body 为 false）\",\n        key: \"mountToParent\",\n        component: \"checkbox\" as const,\n        defaultValue: true,\n      },\n    ],\n  },\n];\n\n/** 演练场右上角展示的等价代码 */\nconst headerCode = computed(() => {\n  const s = state.value;\n  const props: string[] = [`title=\"${s.title}\"`, 'to=\"/\"'];\n\n  if (s.toggleSide !== \"right\") props.push(`toggle-side=\"${s.toggleSide}\"`);\n  if (s.sticky) props.push(\"sticky\");\n  if (s.mountToParent) props.push(':append-to-body=\"false\"');\n\n  return `<RebornHeader\\n  ${props.join(\"\\n  \")}\\n>\\n  <nav>…</nav>\\n  <template #right>…</template>\\n  <template #content=\"{ close }\">…</template>\\n</RebornHeader>`;\n});\n\n// ─── 场景演示数据 ───────────────────────────────────────────────\n\n/** 挂载位置演示：两块宿主各自的侧边栏开关 */\nconst parentOpen = shallowRef(false);\n\n/** 中间区域的导航项 */\nconst links = [\n  { label: \"入门指南\", to: \"#\" },\n  { label: \"组件列表\", to: \"#\" },\n  { label: \"设计规范\", to: \"#\" },\n  { label: \"GitHub\", to: \"https://github.com/1997liuyh-boop/Reborn-UI\" },\n];\n</script>\n\n<template>\n  <div class=\"flex w-full min-w-0 flex-col\">\n    <Playground\n      v-model=\"state\" :controls=\"controls\" :code=\"headerCode\" component-name=\"RebornHeader\" title=\"交互演练场\"\n      description=\"在下方可滚动的宿主区域内滚动内容观察吸顶；打开侧边栏对比挂载到父元素与挂载到 body 的覆盖范围。\"\n    >\n      <template #tag>\n        <RebornButton size=\"sm\" variant=\"soft\" color=\"neutral\" @click=\"resetState\">\n          <template #leading>\n            <Icon name=\"lucide:rotate-ccw\" size=\"12\" />\n          </template>\n          重置配置\n        </RebornButton>\n      </template>\n\n      <div class=\"flex w-full flex-col gap-3\">\n        <!-- 外层只负责定位与裁切：挂载到父元素时抽屉以它为参照铺满，不随内层滚动 -->\n        <div class=\"border-default rounded-lg relative h-[420px] w-full overflow-hidden border\">\n          <!-- 内层是独立的滚动视口，吸顶相对它生效 -->\n          <div class=\"h-full overflow-y-auto\">\n            <RebornHeader v-model:open=\"playgroundOpen\" :title=\"state.title\" to=\"/\" :toggle-side=\"state.toggleSide\" :sticky=\"state.sticky\" :append-to-body=\"!state.mountToParent\">\n              <!-- 中间导航：默认插槽 -->\n              <nav class=\"flex items-center gap-8\">\n                <NuxtLink\n                  v-for=\"link in links\" :key=\"link.label\" :to=\"link.to\"\n                  class=\"text-muted hover:text-highlighted text-sm font-medium transition-colors\"\n                >\n                  {{ link.label }}\n                  <Icon v-if=\"link.label === 'GitHub'\" name=\"lucide:external-link\" class=\"ml-1 inline size-3 opacity-50\" />\n                </NuxtLink>\n              </nav>\n\n              <!-- 右侧操作区 -->\n              <template #right>\n                <div class=\"flex items-center gap-2\">\n                  <RebornButton size=\"sm\" color=\"success\" circle variant=\"filled\" aria-label=\"搜索\">\n                    <Icon name=\"lucide:search\" />\n                  </RebornButton>\n                  <RebornButton size=\"sm\" color=\"secondary\" circle variant=\"filled\" aria-label=\"切换主题\">\n                    <Icon name=\"lucide:moon\" />\n                  </RebornButton>\n                  <RebornButton size=\"sm\" class=\"hidden sm:flex\" label=\"立即体验\" />\n                </div>\n              </template>\n\n              <!-- 移动端侧边栏内容，作用域参数 close 用于关闭弹层 -->\n              <template #content=\"{ close }\">\n                <div class=\"flex flex-col gap-4\">\n                  <div class=\"border-default border-b px-2 py-4\">\n                    <p class=\"text-dimmed px-2 text-xs font-semibold tracking-wider uppercase\">\n                      导航页面\n                    </p>\n                    <nav class=\"mt-4 flex flex-col gap-1\">\n                      <NuxtLink\n                        v-for=\"link in links\" :key=\"link.label\" :to=\"link.to\"\n                        class=\"text-default hover:text-highlighted rounded-lg px-3 py-2 text-base font-medium transition-colors\"\n                        @click=\"close\"\n                      >\n                        {{ link.label }}\n                      </NuxtLink>\n                    </nav>\n                  </div>\n\n                  <div class=\"px-2\">\n                    <RebornButton class=\"w-full\" label=\"登录账户\" @click=\"close\" />\n                  </div>\n                </div>\n              </template>\n            </RebornHeader>\n\n            <!-- 占位内容：制造足够的滚动高度以观察吸顶 -->\n            <div class=\"flex flex-col gap-4 p-6\">\n              <p class=\"text-muted text-sm\">\n                向下滚动这块区域，{{ state.sticky ? \"顶栏将保持吸顶\" : \"顶栏会随内容一起滚走\" }}。\n              </p>\n              <div v-for=\"i in 6\" :key=\"i\" class=\"border-default rounded-lg h-32 shrink-0 border border-dashed\" />\n            </div>\n          </div>\n        </div>\n        <div class=\"flex flex-wrap items-center gap-3\">\n          <RebornButton size=\"sm\" variant=\"outlined\" color=\"neutral\" @click=\"playgroundOpen = true\">\n            打开侧边栏\n          </RebornButton>\n          <DemoNote tone=\"dimmed\">\n            {{ state.mountToParent ? \"侧边栏铺满上方宿主区域，页面其余部分仍可见。\" : \"侧边栏挂到 body，铺满整个浏览器视口。\" }}\n          </DemoNote>\n        </div>\n      </div>\n    </Playground>\n\n    <DemoSection title=\"插槽结构\" description=\"顶栏分为左、中、右三个区域，默认插槽填充中间导航，#right 承载操作按钮，#content 则是窄屏侧边栏的内容。\">\n      <DemoNote tone=\"dimmed\">\n        <code>toggle-side</code> 决定侧边栏从哪一侧滑出；<code>auto-close</code> 控制点击内部链接后是否自动收起；\n        <code>before-toggle</code> 可返回 <code>false</code> 阻止本次开合，适合做未保存提示。\n      </DemoNote>\n    </DemoSection>\n\n    <DemoSection title=\"侧边栏挂载位置\">\n      <template #description>\n        移动端侧边栏默认挂载到 body、铺满视口；<code>append-to-body</code>\n        为 <code>false</code> 时在顶栏所在位置渲染，铺满最近的定位父元素，适合嵌在局部预览区或后台的内容区里。\n      </template>\n      <DemoBlock layout=\"stack\">\n        <div class=\"border-default rounded-lg relative h-[280px] w-full overflow-hidden border\">\n          <RebornHeader v-model:open=\"parentOpen\" title=\"局部预览\" to=\"/\" :append-to-body=\"false\">\n            <template #content=\"{ close }\">\n              <nav class=\"flex flex-col gap-1 p-2\">\n                <NuxtLink\n                  v-for=\"link in links\" :key=\"link.label\" :to=\"link.to\"\n                  class=\"text-default hover:text-highlighted rounded-lg px-3 py-2 text-sm font-medium transition-colors\"\n                  @click=\"close\"\n                >\n                  {{ link.label }}\n                </NuxtLink>\n              </nav>\n            </template>\n          </RebornHeader>\n          <p class=\"text-muted p-6 text-sm\">点击右上角菜单或下方按钮，侧边栏只覆盖这块区域。</p>\n        </div>\n        <RebornButton size=\"sm\" variant=\"outlined\" color=\"neutral\" @click=\"parentOpen = !parentOpen\">\n          {{ parentOpen ? \"收起侧边栏\" : \"打开侧边栏\" }}\n        </RebornButton>\n      </DemoBlock>\n      <DemoNote>\n        父元素必须带 <code>relative</code>（或其他定位）：抽屉以绝对定位铺满最近的定位祖先，找不到时会一路铺到更外层。\n        滚动容器与定位容器最好分两层，否则抽屉会随内容滚走。\n      </DemoNote>\n    </DemoSection>\n  </div>\n</template>\n"
+    }
+  ],
+  "related": [
+    "reborn-drawer"
+  ],
+  "whenToUse": [
+    "文档站、官网需要顶部导航栏时。",
+    "需要吸顶导航（sticky）并跟随页面滚动固定。",
+    "移动端需要通过 toggle 按钮展开弹窗式菜单，并自定义其 header/body/footer 内容。"
+  ],
+  "whenNotToUse": [
+    "uniapp 页面的导航结构，本组件仅 web 端；小程序底部导航改用 reborn-tabbar。",
+    "页面内消息循环播报改用 reborn-notice-bar。"
+  ],
+  "pitfalls": [
+    "仅 web 端可用。",
+    "open 为双向绑定值（update:open 事件同步），控制移动端菜单开合。",
+    "autoClose 默认 true，路由变化时自动关闭菜单；beforeToggle 可返回 boolean 或 Promise<boolean> 拦截切换。",
+    "通常与 reborn-main 配套使用，后者会自动适配 Header 高度。",
+    "open 默认 undefined；缺省关闭，显式 false/undefined/null 按关闭处理。受控交互发送 update:open；模型变化会作废等待中的 beforeToggle 结果。"
+  ],
+  "dependencies": [
+    "@vueuse/core",
+    "clsx",
+    "tailwind-merge",
+    "tailwind-variants"
+  ],
+  "install": {
+    "cli": "npx reborn-ui@latest add reborn-header"
+  },
+  "sourceRefs": {
+    "web": [
+      "app/components/reborn/ui/reborn-header/RebornHeader.vue",
+      "app/components/reborn/ui/reborn-header/index.ts",
+      "app/components/reborn/ui/reborn-header/reborn-header.config.ts"
+    ]
+  },
+  "docPath": "content/2.components/navigation/reborn-header.md",
+  "_meta": {
+    "contentHash": "cae47d96d1fa95b665a905da49679341812f6e21",
+    "hasOverride": true,
+    "extractors": {
+      "web": "ok",
+      "uniapp": "absent",
+      "docs": "found"
+    }
+  }
+}

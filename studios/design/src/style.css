@@ -1,0 +1,11 @@
+@import "tailwindcss";
+@source "./App.vue";
+
+@theme {
+  --color-canvas: #f7f8fa;
+  --color-panel: #ffffff;
+  --color-ink: #222831;
+  --color-muted: #636e7d;
+  --color-line: #e2e6ed;
+  --color-accent: #4465bf;
+}

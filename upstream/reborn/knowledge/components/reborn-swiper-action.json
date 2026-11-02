@@ -1,0 +1,320 @@
+{
+  "$schema": "../schema/component.schema.json",
+  "id": "reborn-swiper-action",
+  "title": "滑动操作",
+  "description": "用于列表项左滑露出右侧操作按钮的滑动单元格组件，支持 push / overlay 模式与同组互斥。",
+  "category": "misc",
+  "tags": [
+    "css",
+    "tailwind",
+    "uniapp",
+    "swiper"
+  ],
+  "platforms": [
+    "uniapp"
+  ],
+  "props": [
+    {
+      "name": "rightActions",
+      "type": "SwiperActionItem[]",
+      "required": false,
+      "description": "**手指向左滑**时露出的右侧操作条（常见「删除」侧）",
+      "default": "() => []"
+    },
+    {
+      "name": "actionWidth",
+      "type": "number",
+      "required": false,
+      "description": "单个操作格默认宽度，**数字单位为 rpx**（内部经 `uni.upx2px` 换算）",
+      "default": "144"
+    },
+    {
+      "name": "threshold",
+      "type": "number",
+      "required": false,
+      "description": "松手时「展开」判定：取 `侧栏总宽 × threshold` 与 `maxThreshold` 换算后的像素上限的较小值（下限约 24px）",
+      "default": "0.35"
+    },
+    {
+      "name": "maxThreshold",
+      "type": "number",
+      "required": false,
+      "description": "上述展开判定距离的 **rpx 上限**",
+      "default": "120"
+    },
+    {
+      "name": "closeThreshold",
+      "type": "number",
+      "required": false,
+      "description": "已展开时「滑回关闭」判定距离的 **rpx 上限**（同样与 `侧栏宽 × threshold` 取较小值）",
+      "default": "96"
+    },
+    {
+      "name": "duration",
+      "type": "number",
+      "required": false,
+      "description": "拖拽结束吸附动画时长（ms）",
+      "default": "80"
+    },
+    {
+      "name": "closeDuration",
+      "type": "number",
+      "required": false,
+      "description": "主动关闭、页面滚动关闭等场景的过渡时长（ms）",
+      "default": "300"
+    },
+    {
+      "name": "dragDamping",
+      "type": "number",
+      "required": false,
+      "description": "拖动阻尼：**0–1 为小数**，**大于 1 时按百分比**理解（内部 `normalizeDamping` 除以 100）",
+      "default": "50"
+    },
+    {
+      "name": "damping",
+      "type": "number",
+      "required": false,
+      "description": "拉出过量时的边缘阻尼系数（0–1）",
+      "default": "0.05"
+    },
+    {
+      "name": "dampingDistance",
+      "type": "number",
+      "required": false,
+      "description": "边缘阻尼允许的最大额外位移，**rpx**",
+      "default": "72"
+    },
+    {
+      "name": "touchThreshold",
+      "type": "number",
+      "required": false,
+      "description": "横竖手势判定死区，**按 rpx 换算为像素**传入底层数据集",
+      "default": "12"
+    },
+    {
+      "name": "directionRatio",
+      "type": "number",
+      "required": false,
+      "description": "微信小程序 WXS 侧滑意图判定斜率参数（与 `data-direction-ratio` 同步）",
+      "default": "2.4"
+    },
+    {
+      "name": "maxRevealRatio",
+      "type": "number",
+      "required": false,
+      "description": "单侧操作区总宽不超过根宽的该比例（避免操作过多时把主内容推出可视区）",
+      "default": "0.82"
+    },
+    {
+      "name": "disabled",
+      "type": "boolean",
+      "required": false,
+      "description": "禁用拖拽与按钮；为 `true` 时样式变淡并阻断内容指针",
+      "default": "false"
+    },
+    {
+      "name": "closeOnActionClick",
+      "type": "boolean",
+      "required": false,
+      "description": "点击操作按钮后是否自动收起（`item.triggerRemove` 为 `true` 时仍会先走移除流程）",
+      "default": "true"
+    },
+    {
+      "name": "closeOnContentClick",
+      "type": "boolean",
+      "required": false,
+      "description": "展开状态下点击主内容是否收起（与 `contentTapNavigate` 互斥）",
+      "default": "true"
+    },
+    {
+      "name": "closeOnPageScroll",
+      "type": "boolean",
+      "required": false,
+      "description": "页面滚动时是否收起已展开项",
+      "default": "true"
+    },
+    {
+      "name": "contentTapNavigate",
+      "type": "boolean",
+      "required": false,
+      "description": "为 `true` 时点击主内容不自动关闭，改为触发 `content-click`（适合列表项跳转）",
+      "default": "false"
+    },
+    {
+      "name": "group",
+      "type": "string | number | false",
+      "required": false,
+      "description": "同组互斥：同值组件同时只展开一个；**`false`** 关闭互斥",
+      "default": "'default'"
+    },
+    {
+      "name": "mode",
+      "type": "'push' | 'overlay'",
+      "required": false,
+      "description": "展开模式：`push` 为内容平移推开操作区（传统）；`overlay` 为操作区从右侧叠加滑入，内容不移动",
+      "default": "'push'"
+    },
+    {
+      "name": "actionRadius",
+      "type": "'none' | 'right' | 'both'",
+      "required": false,
+      "description": "操作区外侧圆角策略：`none` 不补圆角；`right` 仅最右侧按钮补右圆角；`both` 最左与最右各补一侧圆角",
+      "default": "'right'"
+    },
+    {
+      "name": "touchHint",
+      "type": "boolean",
+      "required": false,
+      "description": "落指时给用户可滑动的视觉提示：`push` 模式对内容施加微小负偏移露出色条边缘；`overlay` 模式显示操作区边缘",
+      "default": "false"
+    },
+    {
+      "name": "customClass",
+      "type": "string",
+      "required": false,
+      "description": "根节点额外 class（会与 `ui.root` 合并）",
+      "default": "''"
+    },
+    {
+      "name": "customStyle",
+      "type": "string",
+      "required": false,
+      "description": "根节点内联样式（移除动画时会拼接 `max-height` / `opacity`）",
+      "default": "''"
+    },
+    {
+      "name": "ui",
+      "type": "SwiperActionUI",
+      "required": false,
+      "description": "按键覆盖各区域 Tailwind / Uno 类名，见下文 **UI** 可用键（从源码抽取，以此为准）——UniApp：action、actions、content、icon*、rightActions、root、text*。 带 * 的键对应插槽兜底节点：填了同名插槽，组件自带的节点被替换，这个键随之失效。",
+      "default": "() => ({})"
+    },
+    {
+      "name": "modelValue",
+      "type": "SwiperActionSide | ''",
+      "required": false,
+      "description": "双向绑定值",
+      "vModel": true
+    }
+  ],
+  "events": [
+    {
+      "name": "change",
+      "payload": "(e: 'change', value: SwiperActionSide | ''): void",
+      "description": "展开侧变化（与 `v-model` 同步）"
+    },
+    {
+      "name": "open",
+      "payload": "(e: 'open', value: SwiperActionSide): void",
+      "description": "从收起到展开"
+    },
+    {
+      "name": "close",
+      "payload": "(e: 'close'): void",
+      "description": "从展开到收起"
+    },
+    {
+      "name": "click",
+      "payload": "(e: 'click', payload: SwiperActionClickPayload): void",
+      "description": "点击某一操作项；`payload` 含 `item`、`index`、`side`，以及 **`close()`**、**`remove()`**（`remove` 为收起后播放移除动画并在结束时触发 `remove` 事件）"
+    },
+    {
+      "name": "content-click",
+      "payload": "(e: 'content-click', payload: { openSide: SwiperActionSide | '', close: () => void }): void",
+      "description": "contentTapNavigate` 为 `true` 时由主内容点击触发；`openSide` 为当前展开侧，`close` 为收起函数"
+    },
+    {
+      "name": "remove",
+      "payload": "(e: 'remove', payload: { item: SwiperActionItem, index: number, side: SwiperActionSide }): void",
+      "description": "移除动画结束后触发（内置 `triggerRemove` 或手动调用 `payload.remove()` 且动画走完）"
+    },
+    {
+      "name": "update:modelValue",
+      "description": "modelValue 变化时触发（v-model 同步）"
+    }
+  ],
+  "slots": [
+    {
+      "name": "default",
+      "props": "",
+      "description": "滑动手势覆盖的主内容区"
+    },
+    {
+      "name": "right-action",
+      "props": "",
+      "description": "自定义右侧单个操作格；`ui` 与组件内部 computed 一致（含 `root`、`content`、`action` 等类名工厂）"
+    }
+  ],
+  "exposes": [
+    {
+      "name": "open",
+      "description": ""
+    },
+    {
+      "name": "close",
+      "description": ""
+    }
+  ],
+  "examples": [
+    {
+      "title": "Web 演示",
+      "path": "app/components/reborn/examples/reborn-swiper-action/RebornSwiperActionDemo.vue",
+      "source": "demo",
+      "platform": "web",
+      "code": "<template>\n  <div class=\"border-default rounded-lg border border-dashed p-6 text-center\">\n    <DemoNote>Web 端暂未提供此组件，请在 UniApp 端查看。</DemoNote>\n  </div>\n</template>\n"
+    },
+    {
+      "title": "UniApp 演示",
+      "path": "packages/uniapp-project/src/pages/reborn-swiper-action/RebornSwiperActionDemo.vue",
+      "source": "demo",
+      "platform": "uniapp",
+      "code": "<script setup lang=\"ts\">\nimport { ref, shallowRef } from 'vue'\nimport RebornPage from '@/components/reborn-page/RebornPage.vue'\nimport RebornCard from '@/components/reborn-card/RebornCard.vue'\nimport RebornSwitch from '@/components/reborn-switch/RebornSwitch.vue'\nimport RebornSwiperAction, { type SwiperActionItem, type SwiperActionClickPayload } from '@/components/reborn-swiper-action/RebornSwiperAction.vue'\n\nconst rightActions: SwiperActionItem[] = [\n  { text: '收藏', key: 'star', icon: 'i-lucide-star', color: 'warning', width: 124 },\n  { text: '删除', key: 'delete', icon: 'i-lucide-trash-2', color: 'error', width: 124 },\n]\n\nconst rightActionsWithRemove: SwiperActionItem[] = [\n  { text: '收藏', key: 'star', icon: 'i-lucide-star', color: 'warning', width: 124 },\n  { text: '删除', key: 'delete', icon: 'i-lucide-trash-2', color: 'error', width: 124, triggerRemove: true },\n]\n\nconst compactActions: SwiperActionItem[] = [\n  { text: '更多', key: 'more', icon: 'i-lucide-more-horizontal', color: 'info', width: 96 },\n  { text: '收藏', key: 'star', icon: 'i-lucide-star', color: 'warning', width: 144 },\n  { text: '删除', key: 'delete', icon: 'i-lucide-trash-2', color: 'error', width: 196 },\n]\n\nconst messageList = ref(\n  [\n    { title: '交互评审', desc: '滑开其中一条，再滑另一条，上一条会自动关闭', iconClass: 'i-lucide-message-square text-primary' },\n    { title: '版本计划', desc: '同一个 group 下只保留一个打开项', iconClass: 'i-lucide-calendar-days text-info' },\n    { title: '关注提醒', desc: '列表、消息、联系人这类场景会更清爽', iconClass: 'i-lucide-bell text-warning' },\n    { title: '交互评审', desc: '滑开其中一条，再滑另一条，上一条会自动关闭', iconClass: 'i-lucide-message-square text-primary' },\n    { title: '版本计划', desc: '同一个 group 下只保留一个打开项', iconClass: 'i-lucide-calendar-days text-info' },\n    { title: '关注提醒', desc: '列表、消息、联系人这类场景会更清爽', iconClass: 'i-lucide-bell text-warning' },\n  ].map((item, i) => ({ ...item, id: i }))\n)\n\nconst confirmList = ref(\n  [\n    { title: '重要邮件', desc: '点击删除将弹出确认框，swiper 保持展开等待操作', iconClass: 'i-lucide-mail text-primary' },\n    { title: '项目文档', desc: '确认后 swiper 关闭，再触发折叠动画', iconClass: 'i-lucide-file-text text-info' },\n    { title: '会议记录', desc: '取消则调用 close() 回弹，不产生任何副作用', iconClass: 'i-lucide-clipboard text-warning' },\n    { title: '联系人', desc: 'close() 来自 @click payload，无需维护组件 ref', iconClass: 'i-lucide-user text-success' },\n  ].map((item, i) => ({ ...item, id: i + 1000 }))\n)\n\nconst controlledSwiperRef = ref<{ open: (side?: string) => void, close: () => void } | null>(null)\nconst controlledOpen = shallowRef(false)\n\nfunction onSwitchChange(val: boolean) {\n  if (val) {\n    controlledSwiperRef.value?.open('right')\n  }\n  else {\n    controlledSwiperRef.value?.close()\n  }\n}\n\nfunction onControlledSwiperOpen() {\n  controlledOpen.value = true\n}\n\nfunction onControlledSwiperClose() {\n  controlledOpen.value = false\n}\n\nconst confirmDeleteActions: SwiperActionItem[] = [\n  { text: '删除', key: 'delete', icon: 'i-lucide-trash-2', color: 'error' },\n]\n\n/** Demo 示例：滑块根节点与内容区不使用圆角 */\nconst demoSwiperUi = {\n  root: 'rounded-none',\n  content: 'rounded-none',\n}\n\nconst currentMode = shallowRef<'push' | 'overlay'>('push')\nconst touchHintEnabled = shallowRef(true)\nconst currentActionRadius = shallowRef<'none' | 'right' | 'both'>('right')\n\nconst actionRadiusOptions: { label: string, value: 'none' | 'right' | 'both', desc: string }[] = [\n  { label: '无', value: 'none', desc: '不补圆角' },\n  { label: '右侧', value: 'right', desc: '补右边两角' },\n  { label: '两侧', value: 'both', desc: '补左右四角' },\n]\n\nfunction handleAction(payload: SwiperActionClickPayload) {\n  uni.showToast({\n    title: payload.item.text,\n    icon: 'none',\n  })\n}\n\nfunction handleConfirmAction(payload: SwiperActionClickPayload) {\n  if (payload.item.key !== 'delete') return\n\n  uni.showModal({\n    title: '确认删除',\n    content: '删除后无法恢复，是否继续？',\n    success: (res) => {\n      if (res.confirm) {\n        payload.remove()\n      } else {\n        payload.close()\n      }\n    },\n  })\n}\n\nfunction handleContentClick() {\n  uni.showToast({\n    title: '触发内容点击，可在这里跳转',\n    icon: 'none',\n  })\n}\n</script>\n\n<template>\n  <RebornPage title=\"SwiperAction 滑动操作\" description=\"左滑唤出收藏、删除等快捷操作\">\n    <RebornCard title=\"基础用法\" overflow-visible>\n      <RebornSwiperAction :ui=\"demoSwiperUi\" :right-actions=\"rightActions\" @click=\"handleAction\">\n        <view class=\"flex min-h-[128rpx] flex-row items-center gap-[24rpx] px-[32rpx]\">\n          <view class=\"flex size-[72rpx] items-center justify-center rounded-full bg-primary/10\">\n            <view class=\"i-lucide-mail text-[34rpx] text-primary\" />\n          </view>\n          <view class=\"flex flex-1 flex-col gap-[8rpx]\">\n            <text class=\"text-[30rpx] font-medium text-gray-9 dark:text-gray-1\">系统通知</text>\n            <text class=\"truncate text-[24rpx] text-gray-5 dark:text-gray-4\">左滑可以收藏或删除这条消息</text>\n          </view>\n          <view class=\"i-lucide-chevron-left text-[32rpx] text-gray-4\" />\n        </view>\n      </RebornSwiperAction>\n    </RebornCard>\n\n    <RebornCard title=\"自定义宽度\" overflow-visible>\n      <RebornSwiperAction :ui=\"demoSwiperUi\" :right-actions=\"compactActions\" :threshold=\"0.25\" @click=\"handleAction\">\n        <view class=\"flex min-h-[132rpx] flex-row items-center justify-between gap-[24rpx] px-[32rpx]\">\n          <view class=\"flex min-w-0 flex-1 flex-col gap-[10rpx]\">\n            <text class=\"text-[30rpx] font-medium text-gray-9 dark:text-gray-1\">紧凑操作区</text>\n            <text class=\"truncate text-[24rpx] text-gray-5 dark:text-gray-4\">更多 96rpx / 收藏 144rpx / 删除 196rpx</text>\n            <view class=\"flex flex-row overflow-hidden rounded-full bg-gray-1 dark:bg-gray-7\">\n              <view class=\"h-[10rpx] w-[96rpx] bg-info\" />\n              <view class=\"h-[10rpx] w-[144rpx] bg-warning\" />\n              <view class=\"h-[10rpx] w-[196rpx] bg-error\" />\n            </view>\n          </view>\n          <view class=\"i-lucide-sliders-horizontal shrink-0 text-[32rpx] text-gray-4\" />\n        </view>\n      </RebornSwiperAction>\n    </RebornCard>\n\n    <RebornCard title=\"滑动模式\" overflow-visible>\n      <view class=\"flex flex-col gap-[16rpx]\">\n        <view class=\"flex flex-row items-center justify-between px-[32rpx] pb-[4rpx]\">\n          <view class=\"flex flex-col gap-[6rpx]\">\n            <text class=\"text-[26rpx] font-medium text-gray-9 dark:text-gray-1\">\n              {{ currentMode === 'push' ? 'Push · 推移' : 'Overlay · 叠加' }}\n            </text>\n            <text class=\"text-[22rpx] text-gray-5 dark:text-gray-4\">\n              {{ currentMode === 'push' ? '内容随操作区同步位移' : '操作区浮层叠加在内容之上' }}\n            </text>\n          </view>\n          <RebornSwitch :model-value=\"currentMode === 'overlay'\"\n            @change=\"(val) => currentMode = val ? 'overlay' : 'push'\" />\n        </view>\n\n        <view class=\"flex flex-col gap-[12rpx] px-[32rpx] pb-[4rpx]\">\n          <view class=\"flex flex-col gap-[6rpx]\">\n            <text class=\"text-[26rpx] font-medium text-gray-9 dark:text-gray-1\">ActionRadius · 圆角模式</text>\n            <text class=\"text-[22rpx] text-gray-5 dark:text-gray-4\">控制操作区按钮的圆角补全方式</text>\n          </view>\n          <view class=\"flex flex-row gap-[12rpx]\">\n            <view v-for=\"opt in actionRadiusOptions\" :key=\"opt.value\"\n              class=\"flex flex-1 flex-col items-center gap-[4rpx] rounded-[16rpx] py-[16rpx] transition-colors\" :class=\"currentActionRadius === opt.value\n                ? 'bg-primary/10'\n                : 'bg-gray-1 dark:bg-gray-7'\" @tap=\"currentActionRadius = opt.value\">\n              <text class=\"text-[26rpx] font-semibold\"\n                :class=\"currentActionRadius === opt.value ? 'text-primary' : 'text-gray-7 dark:text-gray-3'\">{{\n                opt.label }}</text>\n              <text class=\"text-[20rpx]\"\n                :class=\"currentActionRadius === opt.value ? 'text-primary/70' : 'text-gray-4'\">{{ opt.desc }}</text>\n            </view>\n          </view>\n        </view>\n\n        <view class=\"flex flex-row items-center justify-between px-[32rpx] pb-[4rpx]\">\n          <view class=\"flex flex-col gap-[6rpx]\">\n            <text class=\"text-[26rpx] font-medium text-gray-9 dark:text-gray-1\">TouchHint · 操作提示</text>\n            <text class=\"text-[22rpx] text-gray-5 dark:text-gray-4\">\n              {{ touchHintEnabled ? '触摸内容时露出右侧操作区边缘' : '关闭后仅在滑动时显示操作区' }}\n            </text>\n          </view>\n          <RebornSwitch v-model=\"touchHintEnabled\" />\n        </view>\n\n        <RebornSwiperAction :ui=\"demoSwiperUi\" :mode=\"currentMode\" :touch-hint=\"touchHintEnabled\"\n          :action-radius=\"currentActionRadius\" :right-actions=\"rightActions\" @click=\"handleAction\">\n          <view class=\"flex min-h-[128rpx] flex-row items-center gap-[24rpx] px-[32rpx]\">\n            <view class=\"flex size-[72rpx] shrink-0 items-center justify-center rounded-full bg-success/10\">\n              <view class=\"i-lucide-layers text-[34rpx] text-success\" />\n            </view>\n            <view class=\"flex min-w-0 flex-1 flex-col gap-[8rpx]\">\n              <text class=\"truncate text-[30rpx] font-medium text-gray-9 dark:text-gray-1\">双按钮示例</text>\n              <text class=\"truncate text-[24rpx] text-gray-5 dark:text-gray-4\">收藏 + 删除，切换模式与提示观察差异</text>\n            </view>\n          </view>\n        </RebornSwiperAction>\n\n        <RebornSwiperAction :ui=\"demoSwiperUi\" :mode=\"currentMode\" :touch-hint=\"touchHintEnabled\"\n          :action-radius=\"currentActionRadius\" :right-actions=\"compactActions\" @click=\"handleAction\">\n          <view class=\"flex min-h-[128rpx] flex-row items-center gap-[24rpx] px-[32rpx]\">\n            <view class=\"flex size-[72rpx] shrink-0 items-center justify-center rounded-full bg-warning/10\">\n              <view class=\"i-lucide-layout-template text-[34rpx] text-warning\" />\n            </view>\n            <view class=\"flex min-w-0 flex-1 flex-col gap-[8rpx]\">\n              <text class=\"truncate text-[30rpx] font-medium text-gray-9 dark:text-gray-1\">三按钮示例</text>\n              <text class=\"truncate text-[24rpx] text-gray-5 dark:text-gray-4\">更多 + 收藏 + 删除，切换模式与提示观察差异</text>\n            </view>\n          </view>\n        </RebornSwiperAction>\n      </view>\n    </RebornCard>\n\n    <RebornCard title=\"内容点击\" overflow-visible>\n      <RebornSwiperAction :ui=\"demoSwiperUi\" :right-actions=\"rightActions\" content-tap-navigate @click=\"handleAction\"\n        @content-click=\"handleContentClick\">\n        <view class=\"flex min-h-[128rpx] flex-row items-center justify-between px-[32rpx]\">\n          <view class=\"flex flex-col gap-[8rpx]\">\n            <text class=\"text-[30rpx] font-medium text-gray-9 dark:text-gray-1\">点击内容触发跳转</text>\n            <text class=\"text-[24rpx] text-gray-5 dark:text-gray-4\">开启 contentTapNavigate 后不再自动收起</text>\n          </view>\n          <view class=\"i-lucide-arrow-right text-[32rpx] text-gray-4\" />\n        </view>\n      </RebornSwiperAction>\n    </RebornCard>\n\n    <RebornCard title=\"外部控制\" overflow-visible>\n      <view class=\"flex flex-col gap-[20rpx]\">\n        <view class=\"flex flex-row items-center justify-between px-[32rpx]\">\n          <view class=\"flex flex-col gap-[6rpx]\">\n            <text class=\"text-[28rpx] font-medium text-gray-9 dark:text-gray-1\">展开操作区</text>\n            <text class=\"text-[24rpx] text-gray-5 dark:text-gray-4\">{{ controlledOpen ? '已展开' : '已收起' }}</text>\n          </view>\n          <RebornSwitch :model-value=\"controlledOpen\" @change=\"onSwitchChange\" />\n        </view>\n\n        <RebornSwiperAction ref=\"controlledSwiperRef\" :ui=\"demoSwiperUi\" :right-actions=\"rightActions\"\n          @open=\"onControlledSwiperOpen\" @close=\"onControlledSwiperClose\" @click=\"handleAction\">\n          <view class=\"flex min-h-[128rpx] flex-row items-center gap-[24rpx] px-[32rpx]\">\n            <view class=\"flex size-[72rpx] shrink-0 items-center justify-center rounded-full bg-info/10\">\n              <view class=\"i-lucide-sliders-horizontal text-[34rpx] text-info\" />\n            </view>\n            <view class=\"flex min-w-0 flex-1 flex-col gap-[8rpx]\">\n              <text class=\"truncate text-[30rpx] font-medium text-gray-9 dark:text-gray-1\">受控滑块</text>\n              <text class=\"truncate text-[24rpx] text-gray-5 dark:text-gray-4\">手势滑动也会同步更新开关状态</text>\n            </view>\n          </view>\n        </RebornSwiperAction>\n      </view>\n    </RebornCard>\n\n    <RebornCard title=\"列表互斥\" overflow-visible>\n      <view class=\"flex flex-col gap-[16rpx]\">\n        <RebornSwiperAction v-for=\"(item, index) in messageList\" :key=\"item.id\" group=\"message-list\"\n          :right-actions=\"rightActionsWithRemove\" :ui=\"{ ...demoSwiperUi, action: 'px-[16rpx]' }\" @click=\"handleAction\"\n          @remove=\"messageList = messageList.filter(message => message.id !== item.id)\">\n          <view class=\"flex min-h-[120rpx] flex-row items-center gap-[24rpx] px-[32rpx]\">\n            <view class=\"flex size-[68rpx] shrink-0 items-center justify-center rounded-full bg-gray-1 dark:bg-gray-7\">\n              <view :class=\"[item.iconClass, 'text-[32rpx]']\" />\n            </view>\n            <view class=\"flex min-w-0 flex-1 flex-col gap-[8rpx]\">\n              <view class=\"flex flex-row items-center gap-[12rpx]\">\n                <text class=\"truncate text-[30rpx] font-medium text-gray-9 dark:text-gray-1\">{{ item.title }}</text>\n                <text class=\"shrink-0 text-[22rpx] text-gray-4\">#{{ index + 1 }}</text>\n              </view>\n              <text class=\"truncate text-[24rpx] text-gray-5 dark:text-gray-4\">{{ item.desc }}</text>\n            </view>\n          </view>\n        </RebornSwiperAction>\n      </view>\n    </RebornCard>\n\n    <RebornCard title=\"确认删除\" overflow-visible>\n      <view class=\"flex flex-col gap-[16rpx]\">\n        <RebornSwiperAction v-for=\"item in confirmList\" :key=\"item.id\" group=\"confirm-list\"\n          :right-actions=\"confirmDeleteActions\" :close-on-action-click=\"false\"\n          :ui=\"{ ...demoSwiperUi, action: 'px-[16rpx]' }\" @click=\"handleConfirmAction\"\n          @remove=\"confirmList = confirmList.filter(message => message.id !== item.id)\">\n          <view class=\"flex min-h-[120rpx] flex-row items-center gap-[24rpx] px-[32rpx]\">\n            <view class=\"flex size-[68rpx] shrink-0 items-center justify-center rounded-full bg-gray-1 dark:bg-gray-7\">\n              <view :class=\"[item.iconClass, 'text-[32rpx]']\" />\n            </view>\n            <view class=\"flex min-w-0 flex-1 flex-col gap-[8rpx]\">\n              <text class=\"truncate text-[30rpx] font-medium text-gray-9 dark:text-gray-1\">{{ item.title }}</text>\n              <text class=\"truncate text-[24rpx] text-gray-5 dark:text-gray-4\">{{ item.desc }}</text>\n            </view>\n          </view>\n        </RebornSwiperAction>\n      </view>\n    </RebornCard>\n\n    <RebornCard title=\"禁用状态\" overflow-visible>\n      <RebornSwiperAction :ui=\"demoSwiperUi\" :right-actions=\"rightActions\" disabled>\n        <view class=\"flex min-h-[112rpx] flex-row items-center justify-between px-[32rpx]\">\n          <view class=\"flex flex-col gap-[8rpx]\">\n            <text class=\"text-[30rpx] font-medium text-gray-9 dark:text-gray-1\">不可滑动</text>\n            <text class=\"text-[24rpx] text-gray-5 dark:text-gray-4\">disabled 后不响应手势和操作点击</text>\n          </view>\n          <view class=\"i-lucide-lock text-[32rpx] text-gray-4\" />\n        </view>\n      </RebornSwiperAction>\n    </RebornCard>\n  </RebornPage>\n</template>\n"
+    }
+  ],
+  "related": [],
+  "whenToUse": [
+    "消息、待办等列表的左滑删除、置顶操作（rightActions 配置操作条）。",
+    "同一列表内只允许一项展开（group 分组互斥，默认组名 'default'）。",
+    "需要带移除动画的删除（操作项 triggerRemove 或事件 payload 的 remove()，动画结束后触发 remove 事件）。",
+    "列表项点击跳转与滑动操作共存（contentTapNavigate=true 时点击内容触发 content-click 而非收起）。"
+  ],
+  "whenNotToUse": [
+    "web 端项目：platforms 仅 uniapp，web 端无对应实现。",
+    "整块内容轮播切换改用 reborn-carousel（仅 web）。"
+  ],
+  "pitfalls": [
+    "platforms 仅 uniapp 端提供。",
+    "actionWidth / maxThreshold / closeThreshold / dampingDistance / touchThreshold 等数字单位均为 rpx（内部经 uni.upx2px 换算）。",
+    "dragDamping 0–1 按小数、大于 1 按百分比理解（内部除以 100）。",
+    "contentTapNavigate 与 closeOnContentClick 互斥：前者为 true 时点击主内容不再自动收起。",
+    "group 传 false 可关闭同组互斥；closeOnPageScroll 默认 true，页面滚动会收起已展开项。"
+  ],
+  "dependencies": [
+    "@dcloudio/uni-app",
+    "@weapp-tailwindcss/merge-v3",
+    "@weapp-tailwindcss/variants-v3",
+    "clsx",
+    "tailwind-merge",
+    "tailwind-variants"
+  ],
+  "install": {
+    "cli": "npx reborn-ui@latest add reborn-swiper-action"
+  },
+  "sourceRefs": {
+    "uniapp": [
+      "packages/uniapp-project/src/components/reborn-swiper-action/RebornSwiperAction.vue",
+      "packages/uniapp-project/src/components/reborn-swiper-action/index.ts",
+      "packages/uniapp-project/src/components/reborn-swiper-action/reborn-swiper-action.config.ts"
+    ]
+  },
+  "docPath": "content/2.components/miscellaneous/reborn-swiper-action.md",
+  "_meta": {
+    "contentHash": "a2d0db58091213115271c10aceeeaf255cee2987",
+    "hasOverride": true,
+    "extractors": {
+      "web": "absent",
+      "uniapp": "ok",
+      "docs": "found"
+    }
+  }
+}

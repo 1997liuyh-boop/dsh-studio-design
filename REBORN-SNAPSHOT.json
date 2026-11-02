@@ -1,0 +1,735 @@
+{
+  "repository": "https://github.com/1997liuyh-boop/Reborn-UI",
+  "commit": "130c4f78a60745c77d59fe8f858d2b9430ad7feb",
+  "knowledge": "由该检出的知识库生成，示例源码已内联；摘要覆盖分发内容",
+  "files": [
+    {
+      "path": "upstream/reborn/src/index.ts",
+      "sha256": "65e32176f4b69bd1342f58eaf6959c1cee3255bf766000db0c722b141b2913d9"
+    },
+    {
+      "path": "upstream/reborn/src/kb.ts",
+      "sha256": "555d8134253b02f7ec7919b9a2d0ba5afe2b8e8dff40b0aeabccd356e38ee64d"
+    },
+    {
+      "path": "upstream/reborn/src/search.ts",
+      "sha256": "478c5096d7da6a700e050682f9d4e6c343e23db44aec976d66489bcf57ca130e"
+    },
+    {
+      "path": "upstream/reborn/src/spec.ts",
+      "sha256": "5f4f2e8accfb843bc440ceba2defcad5f824e911736726e409c75adba036688e"
+    },
+    {
+      "path": "upstream/reborn/LICENSE",
+      "sha256": "018957cfb13c0b904a1d69824e203bdd3c18338011fbbcbe06a8e4f8d717613e"
+    },
+    {
+      "path": "upstream/reborn/knowledge/index.json",
+      "sha256": "3f466e0951dea23e8253f0ad524e69667e30b7cb70ffc18c700a0c7b6085b9cf"
+    },
+    {
+      "path": "upstream/reborn/knowledge/components/animate-grid.json",
+      "sha256": "b4175246751e54a62ca7dc15cd52ef1e474cae6b439a9299f32fdf010db54111"
+    },
+    {
+      "path": "upstream/reborn/knowledge/components/animated-circular-progressbar.json",
+      "sha256": "20ad10da6e2e798c7e8697f1d843b5ab60a5dd212bdb8e757da8f9adfec28cd1"
+    },
+    {
+      "path": "upstream/reborn/knowledge/components/animated-list.json",
+      "sha256": "ba7d454de828dd5766dd4f8c8dee402eef9e4d4c325d243be108fe38a24bde32"
+    },
+    {
+      "path": "upstream/reborn/knowledge/components/animated-testimonials.json",
+      "sha256": "8a81e85b04c62ce99ff41c1c22f9fed097051204d03b15395ebdd57caf5f05bb"
+    },
+    {
+      "path": "upstream/reborn/knowledge/components/animated-tooltip.json",
+      "sha256": "251b8c9341aec5ba335bebbe27cd0be3bdad27b0602b5d2738d82063f907bc7f"
+    },
+    {
+      "path": "upstream/reborn/knowledge/components/apple-card-carousel.json",
+      "sha256": "a100ea197f1392c85bb91cd675252a862cf171f2caba0c28d74ed501c0972de5"
+    },
+    {
+      "path": "upstream/reborn/knowledge/components/balance-slider.json",
+      "sha256": "382a7129165878e6dc100f827be4278e944eec4face0f64d8cbd61dbf4c661a0"
+    },
+    {
+      "path": "upstream/reborn/knowledge/components/bento-grid.json",
+      "sha256": "7aa435191a69d6f833efbbdf7a16d32b5e1a323c0f3041c53950e75816ffb4d2"
+    },
+    {
+      "path": "upstream/reborn/knowledge/components/blur-reveal.json",
+      "sha256": "fb6d1c504e8b4cf6a7976bbea047e847c5e7336e227306422cfea5a50a337173"
+    },
+    {
+      "path": "upstream/reborn/knowledge/components/book.json",
+      "sha256": "c0c27cebcce5b85abf209d195f1b5d2c6e042085ea6d8fd6ac63f9ad3f61a1ff"
+    },
+    {
+      "path": "upstream/reborn/knowledge/components/box-reveal.json",
+      "sha256": "adc4d5e856b4a698e7e5d80d6f8549a8f6384c2fa63e96edd4153cf4e453e70b"
+    },
+    {
+      "path": "upstream/reborn/knowledge/components/card-3d.json",
+      "sha256": "221c1b7307d9abe718795b3d624d30be3606cc4d3b411202b04e29fc1c2a2d58"
+    },
+    {
+      "path": "upstream/reborn/knowledge/components/color-picker.json",
+      "sha256": "f0a34a21aac8faf8737e77306735daa6a0b4f200d8fc257e90555717d314a001"
+    },
+    {
+      "path": "upstream/reborn/knowledge/components/colourful-text.json",
+      "sha256": "3d3c4a327ec5a2dceb2cfad1751124a2c32c7a0a735b95e5e9fc4d26c959065d"
+    },
+    {
+      "path": "upstream/reborn/knowledge/components/compare.json",
+      "sha256": "31c177b3217148224962ad2824e44ce81e12f221e009f6247a07a6f2a076d21c"
+    },
+    {
+      "path": "upstream/reborn/knowledge/components/container-scroll.json",
+      "sha256": "cd54ef3abfb5afe1f9cc93ef2f9fb00544ccc87e9a024c9e6e0ed9cc923e2701"
+    },
+    {
+      "path": "upstream/reborn/knowledge/components/container-text-flip.json",
+      "sha256": "6438918ab16c4471d6f15411e40be6d86943a71cc7c7d2b7ad7efc03f3c291fc"
+    },
+    {
+      "path": "upstream/reborn/knowledge/components/direction-aware-hover.json",
+      "sha256": "2e1877ad733406529c7f4a0f17beb81b23799fde99952db1b75cecfdf557bf05"
+    },
+    {
+      "path": "upstream/reborn/knowledge/components/dither-shader.json",
+      "sha256": "062bd415fb2df83e0fd539edf8a0dfc17917f7a4f44d77e57d7349a28870c223"
+    },
+    {
+      "path": "upstream/reborn/knowledge/components/dock.json",
+      "sha256": "5ca13e183804d7495cb2bebffc348910cac59c8e4d90fd627f464057e9b29f1f"
+    },
+    {
+      "path": "upstream/reborn/knowledge/components/expandable-gallery.json",
+      "sha256": "137d000d804adb96edf4d10f147588a832147b3d730db7b0d93081be0de5e13e"
+    },
+    {
+      "path": "upstream/reborn/knowledge/components/file-upload.json",
+      "sha256": "aa9f510914a0c2ab9b972759b9b19fe4b168c6377ea1662cb03645ac9c63f621"
+    },
+    {
+      "path": "upstream/reborn/knowledge/components/flip-card.json",
+      "sha256": "52dd8588471a0c74a2c074f67612833368db5d014611224da1ad73e8ca3754a9"
+    },
+    {
+      "path": "upstream/reborn/knowledge/components/flip-words.json",
+      "sha256": "2e3fae6ea83d67c1e2fa5abe85f1c122f5a5da2b38b8a0936fdb05c120f6ae42"
+    },
+    {
+      "path": "upstream/reborn/knowledge/components/focus.json",
+      "sha256": "f3925f1eeec0aba5c64dd648929b65ac96299b89f6778db4fd1daa1852f75954"
+    },
+    {
+      "path": "upstream/reborn/knowledge/components/glare-card.json",
+      "sha256": "99dd2c21c6cf2e793600e3609c032d356ae751970f5f4adecef2f5efc03e1211"
+    },
+    {
+      "path": "upstream/reborn/knowledge/components/gradient-button.json",
+      "sha256": "622f8e87e116d70e213140c315f5bda788034f2a3c84378f7c9d567e02bab883"
+    },
+    {
+      "path": "upstream/reborn/knowledge/components/halo-search.json",
+      "sha256": "bad45bee0dd117990d64822d8e166fcbad30a9be4b5931514de506aefaa86e4e"
+    },
+    {
+      "path": "upstream/reborn/knowledge/components/hyper-text.json",
+      "sha256": "e3f6122525e051802ceb6f0d84516a5c38592543917f622a6ba0bdb1726bec91"
+    },
+    {
+      "path": "upstream/reborn/knowledge/components/icon-cloud.json",
+      "sha256": "0699db4977cd583c76e989d89fbf1cf0c35c83cf4c8d7280a58c6cfa4812442a"
+    },
+    {
+      "path": "upstream/reborn/knowledge/components/images-slider.json",
+      "sha256": "413a5c42c12531fc9e9e7a8ebdb0f0d328b0158d4d3bea861612938d17f7dc07"
+    },
+    {
+      "path": "upstream/reborn/knowledge/components/input.json",
+      "sha256": "87f4714e2a70b1d0e3309bae00bb85a52f25d3a574787c4430e797c21f2a0436"
+    },
+    {
+      "path": "upstream/reborn/knowledge/components/interactive-hover-button.json",
+      "sha256": "df11483f12b251f8459b42965739f5a20547e551f475a87f8288132d14e51ab8"
+    },
+    {
+      "path": "upstream/reborn/knowledge/components/iphone-mockup.json",
+      "sha256": "f011f06613abc2ed2880bff19d8d90df56a3d42ebcdd3c21c89a7b3f870a4bad"
+    },
+    {
+      "path": "upstream/reborn/knowledge/components/lens.json",
+      "sha256": "ffb0c94d15c6ad7e44f6c633a38a4ed87ec2274cf2a672c3aa74e3d2baf79886"
+    },
+    {
+      "path": "upstream/reborn/knowledge/components/letter-pullup.json",
+      "sha256": "a37432d8b7c5cd826f8e4d7ce9b206c40168d205085e4ca4c979d7a27b63f3ce"
+    },
+    {
+      "path": "upstream/reborn/knowledge/components/line-shadow-text.json",
+      "sha256": "a58a3b80757709d56ce174a5ca52a93fb504e6060c3f88c3061d64a8cb5d37e8"
+    },
+    {
+      "path": "upstream/reborn/knowledge/components/link-preview.json",
+      "sha256": "be5952581953af96925f0ed0b1ab06d4f6c655178e46de6c9266a75c8b888c02"
+    },
+    {
+      "path": "upstream/reborn/knowledge/components/liquid-glass.json",
+      "sha256": "bbd12ac8292cba127aeefe3ec97986ba55cc95289ecb29ef7e82be14bb868e3d"
+    },
+    {
+      "path": "upstream/reborn/knowledge/components/meteors.json",
+      "sha256": "e2840e89a12918ab878eeb7232ab497d3d8e63b4ab5974f910cc7e3b15aa6b59"
+    },
+    {
+      "path": "upstream/reborn/knowledge/components/morphing-tabs.json",
+      "sha256": "0d4350f0834806310735a9c8c4ba12cc22285585dbb46ab709a47e3a81c4b455"
+    },
+    {
+      "path": "upstream/reborn/knowledge/components/morphing-text.json",
+      "sha256": "c5074acbc6ecc50a1c3dbb170fa3ce9916f320195e287fa7d2acb615b6e04f6a"
+    },
+    {
+      "path": "upstream/reborn/knowledge/components/multi-step-loader.json",
+      "sha256": "ad16a7ecbae16f5b85e90581253aaffeedc0b116845df4b4c77cb35ae352441b"
+    },
+    {
+      "path": "upstream/reborn/knowledge/components/neon-border.json",
+      "sha256": "8a75533d086e0a262c2f4b3af70e0f5e142409b13bd9b9abc7c5b36d0e350200"
+    },
+    {
+      "path": "upstream/reborn/knowledge/components/number-ticker.json",
+      "sha256": "c84117ae96ed5816137aa25ea3d9d53af71a4ebe21c91e8e664332fe2e62471b"
+    },
+    {
+      "path": "upstream/reborn/knowledge/components/pattern-background.json",
+      "sha256": "5de7fe4c72eddeb7f046c0bbd73cb6571aa24f1f0b6dc743740eceedd77c614b"
+    },
+    {
+      "path": "upstream/reborn/knowledge/components/photo-gallery.json",
+      "sha256": "d9eb152ef794dce2ffbfc52d826ba43084c4b165f4f25fdbd23185d8e686084c"
+    },
+    {
+      "path": "upstream/reborn/knowledge/components/radiant-text.json",
+      "sha256": "e67069d6f63f796ba31bb28aa42acf5d76e6be4bd4412ffa94a7e5edab7fbae9"
+    },
+    {
+      "path": "upstream/reborn/knowledge/components/rainbow-button.json",
+      "sha256": "fdb1214f67e762309b87ddc86fc1091e9bfd86704497f9910a0d10c4cabf00ee"
+    },
+    {
+      "path": "upstream/reborn/knowledge/components/reborn-affix.json",
+      "sha256": "c0075691cb8df34c2df20e5f92d027cdad1357484e6e072402b7f663934c2057"
+    },
+    {
+      "path": "upstream/reborn/knowledge/components/reborn-alert.json",
+      "sha256": "239a381c5afd088e5171e94ff8f2a183b0e1690595322388a6edf02d91f1c0be"
+    },
+    {
+      "path": "upstream/reborn/knowledge/components/reborn-anchor.json",
+      "sha256": "3e65b5b0cc64fa324b4eaa1afeffe32e846fb15e9933c86c481881c31831cc59"
+    },
+    {
+      "path": "upstream/reborn/knowledge/components/reborn-avatar-group.json",
+      "sha256": "149ed0890133ed5da7f9b604fdd86806ac3de368d337eae51a78ec68b3a34fbe"
+    },
+    {
+      "path": "upstream/reborn/knowledge/components/reborn-avatar.json",
+      "sha256": "55f2ea6844de02b935b66ab2e82f43ada92f2ef89407f6009e2c21461d6508b0"
+    },
+    {
+      "path": "upstream/reborn/knowledge/components/reborn-back-top.json",
+      "sha256": "14a6223877629cb7e4e586cbbd1927a376843645c0e9c58b15698c9abc640c95"
+    },
+    {
+      "path": "upstream/reborn/knowledge/components/reborn-badge.json",
+      "sha256": "f0e484c85c3b954c8a860a63e858a8b2cf91300ca1a2ecd9d0a10d4746dcd558"
+    },
+    {
+      "path": "upstream/reborn/knowledge/components/reborn-breadcrumb.json",
+      "sha256": "ba5f6348f47052d6f6d3fe851736d999372931d5f7b30f04056d4e0b1ffcddf1"
+    },
+    {
+      "path": "upstream/reborn/knowledge/components/reborn-button.json",
+      "sha256": "0c750629d1a32192d0121cf3f4d40a1f4f33957933d66ff78ba748f616a34df1"
+    },
+    {
+      "path": "upstream/reborn/knowledge/components/reborn-calendar.json",
+      "sha256": "28c283ffa3838ca22f140dc835ec716e1478b3ab7a15871138915cf2ce6a420c"
+    },
+    {
+      "path": "upstream/reborn/knowledge/components/reborn-card.json",
+      "sha256": "cee5a49992b56fddaac9fe173a7a276f7f7646f3d8a7e030bb5546c356d1a7d3"
+    },
+    {
+      "path": "upstream/reborn/knowledge/components/reborn-carousel.json",
+      "sha256": "f8587f2dadcd825bb9244a4cfb95b64491b284f4c149ec49a5db3054a41bb79d"
+    },
+    {
+      "path": "upstream/reborn/knowledge/components/reborn-cascader.json",
+      "sha256": "e69d5672f7496b0581bb43e382d1dbe8e37e9f0ae6ef65c9274546abee455072"
+    },
+    {
+      "path": "upstream/reborn/knowledge/components/reborn-checkbox.json",
+      "sha256": "9032760d5b64b5133314cabe886be70f425672307d45cb0b3b7c31f568d89352"
+    },
+    {
+      "path": "upstream/reborn/knowledge/components/reborn-chip.json",
+      "sha256": "90d47109130a4b89d0d737e04b490761921ebeb25755fca479e59f905fcb97d0"
+    },
+    {
+      "path": "upstream/reborn/knowledge/components/reborn-collapse.json",
+      "sha256": "99e06e5f93bfae215a0503032dae5c295645e01a1c3fa8f49d70991ca8ea99fb"
+    },
+    {
+      "path": "upstream/reborn/knowledge/components/reborn-color-picker.json",
+      "sha256": "3bd1f8a9bb7d071c0764555a6e747d9ef9f4e5391616d2687e5bd26b2fbd26af"
+    },
+    {
+      "path": "upstream/reborn/knowledge/components/reborn-container.json",
+      "sha256": "dda4925566acf0bfdd2deca3988d3b05a19f00ab4e864d41c991b25e4e1d9262"
+    },
+    {
+      "path": "upstream/reborn/knowledge/components/reborn-context-menu.json",
+      "sha256": "1c181363600ef62c004e9778a389047b66b37c8bafe5fae7c1dd0f6e3ad45430"
+    },
+    {
+      "path": "upstream/reborn/knowledge/components/reborn-countdown.json",
+      "sha256": "846342ad6bb9e7dd42621d582c0dc4bb58d16461639c29231b8b73981aceddf4"
+    },
+    {
+      "path": "upstream/reborn/knowledge/components/reborn-coupon.json",
+      "sha256": "3718de161d7de0604fe99c22e8957dd796dcee7181e88b170ac6849cf965ba07"
+    },
+    {
+      "path": "upstream/reborn/knowledge/components/reborn-crowd.json",
+      "sha256": "a4f6f3958b845f608de845ca8a3b311efd7db9fd635fe419100c4c0befb04d63"
+    },
+    {
+      "path": "upstream/reborn/knowledge/components/reborn-date-picker-panel.json",
+      "sha256": "ca6738ccd0491b8ca11d56851c429d2ea9893bdb729f3c8cb344537afd474ac4"
+    },
+    {
+      "path": "upstream/reborn/knowledge/components/reborn-date-picker.json",
+      "sha256": "742caf6b8a8c916732c6510e1fd56939df5b24db131d437d21bc3d997abc82e6"
+    },
+    {
+      "path": "upstream/reborn/knowledge/components/reborn-depth-image.json",
+      "sha256": "cb0116283e422b8c5b0596a31c8de829edb2c9dab14e042cbc63bb915c63cbde"
+    },
+    {
+      "path": "upstream/reborn/knowledge/components/reborn-descriptions.json",
+      "sha256": "fe888b97752eb3c0d00fe8c052abfaebbb236eea544e610aaa737184e123c731"
+    },
+    {
+      "path": "upstream/reborn/knowledge/components/reborn-dialog.json",
+      "sha256": "be3aa198a12b60577e58d669ed2701ab3be3424224e3b924ccd54cab79804e74"
+    },
+    {
+      "path": "upstream/reborn/knowledge/components/reborn-draggable.json",
+      "sha256": "19add5fcb02c049d1e34c8dc561be40840d2f267374b6f4dd90a0b240e9085ff"
+    },
+    {
+      "path": "upstream/reborn/knowledge/components/reborn-drawer.json",
+      "sha256": "e972f0b5984d5760a90b5ff2e74aa5f552b3112e81e3bc9b88b36854e9e39ba3"
+    },
+    {
+      "path": "upstream/reborn/knowledge/components/reborn-dropdown-select.json",
+      "sha256": "50f23e188713ac07b7fac3464a3d40c927c7ce538523366c5dd372e2cfc491a6"
+    },
+    {
+      "path": "upstream/reborn/knowledge/components/reborn-dropdown.json",
+      "sha256": "99366f7aa1817f06cf2472400ce95c67f302475085b3f7ad86ad2d5d3088795b"
+    },
+    {
+      "path": "upstream/reborn/knowledge/components/reborn-empty.json",
+      "sha256": "822ac0dcb4d79de4b3815fe4b3bf9247b568a6c5450feb6ca7900ca22b9888d3"
+    },
+    {
+      "path": "upstream/reborn/knowledge/components/reborn-fab.json",
+      "sha256": "2895376e0d47090208233705b991b1560e01dca9f27ca385abe1ec41f2aa2ac9"
+    },
+    {
+      "path": "upstream/reborn/knowledge/components/reborn-field-trigger.json",
+      "sha256": "2916049366c3f09a287a7f308b8103ce1bdc2a2ce079341d2e58950eb9e0d390"
+    },
+    {
+      "path": "upstream/reborn/knowledge/components/reborn-fireworks.json",
+      "sha256": "75e876e6f8f98f94ffef33a3ea69dfeca8e17e89d0303c17cadf4c991c82c855"
+    },
+    {
+      "path": "upstream/reborn/knowledge/components/reborn-footer.json",
+      "sha256": "c3e763293aa2ccbb4aad6c38def8eff8c4f30a7aa209e1a6d331b432332b515c"
+    },
+    {
+      "path": "upstream/reborn/knowledge/components/reborn-form.json",
+      "sha256": "1ccd8e30f56586be1f4470c98847bcd85bb18a6e47b9d5c1382bf384fe59db47"
+    },
+    {
+      "path": "upstream/reborn/knowledge/components/reborn-guide.json",
+      "sha256": "a00f021775b5623729d60ff4423100cd5ca3f8260adea9ef5ce34ce5be28acb3"
+    },
+    {
+      "path": "upstream/reborn/knowledge/components/reborn-header.json",
+      "sha256": "595ea9d2e8c662814e807b1227daa8a20ea7d04a29eeec1532c0b557c200b82c"
+    },
+    {
+      "path": "upstream/reborn/knowledge/components/reborn-image.json",
+      "sha256": "061123e7b7df45a99e2eba0083ddc544dd71e51734bdd0a553c140ebf8537fbe"
+    },
+    {
+      "path": "upstream/reborn/knowledge/components/reborn-input-number.json",
+      "sha256": "28a6cb441b058de057fc7d416940640a0f65dc3e8b5eabca4cf9b5d99b1106cb"
+    },
+    {
+      "path": "upstream/reborn/knowledge/components/reborn-input-otp.json",
+      "sha256": "5dd9f2bd0c7f78928710a2da7402f7778a8602cd4c9279568f334129babfc6a9"
+    },
+    {
+      "path": "upstream/reborn/knowledge/components/reborn-input.json",
+      "sha256": "29eb3b9fc9e7c7116140ecf10f8c3e46c400b7c5ca47a0569f0bd6fc64a6e1e8"
+    },
+    {
+      "path": "upstream/reborn/knowledge/components/reborn-layout.json",
+      "sha256": "9ed8e84b4295f7bf08be4b3a340aaaa610e8b9b3d2388fd4e21059f36da934f9"
+    },
+    {
+      "path": "upstream/reborn/knowledge/components/reborn-loading.json",
+      "sha256": "91e4e3ec72d53981ed9c2c283b5866bd372aa3fa97474418d6db97e7e2c13dbd"
+    },
+    {
+      "path": "upstream/reborn/knowledge/components/reborn-loadmore.json",
+      "sha256": "c8117bf7b58add01b4c2a11b98811bba8f574bb4c209a8d4120774f5d27c6489"
+    },
+    {
+      "path": "upstream/reborn/knowledge/components/reborn-main.json",
+      "sha256": "c6e15bf833a0d560e8d11ce87b59329ee7fa34fdee7ca808404f3701a21f955a"
+    },
+    {
+      "path": "upstream/reborn/knowledge/components/reborn-marquee.json",
+      "sha256": "a11c5de6ad742c074f83909ab966ebf2cbbdf7cc335bd71d7bdf3f2554ae2679"
+    },
+    {
+      "path": "upstream/reborn/knowledge/components/reborn-mention.json",
+      "sha256": "a434bf6a786d0ff2833879bfb1f1638bc32e8107275bc132ee4a1a3ce46a9804"
+    },
+    {
+      "path": "upstream/reborn/knowledge/components/reborn-menu.json",
+      "sha256": "cd5ac31079912a26be6f5800b172de199f7577a912ff744b815953e640d59d70"
+    },
+    {
+      "path": "upstream/reborn/knowledge/components/reborn-notice-bar.json",
+      "sha256": "95d607df9b09b3c9df1f2444bfda08109152ede7fff12f232b28cea3b202eb84"
+    },
+    {
+      "path": "upstream/reborn/knowledge/components/reborn-notification.json",
+      "sha256": "0dbd4df8b0910681d53c6465521d79136b235087e962ed3dd0324d67b9bdfede"
+    },
+    {
+      "path": "upstream/reborn/knowledge/components/reborn-overlay.json",
+      "sha256": "0e52de4d41ed9de625c60326d3fd663ddc8c914e8a92282bd11a7be8bf9fc767"
+    },
+    {
+      "path": "upstream/reborn/knowledge/components/reborn-page-header.json",
+      "sha256": "761be8f6e47b18b653049eeee70f9c04e6a1d491bbe351dc1d946ad03fcbbbc7"
+    },
+    {
+      "path": "upstream/reborn/knowledge/components/reborn-page.json",
+      "sha256": "a0f4807a24ec37477225970151c27d06eac4e0118b44fe3adaba2f8d3be7c523"
+    },
+    {
+      "path": "upstream/reborn/knowledge/components/reborn-pagination.json",
+      "sha256": "f75a37f14d482386f0b9a43225cd74d55e4a4406eee81a35b4208783c162b1f2"
+    },
+    {
+      "path": "upstream/reborn/knowledge/components/reborn-picker-view.json",
+      "sha256": "5604d6bd0d11c8894e9c44e149f065ccb2c3f4ec132e04d46d3faef270996729"
+    },
+    {
+      "path": "upstream/reborn/knowledge/components/reborn-popconfirm.json",
+      "sha256": "e16987b37a10e7744f2e67382520d37be9fa94ebc11b996689f795f4c02edbfe"
+    },
+    {
+      "path": "upstream/reborn/knowledge/components/reborn-popover.json",
+      "sha256": "c61351afc98d4bbb915788f0ae3a8d4caebd2124d2a3e49dde5f1c7efaf429c2"
+    },
+    {
+      "path": "upstream/reborn/knowledge/components/reborn-popup.json",
+      "sha256": "0227e2a2906a40003d3f076bc71f58cdf2e52e1fb03a40428f786278c4497137"
+    },
+    {
+      "path": "upstream/reborn/knowledge/components/reborn-progress.json",
+      "sha256": "37c761d30a70617da5db049c2b1356fbf7e7d281a9b6260ef143fe099010213d"
+    },
+    {
+      "path": "upstream/reborn/knowledge/components/reborn-qrcode.json",
+      "sha256": "cd4b0e99ef26e82137f3e47ec214410e2f0ea1800a99da6ca61dbf4376bcd312"
+    },
+    {
+      "path": "upstream/reborn/knowledge/components/reborn-radio.json",
+      "sha256": "3f5660681469243ba958e22f57f85cc7a8abf98d73c23ea76e89c12df51c2f33"
+    },
+    {
+      "path": "upstream/reborn/knowledge/components/reborn-rate.json",
+      "sha256": "57f4c197fd5ca8dfdcaaa8e8aa4f0062387546101db3f0ca8aaaa2b26ac10675"
+    },
+    {
+      "path": "upstream/reborn/knowledge/components/reborn-result.json",
+      "sha256": "cb9d032d54d1e3043f733d440b7d62d18cb2b67cdf8b007a89a9a7692a93d034"
+    },
+    {
+      "path": "upstream/reborn/knowledge/components/reborn-root-portal.json",
+      "sha256": "6eb7c14528cdf0f55890c18da56b7771a71963d3c7cd3a73124626a0cb0cb2cd"
+    },
+    {
+      "path": "upstream/reborn/knowledge/components/reborn-search-box.json",
+      "sha256": "a37ddc2bb672ab40b0b557a5c3b804d18ab1018c32bb22e14d33093ab3900a14"
+    },
+    {
+      "path": "upstream/reborn/knowledge/components/reborn-segmented.json",
+      "sha256": "42e5e2ec63a2a77bc1d959b5262b4af7d40276f8b07e18c5ee8f655744986402"
+    },
+    {
+      "path": "upstream/reborn/knowledge/components/reborn-select-trigger.json",
+      "sha256": "c461f84a84284abc664adf399258aaa9a1e141ba42ce33d28450d932edf7a2b1"
+    },
+    {
+      "path": "upstream/reborn/knowledge/components/reborn-select.json",
+      "sha256": "1adc9e8df390b441e0f61ccd3030f2a3bad40acfa683912842e6f8928e465c6a"
+    },
+    {
+      "path": "upstream/reborn/knowledge/components/reborn-signature.json",
+      "sha256": "1c12d8fd0ded602c0a2340903fed0fcf36e2be0dff13b14da29bb06c8b41e43a"
+    },
+    {
+      "path": "upstream/reborn/knowledge/components/reborn-sku.json",
+      "sha256": "2e7cfb48d6c60a1a8f754f3673801bfe0d769a5c922497fc12ab88eb93667c77"
+    },
+    {
+      "path": "upstream/reborn/knowledge/components/reborn-slide-verify.json",
+      "sha256": "1ceee966d0ca1078da2dae7b2ee7ee08fee154307ccde853e08688f5135120eb"
+    },
+    {
+      "path": "upstream/reborn/knowledge/components/reborn-slider.json",
+      "sha256": "07d3a96d32ba1d66a9a5faf6375179936a64ce54181bcb32ab7b51aaf8b550d5"
+    },
+    {
+      "path": "upstream/reborn/knowledge/components/reborn-splitter.json",
+      "sha256": "317fbc0fe13ca805f5324f05f56577eca2a2c1f9c8dc761ceb2e1c60298e1301"
+    },
+    {
+      "path": "upstream/reborn/knowledge/components/reborn-statistic.json",
+      "sha256": "9a3245a9fc198caf5d40ceb79c8972403df0db74ce007511c2608394d81fcf97"
+    },
+    {
+      "path": "upstream/reborn/knowledge/components/reborn-steps.json",
+      "sha256": "579156209600f7fcf2a21c83ae1f7e56c82e16e56de46c30176d1beb0cd26b5d"
+    },
+    {
+      "path": "upstream/reborn/knowledge/components/reborn-sticky.json",
+      "sha256": "99cf023e602334b5095ac1305a73459c72c46e24a2b51e147b9166ce20058112"
+    },
+    {
+      "path": "upstream/reborn/knowledge/components/reborn-swiper-action.json",
+      "sha256": "71c74e77c2dde407e40cdbe83435f46f13397480f079e85ea3852649921cc48c"
+    },
+    {
+      "path": "upstream/reborn/knowledge/components/reborn-switch.json",
+      "sha256": "d4769cf1769c6db6886b5c45a31db201e417ecdeec9108db4ab94d10aa4a95b4"
+    },
+    {
+      "path": "upstream/reborn/knowledge/components/reborn-tabbar.json",
+      "sha256": "f477560a673ea453a2a2cc0c5289c8ba22204abed3b50a286fa8e0369a9a602a"
+    },
+    {
+      "path": "upstream/reborn/knowledge/components/reborn-table.json",
+      "sha256": "870685e8aa84180f1786abf436cd7de90aa2db502e836067ce033bff4d6f6302"
+    },
+    {
+      "path": "upstream/reborn/knowledge/components/reborn-tabs.json",
+      "sha256": "d93c8f64052d07bc7aa3fd56d640b8e9106635b7ef647ab64988c3563bf8fbde"
+    },
+    {
+      "path": "upstream/reborn/knowledge/components/reborn-text.json",
+      "sha256": "8f5a6b707895d0445f4b95f3e94dbd19867b30dc9a751ae9588099fafc15b6c1"
+    },
+    {
+      "path": "upstream/reborn/knowledge/components/reborn-textarea.json",
+      "sha256": "c2e5e2c2348a9646d6370d9144feb93cc63d1763ffd46230e59eba5c4ff5d132"
+    },
+    {
+      "path": "upstream/reborn/knowledge/components/reborn-time-picker.json",
+      "sha256": "2111a49c73677c70b932cc50102466b4e33314059ae9d731b3bd876d5bae11d7"
+    },
+    {
+      "path": "upstream/reborn/knowledge/components/reborn-timeline.json",
+      "sha256": "45547c05cb62108e4dd1252a52dc42d9f34aa7e883085b316eb799607ad0b31a"
+    },
+    {
+      "path": "upstream/reborn/knowledge/components/reborn-toast.json",
+      "sha256": "d52c20318ccc441e7e4f148b919cefb3d6c990ee237f12fff67ae1a1f562bf33"
+    },
+    {
+      "path": "upstream/reborn/knowledge/components/reborn-tooltip.json",
+      "sha256": "34dad690f16804f6be9a82ce07b451f7f426be64359f6bbc2516ee0af80cb2e4"
+    },
+    {
+      "path": "upstream/reborn/knowledge/components/reborn-transfer.json",
+      "sha256": "58e1f862b79191329aead449143b4e430ce2c547bd35989ae1cf1cf410b246b7"
+    },
+    {
+      "path": "upstream/reborn/knowledge/components/reborn-transition.json",
+      "sha256": "1ce0854d6bbd6deb0f5a0bda215ede168a8a9d083845a5e3abcbb04a0022150d"
+    },
+    {
+      "path": "upstream/reborn/knowledge/components/reborn-tree-select.json",
+      "sha256": "7aed73113df61459be75268ddd0e57d1d6779dc325f531303126d7eaff072228"
+    },
+    {
+      "path": "upstream/reborn/knowledge/components/reborn-tree.json",
+      "sha256": "b9aecd87605261f9699a9384e295684757c37bb4db2c0eae0ad74743fed1a159"
+    },
+    {
+      "path": "upstream/reborn/knowledge/components/reborn-typewriter.json",
+      "sha256": "bf54488468eb2870ad28323fcaca20b3ff8e093d0378ece90a00794b6ccfdb25"
+    },
+    {
+      "path": "upstream/reborn/knowledge/components/reborn-upload.json",
+      "sha256": "9f3f6d4b9a5982106d76a02a8802baf9f52bba79224436e76d832684f23ad52d"
+    },
+    {
+      "path": "upstream/reborn/knowledge/components/reborn-waterfall.json",
+      "sha256": "b58da1f6424f0c4df761307a149408edc09efa677e4c9093d153a02ec832cb27"
+    },
+    {
+      "path": "upstream/reborn/knowledge/components/reborn-watermark.json",
+      "sha256": "2e546d0e49490f55e384a60a0e7decdeb1108bfc09987cf5e44de4b6007d9534"
+    },
+    {
+      "path": "upstream/reborn/knowledge/components/reui-launch.json",
+      "sha256": "5825ef031c5aeb53c018a64c69e161e1ac79d3c366b5a6243e59011d775dfba9"
+    },
+    {
+      "path": "upstream/reborn/knowledge/components/ripple-button.json",
+      "sha256": "bb45c46de14d11d189ef8cfb92c579d02bda5328cc2a87e0c5774cbefd68996c"
+    },
+    {
+      "path": "upstream/reborn/knowledge/components/ripple.json",
+      "sha256": "1546b5771ea618651a878404bd209d24b9c0f3796d5e0592eff954c50d4e0641"
+    },
+    {
+      "path": "upstream/reborn/knowledge/components/safari-mockup.json",
+      "sha256": "43b7b15316b86f8ac631c67579e7a5a4e1c6c3fec689bc893fa540274aa9fdc8"
+    },
+    {
+      "path": "upstream/reborn/knowledge/components/scratch-to-reveal.json",
+      "sha256": "622ac9af2e01a7f669614ebb881db3c2a29097b612eb9fe15c52368f070ab5bc"
+    },
+    {
+      "path": "upstream/reborn/knowledge/components/scroll-island.json",
+      "sha256": "a716dcfe43e716bd442bbe44b43a6428822b00ff34a78edc525f9d28fa0ed7ee"
+    },
+    {
+      "path": "upstream/reborn/knowledge/components/scrollbar.json",
+      "sha256": "50ec1c80474704d5b0e2554f63886a5aee6c29828036acdbaa6ddcc5338b3600"
+    },
+    {
+      "path": "upstream/reborn/knowledge/components/shader-toy.json",
+      "sha256": "9bd33f023ff33184381a8989eacbdd5d27709e03877ddec1d2fddaf42742a022"
+    },
+    {
+      "path": "upstream/reborn/knowledge/components/shimmer-button.json",
+      "sha256": "b12833df34f1a3675aa30eb84353f8f37e2d62c1d4de14aad5b34e6c4e812679"
+    },
+    {
+      "path": "upstream/reborn/knowledge/components/sparkles-text.json",
+      "sha256": "5573279d17bde250b0249df4906106eff192d5a2484e848e75ba3dbed05bf0f3"
+    },
+    {
+      "path": "upstream/reborn/knowledge/components/sparkles.json",
+      "sha256": "9c354329eff75ebd17c64d3a0c9857926878089723561c6ddf0fcc4c9d8579e9"
+    },
+    {
+      "path": "upstream/reborn/knowledge/components/spinning-text.json",
+      "sha256": "386ce304ecc487f4e0e529f566c8821f5186374122671ce3e6e3ba9f33ad5a98"
+    },
+    {
+      "path": "upstream/reborn/knowledge/components/spring-calendar.json",
+      "sha256": "447297651b0c55e09e6b187c8c8283abfb442e7765c9095a4b591a7eda3f6efb"
+    },
+    {
+      "path": "upstream/reborn/knowledge/components/svg-mask.json",
+      "sha256": "7d5b720a1d407cb7d41ca06bab88a106bc9c4de4b591da00effe2cb71f0e3739"
+    },
+    {
+      "path": "upstream/reborn/knowledge/components/testimonial-slider.json",
+      "sha256": "b50b4f7abfa8d6c082656cc4b69fcd8d61d73d6d5557b284372eb82136b6ec94"
+    },
+    {
+      "path": "upstream/reborn/knowledge/components/text-3d.json",
+      "sha256": "e4c7e65eaf127fa47920a038dcc6b15440b2ba8182ac6abb7e925f43fd9494a0"
+    },
+    {
+      "path": "upstream/reborn/knowledge/components/text-generate-effect.json",
+      "sha256": "e37e6495b624ce3b2f913df65e54c2b81da23a43dc6ba2fa5152a4336c6ce368"
+    },
+    {
+      "path": "upstream/reborn/knowledge/components/text-glitch.json",
+      "sha256": "206545ac8f16c09fdc947f302e67214188bc3c9649d1b9856771c982c8443429"
+    },
+    {
+      "path": "upstream/reborn/knowledge/components/text-highlight.json",
+      "sha256": "df354486e83c1f82bc1d72d7de2da3ba13e04484f388931ebeecbf9b67562417"
+    },
+    {
+      "path": "upstream/reborn/knowledge/components/text-hover-effect.json",
+      "sha256": "9e5176204d87149c85890cf24b8dd592ed745d4447c4e047928ab0c46fb15c0c"
+    },
+    {
+      "path": "upstream/reborn/knowledge/components/text-reveal-card.json",
+      "sha256": "248babcacc6fb826ef02124a9851e85c95b02f1a8ed7ad3b3577c51a17c8fea2"
+    },
+    {
+      "path": "upstream/reborn/knowledge/components/text-reveal.json",
+      "sha256": "4a6121a5bfa9a7f127e8b15d9e9241aa84dd9d70d6032d2cde972d77d242d486"
+    },
+    {
+      "path": "upstream/reborn/knowledge/components/text-scroll-reveal.json",
+      "sha256": "de322a2bacd164b0b52897bcf93b1d8eef1ddad89d959817495492d732d4a4cb"
+    },
+    {
+      "path": "upstream/reborn/knowledge/components/timeline.json",
+      "sha256": "ea99726b59a1b0e9407142ca08e0896ee6da12968e0e64cabd8f1e251add5ce4"
+    },
+    {
+      "path": "upstream/reborn/knowledge/components/tracing-beam.json",
+      "sha256": "b72bcdb5478176967dae648f1e6dd719ece043fb31e46e386fa3776f3775682d"
+    },
+    {
+      "path": "upstream/reborn/knowledge/components/vanishing-input.json",
+      "sha256": "7c698a25fcbacff7fff62c1bd94c65d91270b71b95f271f83bea3ab821f2e8e6"
+    },
+    {
+      "path": "upstream/reborn/spec/component-doc.md",
+      "sha256": "f5d43ac2d9a3b972144f62fcc04ac617610268c080cdc5413b6dad7389e93bd3"
+    },
+    {
+      "path": "upstream/reborn/spec/template-component-doc.md",
+      "sha256": "fa9490939582f72c2fed87399326d3b69dcf0b92ac965da6ed6063853ea9b936"
+    },
+    {
+      "path": "upstream/reborn/spec/component-demo.md",
+      "sha256": "53fd673d84515631b9b969f938d4d2b29490370cc9a576590c0f16f0a8d8e9e8"
+    },
+    {
+      "path": "upstream/reborn/spec/template-component-demo.vue",
+      "sha256": "d7518da559950075ebf4f5b64f1f85d9e16e61f6a5f34b0186ce8cabd975ae3b"
+    }
+  ]
+}

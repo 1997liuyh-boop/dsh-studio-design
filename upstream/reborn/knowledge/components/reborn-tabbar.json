@@ -1,0 +1,271 @@
+{
+  "$schema": "../schema/component.schema.json",
+  "id": "reborn-tabbar",
+  "title": "Tabbar 底部标签栏",
+  "description": "用于 uniapp 页面底部导航切换的自定义标签栏组件，需配合 RebornTabbarTrigger 子项使用。",
+  "category": "navigation",
+  "tags": [
+    "uniapp",
+    "tabbar",
+    "navigation"
+  ],
+  "platforms": [
+    "uniapp"
+  ],
+  "props": [
+    {
+      "name": "fixed",
+      "type": "boolean",
+      "required": false,
+      "description": "是否固定在页面底部（fixed 定位吸底，配合 placeholder 自动占位）",
+      "default": "false"
+    },
+    {
+      "name": "bordered",
+      "type": "boolean",
+      "required": false,
+      "description": "是否显示顶部分隔线（仅 shape 为 normal 时渲染）",
+      "default": "true"
+    },
+    {
+      "name": "safeAreaInsetBottom",
+      "type": "boolean",
+      "required": false,
+      "description": "是否为 iOS 底部安全区追加内边距（仅 fixed 开启时生效）",
+      "default": "false"
+    },
+    {
+      "name": "pureIcon",
+      "type": "boolean",
+      "required": false,
+      "description": "是否仅显示图标不显示标题，开启后标签栏高度降为 90rpx",
+      "default": "false"
+    },
+    {
+      "name": "shape",
+      "type": "(typeof tabbarShapes)[number]",
+      "required": false,
+      "description": "标签栏形状：normal 通栏矩形；round 悬浮胶囊（带左右边距与阴影）",
+      "default": "'normal'"
+    },
+    {
+      "name": "animation",
+      "type": "(typeof tabbarAnimations)[number] | null",
+      "required": false,
+      "description": "切换动画类型：reveal / flip / creative / glass / fly-balls / drop，null 表示无动画",
+      "default": "null"
+    },
+    {
+      "name": "ballColors",
+      "type": "string[]",
+      "required": false,
+      "description": "fly-balls 动画的小球颜色数组，数组长度即小球数量",
+      "default": "() => ['#ff6675', '#ffb03b', '#35b6f2', '#3ac29e']"
+    },
+    {
+      "name": "activeColor",
+      "type": "string",
+      "required": false,
+      "description": "选中态图标与标题颜色（内联样式，优先级高于 color 主题色）"
+    },
+    {
+      "name": "inactiveColor",
+      "type": "string",
+      "required": false,
+      "description": "未选中态图标与标题颜色（内联样式）"
+    },
+    {
+      "name": "placeholder",
+      "type": "boolean",
+      "required": false,
+      "description": "fixed 时是否生成等高占位元素，防止页面内容被标签栏遮挡",
+      "default": "true"
+    },
+    {
+      "name": "zIndex",
+      "type": "number",
+      "required": false,
+      "description": "标签栏主体的 z-index 层级",
+      "default": "99"
+    },
+    {
+      "name": "color",
+      "type": "(typeof tabbarColors)[number]",
+      "required": false,
+      "description": "主题色，选中项与 drop 指示球随之着色；子项可用自身 color 覆盖",
+      "default": "'primary'"
+    },
+    {
+      "name": "customClass",
+      "type": "any",
+      "required": false,
+      "description": "追加到根节点的自定义类名"
+    },
+    {
+      "name": "customStyle",
+      "type": "string",
+      "required": false,
+      "description": "追加到标签栏主体的内联样式字符串",
+      "default": "''"
+    },
+    {
+      "name": "ui",
+      "type": "Partial<Record<'root' | 'base' | 'dropBall' | 'flyBallsContainer' | 'flyBallItem', string>>",
+      "required": false,
+      "description": "按 root / base / dropBall / flyBallsContainer / flyBallItem 键覆盖内部节点类名 可用键（从源码抽取，以此为准）——UniApp：RebornTabbar → base、dropBall、flyBallItem、flyBallsContainer、root；RebornTabbarTrigger → activeIcon*、body*、bodyGlowLayer*、glowLayer、icon*、iconInner*、inactiveIcon*、root、title。 带 * 的键对应插槽兜底节点：填了同名插槽，组件自带的节点被替换，这个键随之失效。"
+    },
+    {
+      "name": "ballShiftY",
+      "type": "number",
+      "required": false,
+      "description": "fly-balls 小球落点的纵向偏移，单位 rpx，默认 -5",
+      "default": "-5"
+    },
+    {
+      "name": "beforeChange",
+      "type": "(params: { name: string | number }, done: (shouldProceed?: boolean) => void) => boolean | Promise<boolean> | void",
+      "required": false,
+      "description": "切换前拦截钩子：返回 false、Promise 解析为 false 或调用 done(false) 均可阻止本次切换"
+    },
+    {
+      "name": "modelValue",
+      "type": "string | number",
+      "required": false,
+      "description": "双向绑定值",
+      "vModel": true,
+      "default": "0"
+    },
+    {
+      "name": "title",
+      "type": "string",
+      "required": false,
+      "description": "标签页标题"
+    },
+    {
+      "name": "name",
+      "type": "number | string",
+      "required": false,
+      "description": "唯一标识符",
+      "default": "子项索引"
+    },
+    {
+      "name": "order",
+      "type": "number",
+      "required": false,
+      "description": "显式序位；小程序动态列表所有项须传入有限数值"
+    },
+    {
+      "name": "icon",
+      "type": "string",
+      "required": false,
+      "description": "图标名称或图片链接"
+    },
+    {
+      "name": "inactive",
+      "type": "string",
+      "required": false,
+      "description": "未选中时的图标名称或图片链接"
+    },
+    {
+      "name": "disabled",
+      "type": "boolean",
+      "required": false,
+      "description": "是否禁用",
+      "default": "false"
+    },
+    {
+      "name": "imageSize",
+      "type": "number",
+      "required": false,
+      "description": "图片大小",
+      "default": "40"
+    }
+  ],
+  "events": [
+    {
+      "name": "change",
+      "payload": "[payload: { value: string | number }]",
+      "description": "选中项切换后触发（`beforeChange` 拦截通过后才会触发），`value` 为新选中项的 `name`。"
+    },
+    {
+      "name": "update:modelValue",
+      "description": "modelValue 变化时触发（v-model 同步）"
+    }
+  ],
+  "slots": [
+    {
+      "name": "default",
+      "description": "RebornTabbar` 上放置 `RebornTabbarTrigger` 子项；`RebornTabbarTrigger` 上则完全接管该子项的渲染内容。"
+    },
+    {
+      "name": "icon",
+      "description": "RebornTabbarTrigger` 的图标区插槽，替代 `icon` / `inactive` 属性自定义图标渲染。"
+    }
+  ],
+  "exposes": [],
+  "examples": [
+    {
+      "title": "Web 演示",
+      "path": "app/components/reborn/examples/reborn-tabbar/RebornTabbarDemo.vue",
+      "source": "demo",
+      "platform": "web",
+      "code": "<template>\n  <div class=\"border-default rounded-lg border border-dashed p-6 text-center\">\n    <DemoNote>Web 端暂未提供此组件，请在 UniApp 端查看。</DemoNote>\n  </div>\n</template>\n"
+    },
+    {
+      "title": "UniApp 演示",
+      "path": "packages/uniapp-project/src/pages/reborn-tabbar/RebornTabbarDemo.vue",
+      "source": "demo",
+      "platform": "uniapp",
+      "code": "<script lang=\"ts\" setup>\nimport { shallowRef } from 'vue'\nimport RebornTabbar from '@/components/reborn-tabbar/RebornTabbar.vue'\nimport RebornTabbarTrigger from '@/components/reborn-tabbar/RebornTabbarTrigger.vue'\nimport { tabbarAnimations, tabbarShapes, tabbarColors } from '@/components/reborn-tabbar/reborn-tabbar.config'\n\nimport RebornPage from '@/components/reborn-page/RebornPage.vue'\nimport RebornCard from '@/components/reborn-card/RebornCard.vue'\nimport RebornRadioGroup from '@/components/reborn-radio/RebornRadioGroup.vue'\nimport RebornRadio from '@/components/reborn-radio/RebornRadio.vue'\nimport RebornText from '@/components/reborn-text/RebornText.vue'\nimport RebornSwitch from '@/components/reborn-switch/RebornSwitch.vue'\n\nconst tabbar = shallowRef('home')\nconst tabbar1 = shallowRef(1)\nconst tabbar2 = shallowRef(3)\nconst fixedTabbar = shallowRef('home')\nconst animation = shallowRef<typeof tabbarAnimations[number] | null>(null)\nconst shape = shallowRef<typeof tabbarShapes[number]>('normal')\nconst fixed = shallowRef(false)\nconst demoColor = shallowRef<typeof tabbarColors[number]>(tabbarColors[0])\nconst onlyIcon = shallowRef(false)\n\nconst tabbarTitles = { home: '首页', site: '分类', shopping: '购物车', my: '我的' }\nconst tabbarList = Object.entries(tabbarTitles).map(([name, title]) => ({\n    name,\n    title,\n    icon: `https://mall.leyifan.cn/static/h5/new_images/${name}_active.png`,\n    inactive: `https://mall.leyifan.cn/static/h5/new_images/${name}.png`,\n}))\n\nfunction handleChange({ value }: { value: string | number }) {\n    uni.showToast({ title: `选中标签: ${value}`, icon: 'none' })\n}\n\n\nfunction handleChange1({ value }: { value: string | number }) {\n    uni.showToast({ title: '选中标签: ' + value, icon: 'none' })\n}\n\n</script>\n\n<template>\n    <RebornPage title=\"Tabbar 标签栏\" description=\"页面底部标签栏，用于页面级路由跳转或内容区域切换。\" :ui=\"{ body: 'p-0' }\">\n\n        <RebornTabbar bordered :animation=\"animation\" :shape=\"shape\" v-model=\"tabbar\" :fixed=\"fixed\" :color=\"demoColor\"\n            :pure-icon=\"onlyIcon\" @change=\"handleChange\" :ball-shift-y=\"-10\">\n            <RebornTabbarTrigger v-for=\"(item, index) in tabbarList\" :key=\"item.name\" :order=\"index\" :name=\"item.name\" :title=\"item.title\"\n                :image-size=\"52\" :icon=\"item.icon\" :inactive=\"item.inactive\" />\n        </RebornTabbar>\n\n        <RebornCard title=\"参数配置\" customClass=\"flex flex-col gap-4 mx-4\">\n            <view class=\"space-y-3\">\n                <RebornText color=\"neutral\" customClass=\"text-26 font-bold\">颜色</RebornText>\n                <view class=\"flex flex-wrap gap-2\">\n                    <view v-for=\"c in tabbarColors\" :key=\"c\" class=\"\n                  size-4 cursor-pointer rounded-full ring-2 ring-transparent\n                  ring-offset-2 transition-all\n                \" :class=\"[\n                    `\n                    bg-${c}\n                  `,\n                    demoColor === c ? 'scale-110 ring-slate-400' : `\n                    hover:scale-110\n                  `,\n                ]\" :style=\"{ backgroundColor: `var(--color-${c}, ${c === 'neutral' ? '#737373' : ''})` }\"\n                        @click=\"demoColor = c\" />\n                </view>\n            </view>\n            <view class=\"flex flex-col gap-2\">\n                <RebornText color=\"neutral\" customClass=\"text-26 font-bold\">动画</RebornText>\n                <RebornRadioGroup v-model=\"animation\">\n                    <RebornRadio v-for=\"item in tabbarAnimations\" :key=\"item\" :value=\"item\">{{ item }}</RebornRadio>\n                </RebornRadioGroup>\n            </view>\n            <view class=\"flex flex-col gap-2\">\n                <RebornText color=\"neutral\" customClass=\"text-26 font-bold\">类型</RebornText>\n                <RebornRadioGroup v-model=\"shape\">\n                    <RebornRadio v-for=\"item in tabbarShapes\" :key=\"item\" :value=\"item\">{{ item }}</RebornRadio>\n                </RebornRadioGroup>\n            </view>\n            <view class=\"flex flex-col gap-2\">\n                <RebornText color=\"neutral\" customClass=\"text-26 font-bold\">纯图标标签栏</RebornText>\n                <RebornSwitch v-model=\"onlyIcon\" size=\"sm\" />\n            </view>\n            <view class=\"flex flex-col gap-2\">\n                <RebornText color=\"neutral\" customClass=\"text-26 font-bold\">是否固定底部</RebornText>\n                <RebornSwitch v-model=\"fixed\" size=\"sm\" />\n            </view>\n        </RebornCard>\n\n\n        <!-- 自定义图标 -->\n        <view class=\"text-26 font-bold mt-4 mb-2\">自定义图标</view>\n        <view class=\"relative w-full bg-gray-2 rounded-md\">\n            <RebornTabbar v-model=\"tabbar1\" @change=\"handleChange\" animation=\"flip\" active-color=\"#409EFF\"\n                inactive-color=\"#909399\">\n                <RebornTabbarTrigger title=\"首页\" icon=\"i-lucide-home\" />\n                <RebornTabbarTrigger title=\"分类\" icon=\"https://letaoyifan.com/images/svg/quickPurchase.svg\"\n                    inactive=\"https://letaoyifan.com/images/svg/wx.svg\" />\n                <RebornTabbarTrigger title=\"我的\" icon=\"i-lucide-user\" />\n            </RebornTabbar>\n        </view>\n\n        <!-- 自定义颜色 -->\n        <view class=\"text-26 font-bold mt-4 mb-2\">自定义颜色</view>\n        <view class=\"relative w-full bg-gray-2 rounded-md \">\n            <RebornTabbar v-model=\"tabbar2\" @change=\"handleChange\">\n                <RebornTabbarTrigger title=\"首页\" icon=\"i-lucide-home\" color=\"success\" />\n                <RebornTabbarTrigger title=\"分类\" icon=\"i-lucide-shopping-cart\" color=\"warning\" />\n                <RebornTabbarTrigger title=\"我的\" icon=\"i-lucide-user\" color=\"error\" />\n                <RebornTabbarTrigger title=\"最大值\" icon=\"i-lucide-image\" color=\"info\" />\n                <RebornTabbarTrigger title=\"客服\" icon=\"i-lucide-message-circle\" color=\"primary\" />\n            </RebornTabbar>\n        </view>\n\n        <!-- 监听切换事件 -->\n        <view class=\"text-26 font-bold mt-4 mb-2\">监听切换事件+固定底部</view>\n        <view class=\"relative w-full bg-gray-2 rounded-md \">\n            <RebornTabbar v-if=\"!fixed\" bordered :animation=\"animation\" :shape=\"shape\" v-model=\"fixedTabbar\" :fixed=\"true\"\n                :color=\"demoColor\" :pure-icon=\"onlyIcon\" @change=\"handleChange1\" :ball-shift-y=\"-10\">\n                <RebornTabbarTrigger v-for=\"(item, index) in tabbarList\" :key=\"item.name\" :order=\"index\" :name=\"item.name\" :title=\"item.title\"\n                    :image-size=\"52\" :icon=\"item.icon\" :inactive=\"item.inactive\" />\n            </RebornTabbar>\n      <text v-else class=\"text-[24rpx] text-gray-500\">当前由顶部配置示例占用固定底栏。</text>\n        </view>\n\n    </RebornPage>\n</template>\n"
+    }
+  ],
+  "related": [
+    "reborn-image"
+  ],
+  "whenToUse": [
+    "替代原生 tabBar 实现自定义样式的底部导航（shape、动画、小球颜色等可配）。",
+    "需要固定吸底并处理 iOS 底部安全区（fixed + safeAreaInsetBottom，placeholder 自动占位）。",
+    "切换前需要拦截（beforeChange 支持返回 boolean / Promise 或调用 done 回调）。"
+  ],
+  "whenNotToUse": [
+    "web 端项目：platforms 仅 uniapp，web 端无对应实现。",
+    "页面内内容区切换改用 reborn-tabs。"
+  ],
+  "pitfalls": [
+    "platforms 仅 uniapp 端提供。",
+    "子项 RebornTabbarTrigger 必须放在 RebornTabbar 默认插槽内；title / name / icon / inactive / disabled / imageSize 是子项的 props（知识条目中与父组件 props 合并展示）。",
+    "fixed 默认 false，需要吸底须显式开启；safeAreaInsetBottom 默认 false。",
+    "v-model 绑定当前激活项（number 或 string，与子项 name 对应），切换触发 change。",
+    "动态列表的每个 RebornTabbarTrigger 都须传 order 下标；整组均为有限数值时按 order 排序，同值保留相对次序，混传或 NaN/Infinity 整组忽略。缺省时 H5 跟随 VNode 顺序，MP 保留当前登记次序。name 缺省时使用排序后索引，视觉位置、选中与 drop 指示球保持同序。"
+  ],
+  "dependencies": [
+    "@weapp-tailwindcss/merge-v3",
+    "@weapp-tailwindcss/variants-v3",
+    "clsx",
+    "tailwind-merge",
+    "tailwind-variants"
+  ],
+  "install": {
+    "cli": "npx reborn-ui@latest add reborn-tabbar"
+  },
+  "sourceRefs": {
+    "uniapp": [
+      "packages/uniapp-project/src/components/reborn-tabbar/RebornTabbar.vue",
+      "packages/uniapp-project/src/components/reborn-tabbar/RebornTabbarTrigger.vue",
+      "packages/uniapp-project/src/components/reborn-tabbar/index.ts",
+      "packages/uniapp-project/src/components/reborn-tabbar/reborn-tabbar-trigger.config.ts",
+      "packages/uniapp-project/src/components/reborn-tabbar/reborn-tabbar.config.ts",
+      "packages/uniapp-project/src/components/reborn-tabbar/types.ts"
+    ]
+  },
+  "docPath": "content/2.components/navigation/reborn-tabbar.md",
+  "_meta": {
+    "contentHash": "3df85eb7277702c6bcb0bec70214c87919c4c3eb",
+    "hasOverride": true,
+    "extractors": {
+      "web": "absent",
+      "uniapp": "ok",
+      "docs": "found"
+    }
+  }
+}

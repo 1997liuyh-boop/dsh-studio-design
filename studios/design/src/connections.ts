@@ -1,0 +1,66 @@
+import type { ConnectionSpec, ConnectionStatus } from './types.ts'
+
+/** Cordis 子插件拥有 MCP 传输；工作室不实现自己的 JSON-RPC。 */
+export interface McpFiber { await(): Promise<unknown>; dispose(): Promise<unknown> }
+export type StartMcp = (config: Record<string, unknown>) => Promise<McpFiber>
+const probes = { mastergo: 'get_selection_code', reborn: 'get_component' }
+
+/** 每条连接串行变更，断线后根据真实工具是否存在显示状态。 */
+export class Connections {
+  private fibers = new Map<string, McpFiber>()
+  private queue: Promise<unknown> = Promise.resolve()
+  private closed = false
+  private pending = new Set<McpFiber>()
+  private statuses: Record<'mastergo' | 'reborn', ConnectionStatus> = {
+    mastergo: { state: 'disconnected', message: '请运行 MasterGo 桌面端并打开设计文档' },
+    reborn: { state: 'disconnected', message: '连接后可查询真实参数与示例' },
+  }
+  constructor(private start: StartMcp, private hasTool: (name: string) => boolean) {}
+  /** 已完成握手后仍检查工具是否在线。 */
+  snapshot(): typeof this.statuses {
+    return Object.fromEntries(Object.entries(this.statuses).map(([name, status]) => [name, status.state === 'connected' && !this.hasTool('mcp__design_' + name + '__' + probes[name as keyof typeof probes]) ? { state: 'error', message: 'MCP 已断开，请重新连接' } : { ...status }])) as typeof this.statuses
+  }
+  /** 显式连接；失败时释放半启动子插件并保留可重试的错误。 */
+  connect(name: 'mastergo' | 'reborn', spec: ConnectionSpec, cwd: string): Promise<void> {
+    const task = this.queue.then(async () => {
+      if (this.closed) throw new Error('设计工作室已卸载')
+      await this.disconnectOne(name)
+      if (!spec.command) throw new Error('MCP 启动命令为空')
+      this.statuses[name] = { state: 'connecting', message: '正在连接' }
+      let fiber: McpFiber | undefined
+      try {
+        fiber = await this.start({ serverName: 'design_' + name, transport: 'stdio', ...spec, cwd, env: {}, toolCallTimeoutMs: 60_000, failOnStartupError: true, reconnect: { enabled: false, initialDelayMs: 1000, maxDelayMs: 30000, maxAttempts: 3 } })
+        this.pending.add(fiber)
+        if (this.closed) throw new Error('设计工作室已卸载')
+        await fiber.await()
+        if (this.closed) throw new Error('设计工作室已卸载')
+        if (!this.hasTool('mcp__design_' + name + '__' + probes[name])) throw new Error('MCP 未登记预期工具，请检查版本和桌面端连接')
+        this.fibers.set(name, fiber)
+        this.statuses[name] = { state: 'connected', message: '工具已就绪' }
+      } catch (error) {
+        if (fiber) await fiber.dispose()
+        this.statuses[name] = { state: 'error', message: '连接失败，请检查启动命令、网络及桌面端文档后重连' }
+        throw error
+      } finally { if (fiber) this.pending.delete(fiber) }
+    })
+    this.queue = task.catch(() => {})
+    return task
+  }
+  private async disconnectOne(name: 'mastergo' | 'reborn'): Promise<void> {
+    const fiber = this.fibers.get(name)
+    if (fiber) { await fiber.dispose(); this.fibers.delete(name) }
+    this.statuses[name] = { state: 'disconnected', message: '已断开' }
+  }
+  /** 切换项目或卸载时等待连接中的操作结束，再释放两个传输。 */
+  async disconnect(): Promise<void> {
+    const task = this.queue.then(async () => { await this.disconnectOne('mastergo'); await this.disconnectOne('reborn') })
+    this.queue = task.catch(() => {})
+    await task
+  }
+  /** 卸载后拒绝新连接。 */
+  async dispose(): Promise<void> {
+    this.closed = true
+    await Promise.all([...this.pending].map(fiber => fiber.dispose()))
+    await this.disconnect()
+  }
+}

@@ -1,0 +1,119 @@
+{
+  "$schema": "../schema/component.schema.json",
+  "id": "animate-grid",
+  "title": "动画网格",
+  "description": "用于以 3D 倾斜透视和发光投影展示 logo 卡片阵列的网格组件。",
+  "category": "misc",
+  "tags": [
+    "css",
+    "tailwind",
+    "input"
+  ],
+  "platforms": [
+    "web"
+  ],
+  "props": [
+    {
+      "name": "class",
+      "type": "string",
+      "required": false,
+      "description": "自定义样式的额外 Tailwind CSS 类。",
+      "default": "\"\""
+    },
+    {
+      "name": "textGlowStartColor",
+      "type": "string",
+      "required": false,
+      "description": "盒子阴影的起始颜色。",
+      "default": "\"#38ef7d80\""
+    },
+    {
+      "name": "perspective",
+      "type": "number",
+      "required": false,
+      "description": "传递给 CSS `transform` 的透视值。",
+      "default": "600"
+    },
+    {
+      "name": "textGlowEndColor",
+      "type": "string",
+      "required": false,
+      "description": "盒子阴影的结束颜色。",
+      "default": "\"#38ef7d\""
+    },
+    {
+      "name": "cards",
+      "type": "Cards[]",
+      "required": true,
+      "description": "要在网格中展示的卡片。",
+      "default": "\"[{logo: 'src'}]\""
+    },
+    {
+      "name": "rotateX",
+      "type": "number",
+      "required": false,
+      "description": "传递给 CSS `transform` 的 rotateX 值。",
+      "default": "-1"
+    },
+    {
+      "name": "rotateY",
+      "type": "number",
+      "required": false,
+      "description": "传递给 CSS `transform` 的 rotateY 值。",
+      "default": "-15"
+    }
+  ],
+  "events": [],
+  "slots": [
+    {
+      "name": "logo",
+      "description": ""
+    }
+  ],
+  "exposes": [],
+  "examples": [
+    {
+      "title": "Web 演示",
+      "path": "app/components/reborn/examples/animate-grid/AnimateGridDemo.vue",
+      "source": "demo",
+      "platform": "web",
+      "code": "<script lang=\"ts\" setup>\nimport cloudflare from \"./cloudflare.svg\";\n\ninterface Props {\n  textGlowStartColor?: string;\n  perspective?: number;\n  textGlowEndColor?: string;\n  rotateX?: number;\n  rotateY?: number;\n}\n\nconst props = defineProps<Props>();\n\nconst cards = Array.from({ length: 16 }, () => ({\n  logo: cloudflare,\n}));\n</script>\n\n<template>\n  <div class=\"flex items-center justify-center p-4\">\n    <AnimateGrid\n      :cards\n      v-bind=\"props\"\n    >\n      <template #logo=\"{ logo }\">\n        <img\n          class=\"logo mx-auto h-10 w-auto\"\n          :src=\"logo\"\n        />\n      </template>\n    </AnimateGrid>\n  </div>\n</template>\n"
+    }
+  ],
+  "related": [],
+  "whenToUse": [
+    "落地页展示合作伙伴或客户 logo 墙。",
+    "展示技术栈、集成服务等品牌图标集合。",
+    "需要带透视倾斜与发光效果的卡片阵列装饰区块。"
+  ],
+  "whenNotToUse": [
+    "每格需要标题、描述与 CTA 的功能展示布局，改用 bento-grid。",
+    "常规响应式内容网格，直接用 CSS Grid 即可。"
+  ],
+  "pitfalls": [
+    "仅 web 端可用。",
+    "cards 为必填 prop，每项需提供 logo 字段并通过 #logo 作用域插槽自行渲染。"
+  ],
+  "dependencies": [
+    "@vueuse/core"
+  ],
+  "install": {
+    "cli": "npx reborn-ui@latest add animate-grid"
+  },
+  "sourceRefs": {
+    "web": [
+      "app/components/reborn/ui/animate-grid/AnimateGrid.vue",
+      "app/components/reborn/ui/animate-grid/index.ts"
+    ]
+  },
+  "docPath": "content/2.components/miscellaneous/animate-grid.md",
+  "_meta": {
+    "contentHash": "f3e274f3a4387d2642c9ef5b1bb478d529d4f9c7",
+    "hasOverride": true,
+    "extractors": {
+      "web": "ok",
+      "uniapp": "absent",
+      "docs": "found"
+    }
+  }
+}

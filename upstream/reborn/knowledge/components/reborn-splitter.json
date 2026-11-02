@@ -1,0 +1,202 @@
+{
+  "$schema": "../schema/component.schema.json",
+  "id": "reborn-splitter",
+  "title": "Splitter 分隔面板",
+  "description": "用于将区域按水平或垂直方向分隔、可拖动调整各面板大小的布局组件。",
+  "category": "layout",
+  "tags": [
+    "css",
+    "tailwind",
+    "splitter",
+    "layout"
+  ],
+  "platforms": [
+    "web"
+  ],
+  "props": [
+    {
+      "name": "layout",
+      "type": "'horizontal' | 'vertical'",
+      "required": false,
+      "description": "面板排列方向。",
+      "default": "'horizontal'",
+      "options": [
+        "horizontal",
+        "vertical"
+      ]
+    },
+    {
+      "name": "lazy",
+      "type": "boolean",
+      "required": false,
+      "description": "拖拽结束后才提交尺寸。",
+      "default": "false"
+    },
+    {
+      "name": "class",
+      "type": "ClassValue",
+      "required": false,
+      "description": "根容器追加类名。"
+    },
+    {
+      "name": "ui",
+      "type": "Partial<{\n    root: ClassValue\n    panel: ClassValue\n    bar: ClassValue\n    collapseButton: ClassValue\n  }>",
+      "required": false,
+      "description": "内部样式覆盖。 可用键（从源码抽取，以此为准）——Web：RebornSplitter → root；RebornSplitterPanel → bar、collapseButton、panel。"
+    },
+    {
+      "name": "min",
+      "type": "string | number",
+      "required": false,
+      "description": "最小尺寸；数字为 px，字符串为百分比。"
+    },
+    {
+      "name": "max",
+      "type": "string | number",
+      "required": false,
+      "description": "最大尺寸；数字为 px，字符串为百分比。"
+    },
+    {
+      "name": "resizable",
+      "type": "boolean",
+      "required": false,
+      "description": "本面板与相邻面板都允许时可拖拽。",
+      "default": "true"
+    },
+    {
+      "name": "collapsible",
+      "type": "boolean",
+      "required": false,
+      "description": "是否提供折叠按钮。",
+      "default": "false"
+    },
+    {
+      "name": "size",
+      "type": "string | number",
+      "required": false,
+      "description": "双向绑定值",
+      "vModel": true
+    }
+  ],
+  "events": [
+    {
+      "name": "resize-start",
+      "payload": "(e: 'resize-start', index: number): void",
+      "description": "开始拖拽，index 为拖拽条后面那个面板的下标"
+    },
+    {
+      "name": "resize",
+      "payload": "(e: 'resize', index: number): void",
+      "description": "拖拽中尺寸变化（lazy 模式不触发），或外部改写面板尺寸后补偿相邻面板时触发"
+    },
+    {
+      "name": "resize-end",
+      "payload": "(e: 'resize-end', index: number): void",
+      "description": "拖拽结束"
+    },
+    {
+      "name": "collapse",
+      "payload": "(e: 'collapse', index: number, collapsed: boolean): void",
+      "description": "面板折叠或展开，index 为该面板的下标，collapsed 为操作之后该面板是否处于折叠状态"
+    },
+    {
+      "name": "change",
+      "payload": "(e: 'change', sizes: number[], index: number): void",
+      "description": "布局提交后派发一次：拖拽结束、折叠 / 展开、外部改写 size，且面板尺寸确有变化时才派发；拖拽过程中不派发。 sizes 为全部面板的最新尺寸（百分比，按面板顺序）； index 为尺寸发生变化的那条拖拽条的下标（拖拽条后面那个面板的下标，与 resize-start 等事件同义）"
+    },
+    {
+      "name": "limit",
+      "payload": "(e: 'limit', index: number, boundary: 'min' | 'max', size: number): void",
+      "description": "拖拽中面板尺寸进入 min / max 边界时派发一次：停在边界上不重复派发，离开后再回到才再派发。 未设置 min 按 0、未设置 max 按 100% 判断，与拖拽夹取用的是同一组边界；lazy 模式按幽灵条位置对应的尺寸判断。 index 为面板下标，boundary 为触及的边界，size 为该面板当前尺寸（百分比）"
+    },
+    {
+      "name": "update:size",
+      "description": "size 变化时触发（v-model 同步）",
+      "payload": "(value: string | number)"
+    }
+  ],
+  "slots": [
+    {
+      "name": "default",
+      "props": "() => any",
+      "description": "放置 SplitterPanel，面板按插槽顺序排列"
+    },
+    {
+      "name": "bar",
+      "props": "() => any",
+      "description": "拖拽条内容"
+    },
+    {
+      "name": "start-collapsible",
+      "props": "(props: { collapsed: boolean }) => any",
+      "description": "起始折叠按钮（控制本面板）的内容，collapsed 为本面板是否已折叠"
+    },
+    {
+      "name": "end-collapsible",
+      "props": "(props: { collapsed: boolean }) => any",
+      "description": "结束折叠按钮（控制后一个面板）的内容，collapsed 为后一个面板是否已折叠"
+    }
+  ],
+  "exposes": [
+    {
+      "name": "splitterRef",
+      "description": ""
+    }
+  ],
+  "examples": [
+    {
+      "title": "Web 演示",
+      "path": "app/components/reborn/examples/reborn-splitter/RebornSplitterDemo.vue",
+      "source": "demo",
+      "platform": "web",
+      "code": "<script setup lang=\"ts\">\nimport { DemoBlock, DemoNote, DemoSection, Icon, Playground } from \"#components\";\nimport { computed, shallowRef } from \"vue\";\nimport RebornButton from \"~/components/reborn/ui/reborn-button/RebornButton.vue\";\nimport { splitterLayouts } from \"~/components/reborn/ui/reborn-splitter/reborn-splitter.config\";\nimport RebornSplitter from \"~/components/reborn/ui/reborn-splitter/RebornSplitter.vue\";\nimport RebornSplitterPanel from \"~/components/reborn/ui/reborn-splitter/RebornSplitterPanel.vue\";\n\n/** 分隔容器的演示外框：必须给出明确的宽高，Splitter 根节点是 w-full h-full，父级没尺寸时会塌成内容宽度 */\nconst frameClass = \"h-64 w-full\";\n/** 面板内文字的统一排版 */\nconst panelTextClass = \"text-muted flex h-full w-full items-center justify-center p-2 text-center text-sm\";\n\n/** 尺寸数组保留一位小数，便于阅读 */\nfunction formatSizes(sizes: number[]) {\n  return `[${sizes.map((size) => size.toFixed(1)).join(\", \")}]`;\n}\n\n// ─── 交互演练场 ─────────────────────────────────────────────────\n\n/** 演练场默认状态 */\nconst defaultState: Record<string, any> = {\n  layout: \"horizontal\",\n  lazy: false,\n  panelCount: 3,\n  collapsible: true,\n  resizable: true,\n};\n\nconst state = shallowRef<Record<string, any>>({ ...defaultState });\n\n/** 演练场最近一次 change 提交的尺寸，作为交互回显 */\nconst playgroundSizes = shallowRef(\"\");\n\n/** 重置演练场配置 */\nfunction resetState() {\n  state.value = { ...defaultState };\n  playgroundSizes.value = \"\";\n}\n\n/** 演练场控制面板配置 */\nconst controls: any = [\n  {\n    title: \"容器\",\n    children: [\n      {\n        label: \"排列方向（layout）\",\n        key: \"layout\",\n        component: \"select\" as const,\n        defaultValue: \"horizontal\",\n        props: { options: splitterLayouts.map((l) => ({ label: l === \"horizontal\" ? \"水平 horizontal\" : \"垂直 vertical\", value: l })) },\n      },\n      { label: \"延迟提交（lazy）\", key: \"lazy\", component: \"checkbox\" as const, defaultValue: false },\n      {\n        label: \"面板数量\",\n        key: \"panelCount\",\n        component: \"input-number\" as const,\n        defaultValue: 3,\n        props: { min: 2, max: 4 },\n      },\n    ],\n  },\n  {\n    title: \"首个面板\",\n    children: [\n      { label: \"可折叠（collapsible）\", key: \"collapsible\", component: \"checkbox\" as const, defaultValue: true },\n      { label: \"可拖拽（resizable）\", key: \"resizable\", component: \"checkbox\" as const, defaultValue: true },\n    ],\n  },\n];\n\n/** 布局形态变化后旧尺寸不再对应，用 key 重建 Splitter 并清空回显 */\nconst playgroundKey = computed(() => `${state.value.layout}-${state.value.panelCount}`);\n\nfunction onPlaygroundChange(sizes: number[]) {\n  playgroundSizes.value = formatSizes(sizes);\n}\n\n/** 传参明细：容器属性 + 逐个面板 */\nconst splitterCode = computed(() => {\n  const s = state.value;\n  const attrs: string[] = [];\n  if (s.layout !== \"horizontal\") attrs.push(`layout=\"${s.layout}\"`);\n  if (s.lazy) attrs.push(\"lazy\");\n  const open = attrs.length ? `<RebornSplitter ${attrs.join(\" \")}>` : \"<RebornSplitter>\";\n  const firstAttrs = [s.collapsible ? \"collapsible\" : \"\", s.resizable ? \"\" : ':resizable=\"false\"'].filter(Boolean).join(\" \");\n  const panels = Array.from({ length: s.panelCount }, (_, i) =>\n    i === 0 && firstAttrs ? `  <RebornSplitterPanel ${firstAttrs}>面板 1</RebornSplitterPanel>` : `  <RebornSplitterPanel>面板 ${i + 1}</RebornSplitterPanel>`,\n  );\n  return `${open}\\n${panels.join(\"\\n\")}\\n</RebornSplitter>`;\n});\n\n// ─── 场景演示状态 ───────────────────────────────────────────────\n\n/** 基础用法：首个面板的双向绑定尺寸（数字输入回写数字，单位是百分比） */\nconst navSize = shallowRef<number | string>(30);\n\n/** 尺寸变化与边界通知：一条事件回显 */\ninterface EventLog {\n  id: number;\n  name: string;\n  detail: string;\n}\n\n/** 事件日志，按时间倒序保留最近 6 条 */\nconst eventLogs = shallowRef<EventLog[]>([]);\nlet logSeq = 0;\n\n/** resize 的派发次数：拖拽中逐帧累加，用来对照 change 只在提交时派发一次 */\nconst resizeCount = shallowRef(0);\n\n/** 记录一条事件 */\nfunction pushLog(name: string, detail: string) {\n  eventLogs.value = [{ id: ++logSeq, name, detail }, ...eventLogs.value].slice(0, 6);\n}\n\n/** 布局提交：拖拽松手、折叠或展开之后 */\nfunction onChange(sizes: number[], index: number) {\n  pushLog(\"change\", `${formatSizes(sizes)}，拖拽条 ${index}`);\n}\n\n/** 拖拽中某个面板进入 min / max 边界 */\nfunction onLimit(index: number, boundary: \"min\" | \"max\", size: number) {\n  pushLog(\"limit\", `面板 ${index} 触及 ${boundary}，当前 ${size.toFixed(1)}%`);\n}\n\n/** 折叠或展开，collapsed 为操作之后的状态 */\nfunction onCollapse(index: number, collapsed: boolean) {\n  pushLog(\"collapse\", `面板 ${index} ${collapsed ? \"已折叠\" : \"已展开\"}`);\n}\n\n/** 清空日志与 resize 计数 */\nfunction clearLogs() {\n  eventLogs.value = [];\n  resizeCount.value = 0;\n}\n</script>\n\n<template>\n  <div class=\"flex w-full min-w-0 flex-col\">\n    <Playground\n      v-model=\"state\"\n      :controls=\"controls\"\n      :code=\"splitterCode\"\n      component-name=\"RebornSplitter\"\n      title=\"交互演练场\"\n      description=\"调节上方参数，拖动拖拽条或点击折叠按钮，查看分隔面板在不同方向与提交方式下的表现。\"\n    >\n      <template #tag>\n        <RebornButton size=\"sm\" variant=\"soft\" color=\"neutral\" @click=\"resetState\">\n          <template #leading>\n            <Icon name=\"lucide:rotate-ccw\" size=\"12\" />\n          </template>\n          重置配置\n        </RebornButton>\n      </template>\n\n      <div class=\"flex w-full flex-col gap-3\">\n        <div class=\"border-default rounded-lg border\" :class=\"state.layout === 'vertical' ? 'h-80 w-full' : frameClass\">\n          <RebornSplitter :key=\"playgroundKey\" :layout=\"state.layout\" :lazy=\"state.lazy\" @change=\"onPlaygroundChange\">\n            <RebornSplitterPanel\n              v-for=\"i in state.panelCount\"\n              :key=\"i\"\n              :collapsible=\"i === 1 && state.collapsible\"\n              :resizable=\"i === 1 ? state.resizable : true\"\n            >\n              <div :class=\"panelTextClass\">面板 {{ i }}</div>\n            </RebornSplitterPanel>\n          </RebornSplitter>\n        </div>\n        <DemoNote tone=\"dimmed\" class=\"font-mono text-xs\">\n          最近一次 change：{{ playgroundSizes || \"尚未调整\" }}\n        </DemoNote>\n      </div>\n    </Playground>\n\n    <DemoSection title=\"基础用法\">\n      <template #description>\n        <code>size</code>\n        的数字与字符串都按百分比解析，不传的面板平分剩余空间；<code>v-model:size</code>\n        在拖拽、折叠后回写最新占比。\n      </template>\n      <DemoBlock layout=\"stack\" tone=\"inset\">\n        <div :class=\"frameClass\">\n          <RebornSplitter>\n            <RebornSplitterPanel v-model:size=\"navSize\">\n              <div :class=\"panelTextClass\">导航 · {{ Number(navSize).toFixed(1) }}%</div>\n            </RebornSplitterPanel>\n            <RebornSplitterPanel>\n              <div :class=\"panelTextClass\">内容（平分剩余）</div>\n            </RebornSplitterPanel>\n            <RebornSplitterPanel>\n              <div :class=\"panelTextClass\">属性（平分剩余）</div>\n            </RebornSplitterPanel>\n          </RebornSplitter>\n        </div>\n      </DemoBlock>\n    </DemoSection>\n\n    <DemoSection title=\"排列方向与延迟提交\">\n      <template #description>\n        <code>layout=\"vertical\"</code>\n        改为上下排列，容器需要明确高度；<code>lazy</code>\n        开启后拖拽中只移动预览条，松手才提交尺寸，适合重绘成本高的面板。\n      </template>\n      <DemoBlock layout=\"grid\" :columns=\"2\" tone=\"inset\">\n        <div class=\"flex flex-col gap-2\">\n          <span class=\"text-dimmed text-xs font-medium\">layout=\"vertical\"</span>\n          <div class=\"h-72 w-full\">\n            <RebornSplitter layout=\"vertical\">\n              <RebornSplitterPanel :size=\"60\">\n                <div :class=\"panelTextClass\">编辑</div>\n              </RebornSplitterPanel>\n              <RebornSplitterPanel>\n                <div :class=\"panelTextClass\">预览</div>\n              </RebornSplitterPanel>\n            </RebornSplitter>\n          </div>\n        </div>\n        <div class=\"flex flex-col gap-2\">\n          <span class=\"text-dimmed text-xs font-medium\">lazy</span>\n          <div class=\"h-72 w-full\">\n            <RebornSplitter lazy>\n              <RebornSplitterPanel>\n                <div :class=\"panelTextClass\">松手后才更新</div>\n              </RebornSplitterPanel>\n              <RebornSplitterPanel>\n                <div :class=\"panelTextClass\">松手后才更新</div>\n              </RebornSplitterPanel>\n            </RebornSplitter>\n          </div>\n        </div>\n      </DemoBlock>\n    </DemoSection>\n\n    <DemoSection title=\"尺寸限制与折叠\">\n      <template #description>\n        <code>min</code>\n        /\n        <code>max</code>\n        的数字按 px、字符串按百分比，拖拽到边界后不再移动；<code>collapsible</code>\n        在拖拽条上放出折叠按钮，<code>#start-collapsible</code>\n        只替换按钮内部内容。\n      </template>\n      <DemoBlock layout=\"stack\" tone=\"inset\" class=\"gap-6\">\n        <div :class=\"frameClass\">\n          <RebornSplitter>\n            <RebornSplitterPanel size=\"30%\" :min=\"120\" max=\"60%\" collapsible>\n              <template #start-collapsible=\"{ collapsed }\">\n                <Icon :name=\"collapsed ? 'lucide:plus' : 'lucide:minus'\" class=\"size-3\" />\n              </template>\n              <div :class=\"panelTextClass\">侧栏（120px ~ 60%）</div>\n            </RebornSplitterPanel>\n            <RebornSplitterPanel>\n              <div :class=\"panelTextClass\">内容</div>\n            </RebornSplitterPanel>\n          </RebornSplitter>\n        </div>\n        <div class=\"flex w-full flex-col gap-2\">\n          <span class=\"text-dimmed text-xs font-medium\">面板 2 设为 :resizable=\"false\"</span>\n          <div :class=\"frameClass\">\n            <RebornSplitter>\n              <RebornSplitterPanel>\n                <div :class=\"panelTextClass\">面板 1</div>\n              </RebornSplitterPanel>\n              <RebornSplitterPanel :resizable=\"false\">\n                <div :class=\"panelTextClass\">面板 2（两侧拖拽条锁定）</div>\n              </RebornSplitterPanel>\n              <RebornSplitterPanel>\n                <div :class=\"panelTextClass\">面板 3</div>\n              </RebornSplitterPanel>\n              <RebornSplitterPanel>\n                <div :class=\"panelTextClass\">面板 4</div>\n              </RebornSplitterPanel>\n            </RebornSplitter>\n          </div>\n        </div>\n      </DemoBlock>\n      <DemoNote>\n        拖拽条只在左右两个面板都允许调整时可拖，因此 <code>resizable</code>\n        为 <code>false</code> 锁住的是与该面板相邻的两条拖拽条，其余拖拽条照常可用。\n      </DemoNote>\n    </DemoSection>\n\n    <DemoSection title=\"尺寸变化与边界通知\">\n      <template #description>\n        拖到面板的 <code>min</code> / <code>max</code> 时派发一次 <code>limit</code>，停在边界上不重复派发；松手、折叠或展开后派发一次\n        <code>change</code>，载荷是全部面板的最新尺寸。\n      </template>\n      <DemoBlock layout=\"stack\" tone=\"inset\">\n        <div :class=\"frameClass\">\n          <RebornSplitter\n            @resize=\"resizeCount++\"\n            @change=\"onChange\"\n            @limit=\"onLimit\"\n            @collapse=\"onCollapse\"\n          >\n            <RebornSplitterPanel size=\"30%\" :min=\"160\" max=\"60%\" collapsible>\n              <div :class=\"panelTextClass\">面板 1（min 160px，max 60%）</div>\n            </RebornSplitterPanel>\n            <RebornSplitterPanel min=\"15%\">\n              <div :class=\"panelTextClass\">面板 2（min 15%）</div>\n            </RebornSplitterPanel>\n            <RebornSplitterPanel size=\"20%\">\n              <div :class=\"panelTextClass\">面板 3</div>\n            </RebornSplitterPanel>\n          </RebornSplitter>\n        </div>\n      </DemoBlock>\n      <div class=\"mt-4 flex flex-col gap-2\">\n        <div class=\"flex items-center gap-3\">\n          <RebornButton size=\"sm\" variant=\"soft\" color=\"neutral\" @click=\"clearLogs\">\n            清空日志\n          </RebornButton>\n          <DemoNote tone=\"dimmed\">\n            resize 已派发 {{ resizeCount }} 次：它随拖拽逐帧派发，适合同步预览；保存布局请监听 change，一次拖拽只在松手时派发一次。\n          </DemoNote>\n        </div>\n        <ul class=\"flex flex-col gap-1 font-mono text-xs\">\n          <li v-for=\"log in eventLogs\" :key=\"log.id\" class=\"text-muted break-all\">\n            <span class=\"text-primary\">{{ log.name }}</span>\n            {{ log.detail }}\n          </li>\n          <li v-if=\"!eventLogs.length\" class=\"text-dimmed\">\n            拖动上面的拖拽条或点击折叠按钮，事件会按时间倒序出现在这里\n          </li>\n        </ul>\n      </div>\n    </DemoSection>\n  </div>\n</template>\n"
+    }
+  ],
+  "related": [],
+  "whenToUse": [
+    "编辑器、控制台等需要用户自由调整左右或上下面板比例的布局。",
+    "需要面板可折叠（collapsible，配合 start-collapsible / end-collapsible 插槽自定义折叠按钮）。",
+    "拖动性能敏感时开启 lazy，拖动结束后才更新面板大小。",
+    "需要保存用户调整后的布局（监听 change，载荷为全部面板百分比尺寸），或拖到 min / max 时给出提示（监听 limit）。"
+  ],
+  "whenNotToUse": [
+    "固定比例、无需用户拖拽的布局，直接用普通布局或 reborn-container。",
+    "uniapp 端项目：platforms 仅 web，无 uniapp 实现。"
+  ],
+  "pitfalls": [
+    "platforms 仅 web 端提供。",
+    "size 数字和字符串均按百分比解析，字符串回写为 xx%；min/max 的数字是 px、字符串是百分比。挂载不发 update:size，拖拽、折叠、外部改值引起相邻补偿，或调整过之后增删面板引起相邻补偿时才发。",
+    "resizable 默认 true、collapsible 默认 false；collapse 事件为 (index, collapsed)，index 是被折叠 / 展开面板下标，collapsed 是操作之后的状态。start-collapsible/end-collapsible 插槽仅填按钮内容，作用域包含 collapsed。",
+    "change(sizes, index) 只在提交时派发一次：拖拽松手、折叠 / 展开、调整过之后父级改写 size 引起相邻补偿，且尺寸确有变化；拖拽过程中不派发（逐帧的是 resize）。从未拖拽或折叠过时父级改 size 只是换配置，不派发；增删面板也不派发。index 为尺寸变化所在拖拽条的下标（后一个面板下标）。",
+    "limit(index, boundary, size) 在拖拽中面板进入 min / max 边界时派发一次，停在边界上不重复，离开再回到才再派发；按下时已停在边界上不派发。未设 min 按 0、未设 max 按 100% 判断，没设 min 的面板被压到 0 也会派发；lazy 模式按预览条位置判断；折叠不派发 limit。",
+    "默认插槽不再暴露内部 ui；样式通过各组件的 ui prop 覆盖。动态增删面板按稳定 vnode key 保留布局，v-for 必须提供稳定 key。",
+    "面板必须是 Splitter 默认插槽的直接子节点（可经过 v-for / v-if / template）；外面包元素或其他组件时该面板降级为普通容器、不参与尺寸分配，开发环境给出警告。"
+  ],
+  "dependencies": [
+    "clsx",
+    "tailwind-merge",
+    "tailwind-variants"
+  ],
+  "install": {
+    "cli": "npx reborn-ui@latest add reborn-splitter"
+  },
+  "sourceRefs": {
+    "web": [
+      "app/components/reborn/ui/reborn-splitter/RebornSplitter.vue",
+      "app/components/reborn/ui/reborn-splitter/RebornSplitterPanel.vue",
+      "app/components/reborn/ui/reborn-splitter/index.ts",
+      "app/components/reborn/ui/reborn-splitter/reborn-splitter.config.ts",
+      "app/components/reborn/ui/reborn-splitter/reborn-splitter.context.ts"
+    ]
+  },
+  "docPath": "content/2.components/layout/reborn-splitter.md",
+  "_meta": {
+    "contentHash": "ab30fd532e2e20a1c821bb882dc7317fb7947d92",
+    "hasOverride": true,
+    "extractors": {
+      "web": "ok",
+      "uniapp": "absent",
+      "docs": "found"
+    }
+  }
+}

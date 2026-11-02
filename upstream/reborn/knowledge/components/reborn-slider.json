@@ -1,0 +1,302 @@
+{
+  "$schema": "../schema/component.schema.json",
+  "id": "reborn-slider",
+  "title": "Slider 滑块",
+  "description": "用于在数值区间内拖动取值的滑块组件，支持单值与范围两种模式。",
+  "category": "form",
+  "tags": [
+    "css",
+    "tailwind",
+    "slider",
+    "range",
+    "uniapp"
+  ],
+  "platforms": [
+    "web",
+    "uniapp"
+  ],
+  "props": [
+    {
+      "name": "min",
+      "type": "number",
+      "required": false,
+      "description": "最小值",
+      "default": "0"
+    },
+    {
+      "name": "max",
+      "type": "number",
+      "required": false,
+      "description": "最大值",
+      "default": "100"
+    },
+    {
+      "name": "step",
+      "type": "number | 'mark'",
+      "required": false,
+      "description": "步长；传 \"mark\" 时取值只能落在 marks 定义的刻度上（此时必须设置 marks）",
+      "default": "1"
+    },
+    {
+      "name": "marks",
+      "type": "SliderMarks",
+      "required": false,
+      "description": "刻度标记，key 为 [min, max] 内的数字；对象形式可为单个标记设置样式"
+    },
+    {
+      "name": "showStops",
+      "type": "boolean",
+      "required": false,
+      "description": "是否按步长在轨道上显示间断点（仅数字步长时生效，间断点过多时自动不渲染）",
+      "default": "false"
+    },
+    {
+      "name": "disabled",
+      "type": "boolean | boolean[]",
+      "required": false,
+      "description": "是否禁用。传数组时按下标单独禁用 range 模式下的特定滑块： 被禁用的滑块不可拖动，并作为移动边界，其他滑块无法越过它。 注意数组下标对应「排序后」的节点位置，editable 增删节点会使下标后移。",
+      "default": "false"
+    },
+    {
+      "name": "editable",
+      "type": "boolean",
+      "required": false,
+      "description": "可编辑节点（仅 range 模式）：点按轨道空白处添加节点； 拖拽节点垂直于滑轨方向离开超过 40px 时松手删除。至少保留一个节点。",
+      "default": "false"
+    },
+    {
+      "name": "draggableTrack",
+      "type": "boolean",
+      "required": false,
+      "description": "range 模式下允许拖拽首尾节点之间的选区整体平移（仅当没有单独禁用的滑块、 且 step 不为 \"mark\" 时可用；与 editable 同开时选区内的触摸优先整体拖拽）。",
+      "default": "false"
+    },
+    {
+      "name": "reverse",
+      "type": "boolean",
+      "required": false,
+      "description": "反向：水平模式从右向左递增，垂直模式从上向下递增",
+      "default": "false"
+    },
+    {
+      "name": "vertical",
+      "type": "boolean",
+      "required": false,
+      "description": "垂直模式，滑轨长度由 height 给出",
+      "default": "false"
+    },
+    {
+      "name": "height",
+      "type": "string | number",
+      "required": false,
+      "description": "垂直模式的滑轨长度（数字按 px 处理），缺省 200px",
+      "default": "200px"
+    },
+    {
+      "name": "tooltip",
+      "type": "SliderTooltip",
+      "required": false,
+      "description": "气泡提示：默认拖拽时显示当前值，open 可强制常显/隐藏，formatter 格式化内容"
+    },
+    {
+      "name": "prefixIcon",
+      "type": "string",
+      "required": false,
+      "description": "滑轨起始端图标类名（iconify 类，如 \"i-lucide-volume\"），#prefix 插槽可完全接管"
+    },
+    {
+      "name": "suffixIcon",
+      "type": "string",
+      "required": false,
+      "description": "滑轨末尾端图标类名，#suffix 插槽可完全接管"
+    },
+    {
+      "name": "trackHeight",
+      "type": "number",
+      "required": false,
+      "description": "轨道线的粗细（px），水平为高度、垂直为宽度",
+      "default": "4"
+    },
+    {
+      "name": "showValue",
+      "type": "boolean",
+      "required": false,
+      "description": "是否显示当前值",
+      "default": "false"
+    },
+    {
+      "name": "range",
+      "type": "boolean",
+      "required": false,
+      "description": "是否启用范围选择",
+      "default": "false"
+    },
+    {
+      "name": "size",
+      "type": "typeof sliderSizes[number]",
+      "required": false,
+      "description": "尺寸",
+      "default": "'md'"
+    },
+    {
+      "name": "color",
+      "type": "typeof sliderColors[number]",
+      "required": false,
+      "description": "颜色",
+      "default": "'primary'"
+    },
+    {
+      "name": "ui",
+      "type": "Partial<{\n    wrapper: ClassValue\n    inner: ClassValue\n    picker: ClassValue\n    track: ClassValue\n    progress: ClassValue\n    thumb: ClassValue\n    thumbDot: ClassValue\n    stopDot: ClassValue\n    markDot: ClassValue\n    markLabel: ClassValue\n    tooltip: ClassValue\n    prefix: ClassValue\n    suffix: ClassValue\n    value: ClassValue\n  }>",
+      "required": false,
+      "description": "样式覆盖 可用键（从源码抽取，以此为准）——UniApp：inner、markDot、markLabel、picker、prefix*、progress、stopDot、suffix*、thumb、thumbDot*、tooltip、track、value*、wrapper。 带 * 的键对应插槽兜底节点：填了同名插槽，组件自带的节点被替换，这个键随之失效。",
+      "default": "() => ({})",
+      "platform": "uniapp"
+    },
+    {
+      "name": "customClass",
+      "type": "any",
+      "required": false,
+      "description": "自定义 class"
+    },
+    {
+      "name": "modelValue",
+      "type": "number",
+      "required": false,
+      "description": "双向绑定值",
+      "vModel": true,
+      "default": "0"
+    },
+    {
+      "name": "values",
+      "type": "number[]",
+      "required": false,
+      "description": "双向绑定值",
+      "vModel": true,
+      "default": "[0, 0]"
+    },
+    {
+      "name": "class",
+      "type": "any",
+      "required": false,
+      "description": "追加到根节点的自定义类名"
+    },
+    {
+      "name": "ui",
+      "type": "Partial<{\n        wrapper: ClassValue;\n        inner: ClassValue;\n        track: ClassValue;\n        progress: ClassValue;\n        thumbWrapper: ClassValue;\n        thumb: ClassValue;\n        thumbDot: ClassValue;\n        stopDot: ClassValue;\n        markDot: ClassValue;\n        markLabel: ClassValue;\n        tooltip: ClassValue;\n        prefix: ClassValue;\n        suffix: ClassValue;\n        value: ClassValue;\n    }>",
+      "required": false,
+      "description": "细粒度样式覆盖，键位见「自定义样式（ui）」。 可用键（从源码抽取，以此为准）——Web：inner、markDot、markLabel、prefix*、progress、stopDot、suffix*、thumb、thumbDot*、thumbWrapper、tooltip、track、value*、wrapper。 带 * 的键对应插槽兜底节点：填了同名插槽，组件自带的节点被替换，这个键随之失效。",
+      "platform": "web"
+    }
+  ],
+  "events": [
+    {
+      "name": "change",
+      "payload": "[value: number | number[]]",
+      "description": "值每次变化实时触发（对齐 Ant Design 的 onChange）。"
+    },
+    {
+      "name": "changing",
+      "payload": "[value: number | number[]]",
+      "description": "与 `change` 同时机触发的兼容别名。"
+    },
+    {
+      "name": "changeComplete",
+      "payload": "[value: number | number[]]",
+      "description": "交互结束（松开手指 / 指针，Web 还包括松开按键）时触发一次，适合在此时提交数据。"
+    },
+    {
+      "name": "update:modelValue",
+      "description": "modelValue 变化时触发（v-model 同步）"
+    },
+    {
+      "name": "update:values",
+      "description": "values 变化时触发（v-model 同步）"
+    }
+  ],
+  "slots": [
+    {
+      "name": "prefix",
+      "description": "完全接管滑轨起始端内容（覆盖 `prefixIcon`）。"
+    },
+    {
+      "name": "thumb",
+      "description": "替换滑块中心圆（`thumbDot`），单值与范围模式都可用。`value` 为该滑块的值，`index` 为滑块下标（单值恒为 0），`active` 为是否激活滑块，`disabled` 为该滑块是否禁用。外层滑块的定位、聚焦、键盘与气泡仍由组件渲染。"
+    },
+    {
+      "name": "suffix",
+      "description": "完全接管滑轨末尾端内容（覆盖 `suffixIcon`）。"
+    },
+    {
+      "name": "value",
+      "description": "自定义数值显示，`value` 为当前值文本（范围模式为 `起 - 止`）。"
+    }
+  ],
+  "exposes": [],
+  "examples": [
+    {
+      "title": "Web 演示",
+      "path": "app/components/reborn/examples/reborn-slider/RebornSliderDemo.vue",
+      "source": "demo",
+      "platform": "web",
+      "code": "<script setup lang=\"ts\">\nimport type { SliderTooltip } from \"~/components/reborn/ui/reborn-slider/RebornSlider.vue\";\nimport { DemoBlock, DemoNote, DemoSection, Icon, Playground } from '#components';\nimport { computed, ref, shallowRef } from 'vue';\nimport RebornButton from \"~/components/reborn/ui/reborn-button/RebornButton.vue\";\nimport { sliderColors, sliderSizes } from \"~/components/reborn/ui/reborn-slider/reborn-slider.config\";\nimport RebornSlider from \"~/components/reborn/ui/reborn-slider/RebornSlider.vue\";\n\nconst colorOptions = sliderColors.map(c => ({ label: c.charAt(0).toUpperCase() + c.slice(1), value: c }));\nconst sizeOptions = sliderSizes.map(s => ({ label: s.toUpperCase(), value: s as typeof sliderSizes[number] }));\n\n// ─── 交互演练场 ─────────────────────────────────────────────────\n\n/** 演练场默认状态 */\nconst defaultState: Record<string, any> = {\n  size: \"md\",\n  color: \"primary\",\n  step: 1,\n  reverse: false,\n  disabled: false,\n  showValue: true,\n};\n\nconst state = ref<Record<string, any>>({ ...defaultState });\n\n/** 演练场滑块绑定值 */\nconst playValue = shallowRef(40);\n\n/** 重置演练场配置 */\nfunction resetState() {\n  state.value = { ...defaultState };\n  playValue.value = 40;\n}\n\n/** 演练场控制面板配置 */\nconst controls: any = [\n  {\n    title: \"基础属性\",\n    children: [\n      { label: \"尺寸规格\", key: \"size\", component: \"select\" as const, defaultValue: \"md\", props: { options: sizeOptions } },\n      { label: \"配色方案\", key: \"color\", component: \"select\" as const, defaultValue: \"primary\", props: { options: colorOptions } },\n      { label: \"步长\", key: \"step\", component: \"input-number\" as const, defaultValue: 1, props: { min: 1, max: 25 } },\n    ],\n  },\n  {\n    title: \"状态\",\n    children: [\n      { label: \"反向\", key: \"reverse\", component: \"checkbox\" as const, defaultValue: false },\n      { label: \"禁用\", key: \"disabled\", component: \"checkbox\" as const, defaultValue: false },\n      { label: \"显示数值\", key: \"showValue\", component: \"checkbox\" as const, defaultValue: true },\n    ],\n  },\n];\n\n/** 演练场右上角展示的传参明细：完整列出当前所有参数（含默认值） */\nconst sliderCode = computed(() => {\n  const s = state.value;\n  const props: string[] = [\n    `v-model=\"value\"`,\n    `size=\"${s.size}\"`,\n    `color=\"${s.color}\"`,\n    `:step=\"${s.step}\"`,\n    `:reverse=\"${s.reverse}\"`,\n    `:disabled=\"${s.disabled}\"`,\n    `:show-value=\"${s.showValue}\"`,\n  ];\n  return `<RebornSlider\\n  ${props.join(\"\\n  \")}\\n/>`;\n});\n\n// ─── 场景演示状态 ───────────────────────────────────────────────\n\n/** 步长演示 */\nconst stepValue = shallowRef(40);\n/** 间断点演示 */\nconst stopsValue = shallowRef(30);\nconst stopsRange = shallowRef([20, 70]);\n/** 范围选择演示 */\nconst rangeValues = shallowRef([20, 80]);\n/** 两侧图标演示：属性形式 */\nconst iconValue = shallowRef(50);\n/** 两侧图标演示：插槽形式的音量与亮度 */\nconst volumeValue = shallowRef(30);\nconst brightnessValue = shallowRef(70);\n/** 自定义提示演示 */\nconst percentValue = shallowRef(35);\n/** 气泡里给数值补上百分号 */\nconst percentTooltip: SliderTooltip = { formatter: formatPercent };\nconst tempValue = shallowRef(26);\n/** 气泡里给数值补上温度单位 */\nconst tempTooltip: SliderTooltip = { formatter: formatTemp };\n/** Tooltip 显隐控制演示 */\nconst tipDefaultValue = shallowRef(30);\nconst tipOpenValue = shallowRef(60);\n/** 气泡常显，不必拖拽 */\nconst alwaysOpenTooltip: SliderTooltip = { open: true };\nconst tipHiddenValue = shallowRef(80);\n/** 气泡强制隐藏，拖拽时也不出现 */\nconst hiddenTooltip: SliderTooltip = { open: false };\n/** 事件演示 */\nconst eventValue = shallowRef(50);\n/** change 触发次数（拖拽过程实时累加） */\nconst changeCount = shallowRef(0);\n/** 最近一次 change 载荷 */\nconst lastChange = shallowRef(\"—\");\n/** 最近一次 changeComplete 载荷 */\nconst lastComplete = shallowRef(\"—\");\n/** 垂直模式演示 */\nconst verticalValue = shallowRef(30);\nconst verticalRange = shallowRef([20, 60]);\n/** 刻度标记演示：50°C 单独给了红色样式 */\nconst sliderMarks = {\n  0: { style: { color: \"#FF3D53\" }, label: \"0 分\" },\n  8: \"8 分\",\n  37: \"37 分\",\n  50: { style: { color: \"#2ec7ff\" }, label: \"50 分\" },\n  100: { style: { color: \"#81e22c\" }, label: \"100 分\" },\n};\n/** 常规步长 + 刻度展示 */\nconst marksFreeValue = shallowRef(30);\n/** step=\"mark\"：取值只能落在刻度上 */\nconst markSnapValue = shallowRef(37);\n/** 范围整体拖拽演示 */\nconst dragRange = shallowRef([30, 60]);\n/** 禁用指定滑块演示：下标 0（值较小的一端）被禁用 */\nconst partialDisabledRange = shallowRef([30, 70]);\n/** 按排序后的下标逐个指定：左端禁用、右端可拖 */\nconst leftThumbDisabled = [true, false];\n/** 可编辑节点演示：节点数量随增删变化 */\nconst editableNodes = shallowRef([20, 50, 80]);\n/** 自定义渲染演示 */\nconst thumbValue = shallowRef(40);\n\n/** 温度格式化：给数值补上单位 */\nfunction formatTemp(value: number) {\n  return `${value}°C`;\n}\n\n/** 百分比格式化 */\nfunction formatPercent(value: number) {\n  return `${value}%`;\n}\n\n/** change：值每次变化实时触发 */\nfunction onSliderChange(value: number | number[]) {\n  changeCount.value++;\n  lastChange.value = JSON.stringify(value);\n}\n\n/** changeComplete：松开指针或按键时触发一次 */\nfunction onSliderComplete(value: number | number[]) {\n  lastComplete.value = JSON.stringify(value);\n}\n/** 外形走公开 UI 键，组件仍负责滑块交互。 */\nconst customThumbUi = { thumb: \"h-5 w-[30px] rounded-full bg-warning\" };\n</script>\n\n<template>\n  <div class=\"flex w-full min-w-0 flex-col\">\n    <Playground\n      v-model=\"state\" :controls=\"controls\" :code=\"sliderCode\" component-name=\"RebornSlider\" title=\"交互演练场\"\n      description=\"调节上方参数，实时查看滑块表现；方向键 ←/→（↑/↓）可在聚焦滑块后步进取值。\"\n    >\n      <template #tag>\n        <RebornButton size=\"sm\" variant=\"soft\" color=\"neutral\" @click=\"resetState\">\n          <template #leading>\n            <Icon name=\"lucide:rotate-ccw\" size=\"12\" />\n          </template>\n          重置配置\n        </RebornButton>\n      </template>\n\n      <div class=\"flex w-full flex-col items-center gap-6\">\n        <RebornSlider\n          v-model=\"playValue\" class=\"w-full max-w-sm\" :size=\"state.size\" :color=\"state.color\"\n          :step=\"state.step\" :reverse=\"state.reverse\" :disabled=\"state.disabled\" :show-value=\"state.showValue\"\n        />\n        <DemoNote tone=\"dimmed\" class=\"font-mono text-xs\">\n          value: {{ playValue }} · Props: { size: '{{ state.size }}', color: '{{ state.color }}', step:\n          {{ state.step }}, reverse: {{ state.reverse }} }\n        </DemoNote>\n      </div>\n    </Playground>\n\n    <DemoSection title=\"基础用法\">\n      <template #description>\n        <code>v-model</code> 绑定当前值，<code>min</code> / <code>max</code> 限定区间；<code>step=10</code> 时拖动与方向键步进都按 10 对齐，<code>show-value</code> 在末尾显示当前值。\n      </template>\n      <DemoBlock layout=\"stack\">\n        <RebornSlider v-model=\"stepValue\" class=\"w-full max-w-sm\" :step=\"10\" show-value />\n      </DemoBlock>\n    </DemoSection>\n\n    <DemoSection title=\"语义色：color\">\n      <template #description>\n        <code>color</code> 决定进度条与滑块外圆的颜色，间断点与刻度点边框取同色板的浅色阶。\n      </template>\n      <DemoBlock layout=\"stack\">\n        <RebornSlider v-for=\"c in sliderColors\" :key=\"c\" class=\"w-full max-w-sm\" :model-value=\"50\" :color=\"c\" />\n      </DemoBlock>\n    </DemoSection>\n\n    <DemoSection title=\"间断点：show-stops\">\n      <template #description>\n        设置 <code>show-stops</code> 后按步长在轨道上显示间断点（仅数字步长生效）。\n      </template>\n      <DemoBlock layout=\"stack\" class=\"gap-6\">\n        <RebornSlider v-model=\"stopsValue\" class=\"w-full max-w-sm\" :step=\"10\" show-stops show-value />\n        <RebornSlider\n          v-model:values=\"stopsRange\" class=\"w-full max-w-sm\" range :step=\"10\" show-stops\n          color=\"success\" show-value\n        />\n      </DemoBlock>\n    </DemoSection>\n\n    <DemoSection title=\"范围选择：range 与 v-model:values\">\n      <template #description>\n        <code>v-model:values</code> 绑定数组并开启 <code>range</code> 即为区间滑块；默认最右侧节点为激活节点，点击可切换，悬停或按压时滑块放大并显示圆环。\n      </template>\n      <DemoBlock layout=\"stack\">\n        <RebornSlider v-model:values=\"rangeValues\" class=\"w-full max-w-sm\" range show-value />\n      </DemoBlock>\n    </DemoSection>\n\n    <DemoSection title=\"刻度标记：marks 与 step 吸附\">\n      <template #description>\n        <code>marks</code> 的 key 必须是 <code>[min, max]</code> 内的数字，对象形式可为单个标记设置\n        <code>style</code>；设置 <code>step=\"mark\"</code> 后取值只能落在刻度上；点击刻度文字可直接跳转。\n      </template>\n      <DemoBlock layout=\"stack\" class=\"gap-10\">\n        <RebornSlider v-model=\"marksFreeValue\" class=\"w-full max-w-sm\" :marks=\"sliderMarks\" show-value />\n        <RebornSlider\n          v-model=\"markSnapValue\" class=\"w-full max-w-sm\" step=\"mark\" :marks=\"sliderMarks\" color=\"error\"\n          show-value :max=\"60\"\n        />\n      </DemoBlock>\n    </DemoSection>\n\n    <DemoSection title=\"气泡格式化：tooltip.formatter\">\n      <template #description>\n        <code>tooltip.formatter</code> 接收当前值并返回展示内容，悬停或拖拽时在气泡里生效。\n      </template>\n      <DemoBlock layout=\"stack\" class=\"gap-6\">\n        <RebornSlider v-model=\"percentValue\" class=\"w-full max-w-sm\" :tooltip=\"percentTooltip\" />\n        <RebornSlider\n          v-model=\"tempValue\" class=\"w-full max-w-sm\" color=\"error\" :min=\"16\" :max=\"32\"\n          :tooltip=\"tempTooltip\"\n        />\n      </DemoBlock>\n    </DemoSection>\n\n    <DemoSection title=\"气泡显隐：tooltip.open\">\n      <template #description>\n        缺省悬停或拖拽时显示气泡；<code>tooltip.open=true</code> 常显、<code>false</code> 强制隐藏（<code>formatter: null</code>\n        效果等同隐藏）。\n      </template>\n      <DemoBlock layout=\"stack\" class=\"gap-8 pt-8\">\n        <RebornSlider v-model=\"tipDefaultValue\" class=\"w-full max-w-sm\" />\n        <RebornSlider v-model=\"tipOpenValue\" class=\"w-full max-w-sm\" :tooltip=\"alwaysOpenTooltip\" />\n        <RebornSlider v-model=\"tipHiddenValue\" class=\"w-full max-w-sm\" :tooltip=\"hiddenTooltip\" />\n      </DemoBlock>\n    </DemoSection>\n\n    <DemoSection title=\"两侧图标：prefix-icon 与 prefix / suffix 插槽\">\n      <template #description>\n        <code>prefix-icon</code> / <code>suffix-icon</code> 传图标名放在滑轨两端；<code>#prefix</code> / <code>#suffix</code>\n        插槽可完全接管两端内容，此时同名属性不再渲染。\n      </template>\n      <DemoBlock layout=\"stack\" class=\"gap-6\">\n        <RebornSlider\n          v-model=\"iconValue\" class=\"w-full max-w-sm\" prefix-icon=\"lucide:volume\" suffix-icon=\"lucide:volume-2\"\n        />\n        <RebornSlider v-model=\"volumeValue\" class=\"w-full max-w-sm\" color=\"warning\">\n          <template #prefix>\n            <Icon\n              name=\"lucide:volume-x\" class=\"shrink-0 mr-2 text-gray-6\"\n              :class=\"{ 'text-red-6': volumeValue === 0 }\"\n            />\n          </template>\n          <template #suffix>\n            <Icon\n              name=\"lucide:volume-2\" class=\"shrink-0 ml-2 text-gray-6\"\n              :class=\"{ 'text-red-6': volumeValue > 50 }\"\n            />\n          </template>\n        </RebornSlider>\n        <RebornSlider v-model=\"brightnessValue\" class=\"w-full max-w-sm\" color=\"warning\">\n          <template #prefix>\n            <Icon name=\"lucide:sun-dim\" class=\"mr-2 shrink-0 text-gray-6\" />\n          </template>\n          <template #suffix>\n            <div class=\"ml-2 shrink-0 text-sm text-gray-6 w-9 text-right\">{{ brightnessValue }}%</div>\n          </template>\n        </RebornSlider>\n      </DemoBlock>\n    </DemoSection>\n\n    <DemoSection title=\"垂直与反向：vertical、height 与 reverse\">\n      <template #description>\n        <code>vertical</code> 开启垂直方向，滑轨长度由 <code>height</code> 给出；正向从下往上递增，<code>reverse</code> 后从上往下。\n      </template>\n      <DemoBlock layout=\"stack\">\n        <div class=\"flex items-start gap-12\">\n          <RebornSlider v-model=\"verticalValue\" vertical height=\"200px\" />\n          <RebornSlider v-model:values=\"verticalRange\" vertical height=\"200px\" range color=\"success\" />\n          <RebornSlider v-model=\"verticalValue\" vertical height=\"200px\" reverse color=\"info\" />\n        </div>\n      </DemoBlock>\n    </DemoSection>\n\n    <DemoSection title=\"选区整体拖拽：draggable-track\">\n      <template #description>\n        <code>draggable-track</code> 后按住两滑块之间的选区拖动，整段区间平移且间距保持不变。\n      </template>\n      <DemoBlock layout=\"stack\">\n        <RebornSlider v-model:values=\"dragRange\" class=\"w-full max-w-sm\" range draggable-track show-value />\n      </DemoBlock>\n    </DemoSection>\n\n    <DemoSection title=\"可编辑节点：editable\">\n      <template #description>\n        <code>range</code> 配合 <code>editable</code> 后节点数量可变：点按轨道空白处添加节点，拖动节点垂直离开滑轨超过 40px 后松手删除；聚焦节点后按 Delete / Backspace 也可删除，至少保留一个。\n      </template>\n      <DemoBlock layout=\"stack\">\n        <RebornSlider v-model:values=\"editableNodes\" class=\"w-full max-w-sm\" range editable />\n        <DemoNote tone=\"dimmed\" class=\"font-mono text-xs\">\n          values: {{ editableNodes }}\n        </DemoNote>\n      </DemoBlock>\n    </DemoSection>\n\n    <DemoSection title=\"禁用指定滑块：disabled 数组\">\n      <template #description>\n        <code>disabled</code> 传数组可按下标（排序后位置）单独禁用滑块：本例左端被禁用，不可拖动且作为边界——拖动右端滑块无法越过它。\n      </template>\n      <DemoBlock layout=\"stack\">\n        <RebornSlider\n          v-model:values=\"partialDisabledRange\" class=\"w-full max-w-sm\" range :disabled=\"leftThumbDisabled\"\n          show-value\n        />\n      </DemoBlock>\n    </DemoSection>\n\n    <DemoSection title=\"事件时序：change 与 changeComplete\">\n      <template #description>\n        值每次变化实时触发 <code>change</code>；松开指针或松开按键时触发一次 <code>changeComplete</code>，适合在此时提交数据。\n      </template>\n      <DemoBlock layout=\"stack\">\n        <RebornSlider\n          v-model=\"eventValue\" class=\"w-full max-w-sm\" @change=\"onSliderChange\"\n          @change-complete=\"onSliderComplete\"\n        />\n        <DemoNote tone=\"dimmed\" class=\"font-mono text-xs\">\n          change × {{ changeCount }} · 最近 change: {{ lastChange }} · changeComplete: {{ lastComplete }}\n        </DemoNote>\n      </DemoBlock>\n    </DemoSection>\n\n    <DemoSection title=\"自定义渲染：thumb 与 value 插槽\">\n      <template #description>\n        <code>thumb</code> 插槽接收平铺的 <code>value / index / active / disabled</code>，只替换滑块内容；通过 <code>ui.thumb</code> 改外形，定位、聚焦与键盘操作仍由组件处理。<code>value</code> 插槽替换末尾数值显示。\n      </template>\n      <DemoBlock layout=\"stack\">\n        <RebornSlider v-model=\"thumbValue\" class=\"w-full max-w-sm\" :ui=\"customThumbUi\">\n          <template #thumb=\"{ value, active, disabled }\">\n            <span class=\"pointer-events-none text-sm text-white\" :class=\"{ 'opacity-60': disabled, 'font-semibold': active }\">{{ value }}</span>\n          </template>\n          <template #value=\"{ value }\">\n            <span class=\"text-primary ml-2 w-10 shrink-0 text-sm\">{{ value }}%</span>\n          </template>\n        </RebornSlider>\n      </DemoBlock>\n    </DemoSection>\n  </div>\n</template>\n"
+    },
+    {
+      "title": "UniApp 演示",
+      "path": "packages/uniapp-project/src/pages/reborn-slider/RebornSliderDemo.vue",
+      "source": "demo",
+      "platform": "uniapp",
+      "code": "<script setup lang=\"ts\">\nimport { ref, shallowRef } from 'vue'\nimport ReButton from '@/components/reborn-button/RebornButton.vue'\nimport RebornCard from '@/components/reborn-card/RebornCard.vue'\nimport RebornInputNumber from '@/components/reborn-input-number/RebornInputNumber.vue'\nimport RebornPage from '@/components/reborn-page/RebornPage.vue'\nimport RebornSlider from '@/components/reborn-slider/RebornSlider.vue'\nimport RebornSwitch from '@/components/reborn-switch/RebornSwitch.vue'\n\nconst val1 = shallowRef(30)\nconst val2 = ref([50, 70])\nconst isDisabled = shallowRef(false)\nconst isShowValue = shallowRef(true)\nconst step = shallowRef(10)\nconst max = shallowRef(100)\n\n// 动态配置\nconst currentSize = shallowRef<typeof sizes[number]>('md')\nconst currentColor = shallowRef<typeof colors[number]>('primary')\n\nconst sizes = ['sm', 'md', 'lg'] as const\nconst colors = ['primary', 'secondary', 'success', 'warning', 'error', 'info', 'neutral'] as const\n\n/** 间断点演示 */\nconst stopsValue = shallowRef(30)\n\n/** 刻度标记演示：50 分单独给了强调色 */\nconst sliderMarks = {\n  0: '0 分',\n  8: '8 分',\n  37: '37 分',\n  50: { style: { color: 'var(--color-error)' }, label: '50 分' },\n  100: '100 分',\n}\nconst marksFreeValue = shallowRef(30)\nconst markSnapValue = shallowRef(37)\n\n/** 自定义提示演示 */\nconst tempValue = shallowRef(26)\n/** 温度格式化：给数值补上单位 */\nfunction formatTemp(value: number) {\n  return `${value}°C`\n}\n\n/** Tooltip 显隐控制演示 */\nconst tipOpenValue = shallowRef(60)\nconst tipHiddenValue = shallowRef(80)\n\n/** 事件演示 */\nconst eventValue = shallowRef(50)\n/** change 触发次数（拖拽过程实时累加） */\nconst changeCount = shallowRef(0)\n/** 最近一次 changeComplete 载荷 */\nconst lastComplete = shallowRef('—')\nfunction onSliderChange() {\n  changeCount.value++\n}\nfunction onSliderComplete(value: number | number[]) {\n  lastComplete.value = JSON.stringify(value)\n}\n\n/** 垂直模式演示 */\nconst verticalValue = shallowRef(30)\nconst reverseValue = shallowRef(30)\nconst iconValue = shallowRef(30)\nconst customValue = shallowRef(30)\nconst verticalRange = ref([20, 60])\n\n/** 范围整体拖拽演示 */\nconst dragRange = ref([30, 60])\n\n/** 禁用指定滑块演示：下标 0（值较小的一端）被禁用 */\nconst partialDisabledRange = ref([30, 70])\n</script>\n\n<template>\n  <RebornPage title=\"滑块\" description=\"用于在一定范围内选择数值的滑动组件。\">\n    <!-- 演练场 -->\n    <RebornCard title=\"自定义\" custom-class=\"space-y-4\">\n      <RebornSlider\n        v-model=\"val1\" :size=\"currentSize\" :color=\"currentColor\" :show-value=\"isShowValue\"\n        :step=\"step\" :max=\"max\" :disabled=\"isDisabled\"\n      />\n\n      <view class=\"flex justify-between\">\n        <text class=\"text-24 text-gray-6\">尺寸 (Size)</text>\n        <view class=\"flex flex-wrap gap-2\">\n          <view v-for=\"size in sizes\" :key=\"size\">\n            <ReButton\n              size=\"xs\" :variant=\"currentSize === size ? 'filled' : 'outlined'\"\n              :color=\"currentSize === size ? 'primary' : 'neutral'\" @tap=\"currentSize = size\"\n            >\n              {{ size }}\n            </ReButton>\n          </view>\n        </view>\n      </view>\n      <view class=\"flex justify-between\">\n        <text class=\"text-24 text-gray-6\">颜色 (Color)</text>\n        <view class=\"flex flex-wrap gap-2\">\n          <view\n            v-for=\"c in colors\" :key=\"c\"\n            class=\"\n              size-[32rpx] cursor-pointer rounded-full ring-2 ring-transparent\n              ring-offset-2 transition-all\n            \"\n            :class=\"currentColor === c ? 'scale-110 ring-gray-4' : ''\"\n            :style=\"{ backgroundColor: `var(--color-${c})` }\"\n            @click=\"currentColor = c\"\n          />\n        </view>\n      </view>\n      <view class=\"flex justify-between\">\n        <text class=\"text-24 text-gray-6\">显示值</text>\n        <RebornSwitch v-model=\"isShowValue\" size=\"sm\" />\n      </view>\n      <view class=\"flex justify-between\">\n        <text class=\"text-24 text-gray-6\">步长值</text>\n        <RebornInputNumber v-model=\"step\" size=\"sm\" />\n      </view>\n      <view class=\"flex justify-between\">\n        <text class=\"text-24 text-gray-6\">最大值</text>\n        <RebornInputNumber v-model=\"max\" :max=\"100\" :min=\"20\" size=\"sm\" />\n      </view>\n      <view class=\"flex justify-between\">\n        <text class=\"text-24 text-gray-6\">禁用</text>\n        <RebornSwitch v-model=\"isDisabled\" size=\"sm\" />\n      </view>\n    </RebornCard>\n\n    <!-- 间断点 -->\n    <RebornCard title=\"间断点\" custom-class=\"space-y-4\">\n      <text class=\"text-24 text-gray-6\">show-stops 后按步长在轨道上显示间断点</text>\n      <RebornSlider v-model=\"stopsValue\" :step=\"10\" show-stops show-value />\n    </RebornCard>\n\n    <!-- 范围选择 -->\n    <RebornCard title=\"范围选择器\" custom-class=\"space-y-4\">\n      <text class=\"text-24 text-gray-6\">默认最右侧滑块为激活态（大一号），触摸可切换激活对象：{{ val2.join(' ~ ') }}</text>\n      <RebornSlider v-model:values=\"val2\" range />\n    </RebornCard>\n\n    <!-- 刻度标记 -->\n    <RebornCard title=\"刻度标记\" custom-class=\"space-y-6\">\n      <text class=\"text-24 text-gray-6\">marks 的 key 必须在 [min, max] 内；step=\"mark\" 时取值只能落在刻度上，点按刻度文字可跳转</text>\n      <RebornSlider v-model=\"marksFreeValue\" :marks=\"sliderMarks\" show-value />\n      <RebornSlider v-model=\"markSnapValue\" step=\"mark\" :marks=\"sliderMarks\" color=\"error\" show-value />\n    </RebornCard>\n\n    <!-- 自定义提示 -->\n    <RebornCard title=\"自定义提示与 Tooltip 控制\" custom-class=\"space-y-6\">\n      <text class=\"text-24 text-gray-6\">tooltip.formatter 格式化气泡内容；open 强制常显 / 隐藏</text>\n      <RebornSlider v-model=\"tempValue\" :min=\"16\" :max=\"32\" :tooltip=\"{ formatter: formatTemp }\" />\n      <RebornSlider v-model=\"tipOpenValue\" :tooltip=\"{ open: true }\" />\n      <RebornSlider v-model=\"tipHiddenValue\" :tooltip=\"{ open: false }\" />\n    </RebornCard>\n\n    <!-- 事件 -->\n    <RebornCard title=\"事件\" custom-class=\"space-y-4\">\n      <RebornSlider v-model=\"eventValue\" @change=\"onSliderChange\" @change-complete=\"onSliderComplete\" />\n      <text class=\"text-24 text-gray-6 font-mono\">change × {{ changeCount }} · changeComplete: {{ lastComplete }}</text>\n    </RebornCard>\n\n    <!-- 垂直模式 -->\n    <RebornCard title=\"垂直模式\" custom-class=\"space-y-4\">\n      <text class=\"text-24 text-gray-6\">vertical 开启垂直方向，长度由 height 给出；reverse 后从上往下递增</text>\n      <view class=\"flex flex-row items-start gap-12\">\n        <RebornSlider v-model=\"verticalValue\" vertical height=\"360rpx\" />\n        <RebornSlider v-model:values=\"verticalRange\" vertical height=\"360rpx\" range color=\"success\" />\n        <RebornSlider v-model=\"reverseValue\" vertical height=\"360rpx\" reverse color=\"info\" />\n      </view>\n    </RebornCard>\n\n    <!-- 范围整体拖拽 -->\n    <RebornCard title=\"范围整体拖拽\" custom-class=\"space-y-4\">\n      <text class=\"text-24 text-gray-6\">draggable-track 后按住选区拖动，整段区间平移且间距不变</text>\n      <RebornSlider v-model:values=\"dragRange\" range draggable-track show-value />\n    </RebornCard>\n\n    <!-- 禁用指定滑块 -->\n    <RebornCard title=\"禁用指定滑块\" custom-class=\"space-y-4\">\n      <text class=\"text-24 text-gray-6\">disabled 传数组按下标单独禁用：左端禁用后成为不可越过的边界</text>\n      <RebornSlider v-model:values=\"partialDisabledRange\" range :disabled=\"[true, false]\" show-value />\n    </RebornCard>\n\n    <!-- 图标 -->\n    <RebornCard title=\"两侧图标\" custom-class=\"space-y-4\">\n      <text class=\"text-24 text-gray-6\">prefix-icon / suffix-icon 传 iconify 类名，#prefix / #suffix 插槽可完全接管</text>\n      <RebornSlider v-model=\"iconValue\" prefix-icon=\"i-lucide-volume\" suffix-icon=\"i-lucide-volume-2\" />\n    </RebornCard>\n\n    <!-- 自定义样式 -->\n    <RebornCard title=\"自定义样式\" custom-class=\"space-y-4\">\n      <view class=\"space-y-2\">\n        <text class=\"text-24 text-gray-6\">定位与交互由组件处理，ui.thumb 修改外形，thumb 插槽只替换滑块中心内容。</text>\n        <RebornSlider\n          v-model=\"customValue\" :ui=\"{\n            track: 'bg-purple-100 dark:bg-purple-900',\n            progress: 'bg-purple-500',\n            thumb: 'h-[40rpx] w-[60rpx] rounded-full border-2 border-white bg-warning',\n          }\"\n        >\n          <template #thumb=\"{ value }\">\n            <view\n              class=\"flex size-full items-center justify-center text-[24rpx] text-white\"\n            >\n              {{ value }}\n            </view>\n          </template>\n        </RebornSlider>\n      </view>\n    </RebornCard>\n  </RebornPage>\n</template>\n"
+    }
+  ],
+  "related": [],
+  "whenToUse": [
+    "音量、进度、价格等连续数值的调节，需要 min / max / step 控制取值。",
+    "区间筛选场景：开启 range 并用 v-model:values 绑定 [起, 止] 数组。",
+    "需要展示当前值（showValue）或用 thumb / value 插槽自定义滑块与数值显示。"
+  ],
+  "whenNotToUse": [
+    "人机滑动验证改用 reborn-slide-verify（仅 uniapp）。",
+    "需要精确键入数字改用 reborn-input-number。"
+  ],
+  "pitfalls": [
+    "web 与 uniapp 双端均可用。",
+    "单值模式用 v-model，范围模式必须同时设置 range=true 并改用 v-model:values 绑定数组。",
+    "除 update:modelValue / update:values 外还提供 change 与 changing 两个事件，回调值为数值或数组。",
+    "两端 thumb 插槽仅替换中心圆，单值与范围模式均支持平铺 { value, index, active, disabled }；外层定位与气泡由组件维护，外形通过 ui.thumb 覆盖，Web 还保留聚焦与键盘。",
+    "Web 滑块默认 12px、彩色边框 2px，悬停、按压或键盘聚焦时通过 scale 等比放大至 4/3（默认视觉直径 16px），彩色边框视觉厚度为 3px，不改写 ui.thumb 自定义宽高，并显示 4px 对应色板第 6 阶的 20% 透明色圆环；透明度仅作用于圆环。交互带按 16px 预留空间，悬停不改变绑定值或激活节点。",
+    "Web 数值气泡与滑块本体在 thumbWrapper 中并列渲染，仅本体缩放，气泡文字与箭头尺寸保持不变；底色与箭头取 gray-9，整体 opacity-80。常显气泡在静止时，箭头尖端离本体约 3px，交互时按本体放大与圆环调整距离。默认在悬停或拖拽当前滑块时显示，禁用节点不响应悬停；tooltip.open 可强制显隐，formatter=null 始终隐藏。UniApp 端仍在拖拽时显示。"
+  ],
+  "dependencies": [
+    "@weapp-tailwindcss/merge-v3",
+    "@weapp-tailwindcss/variants-v3",
+    "clsx",
+    "tailwind-merge",
+    "tailwind-variants"
+  ],
+  "install": {
+    "cli": "npx reborn-ui@latest add reborn-slider"
+  },
+  "sourceRefs": {
+    "web": [
+      "app/components/reborn/ui/reborn-slider/RebornSlider.vue",
+      "app/components/reborn/ui/reborn-slider/index.ts",
+      "app/components/reborn/ui/reborn-slider/reborn-slider.config.ts"
+    ],
+    "uniapp": [
+      "packages/uniapp-project/src/components/reborn-slider/RebornSlider.vue",
+      "packages/uniapp-project/src/components/reborn-slider/index.ts",
+      "packages/uniapp-project/src/components/reborn-slider/reborn-slider.config.ts"
+    ]
+  },
+  "docPath": "content/2.components/input-and-forms/reborn-slider.md",
+  "_meta": {
+    "contentHash": "de3de77b68afcc3f9bf596de8b40af1a60ccf542",
+    "hasOverride": true,
+    "extractors": {
+      "web": "ok",
+      "uniapp": "ok",
+      "docs": "found"
+    }
+  }
+}

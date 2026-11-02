@@ -1,0 +1,7 @@
+{
+  "schemaVersion": 1, "id": "design", "name": "设计工作室", "icon": "✦",
+  "description": "MasterGo 设计稿 · Reborn 组件 · 项目配置与代码协作",
+  "order": 17, "entry": "/studio-projects/design",
+  "capabilities": ["project-inspection", "component-mapping", "mastergo-mcp", "reborn-mcp", "dsh-session", "sandbox-preview"],
+  "compatibility": { "host": "0.2.1-rc.2", "runtime": "^0.5.0", "worktable": "^0.6.0" }
+}

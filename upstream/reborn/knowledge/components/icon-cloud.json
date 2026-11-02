@@ -1,0 +1,80 @@
+{
+  "$schema": "../schema/component.schema.json",
+  "id": "icon-cloud",
+  "title": "图标云",
+  "description": "用于以可拖拽旋转的 Canvas 3D 球面展示一组图标的展示组件。",
+  "category": "misc",
+  "tags": [
+    "canvas",
+    "interactive",
+    "tailwind"
+  ],
+  "platforms": [
+    "web"
+  ],
+  "props": [
+    {
+      "name": "class",
+      "type": "HTMLAttributes[\"class\"]",
+      "required": false,
+      "description": "作用于画布容器的额外类名。"
+    },
+    {
+      "name": "images",
+      "type": "string[]",
+      "required": false,
+      "description": "图标图片地址列表，会自动映射到球面节点。",
+      "default": "() => []"
+    }
+  ],
+  "events": [],
+  "slots": [],
+  "exposes": [],
+  "examples": [
+    {
+      "title": "Web 演示",
+      "path": "app/components/reborn/examples/icon-cloud/IconCloudDemo.vue",
+      "source": "demo",
+      "platform": "web",
+      "code": "<script setup lang=\"ts\">\nimport IconCloud from \"~/components/reborn/ui/icon-cloud/IconCloud.vue\";\n\n/** 取自 Simple Icons 的图标标识，用于拼装 CDN 地址 */\nconst slugs = [\n  \"typescript\",\n  \"javascript\",\n  \"dart\",\n  \"java\",\n  \"react\",\n  \"flutter\",\n  \"android\",\n  \"html5\",\n  \"css3\",\n  \"nodedotjs\",\n  \"express\",\n  \"nextdotjs\",\n  \"prisma\",\n  \"amazonaws\",\n  \"postgresql\",\n  \"firebase\",\n  \"nginx\",\n  \"vercel\",\n  \"testinglibrary\",\n  \"jest\",\n  \"cypress\",\n  \"docker\",\n  \"git\",\n  \"jira\",\n  \"github\",\n  \"gitlab\",\n  \"visualstudiocode\",\n  \"androidstudio\",\n  \"sonarqube\",\n  \"figma\",\n];\n\n/** 组件只接收图片地址数组，图标来源可以自由替换 */\nconst imageUrls = slugs.map((slug) => `https://cdn.simpleicons.org/${slug}/${slug}`);\n</script>\n\n<template>\n  <DemoSection\n    title=\"基础用法\"\n    description=\"基于 Canvas 的 3D 图标云，适合做技术栈、能力矩阵或品牌集合的轻量展示；点击任意节点会自动旋转到正前方，拖拽画布可手动调整视角。\"\n  >\n    <DemoBlock\n      layout=\"stack\"\n      align=\"center\"\n    >\n      <IconCloud :images=\"imageUrls\" />\n    </DemoBlock>\n  </DemoSection>\n</template>\n"
+    }
+  ],
+  "related": [],
+  "whenToUse": [
+    "落地页展示技术栈、工具链等图标集合时。",
+    "需要用户可拖拽旋转、点击节点聚焦的品牌矩阵展示。",
+    "图标数量较多、希望在有限空间内立体呈现时。"
+  ],
+  "whenNotToUse": [
+    "静态网格排列的图标墙，改用 animate-grid 或 bento-grid。",
+    "横向滚动的品牌 Logo 展示，改用 reborn-marquee。"
+  ],
+  "pitfalls": [
+    "仅 web 端可用，基于 Canvas 渲染。",
+    "images 传图片 URL 数组，组件自动映射到球面节点；不支持传插槽内容。",
+    "点击节点会自动旋转到正前方，拖拽画布可手动调整视角。"
+  ],
+  "dependencies": [
+    "clsx",
+    "tailwind-merge"
+  ],
+  "install": {
+    "cli": "npx reborn-ui@latest add icon-cloud"
+  },
+  "sourceRefs": {
+    "web": [
+      "app/components/reborn/ui/icon-cloud/IconCloud.vue",
+      "app/components/reborn/ui/icon-cloud/index.ts"
+    ]
+  },
+  "docPath": "content/2.components/miscellaneous/icon-cloud.md",
+  "_meta": {
+    "contentHash": "71f678640a6860652f2f253938929460b84050d3",
+    "hasOverride": true,
+    "extractors": {
+      "web": "ok",
+      "uniapp": "absent",
+      "docs": "found"
+    }
+  }
+}

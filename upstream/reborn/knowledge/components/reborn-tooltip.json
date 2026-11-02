@@ -1,0 +1,269 @@
+{
+  "$schema": "../schema/component.schema.json",
+  "id": "reborn-tooltip",
+  "title": "Tooltip 文字提示",
+  "description": "文字提示气泡组件：多触发行为、自动翻转与贴边偏移、自定义背景色、可控显隐。",
+  "category": "navigation",
+  "tags": [
+    "tooltip",
+    "floating",
+    "hint"
+  ],
+  "platforms": [
+    "web"
+  ],
+  "props": [
+    {
+      "name": "content",
+      "type": "string",
+      "required": false,
+      "description": "提示内容",
+      "default": "''"
+    },
+    {
+      "name": "rawContent",
+      "type": "boolean",
+      "required": false,
+      "description": "将文案作为 HTML 渲染；仅传入可信或已净化的内容",
+      "default": "false"
+    },
+    {
+      "name": "virtualTriggering",
+      "type": "boolean",
+      "required": false,
+      "description": "使用外部元素触发和定位，不渲染默认触发插槽",
+      "default": "false"
+    },
+    {
+      "name": "virtualRef",
+      "type": "HTMLElement | null",
+      "required": false,
+      "description": "虚拟触发元素；切换时迁移事件和 ARIA 关联",
+      "default": "null"
+    },
+    {
+      "name": "title",
+      "type": "string | null",
+      "required": false,
+      "description": "提示文字。显式传 null 或空字符串可禁用提示；未传时回落到 content",
+      "default": "undefined"
+    },
+    {
+      "name": "placement",
+      "type": "TooltipPlacement",
+      "required": false,
+      "description": "出现方向与对齐方式",
+      "default": "'bottom'"
+    },
+    {
+      "name": "color",
+      "type": "string",
+      "required": false,
+      "description": "自定义背景颜色，面板与箭头同步着色"
+    },
+    {
+      "name": "arrow",
+      "type": "boolean | { pointAtCenter?: boolean }",
+      "required": false,
+      "description": "箭头显隐；对象形式的 pointAtCenter 让箭头指向触发元素中心而非对齐端",
+      "default": "true"
+    },
+    {
+      "name": "autoAdjustOverflow",
+      "type": "boolean",
+      "required": false,
+      "description": "主轴放不下时自动翻转到对侧",
+      "default": "true"
+    },
+    {
+      "name": "defaultOpen",
+      "type": "boolean",
+      "required": false,
+      "description": "非受控模式下的初始显隐",
+      "default": "false"
+    },
+    {
+      "name": "destroyOnHidden",
+      "type": "boolean",
+      "required": false,
+      "description": "关闭后是否销毁提示层 DOM；默认隐藏保留",
+      "default": "false"
+    },
+    {
+      "name": "fresh",
+      "type": "boolean",
+      "required": false,
+      "description": "关闭期间文案是否保持实时更新；默认关闭时缓存最后一次显示的文案（仅对 title/content 生效，content 插槽始终实时）",
+      "default": "false"
+    },
+    {
+      "name": "getPopupContainer",
+      "type": "(triggerNode: HTMLElement) => HTMLElement",
+      "required": false,
+      "description": "浮层渲染父节点，默认渲染到 body 上"
+    },
+    {
+      "name": "openDelay",
+      "type": "number",
+      "required": false,
+      "description": "打开延时（毫秒）",
+      "default": "100"
+    },
+    {
+      "name": "closeDelay",
+      "type": "number",
+      "required": false,
+      "description": "关闭延时（毫秒）",
+      "default": "100"
+    },
+    {
+      "name": "mouseEnterDelay",
+      "type": "number",
+      "required": false,
+      "description": "鼠标移入后延时多少才显示，单位：秒；传入时优先于 openDelay"
+    },
+    {
+      "name": "mouseLeaveDelay",
+      "type": "number",
+      "required": false,
+      "description": "鼠标移出后延时多少才隐藏，单位：秒；传入时优先于 closeDelay"
+    },
+    {
+      "name": "trigger",
+      "type": "TooltipTrigger | TooltipTrigger[]",
+      "required": false,
+      "description": "触发行为，可传数组组合多种触发方式",
+      "default": "'hover'"
+    },
+    {
+      "name": "zIndex",
+      "type": "number",
+      "required": false,
+      "description": "提示层 z-index，未传时用样式默认值"
+    },
+    {
+      "name": "disabled",
+      "type": "boolean",
+      "required": false,
+      "description": "是否禁用",
+      "default": "false"
+    },
+    {
+      "name": "class",
+      "type": "any",
+      "required": false,
+      "description": "追加到根节点（触发器外层容器）的自定义类名"
+    },
+    {
+      "name": "ui",
+      "type": "TooltipUI",
+      "required": false,
+      "description": "按语义化结构覆盖各节点样式，键位见文档「自定义样式（ui）」 可用键（从源码抽取，以此为准）——Web：arrow、content、contentWrapper、trigger、wrapper。"
+    },
+    {
+      "name": "open",
+      "type": "boolean",
+      "required": false,
+      "description": "双向绑定值",
+      "vModel": true
+    }
+  ],
+  "events": [
+    {
+      "name": "open",
+      "payload": "(e: 'open'): void;",
+      "description": "提示层显示后触发（经打开延时）"
+    },
+    {
+      "name": "close",
+      "payload": "(e: 'close'): void;",
+      "description": "提示层关闭后触发（经关闭延时）"
+    },
+    {
+      "name": "openChange",
+      "payload": "(e: 'openChange', open: boolean): void;",
+      "description": "显示隐藏变化时触发"
+    },
+    {
+      "name": "update:open",
+      "description": "open 变化时触发（v-model 同步）",
+      "payload": "(value: boolean)"
+    }
+  ],
+  "slots": [
+    {
+      "name": "default",
+      "description": "触发提示的元素；`virtualTriggering` 为 `true` 时不渲染。"
+    },
+    {
+      "name": "content",
+      "description": "自定义提示内容（可承载 HTML 富内容），优先级最高。"
+    }
+  ],
+  "exposes": [
+    {
+      "name": "open",
+      "description": "手动打开提示层（仍受 disabled 与打开延时约束，无内容时不生效）"
+    },
+    {
+      "name": "close",
+      "description": "手动关闭提示层（经关闭延时后隐藏）"
+    }
+  ],
+  "examples": [
+    {
+      "title": "Web 演示",
+      "path": "app/components/reborn/examples/reborn-tooltip/RebornTooltipDemo.vue",
+      "source": "demo",
+      "platform": "web",
+      "code": "<script setup lang=\"ts\">\nimport { computed, shallowRef } from \"vue\";\nimport RebornButton from \"~/components/reborn/ui/reborn-button/RebornButton.vue\";\nimport RebornTooltip from \"~/components/reborn/ui/reborn-tooltip/RebornTooltip.vue\";\n\n/** 12 种基础方位 */\nconst placements = [\n  \"top\", \"top-start\", \"top-end\",\n  \"bottom\", \"bottom-start\", \"bottom-end\",\n  \"left\", \"left-start\", \"left-end\",\n  \"right\", \"right-start\", \"right-end\",\n] as const;\n\nconst placementOptions = placements.map((p) => ({ label: p, value: p }));\nconst triggerOptions = [\n  { label: \"hover（悬停）\", value: \"hover\" },\n  { label: \"click（点击）\", value: \"click\" },\n  { label: \"focus（聚焦）\", value: \"focus\" },\n  { label: \"contextMenu（右键）\", value: \"contextMenu\" },\n];\n\n// ─── 交互演练场 ─────────────────────────────────────────────────\n\nconst state = shallowRef<Record<string, any>>({\n  title: \"这是一个文字提示\",\n  placement: \"top\",\n  trigger: \"hover\",\n  useColor: false,\n  color: \"#8358F6\",\n  arrow: true,\n  disabled: false,\n});\n\n/** 演练场控制面板配置 */\nconst controls = [\n  {\n    title: \"内容与外观\",\n    children: [\n      { label: \"提示文字\", key: \"title\", component: \"input\" as const, defaultValue: \"这是一个文字提示\" },\n      {\n        label: \"气泡位置\",\n        key: \"placement\",\n        component: \"select\" as const,\n        defaultValue: \"top\",\n        props: { options: placementOptions },\n      },\n      { label: \"自定义背景色（关闭用主题色）\", key: \"useColor\", component: \"checkbox\" as const, defaultValue: false },\n      {\n        label: \"背景色\",\n        key: \"color\",\n        component: \"color-picker\" as const,\n        defaultValue: \"#8358F6\",\n        hide: (_: any, s: Record<string, any>) => !s.useColor,\n      },\n    ],\n  },\n  {\n    title: \"行为\",\n    children: [\n      {\n        label: \"触发方式\",\n        key: \"trigger\",\n        component: \"select\" as const,\n        defaultValue: \"hover\",\n        props: { options: triggerOptions },\n      },\n      { label: \"显示箭头\", key: \"arrow\", component: \"checkbox\" as const, defaultValue: true },\n      { label: \"禁用\", key: \"disabled\", component: \"checkbox\" as const, defaultValue: false },\n    ],\n  },\n];\n\n/** 演练场右上角展示的等价代码 */\nconst tooltipCode = computed(() => {\n  const s = state.value;\n  const props: string[] = [`title=\"${s.title}\"`];\n\n  if (s.placement !== \"bottom\") props.push(`placement=\"${s.placement}\"`);\n  if (s.useColor && s.color) props.push(`color=\"${s.color}\"`);\n  if (s.trigger !== \"hover\") props.push(`trigger=\"${s.trigger}\"`);\n  if (!s.arrow) props.push(':arrow=\"false\"');\n  if (s.disabled) props.push(\"disabled\");\n\n  return `<RebornTooltip\\n  ${props.join(\"\\n  \")}\\n>\\n  <RebornButton>触发元素</RebornButton>\\n</RebornTooltip>`;\n});\n\n// ─── 场景演示状态 ───────────────────────────────────────────────\n\n/** title 置空禁用演示 */\nconst emptyTitle = shallowRef(false);\n\n/** 自定义背景颜色演示色板 */\nconst colors = [\"#8358F6\", \"#1b6dfa\", \"#f50\", \"#2db7f5\", \"#87d068\", \"#108ee9\"];\n</script>\n\n<template>\n  <div class=\"flex w-full min-w-0 flex-col\">\n    <Playground\n      v-model=\"state\"\n      :controls=\"controls\"\n      :code=\"tooltipCode\"\n      component-name=\"RebornTooltip\"\n      title=\"交互演练场\"\n      description=\"组合位置与触发方式；选择 contextMenu 后需右键点击触发元素查看提示。\"\n    >\n      <RebornTooltip\n        :title=\"state.title\"\n        :placement=\"state.placement\"\n        :color=\"state.useColor ? state.color : undefined\"\n        :trigger=\"state.trigger\"\n        :arrow=\"state.arrow\"\n        :disabled=\"state.disabled\"\n      >\n        <RebornButton>{{ state.trigger === 'contextMenu' ? '右键点击我' : '触发元素' }}</RebornButton>\n      </RebornTooltip>\n    </Playground>\n\n    <DemoSection title=\"基础用法\">\n      <template #description>\n        <code>title</code> 传入提示文字，鼠标移入显示、移出消失，用来代替浏览器原生的 <code>title</code> 提示；长文字在 240px 处自动换行。\n      </template>\n      <DemoBlock layout=\"row\" align=\"center\">\n        <RebornTooltip title=\"这是一个文字提示\">\n          <RebornButton>悬停查看提示</RebornButton>\n        </RebornTooltip>\n\n        <RebornTooltip title=\"为保证显示效果，建议输入简洁明了的文字，避免特殊符号与过长内容。\">\n          <RebornButton>多行文本提示</RebornButton>\n        </RebornTooltip>\n      </DemoBlock>\n    </DemoSection>\n\n    <DemoSection title=\"方位：12 种 placement\">\n      <template #description>\n        <code>placement</code> 由方向 <code>top</code> / <code>bottom</code> / <code>left</code> / <code>right</code> 与对齐 <code>-start</code> / <code>-end</code> 组合出 12 种方位。\n      </template>\n      <DemoBlock layout=\"stack\" align=\"center\">\n        <div class=\"grid w-fit grid-cols-5 gap-3\">\n          <div class=\"col-start-2\">\n            <RebornTooltip placement=\"top-start\" title=\"Top Start\">\n              <RebornButton size=\"sm\" class=\"w-24\">TL</RebornButton>\n            </RebornTooltip>\n          </div>\n          <div class=\"col-start-3\">\n            <RebornTooltip placement=\"top\" title=\"Top\">\n              <RebornButton size=\"sm\" class=\"w-24\">Top</RebornButton>\n            </RebornTooltip>\n          </div>\n          <div class=\"col-start-4\">\n            <RebornTooltip placement=\"top-end\" title=\"Top End\">\n              <RebornButton size=\"sm\" class=\"w-24\">TR</RebornButton>\n            </RebornTooltip>\n          </div>\n\n          <div class=\"col-start-1 row-start-2\">\n            <RebornTooltip placement=\"left-start\" title=\"Left Start\">\n              <RebornButton size=\"sm\" class=\"w-24\">LT</RebornButton>\n            </RebornTooltip>\n          </div>\n          <div class=\"col-start-5 row-start-2\">\n            <RebornTooltip placement=\"right-start\" title=\"Right Start\">\n              <RebornButton size=\"sm\" class=\"w-24\">RT</RebornButton>\n            </RebornTooltip>\n          </div>\n\n          <div class=\"col-start-1 row-start-3\">\n            <RebornTooltip placement=\"left\" title=\"Left\">\n              <RebornButton size=\"sm\" class=\"w-24\">Left</RebornButton>\n            </RebornTooltip>\n          </div>\n          <div class=\"col-start-5 row-start-3\">\n            <RebornTooltip placement=\"right\" title=\"Right\">\n              <RebornButton size=\"sm\" class=\"w-24\">Right</RebornButton>\n            </RebornTooltip>\n          </div>\n\n          <div class=\"col-start-1 row-start-4\">\n            <RebornTooltip placement=\"left-end\" title=\"Left End\">\n              <RebornButton size=\"sm\" class=\"w-24\">LB</RebornButton>\n            </RebornTooltip>\n          </div>\n          <div class=\"col-start-5 row-start-4\">\n            <RebornTooltip placement=\"right-end\" title=\"Right End\">\n              <RebornButton size=\"sm\" class=\"w-24\">RB</RebornButton>\n            </RebornTooltip>\n          </div>\n\n          <div class=\"col-start-2 row-start-5\">\n            <RebornTooltip placement=\"bottom-start\" title=\"Bottom Start\">\n              <RebornButton size=\"sm\" class=\"w-24\">BL</RebornButton>\n            </RebornTooltip>\n          </div>\n          <div class=\"col-start-3 row-start-5\">\n            <RebornTooltip placement=\"bottom\" title=\"Bottom\">\n              <RebornButton size=\"sm\" class=\"w-24\">Bottom</RebornButton>\n            </RebornTooltip>\n          </div>\n          <div class=\"col-start-4 row-start-5\">\n            <RebornTooltip placement=\"bottom-end\" title=\"Bottom End\">\n              <RebornButton size=\"sm\" class=\"w-24\">BR</RebornButton>\n            </RebornTooltip>\n          </div>\n        </div>\n      </DemoBlock>\n    </DemoSection>\n\n    <DemoSection title=\"颜色：自定义背景色\">\n      <template #description>\n        <code>color</code> 直接指定气泡背景色，面板与箭头同步着色，文字固定为白色。\n      </template>\n      <DemoBlock layout=\"row\" align=\"center\">\n        <RebornTooltip v-for=\"c in colors\" :key=\"c\" :title=\"c\" :color=\"c\">\n          <RebornButton size=\"sm\" :style=\"{ backgroundColor: c, borderColor: c }\">\n            {{ c }}\n          </RebornButton>\n        </RebornTooltip>\n      </DemoBlock>\n    </DemoSection>\n\n    <DemoSection title=\"富内容插槽\">\n      <template #description>\n        <code>content</code> 插槽可承载任意 HTML 结构（多行、快捷键、加粗、链接等），优先级高于 <code>title</code> / <code>content</code> 属性。\n      </template>\n      <DemoBlock layout=\"row\" align=\"center\">\n        <RebornTooltip placement=\"right\">\n          <template #content>\n            <div class=\"flex flex-col gap-1\">\n              <b>快捷键</b>\n              <span>按 <kbd class=\"rounded bg-white/20 px-1\">Ctrl</kbd> + <kbd class=\"rounded bg-white/20 px-1\">S</kbd>\n                保存</span>\n            </div>\n          </template>\n          <RebornButton>富内容提示</RebornButton>\n        </RebornTooltip>\n\n        <RebornTooltip placement=\"top\">\n          <template #content>\n            <span>支持 <i>斜体</i>、<b>加粗</b> 与 <a class=\"underline\" href=\"#\" @click.prevent>链接</a></span>\n          </template>\n          <RebornButton>HTML 片段</RebornButton>\n        </RebornTooltip>\n      </DemoBlock>\n    </DemoSection>\n\n    <DemoSection title=\"触发方式\">\n      <template #description>\n        <code>trigger</code> 支持 <code>hover</code> / <code>focus</code> / <code>click</code> / <code>contextMenu</code>，可传数组组合；<code>click</code> 与 <code>contextMenu</code> 打开后点击外部区域关闭。\n      </template>\n      <DemoBlock layout=\"row\" align=\"center\">\n        <RebornTooltip title=\"hover 触发（默认）\">\n          <RebornButton>悬停</RebornButton>\n        </RebornTooltip>\n\n        <RebornTooltip title=\"click 触发，点击外部关闭\" trigger=\"click\">\n          <RebornButton>点击</RebornButton>\n        </RebornTooltip>\n\n        <RebornTooltip title=\"focus 触发，失焦关闭\" trigger=\"focus\">\n          <RebornButton>聚焦（Tab 键）</RebornButton>\n        </RebornTooltip>\n\n        <RebornTooltip title=\"contextMenu 触发\" trigger=\"contextMenu\">\n          <RebornButton>右键点击</RebornButton>\n        </RebornTooltip>\n      </DemoBlock>\n\n      <DemoNote tone=\"dimmed\">\n        「右键点击」按钮仅响应鼠标右键（<code>trigger=\"contextMenu\"</code>），左键点击与悬停均不会触发。\n      </DemoNote>\n    </DemoSection>\n\n    <DemoSection title=\"箭头：显隐与指向中心\">\n      <template #description>\n        <code>:arrow=\"false\"</code> 隐藏箭头；<code>-start</code> / <code>-end</code> 方位下箭头默认停在对齐端，<code>:arrow=\"{ pointAtCenter: true }\"</code> 改为指向触发元素中心。\n      </template>\n      <DemoBlock layout=\"row\" align=\"center\">\n        <RebornTooltip title=\"无箭头文字提示\" :arrow=\"false\">\n          <RebornButton>无箭头</RebornButton>\n        </RebornTooltip>\n\n        <RebornTooltip title=\"箭头停在对齐端\" placement=\"top-start\">\n          <RebornButton>top-start</RebornButton>\n        </RebornTooltip>\n\n        <RebornTooltip title=\"箭头指向元素中心\" placement=\"top-start\" :arrow=\"{ pointAtCenter: true }\">\n          <RebornButton>pointAtCenter</RebornButton>\n        </RebornTooltip>\n      </DemoBlock>\n    </DemoSection>\n\n    <DemoSection title=\"延时、禁用与初始展示\">\n      <template #description>\n        <code>mouse-enter-delay</code> 以秒为单位设置显示延时；<code>disabled</code> 或把 <code>title</code> 置空都会禁用提示；<code>default-open</code> 让提示挂载后立即展示。\n      </template>\n      <DemoBlock layout=\"row\" align=\"center\">\n        <RebornTooltip title=\"mouseEnterDelay 1 秒\" :mouse-enter-delay=\"1\">\n          <RebornButton>延时 1s</RebornButton>\n        </RebornTooltip>\n\n        <RebornTooltip title=\"禁用提示\" :disabled=\"true\">\n          <RebornButton>禁用</RebornButton>\n        </RebornTooltip>\n\n        <RebornTooltip :title=\"emptyTitle ? '' : '再次点击按钮把 title 置空即禁用'\">\n          <RebornButton @click=\"emptyTitle = !emptyTitle\">\n            {{ emptyTitle ? 'title 已置空（禁用）' : 'title 禁用演示' }}\n          </RebornButton>\n        </RebornTooltip>\n\n        <RebornTooltip title=\"defaultOpen 初始展示\" placement=\"bottom\" default-open>\n          <RebornButton>初始展示</RebornButton>\n        </RebornTooltip>\n      </DemoBlock>\n    </DemoSection>\n  </div>\n</template>\n"
+    }
+  ],
+  "related": [
+    "reborn-transition"
+  ],
+  "whenToUse": [
+    "悬停解释图标、按钮或缩写的含义（title / content 属性传入短文本）。",
+    "需要控制提示的方向与底色（placement 支持驼峰命名别名、color 自定义背景色）。",
+    "需要 hover 以外的触发方式（trigger: focus / click / contextMenu，可数组组合）。",
+    "需要受控显示（v-model:open）、初始展示（defaultOpen）或用 content 插槽承载 HTML 富内容。"
+  ],
+  "whenNotToUse": [
+    "承载可交互的复杂内容改用 reborn-popover。",
+    "uniapp 端项目：platforms 仅 web，无 uniapp 实现。"
+  ],
+  "pitfalls": [
+    "platforms 仅 web 端提供。",
+    "触发元素放在 default 插槽内；content 插槽优先级高于 title / content 属性且始终实时（fresh 只冻结文案属性）。",
+    "title 显式传 null 或空串会禁用提示；未传 title 时回落到 content。",
+    "openDelay / closeDelay 为毫秒，mouseEnterDelay / mouseLeaveDelay 为秒且传入时优先。",
+    "color 自定义背景时面板与箭头同步着色、文字固定白色，需自行保证背景与白字的对比度。",
+    "getPopupContainer 指定的容器若带 CSS transform，fixed 定位会错位。",
+    "destroyOnHidden 默认 false：关闭后 DOM 保留（v-show 隐藏），需要彻底卸载时显式传 true。"
+  ],
+  "dependencies": [
+    "clsx",
+    "tailwind-merge",
+    "tailwind-variants"
+  ],
+  "install": {
+    "cli": "npx reborn-ui@latest add reborn-tooltip"
+  },
+  "sourceRefs": {
+    "web": [
+      "app/components/reborn/ui/reborn-tooltip/RebornTooltip.vue",
+      "app/components/reborn/ui/reborn-tooltip/index.ts",
+      "app/components/reborn/ui/reborn-tooltip/reborn-tooltip.config.ts"
+    ]
+  },
+  "docPath": "content/2.components/navigation/reborn-tooltip.md",
+  "_meta": {
+    "contentHash": "2b63542ce124ddf37ac6570d790b5f0e77c91cf9",
+    "hasOverride": true,
+    "extractors": {
+      "web": "ok",
+      "uniapp": "absent",
+      "docs": "found"
+    }
+  }
+}

@@ -1,0 +1,2499 @@
+{
+  "schemaVersion": 1,
+  "generatedAt": "2026-10-30T10:15:11.163Z",
+  "components": [
+    {
+      "id": "animate-grid",
+      "title": "动画网格",
+      "description": "用于以 3D 倾斜透视和发光投影展示 logo 卡片阵列的网格组件。",
+      "category": "misc",
+      "tags": [
+        "css",
+        "tailwind",
+        "input"
+      ],
+      "platforms": [
+        "web"
+      ]
+    },
+    {
+      "id": "animated-circular-progressbar",
+      "title": "动画圆形进度条",
+      "description": "用于以圆形仪表盘动画展示当前数值百分比的进度条组件。",
+      "category": "misc",
+      "tags": [
+        "css",
+        "tailwind",
+        "input",
+        "magic-ui"
+      ],
+      "platforms": [
+        "web"
+      ]
+    },
+    {
+      "id": "animated-list",
+      "title": "动画列表",
+      "description": "用于让列表项按固定延迟逐条进场的通知流列表组件。",
+      "category": "misc",
+      "tags": [
+        "css",
+        "tailwind",
+        "magic-ui"
+      ],
+      "platforms": [
+        "web"
+      ]
+    },
+    {
+      "id": "animated-testimonials",
+      "title": "动态评价",
+      "description": "用于轮播展示用户评价（头像、姓名、职称、引言）并支持自动播放的组件。",
+      "category": "misc",
+      "tags": [
+        "css",
+        "tailwind",
+        "aceternity-ui"
+      ],
+      "platforms": [
+        "web"
+      ]
+    },
+    {
+      "id": "animated-tooltip",
+      "title": "动画提示",
+      "description": "用于悬停头像时弹出姓名与职称气泡并跟随鼠标位置的提示组件。",
+      "category": "misc",
+      "tags": [
+        "css",
+        "tailwind",
+        "aceternity-ui"
+      ],
+      "platforms": [
+        "web"
+      ]
+    },
+    {
+      "id": "apple-card-carousel",
+      "title": "Apple 卡片轮播",
+      "description": "用于以 Apple 官网风格横向滚动卡片、点击展开为模态详情的轮播组件。",
+      "category": "data-display",
+      "tags": [
+        "css",
+        "tailwind",
+        "card",
+        "aceternity-ui"
+      ],
+      "platforms": [
+        "web"
+      ]
+    },
+    {
+      "id": "balance-slider",
+      "title": "平衡滑块",
+      "description": "用于在左右两侧间拖动分配比例的双色平衡滑块展示组件。",
+      "category": "form",
+      "tags": [
+        "css",
+        "tailwind",
+        "input"
+      ],
+      "platforms": [
+        "web"
+      ]
+    },
+    {
+      "id": "bento-grid",
+      "title": "Bento 网格",
+      "description": "用于以不等宽卡片拼贴展示功能特性的 Bento 风格网格布局组件。",
+      "category": "misc",
+      "tags": [
+        "css",
+        "tailwind",
+        "bento",
+        "aceternity-ui"
+      ],
+      "platforms": [
+        "web"
+      ]
+    },
+    {
+      "id": "blur-reveal",
+      "title": "模糊揭示",
+      "description": "用于让子元素依次从模糊状态淡入上移进场的揭示动画组件。",
+      "category": "effect",
+      "tags": [
+        "css",
+        "tailwind",
+        "magic-ui"
+      ],
+      "platforms": [
+        "web"
+      ]
+    },
+    {
+      "id": "book",
+      "title": "书本",
+      "description": "用于展示 3D 书本封面并在悬停时播放动画的展示组件。",
+      "category": "misc",
+      "tags": [
+        "css",
+        "tailwind",
+        "x-ui"
+      ],
+      "platforms": [
+        "web"
+      ]
+    },
+    {
+      "id": "box-reveal",
+      "title": "盒子揭示",
+      "description": "用于内容被色块滑开后显现的揭示入场动画组件。",
+      "category": "effect",
+      "tags": [
+        "css",
+        "tailwind",
+        "magic-ui"
+      ],
+      "platforms": [
+        "web"
+      ]
+    },
+    {
+      "id": "card-3d",
+      "title": "3D 卡片效果",
+      "description": "用于悬停时随鼠标产生透视倾斜、子元素分层浮起的 3D 卡片组件。",
+      "category": "data-display",
+      "tags": [
+        "css",
+        "tailwind",
+        "card",
+        "aceternity-ui"
+      ],
+      "platforms": [
+        "web"
+      ]
+    },
+    {
+      "id": "color-picker",
+      "title": "ColorPicker 取色器",
+      "description": "用于弹层中选取颜色的取色器组件，支持 hex/hsl/rgb 等格式与预设色板。",
+      "category": "form",
+      "tags": [
+        "css",
+        "tailwind",
+        "input",
+        "color-picker",
+        "uplusion23"
+      ],
+      "platforms": [
+        "web"
+      ]
+    },
+    {
+      "id": "colourful-text",
+      "title": "彩色文字",
+      "description": "用于让文字逐字符循环变换颜色并动画的标题点缀组件。",
+      "category": "effect",
+      "tags": [
+        "css",
+        "tailwind",
+        "aceternity-ui"
+      ],
+      "platforms": [
+        "web"
+      ]
+    },
+    {
+      "id": "compare",
+      "title": "对比",
+      "description": "用于以滑动分割线对比两张图片或两块自定义内容的对比组件。",
+      "category": "misc",
+      "tags": [
+        "css",
+        "tailwind",
+        "aceternity-ui"
+      ],
+      "platforms": [
+        "web"
+      ]
+    },
+    {
+      "id": "container-scroll",
+      "title": "容器滚动",
+      "description": "用于随页面滚动对卡片内容做旋转缩放过渡的首屏展示组件。",
+      "category": "misc",
+      "tags": [
+        "css",
+        "tailwind",
+        "aceternity-ui"
+      ],
+      "platforms": [
+        "web"
+      ]
+    },
+    {
+      "id": "container-text-flip",
+      "title": "容器文字翻转",
+      "description": "用于循环翻转一组单词、容器宽度随词宽平滑过渡的文字组件。",
+      "category": "effect",
+      "tags": [
+        "css",
+        "tailwind",
+        "aceternity-ui"
+      ],
+      "platforms": [
+        "web"
+      ]
+    },
+    {
+      "id": "direction-aware-hover",
+      "title": "方向感知悬停卡片",
+      "description": "用于根据鼠标进入方向滑入内容覆盖层的图片悬停卡片组件。",
+      "category": "data-display",
+      "tags": [
+        "css",
+        "tailwind",
+        "card",
+        "aceternity-ui"
+      ],
+      "platforms": [
+        "web"
+      ]
+    },
+    {
+      "id": "dither-shader",
+      "title": "抖动着色器",
+      "description": "用于对图片实时应用有序抖动与像素化处理的复古风着色器组件。",
+      "category": "effect",
+      "tags": [
+        "tailwind",
+        "background",
+        "card",
+        "aceternity-ui"
+      ],
+      "platforms": [
+        "web"
+      ]
+    },
+    {
+      "id": "dock",
+      "title": "Dock",
+      "description": "用于悬停时邻近图标放大的 macOS 风格 Dock 图标栏组件。",
+      "category": "misc",
+      "tags": [
+        "css",
+        "tailwind"
+      ],
+      "platforms": [
+        "web"
+      ]
+    },
+    {
+      "id": "expandable-gallery",
+      "title": "可扩展画廊",
+      "description": "用于一行图片悬停时放大当前项的可扩展横向画廊组件。",
+      "category": "misc",
+      "tags": [
+        "css",
+        "tailwind",
+        "gallery"
+      ],
+      "platforms": [
+        "web"
+      ]
+    },
+    {
+      "id": "file-upload",
+      "title": "文件上传",
+      "description": "用于拖放或点击选择文件、带动效展示区的文件上传入口组件。",
+      "category": "form",
+      "tags": [
+        "css",
+        "tailwind",
+        "input",
+        "aceternity-ui"
+      ],
+      "platforms": [
+        "web"
+      ]
+    },
+    {
+      "id": "flip-card",
+      "title": "翻转卡片",
+      "description": "用于沿 X 或 Y 轴 180 度翻转、展示正反两面内容的卡片组件。",
+      "category": "data-display",
+      "tags": [
+        "css",
+        "tailwind",
+        "card"
+      ],
+      "platforms": [
+        "web"
+      ]
+    },
+    {
+      "id": "flip-words",
+      "title": "翻转单词",
+      "description": "用于句子中一组单词循环翻转切换的内联文字动画组件。",
+      "category": "effect",
+      "tags": [
+        "css",
+        "tailwind",
+        "aceternity-ui"
+      ],
+      "platforms": [
+        "web"
+      ]
+    },
+    {
+      "id": "focus",
+      "title": "聚焦",
+      "description": "用于句子逐词聚焦、其余单词模糊并带边框动画的文字强调组件。",
+      "category": "effect",
+      "tags": [
+        "css",
+        "tailwind",
+        "codepen"
+      ],
+      "platforms": [
+        "web"
+      ]
+    },
+    {
+      "id": "glare-card",
+      "title": "高光卡片",
+      "description": "用于悬停时表面扫过高光光泽的展示卡片组件，风格源自 Linear。",
+      "category": "data-display",
+      "tags": [
+        "css",
+        "tailwind",
+        "card",
+        "aceternity-ui"
+      ],
+      "platforms": [
+        "web"
+      ]
+    },
+    {
+      "id": "gradient-button",
+      "title": "渐变按钮",
+      "description": "用于带旋转圆锥渐变发光边框的动效按钮组件。",
+      "category": "basic",
+      "tags": [
+        "css",
+        "tailwind",
+        "button"
+      ],
+      "platforms": [
+        "web"
+      ]
+    },
+    {
+      "id": "halo-search",
+      "title": "光晕搜索框",
+      "description": "发光光环搜索输入框：悬停与聚焦时光环旋转，支持 v-model 绑定关键词与回车 search 事件。",
+      "category": "form",
+      "tags": [
+        "css",
+        "tailwind",
+        "input",
+        "ui-verse"
+      ],
+      "platforms": [
+        "web"
+      ]
+    },
+    {
+      "id": "hyper-text",
+      "title": "超能文字",
+      "description": "用于文字以字符快速乱序滚动后定格显现的动画组件，悬停可重播。",
+      "category": "effect",
+      "tags": [
+        "css",
+        "tailwind",
+        "magic-ui"
+      ],
+      "platforms": [
+        "web"
+      ]
+    },
+    {
+      "id": "icon-cloud",
+      "title": "图标云",
+      "description": "用于以可拖拽旋转的 Canvas 3D 球面展示一组图标的展示组件。",
+      "category": "misc",
+      "tags": [
+        "canvas",
+        "interactive",
+        "tailwind"
+      ],
+      "platforms": [
+        "web"
+      ]
+    },
+    {
+      "id": "images-slider",
+      "title": "图片滑块",
+      "description": "用于全屏轮播一组背景图并叠加覆盖层内容的图片滑块组件。",
+      "category": "misc",
+      "tags": [
+        "css",
+        "tailwind",
+        "images",
+        "aceternity-ui"
+      ],
+      "platforms": [
+        "web"
+      ]
+    },
+    {
+      "id": "input",
+      "title": "输入框",
+      "description": "用于带鼠标径向渐变悬停高亮效果的单行文本输入组件。",
+      "category": "form",
+      "tags": [
+        "css",
+        "tailwind",
+        "input",
+        "aceternity-ui"
+      ],
+      "platforms": [
+        "web"
+      ]
+    },
+    {
+      "id": "interactive-hover-button",
+      "title": "交互悬停按钮",
+      "description": "用于悬停时产生动态过渡效果的文字按钮组件，文字经 text prop 传入。",
+      "category": "basic",
+      "tags": [
+        "css",
+        "tailwind",
+        "button",
+        "magic-ui"
+      ],
+      "platforms": [
+        "web"
+      ]
+    },
+    {
+      "id": "iphone-mockup",
+      "title": "iPhone 模型",
+      "description": "用于以 iPhone SVG 外壳包裹展示截图的设备模型组件。",
+      "category": "media",
+      "tags": [
+        "css",
+        "tailwind",
+        "device-mockup",
+        "magic-ui"
+      ],
+      "platforms": [
+        "web"
+      ]
+    },
+    {
+      "id": "lens",
+      "title": "放大镜",
+      "description": "用于在图片等插槽内容上叠加圆形放大镜的局部放大组件。",
+      "category": "misc",
+      "tags": [
+        "css",
+        "tailwind",
+        "aceternity-ui"
+      ],
+      "platforms": [
+        "web"
+      ]
+    },
+    {
+      "id": "letter-pullup",
+      "title": "字符上提",
+      "description": "用于让一段文字逐字符错落上提进场的文字动画组件。",
+      "category": "effect",
+      "tags": [
+        "css",
+        "tailwind",
+        "magic-ui"
+      ],
+      "platforms": [
+        "web"
+      ]
+    },
+    {
+      "id": "line-shadow-text",
+      "title": "线条阴影文字",
+      "description": "用于给插槽文字添加斜线条纹阴影装饰的静态文字效果组件。",
+      "category": "effect",
+      "tags": [
+        "css",
+        "tailwind",
+        "magic-ui"
+      ],
+      "platforms": [
+        "web"
+      ]
+    },
+    {
+      "id": "link-preview",
+      "title": "链接预览",
+      "description": "用于悬停链接文字时弹出目标网页预览图的行内链接组件。",
+      "category": "misc",
+      "tags": [
+        "css",
+        "tailwind",
+        "aceternity-ui"
+      ],
+      "platforms": [
+        "web"
+      ]
+    },
+    {
+      "id": "liquid-glass",
+      "title": "液态玻璃",
+      "description": "用于以 SVG 位移贴图与通道偏移模拟液态玻璃折射的容器组件。",
+      "category": "effect",
+      "tags": [
+        "svg",
+        "filter",
+        "glassmorphism"
+      ],
+      "platforms": [
+        "web"
+      ]
+    },
+    {
+      "id": "meteors",
+      "title": "流星雨",
+      "description": "用于在卡片等容器内渲染划过的流星雨背景动画的装饰组件。",
+      "category": "effect",
+      "tags": [
+        "css",
+        "tailwind",
+        "aceternity-ui"
+      ],
+      "platforms": [
+        "web"
+      ]
+    },
+    {
+      "id": "morphing-tabs",
+      "title": "变形标签页",
+      "description": "用于在切换标签时呈现胶体粘连变形效果的字符串标签页组件。",
+      "category": "misc",
+      "tags": [
+        "css",
+        "tailwind"
+      ],
+      "platforms": [
+        "web"
+      ]
+    },
+    {
+      "id": "morphing-text",
+      "title": "文字变形",
+      "description": "用于在一组文本间以模糊渐变变形循环切换的文字动画组件。",
+      "category": "effect",
+      "tags": [
+        "css",
+        "tailwind",
+        "magic-ui"
+      ],
+      "platforms": [
+        "web"
+      ]
+    },
+    {
+      "id": "multi-step-loader",
+      "title": "多步加载器",
+      "description": "用于按步骤序列展示加载进度、支持异步等待步骤的全屏加载组件。",
+      "category": "misc",
+      "tags": [
+        "css",
+        "tailwind",
+        "aceternity-ui"
+      ],
+      "platforms": [
+        "web"
+      ]
+    },
+    {
+      "id": "neon-border",
+      "title": "霓虹边框",
+      "description": "用于给插槽内容包裹双色霓虹流转边框的装饰容器组件。",
+      "category": "effect",
+      "tags": [
+        "css",
+        "tailwind",
+        "border"
+      ],
+      "platforms": [
+        "web"
+      ]
+    },
+    {
+      "id": "number-ticker",
+      "title": "数字滚动",
+      "description": "用于让数字从起点平滑滚动到目标值的数值动画组件。",
+      "category": "effect",
+      "tags": [
+        "css",
+        "tailwind",
+        "magic-ui"
+      ],
+      "platforms": [
+        "web"
+      ]
+    },
+    {
+      "id": "pattern-background",
+      "title": "图案背景",
+      "description": "用于为区块提供图案纹理背景的容器组件，内容经默认插槽传入。",
+      "category": "effect",
+      "tags": [
+        "css",
+        "tailwind",
+        "background"
+      ],
+      "platforms": [
+        "web"
+      ]
+    },
+    {
+      "id": "photo-gallery",
+      "title": "照片画廊",
+      "description": "用于以动画展开一组照片的画廊展示组件，图片经 items 传入。",
+      "category": "misc",
+      "tags": [
+        "css",
+        "tailwind",
+        "gallery"
+      ],
+      "platforms": [
+        "web"
+      ]
+    },
+    {
+      "id": "radiant-text",
+      "title": "光辉文字",
+      "description": "用于让高光沿插槽文字循环扫过的文字高亮动画组件。",
+      "category": "effect",
+      "tags": [
+        "css",
+        "tailwind",
+        "magic-ui"
+      ],
+      "platforms": [
+        "web"
+      ]
+    },
+    {
+      "id": "rainbow-button",
+      "title": "彩虹按钮",
+      "description": "用于呈现彩虹渐变流动发光效果的按钮组件，内容经默认插槽传入。",
+      "category": "basic",
+      "tags": [
+        "css",
+        "tailwind",
+        "button",
+        "magic-ui"
+      ],
+      "platforms": [
+        "web"
+      ]
+    },
+    {
+      "id": "reborn-affix",
+      "title": "Affix 悬浮",
+      "description": "用于固定悬浮元素并支持拖拽、自动吸附屏幕边缘的跨端悬浮组件。",
+      "category": "navigation",
+      "tags": [],
+      "platforms": [
+        "web",
+        "uniapp"
+      ]
+    },
+    {
+      "id": "reborn-alert",
+      "title": "Alert 警告提示",
+      "description": "静态警告提示条：四种消息类型、六种视觉变体、顶部公告模式与消息轮播通知栏，支持 Web 与 UniApp。",
+      "category": "misc",
+      "tags": [
+        "alert",
+        "notice",
+        "banner",
+        "marquee",
+        "uniapp"
+      ],
+      "platforms": [
+        "web",
+        "uniapp"
+      ]
+    },
+    {
+      "id": "reborn-anchor",
+      "title": "Anchor 锚点",
+      "description": "跟随滚动高亮的目录导航：container 指定滚动层，offset / bound 控制落点与触发线，marker 选标记形态（竖条 / 实心圆 / 空心圆 / 不显示），支持水平排布与子链接嵌套。",
+      "category": "navigation",
+      "tags": [
+        "css",
+        "tailwind",
+        "anchor",
+        "navigation"
+      ],
+      "platforms": [
+        "web"
+      ]
+    },
+    {
+      "id": "reborn-avatar",
+      "title": "Avatar 头像",
+      "description": "展示图片、图标或文字头像，支持三档固定尺寸、自定义像素尺寸、图片失败回退和头像组继承。",
+      "category": "data-display",
+      "tags": [
+        "css",
+        "tailwind",
+        "avatar",
+        "image"
+      ],
+      "platforms": [
+        "web"
+      ]
+    },
+    {
+      "id": "reborn-avatar-group",
+      "title": "AvatarGroup 头像组",
+      "description": "重叠展示成员头像，支持尺寸形状继承、数量折叠、隐藏头像浮层与结构化样式覆盖。",
+      "category": "data-display",
+      "tags": [
+        "css",
+        "tailwind",
+        "avatar",
+        "avatar-group",
+        "tooltip"
+      ],
+      "platforms": [
+        "web"
+      ]
+    },
+    {
+      "id": "reborn-back-top",
+      "title": "BackTop 返回顶部",
+      "description": "双端返回顶部按钮：滚动超过阈值后淡入；Web 端另有去底部、方形与顺/逆时针滚动进度环。",
+      "category": "navigation",
+      "tags": [
+        "css",
+        "tailwind",
+        "back-top",
+        "scroll",
+        "uniapp"
+      ],
+      "platforms": [
+        "web",
+        "uniapp"
+      ]
+    },
+    {
+      "id": "reborn-badge",
+      "title": "Badge 徽章",
+      "description": "双端状态标签：支持四种风格、胶囊、可关闭与可选中；Web 额外支持独立圆形参数。",
+      "category": "basic",
+      "tags": [
+        "css",
+        "tailwind",
+        "badge",
+        "uniapp",
+        "cross-platform"
+      ],
+      "platforms": [
+        "web",
+        "uniapp"
+      ]
+    },
+    {
+      "id": "reborn-breadcrumb",
+      "title": "Breadcrumb 面包屑",
+      "description": "用于展示当前页面层级路径并可逐级返回的面包屑导航组件，支持手写条目与 routes 数据驱动两种用法，双端可用。",
+      "category": "navigation",
+      "tags": [
+        "css",
+        "tailwind",
+        "navigation",
+        "breadcrumb",
+        "uniapp"
+      ],
+      "platforms": [
+        "web",
+        "uniapp"
+      ]
+    },
+    {
+      "id": "reborn-button",
+      "title": "Button 按钮",
+      "description": "双端基础按钮：7 种语义色，Web 支持 5 种风格与独立胶囊、圆形参数，以及加载与禁用状态。",
+      "category": "basic",
+      "tags": [
+        "css",
+        "tailwind",
+        "button",
+        "uniapp"
+      ],
+      "platforms": [
+        "web",
+        "uniapp"
+      ]
+    },
+    {
+      "id": "reborn-calendar",
+      "title": "Calendar 日历",
+      "description": "按月或按年展示事项的日历：支持公农历、直角边框、日期格插槽、时区与字符串绑定值。",
+      "category": "data-display",
+      "tags": [
+        "calendar",
+        "date",
+        "schedule",
+        "event",
+        "lunar"
+      ],
+      "platforms": [
+        "web"
+      ]
+    },
+    {
+      "id": "reborn-card",
+      "title": "卡片 Card",
+      "description": "用于分组展示内容区块的基础卡片容器组件，带可选标题，仅 uniapp 端。",
+      "category": "data-display",
+      "tags": [
+        "uniapp",
+        "card",
+        "container"
+      ],
+      "platforms": [
+        "uniapp"
+      ]
+    },
+    {
+      "id": "reborn-carousel",
+      "title": "Carousel 走马灯",
+      "description": "用于循环展示多个内容项的轮播组件，支持多项显示、卡片模式与纵向布局，仅 web 端。",
+      "category": "navigation",
+      "tags": [
+        "css",
+        "tailwind",
+        "carousel",
+        "slider",
+        "motion"
+      ],
+      "platforms": [
+        "web"
+      ]
+    },
+    {
+      "id": "reborn-cascader",
+      "title": "Cascader 级联选择器",
+      "description": "多层级数据的逐级选择器：Web 端多列面板、父子关联勾选与搜索，UniApp 端底部弹窗。",
+      "category": "form",
+      "tags": [
+        "cascader",
+        "select",
+        "tree",
+        "form",
+        "uniapp"
+      ],
+      "platforms": [
+        "web",
+        "uniapp"
+      ]
+    },
+    {
+      "id": "reborn-checkbox",
+      "title": "checkbox 多选框",
+      "description": "用于开关单项或组合多选的多选框组件，双端可用，支持布尔与数组两种绑定，并提供半选态与数据驱动的复选框组。",
+      "category": "form",
+      "tags": [
+        "css",
+        "tailwind",
+        "checkbox",
+        "uniapp"
+      ],
+      "platforms": [
+        "web",
+        "uniapp"
+      ]
+    },
+    {
+      "id": "reborn-chip",
+      "title": "Chip 角标",
+      "description": "用于在元素角标位置显示提示点或数字标记的组件，双端可用。",
+      "category": "basic",
+      "tags": [
+        "chip",
+        "dot",
+        "corner-mark",
+        "uniapp"
+      ],
+      "platforms": [
+        "web",
+        "uniapp"
+      ]
+    },
+    {
+      "id": "reborn-collapse",
+      "title": "Collapse 折叠面板",
+      "description": "用于点击触发区展开或收起内容区域的折叠组件，带高度过渡动画，双端可用。",
+      "category": "misc",
+      "tags": [
+        "css",
+        "tailwind",
+        "collapse",
+        "accordion",
+        "uniapp"
+      ],
+      "platforms": [
+        "web",
+        "uniapp"
+      ]
+    },
+    {
+      "id": "reborn-color-picker",
+      "title": "取色器",
+      "description": "用于弹出面板选取颜色并以 v-model 绑定色值字符串的取色器组件，双端可用。",
+      "category": "form",
+      "tags": [
+        "vue",
+        "reborn-color-picker",
+        "uniapp"
+      ],
+      "platforms": [
+        "web",
+        "uniapp"
+      ]
+    },
+    {
+      "id": "reborn-container",
+      "title": "容器",
+      "description": "用于将页面内容水平居中并按屏幕断点限制最大宽度的布局容器组件，仅 web 端。",
+      "category": "navigation",
+      "tags": [],
+      "platforms": [
+        "web"
+      ]
+    },
+    {
+      "id": "reborn-context-menu",
+      "title": "Menu 右键菜单",
+      "description": "用于在目标区域右键、点击、悬浮或划词后弹出操作面板的上下文菜单组件，仅 web 端。",
+      "category": "navigation",
+      "tags": [
+        "vue",
+        "reborn-context-menu"
+      ],
+      "platforms": [
+        "web"
+      ]
+    },
+    {
+      "id": "reborn-countdown",
+      "title": "Countdown 倒计时",
+      "description": "基于目标时间的倒计时，支持天数与毫秒格式、标题及前后缀插槽，回传剩余毫秒并在结束时通知。",
+      "category": "data-display",
+      "tags": [
+        "css",
+        "tailwind",
+        "countdown",
+        "statistic",
+        "dayjs"
+      ],
+      "platforms": [
+        "web"
+      ]
+    },
+    {
+      "id": "reborn-coupon",
+      "title": "卡券 Coupon",
+      "description": "用于渲染缺口、撕线、邮票等形态优惠券外观的卡券组件，仅 web 端。",
+      "category": "misc",
+      "tags": [
+        "vue",
+        "reborn-coupon"
+      ],
+      "platforms": [
+        "web"
+      ]
+    },
+    {
+      "id": "reborn-crowd",
+      "title": "人群漫步",
+      "description": "把人物精灵图切格后在 2D 画布上左右随机走过，边走边颠、前后分层，可控人数与速度，用作页脚装饰。",
+      "category": "effect",
+      "tags": [
+        "canvas",
+        "gsap",
+        "animation",
+        "decoration"
+      ],
+      "platforms": [
+        "web"
+      ]
+    },
+    {
+      "id": "reborn-date-picker",
+      "title": "DatePicker 日期选择器",
+      "description": "双端日期选择器：web 下拉日期面板支持 16 种类型，uniapp 底部弹出滚轮选年月日时分秒与范围。",
+      "category": "form",
+      "tags": [
+        "calendar",
+        "date",
+        "picker",
+        "select",
+        "uniapp"
+      ],
+      "platforms": [
+        "web",
+        "uniapp"
+      ]
+    },
+    {
+      "id": "reborn-date-picker-panel",
+      "title": "DatePickerPanel 日期选择面板",
+      "description": "用于内嵌展示的日期/月份/年份选择面板组件，支持范围选择与视图切换，仅 web 端。",
+      "category": "form",
+      "tags": [
+        "calendar",
+        "date",
+        "select",
+        "panel"
+      ],
+      "platforms": [
+        "web"
+      ]
+    },
+    {
+      "id": "reborn-depth-image",
+      "title": "深度视差图",
+      "description": "按深度图对透明背景图片做跟随指针的 2.5D 视差与补光，WebGL 渲染，失败时退回静态图。",
+      "category": "effect",
+      "tags": [
+        "webgl",
+        "canvas",
+        "parallax",
+        "image"
+      ],
+      "platforms": [
+        "web"
+      ]
+    },
+    {
+      "id": "reborn-descriptions",
+      "title": "Descriptions 描述列表",
+      "description": "以键值对展示只读信息，支持边框、尺寸、水平或垂直布局、响应式列数及跨行跨列，仅 Web 端。",
+      "category": "misc",
+      "tags": [
+        "css",
+        "tailwind",
+        "descriptions",
+        "detail"
+      ],
+      "platforms": [
+        "web"
+      ]
+    },
+    {
+      "id": "reborn-dialog",
+      "title": "Dialog 对话框",
+      "description": "用于模态确认与内容展示的对话框组件，属性对齐 Element Plus Dialog，附 Modal 命令式确认框（info/success/warning/error/confirm + destroyAll），仅 web 端。",
+      "category": "misc",
+      "tags": [],
+      "platforms": [
+        "web"
+      ]
+    },
+    {
+      "id": "reborn-draggable",
+      "title": "Draggable 拖拽排序",
+      "description": "用于列表项拖拽排序并同步 v-model 数据顺序的容器组件，双端可用。",
+      "category": "misc",
+      "tags": [
+        "拖拽",
+        "排序",
+        "列表"
+      ],
+      "platforms": [
+        "web",
+        "uniapp"
+      ]
+    },
+    {
+      "id": "reborn-drawer",
+      "title": "Drawer 抽屉",
+      "description": "Web 边缘滑入抽屉，支持四向展开、关闭拦截、局部挂载、焦点管理与尺寸调整。",
+      "category": "navigation",
+      "tags": [
+        "vue",
+        "tailwind",
+        "drawer",
+        "overlay"
+      ],
+      "platforms": [
+        "web"
+      ]
+    },
+    {
+      "id": "reborn-dropdown",
+      "title": "Dropdown 下拉菜单",
+      "description": "当页面上的操作命令过多时用于收纳操作元素的下拉菜单，点击或移入触点展开，选择后触发 select，仅 web 端。",
+      "category": "misc",
+      "tags": [],
+      "platforms": [
+        "web"
+      ]
+    },
+    {
+      "id": "reborn-dropdown-select",
+      "title": "DropdownSelect 下拉选择",
+      "description": "用于从 options 列表下拉选择单个值的选择器组件，仅 uniapp 端。",
+      "category": "form",
+      "tags": [
+        "uniapp",
+        "dropdown",
+        "select",
+        "form"
+      ],
+      "platforms": [
+        "uniapp"
+      ]
+    },
+    {
+      "id": "reborn-empty",
+      "title": "Empty 空状态",
+      "description": "数据为空时的占位块：图片、标题加描述、操作区三段纵向居中，段间 24px（UniApp 48rpx），标题与描述之间 4px（UniApp 8rpx）。不传 image 用内置的 48×48 灰色空箱子（base64 内联），另附 box / folder / scene 三张示例插画。",
+      "category": "misc",
+      "tags": [
+        "css",
+        "tailwind",
+        "empty",
+        "placeholder",
+        "uniapp"
+      ],
+      "platforms": [
+        "web",
+        "uniapp"
+      ]
+    },
+    {
+      "id": "reborn-fab",
+      "title": "悬浮按钮 (Fab)",
+      "description": "用于固定位置悬浮操作入口的按钮组件，支持拖拽吸边与展开动作面板，双端可用。",
+      "category": "navigation",
+      "tags": [
+        "vue",
+        "reborn-fab",
+        "uniapp"
+      ],
+      "platforms": [
+        "web",
+        "uniapp"
+      ]
+    },
+    {
+      "id": "reborn-field-trigger",
+      "title": "reborn-field-trigger",
+      "description": "表单类下拉组件共用的触发器盒子内部基础组件，提供输入框式外观（边框、尺寸、占位符、清空按钮、箭头）。",
+      "category": "misc",
+      "tags": [],
+      "platforms": [
+        "web"
+      ],
+      "internal": true
+    },
+    {
+      "id": "reborn-fireworks",
+      "title": "礼花",
+      "description": "用于给容器内元素附加点击礼花/烟花粒子特效的组件，仅 web 端。",
+      "category": "misc",
+      "tags": [
+        "css",
+        "tailwind",
+        "canvas"
+      ],
+      "platforms": [
+        "web"
+      ]
+    },
+    {
+      "id": "reborn-footer",
+      "title": "Footer 底部栏",
+      "description": "用于固定在页面底部放置操作按钮的容器组件，自动占位并适配安全区，目前仅 uniapp 端实现。",
+      "category": "navigation",
+      "tags": [],
+      "platforms": [
+        "web",
+        "uniapp"
+      ]
+    },
+    {
+      "id": "reborn-form",
+      "title": "Form 表单",
+      "description": "用于组织表单项并基于 zod schema 校验数据的表单容器组件，双端可用。",
+      "category": "form",
+      "tags": [
+        "vue",
+        "reborn-form",
+        "uniapp"
+      ],
+      "platforms": [
+        "web",
+        "uniapp"
+      ]
+    },
+    {
+      "id": "reborn-guide",
+      "title": "引导 Guide",
+      "description": "Web 分步引导：自动居中并锁定目标，支持父子步骤、数字或点状进度、封面与整步组件替换。",
+      "category": "basic",
+      "tags": [
+        "css",
+        "tailwind",
+        "guide",
+        "tour"
+      ],
+      "platforms": [
+        "web"
+      ]
+    },
+    {
+      "id": "reborn-header",
+      "title": "标题",
+      "description": "用于站点顶部导航的响应式头部组件，移动端可切换为弹窗菜单。",
+      "category": "navigation",
+      "tags": [
+        "vue",
+        "reborn-header"
+      ],
+      "platforms": [
+        "web"
+      ]
+    },
+    {
+      "id": "reborn-image",
+      "title": "图片 Image",
+      "description": "用于展示图片并提供预览、加载/错误状态与多种裁剪模式的双端图片组件。",
+      "category": "misc",
+      "tags": [
+        "css",
+        "tailwind",
+        "image",
+        "media",
+        "uniapp",
+        "viewerjs"
+      ],
+      "platforms": [
+        "web",
+        "uniapp"
+      ]
+    },
+    {
+      "id": "reborn-input",
+      "title": "input 输入框",
+      "description": "用于文本录入的双端输入框组件，支持圆角胶囊样式、多尺寸、清除与密码态。",
+      "category": "form",
+      "tags": [
+        "css",
+        "tailwind",
+        "input",
+        "uniapp"
+      ],
+      "platforms": [
+        "web",
+        "uniapp"
+      ]
+    },
+    {
+      "id": "reborn-input-number",
+      "title": "InputNumber 数字输入框",
+      "description": "用于在最小最大值范围内按步进增减数值的双端数字输入组件，支持四种形态变体、精度控制、步进倍数约束、键盘与滚轮增减、前后缀插槽与自定义增减图标。",
+      "category": "form",
+      "tags": [
+        "css",
+        "tailwind",
+        "input-number",
+        "uniapp"
+      ],
+      "platforms": [
+        "web",
+        "uniapp"
+      ]
+    },
+    {
+      "id": "reborn-input-otp",
+      "title": "验证码输入",
+      "description": "用于短信验证码、OTP 等固定位数分格输入的双端组件。",
+      "category": "form",
+      "tags": [
+        "css",
+        "tailwind",
+        "otp",
+        "input",
+        "uniapp"
+      ],
+      "platforms": [
+        "web",
+        "uniapp"
+      ]
+    },
+    {
+      "id": "reborn-layout",
+      "title": "Layout 布局",
+      "description": "由顶栏、侧边栏、主区域、底栏拼装后台页面骨架的 flex 布局容器，排列方向可自动推断。",
+      "category": "layout",
+      "tags": [
+        "css",
+        "tailwind",
+        "layout",
+        "container",
+        "flex"
+      ],
+      "platforms": [
+        "web"
+      ]
+    },
+    {
+      "id": "reborn-loading",
+      "title": "Loading 加载器",
+      "description": "用于给元素或整页添加加载遮罩的组件，提供 v-loading 指令与 showLoading 服务式调用。",
+      "category": "misc",
+      "tags": [],
+      "platforms": [
+        "web",
+        "uniapp"
+      ]
+    },
+    {
+      "id": "reborn-loadmore",
+      "title": "加载更多",
+      "description": "用于列表底部展示加载中、加载失败与没有更多状态的 uniapp 组件。",
+      "category": "misc",
+      "tags": [],
+      "platforms": [
+        "uniapp"
+      ]
+    },
+    {
+      "id": "reborn-main",
+      "title": "主体布局",
+      "description": "用于渲染语义化 main 页面主体区域、默认最小高度撑满一屏的布局组件，仅 web 端。",
+      "category": "navigation",
+      "tags": [],
+      "platforms": [
+        "web"
+      ]
+    },
+    {
+      "id": "reborn-marquee",
+      "title": "跑马灯",
+      "description": "用于横向或纵向无限循环滚动内容的跑马灯组件，支持悬停暂停与渐隐遮罩。",
+      "category": "misc",
+      "tags": [
+        "css",
+        "tailwind",
+        "magic-ui"
+      ],
+      "platforms": [
+        "web"
+      ]
+    },
+    {
+      "id": "reborn-mention",
+      "title": "Mention 提及",
+      "description": "输入前缀唤起等宽候选列表，支持多前缀、远程搜索、退格整体删除与光标行定位。",
+      "category": "form",
+      "tags": [
+        "input",
+        "mention",
+        "autocomplete",
+        "textarea"
+      ],
+      "platforms": [
+        "web"
+      ]
+    },
+    {
+      "id": "reborn-menu",
+      "title": "Menu 菜单",
+      "description": "用于站点侧边或顶部导航的菜单组件，支持垂直/水平模式、折叠、多级子菜单与配置式数据驱动。",
+      "category": "misc",
+      "tags": [],
+      "platforms": [
+        "web"
+      ]
+    },
+    {
+      "id": "reborn-notice-bar",
+      "title": "NoticeBar 通知栏",
+      "description": "用于循环播放一组消息通知的通告栏组件，支持水平滚动与垂直轮播。",
+      "category": "navigation",
+      "tags": [],
+      "platforms": [
+        "web",
+        "uniapp"
+      ]
+    },
+    {
+      "id": "reborn-notification",
+      "title": "Notification 通知",
+      "description": "屏幕四角弹出的全局通知：标题 + 正文 + 底部操作区三段结构，支持倒计时进度条、悬停暂停、同 key 更新，属性基本对齐 Element Plus Notification，仅 web 端。",
+      "category": "misc",
+      "tags": [],
+      "platforms": [
+        "web"
+      ]
+    },
+    {
+      "id": "reborn-overlay",
+      "title": "Overlay 遮罩",
+      "description": "用于弹层背后的全屏或局部遮罩组件，支持点击关闭与滚动锁定。",
+      "category": "misc",
+      "tags": [
+        "overlay",
+        "modal",
+        "uniapp"
+      ],
+      "platforms": [
+        "web",
+        "uniapp"
+      ]
+    },
+    {
+      "id": "reborn-page",
+      "title": "页面容器 Page",
+      "description": "用于 uniapp 页面最外层的页面容器组件，可配置页面标题与描述文案。",
+      "category": "layout",
+      "tags": [
+        "uniapp",
+        "layout",
+        "page"
+      ],
+      "platforms": [
+        "uniapp"
+      ]
+    },
+    {
+      "id": "reborn-page-header",
+      "title": "PageHeader 页头",
+      "description": "页面顶部的返回区 + 标题 + 内容 + 操作栏，可在上方叠面包屑；路径较浅时代替面包屑提供返回入口。",
+      "category": "navigation",
+      "tags": [
+        "page-header",
+        "header",
+        "navigation",
+        "breadcrumb"
+      ],
+      "platforms": [
+        "web"
+      ]
+    },
+    {
+      "id": "reborn-pagination",
+      "title": "Pagination 分页",
+      "description": "用于数据列表分页切换的分页组件，支持布局组合、简洁模式、页码折叠与完整插槽定制。",
+      "category": "navigation",
+      "tags": [
+        "vue",
+        "reborn-pagination",
+        "uniapp"
+      ],
+      "platforms": [
+        "web",
+        "uniapp"
+      ]
+    },
+    {
+      "id": "reborn-picker-view",
+      "title": "PickerView 选择器视图",
+      "description": "用于内嵌页面滚动选择多列选项的 uniapp 选择器视图组件。",
+      "category": "form",
+      "tags": [
+        "uniapp",
+        "picker",
+        "picker-view",
+        "form"
+      ],
+      "platforms": [
+        "uniapp"
+      ]
+    },
+    {
+      "id": "reborn-popconfirm",
+      "title": "Popconfirm 气泡确认框",
+      "description": "点击触发的轻量确认气泡，标题、描述加确认取消按钮，适合低风险操作的二次确认。",
+      "category": "misc",
+      "tags": [
+        "popconfirm",
+        "confirm",
+        "feedback",
+        "popover"
+      ],
+      "platforms": [
+        "web"
+      ]
+    },
+    {
+      "id": "reborn-popover",
+      "title": "Popover 气泡卡片",
+      "description": "用于点击或悬停触发气泡浮层的双端组件，可配置定位方向、箭头与遮罩。",
+      "category": "navigation",
+      "tags": [
+        "popover",
+        "floating",
+        "overlay",
+        "uniapp"
+      ],
+      "platforms": [
+        "web",
+        "uniapp"
+      ]
+    },
+    {
+      "id": "reborn-popup",
+      "title": "Popup 弹出层",
+      "description": "UniApp 弹出层，支持四向或居中显示、底部手势关闭、圆角与安全区适配。",
+      "category": "navigation",
+      "tags": [
+        "uniapp",
+        "tailwind",
+        "popup"
+      ],
+      "platforms": [
+        "uniapp"
+      ]
+    },
+    {
+      "id": "reborn-progress",
+      "title": "Progress 进度条",
+      "description": "用于展示任务完成比例的进度组件，支持直线、圆环、仪表盘及步骤形态、渐变与分段颜色。",
+      "category": "misc",
+      "tags": [
+        "progress",
+        "feedback",
+        "status",
+        "steps"
+      ],
+      "platforms": [
+        "web"
+      ]
+    },
+    {
+      "id": "reborn-qrcode",
+      "title": "二维码 Qrcode",
+      "description": "用于生成二维码的双端组件，支持前景/背景色、码点样式、中央 Logo 与纠错级别。",
+      "category": "misc",
+      "tags": [
+        "qrcode",
+        "canvas",
+        "svg",
+        "uniapp",
+        "web"
+      ],
+      "platforms": [
+        "web",
+        "uniapp"
+      ]
+    },
+    {
+      "id": "reborn-radio",
+      "title": "Radio 单选框",
+      "description": "互斥单选：支持圆点、分段按钮与实体按钮拼接三种形态，提供七种语义色与两种选中填充方式。",
+      "category": "form",
+      "tags": [
+        "css",
+        "tailwind",
+        "radio",
+        "uniapp"
+      ],
+      "platforms": [
+        "web",
+        "uniapp"
+      ]
+    },
+    {
+      "id": "reborn-rate",
+      "title": "Rate 评分",
+      "description": "用于星级评分录入与展示的双端组件，支持半星与悬停预览。",
+      "category": "form",
+      "tags": [
+        "css",
+        "tailwind",
+        "rate",
+        "rating",
+        "star",
+        "uniapp"
+      ],
+      "platforms": [
+        "web",
+        "uniapp"
+      ]
+    },
+    {
+      "id": "reborn-result",
+      "title": "Result 结果页",
+      "description": "操作结果的终态页：图标、标题加描述、操作区三段纵向居中，icon 收 info / success / warning / error 四种语义反馈加 403 / 404 / 500 三种状态码，传 null 则整段去掉图标区。",
+      "category": "misc",
+      "tags": [
+        "css",
+        "tailwind",
+        "result",
+        "feedback",
+        "uniapp"
+      ],
+      "platforms": [
+        "web",
+        "uniapp"
+      ]
+    },
+    {
+      "id": "reborn-root-portal",
+      "title": "RootPortal 根门户",
+      "description": "用于把子节点渲染到页面根节点、脱离当前层级关系的双端传送组件。",
+      "category": "misc",
+      "tags": [
+        "portal",
+        "overlay"
+      ],
+      "platforms": [
+        "web",
+        "uniapp"
+      ]
+    },
+    {
+      "id": "reborn-search-box",
+      "title": "SearchBox 搜索框",
+      "description": "用于带下拉面板的双端搜索框组件，web 端为纯插槽基元：选择器/后置区/面板全部由插槽组合。",
+      "category": "form",
+      "tags": [
+        "css",
+        "tailwind",
+        "input",
+        "search",
+        "reborn"
+      ],
+      "platforms": [
+        "web",
+        "uniapp"
+      ]
+    },
+    {
+      "id": "reborn-segmented",
+      "title": "Segmented 分段控制器",
+      "description": "一组互斥选项排成一条、选中块滑动切换的分段控制器，三档尺寸，可带图标、撑满宽度或竖排，参与表单校验。",
+      "category": "form",
+      "tags": [
+        "segmented",
+        "radio",
+        "tabs",
+        "form"
+      ],
+      "platforms": [
+        "web"
+      ]
+    },
+    {
+      "id": "reborn-select",
+      "title": "Select 下拉选择",
+      "description": "用于从选项列表中单选或多选的双端下拉选择组件，uniapp 端为弹层滚动选择。",
+      "category": "form",
+      "tags": [
+        "css",
+        "tailwind",
+        "select",
+        "dropdown",
+        "uniapp"
+      ],
+      "platforms": [
+        "web",
+        "uniapp"
+      ]
+    },
+    {
+      "id": "reborn-select-trigger",
+      "title": "reborn-select-trigger",
+      "description": "用于各类下拉类组件复用的浮层容器内部基础组件，只负责定位、展开收起与外部点击判定。",
+      "category": "misc",
+      "tags": [],
+      "platforms": [
+        "web",
+        "uniapp"
+      ],
+      "internal": true
+    },
+    {
+      "id": "reborn-signature",
+      "title": "Signature 签名",
+      "description": "用于手写签名并导出图片的画布组件，支持笔锋模拟、撤销恢复与透明背景导出。",
+      "category": "form",
+      "tags": [
+        "uniapp",
+        "signature",
+        "canvas",
+        "form"
+      ],
+      "platforms": [
+        "uniapp"
+      ]
+    },
+    {
+      "id": "reborn-sku",
+      "title": "商品规格 Sku",
+      "description": "用于商品规格（SKU）选择的选项组件，按 options 渲染规格项并以对象形式双向绑定选中结果。",
+      "category": "form",
+      "tags": [
+        "web",
+        "sku",
+        "form",
+        "select"
+      ],
+      "platforms": [
+        "web"
+      ]
+    },
+    {
+      "id": "reborn-slide-verify",
+      "title": "滑块验证",
+      "description": "用于人机校验的滑块验证组件，向右拖动超过阈值即通过，支持失败回弹与自动重置。",
+      "category": "misc",
+      "tags": [
+        "uniapp",
+        "form",
+        "verification"
+      ],
+      "platforms": [
+        "uniapp"
+      ]
+    },
+    {
+      "id": "reborn-slider",
+      "title": "Slider 滑块",
+      "description": "用于在数值区间内拖动取值的滑块组件，支持单值与范围两种模式。",
+      "category": "form",
+      "tags": [
+        "css",
+        "tailwind",
+        "slider",
+        "range",
+        "uniapp"
+      ],
+      "platforms": [
+        "web",
+        "uniapp"
+      ]
+    },
+    {
+      "id": "reborn-splitter",
+      "title": "Splitter 分隔面板",
+      "description": "用于将区域按水平或垂直方向分隔、可拖动调整各面板大小的布局组件。",
+      "category": "layout",
+      "tags": [
+        "css",
+        "tailwind",
+        "splitter",
+        "layout"
+      ],
+      "platforms": [
+        "web"
+      ]
+    },
+    {
+      "id": "reborn-statistic",
+      "title": "Statistic 统计",
+      "description": "数字指标展示：支持连续计数动画、精度、分隔符、自定义格式化，以及标题和前后缀插槽。",
+      "category": "data-display",
+      "tags": [
+        "css",
+        "tailwind",
+        "statistic",
+        "number",
+        "animation"
+      ],
+      "platforms": [
+        "web"
+      ]
+    },
+    {
+      "id": "reborn-steps",
+      "title": "Steps 步骤条",
+      "description": "Web 流程步骤条：横纵排列、四向内容位置与三档尺寸，支持进度圆环、单步状态和内容插槽。",
+      "category": "navigation",
+      "tags": [
+        "vue",
+        "tailwind",
+        "steps",
+        "workflow",
+        "navigation"
+      ],
+      "platforms": [
+        "web"
+      ]
+    },
+    {
+      "id": "reborn-sticky",
+      "title": "Sticky 吸顶",
+      "description": "用于页面滚动时将内容吸附在顶部或底部的吸顶组件。",
+      "category": "navigation",
+      "tags": [],
+      "platforms": [
+        "web",
+        "uniapp"
+      ]
+    },
+    {
+      "id": "reborn-swiper-action",
+      "title": "滑动操作",
+      "description": "用于列表项左滑露出右侧操作按钮的滑动单元格组件，支持 push / overlay 模式与同组互斥。",
+      "category": "misc",
+      "tags": [
+        "css",
+        "tailwind",
+        "uniapp",
+        "swiper"
+      ],
+      "platforms": [
+        "uniapp"
+      ]
+    },
+    {
+      "id": "reborn-switch",
+      "title": "Switch 开关",
+      "description": "用于在两种状态间切换的开关组件，支持自定义开关值、加载态与切换前拦截。",
+      "category": "form",
+      "tags": [
+        "css",
+        "tailwind",
+        "switch",
+        "uniapp"
+      ],
+      "platforms": [
+        "web",
+        "uniapp"
+      ]
+    },
+    {
+      "id": "reborn-tabbar",
+      "title": "Tabbar 底部标签栏",
+      "description": "用于 uniapp 页面底部导航切换的自定义标签栏组件，需配合 RebornTabbarTrigger 子项使用。",
+      "category": "navigation",
+      "tags": [
+        "uniapp",
+        "tabbar",
+        "navigation"
+      ],
+      "platforms": [
+        "uniapp"
+      ]
+    },
+    {
+      "id": "reborn-table",
+      "title": "Table 表格",
+      "description": "Web 数据表格：支持声明列、固定与分组表头、行选择、排序筛选、远程分页、树形数据及合并合计。",
+      "category": "data-display",
+      "tags": [
+        "vue",
+        "css",
+        "tailwind",
+        "table",
+        "data"
+      ],
+      "platforms": [
+        "web"
+      ]
+    },
+    {
+      "id": "reborn-tabs",
+      "title": "Tabs 标签页",
+      "description": "双端标签页：RebornTabs + RebornTabPane 组合，paneKey 驱动切换，7 种类型 × 4 种尺寸，支持可编辑、懒加载与滚动定位。",
+      "category": "navigation",
+      "tags": [
+        "css",
+        "tailwind",
+        "tabs",
+        "uniapp"
+      ],
+      "platforms": [
+        "web",
+        "uniapp"
+      ]
+    },
+    {
+      "id": "reborn-text",
+      "title": "文本 Text",
+      "description": "用于展示文本并内置类型格式化、脱敏与多行省略的增强文本组件。",
+      "category": "misc",
+      "tags": [
+        "css",
+        "tailwind",
+        "text",
+        "format",
+        "mask",
+        "uniapp"
+      ],
+      "platforms": [
+        "web",
+        "uniapp"
+      ]
+    },
+    {
+      "id": "reborn-textarea",
+      "title": "多行输入框",
+      "description": "用于多行文本输入的输入框组件，支持自动增高、字数统计与键盘行为配置。",
+      "category": "form",
+      "tags": [
+        "css",
+        "tailwind",
+        "textarea",
+        "uniapp"
+      ],
+      "platforms": [
+        "web",
+        "uniapp"
+      ]
+    },
+    {
+      "id": "reborn-time-picker",
+      "title": "TimePicker 时间选择器",
+      "description": "Web 单点时间录入：支持时分秒六种组合、手动输入、两种中心选中样式，并保留范围与毫秒选择。",
+      "category": "form",
+      "tags": [
+        "vue",
+        "tailwind",
+        "time-picker",
+        "input"
+      ],
+      "platforms": [
+        "web"
+      ]
+    },
+    {
+      "id": "reborn-timeline",
+      "title": "Timeline 时间线",
+      "description": "按时间顺序展示事件节点：支持竖向与横向、倒序、左右交替、自定义节点图标与时间戳落位。",
+      "category": "data-display",
+      "tags": [
+        "css",
+        "tailwind",
+        "timeline",
+        "data"
+      ],
+      "platforms": [
+        "web"
+      ]
+    },
+    {
+      "id": "reborn-toast",
+      "title": "Toast 消息提示",
+      "description": "全局命令式消息提示（Message）：五种类型静态方法、Promise 接口、同 key 更新与全局配置；web 端由 Toast 升级而来。",
+      "category": "misc",
+      "tags": [],
+      "platforms": [
+        "web",
+        "uniapp"
+      ]
+    },
+    {
+      "id": "reborn-tooltip",
+      "title": "Tooltip 文字提示",
+      "description": "文字提示气泡组件：多触发行为、自动翻转与贴边偏移、自定义背景色、可控显隐。",
+      "category": "navigation",
+      "tags": [
+        "tooltip",
+        "floating",
+        "hint"
+      ],
+      "platforms": [
+        "web"
+      ]
+    },
+    {
+      "id": "reborn-transfer",
+      "title": "Transfer 穿梭框",
+      "description": "用于在双列列表间移动条目的穿梭框组件，支持搜索过滤、全选、单向模式、撤回、分页、虚拟滚动，以及头部、条目、底部与操作按钮插槽。",
+      "category": "misc",
+      "tags": [
+        "vue",
+        "reborn-transfer"
+      ],
+      "platforms": [
+        "web"
+      ]
+    },
+    {
+      "id": "reborn-transition",
+      "title": "Transition 过渡",
+      "description": "用于控制内容显隐过渡动画的容器组件，内置 fade、slide、zoom 等动画名称。",
+      "category": "misc",
+      "tags": [],
+      "platforms": [
+        "web",
+        "uniapp"
+      ]
+    },
+    {
+      "id": "reborn-tree",
+      "title": "Tree 树形控件",
+      "description": "层级数据展示：展开/点选/勾选三组受控 keys，支持父子联动、异步加载、拖拽与虚拟滚动。",
+      "category": "data-display",
+      "tags": [
+        "css",
+        "tailwind",
+        "tree",
+        "data"
+      ],
+      "platforms": [
+        "web"
+      ]
+    },
+    {
+      "id": "reborn-tree-select",
+      "title": "Tree Select 树选择器",
+      "description": "Web 层级选值：沿用 select 的三档尺寸与四种形态，下拉复用 tree，支持单选、父子联动或独立勾选的多选，以及清空。",
+      "category": "form",
+      "tags": [
+        "tree-select",
+        "tree",
+        "select",
+        "form",
+        "web"
+      ],
+      "platforms": [
+        "web"
+      ]
+    },
+    {
+      "id": "reborn-typewriter",
+      "title": "打字机效果",
+      "description": "用于让文本以打字机方式逐字输入与删除的文字动画组件。",
+      "category": "effect",
+      "tags": [
+        "css",
+        "tailwind",
+        "animation"
+      ],
+      "platforms": [
+        "web"
+      ]
+    },
+    {
+      "id": "reborn-upload",
+      "title": "Upload 上传",
+      "description": "Web 文件上传组件：负责选择文件、发起上传并展示每个文件的进度与结果，提供 text / picture / picture-card 三种列表形态，支持拖拽、选择文件夹、手动上传、自定义请求与分片断点续传，图片与视频均可显示缩略图；参数、钩子与实例方法对齐 Element Plus 的 el-upload。",
+      "category": "form",
+      "tags": [
+        "upload",
+        "file",
+        "form",
+        "web"
+      ],
+      "platforms": [
+        "web"
+      ]
+    },
+    {
+      "id": "reborn-waterfall",
+      "title": "Waterfall 瀑布流",
+      "description": "用于 uniapp 中按列分流渲染瀑布流布局的容器组件，数据经实例方法维护、每项由 item 插槽渲染。",
+      "category": "layout",
+      "tags": [
+        "uniapp",
+        "waterfall",
+        "layout",
+        "list"
+      ],
+      "platforms": [
+        "uniapp"
+      ]
+    },
+    {
+      "id": "reborn-watermark",
+      "title": "水印 Watermark",
+      "description": "用于在内容容器上平铺文本或图片水印的组件。",
+      "category": "data-display",
+      "tags": [
+        "data",
+        "watermark",
+        "uniapp"
+      ],
+      "platforms": [
+        "web",
+        "uniapp"
+      ]
+    },
+    {
+      "id": "reui-launch",
+      "title": "Launch 电脑动画",
+      "description": "可设置品牌文字和屏幕动效的复古电脑动画，支持悬停展开、点击固定与紧凑取景，仅 Web 端。",
+      "category": "effect",
+      "tags": [
+        "svg",
+        "animation",
+        "hover",
+        "text",
+        "reui-launch"
+      ],
+      "platforms": [
+        "web"
+      ]
+    },
+    {
+      "id": "ripple",
+      "title": "水波纹",
+      "description": "用于渲染多圈同心圆扩散水波背景的装饰效果组件。",
+      "category": "effect",
+      "tags": [
+        "css",
+        "tailwind",
+        "magic-ui"
+      ],
+      "platforms": [
+        "web"
+      ]
+    },
+    {
+      "id": "ripple-button",
+      "title": "波纹按钮",
+      "description": "用于点击时产生可自定义颜色与时长波纹反馈的按钮组件。",
+      "category": "basic",
+      "tags": [
+        "css",
+        "tailwind",
+        "button",
+        "magic-ui"
+      ],
+      "platforms": [
+        "web"
+      ]
+    },
+    {
+      "id": "safari-mockup",
+      "title": "Safari 模型",
+      "description": "用于以 Safari 浏览器外框展示产品截图的 SVG 设备模型组件。",
+      "category": "media",
+      "tags": [
+        "css",
+        "tailwind",
+        "device-mockup",
+        "magic-ui"
+      ],
+      "platforms": [
+        "web"
+      ]
+    },
+    {
+      "id": "scratch-to-reveal",
+      "title": "刮刮乐揭示",
+      "description": "用于刮开渐变涂层后显示隐藏内容的互动刮刮乐组件。",
+      "category": "effect",
+      "tags": [
+        "css",
+        "tailwind",
+        "magic-ui"
+      ],
+      "platforms": [
+        "web"
+      ]
+    },
+    {
+      "id": "scroll-island",
+      "title": "滚动岛",
+      "description": "用于以灵动岛样式悬浮显示页面滚动进度并可展开附加内容的组件。",
+      "category": "misc",
+      "tags": [
+        "css",
+        "tailwind",
+        "number-flow"
+      ],
+      "platforms": [
+        "web"
+      ]
+    },
+    {
+      "id": "scrollbar",
+      "title": "Scrollbar 滚动条",
+      "description": "不挤压布局的浮层滚动条，支持粗细与颜色定制、固定头部避让、双轴动画及静默定位。",
+      "category": "layout",
+      "tags": [
+        "vue",
+        "component",
+        "scrollbar",
+        "layout"
+      ],
+      "platforms": [
+        "web"
+      ]
+    },
+    {
+      "id": "shader-toy",
+      "title": "ShaderToy 着色器",
+      "description": "用于在浏览器中渲染 ShaderToy GLSL 片段着色器的 WebGL 组件。",
+      "category": "misc",
+      "tags": [
+        "css",
+        "tailwind",
+        "shader-toy",
+        "ogl",
+        "webgl"
+      ],
+      "platforms": [
+        "web"
+      ]
+    },
+    {
+      "id": "shimmer-button",
+      "title": "闪光按钮",
+      "description": "用于呈现环绕闪光流动动画的按钮组件，闪光颜色、速度与背景可配置。",
+      "category": "basic",
+      "tags": [
+        "css",
+        "tailwind",
+        "button",
+        "magic-ui"
+      ],
+      "platforms": [
+        "web"
+      ]
+    },
+    {
+      "id": "sparkles",
+      "title": "闪烁粒子",
+      "description": "用于渲染可配置密度、大小与颜色的闪烁粒子背景层组件。",
+      "category": "effect",
+      "tags": [
+        "canvas",
+        "particles",
+        "aceternity-ui"
+      ],
+      "platforms": [
+        "web"
+      ]
+    },
+    {
+      "id": "sparkles-text",
+      "title": "闪光文字",
+      "description": "用于在文字周围持续生成双色闪光点缀的标题装饰组件。",
+      "category": "effect",
+      "tags": [
+        "css",
+        "tailwind",
+        "magic-ui"
+      ],
+      "platforms": [
+        "web"
+      ]
+    },
+    {
+      "id": "spinning-text",
+      "title": "旋转文字",
+      "description": "用于让一段文字沿圆形路径持续环绕旋转的动画组件。",
+      "category": "effect",
+      "tags": [
+        "css",
+        "tailwind",
+        "magic-ui"
+      ],
+      "platforms": [
+        "web"
+      ]
+    },
+    {
+      "id": "spring-calendar",
+      "title": "弹性日历",
+      "description": "用于横向选择日期并以弹簧动画展开当日事件的日历条组件。",
+      "category": "effect",
+      "tags": [
+        "css",
+        "tailwind",
+        "motion-v"
+      ],
+      "platforms": [
+        "web"
+      ]
+    },
+    {
+      "id": "svg-mask",
+      "title": "SVG 遮罩",
+      "description": "用于跟随鼠标以圆形遮罩在两层内容间切换揭示的 SVG 遮罩组件。",
+      "category": "misc",
+      "tags": [
+        "css",
+        "tailwind",
+        "aceternity-ui"
+      ],
+      "platforms": [
+        "web"
+      ]
+    },
+    {
+      "id": "testimonial-slider",
+      "title": "评价滑块",
+      "description": "用于轮播展示用户评价（头像、引言、姓名、职位）的轻量滑块组件。",
+      "category": "misc",
+      "tags": [
+        "css",
+        "tailwind"
+      ],
+      "platforms": [
+        "web"
+      ]
+    },
+    {
+      "id": "text-3d",
+      "title": "3D 文字",
+      "description": "用于以描边加双层阴影模拟 3D 立体字并可选晃动动画的文字组件。",
+      "category": "effect",
+      "tags": [
+        "css",
+        "tailwind",
+        "3d"
+      ],
+      "platforms": [
+        "web"
+      ]
+    },
+    {
+      "id": "text-generate-effect",
+      "title": "文字生成效果",
+      "description": "用于让段落文字逐字渐显、可带模糊过渡的入场动画组件。",
+      "category": "effect",
+      "tags": [
+        "css",
+        "tailwind",
+        "aceternity-ui"
+      ],
+      "platforms": [
+        "web"
+      ]
+    },
+    {
+      "id": "text-glitch",
+      "title": "文字故障",
+      "description": "用于给文字叠加彩色错位故障（glitch）动画的文字效果组件。",
+      "category": "effect",
+      "tags": [
+        "css",
+        "tailwind"
+      ],
+      "platforms": [
+        "web"
+      ]
+    },
+    {
+      "id": "text-highlight",
+      "title": "文字高亮",
+      "description": "用于以背景填充动画突出句中重点文字的高亮组件。",
+      "category": "effect",
+      "tags": [
+        "css",
+        "tailwind",
+        "aceternity-ui"
+      ],
+      "platforms": [
+        "web"
+      ]
+    },
+    {
+      "id": "text-hover-effect",
+      "title": "文字悬停效果",
+      "description": "用于悬停时跟随鼠标以渐变描边揭示文字的悬停效果组件。",
+      "category": "effect",
+      "tags": [
+        "css",
+        "tailwind"
+      ],
+      "platforms": [
+        "web"
+      ]
+    },
+    {
+      "id": "text-reveal",
+      "title": "文字揭示",
+      "description": "用于基于 GSAP SplitText 将段落按行依次入场的文字动画组件。",
+      "category": "effect",
+      "tags": [
+        "css",
+        "tailwind",
+        "gsap"
+      ],
+      "platforms": [
+        "web"
+      ]
+    },
+    {
+      "id": "text-reveal-card",
+      "title": "文字揭示卡片",
+      "description": "用于鼠标滑过卡片时揭示另一段隐藏文字、带星星粒子的卡片组件。",
+      "category": "effect",
+      "tags": [
+        "css",
+        "tailwind",
+        "aceternity-ui"
+      ],
+      "platforms": [
+        "web"
+      ]
+    },
+    {
+      "id": "text-scroll-reveal",
+      "title": "滚动文字揭示",
+      "description": "用于随页面滚动进度将一句话逐词由淡变实显现的文字组件。",
+      "category": "effect",
+      "tags": [
+        "css",
+        "tailwind",
+        "magic-ui"
+      ],
+      "platforms": [
+        "web"
+      ]
+    },
+    {
+      "id": "timeline",
+      "title": "时间线",
+      "description": "用于纵向展示条目、带粘性标签与滚动渐变动画的时间线组件。",
+      "category": "misc",
+      "tags": [
+        "css",
+        "tailwind",
+        "aceternity-ui"
+      ],
+      "platforms": [
+        "web"
+      ]
+    },
+    {
+      "id": "tracing-beam",
+      "title": "跟踪光束",
+      "description": "用于在内容一侧渲染随滚动延伸的渐变光束装饰的容器组件。",
+      "category": "misc",
+      "tags": [
+        "css",
+        "tailwind",
+        "aceternity-ui"
+      ],
+      "platforms": [
+        "web"
+      ]
+    },
+    {
+      "id": "vanishing-input",
+      "title": "占位符滚动与消失输入框",
+      "description": "用于占位符轮换滚动、提交时文字呈消失动画的单行输入组件。",
+      "category": "form",
+      "tags": [
+        "css",
+        "tailwind",
+        "input",
+        "aceternity-ui"
+      ],
+      "platforms": [
+        "web"
+      ]
+    }
+  ]
+}

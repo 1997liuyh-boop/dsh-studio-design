@@ -1,0 +1,590 @@
+{
+  "$schema": "../schema/component.schema.json",
+  "id": "reborn-input",
+  "title": "input 输入框",
+  "description": "用于文本录入的双端输入框组件，支持圆角胶囊样式、多尺寸、清除与密码态。",
+  "category": "form",
+  "tags": [
+    "css",
+    "tailwind",
+    "input",
+    "uniapp"
+  ],
+  "platforms": [
+    "web",
+    "uniapp"
+  ],
+  "props": [
+    {
+      "name": "defaultValue",
+      "type": "string | number",
+      "required": false,
+      "description": "非受控模式下的初始值，未绑定 modelValue 时生效"
+    },
+    {
+      "name": "placeholder",
+      "type": "string",
+      "required": false,
+      "description": "占位文本。"
+    },
+    {
+      "name": "disabled",
+      "type": "boolean",
+      "required": false,
+      "description": "是否禁用。",
+      "default": "false"
+    },
+    {
+      "name": "readonly",
+      "type": "boolean",
+      "required": false,
+      "description": "原生 readonly，是否只读。",
+      "default": "false"
+    },
+    {
+      "name": "type",
+      "type": "InputType",
+      "required": false,
+      "description": "输入类型；传 'textarea' 渲染为多行文本域，其余为 uniapp 原生键盘类型",
+      "default": "'text'"
+    },
+    {
+      "name": "size",
+      "type": "typeof inputSizes[number]",
+      "required": false,
+      "description": "尺寸：sm/md/lg，影响高度与字号",
+      "default": "'sm'"
+    },
+    {
+      "name": "color",
+      "type": "typeof inputColors[number]",
+      "required": false,
+      "description": "聚焦时描边 / 下划线 / 分割线的高亮颜色",
+      "default": "'primary'"
+    },
+    {
+      "name": "variant",
+      "type": "typeof inputVariants[number]",
+      "required": false,
+      "description": "形态变体： outlined 底色描边／filled 灰底填充（默认，聚焦转白底 + 描边）／ borderless 无边框／underlined 仅下划线（圆角强制为 0，此时 shape 不再生效）。",
+      "default": "'filled'"
+    },
+    {
+      "name": "shape",
+      "type": "typeof inputShapes[number]",
+      "required": false,
+      "description": "外形轮廓：circle 为胶囊圆角，square 按尺寸取圆角令牌（4/6/8rpx）",
+      "default": "'square'"
+    },
+    {
+      "name": "customClass",
+      "type": "any",
+      "required": false,
+      "description": "追加到根节点上的自定义类名"
+    },
+    {
+      "name": "showPassword",
+      "type": "boolean",
+      "required": false,
+      "description": "是否显示明文/密文切换按钮（web 端同名；内容掩码显示）",
+      "default": "false"
+    },
+    {
+      "name": "password",
+      "type": "boolean",
+      "required": false,
+      "description": "旧属性名，等价于 showPassword，保留以兼容既有用法",
+      "default": "false"
+    },
+    {
+      "name": "clearable",
+      "type": "boolean",
+      "required": false,
+      "description": "是否显示清除按钮：有内容且非禁用/只读时出现，点击清空",
+      "default": "false"
+    },
+    {
+      "name": "clearIcon",
+      "type": "string",
+      "required": false,
+      "description": "自定义清除图标类名（iconify class）",
+      "default": "'i-lucide-x-circle'"
+    },
+    {
+      "name": "prefixIcon",
+      "type": "string",
+      "required": false,
+      "description": "自定义前缀图标类名（#prefix 插槽优先）"
+    },
+    {
+      "name": "suffixIcon",
+      "type": "string",
+      "required": false,
+      "description": "自定义后缀图标类名（#suffix 插槽优先）"
+    },
+    {
+      "name": "showWordLimit",
+      "type": "boolean",
+      "required": false,
+      "description": "是否显示字数统计，仅 type 为 'text' 或 'textarea' 时生效，需配合 maxlength",
+      "default": "false"
+    },
+    {
+      "name": "wordLimitPosition",
+      "type": "'inside' | 'outside'",
+      "required": false,
+      "description": "字数统计位置：inside 在输入框内（默认），outside 在输入框下方",
+      "default": "'inside'"
+    },
+    {
+      "name": "formatter",
+      "type": "(value: string | number) => string",
+      "required": false,
+      "description": "展示值格式化，仅 type=\"text\" 时生效；需与 parser 配对使用"
+    },
+    {
+      "name": "parser",
+      "type": "(text: string) => string",
+      "required": false,
+      "description": "从格式化文本中提取值，仅 type=\"text\" 时生效；与 formatter 配对使用"
+    },
+    {
+      "name": "rows",
+      "type": "number",
+      "required": false,
+      "description": "textarea 模式的参考行数，用于估算固定高度（uniapp 无原生 rows）",
+      "default": "2"
+    },
+    {
+      "name": "autosize",
+      "type": "boolean | InputAutosize",
+      "required": false,
+      "description": "textarea 高度是否自适应。 端差异：uniapp 映射为原生 auto-height，minRows/maxRows 不生效，仅为与 web 端同签名。",
+      "default": "false"
+    },
+    {
+      "name": "focus",
+      "type": "boolean",
+      "required": false,
+      "description": "预留的聚焦开关，当前未接入内部逻辑；聚焦请用 autofocus 或实例 focus() 方法",
+      "default": "false"
+    },
+    {
+      "name": "maxlength",
+      "type": "number",
+      "required": false,
+      "description": "最大输入字符数，默认 140，设为 -1 不限制",
+      "default": "140"
+    },
+    {
+      "name": "cursorSpacing",
+      "type": "number",
+      "required": false,
+      "description": "聚焦时输入框距键盘的距离，单位 px",
+      "default": "5"
+    },
+    {
+      "name": "confirmHold",
+      "type": "boolean",
+      "required": false,
+      "description": "点击键盘确认按钮时是否保持键盘不收起",
+      "default": "false"
+    },
+    {
+      "name": "confirmType",
+      "type": "string",
+      "required": false,
+      "description": "键盘右下角确认按钮文案：done/send/search/next/go",
+      "default": "'done'"
+    },
+    {
+      "name": "adjustPosition",
+      "type": "boolean",
+      "required": false,
+      "description": "键盘弹起时是否自动上推页面",
+      "default": "true"
+    },
+    {
+      "name": "holdKeyboard",
+      "type": "boolean",
+      "required": false,
+      "description": "聚焦时点击页面其他区域是否保持键盘不收起",
+      "default": "false"
+    },
+    {
+      "name": "placeholderClass",
+      "type": "string",
+      "required": false,
+      "description": "占位文本的样式类，追加在内置 text-gray-5 之后",
+      "default": "''"
+    },
+    {
+      "name": "autofocus",
+      "type": "boolean",
+      "required": false,
+      "description": "挂载后自动聚焦并唤起键盘",
+      "default": "false"
+    },
+    {
+      "name": "separator",
+      "type": "boolean",
+      "required": false,
+      "description": "是否在清除按钮、密码开关与后缀之间显示竖分割线",
+      "default": "true"
+    },
+    {
+      "name": "ui",
+      "type": "InputUI",
+      "required": false,
+      "description": "按 wrapper/input/inputItem/prefix/suffix 等键覆盖内部节点类名 可用键（从源码抽取，以此为准）——UniApp：append、clear、count、group、iconBox、input、inputItem、password、prefix、prepend、root、separator、suffix、wrapper。",
+      "platform": "uniapp"
+    },
+    {
+      "name": "modelValue",
+      "type": "string | number",
+      "required": false,
+      "description": "双向绑定值",
+      "vModel": true
+    },
+    {
+      "name": "minlength",
+      "type": "string | number",
+      "required": false,
+      "description": "原生 minlength"
+    },
+    {
+      "name": "countGraphemes",
+      "type": "(value: string) => number",
+      "required": false,
+      "description": "自定义字素计数函数；设置后绕过原生 maxlength/minlength 约束，只做统计展示"
+    },
+    {
+      "name": "maxHeight",
+      "type": "number",
+      "required": false,
+      "description": "自动增高的主体高度上限，单位 px；手动缩放后改用用户设定的高度",
+      "default": "248"
+    },
+    {
+      "name": "resize",
+      "type": "(typeof inputResizes)[number]",
+      "required": false,
+      "description": "控制 textarea 是否能被用户缩放（CSS resize）"
+    },
+    {
+      "name": "autocomplete",
+      "type": "string",
+      "required": false,
+      "description": "原生 autocomplete",
+      "default": "\"off\""
+    },
+    {
+      "name": "name",
+      "type": "string",
+      "required": false,
+      "description": "原生 name"
+    },
+    {
+      "name": "form",
+      "type": "string",
+      "required": false,
+      "description": "原生 form"
+    },
+    {
+      "name": "max",
+      "type": "string | number",
+      "required": false,
+      "description": "原生 max"
+    },
+    {
+      "name": "min",
+      "type": "string | number",
+      "required": false,
+      "description": "原生 min"
+    },
+    {
+      "name": "step",
+      "type": "string | number",
+      "required": false,
+      "description": "原生 step"
+    },
+    {
+      "name": "ariaLabel",
+      "type": "string",
+      "required": false,
+      "description": "等价于原生 aria-label"
+    },
+    {
+      "name": "label",
+      "type": "string",
+      "required": false,
+      "description": "旧属性名，等价于 ariaLabel，保留以兼容既有用法"
+    },
+    {
+      "name": "tabindex",
+      "type": "string | number",
+      "required": false,
+      "description": "原生 tabindex"
+    },
+    {
+      "name": "inputmode",
+      "type": "string",
+      "required": false,
+      "description": "原生 inputmode"
+    },
+    {
+      "name": "id",
+      "type": "string",
+      "required": false,
+      "description": "原生 id"
+    },
+    {
+      "name": "validateEvent",
+      "type": "boolean",
+      "required": false,
+      "description": "输入时是否触发所在表单项的校验",
+      "default": "true"
+    },
+    {
+      "name": "inputStyle",
+      "type": "string | Record<string, any>",
+      "required": false,
+      "description": "input / textarea 元素的内联 style"
+    },
+    {
+      "name": "as",
+      "type": "\"input\" | \"textarea\"",
+      "required": false,
+      "description": "旧属性：渲染为 input 还是 textarea；等价于 type=\"textarea\"，保留以兼容既有用法",
+      "default": "\"input\""
+    },
+    {
+      "name": "class",
+      "type": "any",
+      "required": false,
+      "description": "追加到输入框主体 wrapper 的自定义类名。"
+    },
+    {
+      "name": "ui",
+      "type": "InputUi",
+      "required": false,
+      "description": "细粒度样式覆盖，键位见「自定义样式（ui）」。 可用键（从源码抽取，以此为准）——Web：append、clear、count、group、icon*、iconBox、input、password、prefix、prepend、root、separator、suffix、wrapper。 带 * 的键对应插槽兜底节点：填了同名插槽，组件自带的节点被替换，这个键随之失效。",
+      "default": "() => ({})",
+      "platform": "web"
+    }
+  ],
+  "events": [
+    {
+      "name": "input",
+      "payload": "(e: 'input', value: string): void",
+      "description": "输入时触发，参数为当前输入值"
+    },
+    {
+      "name": "change",
+      "payload": "(e: 'change', value: string): void",
+      "description": "输入值变化时触发，与 input 同步；清空时也触发，参数为空字符串"
+    },
+    {
+      "name": "focus",
+      "payload": "(e: 'focus', event: any): void",
+      "description": "输入框获得焦点时触发"
+    },
+    {
+      "name": "blur",
+      "payload": "(e: 'blur', event: any): void",
+      "description": "输入框失去焦点时触发"
+    },
+    {
+      "name": "confirm",
+      "payload": "(e: 'confirm', event: any): void",
+      "description": "点击键盘确认/完成按钮时触发"
+    },
+    {
+      "name": "clear",
+      "payload": "(e: 'clear'): void",
+      "description": "点击清除按钮清空内容后触发"
+    },
+    {
+      "name": "keyboardheightchange",
+      "payload": "(e: 'keyboardheightchange', event: any): void",
+      "description": "键盘高度变化时触发，event.detail 含 height（px）与 duration"
+    },
+    {
+      "name": "update:modelValue",
+      "description": "modelValue 变化时触发（v-model 同步）",
+      "payload": "(value: string | number)"
+    },
+    {
+      "name": "keydown",
+      "payload": "(e: \"keydown\", event: KeyboardEvent): void;",
+      "description": "按下键时触发"
+    },
+    {
+      "name": "mouseenter",
+      "payload": "(e: \"mouseenter\", event: MouseEvent): void;",
+      "description": "鼠标进入输入框时触发"
+    },
+    {
+      "name": "mouseleave",
+      "payload": "(e: \"mouseleave\", event: MouseEvent): void;",
+      "description": "鼠标离开输入框时触发"
+    },
+    {
+      "name": "compositionstart",
+      "payload": "(e: \"compositionstart\", event: CompositionEvent): void;",
+      "description": "输入法合成开始时触发"
+    },
+    {
+      "name": "compositionupdate",
+      "payload": "(e: \"compositionupdate\", event: CompositionEvent): void;",
+      "description": "输入法合成改变时触发"
+    },
+    {
+      "name": "compositionend",
+      "payload": "(e: \"compositionend\", event: CompositionEvent): void;",
+      "description": "输入法合成完成时触发"
+    }
+  ],
+  "slots": [
+    {
+      "name": "prepend",
+      "description": "输入框外的前置连体块（如协议前缀），仅非 textarea 有效。"
+    },
+    {
+      "name": "prefix",
+      "description": "输入框前缀区域，仅非 textarea 有效。"
+    },
+    {
+      "name": "password-icon",
+      "description": "密码切换按钮的图标内容，仅 `show-password` 开启时生效。"
+    },
+    {
+      "name": "suffix",
+      "description": "输入框后缀区域，位于清除按钮与密码开关之后，仅非 textarea 有效。"
+    },
+    {
+      "name": "append",
+      "description": "输入框外的后置连体块（如域名后缀），仅非 textarea 有效。"
+    }
+  ],
+  "exposes": [
+    {
+      "name": "isFocus",
+      "description": "当前是否处于聚焦态（Ref<boolean>）"
+    },
+    {
+      "name": "focus",
+      "description": "使输入框聚焦（H5 端将光标移至内容末尾）"
+    },
+    {
+      "name": "clear",
+      "description": "清空输入内容并触发 clear 事件"
+    },
+    {
+      "name": "passwordVisible",
+      "description": "密码是否以明文展示（Ref<boolean>）"
+    },
+    {
+      "name": "ref",
+      "description": "内部原生 input/textarea 元素引用"
+    },
+    {
+      "name": "inputRef",
+      "description": "旧名，保留以兼容既有用法"
+    },
+    {
+      "name": "input",
+      "description": "单行模式下的原生 input 元素"
+    },
+    {
+      "name": "textarea",
+      "description": "多行模式下的原生 textarea 元素"
+    },
+    {
+      "name": "blur",
+      "description": "使输入框失去焦点"
+    },
+    {
+      "name": "select",
+      "description": "选中输入框中的文字"
+    },
+    {
+      "name": "resizeTextarea",
+      "description": "重新计算 textarea 高度（autosize 时）"
+    },
+    {
+      "name": "textareaStyle",
+      "description": "autosize 计算出的 textarea 样式"
+    },
+    {
+      "name": "isComposing",
+      "description": "是否处于输入法合成状态"
+    }
+  ],
+  "examples": [
+    {
+      "title": "Web 演示",
+      "path": "app/components/reborn/examples/reborn-input/RebornInputDemo.vue",
+      "source": "demo",
+      "platform": "web",
+      "code": "<script setup lang=\"ts\">\nimport { ref, shallowRef } from 'vue';\nimport {\n  inputColors,\n  inputShapes,\n  inputSizes,\n  inputVariants,\n} from \"~/components/reborn/ui/reborn-input/reborn-input.config\";\n\n// ─── 交互演练场 ─────────────────────────────────────────────────\n\n/** 演练场默认状态 */\nconst defaultState: Record<string, any> = {\n  value: \"\",\n  size: \"md\",\n  color: \"primary\",\n  variant: \"filled\",\n  shape: \"square\",\n  clearable: true,\n  showPassword: false,\n  disabled: false,\n  readonly: false,\n  showWordLimit: false,\n  maxlength: 20,\n};\n\nconst state = ref<Record<string, any>>({ ...defaultState });\n\n/** 最近一次 change 事件的值 */\nconst lastChange = shallowRef<string | number | null>(null);\n\nfunction handleChange(value: string | number) {\n  lastChange.value = value;\n}\n\n/** 重置演练场配置 */\nfunction resetState() {\n  state.value = { ...defaultState };\n  lastChange.value = null;\n}\n\n/** 演练场控制面板配置 */\nconst controls: any = [\n  {\n    title: \"外观\",\n    children: [\n      {\n        label: \"尺寸规格\",\n        key: \"size\",\n        component: \"select\" as const,\n        defaultValue: \"md\",\n        props: { options: inputSizes.map((s) => ({ label: s.toUpperCase(), value: s })) },\n      },\n      {\n        label: \"配色方案\",\n        key: \"color\",\n        component: \"select\" as const,\n        defaultValue: \"primary\",\n        props: { options: inputColors.map((c) => ({ label: c, value: c })) },\n      },\n      {\n        label: \"形态变体\",\n        key: \"variant\",\n        component: \"select\" as const,\n        defaultValue: \"filled\",\n        props: { options: inputVariants.map((v) => ({ label: v, value: v })) },\n      },\n      {\n        label: \"形状轮廓\",\n        key: \"shape\",\n        component: \"select\" as const,\n        defaultValue: \"square\",\n        props: { options: inputShapes.map((s) => ({ label: s, value: s })) },\n      },\n      {\n        label: \"最大长度\",\n        key: \"maxlength\",\n        component: \"input-number\" as const,\n        defaultValue: 20,\n        props: { align: 'left', hideButton: true },\n      },\n    ],\n  },\n  {\n    title: \"行为\",\n    children: [\n      { label: \"可清空\", key: \"clearable\", component: \"checkbox\" as const, defaultValue: true },\n      { label: \"密码切换\", key: \"showPassword\", component: \"checkbox\" as const, defaultValue: false },\n      { label: \"字数统计\", key: \"showWordLimit\", component: \"checkbox\" as const, defaultValue: false },\n      { label: \"禁用状态\", key: \"disabled\", component: \"checkbox\" as const, defaultValue: false },\n      { label: \"只读\", key: \"readonly\", component: \"checkbox\" as const, defaultValue: false },\n    ],\n  },\n];\n\n/** 传参明细由 Playground 按 controls 自动生成；这里只补 controls 之外的固定参数与事件 */\nconst codeExtras = ['placeholder=\"请输入内容\"', '@change=\"handleChange\"'];\n\n// ─── 场景演示状态 ───────────────────────────────────────────────\n\n// 各 section 独立持有绑定值，避免调整一处示例牵连其他示例\nconst variantValue = shallowRef(\"Reborn UI\");\nconst basicValue = shallowRef(\"\");\nconst iconValue = shallowRef(\"\");\nconst groupValue = shallowRef(\"\");\nconst limitValue = shallowRef(\"字数统计\");\nconst limitOutsideValue = shallowRef(\"\");\nconst limitAreaValue = shallowRef(\"\");\nconst passwordValue = shallowRef(\"reborn-ui-2026\");\nconst clearValue = shallowRef(\"点右侧图标清空\");\nconst textareaValue = shallowRef(\"\");\nconst resizeValue = shallowRef(\"\");\nconst adornmentValue = shallowRef(\"Reborn UI\");\nconst autosizeValue = shallowRef(\"高度随内容自动增长，最多 6 行。\");\n\n// 格式化与解析：千分位展示，绑定值保持纯数字文本\nconst formattedValue = shallowRef(\"1234567\");\n\n/** 千分位格式化，如 1234567 → 1,234,567 */\nfunction formatThousands(value: string | number) {\n  return String(value).replace(/\\B(?=(\\d{3})+(?!\\d))/g, \",\");\n}\n\n/** 去掉千分位逗号，还原为纯数字文本 */\nfunction parseThousands(text: string) {\n  return text.replace(/,/g, \"\");\n}\n</script>\n\n<template>\n  <div class=\"flex w-full min-w-0 flex-col\">\n    <Playground v-model=\"state\" :controls=\"controls\" :code-extras=\"codeExtras\" component-name=\"RebornInput\"\n      title=\"交互演练场\" description=\"调节尺寸、配色、形态与行为开关，实时预览输入框表现；filled 形态聚焦时背景转为 bg-gray-1 并出现主题色描边。\">\n      <template #tag>\n        <RebornButton size=\"sm\" variant=\"soft\" color=\"neutral\" @click=\"resetState\">\n          <template #leading>\n            <Icon name=\"lucide:rotate-ccw\" size=\"12\" />\n          </template>\n          重置配置\n        </RebornButton>\n      </template>\n\n      <div class=\"flex w-full flex-col items-center gap-4\">\n        <RebornInput v-model=\"state.value\" class=\"max-w-sm\" :size=\"state.size\" :color=\"state.color\"\n          :variant=\"state.variant\" :shape=\"state.shape\" :clearable=\"state.clearable\" :show-password=\"state.showPassword\"\n          :show-word-limit=\"state.showWordLimit\" :maxlength=\"state.maxlength\" :disabled=\"state.disabled\"\n          :readonly=\"state.readonly\" placeholder=\"请输入内容\" @change=\"handleChange\" />\n\n        <DemoNote tone=\"dimmed\">\n          绑定值：<code>{{ state.value === \"\" ? \"（空）\" : state.value }}</code>\n          <template v-if=\"lastChange !== null\">\n            · 最近 <code>change</code>：<code>{{ lastChange === \"\" ? \"（空）\" : lastChange }}</code>\n          </template>\n        </DemoNote>\n      </div>\n    </Playground>\n\n    <DemoSection title=\"基础用法\">\n      <template #description>\n        <code>v-model</code> 绑定输入值；<code>clearable</code> 在有内容时显示清除按钮；<code>readonly</code>\n        只读仍可选中复制，<code>disabled</code> 禁用后不可聚焦。\n      </template>\n      <DemoBlock layout=\"grid\" align=\"start\">\n        <DemoItem label=\"clearable\" mono>\n          <RebornInput\n            v-model=\"basicValue\"\n            clearable\n            placeholder=\"请输入关键词\"\n          />\n        </DemoItem>\n        <DemoItem label=\"readonly\" mono>\n          <RebornInput\n            model-value=\"只读内容\"\n            readonly\n          />\n        </DemoItem>\n        <DemoItem label=\"disabled\" mono>\n          <RebornInput\n            placeholder=\"禁用状态\"\n            disabled\n          />\n        </DemoItem>\n      </DemoBlock>\n    </DemoSection>\n\n    <DemoSection title=\"形状与尺寸\">\n      <template #description>\n        <code>shape</code> 控制外形轮廓：square 按尺寸取圆角令牌（sm 4px / md 6px / lg 8px），circle 为胶囊；\n        <code>size</code> 同时决定高度、字号与内边距。\n      </template>\n      <DemoBlock layout=\"grid\" :columns=\"2\" align=\"start\">\n        <DemoItem v-for=\"s in inputSizes\" :key=\"s\" :label=\"`square · ${s}`\" mono>\n          <RebornInput v-model=\"variantValue\" variant=\"outlined\" shape=\"square\" :size=\"s\" placeholder=\"请输入\" />\n        </DemoItem>\n        <DemoItem label=\"circle · 胶囊\" mono>\n          <RebornInput v-model=\"variantValue\" variant=\"outlined\" shape=\"circle\" placeholder=\"请输入\" />\n        </DemoItem>\n      </DemoBlock>\n    </DemoSection>\n\n    <DemoSection title=\"前后缀与前后置块\">\n      <template #description>\n        <code>prefix-icon</code> / <code>suffix-icon</code> 与 <code>#prefix</code> / <code>#suffix</code>\n        插槽在输入框内部添加内容；<code>#prepend</code> / <code>#append</code> 插槽在输入框外部拼出连体块，仅单行模式有效。\n      </template>\n      <DemoBlock layout=\"grid\" align=\"start\">\n        <DemoItem label=\"#prefix / #suffix\" mono>\n          <RebornInput v-model=\"iconValue\" placeholder=\"搜索日期\">\n            <template #prefix>\n              prefix\n            </template>\n            <template #suffix>\n              suffix\n            </template>\n          </RebornInput>\n        </DemoItem>\n\n        <DemoItem label=\"prefix-icon / suffix-icon\" mono>\n          <RebornInput v-model=\"iconValue\" prefix-icon=\"lucide:search\" suffix-icon=\"lucide:calendar\"\n            placeholder=\"搜索日期\" />\n        </DemoItem>\n\n        <DemoItem label=\"#prepend / #append（连体块）\" mono>\n          <RebornInput v-model=\"groupValue\" variant=\"outlined\" placeholder=\"域名前缀\">\n            <template #prepend>\n              <div class=\"px-[12px]\">\n                https://\n              </div>\n            </template>\n            <template #append>\n              <div class=\"px-[8px]\">\n                .com\n              </div>\n            </template>\n          </RebornInput>\n        </DemoItem>\n      </DemoBlock>\n    </DemoSection>\n\n    <DemoSection title=\"前后置块：搜索按钮与禁用配色\">\n      <template #description>\n        <code>#append</code> 放按钮文字或图标，<code>#prepend</code> 放协议前缀；连体块默认不带内边距，需要在插槽内容或\n        <code>ui.append</code> 里自己给。<code>ui.append</code> 里写的文字色会盖过禁用态自带的 <code>text-gray-5</code>，\n        所以禁用时要单独给一套配色（右列）。\n      </template>\n      <DemoBlock layout=\"grid\" :columns=\"2\" align=\"start\">\n        <DemoItem mono>\n          <RebornInput v-model=\"adornmentValue\" placeholder=\"请输入内容\" :ui=\"{\n            append: 'bg-brand-6 text-white px-[12px] border border-brand-6'\n          }\">\n            <template #append>\n              搜索\n            </template>\n          </RebornInput>\n        </DemoItem>\n        <DemoItem mono>\n          <RebornInput v-model=\"adornmentValue\" disabled placeholder=\"请输入内容\" :ui=\"{\n            append: 'bg-brand-3 text-gray-2 px-[12px] border border-brand-3'\n          }\">\n            <template #append>\n              搜索\n            </template>\n          </RebornInput>\n        </DemoItem>\n        <DemoItem mono>\n          <RebornInput v-model=\"adornmentValue\" placeholder=\"请输入内容\" :ui=\"{\n            append: 'bg-white text-gray-10 px-[8px]'\n          }\">\n            <template #prepend>\n              <div class=\"px-[12px]\">\n                https://\n              </div>\n            </template>\n            <template #append>\n              <Icon name=\"lucide:search\" />\n            </template>\n          </RebornInput>\n        </DemoItem>\n        <DemoItem mono>\n          <RebornInput v-model=\"adornmentValue\" disabled placeholder=\"请输入内容\" :ui=\"{\n            append: 'bg-gray-2 text-gray-5 px-[8px]'\n          }\">\n            <template #prepend>\n              <div class=\"px-[12px] text-gray-5\">\n                https://\n              </div>\n            </template>\n            <template #append>\n              <Icon name=\"lucide:search\" />\n            </template>\n          </RebornInput>\n        </DemoItem>\n      </DemoBlock>\n    </DemoSection>\n\n    <DemoSection title=\"字数统计：show-word-limit\">\n      <template #description>\n        <code>show-word-limit</code> 配合 <code>maxlength</code> 显示字数统计，仅 type 为 text / textarea 时生效；\n        <code>word-limit-position</code> 可选 inside（默认）/ outside。\n      </template>\n      <DemoBlock layout=\"grid\" align=\"start\">\n        <DemoItem label=\"inside（默认）\" mono>\n          <RebornInput v-model=\"limitValue\" :maxlength=\"10\" show-word-limit placeholder=\"最多 10 字\" />\n        </DemoItem>\n\n        <DemoItem label=\"outside\" mono>\n          <RebornInput v-model=\"limitOutsideValue\" :maxlength=\"10\" show-word-limit word-limit-position=\"outside\"\n            placeholder=\"统计显示在下方\" />\n        </DemoItem>\n\n        <DemoItem label=\"textarea（统计落在右下角）\" mono>\n          <RebornInput v-model=\"limitAreaValue\" type=\"textarea\" :rows=\"3\" :maxlength=\"50\" show-word-limit\n            placeholder=\"多行文本统计\" />\n        </DemoItem>\n      </DemoBlock>\n    </DemoSection>\n\n    <DemoSection title=\"格式化与解析：formatter / parser\">\n      <template #description>\n        <code>formatter</code> 决定展示文本，<code>parser</code> 从格式化文本中还原绑定值，两者配对使用，仅\n        <code>type=\"text\"</code> 时生效。\n      </template>\n      <DemoBlock layout=\"stack\" align=\"start\">\n        <DemoItem label=\"千分位分隔\" mono :note=\"`绑定值：${formattedValue}`\" class=\"w-full max-w-sm\">\n          <RebornInput v-model=\"formattedValue\" :formatter=\"formatThousands\" :parser=\"parseThousands\"\n            placeholder=\"输入数字\" />\n        </DemoItem>\n      </DemoBlock>\n    </DemoSection>\n\n    <DemoSection title=\"密码框与清除\">\n      <template #description>\n        <code>show-password</code> 显示明文 / 密文切换按钮，<code>#password-icon</code> 作用域插槽（参数\n        <code>visible</code>）可自定义图标；<code>clearable</code> 显示清除按钮，<code>clear-icon</code> 可换图标。\n      </template>\n      <DemoBlock layout=\"grid\" align=\"start\">\n        <DemoItem label=\"show-password\" mono>\n          <RebornInput v-model=\"passwordValue\" show-password placeholder=\"请输入密码\" />\n        </DemoItem>\n\n        <DemoItem label=\"自定义 #password-icon\" mono>\n          <RebornInput v-model=\"passwordValue\" show-password placeholder=\"请输入密码\">\n            <template #password-icon=\"{ visible }\">\n              <Icon :name=\"visible ? 'lucide:unlock' : 'lucide:lock'\" />\n            </template>\n          </RebornInput>\n        </DemoItem>\n\n        <DemoItem label=\"clearable + clear-icon\" mono>\n          <RebornInput v-model=\"clearValue\" clearable clear-icon=\"lucide:trash-2\" placeholder=\"可清空\" />\n        </DemoItem>\n      </DemoBlock>\n    </DemoSection>\n\n    <DemoSection title=\"多行文本：rows / autosize / resize\">\n      <template #description>\n        <code>type=\"textarea\"</code> 渲染为多行输入，<code>rows</code> 控制初始行数；<code>autosize</code>\n        让高度随内容自适应，可传 <code>{ minRows, maxRows }</code> 限定范围；<code>resize</code> 控制是否允许用户拖拽缩放。\n      </template>\n      <DemoBlock layout=\"grid\" align=\"start\">\n        <DemoItem label=\"rows = 3（固定行数）\" mono>\n          <RebornInput v-model=\"textareaValue\" type=\"textarea\" :rows=\"3\" variant=\"outlined\" placeholder=\"请输入多行内容...\" />\n        </DemoItem>\n\n        <DemoItem label=\"autosize = { minRows: 2, maxRows: 6 }\" mono>\n          <RebornInput v-model=\"autosizeValue\" type=\"textarea\" :autosize=\"{ minRows: 2, maxRows: 6 }\"\n            placeholder=\"高度自适应...\" />\n        </DemoItem>\n\n        <DemoItem label=\"resize=&quot;vertical&quot;（允许纵向拖拽）\" mono>\n          <RebornInput v-model=\"resizeValue\" type=\"textarea\" :rows=\"3\" resize=\"vertical\" maxlength=\"100\"\n            show-word-limit placeholder=\"右下角可拖拽\" />\n        </DemoItem>\n      </DemoBlock>\n    </DemoSection>\n  </div>\n</template>\n"
+    },
+    {
+      "title": "UniApp 演示",
+      "path": "packages/uniapp-project/src/pages/reborn-input/RebornInputDemo.vue",
+      "source": "demo",
+      "platform": "uniapp",
+      "code": "<script setup lang=\"ts\">\nimport { shallowRef } from 'vue'\nimport RebornCard from '@/components/reborn-card/RebornCard.vue'\nimport RebornImage from '@/components/reborn-image/RebornImage.vue'\nimport { inputColors, inputShapes, inputSizes, inputVariants } from '@/components/reborn-input/reborn-input.config'\nimport RebornInput from '@/components/reborn-input/RebornInput.vue'\nimport RebornPage from '@/components/reborn-page/RebornPage.vue'\nimport RebornRadio from '@/components/reborn-radio/RebornRadio.vue'\n\nimport RebornRadioGroup from '@/components/reborn-radio/RebornRadioGroup.vue'\nimport RebornSwitch from '@/components/reborn-switch/RebornSwitch.vue'\nimport RebornText from '@/components/reborn-text/RebornText.vue'\n\nconst input1 = shallowRef('')\nconst input2 = shallowRef('')\n\nconst isTranslated = shallowRef(false)\n\nfunction toggleTranslate() {\n  isTranslated.value = !isTranslated.value\n}\n\nconst colors = shallowRef<typeof inputColors[number]>('primary')\nconst currentSize = shallowRef<typeof inputSizes[number]>('sm')\nconst currentVariant = shallowRef<typeof inputVariants[number]>('filled')\nconst currentShape = shallowRef<typeof inputShapes[number]>('square')\nconst disabled = shallowRef(false)\nconst password = shallowRef(false)\nconst clearable = shallowRef(true)\n\n// ─── 场景演示状态（各卡片独立持有，避免相互牵连） ────────────────\n\nconst variantValue = shallowRef('Reborn UI')\nconst iconValue = shallowRef('')\nconst groupValue = shallowRef('')\nconst limitValue = shallowRef('字数统计')\nconst limitOutsideValue = shallowRef('')\nconst limitAreaValue = shallowRef('')\nconst pwdValue = shallowRef('reborn-ui-2026')\nconst clearValue = shallowRef('点右侧图标清空')\nconst textareaValue = shallowRef('')\nconst autosizeValue = shallowRef('高度随内容自动增长。')\n\n// 格式化与解析：千分位展示，绑定值保持纯数字文本\nconst formattedValue = shallowRef('1234567')\n\n/** 千分位格式化，如 1234567 → 1,234,567 */\nfunction formatThousands(value: string | number) {\n  return String(value).replace(/\\B(?=(\\d{3})+(?!\\d))/g, ',')\n}\n\n/** 去掉千分位逗号，还原为纯数字文本 */\nfunction parseThousands(text: string) {\n  return text.replace(/,/g, '')\n}\n\n</script>\n\n<template>\n  <RebornPage title=\"输入框\" description=\"用于接收用户输入的数据。\">\n    <RebornCard title=\"示例\" custom-class=\"flex flex-col gap-2\">\n      <RebornInput\n        v-model=\"input1\" :size=\"currentSize\" :color=\"colors\" :show-password=\"password\" :disabled=\"disabled\"\n        :variant=\"currentVariant\" :shape=\"currentShape\" :clearable=\"clearable\" placeholder=\"基础用法...\"\n      />\n      <RebornInput\n        v-model=\"input2\" :size=\"currentSize\" :color=\"colors\" :show-password=\"password\" :disabled=\"disabled\"\n        :variant=\"currentVariant\" :shape=\"currentShape\" :clearable=\"clearable\" placeholder=\"插槽\"\n      >\n        <template #prefix=\"{ ui }\">\n          <view class=\"i-lucide-search text-gray-400\" :class=\"ui.prefix()\" />\n        </template>\n        <template #suffix=\"{ ui }\">\n          <view class=\"i-lucide-calendar text-gray-400\" :class=\"ui.suffix()\" />\n        </template>\n      </RebornInput>\n      <RebornInput\n        v-model=\"input2\" :size=\"currentSize\" :color=\"colors\" :show-password=\"password\" :disabled=\"disabled\"\n        :variant=\"currentVariant\" :shape=\"currentShape\" :clearable=\"clearable\" placeholder=\"关键词/商品ID/网址\"\n      >\n        <template #prefix>\n          <RebornImage\n            src=\"https://mall.leyifan.cn/static/h5/new_images/index_search_small.png?v=1\" width=\"30\"\n            height=\"30\" mode=\"widthFix\"\n          />\n        </template>\n        <template #suffix>\n          <view class=\"relative h-[80rpx] w-[80rpx] flex items-center justify-center\" @tap.stop=\"toggleTranslate\">\n            <view\n              class=\"absolute left-[8rpx] top-[12rpx] flex h-[46rpx] w-[46rpx] items-center justify-center rounded-[8rpx] border text-[22rpx] font-bold transition-all duration-300\"\n              :class=\"[isTranslated ? 'translate-x-[26rpx] translate-y-[12rpx] z-10 border-info bg-white text-info shadow-sm' : 'z-0 border-gray-200 bg-[#f8f9fa] text-gray-400']\"\n            >\n              译\n            </view>\n            <view\n              class=\"absolute left-[34rpx] top-[24rpx] flex h-[46rpx] w-[46rpx] items-center justify-center rounded-[8rpx] border text-[22rpx] font-bold transition-all duration-300\"\n              :class=\"[isTranslated ? '-translate-x-[26rpx] -translate-y-[12rpx] z-0 border-gray-200 bg-[#f8f9fa] text-gray-400' : 'z-10 border-info bg-white text-info shadow-sm']\"\n            >\n              原\n            </view>\n          </view>\n        </template>\n      </RebornInput>\n    </RebornCard>\n\n    <RebornCard title=\"配置\" custom-class=\"grid grid-cols-2 gap-2\">\n      <view class=\"col-span-2\">\n        <RebornText color=\"neutral\">尺寸</RebornText>\n        <RebornRadioGroup v-model=\"currentSize\">\n          <RebornRadio v-for=\"size in inputSizes\" :key=\"size\" :value=\"size\">\n            {{ size }}\n          </RebornRadio>\n        </RebornRadioGroup>\n      </view>\n\n      <view class=\"col-span-2\">\n        <RebornText color=\"neutral\">激活边框颜色</RebornText>\n        <RebornRadioGroup v-model=\"colors\">\n          <RebornRadio v-for=\"item in inputColors\" :key=\"item\" :value=\"item\">\n            <!-- radio 插槽完全接管渲染，做成纯色板选择 -->\n            <template #radio=\"{ checked }\">\n              <view class=\"relative flex size-[40rpx]\">\n                <view\n                  v-if=\"checked\" class=\"absolute inline-flex h-full w-full animate-ping rounded-full opacity-75\"\n                  :class=\"`bg-${item}`\"\n                />\n                <view class=\"relative inline-flex size-[40rpx] rounded-full\" :class=\"`bg-${item}`\" />\n              </view>\n            </template>\n          </RebornRadio>\n        </RebornRadioGroup>\n      </view>\n\n      <view>\n        <RebornText color=\"neutral\">密码</RebornText>\n        <RebornSwitch v-model=\"password\" active-label=\"是\" inactive-label=\"否\" />\n      </view>\n\n      <view>\n        <RebornText color=\"neutral\">禁用</RebornText>\n        <RebornSwitch v-model=\"disabled\" active-label=\"是\" inactive-label=\"否\" />\n      </view>\n\n      <view class=\"col-span-2\">\n        <RebornText color=\"neutral\">形态变体 variant</RebornText>\n        <RebornRadioGroup v-model=\"currentVariant\">\n          <RebornRadio v-for=\"v in inputVariants\" :key=\"v\" :value=\"v\">\n            {{ v }}\n          </RebornRadio>\n        </RebornRadioGroup>\n      </view>\n\n      <view class=\"col-span-2\">\n        <RebornText color=\"neutral\">形状轮廓 shape</RebornText>\n        <RebornRadioGroup v-model=\"currentShape\">\n          <RebornRadio v-for=\"s in inputShapes\" :key=\"s\" :value=\"s\">\n            {{ s }}\n          </RebornRadio>\n        </RebornRadioGroup>\n      </view>\n\n      <view>\n        <RebornText color=\"neutral\">可清空</RebornText>\n        <RebornSwitch v-model=\"clearable\" active-label=\"是\" inactive-label=\"否\" />\n      </view>\n    </RebornCard>\n\n    <!-- 形态与形状 -->\n    <RebornCard title=\"形态与形状\" custom-class=\"flex flex-col gap-3\">\n      <text class=\"text-24 text-slate-500\">\n        variant 提供四种形态，underlined 会强制压平圆角；shape 的 square 按尺寸取圆角令牌（4/6/8rpx），circle 为胶囊。\n      </text>\n      <view v-for=\"v in inputVariants\" :key=\"v\" class=\"flex flex-col gap-1\">\n        <text class=\"text-24 text-gray-6\">{{ v }}</text>\n        <RebornInput v-model=\"variantValue\" :variant=\"v\" placeholder=\"请输入\" />\n      </view>\n      <view class=\"flex flex-col gap-1\">\n        <text class=\"text-24 text-gray-6\">circle · 胶囊</text>\n        <RebornInput v-model=\"variantValue\" variant=\"outlined\" shape=\"circle\" placeholder=\"请输入\" />\n      </view>\n    </RebornCard>\n\n    <!-- 前后缀与前后置块 -->\n    <RebornCard title=\"前后缀与前后置块\" custom-class=\"flex flex-col gap-3\">\n      <view class=\"flex flex-col gap-1\">\n        <text class=\"text-24 text-gray-6\">prefix-icon / suffix-icon</text>\n        <RebornInput v-model=\"iconValue\" prefix-icon=\"i-lucide-search\" suffix-icon=\"i-lucide-calendar\" placeholder=\"搜索日期\" />\n      </view>\n      <view class=\"flex flex-col gap-1\">\n        <text class=\"text-24 text-gray-6\">#prepend / #append 连体块</text>\n        <RebornInput v-model=\"groupValue\" variant=\"outlined\" placeholder=\"域名前缀\">\n          <template #prepend>\n            <text>https://</text>\n          </template>\n          <template #append>\n            <text>.com</text>\n          </template>\n        </RebornInput>\n      </view>\n    </RebornCard>\n\n    <!-- 字数统计 -->\n    <RebornCard title=\"字数统计\" custom-class=\"flex flex-col gap-3\">\n      <view class=\"flex flex-col gap-1\">\n        <text class=\"text-24 text-gray-6\">inside（默认）· maxlength 10</text>\n        <RebornInput v-model=\"limitValue\" :maxlength=\"10\" show-word-limit placeholder=\"最多 10 字\" />\n      </view>\n      <view class=\"flex flex-col gap-1\">\n        <text class=\"text-24 text-gray-6\">outside · 统计显示在下方</text>\n        <RebornInput v-model=\"limitOutsideValue\" :maxlength=\"10\" show-word-limit word-limit-position=\"outside\" placeholder=\"统计显示在下方\" />\n      </view>\n      <view class=\"flex flex-col gap-1\">\n        <text class=\"text-24 text-gray-6\">textarea · 右下角</text>\n        <RebornInput v-model=\"limitAreaValue\" type=\"textarea\" :maxlength=\"50\" show-word-limit placeholder=\"多行文本统计\" />\n      </view>\n    </RebornCard>\n\n    <!-- 格式化与解析 -->\n    <RebornCard title=\"格式化与解析\" custom-class=\"flex flex-col gap-3\">\n      <text class=\"text-24 text-slate-500\">\n        formatter 决定展示文本，parser 还原绑定值，仅 type=\"text\" 时生效。\n      </text>\n      <RebornInput v-model=\"formattedValue\" :formatter=\"formatThousands\" :parser=\"parseThousands\" placeholder=\"输入数字\" />\n      <text class=\"text-24 text-gray-6\">绑定值：{{ formattedValue }}</text>\n    </RebornCard>\n\n    <!-- 密码与清除 -->\n    <RebornCard title=\"密码与清除\" custom-class=\"flex flex-col gap-3\">\n      <view class=\"flex flex-col gap-1\">\n        <text class=\"text-24 text-gray-6\">show-password</text>\n        <RebornInput v-model=\"pwdValue\" show-password placeholder=\"请输入密码\" />\n      </view>\n      <view class=\"flex flex-col gap-1\">\n        <text class=\"text-24 text-gray-6\">自定义 #password-icon</text>\n        <RebornInput v-model=\"pwdValue\" show-password placeholder=\"请输入密码\">\n          <template #password-icon=\"{ visible }\">\n            <view :class=\"visible ? 'i-lucide-unlock' : 'i-lucide-lock'\" />\n          </template>\n        </RebornInput>\n      </view>\n      <view class=\"flex flex-col gap-1\">\n        <text class=\"text-24 text-gray-6\">clearable + clear-icon</text>\n        <RebornInput v-model=\"clearValue\" clearable clear-icon=\"i-lucide-trash-2\" placeholder=\"可清空\" />\n      </view>\n    </RebornCard>\n\n    <!-- 多行文本 -->\n    <RebornCard title=\"多行文本\" custom-class=\"flex flex-col gap-3\">\n      <text class=\"text-24 text-slate-500\">\n        type=\"textarea\" 渲染为多行输入；autosize 映射原生 auto-height，高度随内容自适应。\n      </text>\n      <view class=\"flex flex-col gap-1\">\n        <text class=\"text-24 text-gray-6\">固定 rows = 3</text>\n        <RebornInput v-model=\"textareaValue\" type=\"textarea\" :rows=\"3\" placeholder=\"请输入多行内容...\" />\n      </view>\n      <view class=\"flex flex-col gap-1\">\n        <text class=\"text-24 text-gray-6\">autosize · 高度自适应</text>\n        <RebornInput v-model=\"autosizeValue\" type=\"textarea\" autosize placeholder=\"高度自适应...\" />\n      </view>\n    </RebornCard>\n  </RebornPage>\n</template>\n"
+    }
+  ],
+  "related": [],
+  "whenToUse": [
+    "表单中录入文本、密码等单行内容时。",
+    "需要前后缀图标或按钮（prefix/suffix 插槽）时。",
+    "通过 as=\"textarea\" 需要多行输入（rows 默认 4）时。",
+    "uniapp 端需要 confirmType、adjustPosition、holdKeyboard 等键盘控制时。"
+  ],
+  "whenNotToUse": [
+    "数字步进增减改用 reborn-input-number。",
+    "验证码分格输入改用 reborn-input-otp。",
+    "带历史记录、推荐词下拉的搜索改用 reborn-search-box。"
+  ],
+  "pitfalls": [
+    "web、uniapp 双端可用。",
+    "maxlength 默认 140，超长内容注意显式调整。",
+    "cursorSpacing、confirmHold、adjustPosition、holdKeyboard、keyboardheightchange 等为 uniapp 端键盘相关能力。",
+    "组件暴露 focus/blur/clear 方法与 isFocus、inputRef，可命令式控制。"
+  ],
+  "dependencies": [
+    "@weapp-tailwindcss/merge-v3",
+    "@weapp-tailwindcss/variants-v3",
+    "clsx",
+    "tailwind-merge",
+    "tailwind-variants"
+  ],
+  "install": {
+    "cli": "npx reborn-ui@latest add reborn-input"
+  },
+  "sourceRefs": {
+    "web": [
+      "app/components/reborn/ui/reborn-input/RebornInput.vue",
+      "app/components/reborn/ui/reborn-input/index.ts",
+      "app/components/reborn/ui/reborn-input/reborn-input.config.ts"
+    ],
+    "uniapp": [
+      "packages/uniapp-project/src/components/reborn-input/RebornInput.vue",
+      "packages/uniapp-project/src/components/reborn-input/index.ts",
+      "packages/uniapp-project/src/components/reborn-input/reborn-input.config.ts"
+    ]
+  },
+  "docPath": "content/2.components/input-and-forms/reborn-input.md",
+  "_meta": {
+    "contentHash": "23ce1f1bdf5836d76e9a2197d756f45b7ba83aec",
+    "hasOverride": true,
+    "extractors": {
+      "web": "ok",
+      "uniapp": "ok",
+      "docs": "found"
+    }
+  }
+}

@@ -1,0 +1,99 @@
+{
+  "$schema": "../schema/component.schema.json",
+  "id": "text-reveal-card",
+  "title": "文字揭示卡片",
+  "description": "用于鼠标滑过卡片时揭示另一段隐藏文字、带星星粒子的卡片组件。",
+  "category": "effect",
+  "tags": [
+    "css",
+    "tailwind",
+    "aceternity-ui"
+  ],
+  "platforms": [
+    "web"
+  ],
+  "props": [
+    {
+      "name": "class",
+      "type": "HTMLAttributes[\"class\"]",
+      "required": false,
+      "description": "卡片的额外类名。"
+    },
+    {
+      "name": "starsCount",
+      "type": "number",
+      "required": false,
+      "description": "控制生成的星星数量。",
+      "default": "130"
+    },
+    {
+      "name": "starsClass",
+      "type": "HTMLAttributes[\"class\"]",
+      "required": false,
+      "description": "应用于漂浮星星的额外类名。"
+    }
+  ],
+  "events": [],
+  "slots": [
+    {
+      "name": "header",
+      "description": "String"
+    },
+    {
+      "name": "text",
+      "description": "卡片未悬停时显示的默认文字。"
+    },
+    {
+      "name": "revealText",
+      "description": "悬停卡片时显示的文字。"
+    }
+  ],
+  "exposes": [],
+  "examples": [
+    {
+      "title": "Web 演示",
+      "path": "app/components/reborn/examples/text-reveal-card/TextRevealCardDemo.vue",
+      "source": "demo",
+      "platform": "web",
+      "code": "<template>\n  <DemoSection\n    title=\"基础用法\"\n    description=\"卡片自己带深色表面；文案是效果的一部分。\"\n  >\n    <DemoBlock layout=\"stack\">\n      <TextRevealCard class=\"mx-auto\">\n        <template #header>\n          <h2 class=\"mb-2 text-lg font-semibold text-white\">文字揭示</h2>\n          <p class=\"text-gray-6 text-sm\">把鼠标移到文字上，看看藏着什么。</p>\n        </template>\n        <template #text>\n          <p class=\"bg-[#323238] bg-clip-text py-4 text-sm font-bold text-transparent sm:py-6 sm:text-3xl md:py-10 md:text-[3rem]\">\n            准备好看见被藏起来的东西\n          </p>\n        </template>\n        <template #revealText>\n          <p\n            :style=\"{\n              textShadow: '4px 4px 15px rgba(0,0,0,0.5)',\n            }\"\n            class=\"bg-linear-to-b from-white to-neutral-300 bg-clip-text py-4 text-sm font-bold text-white sm:py-6 sm:text-3xl md:py-10 md:text-[3rem]\"\n          >\n            光会揭开影子藏住的东西\n          </p>\n        </template>\n      </TextRevealCard>\n      <TextRevealCard\n        :stars-count=\"130\"\n        stars-class=\"bg-red-500\"\n        class=\"mx-auto\"\n      >\n        <template #header>\n          <h2 class=\"mb-2 text-3xl font-semibold\">文字揭示</h2>\n          <p class=\"text-gray-6 text-sm\">把鼠标移到文字上，看看藏着什么。</p>\n        </template>\n        <template #text>\n          <p class=\"text-white\">\n            揭示动画会把藏起来的内容慢慢展开，增强交互感。可以由滚动、点击或进入视口触发。\n          </p>\n        </template>\n        <template #revealText>\n          <p class=\"text-red-500\">\n            揭示动画会把藏起来的内容慢慢展开，增强交互感。可以由滚动、点击或进入视口触发。\n          </p>\n        </template>\n      </TextRevealCard>\n    </DemoBlock>\n  </DemoSection>\n</template>\n"
+    }
+  ],
+  "related": [],
+  "whenToUse": [
+    "深色卡片内做「滑动揭示隐藏文案」的互动彩蛋。",
+    "两段文案的前后对比展示（如乱码与原文、暗示与答案）。"
+  ],
+  "whenNotToUse": [
+    "大面积双层内容的鼠标遮罩揭示，改用 svg-mask。",
+    "刮开涂层式互动，改用 scratch-to-reveal。",
+    "单段文字的悬停描边效果，改用 text-hover-effect。"
+  ],
+  "pitfalls": [
+    "仅 web 端可用。",
+    "内容需分别放入 text（默认显示）与 revealText（揭示后显示）具名插槽，另有 header 插槽放标题区。",
+    "starsCount 控制漂浮星星数量（默认 130），starsClass 自定义星星样式。"
+  ],
+  "dependencies": [
+    "motion-v"
+  ],
+  "install": {
+    "cli": "npx reborn-ui@latest add text-reveal-card"
+  },
+  "sourceRefs": {
+    "web": [
+      "app/components/reborn/ui/text-reveal-card/TextRevealCard.vue",
+      "app/components/reborn/ui/text-reveal-card/TextRevealStars.vue",
+      "app/components/reborn/ui/text-reveal-card/index.ts"
+    ]
+  },
+  "docPath": "content/2.components/text-animations/text-reveal-card.md",
+  "_meta": {
+    "contentHash": "f67d760ed418925357fbff60d4df7b87f66226f2",
+    "hasOverride": true,
+    "extractors": {
+      "web": "ok",
+      "uniapp": "absent",
+      "docs": "found"
+    }
+  }
+}

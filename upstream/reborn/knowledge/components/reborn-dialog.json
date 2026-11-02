@@ -1,0 +1,390 @@
+{
+  "$schema": "../schema/component.schema.json",
+  "id": "reborn-dialog",
+  "title": "Dialog 对话框",
+  "description": "用于模态确认与内容展示的对话框组件，属性对齐 Element Plus Dialog，附 Modal 命令式确认框（info/success/warning/error/confirm + destroyAll），仅 web 端。",
+  "category": "misc",
+  "tags": [],
+  "platforms": [
+    "web"
+  ],
+  "props": [
+    {
+      "name": "title",
+      "type": "string",
+      "required": false,
+      "description": "对话框标题，也可通过 header 具名插槽传入",
+      "default": "\"\""
+    },
+    {
+      "name": "describe",
+      "type": "string",
+      "required": false,
+      "description": "标题下方的描述文字，与标题间隔 8px",
+      "default": "\"\""
+    },
+    {
+      "name": "description",
+      "type": "string",
+      "required": false,
+      "description": "describe 的旧属性名，保留以兼容既有用法；两者同传时 describe 优先",
+      "default": "\"\""
+    },
+    {
+      "name": "width",
+      "type": "string | number",
+      "required": false,
+      "description": "对话框宽度，数字按 px 处理；默认走主题的 max-w 设计宽度",
+      "default": "\"\""
+    },
+    {
+      "name": "fullscreen",
+      "type": "boolean",
+      "required": false,
+      "description": "是否全屏显示",
+      "default": "false"
+    },
+    {
+      "name": "top",
+      "type": "string",
+      "required": false,
+      "description": "非居中形态下面板距视口顶部的距离（CSS margin-top 语义），默认 15vh",
+      "default": "\"15vh\""
+    },
+    {
+      "name": "modal",
+      "type": "boolean",
+      "required": false,
+      "description": "是否需要遮罩层",
+      "default": "true"
+    },
+    {
+      "name": "modalPenetrable",
+      "type": "boolean",
+      "required": false,
+      "description": "是否允许穿透遮罩层与背后页面交互；modal 必须为 false 才生效",
+      "default": "false"
+    },
+    {
+      "name": "appendToBody",
+      "type": "boolean",
+      "required": false,
+      "description": "对话框自身是否插入至 body 元素上；为 true 时忽略 appendTo 强制挂到 body，false 时按 appendTo 挂载（其默认值也是 body）",
+      "default": "false"
+    },
+    {
+      "name": "appendTo",
+      "type": "string | HTMLElement",
+      "required": false,
+      "description": "对话框挂载到哪个 DOM 元素（CSS 选择器或元素），会覆盖 append-to-body",
+      "default": "\"body\""
+    },
+    {
+      "name": "lockScroll",
+      "type": "boolean",
+      "required": false,
+      "description": "出现时是否锁定 body 滚动",
+      "default": "true"
+    },
+    {
+      "name": "openDelay",
+      "type": "number",
+      "required": false,
+      "description": "打开的延时时间（毫秒）",
+      "default": "0"
+    },
+    {
+      "name": "closeDelay",
+      "type": "number",
+      "required": false,
+      "description": "关闭的延时时间（毫秒）",
+      "default": "0"
+    },
+    {
+      "name": "closeOnClickModal",
+      "type": "boolean",
+      "required": false,
+      "description": "是否可以通过点击遮罩关闭",
+      "default": "true"
+    },
+    {
+      "name": "closeOnPressEscape",
+      "type": "boolean",
+      "required": false,
+      "description": "是否可以通过按下 ESC 关闭",
+      "default": "true"
+    },
+    {
+      "name": "showClose",
+      "type": "boolean",
+      "required": false,
+      "description": "是否显示关闭按钮",
+      "default": "true"
+    },
+    {
+      "name": "beforeClose",
+      "type": "(done: () => void) => void",
+      "required": false,
+      "description": "关闭前的回调，会暂停关闭；回调内执行 done 才真正关闭",
+      "default": "undefined"
+    },
+    {
+      "name": "draggable",
+      "type": "boolean",
+      "required": false,
+      "description": "是否启用拖拽（按住头部平移，非全屏时有效）",
+      "default": "false"
+    },
+    {
+      "name": "overflow",
+      "type": "boolean",
+      "required": false,
+      "description": "拖动范围是否可以超出可视区",
+      "default": "false"
+    },
+    {
+      "name": "center",
+      "type": "boolean",
+      "required": false,
+      "description": "header 与 footer 是否居中排列",
+      "default": "false"
+    },
+    {
+      "name": "alignCenter",
+      "type": "boolean",
+      "required": false,
+      "description": "是否水平垂直居中对话框（false 时按 top 顶部落位）",
+      "default": "false"
+    },
+    {
+      "name": "destroyOnClose",
+      "type": "boolean",
+      "required": false,
+      "description": "关闭时是否销毁其中的元素",
+      "default": "false"
+    },
+    {
+      "name": "closeIcon",
+      "type": "string",
+      "required": false,
+      "description": "自定义关闭图标名",
+      "default": "\"lucide:x\""
+    },
+    {
+      "name": "headerAriaLevel",
+      "type": "string",
+      "required": false,
+      "description": "标题的 aria-level 属性",
+      "default": "\"2\""
+    },
+    {
+      "name": "transition",
+      "type": "DialogTransition",
+      "required": false,
+      "description": "面板过渡动画：scale 缩放 / slide 滑动 / fade 淡入淡出 / bounce 弹跳，或 RebornTransition 过渡名 / 属性对象",
+      "default": "\"scale\""
+    },
+    {
+      "name": "scrollable",
+      "type": "boolean",
+      "required": false,
+      "description": "内容是否独立滚动（扩展属性：页头页脚固定，正文滚动；滚动条为浮层式，悬停或滚动时显示、停止后隐藏）",
+      "default": "false"
+    },
+    {
+      "name": "cancelBtn",
+      "type": "DialogActionButton",
+      "required": false,
+      "description": "取消按钮配置：字符串为标签、false 隐藏、对象透传按钮属性",
+      "default": "\"取消\""
+    },
+    {
+      "name": "confirmBtn",
+      "type": "DialogActionButton",
+      "required": false,
+      "description": "确认按钮配置：字符串为标签、false 隐藏、对象透传按钮属性",
+      "default": "\"确认\""
+    },
+    {
+      "name": "zIndex",
+      "type": "number",
+      "required": false,
+      "description": "基础层级：打开时生效，嵌套弹窗或与抽屉叠放时自动递增，保证后打开的在上层",
+      "default": "2400"
+    },
+    {
+      "name": "class",
+      "type": "any",
+      "required": false,
+      "description": "自定义类名（作用于面板）"
+    },
+    {
+      "name": "ui",
+      "type": "RebornDialogUi",
+      "required": false,
+      "description": "UI 样式透传配置 可用键（从源码抽取，以此为准）——Web：backdrop、body、close、description*、footer、header、headerContent、panel、panelWrapper、root、scrollbar、scrollbarWrap、shell、title*、trigger。 带 * 的键对应插槽兜底节点：填了同名插槽，组件自带的节点被替换，这个键随之失效。",
+      "default": "() => ({})"
+    },
+    {
+      "name": "modelValue",
+      "type": "boolean",
+      "required": false,
+      "description": "双向绑定值",
+      "vModel": true,
+      "default": "undefined"
+    }
+  ],
+  "events": [
+    {
+      "name": "beforeOpen",
+      "payload": "(e: \"beforeOpen\"): void;",
+      "description": "打开动作发生时触发（打开动画开始前）"
+    },
+    {
+      "name": "opened",
+      "payload": "(e: \"opened\"): void;",
+      "description": "打开动画结束时触发"
+    },
+    {
+      "name": "beforeClose",
+      "payload": "(e: \"beforeClose\"): void;",
+      "description": "关闭动作发生时触发（关闭动画开始前）"
+    },
+    {
+      "name": "closed",
+      "payload": "(e: \"closed\"): void;",
+      "description": "关闭动画结束时触发"
+    },
+    {
+      "name": "openAutoFocus",
+      "payload": "(e: \"openAutoFocus\"): void;",
+      "description": "输入焦点聚焦在对话框内容时触发"
+    },
+    {
+      "name": "closeAutoFocus",
+      "payload": "(e: \"closeAutoFocus\"): void;",
+      "description": "输入焦点从对话框内容失焦时触发"
+    },
+    {
+      "name": "confirm",
+      "payload": "(e: \"confirm\"): void;",
+      "description": "点击确认按钮触发（不会自动关闭，由使用方决定关闭时机）"
+    },
+    {
+      "name": "cancel",
+      "payload": "(e: \"cancel\"): void;",
+      "description": "点击取消按钮触发（会随后走关闭流程）"
+    },
+    {
+      "name": "update:modelValue",
+      "description": "modelValue 变化时触发（v-model 同步）",
+      "payload": "(value: boolean)"
+    }
+  ],
+  "slots": [
+    {
+      "name": "trigger",
+      "props": "(props: { open: boolean }) => any",
+      "description": "触发器：包裹层点击即打开对话框；open 为当前是否打开"
+    },
+    {
+      "name": "header",
+      "props": "(props: { open: boolean; close: () => void }) => any",
+      "description": "自定义头部，替换默认的标题与描述；close 走 beforeClose 拦截流程"
+    },
+    {
+      "name": "default",
+      "props": "(props: { open: boolean; close: () => void }) => any",
+      "description": "正文内容"
+    },
+    {
+      "name": "footer",
+      "props": "(props: { open: boolean; close: () => void; confirm: () => void; cancel: () => void }) => any",
+      "description": "自定义底部，替换默认的取消 / 确认按钮；confirm、cancel 与默认按钮的行为一致"
+    }
+  ],
+  "exposes": [
+    {
+      "name": "open",
+      "description": "打开对话框"
+    },
+    {
+      "name": "close",
+      "description": "关闭对话框（走 beforeClose 拦截流程）"
+    },
+    {
+      "name": "handleClose",
+      "description": "关闭对话框（对齐 Element Plus 的同名 expose）"
+    },
+    {
+      "name": "resetPosition",
+      "description": "重置拖拽位置"
+    }
+  ],
+  "examples": [
+    {
+      "title": "Web 演示",
+      "path": "app/components/reborn/examples/reborn-dialog/RebornDialogDemo.vue",
+      "source": "demo",
+      "platform": "web",
+      "code": "<script setup lang=\"ts\">\nimport { onBeforeUnmount, shallowRef } from 'vue';\nimport { createDemoTasks } from \"~/components/reborn/examples/shared/demo-tasks\";\nimport { Modal } from \"~/components/reborn/ui/reborn-dialog\";\nimport RebornDialog from \"~/components/reborn/ui/reborn-dialog/RebornDialog.vue\";\nimport { useOverlay } from \"~/composables/useOverlay\";\nimport CloudSyncDialog from \"./dialogs/CloudSyncDialog.vue\";\nimport DraggableDialog from \"./dialogs/DraggableDialog.vue\";\nimport EditProfileDialog from \"./dialogs/EditProfileDialog.vue\";\nimport NestedDialog from \"./dialogs/NestedDialog.vue\";\nimport SuccessDialog from \"./dialogs/SuccessDialog.vue\";\nimport UserAgreementDialog from \"./dialogs/UserAgreementDialog.vue\";\n\n\nconst tasks = createDemoTasks();\nconst modals: Array<{ destroy: () => void }> = [];\n\n// 1. Playground 状态对象（属性命名对齐 Element Plus Dialog）\nconst state = shallowRef({\n  title: \"编辑个人资料\",\n  describe: \"在此修改您的个人账户信息，完成后点击保存。\",\n  width: \"\",\n  top: \"15vh\",\n  modal: true,\n  closeOnClickModal: true,\n  closeOnPressEscape: true,\n  showClose: true,\n  scrollable: false,\n  fullscreen: false,\n  draggable: false,\n  overflow: false,\n  center: false,\n  alignCenter: false,\n  destroyOnClose: false,\n  closeIcon: \"lucide:x\",\n  transition: \"scale\",\n  confirmBtn: \"保存修改\",\n  cancelBtn: \"取消\",\n  openDelay: 0,\n  closeDelay: 0,\n  zIndex: 2400,\n  lockScroll: true,\n});\n\n// 2. Playground 控制面板配置\nconst controls = [\n  {\n    title: \"基础内容\",\n    children: [\n      { label: \"标题文本\", key: \"title\", component: \"input\" as const, defaultValue: \"编辑个人资料\" },\n      { label: \"描述文本 describe\", key: \"describe\", component: \"input\" as const, defaultValue: \"\" },\n      { label: \"宽度 width（如 480px / 60%）\", key: \"width\", component: \"input\" as const, defaultValue: \"\" },\n      { label: \"顶部距离 top\", key: \"top\", component: \"input\" as const, defaultValue: \"15vh\" },\n      {\n        label: \"过渡动画 transition\",\n        key: \"transition\",\n        component: \"select\" as const,\n        defaultValue: \"scale\",\n        props: {\n          options: [\n            { label: \"缩放 scale\", value: \"scale\" },\n            { label: \"滑动 slide\", value: \"slide\" },\n            { label: \"淡入淡出 fade\", value: \"fade\" },\n            { label: \"弹跳 bounce\", value: \"bounce\" },\n          ],\n        },\n      },\n      { label: \"确认按钮\", key: \"confirmBtn\", component: \"input\" as const, defaultValue: \"确认\" },\n      { label: \"取消按钮\", key: \"cancelBtn\", component: \"input\" as const, defaultValue: \"取消\" },\n    ],\n  },\n  {\n    title: \"交互行为\",\n    children: [\n      { label: \"显示遮罩 modal\", key: \"modal\", component: \"checkbox\" as const, defaultValue: true },\n      { label: \"点击遮罩关闭\", key: \"closeOnClickModal\", component: \"checkbox\" as const, defaultValue: true },\n      { label: \"按 ESC 关闭\", key: \"closeOnPressEscape\", component: \"checkbox\" as const, defaultValue: true },\n      { label: \"显示关闭按钮 show-close\", key: \"showClose\", component: \"checkbox\" as const, defaultValue: true },\n      { label: \"允许滚动正文\", key: \"scrollable\", component: \"checkbox\" as const, defaultValue: false },\n      { label: \"全屏显示\", key: \"fullscreen\", component: \"checkbox\" as const, defaultValue: false },\n      { label: \"允许拖拽头部\", key: \"draggable\", component: \"checkbox\" as const, defaultValue: false },\n      { label: \"拖拽可超出可视区 overflow\", key: \"overflow\", component: \"checkbox\" as const, defaultValue: false },\n      { label: \"头尾居中 center\", key: \"center\", component: \"checkbox\" as const, defaultValue: false },\n      { label: \"垂直居中 align-center\", key: \"alignCenter\", component: \"checkbox\" as const, defaultValue: false },\n      { label: \"关闭时销毁内容\", key: \"destroyOnClose\", component: \"checkbox\" as const, defaultValue: false },\n      { label: \"锁定背景滚动\", key: \"lockScroll\", component: \"checkbox\" as const, defaultValue: true },\n    ],\n  },\n  {\n    title: \"高级配置\",\n    children: [\n      { label: \"打开延迟(ms)\", key: \"openDelay\", component: \"input-number\" as const, defaultValue: 0 },\n      { label: \"关闭延迟(ms)\", key: \"closeDelay\", component: \"input-number\" as const, defaultValue: 0 },\n      { label: \"层级(z-index)\", key: \"zIndex\", component: \"input-number\" as const, defaultValue: 2400 },\n    ],\n  },\n];\n\n// 3. 业务状态\nconst nestedOpen1 = shallowRef(false);\nconst nestedOpen2 = shallowRef(false);\nconst asyncOpen = shallowRef(false);\nconst saving = shallowRef(false);\nconst layoutOpen = shallowRef(false);\nconst layoutMode = shallowRef<\"top\" | \"alignCenter\" | \"center\">(\"top\");\nconst transitionOpen = shallowRef(false);\nconst transitionMode = shallowRef<\"scale\" | \"slide\" | \"fade\" | \"bounce\">(\"scale\");\n\n/** 打开过渡动画演示：scale 缩放 / slide 滑动 / fade 淡入淡出 / bounce 弹跳 */\nfunction openTransitionDialog(mode: \"scale\" | \"slide\" | \"fade\" | \"bounce\") {\n  transitionMode.value = mode;\n  transitionOpen.value = true;\n}\n\n/** 关闭后重开一次，回放当前过渡动画的入场效果 */\nfunction replayTransition() {\n  transitionOpen.value = false;\n  tasks.schedule(() => {\n    transitionOpen.value = true;\n  }, 300);\n}\n\n/** 演示用的长文本，用来撑出需要独立滚动的正文区域 */\nconst longContent = Array.from(\n  { length: 15 },\n  (_, i) =>\n    `这是第 ${i + 1} 段演示文本。Dialog 组件支持在内容过多时开启 scrollable 模式，此时面板高度会被限制，正文区域将独立滚动，而页头和页脚始终保持固定在视口中。`,\n).join(\"\\n\\n\");\n\n/** 演练场中展示的只读表单字段，用来说明 Dialog 常见的承载内容 */\nconst profileFields = [\n  { label: \"姓氏\", value: \"安\" },\n  { label: \"名字\", value: \"重力\" },\n  { label: \"电子邮箱\", value: \"antigravity@example.com\" },\n];\n\nfunction handleAsyncConfirm() {\n  saving.value = true;\n  tasks.schedule(() => {\n    saving.value = false;\n    asyncOpen.value = false;\n  }, 2000);\n}\n\n/** 打开布局演示：top 顶部落位 / align-center 垂直居中 / center 头尾居中 */\nfunction openLayoutDialog(mode: \"top\" | \"alignCenter\" | \"center\") {\n  layoutMode.value = mode;\n  layoutOpen.value = true;\n}\n\n// ─── 命令式调用：Modal 类型方法 ───────────────────────────────────────────\n\nfunction openModalInfo() {\n  modals.push(Modal.info({\n    title: \"版本更新提示\",\n    content: \"检测到新版本 v2.4.0，包含性能优化与若干问题修复，建议尽快更新体验。\",\n    cancelText: \"稍后再说\",\n    okText: \"立即更新\",\n  }));\n}\n\nfunction openModalSuccess() {\n  modals.push(Modal.success({\n    title: \"发布成功\",\n    content: \"组件文档已发布至生产环境，全站缓存将在 5 分钟内刷新。\",\n  }));\n}\n\nfunction openModalWarning() {\n  modals.push(Modal.warning({\n    title: \"存储空间不足\",\n    content: \"当前工作区剩余空间不足 5%，请及时清理历史构建产物。\",\n  }));\n}\n\nfunction openModalError() {\n  modals.push(Modal.error({\n    title: \"同步失败\",\n    content: \"与远端仓库的连接超时，请检查网络后重试。\",\n  }));\n}\n\nfunction openModalConfirm() {\n  modals.push(Modal.confirm({\n    title: \"确认删除该分支？\",\n    content: \"删除后分支上的未合并提交将无法恢复，此操作不可撤销。\",\n    okText: \"删除\",\n    onOk: (close) => {\n      console.log(\"已确认删除\");\n      close();\n    },\n    onCancel: (close) => {\n      console.log(\"已取消\");\n      close();\n    },\n  }));\n}\n\n/** onBeforeOk 异步门控：确定按钮进入 loading，两秒后 done(true) 关闭 */\nfunction openModalAsyncConfirm() {\n  modals.push(Modal.confirm({\n    title: \"提交审核\",\n    content: \"点击确定后将模拟 2 秒的异步提交，期间确定按钮保持 loading；失败场景可 done(false) 仅结束加载。\",\n    okText: \"提交\",\n    onBeforeOk: (done) => {\n      tasks.schedule(() => done(true), 2000);\n    },\n  }));\n}\n\n/** 批量弹出后一键销毁，模拟路由切换场景 */\nfunction openModalBatch() {\n  modals.push(Modal.info({ title: \"第一个确认框\", content: \"3 秒后 Modal.destroyAll() 将统一销毁。\", top: \"10vh\", alignCenter: false }));\n  modals.push(Modal.warning({ title: \"第二个确认框\", content: \"无需持有实例句柄即可被批量销毁。\", top: \"26vh\", alignCenter: false }));\n  tasks.schedule(() => Modal.destroyAll(), 3000);\n}\n\n// 4. useOverlay composables\nconst overlay = useOverlay();\n\n// Playground overlay 实例 - 使用原始 RebornDialog\nconst playgroundDialog = overlay.create(RebornDialog, {\n  props: state.value,\n});\n\n// 编辑个人资料 overlay 实例 - 使用二次封装组件\nconst editProfileDialog = overlay.create(EditProfileDialog, {\n  props: {},\n});\n\n// 嵌套弹窗 overlay 实例 - 使用二次封装组件\nconst nestedDialog = overlay.create(NestedDialog, {\n  props: {},\n});\n\n// 用户协议 overlay 实例 - 使用二次封装组件\nconst userAgreementDialog = overlay.create(UserAgreementDialog, {\n  props: {},\n});\n\n// 云端同步 overlay 实例 - 使用二次封装组件\nconst cloudSyncDialog = overlay.create(CloudSyncDialog, {\n  props: {},\n  /** 确认期间由服务托管加载与关闭门控，卸载时取消等待。 */\n  onConfirm: async () => {\n    if (!await tasks.wait(2000)) throw new Error(\"演示已卸载\");\n  },\n});\n\n// 拖拽演示 overlay 实例 - 使用二次封装组件\nconst draggableDialog = overlay.create(DraggableDialog, {\n  props: {},\n});\n\n// 成功提示 overlay 实例 - 使用二次封装组件\nconst successDialog = overlay.create(SuccessDialog, {\n  props: {},\n});\n\n// 延迟打开/关闭演示 overlay 实例\nconst delayedDialog = overlay.create(RebornDialog, {\n  props: {\n    title: \"延迟效果演示\",\n    describe: \"此对话框有 500ms 的打开和关闭延迟\",\n    openDelay: 500,\n    closeDelay: 500,\n    confirmBtn: \"确定\",\n    cancelBtn: \"取消\",\n  },\n});\n\n// 全屏模式演示 overlay 实例\nconst fullscreenDialog = overlay.create(RebornDialog, {\n  props: {\n    title: \"全屏模式\",\n    describe: \"全屏显示的对话框，适合展示大量内容\",\n    fullscreen: true,\n    confirmBtn: \"关闭\",\n  },\n});\n\n// 自定义关闭按钮图标演示 overlay 实例\nconst customIconDialog = overlay.create(RebornDialog, {\n  props: {\n    title: \"自定义关闭按钮\",\n    describe: \"使用不同的图标作为关闭按钮\",\n    closeIcon: \"lucide:arrow-left\",\n    confirmBtn: \"确定\",\n  },\n});\n\n// 打开 Playground Dialog\nasync function openPlaygroundDialog() {\n  await playgroundDialog.open(state.value);\n}\n\n// 打开编辑个人资料 Dialog\nasync function openEditProfileDialog() {\n  const result = await editProfileDialog.open();\n  console.log(\"编辑个人资料结果:\", result);\n}\n\n// 打开嵌套 Dialog\nasync function openNestedDialog() {\n  await nestedDialog.open();\n}\n\n// 打开用户协议 Dialog\nasync function openUserAgreementDialog() {\n  await userAgreementDialog.open();\n}\n\n// 打开云端同步 Dialog\nasync function openCloudSyncDialog() {\n  await cloudSyncDialog.open();\n}\n\n// 打开拖拽 Dialog\nasync function openDraggableDialog() {\n  await draggableDialog.open();\n}\n\n// 打开成功提示 Dialog\nasync function openSuccessDialog() {\n  await successDialog.open();\n}\n\n// 打开延迟效果 Dialog\nasync function openDelayedDialog() {\n  console.log(\"开始打开（延迟 500ms）...\");\n  await delayedDialog.open();\n  console.log(\"已关闭（延迟 500ms）\");\n}\n\n// 打开全屏模式 Dialog\nasync function openFullscreenDialog() {\n  await fullscreenDialog.open();\n}\n\n// 打开自定义图标 Dialog\nasync function openCustomIconDialog() {\n  await customIconDialog.open();\n}\n/** 页面卸载时注销本页创建的服务实例和定时任务。 */\nonBeforeUnmount(() => {\n  tasks.dispose();\n  [playgroundDialog, editProfileDialog, nestedDialog, userAgreementDialog, cloudSyncDialog, draggableDialog, successDialog, delayedDialog, fullscreenDialog, customIconDialog].forEach(item => overlay.unmount(item.id));\n  modals.forEach(item => item.destroy());\n});\n</script>\n\n<template>\n  <div class=\"flex w-full min-w-0 flex-col\">\n    <Playground v-model=\"state\" :controls=\"controls\" component-name=\"RebornDialog\" title=\"交互演练场\"\n      description=\"调节上方属性，实时预览 Dialog 的视觉效果与交互反馈；属性命名与 Element Plus Dialog 对齐。\">\n      <DemoBlock>\n        <RebornDialog v-bind=\"state\" @confirm=\"() => console.log('Confirm clicked')\"\n          @cancel=\"() => console.log('Cancel clicked')\">\n          <template #trigger>\n            <RebornButton label=\"打开对话框（组件式）\" color=\"primary\" variant=\"filled\" />\n          </template>\n\n          <!-- 只读字段列表：靠分隔线区分行，不额外铺底色 -->\n          <div class=\"divide-default flex flex-col divide-y\">\n            <div v-for=\"field in profileFields\" :key=\"field.label\"\n              class=\"flex items-center justify-between gap-4 py-2.5\">\n              <span class=\"text-muted text-sm\">{{ field.label }}</span>\n              <span class=\"text-highlighted text-sm font-medium\">{{ field.value }}</span>\n            </div>\n          </div>\n        </RebornDialog>\n\n        <RebornButton label=\"打开对话框（服务式）\" color=\"secondary\" variant=\"outlined\" @click=\"openPlaygroundDialog\" />\n        <RebornButton label=\"二次封装组件\" color=\"neutral\" variant=\"soft\" @click=\"openEditProfileDialog\" />\n      </DemoBlock>\n    </Playground>\n\n    <DemoSection title=\"命令式调用：Modal 类型方法\"\n      description=\"Modal.info / success / warning / error / confirm 直接以函数打开确认框；onBeforeOk 支持返回 false 阻断或 done 异步关闭，onOk / onCancel 返回 Promise 时 resolve 关闭、reject 保持；Modal.destroyAll() 可在路由切换等场景批量销毁。\">\n      <DemoBlock>\n        <RebornButton label=\"Modal.info\" color=\"info\" variant=\"soft\" @click=\"openModalInfo\" />\n        <RebornButton label=\"Modal.success\" color=\"success\" variant=\"soft\" @click=\"openModalSuccess\" />\n        <RebornButton label=\"Modal.warning\" color=\"warning\" variant=\"soft\" @click=\"openModalWarning\" />\n        <RebornButton label=\"Modal.error\" color=\"error\" variant=\"soft\" @click=\"openModalError\" />\n        <RebornButton label=\"Modal.confirm\" color=\"primary\" variant=\"outlined\" @click=\"openModalConfirm\" />\n        <RebornButton label=\"onBeforeOk 异步关闭\" color=\"primary\" variant=\"outlined\" @click=\"openModalAsyncConfirm\" />\n        <RebornButton label=\"destroyAll 批量销毁\" color=\"neutral\" variant=\"outlined\" @click=\"openModalBatch\" />\n      </DemoBlock>\n      <DemoNote tone=\"dimmed\" class=\"mt-3\">confirm 的回调结果会打印在浏览器控制台。</DemoNote>\n    </DemoSection>\n\n    <DemoSection title=\"布局：顶部落位、垂直居中与头尾居中\"\n      description=\"默认按 top（15vh）顶部落位；align-center 改为水平垂直居中；center 让 header 与 footer 内容居中排列；width 支持数字（px）或任意 CSS 宽度。\">\n      <DemoBlock>\n        <RebornButton label=\"top: 8vh 顶部落位\" variant=\"outlined\" @click=\"openLayoutDialog('top')\" />\n        <RebornButton label=\"align-center 垂直居中\" variant=\"outlined\" @click=\"openLayoutDialog('alignCenter')\" />\n        <RebornButton label=\"center 头尾居中 + width 360\" variant=\"outlined\" @click=\"openLayoutDialog('center')\" />\n\n        <RebornDialog v-model=\"layoutOpen\" title=\"布局演示\"\n          :describe=\"layoutMode === 'top' ? '当前按 top: 8vh 顶部落位。' : layoutMode === 'alignCenter' ? '当前为 align-center 垂直居中。' : '当前 center 头尾居中，宽度 360px。'\"\n          :top=\"layoutMode === 'top' ? '8vh' : '15vh'\" :align-center=\"layoutMode !== 'top'\"\n          :center=\"layoutMode === 'center'\" :width=\"layoutMode === 'center' ? 360 : ''\" confirm-btn=\"知道了\"\n          :cancel-btn=\"false\">\n          <p class=\"text-muted text-sm\">切换不同按钮可对比三种布局形态的差异。</p>\n        </RebornDialog>\n      </DemoBlock>\n    </DemoSection>\n\n    <DemoSection title=\"过渡动画预设\"\n      description=\"transition 支持四种语义预设：scale 缩放（默认，带回弹）/ slide 滑动（自上方滑入）/ fade 淡入淡出 / bounce 弹跳（关键帧入场）；也接受任意 RebornTransition 过渡名或属性对象。\">\n      <DemoBlock>\n        <RebornButton label=\"scale 缩放\" color=\"primary\" variant=\"outlined\" @click=\"openTransitionDialog('scale')\" />\n        <RebornButton label=\"slide 滑动\" color=\"primary\" variant=\"outlined\" @click=\"openTransitionDialog('slide')\" />\n        <RebornButton label=\"fade 淡入淡出\" color=\"primary\" variant=\"outlined\" @click=\"openTransitionDialog('fade')\" />\n        <RebornButton label=\"bounce 弹跳\" color=\"primary\" variant=\"outlined\" @click=\"openTransitionDialog('bounce')\" />\n\n        <RebornDialog v-model=\"transitionOpen\" title=\"过渡动画演示\" :transition=\"transitionMode\"\n          :describe=\"`当前动画：${transitionMode}，重新打开可回放入场效果。`\" align-center confirm-btn=\"再看一次\" cancel-btn=\"关闭\"\n          @confirm=\"replayTransition\">\n          <p class=\"text-muted text-sm\">关闭时同样带有对应的离场动画，可用 ESC / 遮罩点击观察。</p>\n        </RebornDialog>\n      </DemoBlock>\n    </DemoSection>\n\n    <DemoSection title=\"嵌套弹窗\" description=\"内层 Dialog 写在外层的插槽里即可叠放；各层 z-index 相同，靠挂载先后决定上下，内层后挂载所以在上。\">\n      <DemoBlock>\n        <RebornDialog v-model=\"nestedOpen1\" title=\"第一层对话框\" describe=\"您可以点击下方按钮开启更深一层的交互。\">\n          <template #trigger>\n            <RebornButton label=\"开启嵌套流程（组件式）\" color=\"neutral\" variant=\"outlined\" />\n          </template>\n\n          <!-- 业务内容占位：只描边不填充，避免在弹窗面板内再叠一层表面 -->\n          <div\n            class=\"border-default text-dimmed rounded-lg flex items-center justify-center border border-dashed py-10 text-sm\">\n            第一层业务内容区域\n          </div>\n\n          <template #footer>\n            <RebornDialog v-model=\"nestedOpen2\" title=\"第二层确认\" describe=\"确定要执行这项操作吗？\">\n              <template #trigger>\n                <RebornButton label=\"下一步\" color=\"primary\" />\n              </template>\n              <p class=\"text-warning text-sm font-medium\">警告：此操作不可撤销，请谨慎处理。</p>\n              <template #footer>\n                <RebornButton label=\"我已确认\" color=\"primary\" @click=\"nestedOpen2 = false; nestedOpen1 = false\" />\n              </template>\n            </RebornDialog>\n          </template>\n        </RebornDialog>\n\n        <RebornButton label=\"开启嵌套流程（服务式）\" color=\"neutral\" variant=\"soft\" @click=\"openNestedDialog\" />\n      </DemoBlock>\n    </DemoSection>\n\n    <DemoSection title=\"长内容：scrollable 正文滚动\" description=\"开启 scrollable 属性，使正文区域在高度受限时独立滚动，页头与页脚保持固定。\">\n      <DemoBlock>\n        <RebornDialog title=\"用户服务协议\" scrollable describe=\"更新日期：2026年3月\">\n          <template #trigger>\n            <RebornButton label=\"阅读协议详情（组件式）\" color=\"neutral\" variant=\"soft\" />\n          </template>\n\n          <div class=\"text-muted text-sm leading-relaxed whitespace-pre-wrap\">\n            {{ longContent }}\n          </div>\n        </RebornDialog>\n\n        <RebornButton label=\"阅读协议详情（服务式）\" color=\"neutral\" variant=\"outlined\" @click=\"openUserAgreementDialog\" />\n      </DemoBlock>\n    </DemoSection>\n\n    <DemoSection title=\"异步确认：按钮 loading\" description=\"confirmBtn 传入对象可携带 loading 状态，模拟后端请求成功后再关闭弹窗。\">\n      <DemoBlock>\n        <RebornDialog v-model=\"asyncOpen\" title=\"同步云端设置\" describe=\"正在将您的配置上传至私有云端节点...\"\n          :confirm-btn=\"{ label: '立即同步', loading: saving }\" :cancel-btn=\"saving ? false : '稍后再说'\"\n          @confirm=\"handleAsyncConfirm\">\n          <template #trigger>\n            <RebornButton label=\"执行同步（组件式）\" color=\"secondary\" variant=\"soft\" />\n          </template>\n\n          <!-- 弹窗面板内的语义提示条，属原子标记而非嵌套容器 -->\n          <div class=\"bg-secondary/10 text-secondary rounded-lg flex items-center gap-3 p-3\">\n            <Icon name=\"lucide:cloud-upload\" class=\"size-5 shrink-0\" />\n            <span class=\"text-xs font-medium\">系统检测到 3 项配置需要合并同步。</span>\n          </div>\n        </RebornDialog>\n\n        <RebornButton label=\"执行同步（服务式）\" color=\"secondary\" variant=\"outlined\" @click=\"openCloudSyncDialog\" />\n      </DemoBlock>\n    </DemoSection>\n\n    <DemoSection title=\"拖拽与 ui 样式定制\" description=\"draggable 允许按住标题区域平移，默认限制在可视区内，开启 overflow 后可拖出屏幕；ui 对象可精细重写面板、页头与页脚。\">\n      <DemoBlock layout=\"grid\" align=\"start\" class=\"lg:grid-cols-2\">\n        <div class=\"flex flex-col gap-3\">\n          <span class=\"text-dimmed text-xs font-medium\">自由拖拽 · <code>draggable</code> / <code>overflow</code></span>\n          <DemoBlock>\n            <RebornDialog title=\"自由拖拽\" draggable describe=\"按住标题区域即可平移位置（默认不出可视区）。\">\n              <template #trigger>\n                <RebornButton label=\"拖拽演示（组件式）\" variant=\"outlined\" />\n              </template>\n              <div class=\"text-dimmed flex flex-col items-center gap-2 py-6 text-center\">\n                <Icon name=\"lucide:mouse-pointer-2\" class=\"size-8 opacity-40\" />\n                <p class=\"text-xs\">该模式下弹窗不会锁定在屏幕正中</p>\n              </div>\n            </RebornDialog>\n\n            <RebornDialog title=\"可拖出屏幕\" draggable overflow describe=\"开启 overflow 后拖动范围可超出可视区。\">\n              <template #trigger>\n                <RebornButton label=\"overflow 拖拽\" variant=\"soft\" />\n              </template>\n              <p class=\"text-dimmed py-6 text-center text-xs\">试着把弹窗拖出屏幕边缘，再用页脚按钮关闭。</p>\n            </RebornDialog>\n\n            <RebornButton label=\"拖拽演示（服务式）\" variant=\"soft\" @click=\"openDraggableDialog\" />\n          </DemoBlock>\n        </div>\n\n        <div class=\"flex flex-col gap-3\">\n          <span class=\"text-dimmed text-xs font-medium\">精简模式 · <code>ui</code> 深度重写</span>\n          <DemoBlock>\n            <RebornDialog :show-close=\"false\" title=\"精简模式\" :ui=\"{\n              panel: 'max-w-[360px] rounded-3xl',\n              header: 'border-0 pb-0',\n              body: 'text-center pt-2 pb-6',\n              footer: 'border-0 pt-0 justify-center pb-6',\n            }\">\n              <template #trigger>\n                <RebornButton label=\"自定义 UI（组件式）\" variant=\"outlined\" />\n              </template>\n              <div\n                class=\"bg-success/10 text-success mx-auto mb-4 flex size-16 items-center justify-center rounded-full\">\n                <Icon name=\"lucide:check-circle-2\" class=\"size-8\" />\n              </div>\n              <h4 class=\"text-highlighted mb-1 text-base font-semibold\">操作已成功</h4>\n              <p class=\"text-muted text-xs\">您的设置已即时生效，无需额外操作。</p>\n              <template #footer>\n                <RebornButton label=\"好的，我知道了\" color=\"primary\" class=\"w-full\" />\n              </template>\n            </RebornDialog>\n\n            <RebornButton label=\"自定义 UI（服务式）\" variant=\"soft\" @click=\"openSuccessDialog\" />\n          </DemoBlock>\n        </div>\n      </DemoBlock>\n    </DemoSection>\n\n    <DemoSection title=\"服务式调用：延迟、全屏与关闭图标\" description=\"useOverlay 创建的实例可在任意逻辑中直接唤起，无需在模板里预先占位。\">\n      <DemoBlock>\n        <RebornButton label=\"延迟 500ms 开关\" color=\"neutral\" variant=\"outlined\" @click=\"openDelayedDialog\" />\n        <RebornButton label=\"全屏模式\" color=\"neutral\" variant=\"outlined\" @click=\"openFullscreenDialog\" />\n        <RebornButton label=\"自定义关闭图标\" color=\"neutral\" variant=\"outlined\" @click=\"openCustomIconDialog\" />\n      </DemoBlock>\n      <DemoNote tone=\"dimmed\" class=\"mt-3\">延迟示例的开关时机会打印在浏览器控制台。</DemoNote>\n    </DemoSection>\n  </div>\n</template>\n"
+    }
+  ],
+  "related": [
+    "reborn-button",
+    "reborn-drawer",
+    "reborn-transition",
+    "scrollbar"
+  ],
+  "whenToUse": [
+    "需要确认/取消按钮的模态操作确认（confirm/cancel 事件）。",
+    "免模板占位的命令式确认框：Modal.info/success/warning/error/confirm(config)，onBeforeOk 支持异步 done 关闭、onOk/onCancel 支持 Promise 门控。",
+    "把触发按钮放 trigger 插槽、点击即开的免受控弹窗用法。",
+    "关闭前需要异步拦截（beforeClose 调用 done() 才关闭）的场景。",
+    "需要可拖拽（draggable，配 overflow 可拖出屏幕）或全屏（fullscreen）展示的弹窗。"
+  ],
+  "whenNotToUse": [
+    "uniapp 端不可用（仅 web），UniApp 弹层改用 reborn-popup。",
+    "轻量操作结果提示，改用 reborn-toast。"
+  ],
+  "pitfalls": [
+    "仅 web 端可用。",
+    "显隐为 v-model（modelValue），旧的 v-model:open 已废弃；未绑定时组件内部自管理。",
+    "正文放 default 插槽，触发器放 trigger 具名插槽（与 Element Plus 的 default=正文对齐），勿混淆。",
+    "描述文字参数为 describe（旧名 description 兼容、describe 优先），与标题间隔 8px；普通面板统一 p-5（四边 20px）、header/body/footer 之间 gap-[20px]，header/footer 无分隔线，footer 按钮靠右、间隔 8px（取消 neutral+outlined、确认 filled，均 size=md、border-style=solid）。",
+    "默认按 top（15vh）顶部落位，需要垂直居中要开 align-center；center 只管 header/footer 内容居中。",
+    "遮罩关闭/ESC 分别由 close-on-click-modal、close-on-press-escape 控制；modal-penetrable 需 modal=false 才生效。",
+    "点击确认按钮触发 confirm 事件但默认不自动关闭，取消按钮默认会关闭；before-close 拦截全部关闭入口。",
+    "destroy-on-close 默认 false：首开后内容 DOM 常驻复用，需要每次重置内部状态就开它。",
+    "Modal.method() 的遮罩/ESC/关闭按钮统一走 onBeforeCancel/onCancel 门控；onLoading 默认开启，异步期间按钮 loading；返回 { close, destroy }，Modal.destroyAll() 批量销毁（跳过动画）。",
+    "draggable 在 fullscreen 模式下无效，默认拖拽限制在可视区内（overflow 放开）；lockScroll 默认 true 打开时锁定页面滚动。",
+    "事件名对齐 Element Plus：before-open/opened/before-close/closed/open-auto-focus/close-auto-focus；expose 有 open/close/handleClose/resetPosition。",
+    "嵌套弹窗与 Drawer 共用弹层栈：Esc 只关闭最上层，z-index 是基础层级，打开时自动递增到高于已打开的弹层；未声明的属性（id/style/data-*/aria-*）透传到面板节点。"
+  ],
+  "dependencies": [
+    "clsx",
+    "motion-v",
+    "tailwind-merge",
+    "tailwind-variants"
+  ],
+  "install": {
+    "cli": "npx reborn-ui@latest add reborn-dialog"
+  },
+  "sourceRefs": {
+    "web": [
+      "app/components/reborn/ui/reborn-dialog/RebornDialog.vue",
+      "app/components/reborn/ui/reborn-dialog/index.ts",
+      "app/components/reborn/ui/reborn-dialog/reborn-dialog.config.ts"
+    ]
+  },
+  "docPath": "content/2.components/miscellaneous/reborn-dialog.md",
+  "_meta": {
+    "contentHash": "d5082fa43fdac260c3917d8477943a6e9b19007c",
+    "hasOverride": true,
+    "extractors": {
+      "web": "ok",
+      "uniapp": "absent",
+      "docs": "found"
+    }
+  }
+}

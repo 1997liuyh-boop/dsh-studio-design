@@ -1,0 +1,155 @@
+{
+  "$schema": "../schema/component.schema.json",
+  "id": "reborn-picker-view",
+  "title": "PickerView 选择器视图",
+  "description": "用于内嵌页面滚动选择多列选项的 uniapp 选择器视图组件。",
+  "category": "form",
+  "tags": [
+    "uniapp",
+    "picker",
+    "picker-view",
+    "form"
+  ],
+  "platforms": [
+    "uniapp"
+  ],
+  "props": [
+    {
+      "name": "color",
+      "type": "typeof pickerColors[number]",
+      "required": false,
+      "description": "颜色",
+      "default": "'primary'"
+    },
+    {
+      "name": "headers",
+      "type": "string[]",
+      "required": false,
+      "description": "表头",
+      "default": "() => []"
+    },
+    {
+      "name": "columns",
+      "type": "SelectOption[][]",
+      "required": false,
+      "description": "列数据",
+      "default": "() => []"
+    },
+    {
+      "name": "itemHeight",
+      "type": "number",
+      "required": false,
+      "description": "每项高度",
+      "default": "isAppIOS() ? 50 : 42"
+    },
+    {
+      "name": "height",
+      "type": "number",
+      "required": false,
+      "description": "整体高度",
+      "default": "300"
+    },
+    {
+      "name": "ui",
+      "type": "Partial<{\n    wrapper: ClassValue\n    header: ClassValue\n    headerText: ClassValue\n    pickerContainer: ClassValue\n    item: ClassValue\n    itemText: ClassValue\n    indicator: ClassValue\n  }>",
+      "required": false,
+      "description": "样式覆盖 可用键（从源码抽取，以此为准）——UniApp：header、headerText、indicator、item、itemText、pickerContainer、wrapper。"
+    },
+    {
+      "name": "value",
+      "type": "number[]",
+      "required": false,
+      "description": "双向绑定值",
+      "vModel": true,
+      "default": "[]"
+    }
+  ],
+  "events": [
+    {
+      "name": "change-value",
+      "payload": "(e: 'change-value', values: any[]): void",
+      "description": "选中项变化时触发，参数为各列选中项的 `value` 组成的数组。"
+    },
+    {
+      "name": "change-index",
+      "payload": "(e: 'change-index', indexes: number[]): void",
+      "description": "选中项变化时触发，参数为各列选中项的索引数组。"
+    },
+    {
+      "name": "change-item",
+      "payload": "(e: 'change-item', item: any): void",
+      "description": "选中项变化时触发，参数为各列选中的完整选项对象组成的数组。"
+    },
+    {
+      "name": "update:value",
+      "description": "value 变化时触发（v-model 同步）"
+    }
+  ],
+  "slots": [
+    {
+      "name": "default",
+      "description": "自定义每个选项的渲染内容，默认渲染 `item.label` 文本。"
+    }
+  ],
+  "exposes": [],
+  "examples": [
+    {
+      "title": "Web 演示",
+      "path": "app/components/reborn/examples/reborn-picker-view/RebornPickerViewDemo.vue",
+      "source": "demo",
+      "platform": "web",
+      "code": "<template>\n  <div class=\"border-default rounded-lg border border-dashed p-6 text-center\">\n    <DemoNote>Web 端暂未提供此组件，请在 UniApp 端查看。</DemoNote>\n  </div>\n</template>\n"
+    },
+    {
+      "title": "UniApp 演示",
+      "path": "packages/uniapp-project/src/pages/reborn-picker-view/RebornPickerViewDemo.vue",
+      "source": "demo",
+      "platform": "uniapp",
+      "code": "<script setup lang=\"ts\">\nimport { computed, shallowRef } from 'vue'\nimport RebornPage from '@/components/reborn-page/RebornPage.vue'\nimport RebornCard from '@/components/reborn-card/RebornCard.vue'\nimport RebornPickerView from '@/components/reborn-picker-view/RebornPickerView.vue'\n\nconst columns = [\n  [\n    { label: '周一', value: 1 },\n    { label: '周二', value: 2 },\n    { label: '周三', value: 3 },\n    { label: '周四', value: 4 },\n    { label: '周五', value: 5 },\n  ],\n  [\n    { label: '上午', value: 1 },\n    { label: '下午', value: 2 },\n  ],\n]\n\nconst value = shallowRef([0, 0])\nconst selectedValues = computed(() => value.value.map((index, column) => columns[column]?.[index]?.value))\n</script>\n\n<template>\n  <RebornPage title=\"PickerView 选择器视图\">\n    <RebornCard title=\"基础用法\">\n      <view class=\"h-[300px] w-full bg-white rounded-lg overflow-hidden\">\n        <RebornPickerView\n          :columns=\"columns\"\n          v-model:value=\"value\"\n        />\n      </view>\n      <view class=\"mt-4 text-sm text-gray-500\">\n        当前选中值: {{ selectedValues }}\n      </view>\n    </RebornCard>\n  </RebornPage>\n</template>\n"
+    }
+  ],
+  "related": [],
+  "whenToUse": [
+    "需要直接内嵌在页面/弹层中的滚动选择列表（非自带弹层）时。",
+    "多列联动选择，columns 传 SelectOption 二维数组并配 headers 列标题时。",
+    "作为 reborn-select 底层选择视图之外的独立定制场景。"
+  ],
+  "whenNotToUse": [
+    "需要触发器加弹层的完整下拉选择改用 reborn-select。",
+    "日期选择改用 reborn-date-picker。"
+  ],
+  "pitfalls": [
+    "仅 uniapp 端可用。",
+    "绑定用 value + update:value（number[] 各列选中索引），而非 modelValue。",
+    "itemHeight 默认值区分平台：iOS App 为 50，其余为 42；整体高度 height 默认 300。",
+    "变化事件有 change-value/change-index/change-item 三种粒度。"
+  ],
+  "dependencies": [
+    "@weapp-tailwindcss/merge-v3",
+    "@weapp-tailwindcss/variants-v3",
+    "clsx",
+    "lodash-es",
+    "tailwind-merge",
+    "tailwind-variants"
+  ],
+  "install": {
+    "cli": "npx reborn-ui@latest add reborn-picker-view"
+  },
+  "sourceRefs": {
+    "uniapp": [
+      "packages/uniapp-project/src/components/reborn-picker-view/RebornPickerView.vue",
+      "packages/uniapp-project/src/components/reborn-picker-view/index.ts",
+      "packages/uniapp-project/src/components/reborn-picker-view/reborn-picker-view.config.ts"
+    ]
+  },
+  "docPath": "content/2.components/input-and-forms/reborn-picker-view.md",
+  "_meta": {
+    "contentHash": "2def387eacfe1ca3f9eda48d83d2a46bbfb87fb4",
+    "hasOverride": true,
+    "extractors": {
+      "web": "absent",
+      "uniapp": "ok",
+      "docs": "found"
+    }
+  }
+}

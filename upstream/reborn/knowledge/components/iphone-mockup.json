@@ -1,0 +1,89 @@
+{
+  "$schema": "../schema/component.schema.json",
+  "id": "iphone-mockup",
+  "title": "iPhone 模型",
+  "description": "用于以 iPhone SVG 外壳包裹展示截图的设备模型组件。",
+  "category": "media",
+  "tags": [
+    "css",
+    "tailwind",
+    "device-mockup",
+    "magic-ui"
+  ],
+  "platforms": [
+    "web"
+  ],
+  "props": [
+    {
+      "name": "width",
+      "type": "number",
+      "required": false,
+      "description": "模型 SVG 的宽度，单位 px",
+      "default": "433"
+    },
+    {
+      "name": "height",
+      "type": "number",
+      "required": false,
+      "description": "模型 SVG 的高度，单位 px",
+      "default": "882"
+    },
+    {
+      "name": "src",
+      "type": "string",
+      "required": false,
+      "description": "屏幕中显示的图片地址，按 cover 方式铺满屏幕区域"
+    },
+    {
+      "name": "iframeSrc",
+      "type": "string",
+      "required": false,
+      "description": "屏幕中嵌入的页面地址，以 iframe 渲染；与 src 同时传入时优先显示页面"
+    }
+  ],
+  "events": [],
+  "slots": [],
+  "exposes": [],
+  "examples": [
+    {
+      "title": "Web 演示",
+      "path": "app/components/reborn/examples/iphone-mockup/iPhone15ProMockupDemo.vue",
+      "source": "demo",
+      "platform": "web",
+      "code": "<!-- eslint-disable check-file/filename-naming-convention -->\n<template>\n    <div class=\"relative flex w-full flex-col items-center justify-center p-8\">\n        <IPhone15ProMockup iframe-src=\"/uni-render/#/pages/index/index\" class=\"size-full max-w-sm\" />\n    </div>\n</template>\n"
+    }
+  ],
+  "related": [],
+  "whenToUse": [
+    "落地页展示移动端 App 截图或 H5 页面效果时。",
+    "产品介绍中需要 iPhone 设备外观衬托内容时。"
+  ],
+  "whenNotToUse": [
+    "展示桌面端/网页截图，改用 safari-mockup。"
+  ],
+  "pitfalls": [
+    "仅 web 端可用。",
+    "截图通过 src 传图片 URL；需要嵌入可交互页面时传 iframeSrc（以 iframe 渲染，优先于 src）。没有插槽。",
+    "width/height 同时作为 SVG 像素尺寸与 viewBox（默认 433x882），机身按 433x882 坐标绘制，改小只会裁掉右侧和下部；缩放请在组件上写 class=\"w-full h-auto\"，由外层容器控制宽度。"
+  ],
+  "dependencies": [],
+  "install": {
+    "cli": "npx reborn-ui@latest add iphone-mockup"
+  },
+  "sourceRefs": {
+    "web": [
+      "app/components/reborn/ui/iphone-mockup/iPhone15ProMockup.vue",
+      "app/components/reborn/ui/iphone-mockup/index.ts"
+    ]
+  },
+  "docPath": "content/2.components/device-mocks/iphone-mockup.md",
+  "_meta": {
+    "contentHash": "1916b917da017e7393340383a06feaa7ea899b6e",
+    "hasOverride": true,
+    "extractors": {
+      "web": "ok",
+      "uniapp": "absent",
+      "docs": "found"
+    }
+  }
+}

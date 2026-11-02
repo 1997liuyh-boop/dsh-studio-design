@@ -1,0 +1,77 @@
+{
+  "$schema": "../schema/component.schema.json",
+  "id": "expandable-gallery",
+  "title": "可扩展画廊",
+  "description": "用于一行图片悬停时放大当前项的可扩展横向画廊组件。",
+  "category": "misc",
+  "tags": [
+    "css",
+    "tailwind",
+    "gallery"
+  ],
+  "platforms": [
+    "web"
+  ],
+  "props": [
+    {
+      "name": "images",
+      "type": "string[]",
+      "required": true,
+      "description": "画廊中显示的图片 URL 数组。",
+      "default": "[]"
+    },
+    {
+      "name": "class",
+      "type": "HTMLAttributes[\"class\"]",
+      "required": false,
+      "description": ""
+    }
+  ],
+  "events": [],
+  "slots": [],
+  "exposes": [],
+  "examples": [
+    {
+      "title": "Web 演示",
+      "path": "app/components/reborn/examples/expandable-gallery/ExpandableGalleryDemo.vue",
+      "source": "demo",
+      "platform": "web",
+      "code": "<script lang=\"ts\" setup>\nconst images = [\n  \"https://images.unsplash.com/photo-1709884735646-897b57461d61?q=80&w=3628&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D\",\n  \"https://images.unsplash.com/photo-1541701494587-cb58502866ab?q=80&w=3870&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D\",\n  \"https://images.unsplash.com/photo-1527529482837-4698179dc6ce?q=80&w=3870&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D\",\n  \"https://images.unsplash.com/photo-1502085671122-2d218cd434e6?q=80&w=3626&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D\",\n];\n</script>\n\n<template>\n  <ExpandableGallery\n    :images=\"images\"\n    class=\"p-4\"\n  />\n</template>\n"
+    }
+  ],
+  "related": [],
+  "whenToUse": [
+    "落地页展示 4-5 张图片、悬停聚焦当前项的横向画廊。",
+    "只需传入图片 URL 数组即可成型的轻量图片展示。"
+  ],
+  "whenNotToUse": [
+    "网格相册布局，改用 photo-gallery。",
+    "自动轮播的全幅图片，改用 images-slider。",
+    "瀑布流布局（uniapp），改用 reborn-waterfall。"
+  ],
+  "pitfalls": [
+    "仅 web 端可用。",
+    "images 为必填的图片 URL 字符串数组，不支持插槽自定义单项内容。",
+    "无事件定义，无法监听图片点击。"
+  ],
+  "dependencies": [],
+  "install": {
+    "cli": "npx reborn-ui@latest add expandable-gallery"
+  },
+  "sourceRefs": {
+    "web": [
+      "app/components/reborn/ui/expandable-gallery/ExpandableGallery.vue",
+      "app/components/reborn/ui/expandable-gallery/index.ts"
+    ]
+  },
+  "docPath": "content/2.components/miscellaneous/expandable-gallery.md",
+  "_meta": {
+    "contentHash": "9956009aec88a2a877c6a685d88d95600ec39e9e",
+    "hasOverride": true,
+    "extractors": {
+      "web": "ok",
+      "uniapp": "absent",
+      "docs": "found"
+    }
+  }
+}

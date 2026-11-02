@@ -1,0 +1,88 @@
+{
+  "$schema": "../schema/component.schema.json",
+  "id": "radiant-text",
+  "title": "光辉文字",
+  "description": "用于让高光沿插槽文字循环扫过的文字高亮动画组件。",
+  "category": "effect",
+  "tags": [
+    "css",
+    "tailwind",
+    "magic-ui"
+  ],
+  "platforms": [
+    "web"
+  ],
+  "props": [
+    {
+      "name": "duration",
+      "type": "number",
+      "required": false,
+      "description": "动画持续时间（秒）。",
+      "default": "10"
+    },
+    {
+      "name": "radiantWidth",
+      "type": "number",
+      "required": false,
+      "description": "高光动画的宽度。",
+      "default": "100"
+    },
+    {
+      "name": "class",
+      "type": "string",
+      "required": false,
+      "description": ""
+    }
+  ],
+  "events": [],
+  "slots": [
+    {
+      "name": "default",
+      "description": ""
+    }
+  ],
+  "exposes": [],
+  "examples": [
+    {
+      "title": "Web 演示",
+      "path": "app/components/reborn/examples/radiant-text/RadiantTextDemo.vue",
+      "source": "demo",
+      "platform": "web",
+      "code": "<template>\n  <RadiantText\n    class=\"inline-flex items-center justify-center px-4 py-1 transition ease-out hover:text-neutral-600 hover:duration-300 hover:dark:text-neutral-400\"\n    :duration=\"5\">\n    <span class=\"text-3xl font-bold\">✨ Introducing Reborn UI</span>\n  </RadiantText>\n</template>\n"
+    }
+  ],
+  "related": [],
+  "whenToUse": [
+    "新功能公告、Badge 文案需要流动高光吸引注意时。",
+    "Hero 区标语需要循环扫光效果时。"
+  ],
+  "whenNotToUse": [
+    "需要静态线条阴影装饰，改用 line-shadow-text。",
+    "需要多彩渐变文字，改用 colourful-text。"
+  ],
+  "pitfalls": [
+    "仅 web 端可用。",
+    "文字通过默认插槽传入，可包含图标等行内元素。",
+    "duration 单位为秒（默认 10），radiantWidth 控制高光带宽度（默认 100）。"
+  ],
+  "dependencies": [],
+  "install": {
+    "cli": "npx reborn-ui@latest add radiant-text"
+  },
+  "sourceRefs": {
+    "web": [
+      "app/components/reborn/ui/radiant-text/RadiantText.vue",
+      "app/components/reborn/ui/radiant-text/index.ts"
+    ]
+  },
+  "docPath": "content/2.components/text-animations/radiant-text.md",
+  "_meta": {
+    "contentHash": "d633b7679a16e374268402f107b573e446a1e0d5",
+    "hasOverride": true,
+    "extractors": {
+      "web": "ok",
+      "uniapp": "absent",
+      "docs": "found"
+    }
+  }
+}

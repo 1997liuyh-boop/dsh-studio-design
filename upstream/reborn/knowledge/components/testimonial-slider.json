@@ -1,0 +1,84 @@
+{
+  "$schema": "../schema/component.schema.json",
+  "id": "testimonial-slider",
+  "title": "评价滑块",
+  "description": "用于轮播展示用户评价（头像、引言、姓名、职位）的轻量滑块组件。",
+  "category": "misc",
+  "tags": [
+    "css",
+    "tailwind"
+  ],
+  "platforms": [
+    "web"
+  ],
+  "props": [
+    {
+      "name": "testimonials",
+      "type": "Testimonial[]",
+      "required": false,
+      "description": "滑块中显示的评价对象数组。",
+      "default": "() => []"
+    },
+    {
+      "name": "autoRotate",
+      "type": "boolean",
+      "required": false,
+      "description": "若为 `true`，滑块每隔 `duration` 秒自动切换。",
+      "default": "true"
+    },
+    {
+      "name": "duration",
+      "type": "number",
+      "required": false,
+      "description": "启用自动轮播时的切换间隔（秒）。",
+      "default": "5"
+    }
+  ],
+  "events": [],
+  "slots": [],
+  "exposes": [],
+  "examples": [
+    {
+      "title": "Web 演示",
+      "path": "app/components/reborn/examples/testimonial-slider/TestimonialSliderDemo.vue",
+      "source": "demo",
+      "platform": "web",
+      "code": "<script lang=\"ts\" setup>\n\nconst testimonials = [\n  {\n    img: `https://randomuser.me/api/portraits/men/32.jpg`,\n    quote: \"Reborn UI 比我的星际巡洋舰还顺滑。秒级启动，零崩溃，零重力。\",\n    name: \"Buzz Lightyear\",\n    role: \"星际界面指挥部\",\n  },\n  {\n    img: `https://randomuser.me/api/portraits/women/44.jpg`,\n    quote: \"点来点去像骑着加了涡轮的马。这套组件有劲儿！\",\n    name: \"Jessie\",\n    role: \"牧场体验与互动\",\n  },\n  {\n    img: `https://randomuser.me/api/portraits/men/52.jpg`,\n    quote: \"我见过不少磕磕绊绊的界面……这一套？比周二的风滚草还顺。\",\n    name: \"Woody\",\n    role: \"警长\",\n  },\n  {\n    img: `https://randomuser.me/api/portraits/men/75.jpg`,\n    quote: \"我本来很怕。然后我点了一下。什么都没炸。Reborn UI 是安全区，我活下来了。\",\n    name: \"Rex\",\n    role: \"恐龙可用性实验室 · 高级恐慌测试员\",\n  },\n];\n\n</script>\n\n<template>\n  <DemoSection\n    title=\"基础用法\"\n    description=\"评价轮播自己会铺内容；外层只给高度，不再套填充卡片。\"\n  >\n    <div class=\"relative h-[500px] w-full overflow-hidden\">\n      <div class=\"mt-16 flex justify-center px-12\">\n        <TestimonialSlider :testimonials=\"testimonials\" />\n      </div>\n    </div>\n  </DemoSection>\n</template>\n"
+    }
+  ],
+  "related": [],
+  "whenToUse": [
+    "落地页客户评价、用户推荐语区块。",
+    "需要按固定间隔自动轮播评价内容时（autoRotate + duration）。"
+  ],
+  "whenNotToUse": [
+    "需要更丰富动效的评价展示，改用 animated-testimonials。",
+    "通用内容轮播（图片、卡片等），改用 reborn-carousel。"
+  ],
+  "pitfalls": [
+    "仅 web 端可用。",
+    "testimonials 数据项包含 img/quote/name/role 字段。",
+    "duration 单位为秒（默认 5），autoRotate 默认开启。",
+    "无插槽与事件，展示结构不可自定义。"
+  ],
+  "dependencies": [],
+  "install": {
+    "cli": "npx reborn-ui@latest add testimonial-slider"
+  },
+  "sourceRefs": {
+    "web": [
+      "app/components/reborn/ui/testimonial-slider/TestimonialSlider.vue",
+      "app/components/reborn/ui/testimonial-slider/index.ts"
+    ]
+  },
+  "docPath": "content/2.components/miscellaneous/testimonial-slider.md",
+  "_meta": {
+    "contentHash": "bd6e7bcd7f2ef2db80a9fb96fd38683659005bcb",
+    "hasOverride": true,
+    "extractors": {
+      "web": "ok",
+      "uniapp": "absent",
+      "docs": "found"
+    }
+  }
+}

@@ -1,0 +1,104 @@
+{
+  "$schema": "../schema/component.schema.json",
+  "id": "vanishing-input",
+  "title": "占位符滚动与消失输入框",
+  "description": "用于占位符轮换滚动、提交时文字呈消失动画的单行输入组件。",
+  "category": "form",
+  "tags": [
+    "css",
+    "tailwind",
+    "input",
+    "aceternity-ui"
+  ],
+  "platforms": [
+    "web"
+  ],
+  "props": [
+    {
+      "name": "placeholders",
+      "type": "string[]",
+      "required": false,
+      "description": "轮换显示的占位文本",
+      "default": "() => [\"Placeholder 1\", \"Placeholder 2\", \"Placeholder 3\"]"
+    },
+    {
+      "name": "autofocus",
+      "type": "boolean",
+      "required": false,
+      "description": "挂载后是否自动聚焦输入框；聚焦时不滚动页面",
+      "default": "false"
+    },
+    {
+      "name": "modelValue",
+      "type": "string",
+      "required": false,
+      "description": "双向绑定值",
+      "vModel": true,
+      "default": "\"\""
+    }
+  ],
+  "events": [
+    {
+      "name": "submit",
+      "payload": "[value: string]",
+      "description": "按回车或点击提交按钮时触发，参数为提交时的文本"
+    },
+    {
+      "name": "change",
+      "payload": "[event: { target: { value: string } }]",
+      "description": "输入值变化时触发，参数为模拟的事件对象；动画期间不触发"
+    },
+    {
+      "name": "update:modelValue",
+      "description": "modelValue 变化时触发（v-model 同步）"
+    }
+  ],
+  "slots": [],
+  "exposes": [],
+  "examples": [
+    {
+      "title": "Web 演示",
+      "path": "app/components/reborn/examples/vanishing-input/VanishingInputDemo.vue",
+      "source": "demo",
+      "platform": "web",
+      "code": "<script setup lang=\"ts\">\nimport { shallowRef } from \"vue\";\nconst placeholders = [\n  \"为什么我的代码总是坏掉？\",\n  \"undefined 到底是什么意思？\",\n  \"这次真的要把 div 居中了\",\n  \"我比编译器聪明吗？\",\n  \"循环会不会转晕？\",\n];\nconst text = shallowRef(\"\");\n</script>\n\n<template>\n  <DemoSection\n    title=\"基础用法\"\n    description=\"占位文案轮换消失；标题是输入框的引导，不是页面级 hero。\"\n  >\n    <DemoBlock\n      layout=\"stack\"\n      align=\"center\"\n    >\n      <div class=\"flex flex-col items-center justify-center px-4 py-16\">\n        <h2 class=\"text-highlighted mb-10 text-center text-xl sm:mb-16 sm:text-4xl\">\n          随便问点什么\n        </h2>\n        <VanishingInput\n          v-model=\"text\"\n          :placeholders=\"placeholders\"\n        />\n      </div>\n    </DemoBlock>\n  </DemoSection>\n</template>\n"
+    }
+  ],
+  "related": [],
+  "whenToUse": [
+    "AI 问答、搜索入口需要轮换展示示例问题占位符时。",
+    "落地页互动输入框需要提交动效增强反馈。"
+  ],
+  "whenNotToUse": [
+    "常规表单输入，改用 reborn-input（同时支持 web 与 uniapp）。",
+    "需要目录选择、图片搜索的高级搜索框，改用 reborn-search-box。",
+    "需要发光视觉的搜索输入，改用 halo-search。"
+  ],
+  "pitfalls": [
+    "仅 web 端可用。",
+    "通过 v-model（modelValue）双向绑定输入值。",
+    "placeholders 为字符串数组轮换显示，不传时使用内置的 3 条默认占位文本。",
+    "提交时触发 submit 事件并播放文字消失动画，输入变化触发 change 事件。",
+    "默认不自动聚焦，需要时传 autofocus（以 preventScroll 聚焦，不滚动页面）。"
+  ],
+  "dependencies": [],
+  "install": {
+    "cli": "npx reborn-ui@latest add vanishing-input"
+  },
+  "sourceRefs": {
+    "web": [
+      "app/components/reborn/ui/vanishing-input/VanishingInput.vue",
+      "app/components/reborn/ui/vanishing-input/index.ts"
+    ]
+  },
+  "docPath": "content/2.components/input-and-forms/placeholders-and-vanish-input.md",
+  "_meta": {
+    "contentHash": "5e97387c4235bd0faf1d44fa835e911ff91654e3",
+    "hasOverride": true,
+    "extractors": {
+      "web": "ok",
+      "uniapp": "absent",
+      "docs": "found"
+    }
+  }
+}

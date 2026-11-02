@@ -1,0 +1,344 @@
+{
+  "$schema": "../schema/component.schema.json",
+  "id": "reborn-fab",
+  "title": "悬浮按钮 (Fab)",
+  "description": "用于固定位置悬浮操作入口的按钮组件，支持拖拽吸边与展开动作面板，双端可用。",
+  "category": "navigation",
+  "tags": [
+    "vue",
+    "reborn-fab",
+    "uniapp"
+  ],
+  "platforms": [
+    "web",
+    "uniapp"
+  ],
+  "props": [
+    {
+      "name": "active",
+      "type": "boolean",
+      "required": false,
+      "description": "是否默认展开",
+      "default": "false"
+    },
+    {
+      "name": "position",
+      "type": "FabPosition",
+      "required": false,
+      "description": "预设位置",
+      "default": "'right-bottom'"
+    },
+    {
+      "name": "top",
+      "type": "string | number",
+      "required": false,
+      "description": "自定义位置"
+    },
+    {
+      "name": "bottom",
+      "type": "string | number",
+      "required": false,
+      "description": "自定义底部距离。"
+    },
+    {
+      "name": "left",
+      "type": "string | number",
+      "required": false,
+      "description": "自定义左侧距离。"
+    },
+    {
+      "name": "right",
+      "type": "string | number",
+      "required": false,
+      "description": "自定义右侧距离。"
+    },
+    {
+      "name": "direction",
+      "type": "FabDirection",
+      "required": false,
+      "description": "展开方向",
+      "default": "'top'"
+    },
+    {
+      "name": "color",
+      "type": "FabColor",
+      "required": false,
+      "description": "主题颜色",
+      "default": "'primary'"
+    },
+    {
+      "name": "disabled",
+      "type": "boolean",
+      "required": false,
+      "description": "是否禁用",
+      "default": "false"
+    },
+    {
+      "name": "draggable",
+      "type": "boolean",
+      "required": false,
+      "description": "是否可拖拽",
+      "default": "false"
+    },
+    {
+      "name": "expandable",
+      "type": "boolean",
+      "required": false,
+      "description": "是否可展开",
+      "default": "false"
+    },
+    {
+      "name": "gap",
+      "type": "{ top?: number; left?: number; right?: number; bottom?: number }",
+      "required": false,
+      "description": "距离边缘的间距",
+      "default": "() => ({ top: 16, left: 16, right: 16, bottom: 16 })"
+    },
+    {
+      "name": "inactiveIcon",
+      "type": "string",
+      "required": false,
+      "description": "非激活状态图标",
+      "default": "'i-lucide-plus'"
+    },
+    {
+      "name": "activeIcon",
+      "type": "string",
+      "required": false,
+      "description": "激活状态图标",
+      "default": "'i-lucide-plus'"
+    },
+    {
+      "name": "zIndex",
+      "type": "number",
+      "required": false,
+      "description": "层级",
+      "default": "99"
+    },
+    {
+      "name": "customStyle",
+      "type": "string",
+      "required": false,
+      "description": "自定义样式"
+    },
+    {
+      "name": "customClass",
+      "type": "string",
+      "required": false,
+      "description": "自定义类名"
+    },
+    {
+      "name": "ui",
+      "type": "Partial<UiMap>",
+      "required": false,
+      "description": "UI 配置 可用键（从源码抽取，以此为准）——UniApp：action、actions、icon、root、trigger。",
+      "default": "() => ({\n        root: '',\n        trigger: '',\n        icon: '',\n        actions: '',\n        action: ''\n    })",
+      "platform": "uniapp"
+    },
+    {
+      "name": "items",
+      "type": "FabActionItem[]",
+      "required": false,
+      "description": "动作列表：有数据时由组件内 v-for 渲染（推荐小程序端使用），无数据时回退为默认插槽。",
+      "default": "() => []"
+    },
+    {
+      "name": "modelValue",
+      "type": "boolean",
+      "required": false,
+      "description": "双向绑定值",
+      "vModel": true,
+      "default": "undefined"
+    },
+    {
+      "name": "trigger",
+      "type": "FabTrigger",
+      "required": false,
+      "description": "触发方式 (click | hover)",
+      "default": "\"click\""
+    },
+    {
+      "name": "variant",
+      "type": "\"float\" | \"capsule\" | \"circle\"",
+      "required": false,
+      "description": "UI变体",
+      "default": "\"float\""
+    },
+    {
+      "name": "attract",
+      "type": "boolean",
+      "required": false,
+      "description": "是否开启自动吸边",
+      "default": "true"
+    },
+    {
+      "name": "peekOnScroll",
+      "type": "boolean",
+      "required": false,
+      "description": "滚动时是否自动贴边并半隐藏",
+      "default": "false"
+    },
+    {
+      "name": "divider",
+      "type": "boolean",
+      "required": false,
+      "description": "是否显示分割线"
+    },
+    {
+      "name": "radius",
+      "type": "number",
+      "required": false,
+      "description": "环形布局半径"
+    },
+    {
+      "name": "startAngle",
+      "type": "number",
+      "required": false,
+      "description": "环形布局起始角度 (默认 -90, 正上方)"
+    },
+    {
+      "name": "totalAngle",
+      "type": "number",
+      "required": false,
+      "description": "环形布局总角度 (默认 360, 一整圈)"
+    },
+    {
+      "name": "ui",
+      "type": "UiMap",
+      "required": false,
+      "description": "自定义各部分样式类 可用键（从源码抽取，以此为准）——Web：actions、capsuleActions、capsuleInner、capsuleWrapper、divider、icon、root、trigger。",
+      "default": "() => ({\n    root: \"\",\n    trigger: \"\",\n    icon: \"\",\n    actions: \"\",\n  })",
+      "platform": "web"
+    }
+  ],
+  "events": [
+    {
+      "name": "click",
+      "payload": "[]",
+      "description": "当组件非可展开（`expandable` 为假）状态下被点击时触发。"
+    },
+    {
+      "name": "action",
+      "payload": "[payload: { name: string; index: number }]",
+      "description": "点击某条 items 动作"
+    },
+    {
+      "name": "update:modelValue",
+      "description": "modelValue 变化时触发（v-model 同步）"
+    },
+    {
+      "name": "open",
+      "payload": "[]",
+      "description": "动作面板开始展开时立即触发（动画启动时刻）"
+    },
+    {
+      "name": "opened",
+      "payload": "[]",
+      "description": "动作面板展开动画结束后触发（约 400ms 后）"
+    },
+    {
+      "name": "close",
+      "payload": "[]",
+      "description": "动作面板开始收起时立即触发（动画启动时刻）"
+    },
+    {
+      "name": "closed",
+      "payload": "[]",
+      "description": "动作面板收起动画结束后触发（约 400ms 后）"
+    }
+  ],
+  "slots": [
+    {
+      "name": "default",
+      "description": "动作面板内容。可解构获取展开与位移状态（UniApp 端仅 `isActive`）。"
+    },
+    {
+      "name": "trigger",
+      "description": "自定义主触发按钮的渲染内容。"
+    },
+    {
+      "name": "divider",
+      "props": "() => any",
+      "description": "胶囊变体下动作区与触发按钮之间的分割线"
+    }
+  ],
+  "exposes": [
+    {
+      "name": "open",
+      "description": "手动展开动作面板"
+    },
+    {
+      "name": "close",
+      "description": "手动收起动作面板"
+    },
+    {
+      "name": "restore",
+      "description": "从 peekOnScroll 的半隐藏状态立即复位到正常停靠位置"
+    }
+  ],
+  "examples": [
+    {
+      "title": "Web 演示",
+      "path": "app/components/reborn/examples/reborn-fab/RebornFabDemo.vue",
+      "source": "demo",
+      "platform": "web",
+      "code": "<script lang=\"ts\" setup>\nimport { computed, ref, shallowRef } from 'vue';\nimport { fabColors, fabVariants } from \"~/components/reborn/ui/reborn-fab/reborn-fab.config\";\nimport RebornFab from \"~/components/reborn/ui/reborn-fab/RebornFab.vue\";\n\n// ─── 交互演练场 ─────────────────────────────────────────────────\n\n/** 配色选项，直接取自组件配置以保证与实现同步 */\nconst colorOptions = fabColors.map((c) => ({ label: c, value: c }));\n\n/** UI 变体选项 */\nconst variantOptions = fabVariants.map((v) => ({ label: v, value: v }));\n\nconst directionOptions = [\n  { label: \"上方\", value: \"top\" },\n  { label: \"下方\", value: \"bottom\" },\n  { label: \"左侧\", value: \"left\" },\n  { label: \"右侧\", value: \"right\" },\n];\n\nconst positionOptions = [\n  { label: \"左上 (left-top)\", value: \"left-top\" },\n  { label: \"右上 (right-top)\", value: \"right-top\" },\n  { label: \"左下 (left-bottom)\", value: \"left-bottom\" },\n  { label: \"右下 (right-bottom)\", value: \"right-bottom\" },\n];\n\nconst triggerOptions = [\n  { label: \"Click 点击\", value: \"click\" },\n  { label: \"Hover 悬浮\", value: \"hover\" },\n];\n\nconst state = ref<Record<string, any>>({\n  isActive: false,\n  draggable: true,\n  color: \"primary\",\n  variant: \"float\",\n  direction: \"top\",\n  position: \"right-bottom\",\n  trigger: \"click\",\n  customCoord: true,\n  useTriggerSlot: false,\n  expandable: true,\n  attract: true,\n  peekOnScroll: true,\n});\n\n/** 演练场控制面板配置 */\nconst controls = [\n  {\n    title: \"核心配置\",\n    children: [\n      {\n        label: \"UI 变体\",\n        key: \"variant\",\n        component: \"select\" as const,\n        defaultValue: \"float\",\n        props: { options: variantOptions },\n      },\n      {\n        label: \"主题色调\",\n        key: \"color\",\n        component: \"select\" as const,\n        defaultValue: \"primary\",\n        props: { options: colorOptions },\n      },\n      { label: \"允许拖拽\", key: \"draggable\", component: \"checkbox\" as const, defaultValue: true },\n      { label: \"开启展开\", key: \"expandable\", component: \"checkbox\" as const, defaultValue: true },\n      { label: \"自动吸边\", key: \"attract\", component: \"checkbox\" as const, defaultValue: true },\n      {\n        label: \"滚动半隐藏\",\n        key: \"peekOnScroll\",\n        component: \"checkbox\" as const,\n        defaultValue: true,\n      },\n    ],\n  },\n  {\n    title: \"交互与位置\",\n    children: [\n      {\n        label: \"触发方式\",\n        key: \"trigger\",\n        component: \"select\" as const,\n        defaultValue: \"click\",\n        props: { options: triggerOptions },\n      },\n      {\n        label: \"预设位置\",\n        key: \"position\",\n        component: \"select\" as const,\n        defaultValue: \"right-bottom\",\n        props: { options: positionOptions },\n      },\n      {\n        label: \"展开方向\",\n        key: \"direction\",\n        component: \"select\" as const,\n        defaultValue: \"top\",\n        props: { options: directionOptions },\n      },\n    ],\n  },\n  {\n    title: \"插槽与坐标\",\n    children: [\n      {\n        label: \"使用自定义触发器插槽\",\n        key: \"useTriggerSlot\",\n        component: \"checkbox\" as const,\n        defaultValue: false,\n      },\n      { label: \"指定初始坐标\", key: \"customCoord\", component: \"checkbox\" as const, defaultValue: true },\n    ],\n  },\n];\n\n/** 演练场右上角展示的等价代码 */\nconst fabCode = computed(() => {\n  const s = state.value;\n  const props: string[] = ['v-model=\"isActive\"', `variant=\"${s.variant}\"`];\n\n  if (s.color !== \"primary\") props.push(`color=\"${s.color}\"`);\n  if (s.position !== \"right-bottom\") props.push(`position=\"${s.position}\"`);\n  if (s.direction !== \"top\") props.push(`direction=\"${s.direction}\"`);\n  if (s.trigger !== \"click\") props.push(`trigger=\"${s.trigger}\"`);\n  if (!s.draggable) props.push(':draggable=\"false\"');\n  if (!s.expandable) props.push(':expandable=\"false\"');\n  if (!s.attract) props.push(':attract=\"false\"');\n  if (!s.peekOnScroll) props.push(':peek-on-scroll=\"false\"');\n\n  return `<RebornFab\\n  ${props.join(\"\\n  \")}\\n>\\n  <!-- 展开后的操作项 -->\\n</RebornFab>`;\n});\n\n/** 最近一次点击的操作项，替代 console 输出 */\nconst lastAction = shallowRef(\"\");\n\nfunction handleAction(name: string) {\n  lastAction.value = name;\n}\n</script>\n\n<template>\n  <div class=\"flex w-full min-w-0 flex-col\">\n    <Playground\n      v-model=\"state\"\n      :controls=\"controls\"\n      :code=\"fabCode\"\n      component-name=\"RebornFab\"\n      title=\"交互演练场\"\n      description=\"拖动预览区的悬浮按钮可体验自动吸边；松手后组件会自动选择最优的展开方向。\"\n    >\n      <div class=\"flex w-full flex-col items-center gap-4\">\n        <template v-if=\"!state.useTriggerSlot\">\n          <!-- 悬浮模式：展开为一列/一行图标按钮 -->\n          <RebornFab\n            v-if=\"state.variant === 'float'\"\n            v-model=\"state.isActive\"\n            :color=\"state.color\"\n            variant=\"float\"\n            :draggable=\"state.draggable\"\n            :attract=\"state.attract\"\n            :peek-on-scroll=\"state.peekOnScroll\"\n            :direction=\"state.direction\"\n            :position=\"state.position\"\n            :trigger=\"state.trigger\"\n            :top=\"state.customCoord ? '40vh' : undefined\"\n            :expandable=\"state.expandable\"\n            :gap=\"{ top: 32, bottom: 32, left: 32, right: 32 }\"\n            :z-index=\"500\"\n          >\n            <div\n              v-for=\"i in 5\"\n              :key=\"i\"\n              class=\"bg-success text-success-foreground flex size-12 cursor-pointer items-center justify-center rounded-full transition-all hover:scale-110 hover:rotate-12 active:scale-95\"\n              @click=\"handleAction(`悬浮按钮 ${i}`)\"\n            >\n              <Icon\n                name=\"lucide:star\"\n                class=\"size-6\"\n              />\n            </div>\n          </RebornFab>\n\n          <!-- 胶囊模式：展开为带分隔线的胶囊条 -->\n          <RebornFab\n            v-else-if=\"state.variant === 'capsule'\"\n            v-model=\"state.isActive\"\n            :color=\"state.color\"\n            variant=\"capsule\"\n            :draggable=\"state.draggable\"\n            :attract=\"state.attract\"\n            :peek-on-scroll=\"state.peekOnScroll\"\n            :direction=\"state.direction\"\n            :position=\"state.position\"\n            :trigger=\"state.trigger\"\n            :top=\"state.customCoord ? '65vh' : undefined\"\n            :expandable=\"state.expandable\"\n            divider\n            :gap=\"{ top: 32, bottom: 32, left: 32, right: 32 }\"\n            :z-index=\"500\"\n          >\n            <Icon\n              v-for=\"item in 3\"\n              :key=\"item\"\n              name=\"lucide:share-2\"\n              class=\"size-6\"\n              @click=\"handleAction(`胶囊按钮 ${item}`)\"\n            />\n          </RebornFab>\n\n          <!-- 环形模式：展开为扇形排列 -->\n          <RebornFab\n            v-else-if=\"state.variant === 'circle'\"\n            v-model=\"state.isActive\"\n            :color=\"state.color\"\n            variant=\"circle\"\n            :draggable=\"state.draggable\"\n            :attract=\"state.attract\"\n            :peek-on-scroll=\"state.peekOnScroll\"\n            :direction=\"state.direction\"\n            :position=\"state.position\"\n            :trigger=\"state.trigger\"\n            :top=\"state.customCoord ? '20vh' : undefined\"\n            :expandable=\"state.expandable\"\n            :gap=\"{ top: 32, bottom: 32, left: 32, right: 32 }\"\n            :z-index=\"500\"\n          >\n            <div\n              v-for=\"i in 5\"\n              :key=\"i\"\n              class=\"bg-info text-info-foreground flex size-10 cursor-pointer items-center justify-center rounded-full text-sm font-bold transition-all hover:scale-110 active:scale-95\"\n              @click=\"handleAction(`环形按钮 ${i}`)\"\n            >\n              {{ i }}\n            </div>\n          </RebornFab>\n        </template>\n\n        <!-- #trigger 插槽：完全接管触发器的外观 -->\n        <RebornFab\n          v-else\n          position=\"right-bottom\"\n          :draggable=\"state.draggable\"\n          :expandable=\"false\"\n          :attract=\"state.attract\"\n          :peek-on-scroll=\"state.peekOnScroll\"\n          :trigger=\"state.trigger\"\n          :bottom=\"state.customCoord ? 150 : undefined\"\n          :color=\"state.color\"\n          :z-index=\"500\"\n          @click=\"handleAction('自定义触发器')\"\n        >\n          <template #trigger>\n            <div\n              class=\"from-primary to-info group text-inverted flex cursor-pointer items-center gap-3 rounded-full bg-linear-to-r py-2.5 pr-5 pl-3 transition-all active:scale-95\"\n            >\n              <Icon\n                name=\"lucide:heart\"\n                class=\"size-6 fill-current transition-transform group-hover:scale-110\"\n              />\n              <div class=\"flex flex-col\">\n                <span class=\"text-xs leading-tight tracking-tighter opacity-80\">Like This</span>\n                <span class=\"text-sm leading-tight font-bold\">点个赞吧</span>\n              </div>\n            </div>\n          </template>\n        </RebornFab>\n\n        <DemoNote\n          v-if=\"lastAction\"\n          tone=\"dimmed\"\n        >\n          最后点击：<code>{{ lastAction }}</code>\n        </DemoNote>\n      </div>\n    </Playground>\n\n    <DemoSection\n      title=\"拖拽与吸附\"\n      description=\"draggable 开启后按钮可自由拖动，attract 则在释放时自动贴合最近的窗口边缘。\"\n    >\n      <DemoNote tone=\"dimmed\">\n        <code>gap</code> 决定吸边后与四条边缘的安全距离；<code>peek-on-scroll</code>\n        会在页面滚动时把按钮半隐藏到边缘之外，停止滚动后自动复位。\n      </DemoNote>\n    </DemoSection>\n\n    <DemoSection\n      title=\"展开方向\"\n      description=\"direction 指定期望的展开方向；当按钮已吸附到边缘时，组件会自动改为向内侧展开以避免溢出。\"\n    >\n      <DemoNote tone=\"dimmed\">\n        例如吸附在左边缘时强制向右展开，吸附在顶部边缘时强制向下展开。\n      </DemoNote>\n    </DemoSection>\n\n    <DemoSection\n      title=\"自定义触发器\"\n      description=\"通过 #trigger 插槽可完全替换触发器结构，用于渲染带文字的胶囊按钮等复杂形态。\"\n    >\n      <DemoNote tone=\"dimmed\">\n        在演练场上方的控制区勾选「使用自定义触发器插槽」即可查看效果。\n      </DemoNote>\n    </DemoSection>\n  </div>\n</template>\n"
+    },
+    {
+      "title": "UniApp 演示",
+      "path": "packages/uniapp-project/src/pages/reborn-fab/RebornFabDemo.vue",
+      "source": "demo",
+      "platform": "uniapp",
+      "code": "<script lang=\"ts\" setup>\nimport { shallowRef } from 'vue'\nimport RebornPage from '@/components/reborn-page/RebornPage.vue'\nimport RebornCard from '@/components/reborn-card/RebornCard.vue'\nimport RebornFab from '@/components/reborn-fab/RebornFab.vue'\nimport RebornSwitch from '@/components/reborn-switch/RebornSwitch.vue'\nimport RebornRadioGroup from '@/components/reborn-radio/RebornRadioGroup.vue'\nimport RebornRadio from '@/components/reborn-radio/RebornRadio.vue'\nimport RebornText from '@/components/reborn-text/RebornText.vue'\nimport { fabColors, fabDirections, fabPositions, type FabActionItem } from '@/components/reborn-fab/reborn-fab.config'\n\nconst active1 = shallowRef(false)\nconst draggable = shallowRef(false)\nconst useTriggerSlot = shallowRef(false)\nconst demoColor = shallowRef<typeof fabColors[number]>('primary')\nconst demoDirection = shallowRef<typeof fabDirections[number]>('top')\nconst demoPosition = shallowRef<typeof fabPositions[number]>('right-bottom')\n\nconst fabDemoItems: FabActionItem[] = [\n    { name: '分享', icon: 'i-lucide-share-2', color: 'primary' },\n    { name: '收藏', icon: 'i-lucide-star', color: 'warning' },\n    { name: '下载', icon: 'i-lucide-download', color: 'success' },\n]\n\nfunction handleClick() {\n    uni.showToast({ title: '点击了主按钮', icon: 'none' })\n}\n\nfunction handleCustomClick() {\n    uni.showToast({ title: '触发了自定义分享', icon: 'none' })\n}\n\nfunction handleAction(name: string) {\n    uni.showToast({ title: '点击了动作: ' + name, icon: 'none' })\n}\n</script>\n\n<template>\n    <RebornPage title=\"Fab 悬浮按钮\" description=\"悬浮在页面固定位置的按钮，点按可触发主要操作。\">\n\n        <RebornCard title=\"配置演示\">\n            <RebornText color=\"neutral\">主题颜色</RebornText>\n            <view class=\"flex flex-wrap gap-2\">\n                <view v-for=\"c in fabColors\" :key=\"c\"\n                    class=\"size-6 rounded-full border-2 border-transparent transition-all\"\n                    :class=\"[demoColor === c ? 'scale-110' : '', `bg-${c}`]\"\n                    :style=\"{ backgroundColor: `var(--color-${c})` }\" @tap=\"demoColor = c\" />\n            </view>\n\n            <RebornText color=\"neutral\">展开方向 (开启拖拽后无效)</RebornText>\n            <RebornRadioGroup v-model=\"demoDirection\" direction=\"horizontal\">\n                <RebornRadio v-for=\"d in fabDirections\" :key=\"d\" :value=\"d\">{{ d }}</RebornRadio>\n            </RebornRadioGroup>\n\n            <RebornText color=\"neutral\">位置</RebornText>\n            <RebornRadioGroup v-model=\"demoPosition\" direction=\"horizontal\" :disabled=\"draggable\">\n                <RebornRadio v-for=\"d in fabPositions\" :key=\"d\" :value=\"d\">{{ d }}</RebornRadio>\n            </RebornRadioGroup>\n\n            <view class=\"flex items-center justify-between\">\n                <RebornText color=\"neutral\">当前展开 (v-model)</RebornText>\n                <RebornSwitch v-model=\"active1\" />\n            </view>\n\n            <view class=\"flex items-center justify-between\">\n                <RebornText color=\"neutral\">开启拖拽</RebornText>\n                <RebornSwitch v-model=\"draggable\" />\n            </view>\n\n            <view class=\"flex items-center justify-between\">\n                <RebornText color=\"neutral\">自定义触发器 (Slot)</RebornText>\n                <RebornSwitch v-model=\"useTriggerSlot\" />\n            </view>\n\n            <view class=\"p-4 bg-gray-50 rounded italic text-sm text-gray-400\">\n                提示：开启拖拽后移动至左右边缘会自动切换方向。当方向变化时，菜单会自动收起。\n            </view>\n        </RebornCard>\n\n        <!-- 演示组件 -->\n        <RebornFab v-if=\"!useTriggerSlot\" v-model=\"active1\" :color=\"demoColor\"\n            :draggable=\"draggable\" :direction=\"demoDirection\" expandable :position=\"demoPosition\" :items=\"fabDemoItems\"\n            @click=\"handleClick\" @action=\"({ name }) => handleAction(name)\" />\n\n        <RebornFab v-else :draggable=\"draggable\" :expandable=\"false\" :position=\"demoPosition\">\n            <template #trigger>\n                <view\n                    class=\"pointer-events-auto flex items-center gap-2 px-4 py-2 bg-error text-white rounded-full shadow-lg active:scale-95 transition-transform\"\n                    @tap=\"handleCustomClick\">\n                    <view class=\"i-lucide-share-2 text-32\" />\n                    <text class=\"text-28\">分享给朋友</text>\n                </view>\n            </template>\n        </RebornFab>\n\n    </RebornPage>\n</template>\n"
+    }
+  ],
+  "related": [],
+  "whenToUse": [
+    "页面角落固定的快捷操作入口（客服、发布、回到顶部集合等）。",
+    "点击/悬停展开多个子动作（items 或 default 插槽），含环形布局（radius/startAngle/totalAngle）。",
+    "需要可拖拽并自动吸附屏幕左右边（draggable + attract）的悬浮球。",
+    "滚动时自动贴边半隐藏（peekOnScroll）的场景。"
+  ],
+  "whenNotToUse": [
+    "普通文档流中的操作按钮，改用 reborn-button。",
+    "把一组操作折叠为下拉菜单（web），改用 reborn-dropdown。"
+  ],
+  "pitfalls": [
+    "web 与 uniapp 双端可用。",
+    "expandable 默认值双端不同（web 默认 true、uniapp 默认 false）：为 false 时点击直接触发 click 事件，不会展开动作面板。",
+    "draggable 拖拽结束后按左右侧自动吸附并决定展开方向；attract 默认 true 自动吸边。",
+    "inactiveIcon/activeIcon 在 Web 版默认依赖 nuxt-icon 图标体系。",
+    "展开状态可用 v-model 绑定，点击即立即写回（web 端不再延迟 400ms，与 uniapp 一致）；variant 支持 float/capsule/circle 三种形态。",
+    "两端 modelValue 默认 undefined；active 仅提供非受控初值，不发送初始化更新。显式 false/undefined/null 按收起处理，受控交互立即发送 update:modelValue，旧悬停关闭延迟失效。"
+  ],
+  "dependencies": [
+    "@weapp-tailwindcss/merge-v3",
+    "@weapp-tailwindcss/variants-v3",
+    "clsx",
+    "tailwind-merge",
+    "tailwind-variants"
+  ],
+  "install": {
+    "cli": "npx reborn-ui@latest add reborn-fab"
+  },
+  "sourceRefs": {
+    "web": [
+      "app/components/reborn/ui/reborn-fab/RebornFab.vue",
+      "app/components/reborn/ui/reborn-fab/reborn-fab.config.ts"
+    ],
+    "uniapp": [
+      "packages/uniapp-project/src/components/reborn-fab/RebornFab.vue",
+      "packages/uniapp-project/src/components/reborn-fab/reborn-fab.config.ts"
+    ]
+  },
+  "docPath": "content/2.components/navigation/reborn-fab.md",
+  "_meta": {
+    "contentHash": "2c337f0089cfe4dbe2d2c0798bd99029286d734a",
+    "hasOverride": true,
+    "extractors": {
+      "web": "ok",
+      "uniapp": "ok",
+      "docs": "found"
+    }
+  }
+}

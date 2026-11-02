@@ -1,0 +1,7 @@
+{
+  "kind": "original-integration",
+  "host": { "repository": "https://github.com/1997liuyh-boop/deepseek-harness", "forkedFrom": "https://github.com/deepseek-ai/deepseek-harness", "compatibility": "0.2.1-rc.2 experimental" },
+  "studioSdk": { "repository": "https://github.com/1997liuyh-boop/dsh-studio-library", "commit": "25962551ee4ba473a81c609fee385f0d70a3c15e", "originalReference": "https://github.com/Aisland-SJL/dsh-worktable" },
+  "reborn": { "repository": "https://github.com/1997liuyh-boop/Reborn-UI", "commit": "130c4f78a60745c77d59fe8f858d2b9430ad7feb", "license": "MIT", "snapshotManifest": "https://github.com/1997liuyh-boop/dsh-studio-design/blob/main/REBORN-SNAPSHOT.json" },
+  "mastergo": { "documentation": "https://mastergo.com/help/ai-features/vibe-mcp.html", "adapter": "@mastergo/vibe-mcp@1.0.32", "vendored": false }
+}

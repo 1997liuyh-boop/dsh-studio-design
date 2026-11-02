@@ -1,0 +1,221 @@
+{
+  "$schema": "../schema/component.schema.json",
+  "id": "reborn-anchor",
+  "title": "Anchor 锚点",
+  "description": "跟随滚动高亮的目录导航：container 指定滚动层，offset / bound 控制落点与触发线，marker 选标记形态（竖条 / 实心圆 / 空心圆 / 不显示），支持水平排布与子链接嵌套。",
+  "category": "navigation",
+  "tags": [
+    "css",
+    "tailwind",
+    "anchor",
+    "navigation"
+  ],
+  "platforms": [
+    "web"
+  ],
+  "props": [
+    {
+      "name": "items",
+      "type": "AnchorItem[]",
+      "required": false,
+      "description": "数据化配置链接内容，支持通过 children 嵌套。 传了它就由组件递归渲染链接，默认插槽不再生效；两种写法择一使用"
+    },
+    {
+      "name": "container",
+      "type": "string | HTMLElement | Window",
+      "required": false,
+      "description": "滚动的容器，传选择器字符串时在客户端挂载后才查询；留空监听整个窗口"
+    },
+    {
+      "name": "offset",
+      "type": "number",
+      "required": false,
+      "description": "锚点滚动的偏移量，滚动后目标元素距容器顶部的距离",
+      "default": "0"
+    },
+    {
+      "name": "bound",
+      "type": "number",
+      "required": false,
+      "description": "触发锚点的元素的位置偏移量，目标顶部进入这条线以内即视为选中",
+      "default": "15"
+    },
+    {
+      "name": "duration",
+      "type": "number",
+      "required": false,
+      "description": "容器滚动持续时间，单位为毫秒；小于等于 0 时直接跳转",
+      "default": "300"
+    },
+    {
+      "name": "marker",
+      "type": "boolean | AnchorMarker",
+      "required": false,
+      "description": "标记形态。true 等价于 bar、false 等价于 none； 横向锚点只支持 bar 与 none，传圆点会按 bar 渲染",
+      "default": "true"
+    },
+    {
+      "name": "type",
+      "type": "AnchorType",
+      "required": false,
+      "description": "锚点类型",
+      "default": "\"default\""
+    },
+    {
+      "name": "direction",
+      "type": "AnchorDirection",
+      "required": false,
+      "description": "锚点方向，只影响链接列表的排布，滚动始终是纵向的",
+      "default": "\"vertical\""
+    },
+    {
+      "name": "color",
+      "type": "AnchorColor",
+      "required": false,
+      "description": "强调色，决定选中文字与标记的颜色",
+      "default": "\"primary\""
+    },
+    {
+      "name": "selectScrollTop",
+      "type": "boolean",
+      "required": false,
+      "description": "滚动时链接是否选中位于顶部，开启后 bound 不参与判定",
+      "default": "false"
+    },
+    {
+      "name": "class",
+      "type": "any",
+      "required": false,
+      "description": "追加到根元素的自定义类名。"
+    },
+    {
+      "name": "ui",
+      "type": "AnchorUI",
+      "required": false,
+      "description": "细粒度样式覆盖对象，键为 root/list/marker/item/link/linkTitle/sublist 可用键（从源码抽取，以此为准）——Web：item、link、linkTitle、list、marker、root、sublist。"
+    },
+    {
+      "name": "title",
+      "type": "string",
+      "required": false,
+      "description": "链接的文本内容，写了默认插槽时以插槽为准"
+    },
+    {
+      "name": "href",
+      "type": "string",
+      "required": false,
+      "description": "链接的地址，形如 `#section-id`；留空的链接不参与滚动判定"
+    },
+    {
+      "name": "target",
+      "type": "string",
+      "required": false,
+      "description": "该属性指定在何处显示链接的资源。填了它就交给浏览器打开，组件不再接管滚动"
+    },
+    {
+      "name": "replace",
+      "type": "boolean",
+      "required": false,
+      "description": "点击后是否把 href 同步进地址栏。为真时走 replaceState，替换当前记录而不新增历史条目",
+      "default": "false"
+    }
+  ],
+  "events": [
+    {
+      "name": "change",
+      "payload": "(e: \"change\", href: string | undefined): void;",
+      "description": "选中的链接改变时触发，载荷为新的 href；滚动到首个锚点之前为 undefined"
+    },
+    {
+      "name": "click",
+      "payload": "(e: \"click\", event: MouseEvent, href: string | undefined): void;",
+      "description": "用户点击链接时触发，在滚动之前；在此调用 event.preventDefault() 可拦下组件的默认滚动"
+    }
+  ],
+  "slots": [
+    {
+      "name": "default",
+      "description": "RebornAnchorLink` 组件列表。链接的先后顺序即滚动判定的顺序（挂载后按 DOM 位置自动校正）。传了 `items` 时这个插槽不渲染。"
+    },
+    {
+      "name": "sub-link",
+      "description": "子链接的槽位，里面继续放 `RebornAnchorLink`；缩进一层，判定与标记仍由最外层的锚点统一承担。"
+    }
+  ],
+  "exposes": [
+    {
+      "name": "scrollTo",
+      "description": "`(href: string) => void` 手动滚动到指定链接对应的位置，href 形如 `#section-id`"
+    }
+  ],
+  "examples": [
+    {
+      "title": "Web 演示",
+      "path": "app/components/reborn/examples/reborn-anchor/RebornAnchorDemo.vue",
+      "source": "demo",
+      "platform": "web",
+      "code": "<script setup lang=\"ts\">\nimport type { AnchorItem } from \"~/components/reborn/ui/reborn-anchor/reborn-anchor.config\";\nimport { computed, ref, shallowRef, useTemplateRef } from \"vue\";\nimport {\n  anchorColors,\n  anchorDirections,\n  anchorMarkers,\n  anchorTypes,\n} from \"~/components/reborn/ui/reborn-anchor/reborn-anchor.config\";\nimport RebornAnchor from \"~/components/reborn/ui/reborn-anchor/RebornAnchor.vue\";\nimport RebornAnchorLink from \"~/components/reborn/ui/reborn-anchor/RebornAnchorLink.vue\";\nimport RebornButton from \"~/components/reborn/ui/reborn-button/RebornButton.vue\";\n\n// ─── 演示内容 ─────────────────────────────────────────\n\n/** 各演示共用的章节文案；每个演示用自己的前缀生成 id，避免同一页面上 id 重名 */\nconst chapters = [\n  { key: \"install\", title: \"安装\", text: \"组件随 Reborn UI 一起安装，不需要单独引入依赖。\" },\n  { key: \"usage\", title: \"基础用法\", text: \"把链接的 href 指向容器里某个元素的 id，滚动时链接会跟着高亮。\" },\n  { key: \"spy\", title: \"滚动判定\", text: \"组件取最后一个越过触发线的目标作为选中项，链接顺序要和区块顺序一致。\" },\n  { key: \"faq\", title: \"常见问题\", text: \"点了没反应，多半是 href 指向的 id 不在 container 里，或者页面上没有这个 id。\" },\n];\n\n/** 演练场的章节节点：比 AnchorItem 多一个 text，用来渲染右侧区块的正文 */\ninterface PlaygroundChapter {\n  key: string;\n  title: string;\n  text: string;\n  children?: PlaygroundChapter[];\n}\n\n/**\n * 演练场单独用一棵四级章节树，不复用上面的 chapters：\n * chapters 被另外九节共用，在它上面挂 children 会把那九节一起改掉\n */\nconst playgroundChapters: PlaygroundChapter[] = [\n  {\n    key: \"install\",\n    title: \"安装\",\n    text: \"组件随 Reborn UI 一起安装，不需要单独引入依赖。\",\n    children: [\n      {\n        key: \"pm\",\n        title: \"包管理器\",\n        text: \"仓库用 pnpm，换成别的包管理器也能装，只是锁文件对不上。\",\n        children: [\n          {\n            key: \"pnpm\",\n            title: \"pnpm\",\n            text: \"pnpm add reborn-ui，装完由 Nuxt 自动注册，页面里不用手写 import。\",\n            children: [\n              {\n                key: \"workspace\",\n                title: \"工作区依赖\",\n                text: \"monorepo 里要装进具体的子包，只装在根目录时子包解析不到。\",\n              },\n            ],\n          },\n          { key: \"npm\", title: \"npm\", text: \"npm i reborn-ui，与 pnpm 的差别只在依赖提升方式。\" },\n        ],\n      },\n    ],\n  },\n  {\n    key: \"usage\",\n    title: \"基础用法\",\n    text: \"把链接的 href 指向容器里某个元素的 id，滚动时链接会跟着高亮。\",\n    children: [\n      {\n        key: \"container\",\n        title: \"容器与 id\",\n        text: \"container 指到真正发生滚动的那一层，href 对应的 id 必须落在这层内部。\",\n      },\n    ],\n  },\n  {\n    key: \"spy\",\n    title: \"滚动判定\",\n    text: \"组件取最后一个越过触发线的目标作为选中项，链接顺序要和区块顺序一致。\",\n  },\n  {\n    key: \"faq\",\n    title: \"常见问题\",\n    text: \"点了没反应，多半是 href 指向的 id 不在 container 里，或者页面上没有这个 id。\",\n  },\n];\n\n/** 「子链接嵌套」用的两级章节 */\nconst nestedChapters = [\n  {\n    key: \"start\",\n    title: \"开始使用\",\n    children: [\n      { key: \"install\", title: \"安装\" },\n      { key: \"import\", title: \"引入\" },\n    ],\n  },\n  {\n    key: \"api\",\n    title: \"API\",\n    children: [\n      { key: \"props\", title: \"属性\" },\n      { key: \"events\", title: \"事件\" },\n    ],\n  },\n];\n\n/** 「items 数据化配置」直接把这份数据交给组件，链接由组件递归渲染，页面上不再逐个写 RebornAnchorLink */\nconst anchorItems: AnchorItem[] = [\n  {\n    key: \"guide\",\n    href: \"#anchor-items-guide\",\n    title: \"指南\",\n    children: [\n      { key: \"install\", href: \"#anchor-items-install\", title: \"安装\" },\n      { key: \"import\", href: \"#anchor-items-import\", title: \"引入\" },\n    ],\n  },\n  {\n    key: \"api\",\n    href: \"#anchor-items-api\",\n    title: \"API\",\n    children: [\n      { key: \"props\", href: \"#anchor-items-props\", title: \"属性\" },\n      // 单独给这一项设偏移量，点它时目标会停在距顶 72px 处，其余项仍按组件的 offset 走\n      { key: \"events\", href: \"#anchor-items-events\", title: \"事件\", offset: 72 },\n    ],\n  },\n];\n\n/** 把嵌套的 items 拍平成区块列表，右侧演示区照着它渲染出对应的锚点目标 */\nfunction flattenItems(list: AnchorItem[], depth = 0): { id: string; title: string; depth: number }[] {\n  return list.flatMap(item => [\n    { id: (item.href ?? \"\").slice(1), title: item.title ?? \"\", depth },\n    ...flattenItems(item.children ?? [], depth + 1),\n  ]);\n}\n\nconst itemsBlocks = flattenItems(anchorItems);\n\n/** 按演示前缀拼出区块 id */\nfunction blockId(prefix: string, key: string) {\n  return `${prefix}-${key}`;\n}\n\n/** 按演示前缀拼出链接 href */\nfunction blockHref(prefix: string, key: string) {\n  return `#${prefix}-${key}`;\n}\n\n// ─── 交互演练场 ─────────────────────────────────────────\n\n/** 章节树转成组件要的 items：href 按演练场前缀生成，text 只给右侧区块用，不传给组件 */\nfunction toAnchorItems(list: PlaygroundChapter[]): AnchorItem[] {\n  return list.map(item => ({\n    key: item.key,\n    href: blockHref(\"anchor-playground\", item.key),\n    title: item.title,\n    children: item.children && toAnchorItems(item.children),\n  }));\n}\n\n/** 拍平成区块列表，depth 用来给右侧区块做与左侧同层级的缩进 */\nfunction flattenChapters(list: PlaygroundChapter[], depth = 0): (PlaygroundChapter & { depth: number })[] {\n  return list.flatMap(item => [\n    { ...item, depth },\n    ...flattenChapters(item.children ?? [], depth + 1),\n  ]);\n}\n\nconst playgroundItems = toAnchorItems(playgroundChapters);\nconst playgroundBlocks = flattenChapters(playgroundChapters);\n\nconst defaultState: Record<string, any> = {\n  type: \"default\",\n  direction: \"vertical\",\n  color: \"primary\",\n  marker: \"bar\",\n  offset: 0,\n  bound: 15,\n  duration: 300,\n  selectScrollTop: false,\n};\n\nconst state = ref<Record<string, any>>({ ...defaultState });\n\n/** 演练场最近一次 change 的载荷，给预览区一个可见的回应 */\nconst lastChange = shallowRef(\"（尚未触发）\");\n/** 演练场链接被点击的次数 */\nconst clickCount = shallowRef(0);\n/** 演练场的滚动容器，重置时一并滚回顶部 */\nconst playgroundBox = useTemplateRef<HTMLElement>(\"playgroundBox\");\n\nfunction onPlaygroundChange(href: string | undefined) {\n  lastChange.value = href ?? \"（未选中）\";\n}\n\nfunction onPlaygroundClick() {\n  clickCount.value++;\n}\n\nfunction resetState() {\n  state.value = { ...defaultState };\n  lastChange.value = \"（尚未触发）\";\n  clickCount.value = 0;\n  playgroundBox.value?.scrollTo({ top: 0, behavior: \"instant\" });\n}\n\nconst typeOptions = anchorTypes.map(value => ({\n  label: value === \"default\" ? \"default 轨道线\" : \"underline 下划线\",\n  value,\n}));\n\nconst directionOptions = anchorDirections.map(value => ({\n  label: value === \"vertical\" ? \"vertical 竖排\" : \"horizontal 横排\",\n  value,\n}));\n\nconst colorOptions = anchorColors.map(value => ({ label: value, value }));\n\n/** 「强调色」一节展示的色值；七档全列出来会把演示挤成一排窄条，挑四档有代表性的 */\nconst colorShowcase = [\"primary\", \"success\", \"warning\", \"error\"] as const;\n\nconst markerLabels: Record<string, string> = {\n  bar: \"bar 竖条\",\n  dot: \"dot 实心圆\",\n  hollow: \"hollow 空心圆\",\n  none: \"none 不显示\",\n};\n\nconst markerOptions = anchorMarkers.map(value => ({ label: markerLabels[value] ?? value, value }));\n\nconst controls: any = [\n  {\n    title: \"基础属性\",\n    children: [\n      {\n        label: \"锚点类型\",\n        key: \"type\",\n        component: \"select\" as const,\n        defaultValue: \"default\",\n        props: { options: typeOptions },\n      },\n      {\n        label: \"锚点方向\",\n        key: \"direction\",\n        component: \"select\" as const,\n        defaultValue: \"vertical\",\n        props: { options: directionOptions },\n      },\n      {\n        label: \"强调色\",\n        key: \"color\",\n        component: \"select\" as const,\n        defaultValue: \"primary\",\n        props: { options: colorOptions },\n      },\n    ],\n  },\n  {\n    title: \"状态\",\n    children: [\n      {\n        label: \"标记形态\",\n        key: \"marker\",\n        component: \"select\" as const,\n        defaultValue: \"bar\",\n        props: { options: markerOptions },\n      },\n      {\n        label: \"选中顶部链接\",\n        key: \"selectScrollTop\",\n        component: \"checkbox\" as const,\n        defaultValue: false,\n      },\n    ],\n  },\n  {\n    title: \"行为\",\n    children: [\n      {\n        label: \"滚动偏移量 offset\",\n        key: \"offset\",\n        component: \"slider\" as const,\n        defaultValue: 0,\n        props: { min: 0, max: 120, step: 4 },\n      },\n      {\n        label: \"触发线偏移 bound\",\n        key: \"bound\",\n        component: \"slider\" as const,\n        defaultValue: 15,\n        props: { min: 0, max: 120, step: 5 },\n      },\n      {\n        label: \"滚动时长 duration（毫秒）\",\n        key: \"duration\",\n        component: \"slider\" as const,\n        defaultValue: 300,\n        props: { min: 0, max: 1200, step: 50 },\n      },\n    ],\n  },\n];\n\n/** 把章节树写成 items 字面量，跟着上面的演示数据走，不用手动同步 */\nfunction stringifyItems(list: PlaygroundChapter[], indent = 2): string {\n  const pad = \" \".repeat(indent);\n  return list\n    .map((item) => {\n      const head = `${pad}{ key: \"${item.key}\", href: \"#${item.key}\", title: \"${item.title}\"`;\n      if (!item.children?.length) return `${head} },`;\n      return `${head}, children: [\\n${stringifyItems(item.children, indent + 2)}\\n${pad}] },`;\n    })\n    .join(\"\\n\");\n}\n\n/** 完整列出当前所有参数（含默认值），连同 items 一起复制即可运行 */\nconst anchorCode = computed(() => {\n  const current = state.value;\n  const attrs = [\n    `:items=\"items\"`,\n    `container=\"#scroll-box\"`,\n    `type=\"${current.type}\"`,\n    `direction=\"${current.direction}\"`,\n    `color=\"${current.color}\"`,\n    `marker=\"${current.marker}\"`,\n    `:offset=\"${current.offset}\"`,\n    `:bound=\"${current.bound}\"`,\n    `:duration=\"${current.duration}\"`,\n    `:select-scroll-top=\"${current.selectScrollTop}\"`,\n    `@change=\"onChange\"`,\n    `@click=\"onClick\"`,\n  ];\n  const items = `const items = [\\n${stringifyItems(playgroundChapters)}\\n];`;\n  return `${items}\\n\\n<RebornAnchor\\n  ${attrs.join(\"\\n  \")}\\n/>`;\n});\n\n// ─── 场景演示状态 ─────────────────────────────────────────\n\n/** 「指定滚动容器」里以元素引用形式传给 container 的那个容器 */\nconst containerEl = useTemplateRef<HTMLElement>(\"containerEl\");\n\n/** 「手动滚动」里被实例方法驱动的锚点 */\nconst manualAnchorRef = useTemplateRef<InstanceType<typeof RebornAnchor>>(\"manualAnchorRef\");\n\n/** 调用实例暴露的 scrollTo，不点链接也能滚到指定区块 */\nfunction scrollToBlock(key: string) {\n  manualAnchorRef.value?.scrollTo(blockHref(\"anchor-manual\", key));\n}\n</script>\n\n<template>\n  <div class=\"flex w-full flex-col\">\n    <Playground\n      v-model=\"state\" :controls=\"controls\" :code=\"anchorCode\" component-name=\"RebornAnchor\" title=\"交互演练场\"\n      description=\"调节上方参数，再滚动下方容器，观察选中项与标记怎么跟着变；链接由 items 递归渲染，最深四级\"\n    >\n      <template #tag>\n        <RebornButton size=\"sm\" variant=\"soft\" color=\"neutral\" @click=\"resetState\">\n          <template #leading>\n            <Icon name=\"lucide:rotate-ccw\" size=\"12\" />\n          </template>\n          重置配置\n        </RebornButton>\n      </template>\n\n      <div class=\"flex w-full flex-col gap-4\">\n        <div :class=\"state.direction === 'horizontal' ? 'flex flex-col gap-4' : 'flex gap-6'\">\n          <!-- 每嵌一级子链接多缩进 14px，w-32 装不下第四级的文字，这里给到 w-44 -->\n          <RebornAnchor\n            :items=\"playgroundItems\" container=\"#anchor-playground-box\" :type=\"state.type\"\n            :direction=\"state.direction\" :color=\"state.color\" :marker=\"state.marker\" :offset=\"state.offset\"\n            :bound=\"state.bound\" :duration=\"state.duration\" :select-scroll-top=\"state.selectScrollTop\"\n            :class=\"state.direction === 'horizontal' ? 'w-full' : 'w-44 shrink-0'\" @change=\"onPlaygroundChange\"\n            @click=\"onPlaygroundClick\"\n          />\n\n          <!-- 横排时外层是纵向 flex，flex-1 会顺着纵轴把高度撑到内容全高、h-64 失效，容器就不滚了 -->\n          <div\n            id=\"anchor-playground-box\" ref=\"playgroundBox\"\n            class=\"border-default rounded-lg h-64 min-w-0 overflow-y-auto border px-4\"\n            :class=\"state.direction === 'horizontal' ? 'w-full' : 'flex-1'\"\n          >\n            <!--\n              缩进量按层级算出来，Tailwind 的类名不能在运行时拼，只能写成行内样式。\n              区块必然比容器高（末尾项要能常规越线，需 min-h ≥ 容器高 + bound），文字只占顶部一小截，\n              剩下都是撑高度的空白。画条虚线把区块边界标出来，否则滚到空白处看不出选中项为什么还没换\n            -->\n            <section\n              v-for=\"item in playgroundBlocks\" :id=\"blockId('anchor-playground', item.key)\" :key=\"item.key\"\n              class=\"border-default flex min-h-[280px] flex-col gap-2 border-b border-dashed py-4 last:border-b-0\"\n              :style=\"{ paddingLeft: `${item.depth * 16}px` }\"\n            >\n              <h4 class=\"text-highlighted text-sm font-medium\">\n                {{ item.title }}\n              </h4>\n              <DemoNote tone=\"dimmed\" class=\"text-xs\">\n                {{ item.text }}\n              </DemoNote>\n            </section>\n          </div>\n        </div>\n\n        <DemoNote v-if=\"state.direction === 'horizontal'\" tone=\"dimmed\" class=\"text-xs\">\n          横向锚点只渲染第一级：嵌套层会打乱标记的横向测量基准，组件在这个方向下不展开 children。\n        </DemoNote>\n\n        <DemoNote tone=\"dimmed\" class=\"font-mono text-xs\">\n          change: {{ lastChange }} · 点击次数: {{ clickCount }}\n        </DemoNote>\n      </div>\n    </Playground>\n\n    <DemoSection title=\"基础用法\">\n      <template #description>\n        链接的 <code>href</code> 指向容器里某个元素的 <code>id</code>，<code>container</code> 指到真正发生滚动的那一层，滚动时链接自动高亮。\n      </template>\n\n      <DemoBlock layout=\"row\" tone=\"inset\" align=\"start\" class=\"gap-6\">\n        <RebornAnchor container=\"#anchor-basic-box\" class=\"w-32 shrink-0\">\n          <RebornAnchorLink\n            v-for=\"item in chapters\" :key=\"item.key\" :href=\"blockHref('anchor-basic', item.key)\"\n            :title=\"item.title\"\n          />\n        </RebornAnchor>\n\n        <div id=\"anchor-basic-box\" class=\"h-64 min-w-0 flex-1 overflow-y-auto pr-2\">\n          <section\n            v-for=\"item in chapters\" :id=\"blockId('anchor-basic', item.key)\" :key=\"item.key\"\n            class=\"flex min-h-[280px] flex-col gap-2 py-2\"\n          >\n            <h4 class=\"text-highlighted text-sm font-medium\">\n              {{ item.title }}\n            </h4>\n            <DemoNote tone=\"dimmed\" class=\"text-xs\">\n              {{ item.text }}\n            </DemoNote>\n          </section>\n        </div>\n      </DemoBlock>\n    </DemoSection>\n\n    <DemoSection title=\"数据化配置：items 递归渲染\">\n      <template #description>\n        链接来自接口或路由表时，逐个写 <code>RebornAnchorLink</code> 就得自己套一层 <code>v-for</code>，嵌套还要再套一层。把数组交给\n        <code>items</code>，组件按 <code>children</code> 递归渲染出同样的结构。传了 <code>items</code> 默认插槽就不再生效，两种写法择一使用。\n        条目上的 <code>offset</code> 覆盖组件的同名属性——下面「事件」单独设了 72，点它和点别的项停的位置不一样。\n      </template>\n\n      <DemoBlock layout=\"row\" tone=\"inset\" align=\"start\" class=\"gap-6\">\n        <RebornAnchor :items=\"anchorItems\" container=\"#anchor-items-box\" class=\"w-36 shrink-0\" />\n\n        <div id=\"anchor-items-box\" class=\"h-64 min-w-0 flex-1 overflow-y-auto pr-2\">\n          <section\n            v-for=\"block in itemsBlocks\" :id=\"block.id\" :key=\"block.id\"\n            class=\"flex min-h-[280px] flex-col gap-2 py-2\" :class=\"block.depth > 0 && 'pl-4'\"\n          >\n            <h4 class=\"text-highlighted text-sm font-medium\">\n              {{ block.title }}\n            </h4>\n            <DemoNote tone=\"dimmed\" class=\"text-xs\">\n              这一段的 id 是 <code>{{ block.id }}</code>，对应 items 里那条数据的 href。\n            </DemoNote>\n          </section>\n        </div>\n      </DemoBlock>\n    </DemoSection>\n\n    <DemoSection title=\"排列方向：水平锚点\">\n      <template #description>\n        <code>direction=\"horizontal\"</code> 把链接横排、标记移到底部，适合压在内容区正上方。它只改链接的排布，滚动判定始终是纵向的。横向下标记只有贴底的滑块一种形态，传\n        <code>dot</code> / <code>hollow</code> 会按 <code>bar</code> 渲染。\n      </template>\n\n      <!-- stack 默认 items-start，子项会收缩到内容宽度：锚点与容器都要显式 w-full，横贯底部的轨道线才铺满整行 -->\n      <DemoBlock layout=\"stack\" tone=\"inset\" class=\"gap-4\">\n        <RebornAnchor direction=\"horizontal\" container=\"#anchor-horizontal-box\" class=\"w-full\">\n          <RebornAnchorLink\n            v-for=\"item in chapters\" :key=\"item.key\" :href=\"blockHref('anchor-horizontal', item.key)\"\n            :title=\"item.title\"\n          />\n        </RebornAnchor>\n\n        <div id=\"anchor-horizontal-box\" class=\"h-64 w-full overflow-y-auto\">\n          <section\n            v-for=\"item in chapters\" :id=\"blockId('anchor-horizontal', item.key)\" :key=\"item.key\"\n            class=\"flex min-h-[280px] flex-col gap-2 py-2\"\n          >\n            <h4 class=\"text-highlighted text-sm font-medium\">\n              {{ item.title }}\n            </h4>\n            <DemoNote tone=\"dimmed\" class=\"text-xs\">\n              {{ item.text }}\n            </DemoNote>\n          </section>\n        </div>\n      </DemoBlock>\n    </DemoSection>\n\n    <DemoSection title=\"标记形态：竖条、圆点与隐藏\">\n      <template #description>\n        <code>marker</code> 决定跟随选中项滑动的那个标记长什么样：<code>bar</code> 竖条、<code>dot</code> 实心圆、<code>hollow</code>\n        空心圆、<code>none</code> 不显示。布尔值仍然可用，<code>true</code> 等价于 <code>bar</code>、<code>false</code> 等价于\n        <code>none</code>。四个锚点盯的是同一个容器，滚动时可以直接对比。\n      </template>\n\n      <DemoBlock layout=\"row\" tone=\"inset\" align=\"start\" class=\"gap-6\">\n        <DemoItem label=\"marker: bar\" mono note=\"2×22 的竖条，压在轨道线上\" class=\"w-28 shrink-0\">\n          <RebornAnchor marker=\"bar\" container=\"#anchor-marker-box\">\n            <RebornAnchorLink\n              v-for=\"item in chapters\" :key=\"item.key\" :href=\"blockHref('anchor-marker', item.key)\"\n              :title=\"item.title\"\n            />\n          </RebornAnchor>\n        </DemoItem>\n\n        <DemoItem label=\"marker: dot\" mono note=\"6px 实心圆，骑在轨道中线上\" class=\"w-28 shrink-0\">\n          <RebornAnchor marker=\"dot\" container=\"#anchor-marker-box\">\n            <RebornAnchorLink\n              v-for=\"item in chapters\" :key=\"item.key\" :href=\"blockHref('anchor-marker', item.key)\"\n              :title=\"item.title\"\n            />\n          </RebornAnchor>\n        </DemoItem>\n\n        <DemoItem label=\"marker: hollow\" mono note=\"同尺寸但中间挖空，比实心圆轻\" class=\"w-28 shrink-0\">\n          <RebornAnchor marker=\"hollow\" container=\"#anchor-marker-box\">\n            <RebornAnchorLink\n              v-for=\"item in chapters\" :key=\"item.key\" :href=\"blockHref('anchor-marker', item.key)\"\n              :title=\"item.title\"\n            />\n          </RebornAnchor>\n        </DemoItem>\n\n        <DemoItem label=\"marker: none\" mono note=\"标记不渲染，只靠文字颜色区分\" class=\"w-28 shrink-0\">\n          <RebornAnchor marker=\"none\" container=\"#anchor-marker-box\">\n            <RebornAnchorLink\n              v-for=\"item in chapters\" :key=\"item.key\" :href=\"blockHref('anchor-marker', item.key)\"\n              :title=\"item.title\"\n            />\n          </RebornAnchor>\n        </DemoItem>\n\n        <div id=\"anchor-marker-box\" class=\"h-64 min-w-0 flex-1 overflow-y-auto pr-2\">\n          <section\n            v-for=\"item in chapters\" :id=\"blockId('anchor-marker', item.key)\" :key=\"item.key\"\n            class=\"flex min-h-[280px] flex-col gap-2 py-2\"\n          >\n            <h4 class=\"text-highlighted text-sm font-medium\">\n              {{ item.title }}\n            </h4>\n            <DemoNote tone=\"dimmed\" class=\"text-xs\">\n              {{ item.text }}\n            </DemoNote>\n          </section>\n        </div>\n      </DemoBlock>\n    </DemoSection>\n\n    <DemoSection title=\"轨道线：default 与 underline\">\n      <template #description>\n        <code>type</code> 只管画不画那条贯穿的灰色轨道线：<code>default</code> 画，标记像是轨道被逐段点亮；<code>underline</code> 不画，只剩标记本身。\n      </template>\n\n      <DemoBlock layout=\"row\" tone=\"inset\" align=\"start\" class=\"gap-6\">\n        <DemoItem label=\"type: default\" mono note=\"轨道线常驻\" class=\"w-28 shrink-0\">\n          <RebornAnchor type=\"default\" container=\"#anchor-track-box\">\n            <RebornAnchorLink\n              v-for=\"item in chapters\" :key=\"item.key\" :href=\"blockHref('anchor-track', item.key)\"\n              :title=\"item.title\"\n            />\n          </RebornAnchor>\n        </DemoItem>\n\n        <DemoItem label=\"type: underline\" mono note=\"不画轨道，只有标记\" class=\"w-28 shrink-0\">\n          <RebornAnchor type=\"underline\" container=\"#anchor-track-box\">\n            <RebornAnchorLink\n              v-for=\"item in chapters\" :key=\"item.key\" :href=\"blockHref('anchor-track', item.key)\"\n              :title=\"item.title\"\n            />\n          </RebornAnchor>\n        </DemoItem>\n\n        <div id=\"anchor-track-box\" class=\"h-64 min-w-0 flex-1 overflow-y-auto pr-2\">\n          <section\n            v-for=\"item in chapters\" :id=\"blockId('anchor-track', item.key)\" :key=\"item.key\"\n            class=\"flex min-h-[280px] flex-col gap-2 py-2\"\n          >\n            <h4 class=\"text-highlighted text-sm font-medium\">\n              {{ item.title }}\n            </h4>\n            <DemoNote tone=\"dimmed\" class=\"text-xs\">\n              {{ item.text }}\n            </DemoNote>\n          </section>\n        </div>\n      </DemoBlock>\n    </DemoSection>\n\n    <DemoSection title=\"强调色：color\">\n      <template #description>\n        <code>color</code> 同时改选中文字与标记的颜色，轨道线不跟着变（它是背景而非强调色）。下面四个锚点盯的是同一个容器。\n      </template>\n\n      <DemoBlock layout=\"row\" tone=\"inset\" align=\"start\" class=\"gap-6\">\n        <DemoItem v-for=\"color in colorShowcase\" :key=\"color\" :label=\"`color: ${color}`\" mono class=\"w-28 shrink-0\">\n          <RebornAnchor :color=\"color\" marker=\"dot\" container=\"#anchor-color-box\">\n            <RebornAnchorLink\n              v-for=\"item in chapters\" :key=\"item.key\" :href=\"blockHref('anchor-color', item.key)\"\n              :title=\"item.title\"\n            />\n          </RebornAnchor>\n        </DemoItem>\n\n        <div id=\"anchor-color-box\" class=\"h-64 min-w-0 flex-1 overflow-y-auto pr-2\">\n          <section\n            v-for=\"item in chapters\" :id=\"blockId('anchor-color', item.key)\" :key=\"item.key\"\n            class=\"flex min-h-[280px] flex-col gap-2 py-2\"\n          >\n            <h4 class=\"text-highlighted text-sm font-medium\">\n              {{ item.title }}\n            </h4>\n            <DemoNote tone=\"dimmed\" class=\"text-xs\">\n              {{ item.text }}\n            </DemoNote>\n          </section>\n        </div>\n      </DemoBlock>\n    </DemoSection>\n\n    <DemoSection title=\"滚动容器：container 联动\">\n      <template #description>\n        <code>container</code> 收选择器字符串、<code>HTMLElement</code> 或\n        <code>Window</code>。锚点不必放在容器里面，指得到就能联动——下面两个锚点盯的是中间同一个容器。\n      </template>\n\n      <DemoBlock layout=\"row\" tone=\"inset\" align=\"start\" class=\"gap-6\">\n        <DemoItem label=\"container: 选择器字符串\" mono class=\"w-36 shrink-0\">\n          <RebornAnchor container=\"#anchor-container-box\">\n            <RebornAnchorLink\n              v-for=\"item in chapters\" :key=\"item.key\" :href=\"blockHref('anchor-container', item.key)\"\n              :title=\"item.title\"\n            />\n          </RebornAnchor>\n        </DemoItem>\n\n        <div id=\"anchor-container-box\" ref=\"containerEl\" class=\"h-64 min-w-0 flex-1 overflow-y-auto px-2\">\n          <section\n            v-for=\"item in chapters\" :id=\"blockId('anchor-container', item.key)\" :key=\"item.key\"\n            class=\"flex min-h-[280px] flex-col gap-2 py-2\"\n          >\n            <h4 class=\"text-highlighted text-sm font-medium\">\n              {{ item.title }}\n            </h4>\n            <DemoNote tone=\"dimmed\" class=\"text-xs\">\n              {{ item.text }}\n            </DemoNote>\n          </section>\n        </div>\n\n        <DemoItem label=\"container: 元素引用\" mono class=\"w-36 shrink-0\">\n          <!-- 传元素得等它真的挂上：v-if 让锚点首帧拿到的就是元素本身，否则这一帧的 container 是 undefined，会先当成整窗滚动 -->\n          <RebornAnchor v-if=\"containerEl\" :container=\"containerEl\">\n            <RebornAnchorLink\n              v-for=\"item in chapters\" :key=\"item.key\" :href=\"blockHref('anchor-container', item.key)\"\n              :title=\"item.title\"\n            />\n          </RebornAnchor>\n        </DemoItem>\n      </DemoBlock>\n    </DemoSection>\n\n    <DemoSection title=\"偏移量与触发线：offset、bound\">\n      <template #description>\n        <code>offset</code> 决定滚完之后目标停在距顶多远，<code>bound</code> 决定目标顶部进到哪条线以内才算选中。开了 <code>select-scroll-top</code> 触发线压到\n        0，此时 <code>bound</code> 不再参与判定，两者不叠加。\n      </template>\n\n      <DemoBlock layout=\"row\" tone=\"inset\" align=\"start\" class=\"gap-6\">\n        <DemoItem label=\"offset: 0\" mono note=\"点击后区块贴着容器顶部\" class=\"w-28 shrink-0\">\n          <RebornAnchor :offset=\"0\" container=\"#anchor-offset-box\">\n            <RebornAnchorLink\n              v-for=\"item in chapters\" :key=\"item.key\" :href=\"blockHref('anchor-offset', item.key)\"\n              :title=\"item.title\"\n            />\n          </RebornAnchor>\n        </DemoItem>\n\n        <DemoItem label=\"offset: 64\" mono note=\"点击后区块停在距顶 64px 处\" class=\"w-28 shrink-0\">\n          <RebornAnchor :offset=\"64\" container=\"#anchor-offset-box\">\n            <RebornAnchorLink\n              v-for=\"item in chapters\" :key=\"item.key\" :href=\"blockHref('anchor-offset', item.key)\"\n              :title=\"item.title\"\n            />\n          </RebornAnchor>\n        </DemoItem>\n\n        <DemoItem label=\"selectScrollTop: true\" mono note=\"触发线压到 0，目标顶部越线才换选中\" class=\"w-28 shrink-0\">\n          <RebornAnchor select-scroll-top container=\"#anchor-offset-box\">\n            <RebornAnchorLink\n              v-for=\"item in chapters\" :key=\"item.key\" :href=\"blockHref('anchor-offset', item.key)\"\n              :title=\"item.title\"\n            />\n          </RebornAnchor>\n        </DemoItem>\n\n        <div id=\"anchor-offset-box\" class=\"h-64 min-w-0 flex-1 overflow-y-auto pr-2\">\n          <section\n            v-for=\"item in chapters\" :id=\"blockId('anchor-offset', item.key)\" :key=\"item.key\"\n            class=\"flex min-h-[280px] flex-col gap-2 py-2\"\n          >\n            <h4 class=\"text-highlighted text-sm font-medium\">\n              {{ item.title }}\n            </h4>\n            <DemoNote tone=\"dimmed\" class=\"text-xs\">\n              {{ item.text }}\n            </DemoNote>\n          </section>\n        </div>\n      </DemoBlock>\n    </DemoSection>\n\n    <DemoSection title=\"子链接嵌套：sub-link 插槽\">\n      <template #description>\n        往 <code>sub-link</code> 插槽里再放 <code>RebornAnchorLink</code> 就是下一级链接，缩进一层，但和上级共用同一套滚动判定。子链接始终竖排，横向锚点下不适用。同样的结构用\n        <code>items</code> 的 <code>children</code> 也能写出来，区别只在链接由谁渲染。\n      </template>\n\n      <DemoBlock layout=\"row\" tone=\"inset\" align=\"start\" class=\"gap-6\">\n        <RebornAnchor container=\"#anchor-nested-box\" class=\"w-36 shrink-0\">\n          <RebornAnchorLink\n            v-for=\"group in nestedChapters\" :key=\"group.key\"\n            :href=\"blockHref('anchor-nested', group.key)\" :title=\"group.title\"\n          >\n            <template #sub-link>\n              <RebornAnchorLink\n                v-for=\"child in group.children\" :key=\"child.key\"\n                :href=\"blockHref('anchor-nested', `${group.key}-${child.key}`)\" :title=\"child.title\"\n              />\n            </template>\n          </RebornAnchorLink>\n        </RebornAnchor>\n\n        <div id=\"anchor-nested-box\" class=\"h-64 min-w-0 flex-1 overflow-y-auto pr-2\">\n          <template v-for=\"group in nestedChapters\" :key=\"group.key\">\n            <section :id=\"blockId('anchor-nested', group.key)\" class=\"flex min-h-[280px] flex-col gap-2 py-2\">\n              <h4 class=\"text-highlighted text-sm font-medium\">\n                {{ group.title }}\n              </h4>\n              <DemoNote tone=\"dimmed\" class=\"text-xs\">\n                这是「{{ group.title }}」的正文，下面还有两个子小节。\n              </DemoNote>\n            </section>\n\n            <section\n              v-for=\"child in group.children\" :id=\"blockId('anchor-nested', `${group.key}-${child.key}`)\"\n              :key=\"child.key\" class=\"flex min-h-[280px] flex-col gap-2 py-2 pl-4\"\n            >\n              <h5 class=\"text-highlighted text-xs font-medium\">\n                {{ group.title }} / {{ child.title }}\n              </h5>\n              <DemoNote tone=\"dimmed\" class=\"text-xs\">\n                子小节的正文，滚到这里时上级链接和它自己会一起亮起来。\n              </DemoNote>\n            </section>\n          </template>\n        </div>\n      </DemoBlock>\n    </DemoSection>\n\n    <DemoSection title=\"手动滚动：scrollTo 方法\">\n      <template #description>\n        组件实例暴露 <code>scrollTo(href)</code>，不点链接也能滚到指定区块，选中态同步跟上。适合从页面别处触发跳转，比如目录按钮或搜索结果。\n      </template>\n\n      <DemoBlock layout=\"stack\" tone=\"inset\" class=\"gap-4\">\n        <div class=\"flex flex-wrap gap-2\">\n          <RebornButton\n            v-for=\"item in chapters\" :key=\"item.key\" size=\"sm\" variant=\"soft\" color=\"neutral\"\n            @click=\"scrollToBlock(item.key)\"\n          >\n            滚到「{{ item.title }}」\n          </RebornButton>\n        </div>\n\n        <div class=\"flex gap-6\">\n          <RebornAnchor ref=\"manualAnchorRef\" container=\"#anchor-manual-box\" class=\"w-32 shrink-0\">\n            <RebornAnchorLink\n              v-for=\"item in chapters\" :key=\"item.key\" :href=\"blockHref('anchor-manual', item.key)\"\n              :title=\"item.title\"\n            />\n          </RebornAnchor>\n\n          <div id=\"anchor-manual-box\" class=\"h-64 min-w-0 flex-1 overflow-y-auto pr-2\">\n            <section\n              v-for=\"item in chapters\" :id=\"blockId('anchor-manual', item.key)\" :key=\"item.key\"\n              class=\"flex min-h-[280px] flex-col gap-2 py-2\"\n            >\n              <h4 class=\"text-highlighted text-sm font-medium\">\n                {{ item.title }}\n              </h4>\n              <DemoNote tone=\"dimmed\" class=\"text-xs\">\n                {{ item.text }}\n              </DemoNote>\n            </section>\n          </div>\n        </div>\n      </DemoBlock>\n    </DemoSection>\n  </div>\n</template>\n"
+    }
+  ],
+  "related": [],
+  "whenToUse": [
+    "长文档、详情页的章节导航：container 指向滚动层，每个 href 指到一个区块 id。",
+    "设置页、表单分组的侧边目录：默认 type='default' 会画一条轨道线，把分组串成视觉主轴。",
+    "内容区上方的横排小节切换：direction='horizontal'，链接横排、标记移到底部。",
+    "页面有吸顶栏、滚动后区块不能贴着容器顶部：用 offset 留出吸顶栏的高度。",
+    "从页面别处（搜索结果、目录按钮）跳到某个区块：调实例方法 scrollTo(href)。"
+  ],
+  "whenNotToUse": [
+    "切换的是内容而不是滚动位置，改用 reborn-tabs，它按 key 换面板，不动滚动条。",
+    "跨页面 / 路由的导航，改用 reborn-menu，锚点只在当前容器内滚动，不做路由跳转。",
+    "只想平滑滚到某个元素、不需要目录和高亮，直接用 element.scrollIntoView({ behavior: 'smooth' })。"
+  ],
+  "pitfalls": [
+    "duration 走 JS 补间而非原生 scroll-behavior: smooth（原生方案不提供时长控制）：组件用 rAF 逐帧写 scrollTop 并显式传 behavior: 'instant'，避免与容器 CSS 上的平滑滚动叠成两层动画；系统开启减少动态效果时直接跳转，duration 不生效。",
+    "selectScrollTop 与 bound 不叠加：触发线阈值取 selectScrollTop ? 0 : bound，开启前者后 bound 完全不参与判定，想微调换选中时机只调 bound。",
+    "容器滚到底（scrollTop >= maxScroll - 1）时强制选中最后一项：末尾区块不足一屏高时顶部永远越不过触发线，这是有意为之，不是判定失灵。",
+    "没有 v-model，选中态只能从 change 事件读（与 Element Plus 一致）：选中项由滚动位置算出，从外部写回没有意义。",
+    "链接集合变化（items 异步到达、换了一批锚点）后组件会在下一帧按当前位置重新判定选中项，容器不滚动也不会残留旧高亮；结果变化时会多触发一次 change。",
+    "click 在滚动之前触发，event.preventDefault() 即接管跳转：被拦下时组件既不滚动也不改选中态；未被拦下时组件自行 preventDefault，不让浏览器再做原生锚点跳转。",
+    "container 传选择器字符串时在客户端挂载后才解析，SSR 阶段不查询 DOM；querySelector 落空时不监听也不回落到窗口，链接点了没反应先查选择器与 href 指向的 id 是否存在。",
+    "container 传 HTMLElement 时要确保元素已挂载：父组件首帧模板 ref 还是 undefined，需用 v-if 等它有值再渲染锚点。",
+    "direction 只改链接排布，滚动判定始终按目标元素的垂直位置算；子链接（sub-link）在横向锚点下不适用，嵌套层会打乱标记的横向测量基准。",
+    "横向锚点只支持 marker='bar' 与 'none'，传 dot / hollow 会被组件收敛成 bar：圆点是骑在竖轨道上的形态，贴底的横轨道上没有对应画法。",
+    "marker 收 boolean 与四种形态字符串，true 等价于 bar、false 等价于 none（保留 Element Plus 的布尔签名）；type='default' 配 marker='none' 会留下一条永远不亮的轨道线，要彻底去掉标记需同时设 type='underline'。",
+    "color 只改选中文字与标记颜色，取各色阶的 -6 档，落成 bg-primary / text-primary 这类语义类名，组件不额外定义自己的 CSS 变量；要色板之外的颜色就在锚点上局部改写色板变量，如 class=\"[--color-primary:#7c3aed]\"。",
+    "轨道线固定 bg-gray-3、空心标记的洞固定 bg-gray-1，都不跟随 color（它们是背景而非强调色），要改得用 ui.list 覆盖 before:bg-* 或 ui.marker 覆盖 after:bg-*。轨道线不用 gray-2：浅色主题里 bg-elevated 的底色就是 gray-2（或只差两三个色值），放进填充面板会与底色重合，default 与 underline 看不出区别；自定义轨道色时同样要避开所在面板的底色。",
+    "横向锚点的轨道线横贯列表全宽，列表宽度跟随根节点；锚点放在 items-start / items-center 的纵向 flex 容器里会收缩到链接总宽，轨道线只铺到最后一个链接，要与内容区等宽需给锚点加 class=\"w-full\"。",
+    "color='neutral' 用的是 gray-9 不是 gray-6：gray 色阶在本仓库是会随暗色模式反转的文本色阶，gray-6 是浅灰，当强调色看不清。",
+    "组件根元素带 data-reborn-anchor 标记，供页面级的全局 hash 跳转逻辑放行（本仓库 plugins/anchor-scroll.client.ts 就是这样一个 document 捕获阶段监听）。外层若不放行，stopPropagation 会让点击到不了组件，表现是点链接后页面整体跳走、目标容器纹丝不动。",
+    "仅 Web 端组件，依赖 getBoundingClientRect 同步测量与 href='#id' 锚点语义，UniApp 端暂无对应实现；移动端章节定位请用 scroll-view 的 scroll-into-view 自行实现。"
+  ],
+  "dependencies": [
+    "@vueuse/core",
+    "clsx",
+    "motion-v",
+    "tailwind-merge",
+    "tailwind-variants"
+  ],
+  "install": {
+    "cli": "npx reborn-ui@latest add reborn-anchor"
+  },
+  "sourceRefs": {
+    "web": [
+      "app/components/reborn/ui/reborn-anchor/RebornAnchor.vue",
+      "app/components/reborn/ui/reborn-anchor/RebornAnchorItems.vue",
+      "app/components/reborn/ui/reborn-anchor/RebornAnchorLink.vue",
+      "app/components/reborn/ui/reborn-anchor/index.ts",
+      "app/components/reborn/ui/reborn-anchor/reborn-anchor.config.ts"
+    ]
+  },
+  "docPath": "content/2.components/navigation/reborn-anchor.md",
+  "_meta": {
+    "contentHash": "9f3b8051c3cca417e689372154baffe310247f64",
+    "hasOverride": true,
+    "extractors": {
+      "web": "ok",
+      "uniapp": "absent",
+      "docs": "found"
+    }
+  }
+}
