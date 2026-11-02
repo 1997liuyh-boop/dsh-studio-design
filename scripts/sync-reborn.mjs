@@ -8,7 +8,10 @@ const root = fileURLToPath(new URL('../', import.meta.url))
 if (!process.argv[2]) throw new Error('用法：node scripts/sync-reborn.mjs <Reborn-UI 源码目录>')
 const source = resolve(process.argv[2]), target = join(root, 'upstream/reborn')
 const commit = execFileSync('git', ['-C', source, 'rev-parse', 'HEAD'], { encoding: 'utf8' }).trim()
-execFileSync('git', ['-C', source, 'diff', '--quiet', 'HEAD'])
+const changed = execFileSync('git', ['-C', source, 'diff', '--name-only', 'HEAD'], { encoding: 'utf8' }).trim().split('\n').filter(Boolean)
+const allowed = process.argv.includes('--allow-generated-templates') ? ['packages/cli/src/generated/templates.ts'] : []
+if (changed.some(file => !allowed.includes(file))) throw new Error('Reborn 检出包含源码改动，停止同步：' + changed.filter(file => !allowed.includes(file)).join('、'))
+if (process.argv.includes('--check-source')) { console.log('Reborn 源码状态检查通过'); process.exit(0) }
 const hashes = []
 // 清理本脚本拥有的生成目录，避免已删除组件留在新快照中。
 await rm(join(target, 'knowledge/components'), { recursive: true, force: true })

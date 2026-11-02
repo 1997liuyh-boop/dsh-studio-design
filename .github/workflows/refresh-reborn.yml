@@ -35,8 +35,9 @@ jobs:
           pnpm install --frozen-lockfile
           pnpm kb:bootstrap
           pnpm kb:check
-          git diff --exit-code
-      - run: node scripts/sync-reborn.mjs .reborn-source
+          git diff --exit-code -- knowledge/index.json
+      # registry 会重建受跟踪的 CLI 模板；其余源码仍须与检出提交一致。
+      - run: node scripts/sync-reborn.mjs .reborn-source --allow-generated-templates
       - run: npm run build
       - run: npm run check
       - run: npm test
