@@ -1,0 +1,119 @@
+{
+  "$schema": "../schema/component.schema.json",
+  "id": "pattern-background",
+  "title": "图案背景",
+  "description": "用于为区块提供图案纹理背景的容器组件，内容经默认插槽传入。",
+  "category": "effect",
+  "tags": [
+    "css",
+    "tailwind",
+    "background"
+  ],
+  "platforms": [
+    "web"
+  ],
+  "props": [
+    {
+      "name": "class",
+      "type": "HTMLAttributes[\"class\"]",
+      "required": false,
+      "description": "应用于容器的额外 CSS 类（如高度、圆角、布局）。"
+    },
+    {
+      "name": "animate",
+      "type": "boolean",
+      "required": false,
+      "description": "是否开启背景图案的滚动动画。",
+      "default": "false"
+    },
+    {
+      "name": "direction",
+      "type": "PatternBackgroundDirection",
+      "required": false,
+      "description": "动画滚动方向，仅在 `animate` 开启时生效。",
+      "default": "() => PATTERN_BACKGROUND_DIRECTION.Top"
+    },
+    {
+      "name": "variant",
+      "type": "PatternBackgroundVariants[\"variant\"]",
+      "required": false,
+      "description": "图案样式：网格、点阵或大点阵。",
+      "default": "() => PATTERN_BACKGROUND_VARIANT.Grid"
+    },
+    {
+      "name": "size",
+      "type": "PatternBackgroundVariants[\"size\"]",
+      "required": false,
+      "description": "图案单元尺寸（对应 background-size 8px 到 40px）。",
+      "default": "undefined"
+    },
+    {
+      "name": "mask",
+      "type": "PatternBackgroundMaskVariants[\"mask\"]",
+      "required": false,
+      "description": "遮罩样式，把图案向页面背景色渐隐（居中椭圆或顶部椭圆）。",
+      "default": "undefined"
+    },
+    {
+      "name": "speed",
+      "type": "ObjectValues<typeof PATTERN_BACKGROUND_SPEED>",
+      "required": false,
+      "description": "动画一轮时长（毫秒），预设 5000（快）/ 10000（默认）/ 25000（慢）。",
+      "default": "() => PATTERN_BACKGROUND_SPEED.Default"
+    }
+  ],
+  "events": [],
+  "slots": [
+    {
+      "name": "default",
+      "description": "叠放在图案背景之上展示的内容。"
+    }
+  ],
+  "exposes": [],
+  "examples": [
+    {
+      "title": "Web 演示",
+      "path": "app/components/reborn/examples/pattern-background/PatternBackgroundDemo.vue",
+      "source": "demo",
+      "platform": "web",
+      "code": "<script setup lang=\"ts\">\nimport {\n  PATTERN_BACKGROUND_DIRECTION,\n  PATTERN_BACKGROUND_MASK,\n  PATTERN_BACKGROUND_SPEED,\n  PATTERN_BACKGROUND_VARIANT,\n} from \"../../ui/pattern-background\";\n</script>\n\n<template>\n  <DemoSection\n    title=\"基础用法\"\n    description=\"PatternBackground 自身就是舞台；圆角走白名单，文案用 highlighted。\"\n  >\n    <DemoBlock layout=\"stack\">\n      <!-- 网格图案：默认速度向上滚动 -->\n      <PatternBackground\n        :animate=\"true\"\n        :direction=\"PATTERN_BACKGROUND_DIRECTION.Top\"\n        :variant=\"PATTERN_BACKGROUND_VARIANT.Grid\"\n        size=\"md\"\n        :speed=\"PATTERN_BACKGROUND_SPEED.Default\"\n        class=\"flex h-56 w-full items-center justify-center rounded-xl\"\n      >\n        <span class=\"text-highlighted relative z-10 text-xl font-semibold\">\n          网格 / 向上滚动\n        </span>\n      </PatternBackground>\n\n      <!-- 点阵图案：静态 + 椭圆遮罩聚焦中心 -->\n      <PatternBackground\n        :variant=\"PATTERN_BACKGROUND_VARIANT.Dot\"\n        size=\"sm\"\n        :mask=\"PATTERN_BACKGROUND_MASK.Ellipse\"\n        class=\"flex h-56 w-full items-center justify-center rounded-xl\"\n      >\n        <span class=\"text-highlighted relative z-10 text-xl font-semibold\">\n          点阵 / 椭圆遮罩\n        </span>\n      </PatternBackground>\n\n      <!-- 大点阵图案：快速斜向滚动 + 顶部椭圆遮罩 -->\n      <PatternBackground\n        :animate=\"true\"\n        :direction=\"PATTERN_BACKGROUND_DIRECTION.BottomRight\"\n        :variant=\"PATTERN_BACKGROUND_VARIANT.BigDot\"\n        size=\"lg\"\n        :speed=\"PATTERN_BACKGROUND_SPEED.Fast\"\n        :mask=\"PATTERN_BACKGROUND_MASK.EllipseTop\"\n        class=\"flex h-56 w-full items-center justify-center rounded-xl\"\n      >\n        <span class=\"text-highlighted relative z-10 text-xl font-semibold\">\n          大点阵 / 快速\n        </span>\n      </PatternBackground>\n    </DemoBlock>\n  </DemoSection>\n</template>\n"
+    }
+  ],
+  "related": [],
+  "whenToUse": [
+    "Hero 区、演示区需要点阵等图案背景衬托内容时。",
+    "其他效果组件（如 liquid-glass 示例）需要图案背景配合展示时。"
+  ],
+  "whenNotToUse": [
+    "纯色或渐变背景用 Tailwind 类即可，无需本组件。",
+    "需要流星划过的动态背景，改用 meteors。"
+  ],
+  "pitfalls": [
+    "仅 web 端可用，依赖 class-variance-authority。",
+    "知识条目未提取到 props 与文档（extractors 标记 partial/missing），variant、direction、speed、mask 等配置常量定义在 index.ts 中（PATTERN_BACKGROUND_* 常量），使用前建议核对源码 PatternBackground.vue。"
+  ],
+  "dependencies": [
+    "class-variance-authority",
+    "clsx",
+    "tailwind-merge"
+  ],
+  "install": {
+    "cli": "npx reborn-ui@latest add pattern-background"
+  },
+  "sourceRefs": {
+    "web": [
+      "app/components/reborn/ui/pattern-background/PatternBackground.vue",
+      "app/components/reborn/ui/pattern-background/index.ts"
+    ]
+  },
+  "docPath": "content/2.components/special-effects/pattern-background.md",
+  "_meta": {
+    "contentHash": "2788f522d4811f73d315916de347453d615d25b1",
+    "hasOverride": true,
+    "extractors": {
+      "web": "ok",
+      "uniapp": "absent",
+      "docs": "found"
+    }
+  }
+}

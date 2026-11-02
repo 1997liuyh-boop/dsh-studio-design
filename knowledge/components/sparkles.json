@@ -1,0 +1,116 @@
+{
+  "$schema": "../schema/component.schema.json",
+  "id": "sparkles",
+  "title": "闪烁粒子",
+  "description": "用于渲染可配置密度、大小与颜色的闪烁粒子背景层组件。",
+  "category": "effect",
+  "tags": [
+    "canvas",
+    "particles",
+    "aceternity-ui"
+  ],
+  "platforms": [
+    "web"
+  ],
+  "props": [
+    {
+      "name": "background",
+      "type": "string",
+      "required": false,
+      "description": "画布背景色；作为叠加层使用时通常显式设为 `\"transparent\"`。",
+      "default": "\"#0d47a1\""
+    },
+    {
+      "name": "particleColor",
+      "type": "string",
+      "required": false,
+      "description": "粒子颜色，需为 6 位十六进制值（内部会拼接透明度通道）。",
+      "default": "\"#ffffff\""
+    },
+    {
+      "name": "minSize",
+      "type": "number",
+      "required": false,
+      "description": "粒子最小半径（px）。",
+      "default": "1"
+    },
+    {
+      "name": "maxSize",
+      "type": "number",
+      "required": false,
+      "description": "粒子最大半径（px）。",
+      "default": "3"
+    },
+    {
+      "name": "speed",
+      "type": "number",
+      "required": false,
+      "description": "粒子漂移速度倍率。",
+      "default": "4"
+    },
+    {
+      "name": "particleDensity",
+      "type": "number",
+      "required": false,
+      "description": "粒子数量；密集星光效果常用 800-1200。",
+      "default": "120"
+    }
+  ],
+  "events": [],
+  "slots": [],
+  "exposes": [],
+  "examples": [
+    {
+      "title": "Web 演示 · SparklesDemo",
+      "path": "app/components/reborn/examples/sparkles/SparklesDemo.vue",
+      "source": "demo",
+      "platform": "web",
+      "code": "<script setup lang=\"ts\">\nimport { useColorMode } from \"#imports\";\nimport { computed } from \"vue\";\nimport Sparkles from \"~/components/reborn/ui/sparkles/Sparkles.vue\";\n\n/** 在 setup 顶层读取站点主题，避免再创建主题写入器。 */\nconst colorMode = useColorMode();\n/** 粒子颜色跟随亮暗模式 */\nconst particlesColor = computed(() => (colorMode.value === \"dark\" ? \"#FFFFFF\" : \"#000000\"));\n</script>\n\n<template>\n  <DemoSection\n    title=\"基础用法\"\n    description=\"粒子舞台是效果本身的一部分；径向遮罩用画布同色淡出边缘。\"\n  >\n    <!-- 粒子遮罩需要跟画布同色，外层不再另铺填充 -->\n    <div class=\"flex h-[28rem] w-full flex-col items-center justify-center overflow-hidden\">\n      <h1 class=\"text-highlighted relative z-20 text-center text-3xl font-bold md:text-7xl\">\n        Reborn UI\n      </h1>\n      <div class=\"relative h-40 w-[40rem] max-w-full\">\n        <div class=\"absolute inset-x-20 top-0 h-[2px] w-3/4 bg-linear-to-r from-transparent via-indigo-500 to-transparent blur-sm\" />\n        <div class=\"absolute inset-x-20 top-0 h-px w-3/4 bg-linear-to-r from-transparent via-indigo-500 to-transparent\" />\n        <div class=\"absolute inset-x-60 top-0 h-[5px] w-1/4 bg-linear-to-r from-transparent via-sky-500 to-transparent blur-sm\" />\n        <div class=\"absolute inset-x-60 top-0 h-px w-1/4 bg-linear-to-r from-transparent via-sky-500 to-transparent\" />\n\n        <Sparkles\n          background=\"transparent\"\n          :min-size=\"0.4\"\n          :max-size=\"1.4\"\n          :particle-density=\"1200\"\n          class=\"size-full\"\n          :particle-color=\"particlesColor\"\n        />\n\n        <div class=\"bg-default absolute inset-0 size-full [mask-image:radial-gradient(350px_200px_at_top,transparent_20%,white)]\" />\n      </div>\n    </div>\n  </DemoSection>\n</template>\n"
+    },
+    {
+      "title": "Web 演示 · SparklesFullPageDemo",
+      "path": "app/components/reborn/examples/sparkles/SparklesFullPageDemo.vue",
+      "source": "demo",
+      "platform": "web",
+      "code": "<script setup lang=\"ts\">\nimport { useColorMode } from \"#imports\";\nimport { computed } from \"vue\";\nimport Sparkles from \"~/components/reborn/ui/sparkles/Sparkles.vue\";\n\n/** 在 setup 顶层读取站点主题，监听跟随组件作用域。 */\nconst colorMode = useColorMode();\n/** 粒子颜色跟随亮暗模式 */\nconst particlesColor = computed(() => (colorMode.value === \"dark\" ? \"#FFFFFF\" : \"#000000\"));\n</script>\n\n<template>\n  <div class=\"relative flex h-[28rem] w-full flex-col items-center justify-center overflow-hidden\">\n    <div class=\"absolute inset-0 w-full\">\n      <Sparkles\n        background=\"transparent\"\n        :min-size=\"0.8\"\n        :max-size=\"2\"\n        :particle-density=\"800\"\n        class=\"size-full\"\n        :particle-color=\"particlesColor\"\n      />\n    </div>\n    <h1 class=\"text-highlighted relative z-20 text-center text-3xl font-bold md:text-6xl\">\n      做出好产品\n    </h1>\n  </div>\n</template>\n"
+    }
+  ],
+  "related": [],
+  "whenToUse": [
+    "标题背后或下方铺设星光粒子的装饰背景。",
+    "需要随明暗模式切换 particleColor 的粒子层（示例配合 useColorMode）。",
+    "全屏或局部区域需要粒子氛围背景时。"
+  ],
+  "whenNotToUse": [
+    "只给一段文字加闪光点缀，改用 sparkles-text。",
+    "需要流星雨划过动画，改用 meteors。"
+  ],
+  "pitfalls": [
+    "仅 web 端可用。",
+    "无插槽与事件，前景内容需自行绝对定位叠放在其上。",
+    "background 默认为 #0d47a1，做叠加层时通常需显式设为 transparent。",
+    "particleDensity 默认 120，示例中密集效果用到 800-1200。"
+  ],
+  "dependencies": [
+    "@vueuse/core"
+  ],
+  "install": {
+    "cli": "npx reborn-ui@latest add sparkles"
+  },
+  "sourceRefs": {
+    "web": [
+      "app/components/reborn/ui/sparkles/Sparkles.vue",
+      "app/components/reborn/ui/sparkles/index.ts"
+    ]
+  },
+  "docPath": "content/2.components/special-effects/sparkles.md",
+  "_meta": {
+    "contentHash": "f4406025b7562401119f39c1a7f417126f11ff14",
+    "hasOverride": true,
+    "extractors": {
+      "web": "ok",
+      "uniapp": "absent",
+      "docs": "found"
+    }
+  }
+}

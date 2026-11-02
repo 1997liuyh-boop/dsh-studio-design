@@ -1,0 +1,98 @@
+{
+  "$schema": "../schema/component.schema.json",
+  "id": "text-scroll-reveal",
+  "title": "滚动文字揭示",
+  "description": "用于随页面滚动进度将一句话逐词由淡变实显现的文字组件。",
+  "category": "effect",
+  "tags": [
+    "css",
+    "tailwind",
+    "magic-ui"
+  ],
+  "platforms": [
+    "web"
+  ],
+  "props": [
+    {
+      "name": "word",
+      "type": "string",
+      "required": true,
+      "description": ""
+    },
+    {
+      "name": "progress",
+      "type": "number",
+      "required": true,
+      "description": ""
+    },
+    {
+      "name": "range",
+      "type": "Array<number>",
+      "required": true,
+      "description": ""
+    },
+    {
+      "name": "class",
+      "type": "string",
+      "required": false,
+      "description": "应用于组件的额外 CSS 类，便于自定义。",
+      "default": "\"\""
+    },
+    {
+      "name": "text",
+      "type": "string",
+      "required": true,
+      "description": "在滚动时逐词显示的文本内容。",
+      "default": "N/A"
+    }
+  ],
+  "events": [],
+  "slots": [],
+  "exposes": [],
+  "examples": [
+    {
+      "title": "Web 演示",
+      "path": "app/components/reborn/examples/text-scroll-reveal/TextScrollRevealDemo.vue",
+      "source": "demo",
+      "platform": "web",
+      "code": "<template>\n  <DemoSection\n    title=\"基础用法\"\n    description=\"随滚动逐词点亮；画布内部不再另套填充层。\"\n  >\n    <DemoBlock\n      layout=\"stack\"\n      align=\"center\"\n    >\n      <div class=\"z-10 flex min-h-64 items-center justify-center\">\n        <TextScrollReveal text=\"用 Reborn UI 把界面做漂亮。\" />\n      </div>\n    </DemoBlock>\n  </DemoSection>\n</template>\n"
+    }
+  ],
+  "related": [],
+  "whenToUse": [
+    "长页叙事区块随滚动逐词点亮宣言、标语。",
+    "需要滚动驱动（而非加载即播）的文案强调段落。"
+  ],
+  "whenNotToUse": [
+    "页面加载即逐字渐显，改用 text-generate-effect。",
+    "逐行入场动画，改用 text-reveal。"
+  ],
+  "pitfalls": [
+    "仅 web 端可用。",
+    "使用时只需传 text（必填）；props 中的 word/progress/range 来自内部 ScrollWord 子组件的提取结果，无需手动传入。",
+    "效果由页面滚动进度驱动，需置于可滚动的页面流中。"
+  ],
+  "dependencies": [
+    "@vueuse/core"
+  ],
+  "install": {
+    "cli": "npx reborn-ui@latest add text-scroll-reveal"
+  },
+  "sourceRefs": {
+    "web": [
+      "app/components/reborn/ui/text-scroll-reveal/ScrollWord.vue",
+      "app/components/reborn/ui/text-scroll-reveal/TextScrollReveal.vue",
+      "app/components/reborn/ui/text-scroll-reveal/index.ts"
+    ]
+  },
+  "docPath": "content/2.components/text-animations/text-scroll-reveal.md",
+  "_meta": {
+    "contentHash": "b40676c15e812803a5fdc5b126d34d3b6732b3fd",
+    "hasOverride": true,
+    "extractors": {
+      "web": "ok",
+      "uniapp": "absent",
+      "docs": "found"
+    }
+  }
+}

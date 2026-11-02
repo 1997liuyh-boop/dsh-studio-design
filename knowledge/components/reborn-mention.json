@@ -1,0 +1,250 @@
+{
+  "$schema": "../schema/component.schema.json",
+  "id": "reborn-mention",
+  "title": "Mention 提及",
+  "description": "输入前缀唤起等宽候选列表，支持多前缀、远程搜索、退格整体删除与光标行定位。",
+  "category": "form",
+  "tags": [
+    "input",
+    "mention",
+    "autocomplete",
+    "textarea"
+  ],
+  "platforms": [
+    "web"
+  ],
+  "props": [
+    {
+      "name": "options",
+      "type": "MentionOption[]",
+      "required": false,
+      "description": "提及选项列表 @defaultValue []",
+      "default": "() => []"
+    },
+    {
+      "name": "props",
+      "type": "MentionOptionProps",
+      "required": false,
+      "description": "options 的字段映射 @defaultValue { value: 'value', label: 'label', disabled: 'disabled' }",
+      "default": "() => ({})"
+    },
+    {
+      "name": "prefix",
+      "type": "string | string[]",
+      "required": false,
+      "description": "触发下拉框的前缀字符，每个只能是 1 个字符；传数组时任一字符都能触发 @defaultValue '@'",
+      "default": "\"@\""
+    },
+    {
+      "name": "split",
+      "type": "string",
+      "required": false,
+      "description": "拆分符：选中后自动补在提及之后，也是判定「提及已结束」的字符，只能是 1 个字符 @defaultValue ' '",
+      "default": "\" \""
+    },
+    {
+      "name": "filterOption",
+      "type": "false | ((pattern: string, option: MentionOption) => boolean)",
+      "required": false,
+      "description": "自定义筛选逻辑，返回 true 保留该选项；传 false 关闭本地筛选（远程搜索时由 search 事件回填 options）",
+      "default": "undefined"
+    },
+    {
+      "name": "placement",
+      "type": "(typeof mentionPlacements)[number]",
+      "required": false,
+      "description": "下拉面板的展开方向，放不下时自动翻到另一侧 @defaultValue 'bottom'",
+      "default": "\"bottom\""
+    },
+    {
+      "name": "showArrow",
+      "type": "boolean",
+      "required": false,
+      "description": "下拉面板是否带指向光标的箭头 @defaultValue false",
+      "default": "false"
+    },
+    {
+      "name": "offset",
+      "type": "number",
+      "required": false,
+      "description": "下拉面板与输入框之间在默认间距之上的额外偏移，单位 px @defaultValue 0",
+      "default": "0"
+    },
+    {
+      "name": "whole",
+      "type": "boolean",
+      "required": false,
+      "description": "退格时是否把整个提及（前缀 + 选项值 + 拆分符）一次删除；只对 options 里存在的值生效 @defaultValue false",
+      "default": "false"
+    },
+    {
+      "name": "checkIsWhole",
+      "type": "(pattern: string, prefix: string) => boolean",
+      "required": false,
+      "description": "自定义「是否整体删除」的判断，传入后即使不开 whole 也按它的返回值整体删除"
+    },
+    {
+      "name": "loading",
+      "type": "boolean",
+      "required": false,
+      "description": "下拉面板是否处于加载状态；加载中即使没有选项也会展开面板 @defaultValue false",
+      "default": "false"
+    },
+    {
+      "name": "popperClass",
+      "type": "string | Record<string, boolean>",
+      "required": false,
+      "description": "追加到下拉面板外壳的类名"
+    },
+    {
+      "name": "popperStyle",
+      "type": "string | CSSProperties",
+      "required": false,
+      "description": "下拉面板外壳的行内样式"
+    },
+    {
+      "name": "class",
+      "type": "any",
+      "required": false,
+      "description": "追加到根容器的类名"
+    },
+    {
+      "name": "ui",
+      "type": "MentionUI",
+      "required": false,
+      "description": "按结构键覆盖下拉面板各节点的样式 可用键（从源码抽取，以此为准）——Web：arrow、dropdown、footer、header、list、loading、loadingIcon*、option、optionActive、optionDisabled、optionLabel*、root。 带 * 的键对应插槽兜底节点：填了同名插槽，组件自带的节点被替换，这个键随之失效。",
+      "default": "() => ({})"
+    },
+    {
+      "name": "inputUi",
+      "type": "InputUi",
+      "required": false,
+      "description": "透传给内部 RebornInput 的 ui，覆盖输入框各节点的样式"
+    },
+    {
+      "name": "modelValue",
+      "type": "string",
+      "required": false,
+      "description": "双向绑定值",
+      "vModel": true,
+      "default": "''"
+    }
+  ],
+  "events": [
+    {
+      "name": "search",
+      "payload": "[pattern: string, prefix: string]",
+      "description": "光标进入一个提及（输入前缀或在检索词里移动光标）时触发，远程搜索在这里请求数据"
+    },
+    {
+      "name": "select",
+      "payload": "[option: MentionOption, prefix: string]",
+      "description": "选中选项、选项值已插入输入框后触发"
+    },
+    {
+      "name": "wholeRemove",
+      "payload": "[pattern: string, prefix: string]",
+      "description": "退格整体删除了一个提及后触发"
+    },
+    {
+      "name": "input",
+      "payload": "[value: string]",
+      "description": "输入值变化时触发，包括选中选项与整体删除引起的变化"
+    },
+    {
+      "name": "update:modelValue",
+      "description": "modelValue 变化时触发（v-model 同步）",
+      "payload": "(value: string)"
+    }
+  ],
+  "slots": [
+    {
+      "name": "header",
+      "description": "面板顶部的内容，列表滚动时不动。"
+    },
+    {
+      "name": "loading",
+      "description": "替换加载中占位的内容，`loading` 为 `true` 时渲染。"
+    },
+    {
+      "name": "label",
+      "description": "自定义每一行选项的内容，替换默认的文本。"
+    },
+    {
+      "name": "footer",
+      "description": "面板底部的内容，列表滚动时不动。"
+    }
+  ],
+  "exposes": [
+    {
+      "name": "input",
+      "description": "内部 RebornInput 组件实例，可调用其 focus / blur / select 等方法"
+    },
+    {
+      "name": "dropdown",
+      "description": "下拉面板元素（未展开时为 null）"
+    },
+    {
+      "name": "dropdownVisible",
+      "description": "下拉面板是否展开"
+    }
+  ],
+  "examples": [
+    {
+      "title": "Web 演示",
+      "path": "app/components/reborn/examples/reborn-mention/RebornMentionDemo.vue",
+      "source": "demo",
+      "platform": "web",
+      "code": "<script setup lang=\"ts\">\nimport type { MentionOption } from \"~/components/reborn/ui/reborn-mention\";\nimport { DemoBlock, DemoNote, DemoSection, Icon, Playground } from \"#components\";\nimport { computed, onBeforeUnmount, shallowRef } from 'vue';\nimport RebornButton from \"~/components/reborn/ui/reborn-button/RebornButton.vue\";\nimport RebornMention from \"~/components/reborn/ui/reborn-mention/RebornMention.vue\";\n\n/** 演示用的成员列表 */\nconst members: MentionOption[] = [\n  { value: \"张伟\", label: \"张伟\", role: \"前端\" },\n  { value: \"李娜\", label: \"李娜\", role: \"设计\" },\n  { value: \"王芳\", label: \"王芳\", role: \"产品\" },\n  { value: \"刘洋\", label: \"刘洋\", role: \"后端\" },\n  { value: \"陈静\", label: \"陈静\", role: \"测试\", disabled: true },\n  { value: \"Alice\", label: \"Alice\", role: \"运营\" },\n];\n\n/** 话题列表，配合 # 前缀使用 */\nconst topics: MentionOption[] = [\n  { value: \"版本发布\", label: \"版本发布\" },\n  { value: \"需求评审\", label: \"需求评审\" },\n  { value: \"线上问题\", label: \"线上问题\" },\n];\n\nconst prefixOptions = [\n  { label: \"@\", value: \"@\" },\n  { label: \"#\", value: \"#\" },\n  { label: \"@ 与 #\", value: \"both\" },\n];\nconst placementOptions = [\n  { label: \"向下 bottom\", value: \"bottom\" },\n  { label: \"向上 top\", value: \"top\" },\n];\nconst typeOptions = [\n  { label: \"单行 text\", value: \"text\" },\n  { label: \"多行 textarea\", value: \"textarea\" },\n];\n\n// ─── 交互演练场 ─────────────────────────────────────────────────\n\n/** 演练场默认状态：除 type 外与组件默认值一致 */\nconst defaultState: Record<string, any> = {\n  type: \"textarea\",\n  prefix: \"@\",\n  placement: \"bottom\",\n  showArrow: false,\n  offset: 0,\n  whole: false,\n  loading: false,\n};\n\nconst state = shallowRef<Record<string, any>>({ ...defaultState });\nconst playgroundValue = shallowRef(\"\");\n/** 演练场最近一次 select 事件的回显 */\nconst lastSelect = shallowRef(\"尚未选择\");\n\n/** 重置演练场配置 */\nfunction resetState() {\n  state.value = { ...defaultState };\n  playgroundValue.value = \"\";\n  lastSelect.value = \"尚未选择\";\n}\n\n/** 演练场控制面板配置 */\nconst controls: any = [\n  {\n    title: \"基础属性\",\n    children: [\n      { label: \"输入框类型\", key: \"type\", component: \"select\" as const, defaultValue: \"textarea\", props: { options: typeOptions } },\n      { label: \"触发前缀\", key: \"prefix\", component: \"select\" as const, defaultValue: \"@\", props: { options: prefixOptions } },\n    ],\n  },\n  {\n    title: \"下拉面板\",\n    children: [\n      { label: \"展开方向\", key: \"placement\", component: \"select\" as const, defaultValue: \"bottom\", props: { options: placementOptions } },\n      { label: \"显示箭头\", key: \"showArrow\", component: \"checkbox\" as const, defaultValue: false },\n      { label: \"额外偏移（px）\", key: \"offset\", component: \"slider\" as const, defaultValue: 0, props: { min: 0, max: 24, step: 2 } },\n      { label: \"加载中\", key: \"loading\", component: \"checkbox\" as const, defaultValue: false },\n    ],\n  },\n  {\n    title: \"行为\",\n    children: [\n      { label: \"退格整体删除\", key: \"whole\", component: \"checkbox\" as const, defaultValue: false },\n    ],\n  },\n];\n\n/** 演练场实际传给组件的 prefix */\nconst playgroundPrefix = computed(() => (state.value.prefix === \"both\" ? [\"@\", \"#\"] : state.value.prefix));\n/** 演练场的选项：# 前缀给话题，其余给成员 */\nconst playgroundPrefixUsed = shallowRef(\"@\");\nconst playgroundOptions = computed(() => (playgroundPrefixUsed.value === \"#\" ? topics : members));\n\n/** 演练场右上角展示的等价代码：完整列出当前全部参数 */\nconst mentionCode = computed(() => {\n  const s = state.value;\n  return [\n    \"<RebornMention\",\n    \"  v-model=\\\"value\\\"\",\n    \"  :options=\\\"options\\\"\",\n    `  type=\"${s.type}\"`,\n    s.prefix === \"both\" ? \"  :prefix=\\\"['@', '#']\\\"\" : `  prefix=\"${s.prefix}\"`,\n    `  placement=\"${s.placement}\"`,\n    `  :show-arrow=\"${s.showArrow}\"`,\n    `  :offset=\"${s.offset}\"`,\n    `  :whole=\"${s.whole}\"`,\n    `  :loading=\"${s.loading}\"`,\n    \"  placeholder=\\\"输入 @ 提及成员\\\"\",\n    \"  @search=\\\"onSearch\\\"\",\n    \"  @select=\\\"onSelect\\\"\",\n    \"/>\",\n  ].join(\"\\n\");\n});\n\n// ─── 场景演示状态 ─────────────────────────────────────────────────\n\nconst basicValue = shallowRef(\"\");\nconst multiValue = shallowRef(\"\");\n/** 多前缀一节：按前缀切换选项 */\nconst multiPrefix = shallowRef(\"@\");\nconst multiOptions = computed(() => (multiPrefix.value === \"#\" ? topics : members));\n\n/** 远程搜索：模拟接口延迟 */\nconst remoteValue = shallowRef(\"\");\nconst remoteLoading = shallowRef(false);\nconst remoteOptions = shallowRef<MentionOption[]>([]);\nlet remoteTimer: ReturnType<typeof setTimeout> | undefined;\n\nfunction onRemoteSearch(pattern: string) {\n  remoteLoading.value = true;\n  clearTimeout(remoteTimer);\n  remoteTimer = setTimeout(() => {\n    remoteOptions.value = Array.from({ length: 5 }, (_, i) => {\n      const name = `${pattern || \"用户\"}${i + 1}`;\n      return { value: name, label: name };\n    });\n    remoteLoading.value = false;\n  }, 600);\n}\n\n/** 整体删除一节 */\nconst wholeValue = shallowRef(\"请 @张伟 和 @李娜 一起看下\");\nconst wholeLog = shallowRef(\"尚未删除\");\nconst customWholeValue = shallowRef(\"负责人：@任意名字 \");\nconst customWholeLog = shallowRef(\"尚未删除\");\n\n/** 自定义选项一节 */\nconst slotValue = shallowRef(\"\");\n\n/** 面板位置一节 */\nconst placeValue = shallowRef(\"\");\nconst arrowValue = shallowRef(\"\");\n/** 卸载时取消模拟远程请求，避免回写已卸载实例。 */\nonBeforeUnmount(() => clearTimeout(remoteTimer));\n</script>\n\n<template>\n  <div class=\"flex w-full min-w-0 flex-col\">\n    <Playground\n      v-model=\"state\" :controls=\"controls\" :code=\"mentionCode\" component-name=\"RebornMention\"\n      title=\"交互演练场\" description=\"调节上方参数后在输入框里输入 @（或 #），查看下拉面板的位置、箭头与整体删除行为。\"\n    >\n      <template #tag>\n        <RebornButton size=\"sm\" variant=\"soft\" color=\"neutral\" @click=\"resetState\">\n          <template #leading>\n            <Icon name=\"lucide:rotate-ccw\" size=\"12\" />\n          </template>\n          重置配置\n        </RebornButton>\n      </template>\n\n      <div class=\"flex w-full max-w-md flex-col gap-3\">\n        <RebornMention\n          v-model=\"playgroundValue\" :options=\"playgroundOptions\" :type=\"state.type\" :prefix=\"playgroundPrefix\"\n          :placement=\"state.placement\" :show-arrow=\"state.showArrow\" :offset=\"state.offset\" :whole=\"state.whole\"\n          :loading=\"state.loading\" :rows=\"3\" placeholder=\"输入 @ 提及成员\"\n          @search=\"(_, prefix) => (playgroundPrefixUsed = prefix)\"\n          @select=\"(option, prefix) => (lastSelect = `select：${prefix}${option.value}`)\"\n        />\n        <DemoNote tone=\"dimmed\" class=\"font-mono text-xs\">\n          {{ lastSelect }}；当前值：{{ playgroundValue || '（空）' }}\n        </DemoNote>\n      </div>\n    </Playground>\n\n    <DemoSection title=\"基础用法\">\n      <template #description>\n        输入 <code>@</code> 唤起候选列表，检索词按选项文本筛选；选中后插入 <code>@选项值</code> 并补一个空格。上下键移动、Enter 选中、Esc 收起，禁用项会被跳过。\n      </template>\n      <DemoBlock layout=\"stack\">\n        <RebornMention v-model=\"basicValue\" :options=\"members\" placeholder=\"输入 @ 试试\" class=\"max-w-md\" />\n        <DemoNote tone=\"dimmed\" class=\"font-mono text-xs\">\n          v-model：{{ basicValue || '（空）' }}\n        </DemoNote>\n      </DemoBlock>\n    </DemoSection>\n\n    <DemoSection title=\"多个前缀\">\n      <template #description>\n        <code>prefix</code> 传数组时任一字符都能触发；<code>search</code> 事件的第二个参数是命中的前缀，据此切换选项来源。\n      </template>\n      <DemoBlock layout=\"stack\">\n        <RebornMention\n          v-model=\"multiValue\" :options=\"multiOptions\" :prefix=\"['@', '#']\" placeholder=\"@ 提及成员，# 关联话题\"\n          class=\"max-w-md\" @search=\"(_, prefix) => (multiPrefix = prefix)\"\n        />\n      </DemoBlock>\n    </DemoSection>\n\n    <DemoSection title=\"多行文本\">\n      <template #description>\n        <code>type=\"textarea\"</code> 等输入框属性原样透传给 RebornInput；多行时面板锚定在前缀所在的那一行，跟着前缀走，而不是固定在输入框下方。\n      </template>\n      <DemoBlock layout=\"stack\">\n        <RebornMention\n          :options=\"members\" type=\"textarea\" :rows=\"4\" placeholder=\"换几行再输入 @，面板会出现在那一行下面\"\n          class=\"max-w-md\"\n        />\n      </DemoBlock>\n    </DemoSection>\n\n    <DemoSection title=\"远程搜索与加载\">\n      <template #description>\n        <code>:filter-option=\"false\"</code> 关闭本地筛选，在 <code>search</code> 回调里请求数据并回填 <code>options</code>；请求期间开 <code>loading</code>，面板即使没有选项也会展开。\n      </template>\n      <DemoBlock layout=\"stack\">\n        <RebornMention\n          v-model=\"remoteValue\" :options=\"remoteOptions\" :filter-option=\"false\" :loading=\"remoteLoading\"\n          placeholder=\"输入 @ 后接任意文字，模拟 600ms 请求\" class=\"max-w-md\" @search=\"onRemoteSearch\"\n        />\n      </DemoBlock>\n    </DemoSection>\n\n    <DemoSection title=\"整体删除\">\n      <template #description>\n        <code>whole</code> 开启后，光标紧跟在「@选项值 + 空格」之后按退格，整段一次删掉并派发 <code>whole-remove</code>；它只认 <code>options</code> 里存在的值，其他规则用 <code>check-is-whole</code> 自己判断。\n      </template>\n      <DemoBlock layout=\"grid\" :columns=\"2\">\n        <div class=\"flex flex-col gap-2\">\n          <RebornMention\n            v-model=\"wholeValue\" :options=\"members\" whole\n            @whole-remove=\"(pattern, prefix) => (wholeLog = `whole-remove：${prefix}${pattern}`)\"\n          />\n          <DemoNote tone=\"dimmed\" class=\"font-mono text-xs\">\n            whole · {{ wholeLog }}\n          </DemoNote>\n        </div>\n        <div class=\"flex flex-col gap-2\">\n          <RebornMention\n            v-model=\"customWholeValue\" :options=\"members\" :check-is-whole=\"(pattern) => pattern.length > 0\"\n            @whole-remove=\"(pattern, prefix) => (customWholeLog = `whole-remove：${prefix}${pattern}`)\"\n          />\n          <DemoNote tone=\"dimmed\" class=\"font-mono text-xs\">\n            check-is-whole · {{ customWholeLog }}\n          </DemoNote>\n        </div>\n      </DemoBlock>\n      <DemoNote tone=\"dimmed\">\n        把光标放到「@张伟 」的空格后面按退格试试；右边的「@任意名字」不在 options 里，靠 check-is-whole 一样能整体删除。\n      </DemoNote>\n    </DemoSection>\n\n    <DemoSection title=\"自定义选项与面板\">\n      <template #description>\n        <code>#label</code> 作用域插槽拿到 <code>item</code> / <code>index</code> 自定义每一行；<code>#header</code> / <code>#footer</code> 固定在列表上下方，列表滚动时不动。\n      </template>\n      <DemoBlock layout=\"stack\">\n        <RebornMention v-model=\"slotValue\" :options=\"members\" placeholder=\"输入 @ 查看自定义选项\" class=\"max-w-md\">\n          <template #label=\"{ item }\">\n            <span class=\"flex w-full items-center gap-2\">\n              <span class=\"bg-brand-1 text-primary flex size-6 shrink-0 items-center justify-center rounded-full text-sm\">\n                {{ String(item.label).slice(0, 1) }}\n              </span>\n              <span class=\"truncate\">{{ item.label }}</span>\n              <span class=\"ml-auto shrink-0 text-sm text-gray-5\">{{ item.role }}</span>\n            </span>\n          </template>\n          <template #header>\n            项目成员\n          </template>\n          <template #footer>\n            共 {{ members.length }} 人，灰色为已离职\n          </template>\n        </RebornMention>\n      </DemoBlock>\n    </DemoSection>\n\n    <DemoSection title=\"面板位置\">\n      <template #description>\n        <code>placement=\"top\"</code> 向上展开，放不下时自动翻到另一侧；<code>show-arrow</code> 加一个指向前缀的箭头，<code>offset</code> 在默认间距之上再拉开距离。\n      </template>\n      <DemoBlock layout=\"grid\" :columns=\"2\">\n        <div class=\"flex flex-col gap-2\">\n          <RebornMention v-model=\"placeValue\" :options=\"members\" placement=\"top\" placeholder=\"向上展开\" />\n          <span class=\"font-mono text-xs text-gray-6\">placement=\"top\"</span>\n        </div>\n        <div class=\"flex flex-col gap-2\">\n          <RebornMention v-model=\"arrowValue\" :options=\"members\" show-arrow :offset=\"4\" placeholder=\"带箭头\" />\n          <span class=\"font-mono text-xs text-gray-6\">show-arrow :offset=\"4\"</span>\n        </div>\n      </DemoBlock>\n    </DemoSection>\n  </div>\n</template>\n"
+    }
+  ],
+  "related": [
+    "reborn-input"
+  ],
+  "whenToUse": [
+    "评论、IM 输入框里 @ 成员：options 给成员列表，选中后插入「@值 」。",
+    "同一输入框同时 @ 成员和 # 话题：prefix 传 ['@', '#']，在 search 回调里按第二个参数切换 options。",
+    "成员太多需要远程搜索：:filter-option=\"false\" + search 事件请求接口，请求期间开 loading。",
+    "提及要像整体标签那样删除：开 whole，或用 check-is-whole 自定义判断。"
+  ],
+  "whenNotToUse": [
+    "从固定列表选一个值、不需要自由输入，改用 reborn-select。",
+    "富文本编辑器里把提及渲染成不可编辑的胶囊，本组件只能插入纯文本，需用编辑器自带的提及插件。"
+  ],
+  "pitfalls": [
+    "仅 web 端可用；基于 RebornInput 封装，type / placeholder / size / disabled / rows 等输入框属性与 focus / blur / change 等事件原样透传。",
+    "插入输入框的是选项的 value，下拉框显示的是 label；字段名不同用 props 映射。",
+    "前缀不要求前面是空格，邮箱里的 @ 也会触发；需要限制时用 filterOption 或在 search 里自行判断。",
+    "筛选结果为空且不在 loading 时面板不展开，不会显示「暂无数据」。",
+    "whole 只对 options 里存在的值整体删除，且光标必须紧跟在拆分符之后；check-is-whole 传入后不开 whole 也生效。",
+    "class 落在根容器而不是输入框外壳，改输入框样式用 inputUi；面板样式用 ui 或 popperClass。",
+    "不支持 popper-options（不依赖 popper.js），定位只有 placement / offset / showArrow。"
+  ],
+  "dependencies": [
+    "@vueuse/core",
+    "clsx",
+    "tailwind-merge",
+    "tailwind-variants"
+  ],
+  "install": {
+    "cli": "npx reborn-ui@latest add reborn-mention"
+  },
+  "sourceRefs": {
+    "web": [
+      "app/components/reborn/ui/reborn-mention/RebornMention.vue",
+      "app/components/reborn/ui/reborn-mention/index.ts",
+      "app/components/reborn/ui/reborn-mention/reborn-mention.config.ts",
+      "app/components/reborn/ui/reborn-mention/reborn-mention.utils.ts"
+    ]
+  },
+  "docPath": "content/2.components/input-and-forms/reborn-mention.md",
+  "_meta": {
+    "contentHash": "4a7f5374cf722a30fd34c525e23426c4f643e108",
+    "hasOverride": true,
+    "extractors": {
+      "web": "ok",
+      "uniapp": "absent",
+      "docs": "found"
+    }
+  }
+}

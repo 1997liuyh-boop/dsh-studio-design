@@ -1,0 +1,132 @@
+{
+  "$schema": "../schema/component.schema.json",
+  "id": "reborn-marquee",
+  "title": "跑马灯",
+  "description": "用于横向或纵向无限循环滚动内容的跑马灯组件，支持悬停暂停与渐隐遮罩。",
+  "category": "misc",
+  "tags": [
+    "css",
+    "tailwind",
+    "magic-ui"
+  ],
+  "platforms": [
+    "web"
+  ],
+  "props": [
+    {
+      "name": "class",
+      "type": "ClassValue",
+      "required": false,
+      "description": "应用于根容器的自定义类名。",
+      "default": "''"
+    },
+    {
+      "name": "reverse",
+      "type": "boolean",
+      "required": false,
+      "description": "反转滚动方向。",
+      "default": "false"
+    },
+    {
+      "name": "pauseOnHover",
+      "type": "boolean",
+      "required": false,
+      "description": "鼠标悬停时暂停动画。",
+      "default": "false"
+    },
+    {
+      "name": "vertical",
+      "type": "boolean",
+      "required": false,
+      "description": "orientation=\"vertical\"` 的兼容别名，传入后优先生效。",
+      "default": "false"
+    },
+    {
+      "name": "orientation",
+      "type": "RebornMarqueeOrientation",
+      "required": false,
+      "description": "设置滚动方向。",
+      "default": "'horizontal'"
+    },
+    {
+      "name": "repeat",
+      "type": "number",
+      "required": false,
+      "description": "重复渲染插槽内容的次数。",
+      "default": "4"
+    },
+    {
+      "name": "overlay",
+      "type": "boolean",
+      "required": false,
+      "description": "是否显示两端的渐隐遮罩。",
+      "default": "true"
+    },
+    {
+      "name": "ui",
+      "type": "RebornMarqueeUI",
+      "required": false,
+      "description": "覆盖 `root`、`content`、`overlayStart`、`overlayEnd` 等插槽类名。 可用键（从源码抽取，以此为准）——Web：content、overlayEnd、overlayStart、root。",
+      "default": "() => ({})"
+    }
+  ],
+  "events": [],
+  "slots": [
+    {
+      "name": "default",
+      "props": "(props: { ui: Record<keyof RebornMarqueeUI, (opts?: { class?: ClassValue }) => string> }) => any",
+      "description": ""
+    }
+  ],
+  "exposes": [],
+  "examples": [
+    {
+      "title": "Web 演示",
+      "path": "app/components/reborn/examples/reborn-marquee/RebornMarqueeDemo.vue",
+      "source": "demo",
+      "platform": "web",
+      "code": "<script setup lang=\"ts\">\nimport { computed, shallowRef } from 'vue';\n\n/** 用户评价数据 */\nconst reviews = [\n    {\n        name: 'Jack',\n        username: '@jack',\n        body: 'This feels polished, thoughtful, and unusually easy to integrate.',\n        img: 'https://avatar.vercel.sh/jack',\n    },\n    {\n        name: 'Jill',\n        username: '@jill',\n        body: 'The motion is smooth and the defaults are good enough to ship immediately.',\n        img: 'https://avatar.vercel.sh/jill',\n    },\n    {\n        name: 'John',\n        username: '@john',\n        body: 'It solves the visual repetition problem without feeling noisy or heavy.',\n        img: 'https://avatar.vercel.sh/john',\n    },\n    {\n        name: 'Jane',\n        username: '@jane',\n        body: 'The API is small, but the component still covers the common production cases.',\n        img: 'https://avatar.vercel.sh/jane',\n    },\n    {\n        name: 'Jenny',\n        username: '@jenny',\n        body: 'Hover pause and reverse mode make it easy to use in richer marketing layouts.',\n        img: 'https://avatar.vercel.sh/jenny',\n    },\n    {\n        name: 'James',\n        username: '@james',\n        body: 'Vertical mode works well for side rails and narrow content columns.',\n        img: 'https://avatar.vercel.sh/james',\n    },\n]\n\n/** 演练场里滚动的品牌图标 */\nconst logos = [\n    'i-simple-icons-github',\n    'i-simple-icons-discord',\n    'i-simple-icons-x',\n    'i-simple-icons-instagram',\n    'i-simple-icons-linkedin',\n    'i-simple-icons-facebook',\n    'i-simple-icons-youtube',\n    'i-simple-icons-tiktok',\n    'i-simple-icons-google',\n    'i-simple-icons-apple',\n]\n\n/** 演练场状态 */\nconst state = shallowRef({\n    reverse: false,\n    pauseOnHover: true,\n    overlay: true,\n    repeat: 4,\n    duration: 20,\n})\n\n/** 演练场控制面板配置 */\nconst controls = [\n    {\n        title: '配置',\n        children: [\n            { label: '反向滚动', key: 'reverse', component: 'checkbox' as const, defaultValue: false },\n            { label: '悬停暂停', key: 'pauseOnHover', component: 'checkbox' as const, defaultValue: true },\n            { label: '边缘遮罩', key: 'overlay', component: 'checkbox' as const, defaultValue: true },\n        ],\n    },\n    {\n        title: '动画',\n        children: [\n            {\n                label: '重复次数',\n                key: 'repeat',\n                component: 'slider' as const,\n                defaultValue: 4,\n                props: { min: 1, max: 10, step: 1 },\n            },\n            {\n                label: '动画时长',\n                key: 'duration',\n                component: 'slider' as const,\n                defaultValue: 20,\n                props: { min: 5, max: 100, step: 1 },\n            },\n        ],\n    },\n]\n\nconst splitIndex = Math.ceil(reviews.length / 2)\nconst firstRow = reviews.slice(0, splitIndex)\nconst secondRow = reviews.slice(splitIndex)\n\n/** 3D 截图墙三列各自的图片编号 */\nconst screenshotSets = [\n    [1, 2, 3, 4],\n    [5, 6, 7, 8],\n    [9, 10, 11, 12],\n]\n/** 时长通过 CSS 变量配置；生成代码只包含实际存在的组件参数。 */\nconst marqueeCode = computed(() => `<RebornMarquee\n  :reverse=\"${state.value.reverse}\"\n  :pause-on-hover=\"${state.value.pauseOnHover}\"\n  :overlay=\"${state.value.overlay}\"\n  :repeat=\"${state.value.repeat}\"\n  orientation=\"horizontal\"\n  :style=\"{ '--duration': '${state.value.duration}s' }\"\n>\n  <!-- 滚动内容 -->\n</RebornMarquee>`)\n</script>\n\n<template>\n    <div class=\"flex w-full min-w-0 flex-col\">\n        <Playground v-model=\"state\" :controls=\"controls\" :code=\"marqueeCode\" component-name=\"RebornMarquee\" title=\"交互演练场\"\n            description=\"调节滚动方向、悬停暂停与遮罩，观察跑马灯的实时表现。\">\n            <RebornMarquee :reverse=\"state.reverse\" :pause-on-hover=\"state.pauseOnHover\" :overlay=\"state.overlay\" :repeat=\"state.repeat\" orientation=\"horizontal\" :style=\"{ '--duration': `${state.duration}s` }\">\n                <div v-for=\"logo in logos\" :key=\"logo\"\n                    class=\"border-default rounded-lg text-muted mx-2 flex items-center justify-center gap-2 border px-6 py-4\">\n                    <UIcon :name=\"logo\" class=\"size-8\" />\n                    <span class=\"text-sm font-semibold\">{{ logo.split('-').pop() }}</span>\n                </div>\n            </RebornMarquee>\n        </Playground>\n\n        <DemoSection title=\"3D 截图墙\"\n            description=\"纵向跑马灯配合 CSS 3D 变换，可用 ui.root 直接改写根节点类名以叠加透视与定位。\">\n            <!-- 3D 透视舞台：只描边不填充，内部旋转的图片就是被演示的对象 -->\n            <div class=\"border-default rounded-xl relative h-[400px] w-full overflow-hidden border\">\n                <RebornMarquee reverse orientation=\"vertical\" :overlay=\"false\" :ui=\"{\n                    root: '[--duration:40s] absolute w-[460px] -left-[100px] -top-[300px] h-[940px] transform-3d [transform:rotateX(55deg)_rotateZ(30deg)]'\n                }\">\n                    <img v-for=\"i in screenshotSets[0]\" :key=\"i\" :src=\"`https://picsum.photos/460/258?random=${i}`\"\n                        width=\"460\" height=\"258\" class=\"border-default rounded-md my-4 aspect-video border shadow-lg\">\n                </RebornMarquee>\n\n                <RebornMarquee orientation=\"vertical\" :overlay=\"false\" :ui=\"{\n                    root: '[--duration:40s] absolute w-[460px] -top-[400px] left-[480px] h-[1160px] transform-3d [transform:rotateX(55deg)_rotateZ(30deg)]'\n                }\">\n                    <img v-for=\"i in screenshotSets[1]\" :key=\"i\" :src=\"`https://picsum.photos/460/258?random=${i}`\"\n                        width=\"460\" height=\"258\" class=\"border-default rounded-md my-4 aspect-video border shadow-lg\">\n                </RebornMarquee>\n\n                <RebornMarquee reverse orientation=\"vertical\" :overlay=\"false\" :ui=\"{\n                    root: 'hidden md:flex [--duration:40s] absolute w-[460px] -top-[300px] left-[1020px] h-[1060px] transform-3d [transform:rotateX(55deg)_rotateZ(30deg)]'\n                }\">\n                    <img v-for=\"i in screenshotSets[2]\" :key=\"i\" :src=\"`https://picsum.photos/460/258?random=${i}`\"\n                        width=\"460\" height=\"258\" class=\"border-default rounded-md my-4 aspect-video border shadow-lg\">\n                </RebornMarquee>\n            </div>\n        </DemoSection>\n\n        <DemoSection title=\"用户评价墙\"\n            description=\"两条方向相反的跑马灯上下叠放，配合 pause-on-hover 即可构成常见的口碑展示区。\">\n            <DemoBlock layout=\"stack\" class=\"gap-6 overflow-hidden\">\n                <RebornMarquee pause-on-hover class=\"[--duration:35s] [--gap:1.5rem]\">\n                    <div v-for=\"review in firstRow\" :key=\"review.username\"\n                        class=\"border-default rounded-xl flex w-[320px] flex-col gap-3 border p-5\">\n                        <div class=\"flex items-center gap-3\">\n                            <img :src=\"review.img\" class=\"size-10 rounded-full object-cover\">\n                            <div>\n                                <h4 class=\"text-highlighted text-sm font-bold\">{{ review.name }}</h4>\n                                <span class=\"text-dimmed text-xs\">{{ review.username }}</span>\n                            </div>\n                        </div>\n                        <p class=\"text-muted text-sm leading-relaxed\">{{ review.body }}</p>\n                    </div>\n                </RebornMarquee>\n\n                <RebornMarquee reverse pause-on-hover class=\"[--duration:40s] [--gap:1.5rem]\">\n                    <div v-for=\"review in secondRow\" :key=\"review.username\"\n                        class=\"border-default rounded-xl flex w-[320px] flex-col gap-3 border p-5\">\n                        <div class=\"flex items-center gap-3\">\n                            <img :src=\"review.img\" class=\"size-10 rounded-full object-cover\">\n                            <div>\n                                <h4 class=\"text-highlighted text-sm font-bold\">{{ review.name }}</h4>\n                                <span class=\"text-dimmed text-xs\">{{ review.username }}</span>\n                            </div>\n                        </div>\n                        <p class=\"text-muted text-sm leading-relaxed\">{{ review.body }}</p>\n                    </div>\n                </RebornMarquee>\n            </DemoBlock>\n        </DemoSection>\n    </div>\n</template>\n"
+    }
+  ],
+  "related": [],
+  "whenToUse": [
+    "品牌 Logo 墙、合作伙伴列表循环滚动。",
+    "用户评价、卡片流的横向循环展示（pauseOnHover 悬停暂停）。",
+    "需要纵向循环滚动条目（orientation=\"vertical\"）时。"
+  ],
+  "whenNotToUse": [
+    "文字公告循环播报改用 reborn-notice-bar（双端可用）。",
+    "分页式轮播图改用 reborn-carousel。"
+  ],
+  "pitfalls": [
+    "仅 web 端可用。",
+    "repeat 默认 4，默认插槽内容会被重复渲染多次，勿在插槽内放带唯一 id 的元素。",
+    "vertical 是 orientation=\"vertical\" 的兼容别名，传入后优先生效。",
+    "overlay 默认 true，两端自带渐隐遮罩，可通过 ui 覆盖 overlayStart/overlayEnd。"
+  ],
+  "dependencies": [
+    "clsx",
+    "tailwind-merge",
+    "tailwind-variants"
+  ],
+  "install": {
+    "cli": "npx reborn-ui@latest add reborn-marquee"
+  },
+  "sourceRefs": {
+    "web": [
+      "app/components/reborn/ui/reborn-marquee/RebornMarquee.vue",
+      "app/components/reborn/ui/reborn-marquee/index.ts",
+      "app/components/reborn/ui/reborn-marquee/reborn-marquee.config.ts"
+    ]
+  },
+  "docPath": "content/2.components/miscellaneous/reborn-marquee.md",
+  "_meta": {
+    "contentHash": "5c2646d8da029b97f07c8de70dfcf2e554f3a0dc",
+    "hasOverride": true,
+    "extractors": {
+      "web": "ok",
+      "uniapp": "absent",
+      "docs": "found"
+    }
+  }
+}

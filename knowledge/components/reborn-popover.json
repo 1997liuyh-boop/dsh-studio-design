@@ -1,0 +1,285 @@
+{
+  "$schema": "../schema/component.schema.json",
+  "id": "reborn-popover",
+  "title": "Popover 气泡卡片",
+  "description": "用于点击或悬停触发气泡浮层的双端组件，可配置定位方向、箭头与遮罩。",
+  "category": "navigation",
+  "tags": [
+    "popover",
+    "floating",
+    "overlay",
+    "uniapp"
+  ],
+  "platforms": [
+    "web",
+    "uniapp"
+  ],
+  "props": [
+    {
+      "name": "placement",
+      "type": "PopoverPlacement",
+      "required": false,
+      "description": "出现方向与对齐方式，与 `reborn-popconfirm`、`reborn-tooltip` 一致；主轴放不下时翻到对侧。",
+      "default": "'bottom'"
+    },
+    {
+      "name": "sideOffset",
+      "type": "number",
+      "required": false,
+      "description": "气泡与触发器的间距（px）；显示箭头时从箭头尖端计算。",
+      "default": "4"
+    },
+    {
+      "name": "content",
+      "type": "PopoverContentProps",
+      "required": false,
+      "description": "已废弃：旧的定位对象写法，等价于 `placement` + `sideOffset`；两者同时传入时以新属性为准。",
+      "default": "() => ({ side: 'bottom', align: 'center', sideOffset: 0 })"
+    },
+    {
+      "name": "arrow",
+      "type": "boolean",
+      "required": false,
+      "description": "是否显示指向触发器的箭头。",
+      "default": "true"
+    },
+    {
+      "name": "portal",
+      "type": "boolean | string",
+      "required": false,
+      "description": "是否用 Teleport 挂载到 `body`；传字符串时作为挂载目标选择器。",
+      "default": "false"
+    },
+    {
+      "name": "dismissible",
+      "type": "boolean",
+      "required": false,
+      "description": "在触发器与气泡以外按下（含遮罩、iframe 内）时是否关闭；嵌套浮层内的点击不算外部。",
+      "default": "true"
+    },
+    {
+      "name": "defaultOpen",
+      "type": "boolean",
+      "required": false,
+      "description": "非受控模式下的初始显隐；同时传了 `open` 时以 `open` 为准。",
+      "default": "false"
+    },
+    {
+      "name": "modal",
+      "type": "boolean",
+      "required": false,
+      "description": "打开时是否铺半透明遮罩。",
+      "default": "false"
+    },
+    {
+      "name": "openDelay",
+      "type": "number",
+      "required": false,
+      "description": "hover 模式下悬停多久后打开（ms）。",
+      "default": "0"
+    },
+    {
+      "name": "closeDelay",
+      "type": "number",
+      "required": false,
+      "description": "hover 模式下移出多久后关闭（ms）。",
+      "default": "0"
+    },
+    {
+      "name": "customClass",
+      "type": "any",
+      "required": false,
+      "description": "追加到根节点（`base`）的类名。",
+      "default": "''"
+    },
+    {
+      "name": "ui",
+      "type": "any",
+      "required": false,
+      "description": "细粒度样式覆盖，键位见「自定义样式（ui）」。 可用键（从源码抽取，以此为准）——UniApp：arrow、base、closeIcon、container、hidden、inner、menu、menuInner、pos、target。",
+      "default": "() => ({})",
+      "platform": "uniapp"
+    },
+    {
+      "name": "disabled",
+      "type": "boolean",
+      "required": false,
+      "description": "禁用后点击触发器不再切换显隐（ref 调用 `open()` 不受影响）。",
+      "default": "false"
+    },
+    {
+      "name": "title",
+      "type": "string | Record<string, any>[]",
+      "required": false,
+      "description": "未使用 `content` 插槽时的气泡内容：`normal` 模式传字符串，`menu` 模式传对象数组。",
+      "default": "''"
+    },
+    {
+      "name": "displayMode",
+      "type": "'normal' | 'menu'",
+      "required": false,
+      "description": "未使用 `content` 插槽时的展示模式。",
+      "default": "'normal'"
+    },
+    {
+      "name": "open",
+      "type": "boolean",
+      "required": false,
+      "description": "双向绑定值",
+      "vModel": true,
+      "default": "undefined"
+    },
+    {
+      "name": "mode",
+      "type": "\"click\" | \"hover\"",
+      "required": false,
+      "description": "触发方式：click 点击触发器切换 / hover 悬停打开、移出关闭",
+      "default": "\"click\""
+    },
+    {
+      "name": "closeOnScroll",
+      "type": "boolean",
+      "required": false,
+      "description": "页面或触发器所在容器滚动时是否关闭气泡；关闭后气泡跟随触发器移动",
+      "default": "true"
+    },
+    {
+      "name": "class",
+      "type": "any",
+      "required": false,
+      "description": "追加到根元素（触发器外层容器）的自定义类名"
+    },
+    {
+      "name": "ui",
+      "type": "Partial<{\n    wrapper?: any;\n    trigger?: any;\n    contentWrapper?: any;\n    content?: any;\n    arrow?: any;\n    bridge?: any;\n    mask?: any;\n  }>",
+      "required": false,
+      "description": "按内部结构键覆盖各节点类名，键位见文档「自定义样式（ui）」 可用键（从源码抽取，以此为准）——Web：arrow、bridge、content、contentWrapper、mask、trigger、wrapper。",
+      "platform": "web"
+    }
+  ],
+  "events": [
+    {
+      "name": "menuclick",
+      "payload": "[payload: { item: Record<string, any>; index: number }]",
+      "description": "menu` 模式下点击菜单项时触发，触发前气泡已关闭。"
+    },
+    {
+      "name": "change",
+      "payload": "[payload: { show: boolean }]",
+      "description": "显隐状态切换后触发。"
+    },
+    {
+      "name": "open",
+      "payload": "[]",
+      "description": "气泡打开后触发。"
+    },
+    {
+      "name": "close",
+      "payload": "[]",
+      "description": "气泡关闭后触发。"
+    },
+    {
+      "name": "update:open",
+      "description": "open 变化时触发（v-model 同步）",
+      "payload": "(value: boolean)"
+    }
+  ],
+  "slots": [
+    {
+      "name": "content",
+      "description": "气泡内容。"
+    },
+    {
+      "name": "default",
+      "description": "触发器；`open` 为当前显隐状态。"
+    }
+  ],
+  "exposes": [
+    {
+      "name": "open",
+      "description": "手动打开 Popover"
+    },
+    {
+      "name": "close",
+      "description": "手动关闭 Popover"
+    }
+  ],
+  "examples": [
+    {
+      "title": "Web 演示",
+      "path": "app/components/reborn/examples/reborn-popover/RebornPopoverDemo.vue",
+      "source": "demo",
+      "platform": "web",
+      "code": "<script setup lang=\"ts\">\nimport type { Placement } from \"~/lib/placement\";\nimport { DemoBlock, DemoNote, DemoSection, Icon, Playground } from '#components';\nimport { computed, ref, shallowRef, useTemplateRef } from 'vue';\nimport RebornButton from '~/components/reborn/ui/reborn-button/RebornButton.vue';\nimport RebornPopconfirm from \"~/components/reborn/ui/reborn-popconfirm/RebornPopconfirm.vue\";\nimport RebornPopover from \"~/components/reborn/ui/reborn-popover/RebornPopover.vue\";\nimport RebornSelect from \"~/components/reborn/ui/reborn-select/RebornSelect.vue\";\nimport { placements } from \"~/lib/placement\";\n\n// ─── 交互演练场 ─────────────────────────────────────────────────\n\n/** 演练场显示箭头，其余配置与组件默认值一致。 */\nconst defaultState: Record<string, any> = {\n  placement: \"bottom\",\n  sideOffset: 4,\n  mode: \"click\",\n  arrow: true,\n  modal: false,\n  dismissible: true,\n  closeOnScroll: true,\n};\n\nconst state = ref<Record<string, any>>({ ...defaultState });\n\n/** 演练场气泡的显隐，回显在预览区 */\nconst playgroundOpen = shallowRef(false);\n/** 基础示例由关闭按钮收起。 */\nconst basicOpen = shallowRef(false);\n\n/** 重置演练场配置 */\nfunction resetState() {\n  state.value = { ...defaultState };\n}\n\n/** 演练场控制面板配置 */\nconst controls: any = [\n  {\n    title: \"位置\",\n    children: [\n      { label: \"方位 placement\", key: \"placement\", component: \"select\" as const, defaultValue: \"bottom\", props: { options: placements.map(p => ({ label: p, value: p })) } },\n      { label: \"间距 sideOffset（px）\", key: \"sideOffset\", component: \"slider\" as const, defaultValue: 4, props: { min: 0, max: 40, step: 1 } },\n      { label: \"显示箭头\", key: \"arrow\", component: \"checkbox\" as const, defaultValue: true },\n    ],\n  },\n  {\n    title: \"交互行为\",\n    children: [\n      {\n        label: \"触发模式\",\n        key: \"mode\",\n        component: \"select\" as const,\n        defaultValue: \"click\",\n        props: { options: [{ label: \"点击 click\", value: \"click\" }, { label: \"悬停 hover\", value: \"hover\" }] },\n      },\n      { label: \"点击外部关闭 dismissible\", key: \"dismissible\", component: \"checkbox\" as const, defaultValue: true },\n      { label: \"滚动关闭 closeOnScroll\", key: \"closeOnScroll\", component: \"checkbox\" as const, defaultValue: true },\n      { label: \"遮罩 modal\", key: \"modal\", component: \"checkbox\" as const, defaultValue: false },\n    ],\n  },\n];\n\n/** 演练场右上角展示的等价代码：完整列出当前全部参数 */\nconst popoverCode = computed(() => {\n  const s = state.value;\n  return [\n    \"<RebornPopover\",\n    `  placement=\"${s.placement}\"`,\n    `  :side-offset=\"${s.sideOffset}\"`,\n    `  mode=\"${s.mode}\"`,\n    `  :arrow=\"${s.arrow}\"`,\n    `  :dismissible=\"${s.dismissible}\"`,\n    `  :close-on-scroll=\"${s.closeOnScroll}\"`,\n    `  :modal=\"${s.modal}\"`,\n    \">\",\n    \"  <RebornButton label=\\\"点击触发\\\" />\",\n    \"  <template #content>…</template>\",\n    \"</RebornPopover>\",\n  ].join(\"\\n\");\n});\n\n// ─── 方位、对齐与箭头 ───────────────────────────────────────────\n\n/** 十二个方位按「上 / 左 / 右 / 下」四组排开，每组依次是 start / 居中 / end */\nconst placementGroups: Record<\"top\" | \"left\" | \"right\" | \"bottom\", Placement[]> = {\n  top: [\"top-start\", \"top\", \"top-end\"],\n  left: [\"left-start\", \"left\", \"left-end\"],\n  right: [\"right-start\", \"right\", \"right-end\"],\n  bottom: [\"bottom-start\", \"bottom\", \"bottom-end\"],\n};\n\n// ─── 点击外部、滚动与遮罩 ───────────────────────────────────────\n\n/** 嵌套浮层示例里的下拉框选值 */\nconst nestedSelect = shallowRef(\"week\");\nconst nestedOptions = [\n  { label: \"本周\", value: \"week\" },\n  { label: \"本月\", value: \"month\" },\n  { label: \"本年\", value: \"year\" },\n];\n/** 嵌套 Popconfirm 的确认次数 */\nconst nestedConfirmCount = shallowRef(0);\n\n// ─── 受控与手动关闭 ─────────────────────────────────────────────\n\n/** v-model:open 绑定的显隐状态 */\nconst controlledOpen = shallowRef(false);\n/** 通过 ref 调用 expose 出来的 close() */\nconst popoverRef = useTemplateRef<InstanceType<typeof RebornPopover>>(\"popoverRef\");\n\n// ─── 场景演示数据 ───────────────────────────────────────────────\n\nconst profile = {\n  name: \"Antigravity AI\",\n  role: \"Senior Code Architect\",\n  avatar: \"https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?auto=format&fit=crop&q=80&w=100&h=100\",\n  followers: \"12.5k\",\n  following: \"482\",\n  bio: \"专注构建具有生命力的 UI 系统，用代码探索设计的边界。\",\n};\n\nconst colors = [\n  \"#6366f1\", \"#8b5cf6\", \"#ec4899\", \"#f43f5e\",\n  \"#f97316\", \"#eab308\", \"#22c55e\", \"#06b6d4\",\n];\n\nconst selectedColor = shallowRef(colors[0]);\n\nconst actions = [\n  { icon: \"lucide:edit-3\", label: \"编辑项目\", color: \"text-primary\" },\n  { icon: \"lucide:share-2\", label: \"分享链接\", color: \"text-info\" },\n  { icon: \"lucide:copy\", label: \"复制 ID\", color: \"text-muted\" },\n  { icon: \"lucide:trash-2\", label: \"删除记录\", color: \"text-error\" },\n];\n</script>\n\n<template>\n  <div class=\"flex w-full min-w-0 flex-col\">\n    <Playground\n      v-model=\"state\" :controls=\"controls\" :code=\"popoverCode\" component-name=\"RebornPopover\"\n      title=\"交互演练场\" description=\"调节方位、间距与关闭方式，点击按钮后再滚动页面或点击外部，查看气泡的定位与收起时机。\"\n    >\n      <template #tag>\n        <RebornButton size=\"sm\" variant=\"soft\" color=\"neutral\" @click=\"resetState\">\n          <template #leading>\n            <Icon name=\"lucide:rotate-ccw\" size=\"12\" />\n          </template>\n          重置配置\n        </RebornButton>\n      </template>\n\n      <div class=\"flex w-full flex-col items-center gap-4 py-16\">\n        <RebornPopover\n          v-model:open=\"playgroundOpen\" :mode=\"state.mode\" :placement=\"state.placement\" :side-offset=\"state.sideOffset\"\n          :arrow=\"state.arrow\" :modal=\"state.modal\" :dismissible=\"state.dismissible\"\n          :close-on-scroll=\"state.closeOnScroll\"\n          :ui=\"{ content: 'w-48' }\"\n        >\n          <RebornButton\n            size=\"lg\" :variant=\"state.mode === 'hover' ? 'soft' : 'filled'\"\n            :label=\"state.mode === 'hover' ? '悬停触发' : '点击触发'\" class=\"min-w-[140px]\"\n          />\n\n          <!-- 浮层自带底色、阴影与内边距，插槽只排列内容。 -->\n          <template #content>\n            <div class=\"flex flex-col items-start gap-2 text-base\">\n              <p class=\"text-gray-10 font-medium\">标题</p>\n              <p class=\"text-gray-8\">这是一段内容说明</p>\n              <button type=\"button\" class=\"text-primary hover:text-brand-7 h-6 cursor-pointer\" @click=\"playgroundOpen = false\">关闭</button>\n            </div>\n          </template>\n        </RebornPopover>\n        <DemoNote tone=\"dimmed\" class=\"font-mono text-xs\">\n          open：{{ playgroundOpen }}\n        </DemoNote>\n      </div>\n    </Playground>\n\n    <DemoSection title=\"基础用法\">\n      <template #description>默认插槽放触发器，<code>#content</code> 插槽放气泡内容；默认点击触发、向下弹出、点击外部关闭。</template>\n      <DemoBlock>\n        <RebornPopover v-model:open=\"basicOpen\" :ui=\"{ content: 'w-48' }\">\n          <RebornButton label=\"点击打开\" />\n          <template #content>\n            <div class=\"flex flex-col items-start gap-2 text-base\">\n              <p class=\"text-gray-10 font-medium\">标题</p>\n              <p class=\"text-gray-8\">这是一段内容说明</p>\n              <button type=\"button\" class=\"text-primary hover:text-brand-7 h-6 cursor-pointer\" @click=\"basicOpen = false\">关闭</button>\n            </div>\n          </template>\n        </RebornPopover>\n      </DemoBlock>\n    </DemoSection>\n\n    <DemoSection title=\"方位、对齐与箭头\">\n      <template #description>\n        <code>placement</code> 是「方向-对齐」写法：<code>top</code> / <code>bottom</code> / <code>left</code> / <code>right</code> 决定弹出方向，后缀 <code>-start</code> / <code>-end</code> 决定与触发器的起点或终点对齐，不带后缀为居中。下面每个按钮都开了 <code>arrow</code>：居中时箭头指向触发器中心，<code>start</code> / <code>end</code> 时箭头停在气泡对应一端的内缩处。\n      </template>\n      <DemoBlock layout=\"stack\" align=\"center\">\n        <div class=\"grid grid-cols-[auto_auto_auto] items-center gap-x-6 gap-y-3 py-6\">\n          <!-- 上方一行：top-start / top / top-end -->\n          <div class=\"col-span-3 flex justify-center gap-3\">\n            <RebornPopover v-for=\"item in placementGroups.top\" :key=\"item\" :placement=\"item\" arrow>\n              <RebornButton variant=\"outlined\" class=\"w-28\" :label=\"item\" />\n              <template #content>\n                <span class=\"text-sm\">placement=\"{{ item }}\"</span>\n              </template>\n            </RebornPopover>\n          </div>\n          <!-- 左侧一列 -->\n          <div class=\"flex flex-col gap-3\">\n            <RebornPopover v-for=\"item in placementGroups.left\" :key=\"item\" :placement=\"item\" arrow>\n              <RebornButton variant=\"outlined\" class=\"w-28\" :label=\"item\" />\n              <template #content>\n                <span class=\"text-sm\">placement=\"{{ item }}\"</span>\n              </template>\n            </RebornPopover>\n          </div>\n          <div class=\"w-48\" />\n          <!-- 右侧一列 -->\n          <div class=\"flex flex-col gap-3\">\n            <RebornPopover v-for=\"item in placementGroups.right\" :key=\"item\" :placement=\"item\" arrow>\n              <RebornButton variant=\"outlined\" class=\"w-28\" :label=\"item\" />\n              <template #content>\n                <span class=\"text-sm\">placement=\"{{ item }}\"</span>\n              </template>\n            </RebornPopover>\n          </div>\n          <!-- 下方一行：bottom-start / bottom / bottom-end -->\n          <div class=\"col-span-3 flex justify-center gap-3\">\n            <RebornPopover v-for=\"item in placementGroups.bottom\" :key=\"item\" :placement=\"item\" arrow>\n              <RebornButton variant=\"outlined\" class=\"w-28\" :label=\"item\" />\n              <template #content>\n                <span class=\"text-sm\">placement=\"{{ item }}\"</span>\n              </template>\n            </RebornPopover>\n          </div>\n        </div>\n      </DemoBlock>\n      <DemoNote tone=\"dimmed\">\n        主轴放不下时会自动翻到对侧（如靠近视口底部的 bottom 翻成 top），箭头随之换到另一边；间距用 <code>sideOffset</code> 调整，默认 4px，显示箭头时从箭头尖端计算。\n      </DemoNote>\n    </DemoSection>\n\n    <DemoSection title=\"悬停触发与显隐延迟\">\n      <template #description><code>mode=\"hover\"</code> 改为悬停触发；<code>openDelay</code> 过滤鼠标路过时的误触发，<code>closeDelay</code>（默认 120ms）给鼠标从触发器移到气泡留出时间。</template>\n      <DemoBlock>\n        <RebornPopover\n          mode=\"hover\"\n          :open-delay=\"150\"\n          :close-delay=\"200\"\n          arrow\n        >\n          <span class=\"text-muted cursor-help text-sm underline decoration-dotted\">悬停查看说明</span>\n          <template #content>\n            <p class=\"w-52 text-sm\">悬停 150ms 后打开，移出 200ms 后关闭；鼠标移入气泡内不会关闭。</p>\n          </template>\n        </RebornPopover>\n      </DemoBlock>\n    </DemoSection>\n\n    <DemoSection title=\"受控与手动关闭\">\n      <template #description><code>v-model:open</code> 由外部持有显隐状态；气泡内的操作完成后通过 ref 调用 <code>close()</code> 收起。</template>\n      <DemoBlock>\n        <RebornPopover\n          ref=\"popoverRef\"\n          v-model:open=\"controlledOpen\"\n          placement=\"top\"\n        >\n          <RebornButton :label=\"controlledOpen ? '已打开' : '点击打开'\" />\n          <template #content>\n            <div class=\"flex w-56 flex-col gap-3\">\n              <p class=\"text-muted text-sm\">确认后调用 close() 收起气泡。</p>\n              <RebornButton\n                size=\"sm\"\n                label=\"完成\"\n                @click=\"popoverRef?.close()\"\n              />\n            </div>\n          </template>\n        </RebornPopover>\n        <RebornButton variant=\"outlined\" label=\"外部打开\" :disabled=\"controlledOpen\" @click=\"controlledOpen = true\" />\n        <RebornButton variant=\"outlined\" label=\"外部关闭\" @click=\"controlledOpen = false\" />\n        <DemoNote tone=\"dimmed\">点击外部会在 pointerdown 时先关闭气泡，外部按钮应写入明确的目标状态。</DemoNote>\n      </DemoBlock>\n    </DemoSection>\n\n    <DemoSection title=\"点击外部、滚动与遮罩\">\n      <template #description>\n        默认点击外部或滚动页面就收起（<code>dismissible</code>、<code>closeOnScroll</code> 都为 true）；关掉 <code>closeOnScroll</code> 后气泡跟着触发器移动，关掉 <code>dismissible</code> 后只能再次点击触发器或调用 <code>close()</code>；<code>modal</code> 铺一层遮罩，点击遮罩同样按 <code>dismissible</code> 决定。\n      </template>\n      <DemoBlock>\n        <RebornPopover arrow>\n          <RebornButton label=\"默认：点外部 / 滚动即收起\" />\n          <template #content>\n            <p class=\"w-52 text-sm\">打开后滚动页面或点击空白处，气泡都会收起。</p>\n          </template>\n        </RebornPopover>\n        <RebornPopover arrow :close-on-scroll=\"false\">\n          <RebornButton variant=\"outlined\" label=\"滚动时跟随\" />\n          <template #content>\n            <p class=\"w-52 text-sm\">:close-on-scroll=\"false\"：滚动页面时气泡跟着按钮移动，点击外部仍会收起。</p>\n          </template>\n        </RebornPopover>\n        <RebornPopover arrow :dismissible=\"false\" :close-on-scroll=\"false\">\n          <RebornButton variant=\"outlined\" label=\"只能点触发器关闭\" />\n          <template #content>\n            <p class=\"w-52 text-sm\">点击外部、滚动都不会收起，再次点击按钮才关闭。</p>\n          </template>\n        </RebornPopover>\n        <RebornPopover modal>\n          <RebornButton variant=\"soft\" label=\"带遮罩\" />\n          <template #content>\n            <p class=\"w-48 text-sm\">点击遮罩关闭。</p>\n          </template>\n        </RebornPopover>\n      </DemoBlock>\n      <DemoBlock>\n        <RebornPopover arrow placement=\"bottom-start\">\n          <RebornButton variant=\"soft\" color=\"neutral\" label=\"气泡里嵌套下拉框与确认框\" />\n          <template #content>\n            <div class=\"flex w-64 flex-col gap-3\">\n              <RebornSelect v-model=\"nestedSelect\" :options=\"nestedOptions\" />\n              <RebornPopconfirm title=\"确定重置统计吗？\" @confirm=\"nestedConfirmCount++\">\n                <RebornButton size=\"sm\" variant=\"outlined\" color=\"error\" label=\"重置统计\" />\n              </RebornPopconfirm>\n              <p class=\"text-gray-6 text-sm\">已重置 {{ nestedConfirmCount }} 次</p>\n            </div>\n          </template>\n        </RebornPopover>\n      </DemoBlock>\n      <DemoNote tone=\"dimmed\">\n        下拉框的选项面板与确认框都传送到了 body，不是气泡的 DOM 后代；它们会向外层气泡登记自己，在里面点选不会被当成「点击外部」把外层关掉。\n      </DemoNote>\n    </DemoSection>\n\n    <DemoSection title=\"复合内容：资料卡、调色盘与操作菜单\">\n      <template #description>浮层内容完全由 <code>#content</code> 插槽决定，可承载资料卡、调色盘、操作菜单等复合交互。</template>\n      <DemoBlock layout=\"grid\" align=\"center\">\n        <!-- 场景一：个人资料卡 -->\n        <div class=\"flex flex-col items-center gap-4\">\n          <span class=\"text-dimmed text-xs font-medium\">个人资料卡 · 点击头像</span>\n          <RebornPopover\n            placement=\"top\"\n            :side-offset=\"16\"\n            arrow\n          >\n            <img\n              :src=\"profile.avatar\"\n              class=\"border-default size-20 cursor-pointer rounded-full border object-cover transition-transform duration-300 hover:scale-105 active:scale-95\"\n            >\n\n            <template #content>\n              <div class=\"w-72 space-y-4\">\n                <div class=\"flex items-start justify-between gap-3\">\n                  <img\n                    :src=\"profile.avatar\"\n                    class=\"rounded-xl size-16 object-cover\"\n                  >\n                  <div class=\"flex gap-2\">\n                    <RebornButton\n                      size=\"sm\"\n                      variant=\"soft\"\n                      color=\"neutral\"\n                      label=\"Message\"\n                    />\n                    <RebornButton\n                      size=\"sm\"\n                      color=\"primary\"\n                      label=\"Follow\"\n                    />\n                  </div>\n                </div>\n                <div>\n                  <h4 class=\"text-highlighted text-lg font-bold\">{{ profile.name }}</h4>\n                  <p class=\"text-muted text-sm\">{{ profile.role }}</p>\n                </div>\n                <p class=\"text-muted text-sm leading-relaxed\">{{ profile.bio }}</p>\n                <div class=\"divide-default flex gap-6 divide-x\">\n                  <div>\n                    <div class=\"text-highlighted text-lg font-bold\">{{ profile.followers }}</div>\n                    <div class=\"text-dimmed text-xs\">Followers</div>\n                  </div>\n                  <div class=\"pl-6\">\n                    <div class=\"text-highlighted text-lg font-bold\">{{ profile.following }}</div>\n                    <div class=\"text-dimmed text-xs\">Following</div>\n                  </div>\n                </div>\n              </div>\n            </template>\n          </RebornPopover>\n        </div>\n\n        <!-- 场景二：轻量调色盘 -->\n        <div class=\"flex flex-col items-center gap-4\">\n          <span class=\"text-dimmed text-xs font-medium\">轻量调色盘 · 点击色块</span>\n          <RebornPopover\n            placement=\"bottom\"\n            :side-offset=\"12\"\n            arrow\n          >\n            <div\n              class=\"border-default hover:border-primary flex cursor-pointer items-center gap-3 rounded-full border p-2 pr-4 transition-colors\"\n            >\n              <span\n                class=\"size-8 rounded-full\"\n                :style=\"{ backgroundColor: selectedColor }\"\n              />\n              <span class=\"font-mono text-sm font-medium tracking-tighter uppercase\">{{ selectedColor }}</span>\n              <Icon\n                name=\"lucide:chevron-down\"\n                class=\"text-dimmed ml-auto size-4\"\n              />\n            </div>\n\n            <template #content>\n              <div class=\"w-44 space-y-3\">\n                <div class=\"text-dimmed text-xs font-bold tracking-wider uppercase\">Select accent</div>\n                <div class=\"grid grid-cols-4 gap-2\">\n                  <button\n                    v-for=\"c in colors\"\n                    :key=\"c\"\n                    type=\"button\"\n                    class=\"rounded-sm size-8 transition-transform hover:scale-110 active:scale-90\"\n                    :class=\"{ 'ring-primary ring-2 ring-offset-2': selectedColor === c }\"\n                    :style=\"{ backgroundColor: c }\"\n                    @click=\"selectedColor = c\"\n                  />\n                </div>\n                <RebornButton\n                  class=\"w-full\"\n                  size=\"sm\"\n                  variant=\"soft\"\n                  color=\"primary\"\n                  label=\"Confirm accent\"\n                />\n              </div>\n            </template>\n          </RebornPopover>\n        </div>\n\n        <!-- 场景三：悬停操作菜单 -->\n        <div class=\"flex flex-col items-center gap-4\">\n          <span class=\"text-dimmed text-xs font-medium\">操作菜单 · <code>mode=\"hover\"</code></span>\n          <RebornPopover\n            placement=\"right-start\"\n            :side-offset=\"12\"\n            arrow\n            mode=\"hover\"\n          >\n            <RebornButton\n              color=\"neutral\"\n              circle variant=\"filled\"\n              size=\"lg\"\n            >\n              <template #leading>\n                <Icon\n                  name=\"lucide:more-vertical\"\n                  class=\"size-6\"\n                />\n              </template>\n            </RebornButton>\n\n            <template #content>\n              <div class=\"divide-default flex w-44 flex-col divide-y\">\n                <div class=\"flex flex-col\">\n                  <button\n                    v-for=\"action in actions\"\n                    :key=\"action.label\"\n                    type=\"button\"\n                    class=\"rounded-sm group hover:bg-primary/5 flex w-full items-center gap-3 px-2 py-2 text-left text-sm transition-colors\"\n                  >\n                    <Icon\n                      :name=\"action.icon\"\n                      class=\"size-4 transition-transform group-hover:scale-110\" :class=\"[action.color]\"\n                    />\n                    <span class=\"text-muted font-medium\">{{ action.label }}</span>\n                  </button>\n                </div>\n                <button\n                  type=\"button\"\n                  class=\"rounded-sm text-dimmed hover:bg-primary/5 mt-1 flex w-full items-center gap-3 px-2 py-2 text-left text-sm transition-colors\"\n                >\n                  <Icon\n                    name=\"lucide:info\"\n                    class=\"size-4\"\n                  />\n                  <span>查看详情</span>\n                </button>\n              </div>\n            </template>\n          </RebornPopover>\n        </div>\n      </DemoBlock>\n    </DemoSection>\n\n    <DemoSection title=\"菜单模式（仅 UniApp）\">\n      <template #description>UniApp 端不传 <code>#content</code> 插槽时，<code>displayMode=\"menu\"</code> 把 <code>title</code> 数组渲染成可点击菜单，点击项触发 <code>menuclick</code>。</template>\n      <DemoBlock>\n        <DemoNote tone=\"dimmed\">\n          Web 端没有 <code>title</code> / <code>displayMode</code>，菜单内容直接写进 <code>#content</code> 插槽（见上一节的操作菜单）；UniApp 端的写法见文档「菜单模式（仅 UniApp）」一节的代码。\n        </DemoNote>\n      </DemoBlock>\n    </DemoSection>\n  </div>\n</template>\n"
+    },
+    {
+      "title": "UniApp 演示",
+      "path": "packages/uniapp-project/src/pages/reborn-popover/RebornPopoverDemo.vue",
+      "source": "demo",
+      "platform": "uniapp",
+      "code": "<script setup lang=\"ts\">\nimport type { PopoverPlacement } from '@/components/reborn-popover/types'\nimport { computed, shallowRef } from 'vue'\nimport RebornButton from '@/components/reborn-button/RebornButton.vue'\nimport RebornCard from '@/components/reborn-card/RebornCard.vue'\nimport RebornPage from '@/components/reborn-page/RebornPage.vue'\nimport RebornPopover from '@/components/reborn-popover/RebornPopover.vue'\nimport RebornSelect from '@/components/reborn-select/RebornSelect.vue'\n\nconst isControlledOpen = shallowRef(false)\nconst showPopover2 = shallowRef(false)\nconst sideOptions = [\n    { label: 'Top', value: 'top' },\n    { label: 'Bottom', value: 'bottom' },\n    { label: 'Left', value: 'left' },\n    { label: 'Right', value: 'right' }\n]\nconst alignOptions = [\n    { label: 'Start', value: 'start' },\n    { label: 'Center', value: 'center' },\n    { label: 'End', value: 'end' }\n]\n\ntype Side = 'top' | 'bottom' | 'left' | 'right'\ntype Align = 'start' | 'center' | 'end'\nconst activeSide = shallowRef<Side>('bottom')\nconst activeAlign = shallowRef<Align>('center')\n/** 方向与对齐拼成 placement：居中对齐只写方向，其余写成「方向-对齐」 */\nconst activePlacement = computed<PopoverPlacement>(() =>\n    activeAlign.value === 'center' ? activeSide.value : `${activeSide.value}-${activeAlign.value}`\n)\n\nfunction manualClose() {\n    isControlledOpen.value = false\n}\n</script>\n\n<template>\n    <RebornPage title=\"Popover\" description=\"弹出气泡组件，用于点击元素弹出相关操作或附加内容\" :ui=\"{ body: 'space-y-4 p-4 pb-20' }\">\n\n\n        <RebornCard :overflowVisible=\"true\">\n            <template #title><view>12 个方向动态演示<text class=\"mt-[8rpx] block text-[24rpx] text-gray-500\">placement 由方向与对齐组合而成，如 bottom-start</text></view></template>\n            <view class=\"flex flex-col space-y-6 py-4\">\n                <view class=\"flex justify-between space-x-2 px-2\">\n                    <view class=\"flex-1\">\n                        <view class=\"text-xs text-gray-500 mb-2\">主轴 Side</view>\n                        <RebornSelect v-model=\"activeSide\" :options=\"sideOptions\" :clearable=\"false\" />\n                    </view>\n                    <view class=\"flex-1\">\n                        <view class=\"text-xs text-gray-500 mb-2\">交叉轴 Align (仅上下有效)</view>\n                        <RebornSelect v-model=\"activeAlign\" :options=\"alignOptions\" :clearable=\"false\" />\n                    </view>\n                </view>\n\n                <view\n                    class=\"h-[400rpx] flex items-center justify-center border border-dashed border-gray-200 mt-6 rounded relative overflow-visible\">\n                    <RebornPopover v-model:open=\"showPopover2\" :arrow=\"true\"\n                        :placement=\"activePlacement\" :side-offset=\"12\">\n\n                        <RebornButton size=\"md\">点我弹出</RebornButton>\n                        <template #content>\n                            <view class=\"p-3 w-[500rpx] text-center text-xs\">\n                                橐离国王侍婢有娠，王欲杀之。婢曰：“有气如鸡子，从天来下，故我有娠。”后生子，捐之猪圈中，猪以喙嘘之；徙至马枥中马复以气嘘之。故得不死。王疑以为天子也，乃令其母收畜之，名曰东明。常令牧马。东明善射，王恐其夺己国也，欲杀之。东明走，南至施掩水，以弓击水。鱼鳖浮为桥，东明得渡。鱼鳖解散，追兵不得渡。因都王夫余。《搜神记》\n                            </view>\n                        </template>\n                    </RebornPopover>\n                </view>\n            </view>\n        </RebornCard>\n\n        <!-- 受控模式 -->\n        <RebornCard :overflowVisible=\"true\">\n            <template #title>\n                <view>受控模式与手动关闭<text class=\"mt-[8rpx] block text-[24rpx] text-gray-500\">绑定 v-model:open，通过模型关闭弹层。</text></view>\n      </template>\n      <view class=\"flex flex-col items-center justify-center p-4 space-y-4\">\n                <view class=\"text-sm\">当前状态: {{ isControlledOpen ? '打开' : '关闭' }}</view>\n                <RebornPopover v-model:open=\"isControlledOpen\" placement=\"top\"\n                    :arrow=\"true\">\n                    <RebornButton :color=\"isControlledOpen ? 'error' : 'primary'\">受控组件触发器</RebornButton>\n                    <template #content>\n                        <view class=\"p-4 flex flex-col items-center space-y-4 w-[400rpx]\">\n                            <text class=\"text-sm\">点击按钮关闭，或通过绑定状态管理。</text>\n                            <RebornButton size=\"sm\" variant=\"soft\" @click=\"manualClose\">通过模型关闭</RebornButton>\n                        </view>\n                    </template>\n        </RebornPopover>\n      </view>\n        </RebornCard>\n\n    </RebornPage>\n</template>\n"
+    }
+  ],
+  "related": [
+    "reborn-transition"
+  ],
+  "whenToUse": [
+    "点击元素弹出操作项或补充说明的小型浮层。",
+    "hover 展示提示内容且需要 openDelay/closeDelay 控制显隐延迟时。",
+    "需要 v-model:open 受控开关或调用暴露的 open/close 方法时。"
+  ],
+  "whenNotToUse": [
+    "纯文字提示改用 reborn-tooltip（仅 web）。",
+    "右键呼出的菜单改用 reborn-context-menu（仅 web）。",
+    "底部/侧边大面积面板Web 改用 reborn-drawer，UniApp 改用 reborn-popup。"
+  ],
+  "pitfalls": [
+    "web、uniapp 双端可用。",
+    "portal 默认 true，浮层 Teleport 到 body 或指定节点。",
+    "定位用 placement（「方向-对齐」12 种，默认 bottom，与 reborn-popconfirm / reborn-tooltip 一致）+ sideOffset（Web 默认 4，显示箭头时从箭头尖端计算，UniApp 默认 0）；旧的 content 对象（side/align/sideOffset）已废弃但仍可用，同时传入时以 placement / sideOffset 为准。",
+    "Web 面板无描边，默认 gray-1 底色、8px 圆角、12px 内边距与 0 2px 12px rgba(0,0,0,0.15) 阴影；箭头使用共用 SVG 曲线遮罩，上下方向为 17.5×7px，左右方向交换宽高，根部嵌入面板 2px。上下起止对齐时中心距对应端部 25px，左右方向始终指向触发器高度中心，窄面板收敛到正中。",
+    "modal 默认 false 无遮罩；hover 模式关闭延迟默认 120ms。",
+    "Web 端 dismissible（点击外部，含 iframe 内点击）与 closeOnScroll（滚动关闭）默认都开启；closeOnScroll 只在页面或触发器所在容器滚动时关闭，设为 false 后气泡跟随触发器移动。UniApp 端没有 closeOnScroll。",
+    "气泡里嵌套 RebornSelect、RebornPopconfirm 等浮层时，内层传送到 body 但会向外层登记，在内层点选不会关掉外层；与 Select 等下拉类组件共用同一套判定。",
+    "UniApp 仅支持 v-model:open，不再发 update:modelValue；删除无效 useContentSlot 属性，content 插槽在渲染时判定；每次打开重新测量，已关闭实例不重复发送关闭。",
+    "Web 传入 open 后显隐归父级：触发器点击、点击外部、滚动关闭与 close() 都只派发 update:open，只传值不接事件或拒收时保持父值（与 UniApp 一致）；显式 undefined 在 Web 端不覆盖当前显隐，UniApp 端按关闭处理。",
+    "UniApp 的 open 默认 undefined；未传时用 defaultOpen 初始化本地状态，显式 false/null/undefined 都关闭。传值后由父级持有状态，open()/close() 发出更新请求但父级拒收时不改显示；移除绑定恢复本地值，初始化不派发更新或开关事件。"
+  ],
+  "dependencies": [
+    "@vueuse/core",
+    "@weapp-tailwindcss/merge-v3",
+    "@weapp-tailwindcss/variants-v3",
+    "clsx",
+    "tailwind-merge",
+    "tailwind-variants"
+  ],
+  "install": {
+    "cli": "npx reborn-ui@latest add reborn-popover"
+  },
+  "sourceRefs": {
+    "web": [
+      "app/components/reborn/ui/reborn-popover/RebornPopover.vue",
+      "app/components/reborn/ui/reborn-popover/index.ts",
+      "app/components/reborn/ui/reborn-popover/reborn-popover.config.ts"
+    ],
+    "uniapp": [
+      "packages/uniapp-project/src/components/reborn-popover/RebornPopover.vue",
+      "packages/uniapp-project/src/components/reborn-popover/composables/clickoutside.ts",
+      "packages/uniapp-project/src/components/reborn-popover/composables/usePopover.ts",
+      "packages/uniapp-project/src/components/reborn-popover/composables/useQueue.ts",
+      "packages/uniapp-project/src/components/reborn-popover/index.ts",
+      "packages/uniapp-project/src/components/reborn-popover/reborn-popover.config.ts",
+      "packages/uniapp-project/src/components/reborn-popover/types.ts"
+    ]
+  },
+  "docPath": "content/2.components/navigation/reborn-popover.md",
+  "_meta": {
+    "contentHash": "d8788952973073c45b6967c7b82f05a895977633",
+    "hasOverride": true,
+    "extractors": {
+      "web": "ok",
+      "uniapp": "ok",
+      "docs": "found"
+    }
+  }
+}

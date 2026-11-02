@@ -1,0 +1,118 @@
+{
+  "$schema": "../schema/component.schema.json",
+  "id": "gradient-button",
+  "title": "渐变按钮",
+  "description": "用于带旋转圆锥渐变发光边框的动效按钮组件。",
+  "category": "basic",
+  "tags": [
+    "css",
+    "tailwind",
+    "button"
+  ],
+  "platforms": [
+    "web"
+  ],
+  "props": [
+    {
+      "name": "borderWidth",
+      "type": "number",
+      "required": false,
+      "description": "渐变边框的像素宽度。",
+      "default": "2"
+    },
+    {
+      "name": "colors",
+      "type": "string[]",
+      "required": false,
+      "description": "用于圆锥渐变边框的颜色数组，首尾同色才能无缝旋转。",
+      "default": "() => [\n    \"#FF0000\",\n    \"#FFA500\",\n    \"#FFFF00\",\n    \"#008000\",\n    \"#0000FF\",\n    \"#4B0082\",\n    \"#EE82EE\",\n    \"#FF0000\",\n  ]"
+    },
+    {
+      "name": "duration",
+      "type": "number",
+      "required": false,
+      "description": "渐变旋转动画的持续时间（毫秒）。",
+      "default": "2500"
+    },
+    {
+      "name": "borderRadius",
+      "type": "number",
+      "required": false,
+      "description": "圆角半径（像素）。",
+      "default": "8"
+    },
+    {
+      "name": "blur",
+      "type": "number",
+      "required": false,
+      "description": "渐变边框的模糊强度（像素），值越大光晕越柔和。",
+      "default": "4"
+    },
+    {
+      "name": "class",
+      "type": "string",
+      "required": false,
+      "description": "用于自定义样式的额外 CSS 类。",
+      "default": "\"\""
+    },
+    {
+      "name": "bgColor",
+      "type": "string",
+      "required": false,
+      "description": "按钮内容区的背景色，浅色主题下需自行改为浅色。",
+      "default": "\"#000\""
+    }
+  ],
+  "events": [],
+  "slots": [
+    {
+      "name": "default",
+      "description": "按钮内容，渲染在渐变边框内的内容区中。"
+    }
+  ],
+  "exposes": [],
+  "examples": [
+    {
+      "title": "Web 演示",
+      "path": "app/components/reborn/examples/gradient-button/GradientButtonDemo.vue",
+      "source": "demo",
+      "platform": "web",
+      "code": "<script lang=\"ts\" setup>\nimport { useColorMode } from \"#imports\";\nimport { computed } from \"vue\";\n\n// 读取站点现有主题，避免创建会改写全站 class 的独立主题状态\nconst colorMode = useColorMode();\nconst isDark = computed(() => colorMode.value === \"dark\");\nconst bgColor = computed(() => (isDark.value ? \"#000\" : \"#fff\"));\n</script>\n\n<template>\n  <div class=\"z-10 flex h-56 w-full flex-col items-center justify-center\">\n    <GradientButton :bg-color=\"bgColor\">Zooooooooooom 🚀</GradientButton>\n  </div>\n</template>\n"
+    }
+  ],
+  "related": [],
+  "whenToUse": [
+    "落地页主 CTA 需要持续旋转的渐变发光边框吸引注意。",
+    "需要自定义边框颜色数组（colors）与模糊光晕（blur）的按钮。"
+  ],
+  "whenNotToUse": [
+    "常规功能按钮（含 uniapp），改用 reborn-button。",
+    "需要光斑扫过效果，改用 shimmer-button；需要彩虹底色，改用 rainbow-button。"
+  ],
+  "pitfalls": [
+    "仅 web 端可用。",
+    "bgColor 是按钮内容区背景色（默认 #000），浅色主题下需自行改为浅色，示例中依据明暗模式切换。",
+    "duration 单位为毫秒（默认 2500）；colors 需首尾同色才能无缝旋转（默认数组首尾均为 #FF0000）。",
+    "未定义 click 等事件声明，按钮文字通过默认插槽传入。"
+  ],
+  "dependencies": [],
+  "install": {
+    "cli": "npx reborn-ui@latest add gradient-button"
+  },
+  "sourceRefs": {
+    "web": [
+      "app/components/reborn/ui/gradient-button/GradientButton.vue",
+      "app/components/reborn/ui/gradient-button/index.ts"
+    ]
+  },
+  "docPath": "content/2.components/button/gradient-button.md",
+  "_meta": {
+    "contentHash": "acecce3efb8bf3cf36515aac2771bb1acfaf547f",
+    "hasOverride": true,
+    "extractors": {
+      "web": "ok",
+      "uniapp": "absent",
+      "docs": "found"
+    }
+  }
+}

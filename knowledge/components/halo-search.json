@@ -1,0 +1,90 @@
+{
+  "$schema": "../schema/component.schema.json",
+  "id": "halo-search",
+  "title": "光晕搜索框",
+  "description": "发光光环搜索输入框：悬停与聚焦时光环旋转，支持 v-model 绑定关键词与回车 search 事件。",
+  "category": "form",
+  "tags": [
+    "css",
+    "tailwind",
+    "input",
+    "ui-verse"
+  ],
+  "platforms": [
+    "web"
+  ],
+  "props": [
+    {
+      "name": "class",
+      "type": "HTMLAttributes[\"class\"]",
+      "required": false,
+      "description": "追加到根容器的额外 CSS 类；其余透传属性落到内部输入框。",
+      "default": "\"\""
+    },
+    {
+      "name": "modelValue",
+      "type": "string",
+      "required": false,
+      "description": "双向绑定值",
+      "vModel": true,
+      "default": "\"\""
+    }
+  ],
+  "events": [
+    {
+      "name": "search",
+      "payload": "[keyword: string]",
+      "description": "在输入框内按回车时触发，参数为当前关键词"
+    },
+    {
+      "name": "update:modelValue",
+      "description": "modelValue 变化时触发（v-model 同步）",
+      "payload": "(value: string)"
+    }
+  ],
+  "slots": [],
+  "exposes": [],
+  "examples": [
+    {
+      "title": "Web 演示",
+      "path": "app/components/reborn/examples/halo-search/HaloSearchDemo.vue",
+      "source": "demo",
+      "platform": "web",
+      "code": "<template>\n  <div class=\"relative z-0 flex h-96 w-full flex-col items-center justify-center\">\n    <HaloSearch />\n\n    <span class=\"text-muted-foreground mt-24 font-light\">\n      Try hovering over component and typing in it.\n    </span>\n  </div>\n</template>\n"
+    }
+  ],
+  "related": [],
+  "whenToUse": [
+    "落地页 / 概念页需要未来感搜索入口的视觉区块。",
+    "悬停与输入时有光晕反馈的装饰性搜索框。"
+  ],
+  "whenNotToUse": [
+    "需要清空按钮、尺寸档位与表单联动的功能性搜索框，改用 reborn-search-box。",
+    "需要占位符轮播与提交动画的输入框，改用 vanishing-input。"
+  ],
+  "pitfalls": [
+    "仅 web 端可用。",
+    "v-model 绑定输入框关键词，回车派发 search（输入法组字中的回车除外）。",
+    "组件关闭了 inheritAttrs：除 class 外的属性（含 style、placeholder、原生事件）落到内部 input。"
+  ],
+  "dependencies": [],
+  "install": {
+    "cli": "npx reborn-ui@latest add halo-search"
+  },
+  "sourceRefs": {
+    "web": [
+      "app/components/reborn/ui/halo-search/HaloSearch.vue",
+      "app/components/reborn/ui/halo-search/index.ts"
+    ]
+  },
+  "docPath": "content/2.components/input-and-forms/halo-search.md",
+  "_meta": {
+    "contentHash": "bc67ae266051ee73f955eb3ea47a33e8d6674c31",
+    "hasOverride": true,
+    "extractors": {
+      "web": "ok",
+      "uniapp": "absent",
+      "docs": "found"
+    }
+  }
+}

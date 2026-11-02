@@ -1,0 +1,98 @@
+{
+  "$schema": "../schema/component.schema.json",
+  "id": "text-glitch",
+  "title": "文字故障",
+  "description": "用于给文字叠加彩色错位故障（glitch）动画的文字效果组件。",
+  "category": "effect",
+  "tags": [
+    "css",
+    "tailwind"
+  ],
+  "platforms": [
+    "web"
+  ],
+  "props": [
+    {
+      "name": "text",
+      "type": "string",
+      "required": false,
+      "description": "展示故障效果的文字内容。",
+      "default": "\"\""
+    },
+    {
+      "name": "speed",
+      "type": "number",
+      "required": false,
+      "description": "故障动画的速度（秒）。",
+      "default": "0.5"
+    },
+    {
+      "name": "enableShadows",
+      "type": "boolean",
+      "required": false,
+      "description": "是否开启彩色阴影以增强故障感。",
+      "default": "true"
+    },
+    {
+      "name": "enableOnHover",
+      "type": "boolean",
+      "required": false,
+      "description": "为 `true` 时仅在悬停时启用故障动画。",
+      "default": "false"
+    },
+    {
+      "name": "class",
+      "type": "HTMLAttributes[\"class\"]",
+      "required": false,
+      "description": "容器 div 的额外 CSS 类。",
+      "default": "undefined"
+    }
+  ],
+  "events": [],
+  "slots": [],
+  "exposes": [],
+  "examples": [
+    {
+      "title": "Web 演示",
+      "path": "app/components/reborn/examples/text-glitch/TextGlitchDemo.vue",
+      "source": "demo",
+      "platform": "web",
+      "code": "<template>\n  <DemoSection title=\"基础用法\">\n    <DemoBlock\n      layout=\"stack\"\n      align=\"center\"\n    >\n      <TextGlitch\n        :speed=\"1\"\n        :enable-shadows=\"true\"\n        text=\"Reborn UI\"\n      />\n    </DemoBlock>\n  </DemoSection>\n</template>\n"
+    }
+  ],
+  "related": [],
+  "whenToUse": [
+    "赛博朋克、科技风页面的标题文字。",
+    "404 页或错误提示的风格化文案。",
+    "需要仅在悬停时触发故障动画的交互文字（enableOnHover）。"
+  ],
+  "whenNotToUse": [
+    "悬停时字符快速乱变重排，改用 hyper-text。",
+    "多彩渐变文字，改用 colourful-text。"
+  ],
+  "pitfalls": [
+    "仅 web 端可用。",
+    "文字通过 text prop 传入，不支持插槽。",
+    "enableOnHover 默认 false（动画常驻），设为 true 后仅悬停触发。",
+    "speed 单位为秒（默认 0.5），enableShadows 控制彩色阴影（默认开启）。"
+  ],
+  "dependencies": [],
+  "install": {
+    "cli": "npx reborn-ui@latest add text-glitch"
+  },
+  "sourceRefs": {
+    "web": [
+      "app/components/reborn/ui/text-glitch/TextGlitch.vue"
+    ]
+  },
+  "docPath": "content/2.components/text-animations/text-glitch.md",
+  "_meta": {
+    "contentHash": "7da66b738577e954e8ef70e0f51e86f25dd157d5",
+    "hasOverride": true,
+    "extractors": {
+      "web": "ok",
+      "uniapp": "absent",
+      "docs": "found"
+    }
+  }
+}

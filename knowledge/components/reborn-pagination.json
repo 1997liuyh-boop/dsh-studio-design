@@ -1,0 +1,269 @@
+{
+  "$schema": "../schema/component.schema.json",
+  "id": "reborn-pagination",
+  "title": "Pagination 分页",
+  "description": "用于数据列表分页切换的分页组件，支持布局组合、简洁模式、页码折叠与完整插槽定制。",
+  "category": "navigation",
+  "tags": [
+    "vue",
+    "reborn-pagination",
+    "uniapp"
+  ],
+  "platforms": [
+    "web",
+    "uniapp"
+  ],
+  "props": [
+    {
+      "name": "total",
+      "type": "number",
+      "required": false,
+      "description": "数据总数",
+      "default": "0"
+    },
+    {
+      "name": "pagerCount",
+      "type": "number",
+      "required": false,
+      "description": "页码按钮数量：不小于 3 的整数，奇偶均可（3 即首页、当前页、末页各一），过小的值钳到 3",
+      "default": "3"
+    },
+    {
+      "name": "layout",
+      "type": "string",
+      "required": false,
+      "description": "布局：逗号分隔的 token（prev/pager/next/jumper/total/sizes），未知 token 忽略",
+      "default": "'prev, pager, next'"
+    },
+    {
+      "name": "pageSizes",
+      "type": "number[]",
+      "required": false,
+      "description": "每页条数选项",
+      "default": "() => [10, 20, 50, 100]"
+    },
+    {
+      "name": "size",
+      "type": "(typeof paginationSizes)[number]",
+      "required": false,
+      "description": "尺寸：sm / md / lg",
+      "default": "'md'"
+    },
+    {
+      "name": "background",
+      "type": "boolean",
+      "required": false,
+      "description": "是否为页码按钮添加背景",
+      "default": "false"
+    },
+    {
+      "name": "disabled",
+      "type": "boolean",
+      "required": false,
+      "description": "是否禁用",
+      "default": "false"
+    },
+    {
+      "name": "hideOnSinglePage",
+      "type": "boolean",
+      "required": false,
+      "description": "总页数不超过 1 时整组件隐藏",
+      "default": "false"
+    },
+    {
+      "name": "simple",
+      "type": "boolean",
+      "required": false,
+      "description": "简洁模式：忽略 layout，只渲染上一页/当前页-总页数/下一页",
+      "default": "false"
+    },
+    {
+      "name": "prevText",
+      "type": "string",
+      "required": false,
+      "description": "上一页按钮文字，不传显示箭头图标",
+      "default": "''"
+    },
+    {
+      "name": "nextText",
+      "type": "string",
+      "required": false,
+      "description": "下一页按钮文字，不传显示箭头图标",
+      "default": "''"
+    },
+    {
+      "name": "ui",
+      "type": "Partial<PaginationUI>",
+      "required": false,
+      "description": "各部分 UI 自定义 可用键（从源码抽取，以此为准）——Web：ellipsis、input*、jumper、next*、pager、pagerItem*、pagerItemActive、prev*、root、simple、sizes、total。UniApp：ellipsis、input*、jumper、next*、pager、pagerItem、pagerItemActive、prev*、root、simple、sizes、total。 带 * 的键对应插槽兜底节点：填了同名插槽，组件自带的节点被替换，这个键随之失效。",
+      "default": "() => ({})"
+    },
+    {
+      "name": "customClass",
+      "type": "any",
+      "required": false,
+      "description": "自定义类名",
+      "default": "undefined"
+    },
+    {
+      "name": "modelValue",
+      "type": "number",
+      "required": false,
+      "description": "双向绑定值",
+      "vModel": true,
+      "default": "1"
+    },
+    {
+      "name": "pageSize",
+      "type": "number",
+      "required": false,
+      "description": "双向绑定值",
+      "vModel": true,
+      "default": "10"
+    },
+    {
+      "name": "color",
+      "type": "PaginationColor",
+      "required": false,
+      "description": "激活页码的语义色",
+      "default": "\"primary\""
+    },
+    {
+      "name": "class",
+      "type": "any",
+      "required": false,
+      "description": "自定义类名"
+    }
+  ],
+  "events": [
+    {
+      "name": "current-change",
+      "payload": "(e: 'current-change', page: number): void",
+      "description": "页码实际变化时触发"
+    },
+    {
+      "name": "size-change",
+      "payload": "(e: 'size-change', size: number): void",
+      "description": "每页条数变化时触发"
+    },
+    {
+      "name": "update:modelValue",
+      "description": "modelValue 变化时触发（v-model 同步）",
+      "payload": "(page: number)"
+    },
+    {
+      "name": "update:pageSize",
+      "description": "pageSize 变化时触发（v-model 同步）",
+      "payload": "(size: number)"
+    }
+  ],
+  "slots": [
+    {
+      "name": "prev",
+      "description": "上一页按钮"
+    },
+    {
+      "name": "next",
+      "description": "下一页按钮"
+    },
+    {
+      "name": "pager-item",
+      "description": "页码项（省略号不是 pager-item）；`select()` 选择该页"
+    },
+    {
+      "name": "jumper",
+      "description": "跳转输入区"
+    },
+    {
+      "name": "total",
+      "description": "总数文本"
+    },
+    {
+      "name": "sizes",
+      "description": "每页条数选择器"
+    }
+  ],
+  "exposes": [
+    {
+      "name": "prev",
+      "description": "翻到上一页"
+    },
+    {
+      "name": "next",
+      "description": "翻到下一页"
+    }
+  ],
+  "examples": [
+    {
+      "title": "Web 演示",
+      "path": "app/components/reborn/examples/reborn-pagination/RebornPaginationDemo.vue",
+      "source": "demo",
+      "platform": "web",
+      "code": "<script setup lang=\"ts\">\nimport { DemoBlock, DemoItem, DemoNote, DemoSection, Icon, Playground } from '#components';\nimport { computed, ref, shallowRef } from 'vue';\nimport RebornButton from '~/components/reborn/ui/reborn-button/RebornButton.vue';\nimport RebornInput from '~/components/reborn/ui/reborn-input/RebornInput.vue';\nimport { paginationColors, paginationSizes } from \"~/components/reborn/ui/reborn-pagination/reborn-pagination.config\";\nimport RebornPagination from '~/components/reborn/ui/reborn-pagination/RebornPagination.vue';\nimport RebornSelect from \"~/components/reborn/ui/reborn-select/RebornSelect.vue\";\n\n// ─── 交互演练场 ─────────────────────────────────────────────────\n\n/** 演练场默认状态 */\nconst defaultState: Record<string, any> = {\n  page: 1,\n  total: 100,\n  pageSize: 10,\n  pagerCount: 3,\n  layout: \"total,prev, pager, next,jumper,sizes\",\n  pageSizes: \"10,20,50,100\",\n  size: \"md\",\n  color: \"primary\",\n  background: false,\n  disabled: false,\n  simple: false,\n  hideOnSinglePage: false,\n};\n\nconst state = ref<Record<string, any>>({ ...defaultState });\n\n/** 重置演练场配置 */\nfunction resetState() {\n  state.value = { ...defaultState };\n}\n\n/** pageSizes 由逗号分隔字符串解析为数字数组 */\nconst parsedPageSizes = computed(() =>\n  String(state.value.pageSizes)\n    .split(\",\")\n    .map((n) => Number(n.trim()))\n    .filter((n) => Number.isFinite(n) && n > 0),\n);\n\n/** 演练场控制面板配置 */\nconst controls: any = [\n  {\n    title: \"数据规模\",\n    children: [\n      {\n        label: \"数据总数\",\n        key: \"total\",\n        component: \"input-number\" as const,\n        defaultValue: 100,\n        props: { min: 0, max: 1000, step: 10 },\n      },\n      {\n        label: \"每页条数\",\n        key: \"pageSize\",\n        component: \"input-number\" as const,\n        defaultValue: 10,\n        props: { min: 1, max: 100, step: 5 },\n      },\n      {\n        // pagerCount 不小于 3 即可，奇偶均可；组件会把过小的值钳到 3\n        label: \"页码按钮数\",\n        key: \"pagerCount\",\n        component: \"input-number\" as const,\n        defaultValue: 3,\n        props: { min: 3, max: 21, step: 1 },\n      },\n      {\n        label: \"布局组合\",\n        key: \"layout\",\n        component: \"input\" as const,\n        defaultValue: \"prev, pager, next,jumper,total,sizes\",\n      },\n      {\n        label: \"每页条数选项\",\n        key: \"pageSizes\",\n        component: \"input\" as const,\n        defaultValue: \"10,20,50,100\",\n      },\n    ],\n  },\n  {\n    title: \"外观与状态\",\n    children: [\n      {\n        label: \"语义色\",\n        key: \"color\",\n        component: \"select\" as const,\n        defaultValue: \"primary\",\n        props: { options: paginationColors.map((color) => ({ label: color, value: color })) },\n      },\n      {\n        label: \"尺寸规格\",\n        key: \"size\",\n        component: \"select\" as const,\n        defaultValue: \"md\",\n        props: { options: paginationSizes.map((s) => ({ label: s, value: s })) },\n      },\n      { label: \"页码背景\", key: \"background\", component: \"checkbox\" as const, defaultValue: false },\n      { label: \"禁用状态\", key: \"disabled\", component: \"checkbox\" as const, defaultValue: false },\n      { label: \"简洁模式\", key: \"simple\", component: \"checkbox\" as const, defaultValue: false },\n      { label: \"单页隐藏\", key: \"hideOnSinglePage\", component: \"checkbox\" as const, defaultValue: false },\n    ],\n  },\n];\n\n/** 演练场右上角展示的传参明细：完整列出当前所有参数（含默认值），布尔项带值输出保证可直接拷贝 */\nconst paginationCode = computed(() => {\n  const s = state.value;\n  const props: string[] = ['v-model=\"page\"', `:total=\"${s.total}\"`, 'v-model:page-size=\"pageSize\"'];\n\n  props.push(`layout=\"${s.layout}\"`);\n  props.push(`:page-sizes=\"[${parsedPageSizes.value.join(\", \")}]\"`);\n  props.push(`size=\"${s.size}\"`);\n  props.push(`color=\"${s.color}\"`);\n  props.push(`:background=\"${s.background}\"`);\n  props.push(`:disabled=\"${s.disabled}\"`);\n  props.push(`:simple=\"${s.simple}\"`);\n  props.push(`:hide-on-single-page=\"${s.hideOnSinglePage}\"`);\n  props.push(`:pager-count=\"${s.pagerCount}\"`);\n\n  return `<RebornPagination\\n  ${props.join(\"\\n  \")}\\n  @current-change=\"handleCurrentChange\"\\n  @size-change=\"handleSizeChange\"\\n/>`;\n});\n\n/** 最近一次 current-change 的页码 */\nconst lastPage = shallowRef(0);\n/** 最近一次 size-change 的每页条数 */\nconst lastSize = shallowRef(0);\n\nfunction handleCurrentChange(page: number) {\n  lastPage.value = page;\n}\n\nfunction handleSizeChange(size: number) {\n  lastSize.value = size;\n}\n\n// ─── 场景演示状态 ───────────────────────────────────────────────\n\n/** 默认用法 */\nconst basicPage = shallowRef(1);\n/** 背景模式 */\nconst bgPage = shallowRef(1);\n/** 简洁模式 */\nconst simplePage = shallowRef(2);\n/** 布局组合 */\nconst layoutPage = shallowRef(3);\nconst layoutSize = shallowRef(10);\n/** 页码折叠 */\nconst foldPage = shallowRef(7);\n/** 单页隐藏：total 小于 pageSize 时自动隐藏 */\nconst singleTotal = shallowRef(5);\nconst singlePage = shallowRef(1);\n/** 插槽自定义 */\nconst slotPagerPage = shallowRef(3);\nconst slotArrowPage = shallowRef(3);\nconst slotExtraPage = shallowRef(3);\n/** 自定义 #sizes 插槽：可选条数与插槽里的下拉选项同源 */\nconst slotPageSizes = [5, 10, 20];\nconst slotPageSizeOptions = slotPageSizes.map(value => ({ label: `${value} 条`, value }));\nconst layoutPageSizes = [5, 10, 20, 50];\nconst slotSize = shallowRef(10);\n\n/** 切换单页隐藏演示的 total */\nfunction toggleSingleTotal() {\n  singleTotal.value = singleTotal.value === 5 ? 100 : 5;\n}\n\n/** 自定义 jumper：从输入框读取页码并跳转 */\nfunction jumpFromInput(e: Event, jump: (page: number) => void) {\n  const target = e.target as HTMLInputElement;\n  jump(Number(target.value));\n}\n</script>\n\n<template>\n  <div class=\"flex w-full min-w-0 flex-col\">\n    <Playground\n      v-model=\"state\" :controls=\"controls\" :code=\"paginationCode\" component-name=\"RebornPagination\"\n      title=\"交互演练场\" description=\"调节上方参数实时查看反馈；总页数由 total 与 page-size 推导，pagerCount 控制页码折叠。\"\n    >\n      <template #tag>\n        <RebornButton size=\"sm\" variant=\"soft\" color=\"neutral\" @click=\"resetState\">\n          <template #leading>\n            <Icon name=\"lucide:rotate-ccw\" size=\"12\" />\n          </template>\n          重置配置\n        </RebornButton>\n      </template>\n\n      <div class=\"flex w-full flex-col items-center gap-4\">\n        <RebornPagination\n          v-model=\"state.page\" v-model:page-size=\"state.pageSize\" :total=\"state.total\"\n          :pager-count=\"state.pagerCount\" :layout=\"state.layout\" :page-sizes=\"parsedPageSizes\" :size=\"state.size\"\n          :color=\"state.color\" :background=\"state.background\" :disabled=\"state.disabled\" :simple=\"state.simple\"\n          :hide-on-single-page=\"state.hideOnSinglePage\" @current-change=\"handleCurrentChange\"\n          @size-change=\"handleSizeChange\"\n        />\n\n        <DemoNote tone=\"dimmed\">\n          当前页：<code>{{ state.page }}</code>\n          <template v-if=\"lastPage\">\n            · 最近 <code>current-change</code>：<code>{{ lastPage }}</code>\n          </template>\n          <template v-if=\"lastSize\">\n            · 最近 <code>size-change</code>：<code>{{ lastSize }}</code>\n          </template>\n        </DemoNote>\n      </div>\n    </Playground>\n\n    <DemoSection title=\"基础用法\" description=\"传入 total 与 page-size，v-model 绑定当前页码，切换时触发 current-change。\">\n      <DemoBlock layout=\"stack\" align=\"start\">\n        <RebornPagination v-model=\"basicPage\" :total=\"50\" @current-change=\"handleCurrentChange\" />\n        <DemoNote tone=\"dimmed\">当前页：<code>{{ basicPage }}</code></DemoNote>\n      </DemoBlock>\n    </DemoSection>\n\n    <DemoSection title=\"按钮背景与语义色：background 与 color\">\n      <template #description>\n        <code>color</code> 控制激活页码的语义色；开启 <code>background</code> 时使用按钮 <code>soft</code> 配色，关闭时只显示对应文字色。未激活项保留灰阶。\n      </template>\n      <DemoBlock layout=\"grid\" :columns=\"2\" align=\"start\">\n        <DemoItem v-for=\"color in paginationColors\" :key=\"color\" :label=\"color\" mono>\n          <div class=\"flex flex-col items-start gap-3\">\n            <RebornPagination v-model=\"bgPage\" :total=\"60\" :color=\"color\" background />\n            <RebornPagination v-model=\"bgPage\" :total=\"60\" :color=\"color\" />\n          </div>\n        </DemoItem>\n      </DemoBlock>\n    </DemoSection>\n\n    <DemoSection title=\"简洁模式：simple 与翻页文字\">\n      <template #description>\n        <code>simple</code> 忽略 <code>layout</code>，依次显示上一页、当前页输入框、斜杠、总页数和下一页，间距 8px；输入框固定宽 40px，使用 <code>outlined</code> 与 <code>sm</code>，回车或失焦跳页。<code>prev-text</code> 与 <code>next-text</code> 可把箭头换成文字。\n      </template>\n      <DemoBlock layout=\"grid\" :columns=\"2\" align=\"start\">\n        <DemoItem label=\"simple（默认箭头）\" mono>\n          <RebornPagination v-model=\"simplePage\" :total=\"80\" simple />\n        </DemoItem>\n\n        <DemoItem label=\"simple + prev-text / next-text\" mono>\n          <RebornPagination v-model=\"simplePage\" :total=\"80\" simple prev-text=\"上一页\" next-text=\"下一页\" />\n        </DemoItem>\n      </DemoBlock>\n    </DemoSection>\n\n    <DemoSection title=\"布局组合：layout 与每页条数\" description=\"layout 用逗号组合 prev / pager / next / jumper / total / sizes，未知 token 会被忽略。\">\n      <DemoBlock layout=\"stack\" align=\"start\">\n        <RebornPagination\n          v-model=\"layoutPage\" v-model:page-size=\"layoutSize\" :total=\"200\" :page-sizes=\"layoutPageSizes\"\n          layout=\"prev, pager, next, jumper, total, sizes\" @current-change=\"handleCurrentChange\"\n          @size-change=\"handleSizeChange\"\n        />\n        <DemoNote tone=\"dimmed\">\n          当前页 <code>{{ layoutPage }}</code> · 每页 <code>{{ layoutSize }}</code> 条\n        </DemoNote>\n      </DemoBlock>\n    </DemoSection>\n\n    <DemoSection title=\"页码折叠：pager-count\" description=\"pagerCount 控制页码按钮数量（不小于 3 的整数，奇偶均可，过小的值钳到 3），超长时自动折叠并显示省略号，点击省略号向对应方向跳页。\">\n      <DemoBlock layout=\"row\" align=\"center\">\n        <RebornPagination v-model=\"foldPage\" :total=\"200\" :pager-count=\"9\" background />\n      </DemoBlock>\n    </DemoSection>\n\n    <DemoSection title=\"单页隐藏：hide-on-single-page\" description=\"hideOnSinglePage 在总页数不超过 1 时整组件不渲染，点击按钮切换数据量观察显隐。\">\n      <DemoBlock layout=\"stack\" align=\"start\">\n        <div class=\"flex flex-wrap items-center gap-6\">\n          <RebornPagination v-model=\"singlePage\" :total=\"singleTotal\" hide-on-single-page />\n          <RebornButton size=\"sm\" variant=\"soft\" color=\"primary\" @click=\"toggleSingleTotal\">\n            {{ singleTotal === 5 ? \"切换为 100 条\" : \"切换为 5 条\" }}\n          </RebornButton>\n        </div>\n        <DemoNote tone=\"dimmed\">当前 total：<code>{{ singleTotal }}</code></DemoNote>\n      </DemoBlock>\n    </DemoSection>\n\n    <DemoSection title=\"插槽定制：接管翻页、页码与附加区\" description=\"prev / next / pager-item / jumper / total / sizes 六个插槽均可完全接管默认内容。\">\n      <DemoBlock layout=\"stack\" class=\"gap-6\">\n        <DemoItem>\n          <template #label>\n            圆形页码 · <code>#pager-item</code>\n          </template>\n          <RebornPagination v-model=\"slotPagerPage\" :total=\"50\" background>\n            <!-- 两态都用 circle 变体、只换配色：形状不变，RebornButton 的 transition-all 就不会把圆角 / 内边距过渡成椭圆 -->\n            <template #pager-item=\"{ page, active, disabled, select }\">\n              <RebornButton\n                circle variant=\"filled\" :color=\"active ? 'primary' : 'neutral'\" size=\"sm\" :disabled=\"disabled\"\n                :class=\"active ? undefined : 'bg-gray-2 text-gray-6 hover:bg-gray-3'\" @click=\"select\"\n              >\n                {{ page }}\n              </RebornButton>\n            </template>\n          </RebornPagination>\n        </DemoItem>\n\n        <DemoItem>\n          <template #label>\n            自定义箭头 · <code>#prev</code> / <code>#next</code>\n          </template>\n          <RebornPagination v-model=\"slotArrowPage\" :total=\"50\">\n            <template #prev=\"{ prev, disabled }\">\n              <RebornButton color=\"error\" circle variant=\"filled\" size=\"sm\" :disabled=\"disabled\" @click=\"prev\">\n                <Icon name=\"lucide:arrow-left\" />\n              </RebornButton>\n            </template>\n            <template #next=\"{ next, disabled }\">\n              <RebornButton color=\"error\" circle variant=\"filled\" size=\"sm\" :disabled=\"disabled\" @click=\"next\">\n                <Icon name=\"lucide:arrow-right\" />\n              </RebornButton>\n            </template>\n          </RebornPagination>\n        </DemoItem>\n\n        <DemoItem>\n          <template #label>\n            自定义 <code>#jumper</code> / <code>#total</code> / <code>#sizes</code>\n          </template>\n          <RebornPagination\n            v-model=\"slotExtraPage\" v-model:page-size=\"slotSize\" :total=\"120\" :page-sizes=\"slotPageSizes\"\n            layout=\"total, sizes, prev, pager, next, jumper\"\n          >\n            <template #total=\"{ total }\">\n              <span class=\"text-primary text-xs font-medium\">共 {{ total }} 条数据</span>\n            </template>\n            <template #sizes=\"{ pageSize, change }\">\n              <RebornSelect\n                :model-value=\"pageSize\" :options=\"slotPageSizeOptions\"\n                size=\"sm\" class=\"w-[110px]\" :clearable=\"false\" @update:model-value=\"change\"\n              />\n            </template>\n            <template #jumper=\"{ current, totalPages, jump }\">\n              <RebornInput\n                :model-value=\"String(current)\" type=\"number\" size=\"sm\" class=\"!w-[56px]\"\n                @keyup.enter=\"jumpFromInput($event, jump)\"\n              />\n              <span class=\"text-dimmed text-xs\">/ {{ totalPages }} 页</span>\n            </template>\n          </RebornPagination>\n        </DemoItem>\n      </DemoBlock>\n    </DemoSection>\n  </div>\n</template>\n"
+    },
+    {
+      "title": "UniApp 演示",
+      "path": "packages/uniapp-project/src/pages/reborn-pagination/RebornPaginationDemo.vue",
+      "source": "demo",
+      "platform": "uniapp",
+      "code": "<script lang=\"ts\" setup>\nimport { computed, ref, shallowRef } from 'vue'\nimport RebornPage from '@/components/reborn-page/RebornPage.vue'\nimport RebornCard from '@/components/reborn-card/RebornCard.vue'\nimport RebornSwitch from '@/components/reborn-switch/RebornSwitch.vue'\nimport RebornSelect from '@/components/reborn-select/RebornSelect.vue'\nimport RebornPagination from '@/components/reborn-pagination/RebornPagination.vue'\nimport { paginationSizes } from '@/components/reborn-pagination/reborn-pagination.config'\n\n// Playground 状态\nconst playPage = shallowRef(1)\nconst playPageSize = shallowRef(10)\nconst playTotal = shallowRef(200)\nconst playSize = shallowRef<typeof paginationSizes[number]>('md')\nconst playBackground = shallowRef(false)\nconst playDisabled = shallowRef(false)\nconst playSimple = shallowRef(false)\nconst playHideOnSinglePage = shallowRef(false)\n// 初值与组件默认值保持一致（双端默认均为 3）\nconst playPagerCount = shallowRef(3)\nconst playLayout = shallowRef('prev, pager, next')\n\n// 事件日志（最多展示 6 条）\nlet eventId = 0\nconst eventLog = ref<{ id: number, text: string }[]>([])\n\nfunction handlePlayCurrentChange(page: number) {\n  eventLog.value.push({ id: ++eventId, text: `current-change: ${page}` })\n  if (eventLog.value.length > 6) eventLog.value.shift()\n}\n\nfunction handlePlaySizeChange(size: number) {\n  eventLog.value.push({ id: ++eventId, text: `size-change: ${size}` })\n  if (eventLog.value.length > 6) eventLog.value.shift()\n}\n\n// 尺寸选项\nconst sizeOptions = paginationSizes.map(s => ({ label: s, value: s }))\n\n// 折叠数量选项\n// pagerCount 为不小于 3 的整数，奇偶均可，3 即为默认值\nconst pagerCountOptions = [3, 5, 7, 9, 11].map(n => ({ label: `${n}`, value: n }))\n\n// 布局选项\nconst layoutOptions = [\n  { label: 'prev, pager, next', value: 'prev, pager, next' },\n  { label: 'total, sizes, prev, pager, next, jumper', value: 'total, sizes, prev, pager, next, jumper' },\n  { label: 'prev, pager, next, total', value: 'prev, pager, next, total' },\n  { label: 'prev, pager, next, jumper', value: 'prev, pager, next, jumper' },\n]\n\n// 每页条数预设\nconst pageSizePresetIdx = shallowRef(0)\nconst pageSizePresets = [\n  { label: '10/20/50/100', value: 0 },\n  { label: '5/10/15/20', value: 1 },\n  { label: '2/4/6/8', value: 2 },\n]\nconst pageSizeLists = [\n  [10, 20, 50, 100],\n  [5, 10, 15, 20],\n  [2, 4, 6, 8],\n]\n\nconst playPageSizes = computed(() => pageSizeLists[pageSizePresetIdx.value] ?? pageSizeLists[0]!)\n\n// 独立示例状态\nconst defaultPage = shallowRef(1)\nconst backgroundPage = shallowRef(1)\nconst simplePage = shallowRef(1)\nconst layoutPage = shallowRef(1)\nconst layoutPageSize = shallowRef(20)\nconst foldPage = shallowRef(1)\nconst hidePage = shallowRef(1)\nconst hideTotal = shallowRef(10)\nconst slotPage = shallowRef(1)\nconst slotPageSize = shallowRef(10)\n\nfunction handleLayoutCurrentChange(page: number) {\n  eventLog.value.push({ id: ++eventId, text: `layout current-change: ${page}` })\n  if (eventLog.value.length > 6) eventLog.value.shift()\n}\n\nfunction handleLayoutSizeChange(size: number) {\n  eventLog.value.push({ id: ++eventId, text: `layout size-change: ${size}` })\n  if (eventLog.value.length > 6) eventLog.value.shift()\n}\n</script>\n\n<template>\n  <RebornPage title=\"Pagination 分页\" description=\"当数据量过多时，使用分页分解数据。\">\n\n    <!-- Playground 配置演示 -->\n    <RebornCard title=\"配置演示（Playground）\">\n      <view>\n        <text class=\"text-24 text-gray-5 mb-2\">尺寸 size</text>\n        <view class=\"flex flex-wrap gap-2\">\n          <view\n            v-for=\"s in paginationSizes\"\n            :key=\"s\"\n            class=\"px-4 py-1 rounded-full\"\n            :class=\"playSize === s ? 'bg-primary text-white' : 'bg-gray-2 text-gray-6'\"\n            @tap=\"playSize = s\"\n          >\n            <text class=\"text-24\">{{ s }}</text>\n          </view>\n        </view>\n      </view>\n\n      <view>\n        <text class=\"text-24 text-gray-5 mb-2\">折叠数量 pagerCount</text>\n        <RebornSelect v-model=\"playPagerCount\" :options=\"pagerCountOptions\" :size=\"'sm'\" :clearable=\"false\" />\n      </view>\n\n      <view>\n        <text class=\"text-24 text-gray-5 mb-2\">布局 layout</text>\n        <RebornSelect v-model=\"playLayout\" :options=\"layoutOptions\" :size=\"'sm'\" :clearable=\"false\" />\n      </view>\n\n      <view>\n        <text class=\"text-24 text-gray-5 mb-2\">每页条数 pageSizes</text>\n        <RebornSelect v-model=\"pageSizePresetIdx\" :options=\"pageSizePresets\" :size=\"'sm'\" :clearable=\"false\" />\n      </view>\n\n      <view>\n        <text class=\"text-24 text-gray-5 mb-2\">背景 background</text>\n        <RebornSwitch v-model=\"playBackground\" active-label=\"开\" inactive-label=\"关\" />\n      </view>\n\n      <view>\n        <text class=\"text-24 text-gray-5 mb-2\">禁用 disabled</text>\n        <RebornSwitch v-model=\"playDisabled\" active-label=\"禁用\" inactive-label=\"启用\" />\n      </view>\n\n      <view>\n        <text class=\"text-24 text-gray-5 mb-2\">简洁模式 simple</text>\n        <RebornSwitch v-model=\"playSimple\" active-label=\"开\" inactive-label=\"关\" />\n      </view>\n\n      <view>\n        <text class=\"text-24 text-gray-5 mb-2\">单页隐藏 hideOnSinglePage</text>\n        <RebornSwitch v-model=\"playHideOnSinglePage\" active-label=\"隐藏\" inactive-label=\"显示\" />\n      </view>\n\n      <view class=\"py-4\">\n        <RebornPagination\n          v-model=\"playPage\"\n          v-model:page-size=\"playPageSize\"\n          :total=\"playTotal\"\n          :pager-count=\"playPagerCount\"\n          :layout=\"playLayout\"\n          :page-sizes=\"playPageSizes\"\n          :size=\"playSize\"\n          :background=\"playBackground\"\n          :disabled=\"playDisabled\"\n          :simple=\"playSimple\"\n          :hide-on-single-page=\"playHideOnSinglePage\"\n          @current-change=\"handlePlayCurrentChange\"\n          @size-change=\"handlePlaySizeChange\"\n        />\n        <view class=\"mt-2 text-center\">\n          <text class=\"text-24 text-gray-6\">当前页 {{ playPage }}，每页 {{ playPageSize }} 条</text>\n        </view>\n      </view>\n\n      <view v-if=\"eventLog.length\" class=\"flex flex-col gap-1\">\n        <text class=\"text-24 text-gray-5\">事件日志</text>\n        <text v-for=\"line in eventLog\" :key=\"line.id\" class=\"text-24 text-gray-6\">{{ line.text }}</text>\n      </view>\n    </RebornCard>\n\n    <!-- 默认 -->\n    <RebornCard title=\"默认\">\n      <RebornPagination v-model=\"defaultPage\" :total=\"100\" />\n      <text class=\"text-24 text-gray-6\">当前页 {{ defaultPage }}</text>\n    </RebornCard>\n\n    <!-- 背景 -->\n    <RebornCard title=\"背景（background）\">\n      <RebornPagination v-model=\"backgroundPage\" :total=\"80\" background />\n      <text class=\"text-24 text-gray-6\">当前页 {{ backgroundPage }}</text>\n    </RebornCard>\n\n    <!-- 简洁模式 -->\n    <RebornCard title=\"简洁模式（simple）\">\n      <RebornPagination v-model=\"simplePage\" :total=\"60\" simple />\n      <text class=\"text-24 text-gray-6\">当前页 {{ simplePage }} / 总页数文本展示</text>\n    </RebornCard>\n\n    <!-- 完整布局 -->\n    <RebornCard title=\"完整布局（jumper + total + sizes）\">\n      <RebornPagination\n        v-model=\"layoutPage\"\n        v-model:page-size=\"layoutPageSize\"\n        :total=\"120\"\n        layout=\"total, sizes, prev, pager, next, jumper\"\n        @current-change=\"handleLayoutCurrentChange\"\n        @size-change=\"handleLayoutSizeChange\"\n      />\n      <text class=\"text-24 text-gray-6\">当前页 {{ layoutPage }}，每页 {{ layoutPageSize }} 条</text>\n    </RebornCard>\n\n    <!-- 页码折叠 -->\n    <RebornCard title=\"页码折叠（total ≥ 200）\">\n      <RebornPagination v-model=\"foldPage\" :total=\"200\" :pager-count=\"7\" />\n      <text class=\"text-24 text-gray-6\">当前页 {{ foldPage }}</text>\n    </RebornCard>\n\n    <!-- 单页隐藏 -->\n    <RebornCard title=\"单页隐藏（hide-on-single-page）\">\n      <view class=\"flex items-center justify-between\">\n        <text class=\"text-24 text-gray-5\">切换 total（10 单页 / 30 三页）</text>\n        <RebornSwitch v-model=\"hideTotal\" active-label=\"1 页\" inactive-label=\"3 页\" :active-value=\"10\" :inactive-value=\"30\" />\n      </view>\n      <RebornPagination v-model=\"hidePage\" :total=\"hideTotal\" hide-on-single-page />\n      <text class=\"text-24 text-gray-6\">{{ hideTotal <= 10 ? '单页时组件已隐藏' : '多页时正常显示' }}</text>\n    </RebornCard>\n\n    <!-- 插槽自定义 -->\n    <RebornCard title=\"插槽自定义\">\n      <RebornPagination\n        v-model=\"slotPage\"\n        v-model:page-size=\"slotPageSize\"\n        :total=\"60\"\n        layout=\"prev, pager, next, jumper, total, sizes\"\n      >\n        <template #prev=\"{ prev }\">\n          <view class=\"px-3 h-[56rpx] inline-flex items-center justify-center rounded-md bg-gray-2\" @tap=\"prev\">\n            <view class=\"i-lucide-arrow-left text-24 text-primary\" />\n          </view>\n        </template>\n\n        <template #pager-item=\"{ page, active, select }\">\n          <view\n            class=\"px-3 h-[56rpx] inline-flex items-center justify-center rounded-full border\"\n            :class=\"active ? 'bg-primary text-white border-primary' : 'bg-white text-gray-6 border-gray-3'\"\n            @tap=\"select\"\n          >\n            <text class=\"text-24 font-medium\">{{ page }}</text>\n          </view>\n        </template>\n\n        <template #next=\"{ next }\">\n          <view class=\"px-3 h-[56rpx] inline-flex items-center justify-center rounded-md bg-gray-2\" @tap=\"next\">\n            <view class=\"i-lucide-arrow-right text-24 text-primary\" />\n          </view>\n        </template>\n\n        <template #jumper=\"{ current, totalPages, jump }\">\n          <view class=\"inline-flex items-center gap-[8rpx]\">\n            <text class=\"text-24 text-gray-5\">第 {{ current }}/{{ totalPages }} 页</text>\n            <view class=\"px-2 py-1 rounded-md bg-gray-2\" @tap=\"jump(1)\">\n              <text class=\"text-24 text-primary\">首页</text>\n            </view>\n          </view>\n        </template>\n\n        <template #total=\"{ total }\">\n          <text class=\"text-24 text-primary\">共 {{ total }} 条数据</text>\n        </template>\n\n        <template #sizes=\"{ pageSize, pageSizes, change }\">\n          <view class=\"inline-flex items-center gap-[8rpx]\">\n            <view\n              v-for=\"s in pageSizes\"\n              :key=\"s\"\n              class=\"px-2 py-1 rounded-md\"\n              :class=\"pageSize === s ? 'bg-primary text-white' : 'bg-gray-2 text-gray-6'\"\n              @tap=\"change(s)\"\n            >\n              <text class=\"text-24\">{{ s }} 条/页</text>\n            </view>\n          </view>\n        </template>\n      </RebornPagination>\n      <text class=\"text-24 text-gray-6\">当前页 {{ slotPage }}，每页 {{ slotPageSize }} 条</text>\n    </RebornCard>\n\n  </RebornPage>\n</template>\n"
+    }
+  ],
+  "related": [
+    "reborn-input",
+    "reborn-select"
+  ],
+  "whenToUse": [
+    "表格、列表数据量大需要按页浏览时。",
+    "需要自定义翻页控件布局（layout 组合 total/jumper/sizes）时。",
+    "移动端或窄屏需要简洁的上一页/下一页翻页（simple）时。",
+    "只有一页时希望自动隐藏分页器（hideOnSinglePage）时。"
+  ],
+  "whenNotToUse": [
+    "滚动触底加载更多改用 reborn-loadmore。",
+    "内容按类别切换改用 reborn-tabs。"
+  ],
+  "pitfalls": [
+    "pagerCount 为不小于 3 的整数（奇偶均可），过小的值钳到 3；3 时只显示首页、当前页、末页，偶数时当前页在中间窗口偏左一格。",
+    "Web 的 color 默认 primary，支持 primary/secondary/success/info/warning/error/neutral；background=true 的激活页码采用同色按钮 soft 配色，background=false 的激活页码使用 text-{color}。UniApp 暂不支持 color，激活页码仍为 bg-primary/50 text-primary。",
+    "background=true 的未激活页码为 bg-gray-2 text-gray-5。Web 普通无背景模式未激活页码和可点击按钮为 text-gray-9，禁用按钮与页码为 text-gray-5，不叠加透明度。",
+    "simple 为 true 时忽略 layout。Web 按上一页、40px 宽的 outlined/sm 当前页输入框、斜杠、总页数、下一页排列，间距 8px，回车或失焦提交，清空恢复当前页；UniApp 中间仍显示当前页/总页数文本。",
+    "total 为 0 时按 1 页显示且翻页按钮禁用，配合 hideOnSinglePage 可整组件隐藏。",
+    "layout 使用逗号分隔的 token（prev/pager/next/jumper/total/sizes），未知 token 会被忽略。",
+    "current-change 仅在页码实际变化时触发；size-change 触发后会先钳制当前页再判断是否补发 current-change。",
+    "pager 中省略号不是 pager-item，点击省略号会向对应方向跳 pagerCount - 2 页。",
+    "自定义 pager-item 调用作用域中的 select() 选择该页，并绑定 disabled；select 会检查禁用、同步模型并触发 current-change。",
+    "UniApp 自定义根类名为 customClass；pager-item 插槽 select() 与默认页码共用禁用检查、模型同步和 current-change。"
+  ],
+  "dependencies": [
+    "@weapp-tailwindcss/merge-v3",
+    "@weapp-tailwindcss/variants-v3",
+    "clsx",
+    "tailwind-merge",
+    "tailwind-variants"
+  ],
+  "install": {
+    "cli": "npx reborn-ui@latest add reborn-pagination"
+  },
+  "sourceRefs": {
+    "web": [
+      "app/components/reborn/ui/reborn-pagination/RebornPagination.vue",
+      "app/components/reborn/ui/reborn-pagination/index.ts",
+      "app/components/reborn/ui/reborn-pagination/reborn-pagination.config.ts"
+    ],
+    "uniapp": [
+      "packages/uniapp-project/src/components/reborn-pagination/RebornPagination.vue",
+      "packages/uniapp-project/src/components/reborn-pagination/reborn-pagination.config.ts"
+    ]
+  },
+  "docPath": "content/2.components/navigation/reborn-pagination.md",
+  "_meta": {
+    "contentHash": "30a1848af10c46d06f6090313678eadde38bf0cd",
+    "hasOverride": true,
+    "extractors": {
+      "web": "ok",
+      "uniapp": "ok",
+      "docs": "found"
+    }
+  }
+}

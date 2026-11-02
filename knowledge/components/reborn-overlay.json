@@ -1,0 +1,168 @@
+{
+  "$schema": "../schema/component.schema.json",
+  "id": "reborn-overlay",
+  "title": "Overlay 遮罩",
+  "description": "用于弹层背后的全屏或局部遮罩组件，支持点击关闭与滚动锁定。",
+  "category": "misc",
+  "tags": [
+    "overlay",
+    "modal",
+    "uniapp"
+  ],
+  "platforms": [
+    "web",
+    "uniapp"
+  ],
+  "props": [
+    {
+      "name": "customClass",
+      "type": "string",
+      "required": false,
+      "description": "组件自定义类名",
+      "default": "''"
+    },
+    {
+      "name": "customStyle",
+      "type": "string",
+      "required": false,
+      "description": "组件自定义样式",
+      "default": "''"
+    },
+    {
+      "name": "duration",
+      "type": "Record<string, number> | number | boolean",
+      "required": false,
+      "description": "转发给过渡组件的动画时长，数值单位 ms",
+      "default": "300"
+    },
+    {
+      "name": "lockScroll",
+      "type": "boolean",
+      "required": false,
+      "description": "背景是否锁定滚动",
+      "default": "true"
+    },
+    {
+      "name": "zIndex",
+      "type": "number",
+      "required": false,
+      "description": "遮罩层级",
+      "default": "10"
+    },
+    {
+      "name": "closeOnClickOverlay",
+      "type": "boolean",
+      "required": false,
+      "description": "是否允许点击遮罩层关闭",
+      "default": "true"
+    },
+    {
+      "name": "absolute",
+      "type": "boolean",
+      "required": false,
+      "description": "是否绝对定位。开启后将在祖先元素(position非static)内展示，用于指定节点的部分遮罩",
+      "default": "false"
+    },
+    {
+      "name": "modelValue",
+      "type": "boolean",
+      "required": false,
+      "description": "双向绑定值",
+      "vModel": true,
+      "default": "undefined"
+    }
+  ],
+  "events": [
+    {
+      "name": "close",
+      "payload": "[]",
+      "description": "关闭时触发"
+    },
+    {
+      "name": "click",
+      "payload": "[]",
+      "description": "点击遮罩时触发，不受关闭策略限制，仅 UniApp"
+    },
+    {
+      "name": "update:modelValue",
+      "description": "modelValue 变化时触发（v-model 同步）",
+      "payload": "(val: Boolean)"
+    },
+    {
+      "name": "afterLeave",
+      "payload": "(e: \"afterLeave\"): void;",
+      "description": "离场过渡完成后触发，仅 Web"
+    }
+  ],
+  "slots": [
+    {
+      "name": "default",
+      "description": "遮罩内自定义内容"
+    }
+  ],
+  "exposes": [],
+  "examples": [
+    {
+      "title": "Web 演示",
+      "path": "app/components/reborn/examples/reborn-overlay/RebornOverlayDemo.vue",
+      "source": "demo",
+      "platform": "web",
+      "code": "<script setup lang=\"ts\">\nimport { DemoBlock, DemoNote, DemoSection, Playground } from '#components';\nimport { computed, ref, shallowRef } from 'vue';\nimport RebornButton from '~/components/reborn/ui/reborn-button/RebornButton.vue';\nimport RebornOverlay from \"~/components/reborn/ui/reborn-overlay/RebornOverlay.vue\";\n\n// ─── 交互演练场 ─────────────────────────────────────────────────\n\nconst state = ref<Record<string, any>>({\n  duration: 300,\n  closeOnClickOverlay: true,\n});\n\n/** 演练场内局部遮罩的显隐 */\nconst playgroundVisible = shallowRef(false);\n\n/** 演练场控制面板配置 */\nconst controls = [\n  {\n    title: \"基础属性\",\n    children: [\n      {\n        label: \"过渡时长（ms）\",\n        key: \"duration\",\n        component: \"slider\" as const,\n        defaultValue: 300,\n        props: { min: 100, max: 1200, step: 50 },\n      },\n      {\n        label: \"点击遮罩关闭\",\n        key: \"closeOnClickOverlay\",\n        component: \"checkbox\" as const,\n        defaultValue: true,\n      },\n    ],\n  },\n];\n\n/** 演练场右上角展示的等价代码 */\nconst overlayCode = computed(() => {\n  const s = state.value;\n  const props: string[] = ['v-model=\"visible\"', \"absolute\"];\n\n  if (s.duration !== 300) props.push(`:duration=\"${s.duration}\"`);\n  if (!s.closeOnClickOverlay) props.push(':close-on-click-overlay=\"false\"');\n\n  return `<div class=\"relative\">\\n  <RebornOverlay\\n    ${props.join(\"\\n    \")}\\n  />\\n</div>`;\n});\n\n// ─── 场景演示状态 ───────────────────────────────────────────────\n\n/** 全屏遮罩显隐 */\nconst fullscreenVisible = shallowRef(false);\n\n/** 自定义样式遮罩显隐 */\nconst gradientVisible = shallowRef(false);\n</script>\n\n<template>\n  <div class=\"flex w-full min-w-0 flex-col\">\n    <Playground\n      v-model=\"state\"\n      :controls=\"controls\"\n      :code=\"overlayCode\"\n      component-name=\"RebornOverlay\"\n      title=\"交互演练场\"\n      description=\"absolute 让遮罩只覆盖最近的定位父级，适合在卡片或区块内部做局部蒙层。\"\n    >\n      <div class=\"flex w-full flex-col items-center gap-4\">\n        <!-- 局部遮罩宿主：仅描边不填充，保证遮罩的覆盖范围可见 -->\n        <div\n          class=\"border-default rounded-lg relative flex h-[260px] w-full max-w-md items-center justify-center overflow-hidden border border-dashed\"\n        >\n          <span class=\"text-dimmed text-sm\">遮罩仅覆盖这个虚线区域</span>\n\n          <RebornOverlay\n            v-model=\"playgroundVisible\"\n            absolute\n            :duration=\"state.duration\"\n            :close-on-click-overlay=\"state.closeOnClickOverlay\"\n          >\n            <div class=\"flex h-full items-center justify-center\">\n              <div class=\"bg-default border-default rounded-xl w-[240px] border p-5 text-center\" @click.stop>\n                <p class=\"text-highlighted text-sm font-medium\">局部遮罩内容</p>\n                <p class=\"text-muted mt-1 text-xs\">\n                  {{ state.closeOnClickOverlay ? \"点击遮罩可关闭\" : \"已禁止点击遮罩关闭\" }}\n                </p>\n                <RebornButton\n                  class=\"mt-4\"\n                  size=\"sm\"\n                  variant=\"soft\"\n                  block\n                  label=\"关闭\"\n                  @click=\"playgroundVisible = false\"\n                />\n              </div>\n            </div>\n          </RebornOverlay>\n        </div>\n\n        <RebornButton\n          label=\"展开局部遮罩\"\n          @click=\"playgroundVisible = true\"\n        />\n      </div>\n    </Playground>\n\n    <DemoSection\n      title=\"全屏遮罩\"\n      description=\"默认覆盖整个视口，并自动锁定页面滚动；关闭后按 duration 时长淡出。\"\n    >\n      <DemoBlock\n        layout=\"row\"\n        align=\"center\"\n      >\n        <RebornButton\n          label=\"展开全屏遮罩\"\n          @click=\"fullscreenVisible = true\"\n        />\n      </DemoBlock>\n\n      <RebornOverlay v-model=\"fullscreenVisible\">\n        <div class=\"flex h-full items-center justify-center\">\n          <div class=\"bg-default border-default rounded-xl w-[280px] border p-6 text-center\" @click.stop>\n            <p class=\"text-highlighted text-base font-medium\">全屏遮罩</p>\n            <p class=\"text-muted mt-1.5 text-sm\">页面滚动已被锁定，点击遮罩或按钮均可关闭。</p>\n            <RebornButton\n              class=\"mt-5\"\n              block\n              label=\"我知道了\"\n              @click=\"fullscreenVisible = false\"\n            />\n          </div>\n        </div>\n      </RebornOverlay>\n    </DemoSection>\n\n    <DemoSection\n      title=\"自定义样式\"\n      description=\"custom-class 与 custom-style 可覆盖遮罩自身的背景，用于渐变蒙层等品牌化场景。\"\n    >\n      <DemoBlock\n        layout=\"row\"\n        align=\"center\"\n      >\n        <RebornButton\n          variant=\"outlined\"\n          label=\"展开渐变遮罩\"\n          @click=\"gradientVisible = true\"\n        />\n      </DemoBlock>\n\n      <RebornOverlay\n        v-model=\"gradientVisible\"\n        :duration=\"450\"\n        custom-style=\"background: linear-gradient(135deg, rgba(53,182,242,0.92), rgba(50,236,149,0.92));\"\n      >\n        <div class=\"flex h-full items-center justify-center\">\n          <div class=\"text-center text-white\">\n            <p class=\"text-2xl font-bold\">Reborn UI</p>\n            <p class=\"mt-2 text-sm opacity-80\">点击任意位置关闭</p>\n          </div>\n        </div>\n      </RebornOverlay>\n\n      <DemoNote tone=\"dimmed\">\n        遮罩内容通过默认插槽渲染；内容卡片使用 @click.stop 阻止点击冒泡，点击卡片不会触发遮罩关闭。\n      </DemoNote>\n    </DemoSection>\n  </div>\n</template>\n"
+    },
+    {
+      "title": "UniApp 演示",
+      "path": "packages/uniapp-project/src/pages/reborn-overlay/RebornOverlayDemo.vue",
+      "source": "demo",
+      "platform": "uniapp",
+      "code": "<script setup lang=\"ts\">\nimport { shallowRef } from 'vue'\nimport RebornPage from '@/components/reborn-page/RebornPage.vue'\nimport RebornCard from '@/components/reborn-card/RebornCard.vue'\nimport ReButton from '@/components/reborn-button/RebornButton.vue'\nimport RebornOverlay from '@/components/reborn-overlay/RebornOverlay.vue'\nimport RebornSwitch from '@/components/reborn-switch/RebornSwitch.vue'\nimport PinyinPoem from '@/demo/PinyinPoem.vue'\nimport { overlayPoem } from '@/demo/poems'\nconst show = shallowRef(false)\nconst show2 = shallowRef(false)\nconst closeOnClickOverlay = shallowRef(true)\n</script>\n<template>\n    <RebornPage title=\"Overlay 遮罩层\" description=\"创建一个遮罩层，用于强调特定的页面元素，并阻止用户进行其他操作。\">\n        <RebornCard custom-class=\"flex flex-col gap-4\">\n            <RebornSwitch v-model=\"closeOnClickOverlay\" active-label=\"允许直接关闭\" inactive-label=\"不允许直接关闭\" />\n            <ReButton v-if=\"closeOnClickOverlay\" block @click=\"show = true\">显示遮罩层</ReButton>\n            <ReButton block @click=\"show2 = true\">嵌入内容</ReButton>\n        </RebornCard>\n        <RebornOverlay v-model=\"show\" :closeOnClickOverlay=\"closeOnClickOverlay\" />\n        <RebornOverlay v-model=\"show2\" :closeOnClickOverlay=\"closeOnClickOverlay\">\n            <view class=\"h-full w-full flex justify-center items-center\">\n                <scroll-view\n                    scroll-y\n                    class=\"relative box-border h-3/4 w-3/4 mx-auto rounded-xl bg-white shadow-2xl\"\n                    @touchmove.stop>\n                    <view\n                        class=\"absolute right-4 top-4 z-10 flex size-10 cursor-pointer items-center justify-center rounded-full bg-gray-100 transition-all active:scale-95 hover:bg-gray-200\"\n                        @click=\"show2 = false\">\n                        <view class=\"i-lucide-x size-6 text-gray-600\" />\n                    </view>\n                    <view class=\"p-6\">\n                        <PinyinPoem :poem=\"overlayPoem\" />\n                    </view>\n                </scroll-view>\n            </view>\n        </RebornOverlay>\n    </RebornPage>\n</template>\n"
+    }
+  ],
+  "related": [
+    "reborn-transition"
+  ],
+  "whenToUse": [
+    "自研弹层需要独立控制的背景遮罩时。",
+    "需要在某个定位容器内做局部遮罩（absolute 模式）时。",
+    "需要自定义遮罩显隐动画时长（duration）时。"
+  ],
+  "whenNotToUse": [
+    "完整弹窗交互直接用自带遮罩的 reborn-drawer（Web）、reborn-popup（UniApp）或 reborn-dialog。",
+    "加载中的遮罩状态改用 reborn-loading。"
+  ],
+  "pitfalls": [
+    "web、uniapp 双端可用。",
+    "absolute=true 时在最近的非 static 定位祖先内展示，用于局部遮罩。",
+    "closeOnClickOverlay 与 lockScroll 默认均为 true。",
+    "两端 modelValue 默认 undefined；缺省与显式 false/undefined/null 均隐藏，受控关闭只发送 update:modelValue，只传值不接事件或父级拒收时保持父值。zIndex 默认值为 Web 100、UniApp 10。"
+  ],
+  "dependencies": [
+    "@vueuse/core",
+    "@weapp-tailwindcss/variants-v3",
+    "tailwind-variants"
+  ],
+  "install": {
+    "cli": "npx reborn-ui@latest add reborn-overlay"
+  },
+  "sourceRefs": {
+    "web": [
+      "app/components/reborn/ui/reborn-overlay/RebornOverlay.vue",
+      "app/components/reborn/ui/reborn-overlay/index.ts",
+      "app/components/reborn/ui/reborn-overlay/reborn-overlay.config.ts"
+    ],
+    "uniapp": [
+      "packages/uniapp-project/src/components/reborn-overlay/RebornOverlay.vue",
+      "packages/uniapp-project/src/components/reborn-overlay/index.ts",
+      "packages/uniapp-project/src/components/reborn-overlay/reborn-overlay.config.ts"
+    ]
+  },
+  "docPath": "content/2.components/miscellaneous/reborn-overlay.md",
+  "_meta": {
+    "contentHash": "01d380ebff9f82210fd41a9dddaa40bb5a588d3f",
+    "hasOverride": true,
+    "extractors": {
+      "web": "ok",
+      "uniapp": "ok",
+      "docs": "found"
+    }
+  }
+}

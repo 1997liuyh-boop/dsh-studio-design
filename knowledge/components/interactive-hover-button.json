@@ -1,0 +1,79 @@
+{
+  "$schema": "../schema/component.schema.json",
+  "id": "interactive-hover-button",
+  "title": "交互悬停按钮",
+  "description": "用于悬停时产生动态过渡效果的文字按钮组件，文字经 text prop 传入。",
+  "category": "basic",
+  "tags": [
+    "css",
+    "tailwind",
+    "button",
+    "magic-ui"
+  ],
+  "platforms": [
+    "web"
+  ],
+  "props": [
+    {
+      "name": "text",
+      "type": "string",
+      "required": false,
+      "description": "按钮内部显示的文字。",
+      "default": "\"Button\""
+    },
+    {
+      "name": "class",
+      "type": "string",
+      "required": false,
+      "description": "用于样式的额外类名。",
+      "default": "\"\""
+    }
+  ],
+  "events": [],
+  "slots": [],
+  "exposes": [],
+  "examples": [
+    {
+      "title": "Web 演示",
+      "path": "app/components/reborn/examples/interactive-hover-button/InteractiveHoverButtonDemo.vue",
+      "source": "demo",
+      "platform": "web",
+      "code": "<script lang=\"ts\" setup></script>\n\n<template>\n  <div class=\"flex w-full items-center justify-center p-4\">\n    <InteractiveHoverButton />\n  </div>\n</template>\n\n<style></style>\n"
+    }
+  ],
+  "related": [],
+  "whenToUse": [
+    "落地页 CTA 按钮需要悬停过渡动效吸引点击时。",
+    "明暗模式站点中需要一个自适应配色的强调按钮。"
+  ],
+  "whenNotToUse": [
+    "常规业务按钮或跨端场景，改用 reborn-button。",
+    "需要点击波纹反馈，改用 ripple-button。",
+    "需要流光边框效果，改用 shimmer-button。"
+  ],
+  "pitfalls": [
+    "仅 web 端可用。",
+    "按钮文字通过 text prop 传入（默认 \"Button\"），没有默认插槽。",
+    "未定义 click 等事件，需通过原生事件透传处理点击。"
+  ],
+  "dependencies": [],
+  "install": {
+    "cli": "npx reborn-ui@latest add interactive-hover-button"
+  },
+  "sourceRefs": {
+    "web": [
+      "app/components/reborn/ui/interactive-hover-button/InteractiveHoverButton.vue",
+      "app/components/reborn/ui/interactive-hover-button/index.ts"
+    ]
+  },
+  "docPath": "content/2.components/button/interactive-hover-button.md",
+  "_meta": {
+    "contentHash": "622603c85818e213e434f434bb5233a9ea9be875",
+    "hasOverride": true,
+    "extractors": {
+      "web": "ok",
+      "uniapp": "absent",
+      "docs": "found"
+    }
+  }
+}

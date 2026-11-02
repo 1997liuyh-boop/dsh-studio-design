@@ -1,0 +1,81 @@
+{
+  "$schema": "../schema/component.schema.json",
+  "id": "reborn-main",
+  "title": "主体布局",
+  "description": "用于渲染语义化 main 页面主体区域、默认最小高度撑满一屏的布局组件，仅 web 端。",
+  "category": "navigation",
+  "tags": [],
+  "platforms": [
+    "web"
+  ],
+  "props": [
+    {
+      "name": "ui",
+      "type": "Partial<{\n        base: any\n    }>",
+      "required": false,
+      "description": "UI 样式调整 可用键（从源码抽取，以此为准）——Web：base。",
+      "default": "{}"
+    },
+    {
+      "name": "class",
+      "type": "any",
+      "required": false,
+      "description": "自定义类名"
+    }
+  ],
+  "events": [],
+  "slots": [
+    {
+      "name": "default",
+      "description": "容器内部插槽内容。"
+    }
+  ],
+  "exposes": [],
+  "examples": [
+    {
+      "title": "Web 演示",
+      "path": "app/components/reborn/examples/reborn-main/RebornMainDemo.vue",
+      "source": "demo",
+      "platform": "web",
+      "code": "<script setup lang=\"ts\">\n/**\n * 主体区域演示\n *\n * RebornMain 的职责是根据 --ui-header-height 变量自动撑起最小高度，\n * 视觉上本身不带任何样式，因此这里只用一条描边勾出它的边界，内部不再套填充盒。\n */\nconst features = [\n  { icon: \"lucide:layout\", title: \"自动最小高度\", desc: \"读取头部高度变量，保证内容不足时页面仍撑满视口。\" },\n  { icon: \"lucide:columns-3\", title: \"配合容器使用\", desc: \"内部通常嵌 RebornContainer 控制最大宽度与左右留白。\" },\n  { icon: \"lucide:sliders-horizontal\", title: \"样式完全交给业务\", desc: \"组件不预设背景与内边距，可自由通过 class 覆盖。\" },\n];\n</script>\n\n<template>\n  <div class=\"flex w-full min-w-0 flex-col\">\n    <DemoSection\n      title=\"基础用法\"\n      description=\"RebornMain 作为页面主体包裹层，最小高度为「视口高度 − 头部高度」；下方描边即它撑开的实际范围。\"\n    >\n      <DemoBlock layout=\"stack\">\n        <RebornMain class=\"border-default rounded-xl w-full border\">\n          <RebornContainer class=\"py-10\">\n            <div class=\"flex flex-col gap-8\">\n              <p class=\"text-muted mx-auto max-w-2xl text-center text-sm leading-relaxed\">\n                主体区域会自动占满剩余高度，页脚因此始终贴在视口底部，而不会在内容较少时上浮。\n              </p>\n\n              <div class=\"grid w-full gap-4 sm:grid-cols-2 lg:grid-cols-3\">\n                <div\n                  v-for=\"item in features\"\n                  :key=\"item.title\"\n                  class=\"flex flex-col items-start gap-2\"\n                >\n                  <Icon\n                    :name=\"item.icon\"\n                    class=\"text-primary size-5\"\n                  />\n                  <h4 class=\"text-default text-sm font-semibold\">\n                    {{ item.title }}\n                  </h4>\n                  <p class=\"text-muted text-sm leading-relaxed\">\n                    {{ item.desc }}\n                  </p>\n                </div>\n              </div>\n            </div>\n          </RebornContainer>\n        </RebornMain>\n      </DemoBlock>\n    </DemoSection>\n  </div>\n</template>\n"
+    }
+  ],
+  "related": [],
+  "whenToUse": [
+    "与 reborn-header / reborn-footer 搭配组织文档站、官网的页面主体区域。",
+    "需要语义化 main 标签并保证主体内容至少撑满一屏时。"
+  ],
+  "whenNotToUse": [
+    "uniapp 页面容器改用 reborn-page。",
+    "普通的限宽居中内容容器改用 reborn-container。"
+  ],
+  "pitfalls": [
+    "仅 web 端可用。",
+    "接口极简：仅 ui.base 与 class 两个配置项，内容全部走默认插槽。",
+    "默认样式仅 min-h-screen（最小高度撑满视口）；页面存在固定 Header 需扣除其高度时，可用 ui.base 覆盖为 min-h-[calc(100vh-var(--ui-header-height))]。"
+  ],
+  "dependencies": [
+    "clsx",
+    "tailwind-merge",
+    "tailwind-variants"
+  ],
+  "install": {
+    "cli": "npx reborn-ui@latest add reborn-main"
+  },
+  "sourceRefs": {
+    "web": [
+      "app/components/reborn/ui/reborn-main/RebornMain.vue",
+      "app/components/reborn/ui/reborn-main/reborn-main.config.ts"
+    ]
+  },
+  "docPath": "content/2.components/navigation/reborn-main.md",
+  "_meta": {
+    "contentHash": "87ff29ce514878d14aaf4cb9258afca518f3b0ee",
+    "hasOverride": true,
+    "extractors": {
+      "web": "ok",
+      "uniapp": "absent",
+      "docs": "found"
+    }
+  }
+}

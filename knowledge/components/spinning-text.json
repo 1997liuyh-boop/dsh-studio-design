@@ -1,0 +1,114 @@
+{
+  "$schema": "../schema/component.schema.json",
+  "id": "spinning-text",
+  "title": "旋转文字",
+  "description": "用于让一段文字沿圆形路径持续环绕旋转的动画组件。",
+  "category": "effect",
+  "tags": [
+    "css",
+    "tailwind",
+    "magic-ui"
+  ],
+  "platforms": [
+    "web"
+  ],
+  "props": [
+    {
+      "name": "text",
+      "type": "string",
+      "required": true,
+      "description": "沿圆周排列的文本。",
+      "default": "必填"
+    },
+    {
+      "name": "duration",
+      "type": "number",
+      "required": false,
+      "description": "完成一圈旋转动画的持续时间。",
+      "default": "10"
+    },
+    {
+      "name": "class",
+      "type": "string",
+      "required": false,
+      "description": "文字容器的自定义类名。",
+      "default": "\"\""
+    },
+    {
+      "name": "reverse",
+      "type": "boolean",
+      "required": false,
+      "description": "是否反向旋转。",
+      "default": "false"
+    },
+    {
+      "name": "radius",
+      "type": "number",
+      "required": false,
+      "description": "文字旋转路径的半径。",
+      "default": "5"
+    },
+    {
+      "name": "transition",
+      "type": "Transition",
+      "required": false,
+      "description": "动画的自定义过渡效果。"
+    },
+    {
+      "name": "variants",
+      "type": "{\n    container?: Variants;\n    item?: Variants;\n  }",
+      "required": false,
+      "description": "容器与每个字母的变体表（以 hidden / visible 为键），分别合并进内置变体"
+    }
+  ],
+  "events": [],
+  "slots": [],
+  "exposes": [],
+  "examples": [
+    {
+      "title": "Web 演示",
+      "path": "app/components/reborn/examples/spinning-text/SpinningTextDemo.vue",
+      "source": "demo",
+      "platform": "web",
+      "code": "<script lang=\"ts\" setup></script>\n\n<template>\n  <ClientOnly>\n    <div class=\"flex min-h-[350px] w-full items-center justify-center\">\n      <SpinningText text=\"learn more · earn more · grow more ·\" />\n    </div>\n  </ClientOnly>\n</template>\n<style scoped></style>\n"
+    }
+  ],
+  "related": [],
+  "whenToUse": [
+    "圆形徽章、印章式的旋转标语。",
+    "环绕 Logo 或按钮外圈循环转动的文字装饰。",
+    "需要通过 reverse、duration 控制旋转方向与转速的场景。"
+  ],
+  "whenNotToUse": [
+    "一组词轮换切换展示，改用 flip-words 或 morphing-text。",
+    "横向滚动的跑马灯文字，改用 reborn-marquee。"
+  ],
+  "pitfalls": [
+    "仅 web 端可用，依赖 motion-v，示例包裹在 ClientOnly 中使用。",
+    "text 为必填 prop；示例文本以「·」分隔且以其结尾，使环形首尾衔接自然。",
+    "duration 单位为秒（默认 10 秒一圈），radius 控制圆周半径（默认 5）。",
+    "可通过 transition 与 variants 自定义动画细节。"
+  ],
+  "dependencies": [
+    "motion-v"
+  ],
+  "install": {
+    "cli": "npx reborn-ui@latest add spinning-text"
+  },
+  "sourceRefs": {
+    "web": [
+      "app/components/reborn/ui/spinning-text/SpinningText.vue",
+      "app/components/reborn/ui/spinning-text/index.ts"
+    ]
+  },
+  "docPath": "content/2.components/text-animations/spinning-text.md",
+  "_meta": {
+    "contentHash": "52a2d163abaa88f20ac5161fc9f09eb7f93c834a",
+    "hasOverride": true,
+    "extractors": {
+      "web": "ok",
+      "uniapp": "absent",
+      "docs": "found"
+    }
+  }
+}

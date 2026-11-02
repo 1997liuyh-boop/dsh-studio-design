@@ -1,0 +1,416 @@
+{
+  "$schema": "../schema/component.schema.json",
+  "id": "reborn-input-number",
+  "title": "InputNumber 数字输入框",
+  "description": "用于在最小最大值范围内按步进增减数值的双端数字输入组件，支持四种形态变体、精度控制、步进倍数约束、键盘与滚轮增减、前后缀插槽与自定义增减图标。",
+  "category": "form",
+  "tags": [
+    "css",
+    "tailwind",
+    "input-number",
+    "uniapp"
+  ],
+  "platforms": [
+    "web",
+    "uniapp"
+  ],
+  "props": [
+    {
+      "name": "defaultValue",
+      "type": "number",
+      "required": false,
+      "description": "非受控默认值，未使用 `v-model` 时作为初始值。",
+      "default": "0"
+    },
+    {
+      "name": "min",
+      "type": "number",
+      "required": false,
+      "description": "允许的最小值，等于不限制下界。",
+      "default": "0"
+    },
+    {
+      "name": "max",
+      "type": "number",
+      "required": false,
+      "description": "允许的最大值，等于不限制上界。",
+      "default": "200"
+    },
+    {
+      "name": "step",
+      "type": "number",
+      "required": false,
+      "description": "每次增减的步进值。",
+      "default": "1"
+    },
+    {
+      "name": "disabled",
+      "type": "boolean",
+      "required": false,
+      "description": "是否禁用（输入框与加减按钮同时禁用）。",
+      "default": "false"
+    },
+    {
+      "name": "size",
+      "type": "typeof inputNumberSizes[number]",
+      "required": false,
+      "description": "尺寸档位，对应高度 24 / 32 / 40px。",
+      "default": "'md'"
+    },
+    {
+      "name": "color",
+      "type": "typeof inputNumberColors[number]",
+      "required": false,
+      "description": "聚焦环与按钮悬停的强调色。",
+      "default": "'primary'"
+    },
+    {
+      "name": "shape",
+      "type": "typeof inputNumberShapes[number]",
+      "required": false,
+      "description": "外形轮廓：circle 为胶囊圆角，square 为方角",
+      "default": "'circle'"
+    },
+    {
+      "name": "variant",
+      "type": "typeof inputNumberVariants[number]",
+      "required": false,
+      "description": "形态变体： outlined 白底描边（默认）／filled 灰底填充／borderless 无边框／underlined 仅下划线。 underlined 会强制压平圆角，此时 shape 不再生效。",
+      "default": "'outlined'"
+    },
+    {
+      "name": "precision",
+      "type": "number",
+      "required": false,
+      "description": "数值精度（保留的小数位数）。 当 precision 小于 step 的小数位时，按 step 的小数位生效，否则步进结果会被截断。 不传时沿用旧行为：inputType='digit' 保留两位小数，否则不做定长补零。"
+    },
+    {
+      "name": "ui",
+      "type": "Partial<{\n    wrapper: ClassValue\n    button: ClassValue\n    stack: ClassValue\n    stackButton: ClassValue\n    input: ClassValue\n    divider: ClassValue\n    prefix: ClassValue\n    suffix: ClassValue\n    icon: ClassValue\n  }>",
+      "required": false,
+      "description": "细粒度样式覆盖，键位见「自定义样式（ui）」。 可用键（从源码抽取，以此为准）——Web：button、divider、icon*、input、prefix、stack、stackButton、suffix、wrapper。UniApp：button、divider、icon、input、prefix、stack、stackButton、suffix、wrapper。 带 * 的键对应插槽兜底节点：填了同名插槽，组件自带的节点被替换，这个键随之失效。",
+      "default": "() => ({})"
+    },
+    {
+      "name": "controlsPosition",
+      "type": "'left' | 'right'",
+      "required": false,
+      "description": "控制按钮位置：默认左右分列，'left' / 'right' 为在对应侧上下堆叠， 堆叠按钮与输入区之间以分割线（gray-4）隔开。 端差异：触屏端没有 hover，堆叠按钮为常显；web 端为悬停 / 聚焦时滑入显示。"
+    },
+    {
+      "name": "readonly",
+      "type": "boolean",
+      "required": false,
+      "description": "是否允许直接在输入框键入（与原生 readonly 语义相反）：默认 true 可键入，设为 false 后输入框只读、仅能通过按钮增减",
+      "default": "true"
+    },
+    {
+      "name": "placeholder",
+      "type": "string",
+      "required": false,
+      "description": "输入框占位文本",
+      "default": "''"
+    },
+    {
+      "name": "inputType",
+      "type": "'digit' | 'number'",
+      "required": false,
+      "description": "键盘类型：number 为整数数字键盘，digit 为带小数点的数字键盘（digit 模式下数值自动保留两位小数）",
+      "default": "'number'"
+    },
+    {
+      "name": "keyboard",
+      "type": "boolean",
+      "required": false,
+      "description": "是否启用键盘增减（↑ / ↓ 按 step 步进）。 端能力限制：仅 H5 生效。小程序与 App 的原生输入框不派发 keydown 事件， 该端上此属性只影响 Enter 提交之外的行为，实际无可拦截的按键。",
+      "default": "true"
+    },
+    {
+      "name": "changeOnWheel",
+      "type": "boolean",
+      "required": false,
+      "description": "是否启用鼠标滚轮增减。 端能力限制：uniapp 侧为空实现。小程序与 App 无鼠标滚轮事件， 保留该属性仅为与 web 端保持同名同签名，便于同一份业务代码跨端复用。",
+      "default": "false"
+    },
+    {
+      "name": "customClass",
+      "type": "any",
+      "required": false,
+      "description": "追加到根节点的自定义类名（等价于 web 端的 class）"
+    },
+    {
+      "name": "modelValue",
+      "type": "number",
+      "required": false,
+      "description": "双向绑定值",
+      "vModel": true,
+      "default": "undefined"
+    },
+    {
+      "name": "stepStrictly",
+      "type": "boolean",
+      "required": false,
+      "description": "是否只能输入 step 的倍数；开启后提交时会把数值就近吸附到最近的倍数",
+      "default": "false"
+    },
+    {
+      "name": "controls",
+      "type": "boolean",
+      "required": false,
+      "description": "是否使用增减控制按钮",
+      "default": "true"
+    },
+    {
+      "name": "hideButton",
+      "type": "boolean",
+      "required": false,
+      "description": "是否隐藏增减按钮；与 controls=false 等效，任一成立即隐藏",
+      "default": "false"
+    },
+    {
+      "name": "modelEvent",
+      "type": "\"change\" | \"input\"",
+      "required": false,
+      "description": "绑定值的更新时机。 'change'（默认）失焦或按下 Enter 时更新；'input' 键入时即时更新， 此模式下键入值允许临时超出 min/max，失焦时统一修正。",
+      "default": "\"change\""
+    },
+    {
+      "name": "name",
+      "type": "string",
+      "required": false,
+      "description": "原生 name"
+    },
+    {
+      "name": "ariaLabel",
+      "type": "string",
+      "required": false,
+      "description": "原生 aria-label"
+    },
+    {
+      "name": "id",
+      "type": "string",
+      "required": false,
+      "description": "原生 id"
+    },
+    {
+      "name": "inputmode",
+      "type": "InputNumberInputMode",
+      "required": false,
+      "description": "原生 inputmode，默认 decimal 以便移动端唤起数字键盘",
+      "default": "\"decimal\""
+    },
+    {
+      "name": "tabindex",
+      "type": "string | number",
+      "required": false,
+      "description": "原生 tabindex",
+      "default": "0"
+    },
+    {
+      "name": "valueOnClear",
+      "type": "number | null | \"min\" | \"max\"",
+      "required": false,
+      "description": "输入框被清空时回填的值：'min' / 'max' 取对应边界，数字取该值，null 置空"
+    },
+    {
+      "name": "validateEvent",
+      "type": "boolean",
+      "required": false,
+      "description": "是否触发所在表单项的校验",
+      "default": "true"
+    },
+    {
+      "name": "align",
+      "type": "(typeof inputNumberAligns)[number]",
+      "required": false,
+      "description": "输入文本对齐",
+      "default": "\"center\""
+    },
+    {
+      "name": "disabledScientific",
+      "type": "boolean",
+      "required": false,
+      "description": "禁用科学计数法输入：键入的 e / E 会被剔除",
+      "default": "false"
+    },
+    {
+      "name": "formatter",
+      "type": "(value: number | string) => string",
+      "required": false,
+      "description": "展示值格式化，如 (v) => `¥ ${v}`；需与 parser 配对使用"
+    },
+    {
+      "name": "parser",
+      "type": "(text: string) => string",
+      "required": false,
+      "description": "从格式化文本中解析出数值，与 formatter 配对使用"
+    },
+    {
+      "name": "class",
+      "type": "any",
+      "required": false,
+      "description": "追加到根节点的自定义类名（宽度默认 `w-full`，需固定宽度时在此传入，如 `w-40`）。"
+    }
+  ],
+  "events": [
+    {
+      "name": "change",
+      "payload": "[value: number]",
+      "description": "绑定值真正发生变化时触发，同时给出变化前的值。"
+    },
+    {
+      "name": "input",
+      "payload": "[event: any]",
+      "description": "键入过程中透传原生 input 事件对象，此时数值**尚未**做范围与精度修正。"
+    },
+    {
+      "name": "blur",
+      "payload": "[event: any]",
+      "description": "输入框失焦并完成数值修正后触发。"
+    },
+    {
+      "name": "focus",
+      "payload": "[event: any]",
+      "description": "输入框获得焦点时触发，透传原生事件对象。"
+    },
+    {
+      "name": "update:modelValue",
+      "description": "modelValue 变化时触发（v-model 同步）"
+    }
+  ],
+  "slots": [
+    {
+      "name": "minus",
+      "description": "替换减按钮内的图标，`iconClass` 为当前尺寸的图标类名。"
+    },
+    {
+      "name": "decrease-icon",
+      "description": "旧插槽名，等价于 `minus`，仅在未提供 `minus` 时回退使用。"
+    },
+    {
+      "name": "prefix",
+      "description": "输入框内的头部内容，不参与数值解析。"
+    },
+    {
+      "name": "suffix",
+      "description": "输入框内的尾部内容，不参与数值解析。"
+    },
+    {
+      "name": "plus",
+      "description": "替换加按钮内的图标，`iconClass` 为当前尺寸的图标类名。"
+    },
+    {
+      "name": "increase-icon",
+      "description": "旧插槽名，等价于 `plus`，仅在未提供 `plus` 时回退使用。"
+    },
+    {
+      "name": "decrement",
+      "props": "(props: { iconClass: string }) => any",
+      "description": "minus 的旧插槽名，保留以兼容既有用法"
+    },
+    {
+      "name": "increment",
+      "props": "(props: { iconClass: string }) => any",
+      "description": "plus 的旧插槽名，保留以兼容既有用法"
+    }
+  ],
+  "exposes": [
+    {
+      "name": "focus",
+      "description": "使输入框获得焦点，可指定 cursor 落位"
+    },
+    {
+      "name": "blur",
+      "description": ""
+    },
+    {
+      "name": "inputRef",
+      "description": "内部原生 input 元素引用"
+    }
+  ],
+  "examples": [
+    {
+      "title": "Web 演示",
+      "path": "app/components/reborn/examples/reborn-input-number/RebornInputNumberDemo.vue",
+      "source": "demo",
+      "platform": "web",
+      "code": "<script setup lang=\"ts\">\nimport { ref, shallowRef, useTemplateRef } from 'vue';\nimport {\n  inputNumberAligns,\n  inputNumberColors,\n  inputNumberShapes,\n  inputNumberSizes,\n  inputNumberVariants,\n} from \"~/components/reborn/ui/reborn-input-number/reborn-input-number.config\";\nimport RebornInputNumber from \"~/components/reborn/ui/reborn-input-number/RebornInputNumber.vue\";\n\n// ─── 交互演练场 ─────────────────────────────────────────────────\n\n/** 演练场默认状态 */\nconst defaultState: Record<string, any> = {\n  value: 10,\n  size: \"md\",\n  color: \"primary\",\n  variant: \"outlined\",\n  shape: \"square\",\n  align: \"center\",\n  min: 0,\n  max: 100,\n  step: 1,\n  stepStrictly: false,\n  controlsPosition: \"\",\n  modelEvent: \"change\",\n  keyboard: true,\n  changeOnWheel: false,\n  hideButton: false,\n  disabled: false,\n  readonly: false,\n};\n\nconst state = ref<Record<string, any>>({ ...defaultState });\n\n/** 最近一次 change 事件的参数，回调形如 (新值, 旧值) */\nconst lastChange = shallowRef<{ value: number | null; oldValue: number | null } | null>(null);\n\nfunction handleChange(value: number | null, oldValue: number | null) {\n  lastChange.value = { value, oldValue };\n}\n\n/** 重置演练场配置 */\nfunction resetState() {\n  state.value = { ...defaultState };\n  lastChange.value = null;\n}\n\n/** 演练场控制面板配置 */\nconst controls: any = [\n  {\n    title: \"基础属性\",\n    children: [\n      {\n        label: \"尺寸规格\",\n        key: \"size\",\n        component: \"select\" as const,\n        defaultValue: \"md\",\n        props: {\n          options: inputNumberSizes.map((s) => ({ label: s.toUpperCase(), value: s })),\n        },\n      },\n      {\n        label: \"配色方案\",\n        key: \"color\",\n        component: \"select\" as const,\n        defaultValue: \"primary\",\n        props: {\n          options: inputNumberColors.map((c) => ({ label: c, value: c })),\n        },\n      },\n      {\n        label: \"形态变体\",\n        key: \"variant\",\n        component: \"select\" as const,\n        defaultValue: \"outlined\",\n        props: {\n          options: inputNumberVariants.map((v) => ({ label: v, value: v })),\n        },\n      },\n      {\n        label: \"形状轮廓\",\n        key: \"shape\",\n        component: \"select\" as const,\n        defaultValue: \"square\",\n        props: {\n          options: inputNumberShapes.map((s) => ({ label: s, value: s })),\n        },\n      },\n      {\n        label: \"文本对齐\",\n        key: \"align\",\n        component: \"select\" as const,\n        defaultValue: \"center\",\n        props: {\n          options: inputNumberAligns.map((a) => ({ label: a, value: a })),\n        },\n      },\n    ],\n  },\n  {\n    title: \"数值控制\",\n    children: [\n      { label: \"最小值\", key: \"min\", component: \"input-number\" as const, defaultValue: 0, props: { align: \"left\", hideButton: true } },\n      { label: \"最大值\", key: \"max\", component: \"input-number\" as const, defaultValue: 100, props: { align: \"left\", hideButton: true } },\n      { label: \"步长\", key: \"step\", component: \"input-number\" as const, defaultValue: 1, props: { align: \"left\", hideButton: true } },\n      { label: \"仅允许步进倍数（stepStrictly）\", key: \"stepStrictly\", component: \"checkbox\" as const, defaultValue: false },\n      {\n        label: \"更新时机（modelEvent）\",\n        key: \"modelEvent\",\n        component: \"select\" as const,\n        defaultValue: \"change\",\n        props: {\n          options: [\n            { label: \"change（失焦 / 回车）\", value: \"change\" },\n            { label: \"input（键入即时）\", value: \"input\" },\n          ],\n        },\n      },\n      { label: \"键盘增减（keyboard）\", key: \"keyboard\", component: \"checkbox\" as const, defaultValue: true },\n      {\n        label: \"滚轮增减（changeOnWheel）\",\n        key: \"changeOnWheel\",\n        component: \"checkbox\" as const,\n        defaultValue: false,\n      },\n    ],\n  },\n  {\n    title: \"按钮与状态\",\n    children: [\n      {\n        label: \"按钮位置\",\n        key: \"controlsPosition\",\n        component: \"select\" as const,\n        defaultValue: \"\",\n        // 空串表示未传该参数（保持左右分列），不写入传参明细\n        codeSkipEmpty: true,\n        props: {\n          options: [\n            { label: \"左右分列（默认）\", value: \"\" },\n            { label: \"左侧堆叠（left，悬停显示）\", value: \"left\" },\n            { label: \"右侧堆叠（right，悬停显示）\", value: \"right\" },\n          ],\n        },\n      },\n      { label: \"隐藏按钮（hideButton）\", key: \"hideButton\", component: \"checkbox\" as const, defaultValue: false },\n      { label: \"禁用状态\", key: \"disabled\", component: \"checkbox\" as const, defaultValue: false },\n      { label: \"只读（readonly）\", key: \"readonly\", component: \"checkbox\" as const, defaultValue: false },\n    ],\n  },\n];\n\n/** 传参明细由 Playground 按 controls 自动生成；这里只补 controls 之外的事件监听 */\nconst codeExtras = ['@change=\"handleChange\"'];\n\n// ─── 场景演示状态 ───────────────────────────────────────────────\n\n// 各 section 独立持有绑定值，避免调整一处示例牵连其他示例\n// 基础用法\nconst basicValue = shallowRef(5);\n\nconst shapeValue = shallowRef(5);\nconst variantValue = shallowRef(12);\nconst layoutValue = shallowRef(5);\nconst customValue = shallowRef(8);\nconst themedValue = shallowRef(8);\n\n// 禁用与只读\nconst lockedValue = shallowRef(42);\n\n// 精度：step 为 0.1 时即便 precision 传 0，也会按 step 的小数位保留 1 位\nconst precisionValue = shallowRef(1.5);\nconst stepPrecisionValue = shallowRef(1);\n\n// 前后缀\nconst priceValue = shallowRef(199);\nconst weightValue = shallowRef(2.5);\n\n// 更新时机对比\nconst changeModeValue = shallowRef(50);\nconst inputModeValue = shallowRef(50);\n\n// 步进倍数\nconst strictlyValue = shallowRef(10);\n\n// 键盘与滚轮\nconst keyboardOnValue = shallowRef(30);\nconst keyboardOffValue = shallowRef(30);\nconst wheelValue = shallowRef(30);\n\n// 格式化与解析：formatter 只影响展示文本，parser 在提交前把文本还原为数值\nconst formattedValue = shallowRef(1234567);\nconst percentValue = shallowRef(60);\n\n/** 千分位格式化，如 1234567 → 1,234,567 */\nfunction formatThousands(v: number | string) {\n  return String(v).replace(/\\B(?=(\\d{3})+(?!\\d))/g, \",\");\n}\n\n/** 去掉千分位逗号，还原为可解析的数值文本 */\nfunction parseThousands(text: string) {\n  return text.replace(/,/g, \"\");\n}\n\n/** 百分比展示，如 60 → 60% */\nfunction formatPercent(v: number | string) {\n  return `${v}%`;\n}\n\n/** 去掉百分号，还原为可解析的数值文本 */\nfunction parsePercent(text: string) {\n  return text.replace(/%/g, \"\");\n}\n\n// focus(cursor) 演示\nconst cursorValue = shallowRef(1234);\nconst cursorInputRef = useTemplateRef<InstanceType<typeof RebornInputNumber>>(\"cursorInputRef\");\n\n/** 调用组件暴露的 focus()，按 cursor 决定焦点落位 */\nfunction focusWithCursor(cursor: \"start\" | \"end\" | \"all\") {\n  cursorInputRef.value?.focus({ cursor });\n}\n</script>\n\n<template>\n  <div class=\"flex w-full min-w-0 flex-col\">\n    <Playground\n      v-model=\"state\"\n      :controls=\"controls\"\n      :code-extras=\"codeExtras\"\n      component-name=\"RebornInputNumber\"\n      title=\"交互演练场\"\n      description=\"调节尺寸、配色、数值边界与更新时机，实时预览步进器的增减行为。\"\n    >\n      <template #tag>\n        <RebornButton size=\"sm\" variant=\"soft\" color=\"neutral\" @click=\"resetState\">\n          <template #leading>\n            <Icon name=\"lucide:rotate-ccw\" size=\"12\" />\n          </template>\n          重置配置\n        </RebornButton>\n      </template>\n\n      <div class=\"flex w-full flex-col items-center gap-4\">\n        <RebornInputNumber\n          v-model=\"state.value\"\n          class=\"max-w-sm\"\n          :size=\"state.size\"\n          :color=\"state.color\"\n          :variant=\"state.variant\"\n          :shape=\"state.shape\"\n          :align=\"state.align\"\n          :min=\"state.min\"\n          :max=\"state.max\"\n          :step=\"state.step\"\n          :step-strictly=\"state.stepStrictly\"\n          :model-event=\"state.modelEvent\"\n          :keyboard=\"state.keyboard\"\n          :change-on-wheel=\"state.changeOnWheel\"\n          :controls-position=\"state.controlsPosition || undefined\"\n          :hide-button=\"state.hideButton\"\n          :disabled=\"state.disabled\"\n          :readonly=\"state.readonly\"\n          @change=\"handleChange\"\n        />\n\n        <DemoNote tone=\"dimmed\">\n          绑定值：<code>{{ state.value ?? \"null\" }}</code>\n          <template v-if=\"lastChange\">\n            · 最近 <code>change</code>：<code>{{ lastChange.oldValue ?? \"null\" }}</code> →\n            <code>{{ lastChange.value ?? \"null\" }}</code>\n          </template>\n        </DemoNote>\n      </div>\n    </Playground>\n\n    <DemoSection title=\"基础用法\">\n      <template #description>\n        <code>v-model</code> 绑定数值，<code>min</code> / <code>max</code> 限定边界，<code>step</code> 决定每次增减的幅度；到达边界时对应按钮自动禁用。\n      </template>\n      <DemoBlock layout=\"grid\" :columns=\"2\" align=\"start\">\n        <DemoItem label=\"min=0 max=20 step=5\" mono>\n          <RebornInputNumber\n            v-model=\"basicValue\"\n            :min=\"0\"\n            :max=\"20\"\n            :step=\"5\"\n          />\n        </DemoItem>\n      </DemoBlock>\n    </DemoSection>\n\n    <DemoSection title=\"形状：shape\">\n      <template #description>\n        <code>shape</code> 控制外框圆角：circle 胶囊 / square 按尺寸取 sm / md / lg 圆角。\n        注意 <code>variant=\"underlined\"</code> 会强制压平圆角，此时 shape 不再生效。\n      </template>\n      <DemoBlock layout=\"grid\" :columns=\"2\" align=\"start\">\n        <DemoItem v-for=\"s in inputNumberShapes\" :key=\"s\" :label=\"s\" mono>\n          <RebornInputNumber v-model=\"shapeValue\" :shape=\"s\" color=\"secondary\" />\n        </DemoItem>\n      </DemoBlock>\n    </DemoSection>\n\n    <DemoSection title=\"形态：variant\">\n      <template #description>\n        <code>variant</code> 提供 outlined / filled / borderless / underlined 四种形态。\n      </template>\n      <DemoBlock layout=\"grid\" :columns=\"2\" align=\"start\">\n        <DemoItem v-for=\"v in inputNumberVariants\" :key=\"v\" :label=\"v\" mono>\n          <!-- borderless 无边框形态搭配左侧堆叠按钮，悬停时体验滑入效果 -->\n          <RebornInputNumber\n            v-model=\"variantValue\" :variant=\"v\" shape=\"square\" color=\"primary\"\n            :controls-position=\"v === 'borderless' ? 'left' : undefined\"\n          />\n        </DemoItem>\n      </DemoBlock>\n    </DemoSection>\n\n    <DemoSection title=\"禁用与只读：disabled / readonly\">\n      <template #description>\n        <code>disabled</code> 整体灰显且不可交互；<code>readonly</code> 可聚焦、可选中复制文本，但键入与按钮增减均被拦截。\n      </template>\n      <DemoBlock layout=\"grid\" :columns=\"2\" align=\"start\">\n        <DemoItem label=\"disabled\" mono>\n          <RebornInputNumber v-model=\"lockedValue\" disabled />\n        </DemoItem>\n\n        <DemoItem label=\"readonly\" mono>\n          <RebornInputNumber v-model=\"lockedValue\" readonly />\n        </DemoItem>\n      </DemoBlock>\n    </DemoSection>\n\n    <DemoSection title=\"数值精度：precision\">\n      <template #description>\n        <code>precision</code> 指定保留的小数位数。当 precision 小于 step 的小数位时，精度取 step 的小数位，否则步进结果会被截断。\n      </template>\n      <DemoBlock layout=\"grid\" :columns=\"2\" align=\"start\">\n        <DemoItem label=\"precision = 2，step = 1\" mono :note=\"`当前值：${precisionValue}`\">\n          <RebornInputNumber v-model=\"precisionValue\" :precision=\"2\" :step=\"1\" />\n        </DemoItem>\n\n        <DemoItem\n          label=\"precision = 0，step = 0.1 → 实际精度 1 位\" mono\n          :note=\"`当前值：${stepPrecisionValue}`\"\n        >\n          <RebornInputNumber v-model=\"stepPrecisionValue\" :precision=\"0\" :step=\"0.1\" />\n        </DemoItem>\n      </DemoBlock>\n    </DemoSection>\n\n    <DemoSection title=\"前缀与后缀插槽：prefix / suffix\">\n      <template #description>\n        <code>#prefix</code> 与 <code>#suffix</code> 插槽在输入框内部添加固定内容，不参与数值解析。\n      </template>\n      <DemoBlock layout=\"grid\" :columns=\"2\" align=\"start\">\n        <DemoItem label=\"货币前缀\">\n          <RebornInputNumber v-model=\"priceValue\" :min=\"0\" :step=\"10\" align=\"right\">\n            <template #prefix>\n              <span class=\"text-sm\">￥</span>\n            </template>\n          </RebornInputNumber>\n        </DemoItem>\n\n        <DemoItem label=\"单位后缀\">\n          <RebornInputNumber v-model=\"weightValue\" :min=\"0\" :step=\"0.5\" :precision=\"1\" align=\"right\">\n            <template #suffix>\n              <span class=\"text-sm\">kg</span>\n            </template>\n          </RebornInputNumber>\n        </DemoItem>\n      </DemoBlock>\n    </DemoSection>\n\n    <DemoSection title=\"格式化与解析：formatter / parser\">\n      <template #description>\n        <code>formatter</code> 决定输入框展示的文本，<code>parser</code> 负责在提交前把文本还原为数值，两者必须配对使用；\n        按钮步进与键入提交都会经过这对转换。\n      </template>\n      <DemoBlock layout=\"grid\" :columns=\"2\" align=\"start\">\n        <DemoItem label=\"千分位分隔\" :note=\"`绑定值：${formattedValue}`\">\n          <RebornInputNumber\n            v-model=\"formattedValue\" :min=\"0\" :step=\"1000\" align=\"right\" :formatter=\"formatThousands\"\n            :parser=\"parseThousands\"\n          />\n        </DemoItem>\n\n        <DemoItem label=\"百分比展示\" :note=\"`绑定值：${percentValue}`\">\n          <RebornInputNumber\n            v-model=\"percentValue\" :min=\"0\" :max=\"100\" :step=\"5\" :formatter=\"formatPercent\"\n            :parser=\"parsePercent\"\n          />\n        </DemoItem>\n      </DemoBlock>\n    </DemoSection>\n\n    <DemoSection title=\"增减图标插槽：minus / plus\">\n      <template #description>\n        <code>#plus</code> 与 <code>#minus</code> 插槽替换增减按钮内的图标，作用域参数 <code>iconClass</code>\n        是当前尺寸对应的图标类名。\n      </template>\n      <DemoBlock layout=\"grid\" :columns=\"2\" align=\"start\">\n        <DemoItem label=\"爱心图标\">\n          <RebornInputNumber v-model=\"customValue\" color=\"error\">\n            <template #minus=\"{ iconClass }\">\n              <Icon name=\"lucide:heart-minus\" :class=\"iconClass\" />\n            </template>\n            <template #plus=\"{ iconClass }\">\n              <Icon name=\"lucide:heart-plus\" :class=\"iconClass\" />\n            </template>\n          </RebornInputNumber>\n        </DemoItem>\n\n        <DemoItem label=\"左右箭头\">\n          <RebornInputNumber v-model=\"customValue\" shape=\"square\" color=\"info\">\n            <template #minus=\"{ iconClass }\">\n              <Icon name=\"lucide:arrow-left\" :class=\"iconClass\" />\n            </template>\n            <template #plus=\"{ iconClass }\">\n              <Icon name=\"lucide:arrow-right\" :class=\"iconClass\" />\n            </template>\n          </RebornInputNumber>\n        </DemoItem>\n      </DemoBlock>\n    </DemoSection>\n\n    <DemoSection title=\"绑定值更新时机：model-event\">\n      <template #description>\n        默认在失焦或按下 Enter 时更新绑定值；<code>model-event=\"input\"</code> 改为键入时即时更新，\n        此时允许临时超出 min / max，失焦时自动修正。\n      </template>\n      <DemoBlock layout=\"grid\" :columns=\"2\" align=\"start\">\n        <DemoItem label=\"change（默认，失焦 / 回车提交）\" mono :note=\"`绑定值：${changeModeValue}`\">\n          <RebornInputNumber v-model=\"changeModeValue\" :min=\"0\" :max=\"100\" />\n        </DemoItem>\n\n        <DemoItem label=\"input（键入即时，失焦修正）\" mono :note=\"`绑定值：${inputModeValue}`\">\n          <RebornInputNumber v-model=\"inputModeValue\" model-event=\"input\" :min=\"0\" :max=\"100\" />\n        </DemoItem>\n      </DemoBlock>\n    </DemoSection>\n\n    <DemoSection title=\"步进倍数与按钮布局：step-strictly / controls-position\">\n      <template #description>\n        <code>step-strictly</code> 只允许步进的倍数，键入非倍数值会在提交时就近吸附；\n        <code>controls-position</code> 支持 left / right 上下堆叠，堆叠时按钮默认隐藏，悬停或聚焦时从所在侧滑入；\n        <code>hide-button</code> 隐藏按钮只保留数字输入。\n      </template>\n      <DemoBlock layout=\"grid\" :columns=\"2\" align=\"start\">\n        <DemoItem label=\"step-strictly，step = 5（试着输入 13）\" mono :note=\"`绑定值：${strictlyValue}`\">\n          <RebornInputNumber v-model=\"strictlyValue\" :step=\"5\" step-strictly :min=\"0\" :max=\"100\" />\n        </DemoItem>\n\n        <DemoItem label=\"hide-button（纯数字输入）\" mono>\n          <RebornInputNumber v-model=\"layoutValue\" shape=\"square\" hide-button align=\"left\" />\n        </DemoItem>\n\n        <DemoItem label=\"controls-position=&quot;left&quot;（悬停显示）\" mono>\n          <RebornInputNumber v-model=\"layoutValue\" shape=\"square\" controls-position=\"left\" align=\"left\" />\n        </DemoItem>\n\n        <DemoItem label=\"controls-position=&quot;right&quot;（悬停显示）\" mono>\n          <RebornInputNumber v-model=\"layoutValue\" shape=\"square\" controls-position=\"right\" align=\"left\" />\n        </DemoItem>\n      </DemoBlock>\n    </DemoSection>\n\n    <DemoSection title=\"键盘与滚轮：keyboard / change-on-wheel\">\n      <template #description>\n        <code>keyboard</code> 默认开启，聚焦后按 ↑ / ↓ 即按 step 步进；设为 false 后方向键回归原生文本框行为。\n        <code>change-on-wheel</code> 开启鼠标滚轮增减，仅在输入框已聚焦时接管滚动，未聚焦时不影响页面滚动。\n      </template>\n      <DemoBlock layout=\"grid\" align=\"start\">\n        <DemoItem label=\"keyboard 默认开启（聚焦后按 ↑ / ↓）\" mono :note=\"`绑定值：${keyboardOnValue}`\">\n          <RebornInputNumber v-model=\"keyboardOnValue\" shape=\"square\" :min=\"0\" :max=\"100\" />\n        </DemoItem>\n\n        <DemoItem label=\":keyboard=&quot;false&quot;（方向键不再步进）\" mono :note=\"`绑定值：${keyboardOffValue}`\">\n          <RebornInputNumber v-model=\"keyboardOffValue\" shape=\"square\" :keyboard=\"false\" :min=\"0\" :max=\"100\" />\n        </DemoItem>\n\n        <DemoItem label=\"change-on-wheel（先聚焦，再滚滚轮）\" mono :note=\"`绑定值：${wheelValue}`\">\n          <RebornInputNumber v-model=\"wheelValue\" shape=\"square\" change-on-wheel :min=\"0\" :max=\"100\" />\n        </DemoItem>\n      </DemoBlock>\n    </DemoSection>\n\n    <DemoSection title=\"程序化聚焦：focus 方法\">\n      <template #description>\n        组件通过 <code>defineExpose</code> 暴露 <code>focus()</code>，可传 cursor 决定焦点落位：start 光标置于文本首，\n        end 置于文本尾，all 全选文本。两种调用形式等价：<code>focus('all')</code> 与\n        <code>focus({ cursor: 'all' })</code>。\n      </template>\n      <DemoBlock layout=\"stack\" align=\"start\">\n        <RebornInputNumber\n          ref=\"cursorInputRef\" v-model=\"cursorValue\" shape=\"square\" align=\"left\" hide-button\n          class=\"max-w-xs\"\n        />\n        <div class=\"flex flex-wrap gap-3\">\n          <RebornButton variant=\"outlined\" size=\"sm\" label=\"cursor: start\" @click=\"focusWithCursor('start')\" />\n          <RebornButton variant=\"outlined\" size=\"sm\" label=\"cursor: end\" @click=\"focusWithCursor('end')\" />\n          <RebornButton variant=\"outlined\" size=\"sm\" label=\"cursor: all\" @click=\"focusWithCursor('all')\" />\n        </div>\n      </DemoBlock>\n    </DemoSection>\n\n    <DemoSection title=\"自定义样式：ui\">\n      <template #description>\n        <code>ui</code> 可逐槽覆盖 wrapper / input / button / divider / prefix / suffix 的类名。\n      </template>\n      <DemoBlock layout=\"grid\" align=\"start\">\n        <DemoItem label=\"甜美主题\">\n          <RebornInputNumber\n            v-model=\"themedValue\" :ui=\"{\n              wrapper: 'bg-default ring-rose-200 focus-within:ring-rose-400 rounded-xl h-14 border-0',\n              button: 'text-rose-400 hover:bg-rose-50 active:scale-95 transition-all',\n              input: 'text-rose-600 font-black',\n            }\"\n          >\n            <template #minus=\"{ iconClass }\">\n              <Icon name=\"lucide:heart-minus\" :class=\"iconClass\" />\n            </template>\n            <template #plus=\"{ iconClass }\">\n              <Icon name=\"lucide:heart-plus\" :class=\"iconClass\" />\n            </template>\n          </RebornInputNumber>\n        </DemoItem>\n\n        <DemoItem label=\"科技霓虹 · 直角 + 等宽字体\">\n          <!-- 灰阶在明暗之间对偶翻转，恒深底必须写成 bg-gray-10 dark:bg-gray-1，否则暗色模式下会翻成浅底白字 -->\n          <RebornInputNumber\n            v-model=\"themedValue\" :ui=\"{\n              wrapper:\n                'bg-gray-10 dark:bg-gray-1 ring-indigo-500/50 focus-within:ring-indigo-400 rounded-none h-12 border-0',\n              input: 'text-white font-mono leading-none',\n              button: 'text-indigo-400 hover:bg-indigo-500/20 transition-all',\n              divider: 'bg-indigo-500/20',\n            }\"\n          >\n            <template #plus>\n              <Icon name=\"lucide:arrow-right\" class=\"size-4\" />\n            </template>\n            <template #minus>\n              <Icon name=\"lucide:arrow-left\" class=\"size-4\" />\n            </template>\n          </RebornInputNumber>\n        </DemoItem>\n\n        <DemoItem label=\"极简无界 · 仅保留下划线\">\n          <RebornInputNumber\n            v-model=\"themedValue\" class=\"font-bold\" :ui=\"{\n              wrapper:\n                'bg-transparent ring-0 focus-within:ring-0 border-b-2 border-default rounded-none h-12 transition-all focus-within:border-inverted',\n              button: 'text-dimmed hover:text-highlighted',\n              input: 'font-black text-highlighted',\n              divider: 'hidden',\n            }\"\n          />\n        </DemoItem>\n      </DemoBlock>\n    </DemoSection>\n  </div>\n</template>\n"
+    },
+    {
+      "title": "UniApp 演示",
+      "path": "packages/uniapp-project/src/pages/reborn-input-number/RebornInputNumberDemo.vue",
+      "source": "demo",
+      "platform": "uniapp",
+      "code": "<script setup lang=\"ts\">\nimport { reactive, ref, shallowRef } from 'vue'\nimport ReButton from '@/components/reborn-button/RebornButton.vue'\nimport RebornCard from '@/components/reborn-card/RebornCard.vue'\nimport RebornInputNumber from '@/components/reborn-input-number/RebornInputNumber.vue'\nimport RebornPage from '@/components/reborn-page/RebornPage.vue'\n\nconst basicValue = shallowRef(1)\nconst disabledValue = shallowRef(1)\nconst stepValue = shallowRef(10)\nconst dynamicValue = shallowRef(5)\nconst colorValue = shallowRef(5)\nconst fullWidthValue = shallowRef(5)\nconst narrowValue = shallowRef(5)\nconst wideValue = shallowRef(5)\nconst customValue = shallowRef(5)\nconst darkValue = shallowRef(5)\nconst smallValue = shallowRef(5)\n\n// 动态配置仅影响本卡片的输入框。\nconst currentSize = shallowRef<typeof sizes[number]>('sm')\nconst currentColor = shallowRef<typeof colors[number]>('primary')\nconst currentShape = shallowRef<typeof shapes[number]>('circle')\n\nconst sizes = ['sm', 'md', 'lg'] as const\nconst colors = ['primary', 'secondary', 'success', 'warning', 'error', 'info', 'neutral'] as const\nconst shapes = ['square', 'circle'] as const\nconst variants = ['outlined', 'filled', 'borderless', 'underlined'] as const\nconst cursors = ['start', 'end', 'all'] as const\n\nconst variantValues = reactive({ outlined: 3, filled: 3, borderless: 3, underlined: 3 })\n// 按钮位置（左 / 右堆叠）\nconst rightPositionValue = shallowRef(5)\nconst leftPositionValue = shallowRef(5)\nconst precisionValue = shallowRef(1.5)\nconst prefixValue = shallowRef(1.5)\nconst keyboardValue = shallowRef(8)\nconst focusValue = shallowRef(8)\n\n/** 组件实例引用，用于调用暴露出的 focus(cursor) */\nconst focusInputRef = ref<InstanceType<typeof RebornInputNumber> | null>(null)\n\n/** 按指定落位方式聚焦输入框 */\nfunction focusAt(cursor: typeof cursors[number]) {\n  focusInputRef.value?.focus(cursor)\n}\n</script>\n\n<template>\n  <RebornPage title=\"数字输入框\" description=\"带有加减控制的数字输入组件。\">\n    <!-- Dynamic Configuration -->\n    <RebornCard title=\"动态配置\" custom-class=\"flex flex-col gap-2\">\n      <!-- Size -->\n      <view class=\"space-y-3\">\n        <text class=\"text-sm text-slate-500\">尺寸 (Size)</text>\n        <view class=\"flex flex-wrap gap-2\">\n          <ReButton\n            v-for=\"size in sizes\" :key=\"size\" size=\"xs\"\n            :variant=\"currentSize === size ? 'filled' : 'outlined'\"\n            :color=\"currentSize === size ? 'primary' : 'neutral'\" @tap=\"currentSize = size\"\n          >\n            {{ size }}\n          </ReButton>\n        </view>\n      </view>\n\n      <!-- Shape -->\n      <view class=\"space-y-3\">\n        <text class=\"text-sm text-slate-500\">形状 (Shape)</text>\n        <view class=\"flex flex-wrap gap-2\">\n          <ReButton\n            v-for=\"shape in shapes\" :key=\"shape\" size=\"xs\"\n            :variant=\"currentShape === shape ? 'filled' : 'outlined'\"\n            :color=\"currentShape === shape ? 'primary' : 'neutral'\" @tap=\"currentShape = shape\"\n          >\n            {{ shape }}\n          </ReButton>\n        </view>\n      </view>\n\n      <!-- Color -->\n      <view class=\"space-y-3\">\n        <text class=\"text-sm text-slate-500\">颜色 (Color)</text>\n        <view class=\"flex flex-wrap gap-2\">\n          <view\n            v-for=\"c in colors\" :key=\"c\"\n            class=\"\n              size-6 cursor-pointer rounded-full ring-2 ring-transparent\n              ring-offset-2 transition-all\n            \"\n            :class=\"[\n              `\n                bg-${c}\n              `,\n              currentColor === c ? 'scale-110 ring-slate-400' : `\n                hover:scale-110\n              `,\n            ]\" :style=\"{ backgroundColor: `var(--color-${c}, ${c === 'neutral' ? '#737373' : ''})` }\"\n            @click=\"currentColor = c\"\n          />\n        </view>\n      </view>\n\n      <view class=\"flex justify-center pt-4\">\n        <RebornInputNumber v-model=\"dynamicValue\" :size=\"currentSize\" :color=\"currentColor\" :shape=\"currentShape\" />\n      </view>\n    </RebornCard>\n\n    <!-- Basic -->\n    <RebornCard title=\"基础用法\" custom-class=\"space-y-3\">\n      <view class=\"flex items-center justify-between\">\n        <text\n          class=\"\n            text-sm text-slate-600\n            dark:text-gray-5\n          \"\n        >\n          默认\n        </text>\n        <RebornInputNumber v-model=\"basicValue\" />\n      </view>\n      <view class=\"flex items-center justify-between\">\n        <text\n          class=\"\n            text-sm text-slate-600\n            dark:text-gray-5\n          \"\n        >\n          禁用状态\n        </text>\n        <RebornInputNumber v-model=\"disabledValue\" disabled />\n      </view>\n    </RebornCard>\n\n    <!-- Limits & Step -->\n    <RebornCard title=\"限制与步长\" custom-class=\"space-y-3\">\n      <view class=\"flex items-center justify-between\">\n        <text\n          class=\"\n            text-sm text-slate-600\n            dark:text-gray-5\n          \"\n        >\n          Min 5, Max 20, Step 5\n        </text>\n        <RebornInputNumber v-model=\"stepValue\" :min=\"5\" :max=\"20\" :step=\"5\" />\n      </view>\n    </RebornCard>\n\n    <!-- Controls Position -->\n    <RebornCard title=\"按钮位置\" custom-class=\"space-y-3\">\n      <text class=\"text-sm text-slate-500\">\n        controls-position 支持 left / right 上下堆叠，堆叠按钮与输入区之间以分割线隔开（触屏端常显，web 端悬停滑入）。\n      </text>\n      <view class=\"flex items-center justify-between\">\n        <text\n          class=\"\n            text-sm text-slate-600\n            dark:text-gray-5\n          \"\n        >\n          右侧堆叠 right\n        </text>\n        <RebornInputNumber v-model=\"rightPositionValue\" controls-position=\"right\" shape=\"square\" />\n      </view>\n      <view class=\"flex items-center justify-between\">\n        <text\n          class=\"\n            text-sm text-slate-600\n            dark:text-gray-5\n          \"\n        >\n          左侧堆叠 left\n        </text>\n        <RebornInputNumber v-model=\"leftPositionValue\" controls-position=\"left\" shape=\"square\" />\n      </view>\n    </RebornCard>\n\n    <!-- Variant -->\n    <RebornCard title=\"形态变体\" custom-class=\"space-y-3\">\n      <text class=\"text-sm text-slate-500\">\n        outlined / filled / borderless / underlined，underlined 会强制压平圆角，此时 shape 不生效。\n      </text>\n      <view v-for=\"v in variants\" :key=\"v\" class=\"flex items-center justify-between\">\n        <text\n          class=\"\n            text-sm text-slate-600\n            dark:text-gray-5\n          \"\n        >\n          {{ v }}\n        </text>\n        <RebornInputNumber v-model=\"variantValues[v]\" :variant=\"v\" shape=\"square\" color=\"primary\" />\n      </view>\n    </RebornCard>\n\n    <!-- Precision & Prefix / Suffix -->\n    <RebornCard title=\"精度与前后缀\" custom-class=\"space-y-3\">\n      <view class=\"flex items-center justify-between\">\n        <text\n          class=\"\n            text-sm text-slate-600\n            dark:text-gray-5\n          \"\n        >\n          precision=2, step=0.5\n        </text>\n        <RebornInputNumber v-model=\"precisionValue\" :precision=\"2\" :step=\"0.5\" :max=\"10\" input-type=\"digit\" />\n      </view>\n      <view class=\"flex items-center justify-between\">\n        <text\n          class=\"\n            text-sm text-slate-600\n            dark:text-gray-5\n          \"\n        >\n          prefix / suffix 插槽\n        </text>\n        <RebornInputNumber v-model=\"prefixValue\" :max=\"10\" shape=\"square\">\n          <template #prefix>\n            <text>¥</text>\n          </template>\n          <template #suffix>\n            <text>元</text>\n          </template>\n        </RebornInputNumber>\n      </view>\n    </RebornCard>\n\n    <!-- Keyboard / Wheel / Focus -->\n    <RebornCard title=\"键盘、滚轮与焦点\" custom-class=\"space-y-3\">\n      <text class=\"text-sm text-slate-500\">\n        keyboard 控制 ↑ / ↓ 步进，仅 H5 生效：小程序与 App 的原生输入框不派发 keydown。\n        changeOnWheel 在 uniapp 侧为空实现，仅为与 web 端同名同签名而保留。\n      </text>\n      <view class=\"flex items-center justify-between\">\n        <text\n          class=\"\n            text-sm text-slate-600\n            dark:text-gray-5\n          \"\n        >\n          keyboard 关闭\n        </text>\n        <RebornInputNumber v-model=\"keyboardValue\" :keyboard=\"false\" :max=\"99\" />\n      </view>\n      <view class=\"flex items-center justify-between\">\n        <text\n          class=\"\n            text-sm text-slate-600\n            dark:text-gray-5\n          \"\n        >\n          focus(cursor)\n        </text>\n        <RebornInputNumber ref=\"focusInputRef\" v-model=\"focusValue\" :max=\"99\" shape=\"square\" />\n      </view>\n      <view class=\"flex flex-wrap gap-2\">\n        <ReButton v-for=\"c in cursors\" :key=\"c\" size=\"xs\" variant=\"outlined\" color=\"primary\" @tap=\"focusAt(c)\">\n          focus('{{ c }}')\n        </ReButton>\n      </view>\n    </RebornCard>\n\n    <!-- Custom Color -->\n    <RebornCard title=\"自定义颜色\" custom-class=\"space-y-3\">\n      <view class=\"flex items-center justify-between\">\n        <text\n          class=\"\n            text-sm text-slate-600\n            dark:text-gray-5\n          \"\n        >\n          Purple Theme\n        </text>\n        <RebornInputNumber\n          v-model=\"colorValue\" :ui=\"{\n            wrapper: 'ring-purple-500 dark:ring-purple-500 focus-within:ring-purple-500/20',\n            divider: 'bg-purple-500 dark:bg-purple-500!',\n            button: 'hover:text-purple-600 dark:hover:text-purple-600',\n          }\"\n        />\n      </view>\n    </RebornCard>\n\n    <!-- Width Adjustment -->\n    <RebornCard title=\"宽度调整\" custom-class=\"space-y-3\">\n      <!-- Full Width -->\n      <view class=\"space-y-2\">\n        <text class=\"text-sm text-slate-500\">全宽 (Full Width)</text>\n        <RebornInputNumber v-model=\"fullWidthValue\" :ui=\"{ wrapper: 'w-full' }\" />\n      </view>\n\n      <view class=\"flex gap-2\">\n        <!-- Narrow -->\n        <view class=\"space-y-2\">\n          <text class=\"text-sm text-slate-500\">窄 (Narrow)</text>\n          <RebornInputNumber v-model=\"narrowValue\" :ui=\"{ input: 'w-8' }\" />\n        </view>\n        <!-- Wide -->\n        <view class=\"space-y-2\">\n          <text class=\"text-sm text-slate-500\">宽 (Wide)</text>\n          <RebornInputNumber v-model=\"wideValue\" :ui=\"{ input: 'w-24' }\" />\n        </view>\n      </view>\n    </RebornCard>\n\n    <!-- Fully Customized -->\n    <RebornCard title=\"完全自定义\" custom-class=\"space-y-3\">\n      <!-- Custom Button & Icon Size -->\n      <view class=\"space-y-2\">\n        <text class=\"text-sm text-slate-500\">自定义按钮与图标大小</text>\n        <RebornInputNumber\n          v-model=\"customValue\" :ui=\"{\n            wrapper: 'h-12 border-indigo-100 bg-indigo-50/30 ring-indigo-200 focus-within:ring-indigo-300 rounded-lg',\n            button: 'w-12 hover:bg-indigo-100 text-indigo-600 active:scale-90 transition-transform',\n            input: 'w-20 text-indigo-700 font-bold text-lg',\n            divider: 'bg-indigo-100 w-px group-focus-within:bg-indigo-200',\n          }\"\n        >\n          <!-- 与 web 端对齐的新插槽名 -->\n          <template #minus>\n            <view class=\"i-lucide-arrow-left size-5\" />\n          </template>\n          <template #plus>\n            <view class=\"i-lucide-arrow-right size-5\" />\n          </template>\n        </RebornInputNumber>\n      </view>\n\n      <view class=\"flex items-center gap-8\">\n        <!-- Compact Dark Theme -->\n        <view class=\"space-y-2\">\n          <text class=\"text-sm text-slate-500\">紧凑深色主题</text>\n          <RebornInputNumber\n            v-model=\"darkValue\" :ui=\"{\n              wrapper: 'bg-slate-900 dark:bg-slate-900 border-slate-700 ring-slate-800 rounded-md h-8',\n              input: 'text-white w-12 text-sm',\n              button: 'text-slate-400 hover:text-white px-2',\n              divider: 'bg-slate-700 w-px group-focus-within:bg-slate-600',\n            }\"\n          />\n        </view>\n\n        <!-- Ultra Small Height Theme -->\n        <view class=\"space-y-2\">\n          <text class=\"text-sm text-slate-500\">超小高度主题 (h-7)</text>\n          <RebornInputNumber\n            v-model=\"smallValue\" :ui=\"{\n              wrapper: 'h-7 rounded bg-emerald-50 dark:bg-emerald-500 border-emerald-200 ring-emerald-200',\n              input: 'text-emerald-700 text-xs w-10',\n              button: 'text-emerald-600 dark:text-emerald-100 hover:text-emerald-800 dark:hover:text-warning px-1.5',\n              divider: 'bg-emerald-200 w-px group-focus-within:bg-emerald-300',\n            }\"\n          >\n            <template #minus>\n              <view class=\"i-lucide-heart-off size-3\" />\n            </template>\n            <template #plus>\n              <view class=\"i-lucide-heart size-3\" />\n            </template>\n          </RebornInputNumber>\n        </view>\n      </view>\n    </RebornCard>\n  </RebornPage>\n</template>\n"
+    }
+  ],
+  "related": [],
+  "whenToUse": [
+    "购物车、库存等数量增减场景。",
+    "需要限定 min/max/step，或需要固定小数位（precision）的数值录入。",
+    "需要在输入框内附带货币符号、单位等前后缀（prefix/suffix 插槽）时。",
+    "需要只允许步进倍数取值（step-strictly）时。",
+    "需要自定义加减按钮图标（plus/minus 插槽，双端同名）时。",
+    "需要嵌入已有边框容器（variant=borderless）或走极简下划线风格（variant=underlined）时。",
+    "表格行内批量改数值、希望用滚轮快速调节（change-on-wheel）时，注意该能力仅 web 端有效。",
+    "需要在校验失败后把焦点与光标精确落到该输入框（focus('start' | 'end' | 'all')）时。"
+  ],
+  "whenNotToUse": [
+    "自由输入长数字或文本改用 reborn-input。",
+    "在连续区间内取值改用 reborn-slider。"
+  ],
+  "pitfalls": [
+    "宽度默认 w-full 撑满父容器，组件自身不设固定宽度；需要固定宽度时通过 class（如 w-40）或 ui.wrapper 传入。",
+    "variant=underlined 会强制压平圆角并隐藏按钮间的竖直分割线，此时传 shape 不会有效果。",
+    "variant=borderless 平时没有描边，仅在表单校验失败时补一圈红色描边，否则错误态不可见。",
+    "源码里的 rounded-none! 带 ! 是历史遗留：size 轴原先用自定义的 rounded-ui-*，没注册进 app/lib/utils.ts 的 tailwind-merge 冲突组，不提权时它会与 rounded-none 共存并由 CSS 源码顺序决定胜负。现在两端都用原生 rounded-*，tailwind-merge 能正常合并，覆盖圆角不需要再加 !。",
+    "web 端配色背景一律使用 gray-1/gray-2 等灰阶 token（base.css 的 .dark 会整条翻转），不可写 bg-white；uniapp 端 theme.css 没有 .dark 代码块、灰阶不翻转，深色适配必须逐条写显式 dark: 变体。两端策略相反，互抄样式会出错。",
+    "change-on-wheel 只在输入框已聚焦时接管滚轮，未聚焦时不影响页面滚动；这与 Element Plus 的默认行为不同，需要留意。",
+    "change-on-wheel 在 uniapp 端是空实现：小程序与 App 没有鼠标滚轮事件，该属性仅为与 web 端同名同签名而保留，便于同一份业务代码跨端复用。",
+    "keyboard=false 只关闭 ↑/↓ 步进，Enter 提交仍然生效，提交时机仍由 model-event 决定。",
+    "keyboard 在 uniapp 端仅 H5 生效：小程序与 App 的原生输入框不派发 keydown 事件，该端上没有可拦截的按键。",
+    "focus(cursor) 双端可用但实现机制不同：web 端命令式调用 setSelectionRange，uniapp 端只能通过 cursor / selection-start / selection-end 属性声明式指定，落位在部分小程序端可能不精确。",
+    "web、uniapp 双端插槽名已对齐为 plus/minus；旧名仍兼容（web 端 decrement/increment，uniapp 端 decrease-icon/increase-icon），新代码不要再用旧名。",
+    "precision 与 step 冲突时以 step 的小数位优先：precision 小于 step 的小数位会被提升，否则步进结果会被截断。",
+    "model-event=\"input\" 下键入值允许临时超出 min/max，失焦时才统一修正；在 watch 中直接消费绑定值需考虑这段越界窗口。",
+    "step-strictly 采用就近吸附而非拒绝输入：step 为 5 时键入 13，提交后为 15。",
+    "formatter 与 parser 必须配对使用，只传其一会导致展示文本无法被解析回数值。",
+    "web 端 readonly 为原生语义（只读且按钮禁用）；uniapp 端 readonly 与原生语义相反，默认 true 表示允许键入，设为 false 后仅能通过按钮增减。",
+    "uniapp 端 min 默认 0、max 默认 200；web 端默认取 Number.MIN_SAFE_INTEGER / Number.MAX_SAFE_INTEGER 即不限制，业务范围不同时必须显式传入。",
+    "inputType（仅 uniapp）仅支持 digit/number 两种；digit 模式下默认保留两位小数，显式传 precision 会覆盖这一默认。",
+    "UniApp modelValue 默认 undefined，未绑定时由 defaultValue 初始化；非法数字回退上次提交值，数值回到 0 也会触发 change。"
+  ],
+  "dependencies": [
+    "@weapp-tailwindcss/merge-v3",
+    "@weapp-tailwindcss/variants-v3",
+    "clsx",
+    "tailwind-merge",
+    "tailwind-variants"
+  ],
+  "install": {
+    "cli": "npx reborn-ui@latest add reborn-input-number"
+  },
+  "sourceRefs": {
+    "web": [
+      "app/components/reborn/ui/reborn-input-number/RebornInputNumber.vue",
+      "app/components/reborn/ui/reborn-input-number/index.ts",
+      "app/components/reborn/ui/reborn-input-number/reborn-input-number.config.ts"
+    ],
+    "uniapp": [
+      "packages/uniapp-project/src/components/reborn-input-number/RebornInputNumber.vue",
+      "packages/uniapp-project/src/components/reborn-input-number/index.ts",
+      "packages/uniapp-project/src/components/reborn-input-number/long-press.ts",
+      "packages/uniapp-project/src/components/reborn-input-number/reborn-input-number.config.ts"
+    ]
+  },
+  "docPath": "content/2.components/input-and-forms/reborn-input-number.md",
+  "_meta": {
+    "contentHash": "a42cebea6622efd25d24f176ec20df6e5a4b346c",
+    "hasOverride": true,
+    "extractors": {
+      "web": "ok",
+      "uniapp": "ok",
+      "docs": "found"
+    }
+  }
+}

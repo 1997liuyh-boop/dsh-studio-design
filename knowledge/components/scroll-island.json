@@ -1,0 +1,95 @@
+{
+  "$schema": "../schema/component.schema.json",
+  "id": "scroll-island",
+  "title": "滚动岛",
+  "description": "用于以灵动岛样式悬浮显示页面滚动进度并可展开附加内容的组件。",
+  "category": "misc",
+  "tags": [
+    "css",
+    "tailwind",
+    "number-flow"
+  ],
+  "platforms": [
+    "web"
+  ],
+  "props": [
+    {
+      "name": "class",
+      "type": "string",
+      "required": false,
+      "description": "自定义样式的额外 CSS 类。",
+      "default": "\"\""
+    },
+    {
+      "name": "title",
+      "type": "string",
+      "required": false,
+      "description": "组件头部显示的标题。",
+      "default": "\"Progress\""
+    },
+    {
+      "name": "height",
+      "type": "number",
+      "required": false,
+      "description": "组件高度。",
+      "default": "44"
+    }
+  ],
+  "events": [],
+  "slots": [
+    {
+      "name": "default",
+      "description": "点击展开后展示的附加内容。"
+    }
+  ],
+  "exposes": [],
+  "examples": [
+    {
+      "title": "Web 演示",
+      "path": "app/components/reborn/examples/scroll-island/ScrollIslandDemo.vue",
+      "source": "demo",
+      "platform": "web",
+      "code": "<template>\n  <div class=\"flex items-center justify-center p-8\">\n    <span class=\"text-primary text-lg\">\n      See the scroll island in action on the top of this page\n    </span>\n    <ScrollIsland title=\"Scroll Island\">\n      <div class=\"my-3 flex flex-col gap-2\">\n        <a href=\"#install-using-cli\"># Install using CLI</a>\n        <a href=\"#install-manually\"># Install Manually</a>\n        <a href=\"#api\"># API</a>\n        <a href=\"#features\"># Features</a>\n        <a href=\"#credits\"># Credits</a>\n      </div>\n    </ScrollIsland>\n  </div>\n</template>\n"
+    }
+  ],
+  "related": [],
+  "whenToUse": [
+    "文章、文档页顶部需要显示阅读滚动进度百分比时。",
+    "需要点击展开显示页内目录等附加导航内容。",
+    "希望以仿 iOS 灵动岛的悬浮胶囊承载页面进度信息。"
+  ],
+  "whenNotToUse": [
+    "需要独立的环形百分比进度展示，改用 animated-circular-progressbar。",
+    "沿内容侧边跟随滚动的装饰光束，改用 tracing-beam。"
+  ],
+  "pitfalls": [
+    "仅 web 端可用，依赖 @number-flow/vue、@vueuse/core、motion-v。",
+    "展开区内容通过默认插槽传入。",
+    "title 默认为 \"Progress\"，height 默认 44。",
+    "深浅配色读取 Nuxt 的 useColorMode（@nuxtjs/color-mode，@nuxt/ui 已内置），只读不改写 html 的主题类；页面不可滚动时进度为 0。"
+  ],
+  "dependencies": [
+    "@number-flow/vue",
+    "@vueuse/core",
+    "motion-v"
+  ],
+  "install": {
+    "cli": "npx reborn-ui@latest add scroll-island"
+  },
+  "sourceRefs": {
+    "web": [
+      "app/components/reborn/ui/scroll-island/ScrollIsland.vue",
+      "app/components/reborn/ui/scroll-island/index.ts"
+    ]
+  },
+  "docPath": "content/2.components/miscellaneous/scroll-island.md",
+  "_meta": {
+    "contentHash": "0068bd257637b51e99f81e65bc965d7c15cafdaa",
+    "hasOverride": true,
+    "extractors": {
+      "web": "ok",
+      "uniapp": "absent",
+      "docs": "found"
+    }
+  }
+}

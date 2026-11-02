@@ -1,0 +1,152 @@
+{
+  "$schema": "../schema/component.schema.json",
+  "id": "reborn-dropdown-select",
+  "title": "DropdownSelect 下拉选择",
+  "description": "用于从 options 列表下拉选择单个值的选择器组件，仅 uniapp 端。",
+  "category": "form",
+  "tags": [
+    "uniapp",
+    "dropdown",
+    "select",
+    "form"
+  ],
+  "platforms": [
+    "uniapp"
+  ],
+  "props": [
+    {
+      "name": "options",
+      "type": "Option[]",
+      "required": false,
+      "description": "下拉选项数组。",
+      "default": "() => []"
+    },
+    {
+      "name": "placeholder",
+      "type": "string",
+      "required": false,
+      "description": "未选中任何值时触发器显示的占位文本。",
+      "default": "'请选择'"
+    },
+    {
+      "name": "disabled",
+      "type": "boolean",
+      "required": false,
+      "description": "是否禁用（整体半透明且不可交互）。放入 `RebornForm` 时表单的 `disabled` 优先。",
+      "default": "false"
+    },
+    {
+      "name": "size",
+      "type": "typeof dropdownSelectSizes[number]",
+      "required": false,
+      "description": "触发器与选项行的尺寸。放入 `RebornForm` 时表单的 `size` 优先。",
+      "default": "'md'"
+    },
+    {
+      "name": "color",
+      "type": "typeof dropdownSelectColors[number]",
+      "required": false,
+      "description": "主题色，作用于选中项高亮与勾选图标。",
+      "default": "'primary'"
+    },
+    {
+      "name": "clearable",
+      "type": "boolean",
+      "required": false,
+      "description": "是否显示清空按钮，点击后将值重置为 `null`。",
+      "default": "false"
+    },
+    {
+      "name": "ui",
+      "type": "Partial<{\n    wrapper?: string\n    trigger?: string\n    panel?: string\n    content?: string\n    item?: string\n    itemText?: string\n    itemIcon?: string\n    empty?: string\n    mask?: string\n  }>",
+      "required": false,
+      "description": "按内部结构键覆盖类名，见下方「自定义样式（ui）」。 可用键（从源码抽取，以此为准）——UniApp：content、empty、item、itemIcon、itemText、mask、panel、trigger、wrapper。",
+      "default": "() => ({})"
+    },
+    {
+      "name": "customClass",
+      "type": "any",
+      "required": false,
+      "description": "追加到最外层容器的自定义类名。"
+    },
+    {
+      "name": "modelValue",
+      "type": "any",
+      "required": false,
+      "description": "双向绑定值",
+      "vModel": true
+    }
+  ],
+  "events": [
+    {
+      "name": "change",
+      "payload": "(e: 'change', value: any): void",
+      "description": "选中项变化（含点击清空后的 null）"
+    },
+    {
+      "name": "update:modelValue",
+      "description": "modelValue 变化时触发（v-model 同步）"
+    }
+  ],
+  "slots": [],
+  "exposes": [],
+  "examples": [
+    {
+      "title": "Web 演示",
+      "path": "app/components/reborn/examples/reborn-dropdown-select/RebornDropdownSelectDemo.vue",
+      "source": "demo",
+      "platform": "web",
+      "code": "<template>\n  <div class=\"border-default rounded-lg border border-dashed p-6 text-center\">\n    <DemoNote>Web 端暂未提供此组件，请在 UniApp 端查看。</DemoNote>\n  </div>\n</template>\n"
+    },
+    {
+      "title": "UniApp 演示",
+      "path": "packages/uniapp-project/src/pages/reborn-dropdown-select/RebornDropdownSelectDemo.vue",
+      "source": "demo",
+      "platform": "uniapp",
+      "code": "<script setup lang=\"ts\">\nimport { shallowRef } from 'vue'\nimport RebornPage from '@/components/reborn-page/RebornPage.vue'\nimport RebornCard from '@/components/reborn-card/RebornCard.vue'\nimport RebornButton from '@/components/reborn-button/RebornButton.vue'\nimport RebornDropdownSelect from '@/components/reborn-dropdown-select/RebornDropdownSelect.vue'\nimport { dropdownSelectColors, dropdownSelectSizes } from '@/components/reborn-dropdown-select/reborn-dropdown-select.config'\n\nconst demoColor = shallowRef<typeof dropdownSelectColors[number]>('primary')\nconst demoSize = shallowRef<typeof dropdownSelectSizes[number]>('md')\nconst value1 = shallowRef('')\nconst value2 = shallowRef('2')\nconst value3 = shallowRef('')\nconst value4 = shallowRef('')\n\nconst options = [\n  { label: '选项一', value: '1' },\n  { label: '选项二', value: '2' },\n  { label: '选项三', value: '3' },\n  { label: '选项四', value: '4' },\n]\n</script>\n\n<template>\n  <RebornPage title=\"DropdownSelect 下拉选择\">\n    <RebornCard title=\"基础用法\" custom-class=\"space-y-4\" overflow-visible>\n      <view class=\"text-sm font-medium text-slate-500 dark:text-slate-200\">\n        颜色\n      </view>\n      <view class=\"flex flex-wrap gap-2\">\n        <view v-for=\"c in dropdownSelectColors\" :key=\"c\" class=\"\n              size-6 cursor-pointer rounded-full ring-2 ring-transparent\n              ring-offset-2 transition-all\n            \" :class=\"[\n              `bg-${c}`,\n              demoColor === c ? 'scale-110 ring-slate-400' : `hover:scale-110`,\n            ]\" :style=\"{ backgroundColor: `var(--color-${c}, ${c === 'neutral' ? '#737373' : ''})` }\"\n          @click=\"demoColor = c\" />\n      </view>\n\n      <view class=\"text-sm font-medium text-slate-500 dark:text-slate-200\">\n        尺寸\n      </view>\n      <view>\n        <RebornButton v-for=\"s in dropdownSelectSizes\" :key=\"s\" variant=\"outlined\" gap\n          :color=\"demoSize === s ? 'primary' : 'neutral'\" size=\"sm\" custom-class=\"rounded-full\"\n          @click=\"demoSize = s\">\n          {{ s }}\n        </RebornButton>\n      </view>\n\n      <RebornDropdownSelect v-model=\"value1\" :options=\"options\" :color=\"demoColor\" :size=\"demoSize\" placeholder=\"请选择\" />\n      <text class=\"text-sm text-gray-500\">当前值: {{ value1 }}</text>\n    </RebornCard>\n\n    <RebornCard title=\"默认选中\" custom-class=\"space-y-4\" overflow-visible>\n      <RebornDropdownSelect v-model=\"value2\" :options=\"options\" />\n    </RebornCard>\n\n    <RebornCard title=\"禁用状态\" custom-class=\"space-y-4\" overflow-visible>\n      <RebornDropdownSelect v-model=\"value3\" :options=\"options\" disabled />\n    </RebornCard>\n\n    <RebornCard title=\"可清除\" custom-class=\"space-y-4\" overflow-visible>\n      <RebornDropdownSelect v-model=\"value4\" :options=\"options\" clearable />\n    </RebornCard>\n  </RebornPage>\n</template>\n"
+    }
+  ],
+  "related": [
+    "reborn-select-trigger",
+    "reborn-transition"
+  ],
+  "whenToUse": [
+    "uniapp 页面中需要轻量的下拉单选控件（options + v-model）。",
+    "需要 clearable 清空已选值的筛选条件选择。"
+  ],
+  "whenNotToUse": [
+    "web 端不可用（仅 uniapp），web 端表单选值改用 reborn-select，操作菜单改用 reborn-dropdown。",
+    "多层级数据选择，改用 reborn-cascader。"
+  ],
+  "pitfalls": [
+    "仅 uniapp 端可用；已接入 useFormInject，放进 RebornForm 时表单的 size / disabled 优先，值变化会触发所在表单项的 change 校验。",
+    "options 为 Option[] 数组，选中值通过 v-model 绑定，变更时触发 change 事件。",
+    "clearable 默认 false，需要清空按钮时须显式开启。"
+  ],
+  "dependencies": [
+    "@weapp-tailwindcss/merge-v3",
+    "@weapp-tailwindcss/variants-v3",
+    "clsx",
+    "tailwind-merge",
+    "tailwind-variants"
+  ],
+  "install": {
+    "cli": "npx reborn-ui@latest add reborn-dropdown-select"
+  },
+  "sourceRefs": {
+    "uniapp": [
+      "packages/uniapp-project/src/components/reborn-dropdown-select/RebornDropdownSelect.vue",
+      "packages/uniapp-project/src/components/reborn-dropdown-select/reborn-dropdown-select.config.ts"
+    ]
+  },
+  "docPath": "content/2.components/input-and-forms/reborn-dropdown-select.md",
+  "_meta": {
+    "contentHash": "35ea1c4593dc941c65db5193bf6a02bae6d3f888",
+    "hasOverride": true,
+    "extractors": {
+      "web": "absent",
+      "uniapp": "ok",
+      "docs": "found"
+    }
+  }
+}

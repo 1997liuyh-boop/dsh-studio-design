@@ -1,0 +1,101 @@
+{
+  "$schema": "../schema/component.schema.json",
+  "id": "container-scroll",
+  "title": "容器滚动",
+  "description": "用于随页面滚动对卡片内容做旋转缩放过渡的首屏展示组件。",
+  "category": "misc",
+  "tags": [
+    "css",
+    "tailwind",
+    "aceternity-ui"
+  ],
+  "platforms": [
+    "web"
+  ],
+  "props": [
+    {
+      "name": "rotate",
+      "type": "number",
+      "required": false,
+      "description": "绕 X 轴的旋转角度，单位度",
+      "default": "0"
+    },
+    {
+      "name": "scale",
+      "type": "number",
+      "required": false,
+      "description": "缩放倍数",
+      "default": "1"
+    },
+    {
+      "name": "translate",
+      "type": "number",
+      "required": false,
+      "description": "纵向位移，单位 px",
+      "default": "0"
+    }
+  ],
+  "events": [],
+  "slots": [
+    {
+      "name": "title",
+      "description": ""
+    },
+    {
+      "name": "card",
+      "description": ""
+    },
+    {
+      "name": "default",
+      "description": ""
+    }
+  ],
+  "exposes": [],
+  "examples": [
+    {
+      "title": "Web 演示",
+      "path": "app/components/reborn/examples/container-scroll/ContainerScrollDemo.vue",
+      "source": "demo",
+      "platform": "web",
+      "code": "<template>\n  <DemoSection\n    title=\"基础用法\"\n    description=\"标题是组件自己的 #title 插槽；卡片面上的图用白名单圆角。\"\n  >\n    <div class=\"flex flex-col overflow-hidden\">\n      <ContainerScroll>\n        <template #title>\n          <h1 class=\"text-highlighted text-4xl font-semibold\">\n            释放滚动动画的力量\n            <br>\n            <span class=\"mt-1 text-4xl leading-none font-bold md:text-[6rem]\">\n              Scroll Animations\n            </span>\n          </h1>\n        </template>\n        <template #card>\n          <img\n            src=\"https://cdn.reborn-ui.com/images/linear.webp\"\n            class=\"mx-auto h-full rounded-3xl object-cover object-left-top\"\n            alt=\"滚动动画示意\"\n            height=\"720\"\n            width=\"1400\"\n          >\n        </template>\n      </ContainerScroll>\n    </div>\n  </DemoSection>\n</template>\n"
+    }
+  ],
+  "related": [],
+  "whenToUse": [
+    "落地页首屏产品截图随滚动展开的 hero 动画。",
+    "标题 + 大图卡片组合、由滚动进度驱动的展示区块。"
+  ],
+  "whenNotToUse": [
+    "滚动驱动的文字逐词揭示，改用 text-scroll-reveal。",
+    "沿内容侧边跟随滚动的光束线条，改用 tracing-beam。"
+  ],
+  "pitfalls": [
+    "仅 web 端可用，依赖 @vueuse/core。",
+    "内容通过 title 与 card 插槽传入（配套 ContainerScrollTitle / ContainerScrollCard 子组件）。",
+    "rotate / scale / translate 分别控制内容旋转、缩放与标题位移的幅度，效果由滚动进度驱动。"
+  ],
+  "dependencies": [
+    "@vueuse/core"
+  ],
+  "install": {
+    "cli": "npx reborn-ui@latest add container-scroll"
+  },
+  "sourceRefs": {
+    "web": [
+      "app/components/reborn/ui/container-scroll/ContainerScroll.vue",
+      "app/components/reborn/ui/container-scroll/ContainerScrollCard.vue",
+      "app/components/reborn/ui/container-scroll/ContainerScrollTitle.vue",
+      "app/components/reborn/ui/container-scroll/index.ts"
+    ]
+  },
+  "docPath": "content/2.components/miscellaneous/container-scroll.md",
+  "_meta": {
+    "contentHash": "4addae4a876db4f0e28666bcc67fa3e2f5dc35c0",
+    "hasOverride": true,
+    "extractors": {
+      "web": "ok",
+      "uniapp": "absent",
+      "docs": "found"
+    }
+  }
+}

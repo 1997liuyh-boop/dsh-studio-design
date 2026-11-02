@@ -1,0 +1,91 @@
+{
+  "$schema": "../schema/component.schema.json",
+  "id": "rainbow-button",
+  "title": "彩虹按钮",
+  "description": "用于呈现彩虹渐变流动发光效果的按钮组件，内容经默认插槽传入。",
+  "category": "basic",
+  "tags": [
+    "css",
+    "tailwind",
+    "button",
+    "magic-ui"
+  ],
+  "platforms": [
+    "web"
+  ],
+  "props": [
+    {
+      "name": "class",
+      "type": "string",
+      "required": false,
+      "description": "应用于按钮的额外 CSS 类。",
+      "default": "\"\""
+    },
+    {
+      "name": "is",
+      "type": "string",
+      "required": false,
+      "description": "渲染根节点使用的 HTML 标签，如 `a`。",
+      "default": "\"button\""
+    },
+    {
+      "name": "speed",
+      "type": "number",
+      "required": false,
+      "description": "彩虹流动动画周期（秒），值越小流动越快。",
+      "default": "2"
+    }
+  ],
+  "events": [],
+  "slots": [
+    {
+      "name": "default",
+      "description": "按钮显示内容。"
+    }
+  ],
+  "exposes": [],
+  "examples": [
+    {
+      "title": "Web 演示",
+      "path": "app/components/reborn/examples/rainbow-button/RainbowButtonDemo.vue",
+      "source": "demo",
+      "platform": "web",
+      "code": "<template>\n  <div class=\"flex min-h-64 items-center justify-center\">\n    <RainbowButton> Rainbow Button </RainbowButton>\n  </div>\n</template>\n"
+    }
+  ],
+  "related": [],
+  "whenToUse": [
+    "落地页主 CTA 需要高辨识度的彩虹发光按钮时。",
+    "需要通过 is prop 渲染为 a 等其他标签的发光跳转入口。"
+  ],
+  "whenNotToUse": [
+    "常规业务按钮或跨端场景，改用 reborn-button。",
+    "单色流光边框效果，改用 shimmer-button。",
+    "悬停过渡动效按钮，改用 interactive-hover-button。"
+  ],
+  "pitfalls": [
+    "仅 web 端可用。",
+    "speed 为动画周期，单位秒（默认 2）。",
+    "未定义 click 等事件，点击处理依赖原生事件透传；is 默认渲染为 button 标签。"
+  ],
+  "dependencies": [],
+  "install": {
+    "cli": "npx reborn-ui@latest add rainbow-button"
+  },
+  "sourceRefs": {
+    "web": [
+      "app/components/reborn/ui/rainbow-button/RainbowButton.vue",
+      "app/components/reborn/ui/rainbow-button/index.ts"
+    ]
+  },
+  "docPath": "content/2.components/button/rainbow-button.md",
+  "_meta": {
+    "contentHash": "e0139f243ff78c255cd0e7b03537475cbbc8524b",
+    "hasOverride": true,
+    "extractors": {
+      "web": "ok",
+      "uniapp": "absent",
+      "docs": "found"
+    }
+  }
+}

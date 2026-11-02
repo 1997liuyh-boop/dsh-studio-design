@@ -1,0 +1,288 @@
+{
+  "$schema": "../schema/component.schema.json",
+  "id": "reborn-search-box",
+  "title": "SearchBox 搜索框",
+  "description": "用于带下拉面板的双端搜索框组件，web 端为纯插槽基元：选择器/后置区/面板全部由插槽组合。",
+  "category": "form",
+  "tags": [
+    "css",
+    "tailwind",
+    "input",
+    "search",
+    "reborn"
+  ],
+  "platforms": [
+    "web",
+    "uniapp"
+  ],
+  "props": [
+    {
+      "name": "historyKey",
+      "type": "string",
+      "required": false,
+      "description": "未绑定历史记录时使用的本地存储键。",
+      "default": "'reborn-search-history'"
+    },
+    {
+      "name": "placeholder",
+      "type": "string",
+      "required": false,
+      "description": "占位文本。",
+      "default": "'请输入搜索内容'"
+    },
+    {
+      "name": "size",
+      "type": "SearchBoxSize",
+      "required": false,
+      "description": "尺寸大小；高度由内部 `RebornInput` 承担，本组件另按尺寸给出输入框区的水平内边距。",
+      "default": "'sm'"
+    },
+    {
+      "name": "color",
+      "type": "SearchBoxColor",
+      "required": false,
+      "description": "主题颜色，作用于聚焦描边（取对应色族 5 阶）。",
+      "default": "'primary'"
+    },
+    {
+      "name": "customClass",
+      "type": "any",
+      "required": false,
+      "description": "追加到根节点的自定义类名",
+      "default": "undefined"
+    },
+    {
+      "name": "placeholderClass",
+      "type": "string",
+      "required": false,
+      "description": "透传给内部输入框的占位符样式类",
+      "default": "'text-gray-5'"
+    },
+    {
+      "name": "disabled",
+      "type": "boolean",
+      "required": false,
+      "description": "是否禁用输入",
+      "default": "false"
+    },
+    {
+      "name": "rounded",
+      "type": "boolean",
+      "required": false,
+      "description": "是否使用圆角（药丸形）外观",
+      "default": "true"
+    },
+    {
+      "name": "clearable",
+      "type": "boolean",
+      "required": false,
+      "description": "是否显示一键清空按钮",
+      "default": "true"
+    },
+    {
+      "name": "border",
+      "type": "boolean",
+      "required": false,
+      "description": "是否显示输入框边框",
+      "default": "false"
+    },
+    {
+      "name": "modelValue",
+      "type": "string",
+      "required": false,
+      "description": "双向绑定值",
+      "vModel": true,
+      "default": "{ inputValue: \"\", selectValue: \"\" }"
+    },
+    {
+      "name": "history",
+      "type": "string[]",
+      "required": false,
+      "description": "双向绑定值",
+      "vModel": true,
+      "default": "undefined"
+    },
+    {
+      "name": "shape",
+      "type": "typeof inputShapes[number]",
+      "required": false,
+      "description": "外形轮廓，与 RebornInput 的 shape 对齐：circle 胶囊 / square 统一取 rounded-md 令牌（不分尺寸）；底色卡片与下拉面板的圆角随之与输入框对齐",
+      "default": "\"square\""
+    },
+    {
+      "name": "showDropdown",
+      "type": "boolean",
+      "required": false,
+      "description": "是否展示下拉面板（面板内容完全由 dropdown 插槽提供）",
+      "default": "true"
+    },
+    {
+      "name": "class",
+      "type": "any",
+      "required": false,
+      "description": "自定义类名",
+      "default": "undefined"
+    },
+    {
+      "name": "ui",
+      "type": "SearchBoxUi",
+      "required": false,
+      "description": "组件自身 UI 覆盖 可用键（从源码抽取，以此为准）——Web：backdropCard、control、dropdown、dropdownOuter、inputWrapper、leadingWrapper、trailingWrapper、wrapper。",
+      "default": "() => ({})"
+    },
+    {
+      "name": "inputUi",
+      "type": "InputUi",
+      "required": false,
+      "description": "内部 RebornInput UI 覆盖",
+      "default": "() => ({})"
+    },
+    {
+      "name": "inputAttrs",
+      "type": "Partial<InputProps>",
+      "required": false,
+      "description": "输入框属性透传（v-bind 到内部 RebornInput；size/color/shape/placeholder 等显式 prop 优先级更高）",
+      "default": "undefined"
+    }
+  ],
+  "events": [
+    {
+      "name": "search",
+      "payload": "[value: string]",
+      "description": "按下回车、调用 `trailing` 作用域的 `search()`，或经 `dropdown` 作用域 `selectHistory` 选中历史时触发。非空 `inputValue` 会写入历史记录，触发后收起面板并让输入框失焦。"
+    },
+    {
+      "name": "clickCamera",
+      "payload": "[]",
+      "description": "点击右侧相机区域时触发（模板用 `@click-camera` 监听）。"
+    },
+    {
+      "name": "focus",
+      "payload": "[event: any]",
+      "description": "输入框获得焦点时触发；`showDropdown` 开启时同时展开下拉面板。"
+    },
+    {
+      "name": "blur",
+      "payload": "[event: any]",
+      "description": "输入框失去焦点时触发；若新焦点仍在组件内部则不收起面板。"
+    },
+    {
+      "name": "update:modelValue",
+      "description": "modelValue 变化时触发（v-model 同步）"
+    },
+    {
+      "name": "update:history",
+      "description": "history 变化时触发（v-model 同步）"
+    }
+  ],
+  "slots": [
+    {
+      "name": "prefix",
+      "props": "() => any",
+      "description": ""
+    },
+    {
+      "name": "extra",
+      "props": "() => any",
+      "description": ""
+    },
+    {
+      "name": "default",
+      "props": "() => any",
+      "description": "自定义右侧相机区域的内容，不传时渲染 `i-lucide-camera` 图标。点击该区域仍会触发 `clickCamera`。"
+    },
+    {
+      "name": "leading",
+      "props": "(props: { ui: (typeof ui)[\"value\"] }) => any",
+      "description": "搜索框外置前置插槽，**与输入框区并列排在控件行里（被外层边框囊括在内、高度撑满整行），获得焦点时不出现描边，无默认内容**：自行放入 `RebornSelect` 等内容；包裹层点击会收起面板并阻止冒泡；分隔线等装饰样式由插槽内容自行提供。"
+    },
+    {
+      "name": "trailing",
+      "props": "(props: { ui: (typeof ui)[\"value\"]; search: typeof handleSearch }) => any",
+      "description": "搜索框外置后置插槽，位置与约束同 `leading`，无默认内容：搜索按钮、相机图标等自行提供（样式也由内容自带），`search()` 调用即触发搜索。"
+    },
+    {
+      "name": "input-leading",
+      "props": "(props: { ui: (typeof ui)[\"value\"]; inputUi: unknown; search: typeof handleSearch }) => any",
+      "description": "输入框内置前置插槽，转发到内部 `RebornInput` 的 `prefix`，**内容落在输入框内部、贴着文本排布并随输入框一起进入激活态**，无默认内容；`inputUi` 为输入框自身的样式辅助键。"
+    },
+    {
+      "name": "input-trailing",
+      "props": "(props: { ui: (typeof ui)[\"value\"]; inputUi: unknown; search: typeof handleSearch }) => any",
+      "description": "输入框内置后置插槽，转发到内部 `RebornInput` 的 `suffix`，内容落在输入框内部、随输入框一起进入激活态，无默认内容。"
+    },
+    {
+      "name": "dropdown",
+      "props": "(props: { ui: (typeof ui)[\"value\"]; history: string[]; selectHistory: typeof selectHistory; removeHistoryItem: typeof handleRemoveHistoryItem; clearHistory: typeof handleClearHistory; selectRecommend: typeof selectRecommend }) => any",
+      "description": "下拉面板内容，**无默认内容、完全由该插槽提供**：`history` 为历史记录列表，`selectHistory(kw)` 选中并搜索、`removeHistoryItem(kw)` 删除单条、`clearHistory()` 清空、`selectRecommend(kw)` 回填输入框；面板内容的装饰样式由插槽内容自行提供。"
+    }
+  ],
+  "exposes": [],
+  "examples": [
+    {
+      "title": "Web 演示",
+      "path": "app/components/reborn/examples/reborn-search-box/RebornSearchBoxDemo.vue",
+      "source": "demo",
+      "platform": "web",
+      "code": "<script setup lang=\"ts\">\nimport type { BadgeProps } from \"~/components/reborn/ui/reborn-badge/RebornBadge.vue\";\nimport type { SearchBoxModelValue, SearchBoxProps } from \"~/components/reborn/ui/reborn-search-box/RebornSearchBox.vue\";\nimport type { SkuOption } from \"~/components/reborn/ui/reborn-sku/RebornSku.vue\";\nimport { DemoBlock, DemoNote, DemoSection, Icon, Playground } from '#components';\nimport { computed, ref, shallowRef } from 'vue';\nimport RebornBadge from \"~/components/reborn/ui/reborn-badge/RebornBadge.vue\";\nimport RebornButton from \"~/components/reborn/ui/reborn-button/RebornButton.vue\";\nimport { inputColors, inputShapes } from \"~/components/reborn/ui/reborn-input/reborn-input.config\";\nimport RebornRadio from \"~/components/reborn/ui/reborn-radio/RebornRadio.vue\";\nimport RebornRadioGroup from \"~/components/reborn/ui/reborn-radio/RebornRadioGroup.vue\";\nimport { searchBoxSizes } from \"~/components/reborn/ui/reborn-search-box/reborn-search-box.config\";\nimport RebornSearchBox from \"~/components/reborn/ui/reborn-search-box/RebornSearchBox.vue\";\nimport RebornSelect from \"~/components/reborn/ui/reborn-select/RebornSelect.vue\";\nimport RebornSku from \"~/components/reborn/ui/reborn-sku/RebornSku.vue\";\n\nconst colorOptions = inputColors.map(c => ({ label: c.charAt(0).toUpperCase() + c.slice(1), value: c }));\nconst sizeOptions = searchBoxSizes.map(s => ({ label: s.toUpperCase(), value: s as typeof searchBoxSizes[number] }));\nconst shapeOptions = inputShapes.map(sp => ({\n  label: sp === \"circle\" ? \"胶囊 Circle\" : \"方形 Square\",\n  value: sp as typeof inputShapes[number],\n}));\n\n// ─── 交互演练场 ─────────────────────────────────────────────────\n\n/** 演练场默认状态 */\nconst defaultState: Record<string, any> = {\n  size: \"sm\",\n  color: \"primary\",\n  shape: \"circle\",\n  placeholder: \"搜索您感兴趣的内容...\",\n  showDropdown: true,\n};\n\nconst state = ref<Record<string, any>>({ ...defaultState });\n\n/** 演练场绑定值 */\nconst playgroundValue = shallowRef<SearchBoxModelValue>({\n  inputValue: \"\",\n  selectValue: \"1\",\n});\n\n/** 最近一次触发的事件，让预览区的交互「有回应」 */\nconst lastEvent = shallowRef(\"暂无\");\n\nfunction onSearch(val: SearchBoxModelValue) {\n  lastEvent.value = `search · 关键词「${val.inputValue || \"空\"}」`;\n}\n\n/** 相机入口由插槽自行渲染，点击也由使用方自行处理 */\nfunction onCameraClick() {\n  lastEvent.value = \"插槽 · 点击了拍照搜索\";\n}\n\n/** 重置演练场配置 */\nfunction resetState() {\n  state.value = { ...defaultState };\n  playgroundValue.value = { inputValue: \"\", selectValue: \"1\" };\n  lastEvent.value = \"暂无\";\n}\n\n/** 演练场控制面板配置 */\nconst controls: any = [\n  {\n    title: \"基础属性\",\n    children: [\n      { label: \"尺寸规格\", key: \"size\", component: \"select\" as const, defaultValue: \"sm\", props: { options: sizeOptions } },\n      { label: \"配色方案\", key: \"color\", component: \"select\" as const, defaultValue: \"primary\", props: { options: colorOptions } },\n      { label: \"外形轮廓（与 RebornInput 的 shape 对齐）\", key: \"shape\", component: \"select\" as const, defaultValue: \"circle\", props: { options: shapeOptions } },\n      { label: \"占位文本\", key: \"placeholder\", component: \"input\" as const, defaultValue: \"搜索您感兴趣的内容...\" },\n    ],\n  },\n  {\n    title: \"行为\",\n    children: [\n      { label: \"聚焦展开下拉面板\", key: \"showDropdown\", component: \"checkbox\" as const, defaultValue: true },\n    ],\n  },\n];\n\n/** 演练场右上角展示的传参明细：完整列出当前所有参数（含默认值） */\nconst searchBoxCode = computed(() => {\n  const s = state.value;\n  const props: string[] = [\n    `v-model=\"value\"`,\n    'v-model:history=\"history\"',\n    `size=\"${s.size}\"`,\n    `color=\"${s.color}\"`,\n    `shape=\"${s.shape}\"`,\n    `placeholder=\"${s.placeholder}\"`,\n    `:show-dropdown=\"${s.showDropdown}\"`,\n  ];\n  return `<RebornSearchBox\\n  ${props.join(\"\\n  \")}\\n>\\n  <template #leading>...</template>\\n  <template #input-trailing>...</template>\\n  <template #trailing>...</template>\\n  <template #dropdown>...</template>\\n</RebornSearchBox>`;\n});\n\n// ─── 场景演示状态 ───────────────────────────────────────────────\n\n/** 左侧选择器的搜索源（由 leading 插槽自行组合 RebornSelect 提供） */\nconst selectOptions = [\n  { label: \"Mercari\", value: \"1\" },\n  { label: \"JDirectltems Auction\", value: \"2\" },\n  { label: \"駿河屋\", value: \"3\" },\n  { label: \"Animate\", value: \"5\" },\n];\n\n/** 让插槽内的 RebornSelect 融入搜索框：去边框、限宽截断 */\nconst selectTriggerUi = {\n  wrapper: \"h-full!\",\n  trigger: \"border-0! bg-transparent! h-full! overflow-hidden\",\n  triggerText: \"min-w-15 truncate text-gray-9\",\n  dropdown: \"min-w-30!\",\n};\n\n/** 推荐搜索词（面板无默认内容，由 dropdown 插槽渲染） */\nconst recommendKeywords = [\"iPhone 15 Pro\", \"MacBook Air M3\", \"AirPods Pro\", \"Apple Watch Ultra\"];\n\n/** 外置插槽示例绑定值 */\nconst outerSlotValue = ref<SearchBoxModelValue>({ inputValue: \"\", selectValue: \"1\" });\n\n/** 内置插槽示例绑定值 */\nconst innerSlotValue = shallowRef<SearchBoxModelValue>({ inputValue: \"\", selectValue: \"\" });\n\n/** 方形圆角示例绑定值 */\nconst squareValue = shallowRef<SearchBoxModelValue>({ inputValue: \"\", selectValue: \"\" });\n/** 方形示例：input-attrs 透传给内部 RebornInput，限制最多输入 20 个字符 */\nconst squareInputAttrs: SearchBoxProps['inputAttrs'] = { maxlength: 20 };\n\n/** 纯输入框（无前后插槽/无面板）示例绑定值 */\nconst pureValue = shallowRef<SearchBoxModelValue>({ inputValue: \"\", selectValue: \"\" });\n\n/** SKU 搜索绑定值 */\nconst skuSearchValue = ref<SearchBoxModelValue>({\n  inputValue: \"\",\n  selectValue: \"\",\n  language: \"cn\",\n  origin: [\"jp\", \"us\"],\n  platform: \"mercari\",\n});\n\n/** SKU 属性列表：slots 指定用插槽自定义该属性的选择区 */\nconst skuAttributes: SkuOption[] = [\n  {\n    key: \"language\",\n    title: \"语言\",\n    slots: \"language\",\n    slotsCover: true,\n  },\n  {\n    title: \"发货地\",\n    key: \"origin\",\n    multiple: true,\n    children: [\n      { label: \"日本\", value: \"jp\" },\n      { label: \"美国\", value: \"us\" },\n    ],\n  },\n  {\n    title: \"平台\",\n    key: \"platform\",\n    multiple: false,\n    children: [\n      { label: \"Mercari\", value: \"mercari\" },\n      { label: \"Yahoo\", value: \"yahoo\" },\n    ],\n  },\n];\n/** 外部持有的历史只随搜索动作整体更新，各搜索框互不串用。 */\nconst playgroundHistory = shallowRef<string[]>([\"Vue 组件\"]);\n/** 历史记录标签：文字压到 gray-7，弱于输入内容 */\nconst historyBadgeUi: BadgeProps['ui'] = { label: 'text-gray-7' };\nfunction onSkuChange(key: string, value: unknown) {\n  lastEvent.value = `sku change · ${key} → ${JSON.stringify(value)}`;\n}\n</script>\n\n<template>\n  <div class=\"flex w-full flex-col\">\n    <Playground v-model=\"state\" :controls=\"controls\" :code=\"searchBoxCode\" component-name=\"RebornSearchBox\"\n      title=\"交互演练场\"\n      description=\"调节上方参数，实时查看搜索框表现；所有区域全是插槽、无任何默认内容。外层边框把外置插槽一并囊括进来并恒为 gray-4，输入框聚焦时只在输入框区内另起一圈 color 对应色的描边——点左侧选择器或右侧按钮都不会点亮任何描边。\">\n      <template #tag>\n        <RebornButton size=\"sm\" variant=\"soft\" color=\"neutral\" @click=\"resetState\">\n          <template #leading>\n            <Icon name=\"lucide:rotate-ccw\" size=\"12\" />\n          </template>\n          重置配置\n        </RebornButton>\n      </template>\n\n      <div class=\"flex w-full flex-col gap-8 pb-40\">\n        <RebornSearchBox v-model=\"playgroundValue\" v-model:history=\"playgroundHistory\" :size=\"state.size\" :color=\"state.color\" :shape=\"state.shape\"\n          :placeholder=\"state.placeholder\" :show-dropdown=\"state.showDropdown\" @search=\"onSearch\">\n          <!-- 外置前置插槽（在边框内、输入框之外，聚焦不点亮边框）：自行组合 RebornSelect，分隔线等装饰样式自行提供 -->\n          <template #leading>\n            <!--\n              贴边色块自带与外形一致的端部圆角，并向外扩 1px（负边距 + 高度补 2px）盖到控件行的外框线上：\n              控件行按外形以 clip-path（border box 边界）裁切，色块的端部弧线因此与外框轮廓完全重合，\n              不外扩的话色块缩在 1px 边框之内，端头会露出一圈灰色边框弧、与聚焦描边差 1px 高\n            -->\n            <div\n              class=\"bg-gray-2 text-gray-8 text-md px-[12px] -my-px -ml-px h-[calc(100%+2px)] border-r border-r-gray-4 flex items-center justify-center\"\n              :class=\"state.shape === 'circle' ? 'rounded-l-full pl-[16px]' : 'rounded-l-md'\">\n              http://\n            </div>\n          </template>\n\n          <!-- 内置后置插槽（落在输入框内部，随输入框一起进入激活态）：拍照搜索入口 -->\n          <template #input-trailing>\n            <Icon name=\"lucide:camera\"\n              class=\"text-2xl text-gray-5 cursor-pointer hover:text-gray-7/80 transition-colors\"\n              @click.stop=\"onCameraClick\" />\n          </template>\n\n          <!-- 外置后置插槽：搜索按钮，点击调用作用域的 search 触发搜索 -->\n          <template #trailing>\n            <!-- 同 leading：端部圆角 + 外扩 1px 盖到外框线上，色块弧线与外形轮廓重合、与聚焦描边等高 -->\n            <div\n              class=\"text-md bg-brand-6 text-white px-[12px] flex items-center justify-center -my-px -mr-px h-[calc(100%+2px)] border-l border-l-brand-5\"\n              :class=\"state.shape === 'circle' ? 'rounded-r-full pr-[16px]' : 'rounded-r-md'\">\n              <Icon name=\"lucide:search\" />\n            </div>\n          </template>\n\n          <!-- 下拉面板：历史 + 推荐，全部由插槽拼装 -->\n          <template #dropdown=\"{ history, selectHistory, removeHistoryItem, clearHistory, selectRecommend }\">\n            <div class=\"flex flex-col gap-3\">\n              <div class=\"text-lg font-bold text-gray-8 flex items-center justify-between\">\n                <span>搜索历史</span>\n                <div v-if=\"history.length > 0\"\n                  class=\"text-base font-normal text-gray-5 cursor-pointer hover:underline flex items-center gap-1\"\n                  @click=\"clearHistory\">\n                  <Icon name=\"lucide:trash-2\" />\n                  清空\n                </div>\n              </div>\n              <div v-if=\"history.length > 0\" class=\"flex flex-wrap gap-2\">\n                <RebornBadge v-for=\"h in history\" :key=\"h\" :label=\"h\" closable variant=\"soft\" color=\"neutral\" size=\"md\"\n                  :ui=\"historyBadgeUi\" @click=\"selectHistory(h)\" @close=\"removeHistoryItem(h)\" />\n              </div>\n              <div v-else class=\"text-sm text-gray-4 py-2\">\n                暂无最近的搜索记录\n              </div>\n            </div>\n\n            <div class=\"flex flex-col gap-3\">\n              <div class=\"text-lg font-bold text-gray-8 flex items-center justify-between\">\n                热门搜索\n              </div>\n              <div class=\"flex flex-col\">\n                <div v-for=\"item in recommendKeywords\" :key=\"item\"\n                  class=\"flex items-center gap-3 py-3 px-2 cursor-pointer hover:bg-gray-1 rounded-lg transition-colors text-base text-gray-8\"\n                  @click=\"selectRecommend(item)\">\n                  <Icon name=\"lucide:trending-up\" class=\"size-4 text-gray-4 shrink-0\" />\n                  <span>{{ item }}</span>\n                </div>\n              </div>\n            </div>\n          </template>\n        </RebornSearchBox>\n\n        <DemoNote tone=\"dimmed\" class=\"font-mono text-xs\">\n          绑定值: {{ playgroundValue }} · 最近事件: {{ lastEvent }}\n        </DemoNote>\n      </div>\n    </Playground>\n\n    <DemoSection class=\"relative z-50\" title=\"基础用法\"\n      description=\"不填任何插槽并关闭 show-dropdown，即为一只只剩输入能力的搜索框；回车仍会触发 search 并写入历史。\">\n      <DemoBlock layout=\"stack\">\n        <RebornSearchBox v-model=\"pureValue\" history-key=\"reborn-demo-pureValue\" :show-dropdown=\"false\" placeholder=\"无插槽 + 不展开面板，回车触发搜索\"\n          @search=\"onSearch\" />\n      </DemoBlock>\n    </DemoSection>\n\n    <DemoSection class=\"relative z-40\" title=\"外置插槽：选择器与搜索按钮\">\n      <template #description>\n        <code>leading</code> / <code>trailing</code> 是搜索框自身的插槽，与输入框区并列排在<strong>控件行</strong>里，\n        因此同样被外层边框囊括在内，高度也与输入框区一样撑满整行。存在外置插槽时，外层边框恒为 <code>gray-4</code> 不变色，\n        激活高亮改为<strong>只在输入框区内另起一圈</strong>——点左侧选择器、右侧按钮时不会出现任何描边，只有点进输入框才会。\n        输入框区的水平内边距（同时充当与外置插槽的间距）按尺寸给出：<code>sm</code> 为 8px，<code>md</code> /\n        <code>lg</code> 为 12px。\n      </template>\n      <DemoBlock layout=\"stack\">\n        <RebornSearchBox v-model=\"outerSlotValue\" history-key=\"reborn-demo-outerSlotValue\" size=\"md\" shape=\"square\" :show-dropdown=\"false\"\n          placeholder=\"点选择器不会出现描边，点这里才会\">\n          <!-- 外置前置：搜索源选择器 + 分隔线（分隔线样式自行提供） -->\n          <template #leading>\n            <RebornSelect v-model=\"outerSlotValue.selectValue\" :options=\"selectOptions\" size=\"md\" :clearable=\"false\"\n              :bordered=\"false\" :trigger-ui=\"selectTriggerUi\" @click.stop />\n            <div class=\"w-px h-5 shrink-0 bg-[#D3D2D9]!\" />\n          </template>\n\n          <!-- 外置后置：搜索按钮，作用域透出 search 直接触发搜索 -->\n          <template #trailing=\"{ search }\">\n            <RebornButton size=\"md\" color=\"primary\" @click.stop=\"search\">\n              <Icon name=\"lucide:search\" class=\"size-5\" />\n            </RebornButton>\n          </template>\n        </RebornSearchBox>\n      </DemoBlock>\n    </DemoSection>\n\n    <DemoSection class=\"relative z-30\" title=\"内置插槽：输入框内图标\">\n      <template #description>\n        <code>input-leading</code> / <code>input-trailing</code> 会转发到内部 <code>RebornInput</code> 的\n        <code>prefix</code> / <code>suffix</code>，内容落在<strong>输入框内部</strong>、贴着文本排布，\n        随输入框一起进入激活态；作用域除 <code>ui</code> 外还额外透出 <code>inputUi</code>，可直接套用输入框自身的样式键。\n      </template>\n      <DemoBlock layout=\"stack\">\n        <RebornSearchBox v-model=\"innerSlotValue\" history-key=\"reborn-demo-innerSlotValue\" size=\"md\" shape=\"square\" :show-dropdown=\"false\"\n          placeholder=\"放大镜与相机都在输入框里\" @search=\"onSearch\">\n          <!-- 内置前置：放大镜 -->\n          <template #input-leading>\n            <Icon name=\"lucide:search\" class=\"size-5\" />\n          </template>\n\n          <!-- 内置后置：相机入口 -->\n          <template #input-trailing>\n            <Icon name=\"lucide:camera\"\n              class=\"text-2xl text-gray-5 cursor-pointer hover:text-gray-7/80 transition-colors\"\n              @click.stop=\"onCameraClick\" />\n          </template>\n        </RebornSearchBox>\n      </DemoBlock>\n    </DemoSection>\n\n    <DemoSection class=\"relative z-20\" title=\"形状与输入框属性透传\">\n      <template #description>\n        <code>shape=\"square\"</code> 统一取 <code>rounded-md</code> 令牌（不分尺寸），底色卡片上半圆角与输入框对齐、面板只保留下半圆角；\n        <code>input-attrs</code> 会 v-bind 透传给内部 <code>RebornInput</code>（显式 prop 优先）。\n      </template>\n      <DemoBlock layout=\"stack\">\n        <RebornSearchBox v-model=\"squareValue\" history-key=\"reborn-demo-squareValue\" shape=\"square\" size=\"md\" placeholder=\"方形圆角 + maxlength 透传...\"\n          :input-attrs=\"squareInputAttrs\" @search=\"onSearch\">\n          <template #input-trailing=\"{ search }\">\n            <RebornButton size=\"sm\" color=\"primary\" @click.stop=\"search\">\n              <Icon name=\"lucide:search\" class=\"size-5\" />\n            </RebornButton>\n          </template>\n          <template #dropdown=\"{ selectRecommend }\">\n            <div class=\"flex flex-col gap-3\">\n              <div class=\"text-lg font-bold text-gray-8 flex items-center justify-between\">\n                热门搜索\n              </div>\n              <div class=\"flex flex-col\">\n                <div v-for=\"item in recommendKeywords\" :key=\"item\"\n                  class=\"flex items-center gap-3 py-3 px-2 cursor-pointer hover:bg-gray-1 rounded-lg transition-colors text-base text-gray-8\"\n                  @click=\"selectRecommend(item)\">\n                  <Icon name=\"lucide:trending-up\" class=\"size-4 text-gray-4 shrink-0\" />\n                  <span>{{ item }}</span>\n                </div>\n              </div>\n            </div>\n          </template>\n        </RebornSearchBox>\n      </DemoBlock>\n    </DemoSection>\n\n    <DemoSection class=\"relative z-1\" title=\"下拉面板：SKU 属性筛选\">\n      <template #description>\n        面板即插槽：把 <code>RebornSku</code> 直接放进 <code>dropdown</code> 插槽即可组合出属性筛选面板，\n        带 <code>slots</code> 的属性项可用 <code>RebornSku</code> 的同名插槽自定义选择方式。\n      </template>\n      <DemoBlock layout=\"stack\">\n        <RebornSearchBox v-model=\"skuSearchValue\" history-key=\"reborn-demo-skuSearchValue\" placeholder=\"搜索商品属性...\" @search=\"onSearch\" size=\"lg\">\n          <template #input-trailing=\"{ search }\">\n            <RebornButton size=\"sm\" color=\"primary\" round variant=\"filled\" @click.stop=\"search\">\n              <Icon name=\"lucide:search\" class=\"size-5\" />\n            </RebornButton>\n          </template>\n          <template #dropdown>\n            <RebornSku v-model=\"skuSearchValue\" :options=\"skuAttributes\"\n              @change=\"onSkuChange\"\n              @click.stop>\n              <template #language>\n                <RebornRadioGroup v-model=\"skuSearchValue.language\">\n                  <RebornRadio value=\"cn\">\n                    直接搜索\n                  </RebornRadio>\n                  <RebornRadio value=\"en\">\n                    翻译成日文搜索\n                  </RebornRadio>\n                </RebornRadioGroup>\n              </template>\n            </RebornSku>\n          </template>\n        </RebornSearchBox>\n\n        <DemoNote tone=\"dimmed\">\n          当前绑定值：<code>{{ skuSearchValue }}</code>\n        </DemoNote>\n      </DemoBlock>\n    </DemoSection>\n  </div>\n</template>\n"
+    },
+    {
+      "title": "UniApp 演示",
+      "path": "packages/uniapp-project/src/pages/reborn-search-box/RebornSearchBoxDemo.vue",
+      "source": "demo",
+      "platform": "uniapp",
+      "code": "<script setup lang=\"ts\">\nimport { onMounted, reactive, shallowRef } from 'vue'\nimport RebornPage from '@/components/reborn-page/RebornPage.vue'\nimport RebornCard from '@/components/reborn-card/RebornCard.vue'\nimport RebornSearchBox from '@/components/reborn-search-box/RebornSearchBox.vue'\nimport RebornSelect from '@/components/reborn-select/RebornSelect.vue'\nimport RebornSwitch from '@/components/reborn-switch/RebornSwitch.vue'\nimport { searchBoxColors, searchBoxSizes, type SearchBoxSize, type SearchBoxColor } from '@/components/reborn-search-box/reborn-search-box.config'\n\n// 1. 交互演练场状态\nconst state = reactive({\n  value: '',\n  placeholder: '关键词/商品ID/网址',\n  size: 'sm' as SearchBoxSize,\n  color: 'primary' as SearchBoxColor,\n  border: false,\n  disabled: false\n})\n\n// 默认搜索值\nconst customSlotQuery = shallowRef('')\n/** 演练场的历史记录：绑定 v-model:history 后由本页持有，组件不再读写本地存储 */\nconst history = shallowRef<string[]>([])\n\n/** 历史回显的标签样式，演练场与本地存储示例共用 */\nconst historyChipClass = 'rounded-full bg-gray-100 px-[16rpx] py-[4rpx] text-22 text-gray-600 dark:bg-gray-800 dark:text-gray-300'\n\n/** 清空演练场历史：历史归父级所有，直接整体替换即可 */\nfunction clearHistory() {\n  history.value = []\n}\n\n// 颜色选项转换\nconst colorOptions: { label: string, value: SearchBoxColor }[] = searchBoxColors.map(c => ({\n  label: c.charAt(0).toUpperCase() + c.slice(1),\n  value: c as SearchBoxColor\n}))\n\n// 尺寸选项转换\nconst sizeOptions: { label: string, value: SearchBoxSize }[] = [\n  { label: '小 (sm)', value: 'sm' },\n  { label: '中 (md)', value: 'md' },\n  { label: '大 (lg)', value: 'lg' }\n]\n\nconst handleSearch = (value: string) => {\n  uni.showToast({\n    title: `搜索: ${value || '空内容'}`,\n    icon: 'none',\n  })\n}\n\n/** 默认插槽未传时渲染相机图标，点击派发 clickCamera */\nfunction handleCameraClick() {\n  uni.showToast({ title: '点击了相机图标', icon: 'none' })\n}\n\n// 本地存储示例\n/** 本地存储示例的存储键：未绑定 history 时，组件按这个键读写 uni 本地存储 */\nconst storageHistoryKey = 'demo-search-history'\n/** 从本地存储读回的历史，只用于回显（UniApp 端组件不渲染历史列表） */\nconst storedHistory = shallowRef<string[]>([])\n\n/** 读取本地存储里的历史，读不到或格式不对时按空列表处理 */\nfunction readStoredHistory() {\n  try {\n    const saved: unknown = uni.getStorageSync(storageHistoryKey)\n    const parsed: unknown = typeof saved === 'string' ? JSON.parse(saved || '[]') : saved\n    storedHistory.value = Array.isArray(parsed) ? parsed.filter((item): item is string => typeof item === 'string') : []\n  }\n  catch {\n    storedHistory.value = []\n  }\n}\n\n/** 组件先写存储再派发 search，所以在回调里读到的已经包含本次关键词 */\nfunction handleStorageSearch(value: string) {\n  readStoredHistory()\n  handleSearch(value)\n}\n\n// 进入页面先回显上次留下的记录，用来验证离开再进来历史仍在\nonMounted(readStoredHistory)\n</script>\n\n<template>\n  <RebornPage title=\"SearchBox 搜索框\" description=\"支持关键词输入、历史记录及前后缀插槽的搜索框。\">\n\n    <!-- 交互预览区 (直接平铺) -->\n    <view class=\"mb-6\">\n      <view class=\"text-xs text-gray-400 mb-3 px-1 font-bold uppercase tracking-widest\">LIVE PREVIEW</view>\n      <RebornSearchBox v-model=\"state.value\" v-model:history=\"history\"\n        :placeholder=\"state.placeholder\" :size=\"state.size\" :color=\"state.color\"\n                       :border=\"state.border\" :disabled=\"state.disabled\" @search=\"handleSearch\" />\n      <!-- 历史回显：组件不渲染历史列表，绑定 v-model:history 后由本页自行展示 -->\n      <view class=\"mt-[24rpx] flex flex-wrap items-center gap-[12rpx] px-[8rpx]\">\n        <text class=\"text-22 text-gray-400\">history：</text>\n        <text v-if=\"history.length === 0\" class=\"text-22 text-gray-400\">暂无，输入关键词后按键盘确认键</text>\n        <text v-for=\"item in history\" :key=\"item\" :class=\"historyChipClass\">{{ item }}</text>\n        <text v-if=\"history.length > 0\" class=\"text-22 text-primary\" @tap=\"clearHistory\">清空</text>\n      </view>\n    </view>\n\n    <!-- 配置面板 -->\n    <RebornCard padding custom-class=\"mb-8\">\n      <view class=\"grid grid-cols-1 gap-6\">\n        <view class=\"grid grid-cols-2 gap-4\">\n          <view class=\"flex flex-col gap-2\">\n            <text class=\"text-[22rpx] text-gray-400 uppercase font-bold px-1\">尺寸规格</text>\n            <RebornSelect v-model=\"state.size\" :options=\"sizeOptions\" size=\"sm\" placeholder=\"选择尺寸\" title=\"切换尺寸\" />\n          </view>\n          <view class=\"flex flex-col gap-2\">\n            <text class=\"text-[22rpx] text-gray-400 uppercase font-bold px-1\">主题颜色</text>\n            <RebornSelect v-model=\"state.color\" :options=\"colorOptions\" size=\"sm\" placeholder=\"选择颜色\" title=\"切换主题颜色\" />\n          </view>\n        </view>\n\n        <view class=\"flex items-center justify-start gap-12 px-1\">\n          <RebornSwitch v-model=\"state.border\" size=\"sm\" active-label=\"显示边框\"\n            :ui=\"{ activeLabel: 'text-sm text-gray-500', inactiveLabel: 'text-sm text-gray-500' }\" />\n          <RebornSwitch v-model=\"state.disabled\" size=\"sm\" active-label=\"禁用状态\"\n            :ui=\"{ activeLabel: 'text-sm text-gray-500', inactiveLabel: 'text-sm text-gray-500' }\" />\n        </view>\n      </view>\n    </RebornCard>\n\n    <!-- 分隔标题样式 -->\n    <view class=\"flex items-center gap-4 mb-4 mt-2\">\n      <view class=\"w-1 h-6 bg-primary rounded-full\"></view>\n      <text class=\"text-28 font-bold text-gray-800 dark:text-gray-200\">各尺寸对比</text>\n    </view>\n    <view class=\"flex flex-col gap-5 mb-8\">\n      <view v-for=\"size in sizeOptions\" :key=\"size.value\" class=\"flex flex-col gap-2\">\n        <text class=\"text-22 text-gray-400 px-1\">{{ size.label }}</text>\n        <RebornSearchBox :size=\"size.value\" :placeholder=\"`${size.label} 搜索框预览`\" border />\n      </view>\n    </view>\n\n    <view class=\"flex items-center gap-4 mb-4 mt-2\">\n      <view class=\"w-1 h-6 bg-secondary rounded-full\"></view>\n      <text class=\"text-28 font-bold text-gray-800 dark:text-gray-200\">色彩风格</text>\n    </view>\n    <view class=\"grid grid-cols-1 gap-5 mb-8\">\n      <view v-for=\"color in colorOptions.slice(0, 4)\" :key=\"color.value\" class=\"flex flex-col gap-2\">\n        <text class=\"text-22 text-gray-400 px-1\">{{ color.label }}</text>\n        <RebornSearchBox :color=\"color.value\" :placeholder=\"`${color.label} 主题色展示`\" border />\n      </view>\n    </view>\n\n    <view class=\"flex items-center gap-4 mb-4 mt-2\">\n      <view class=\"w-1 h-6 bg-success rounded-full\"></view>\n      <text class=\"text-28 font-bold text-gray-800 dark:text-gray-200\">高度自定义 (Slots)</text>\n    </view>\n    <view class=\"flex flex-col gap-5 mb-10\">\n      <view class=\"flex flex-col gap-2\">\n        <text class=\"text-22 text-gray-400 px-1\">自定义后缀操作（extra 插槽）</text>\n        <RebornSearchBox v-model=\"customSlotQuery\" color=\"success\" placeholder=\"点击右侧图标试试\">\n          <template #extra>\n            <view\n              class=\"flex items-center gap-1.5 rounded-full bg-success/10 px-2.5 py-1 text-success active:scale-95\"\n              @tap=\"handleSearch(customSlotQuery)\"\n            >\n              <view class=\"i-lucide-search text-28\" />\n              <text class=\"text-22 font-bold\">搜索</text>\n            </view>\n          </template>\n        </RebornSearchBox>\n      </view>\n\n      <view class=\"flex flex-col gap-2\">\n        <text class=\"text-22 text-gray-400 px-1\">默认相机图标（点击派发 clickCamera）</text>\n        <RebornSearchBox placeholder=\"不传入插槽时的默认表现\" @click-camera=\"handleCameraClick\" />\n      </view>\n    </view>\n\n    <!-- 本地存储历史：不绑定 history，只传 history-key -->\n    <view class=\"mb-[32rpx] mt-[16rpx] flex items-center gap-[32rpx]\">\n      <view class=\"h-[48rpx] w-[8rpx] rounded-full bg-warning\" />\n      <text class=\"text-28 font-bold text-gray-800 dark:text-gray-200\">本地存储历史</text>\n    </view>\n    <view class=\"mb-[64rpx] flex flex-col gap-[16rpx]\">\n      <text class=\"px-[8rpx] text-22 text-gray-400\">\n        未绑定 history 时按 history-key 读写本地存储，最多保留 10 条，离开本页再进来仍在；与 v-model:history 二选一，绑定后 history-key 不再生效。\n      </text>\n      <RebornSearchBox :history-key=\"storageHistoryKey\" placeholder=\"搜索后返回首页再进来看看\" @search=\"handleStorageSearch\" />\n      <view class=\"flex flex-wrap items-center gap-[12rpx] px-[8rpx]\">\n        <text class=\"text-22 text-gray-400\">{{ storageHistoryKey }}：</text>\n        <text v-if=\"storedHistory.length === 0\" class=\"text-22 text-gray-400\">存储中暂无记录</text>\n        <text v-for=\"item in storedHistory\" :key=\"item\" :class=\"historyChipClass\">{{ item }}</text>\n      </view>\n    </view>\n\n    <!-- 提示区 -->\n    <view\n      class=\"p-6 bg-gray-100/50 dark:bg-gray-800/30 rounded-2xl text-center border border-gray-100 dark:border-gray-800\">\n      <text class=\"text-22 text-gray-500\">\n        输入关键词后按键盘确认键触发 search，非空关键词写入历史。演练场绑定了 v-model:history，历史由本页持有、不读写本地存储；「本地存储历史」一节不绑定 history，由组件按 history-key 读写存储。\n      </text>\n    </view>\n    <view class=\"h-10\"></view>\n  </RebornPage>\n</template>\n"
+    }
+  ],
+  "related": [
+    "reborn-input"
+  ],
+  "whenToUse": [
+    "电商、文档站搜索框，需要历史记录与推荐搜索下拉面板时（经 dropdown 插槽构建）。",
+    "按商品属性筛选：把 reborn-sku 放进 dropdown 插槽组合使用。",
+    "需要目录选择器、图片搜索等自定义入口时（外置区用 leading / trailing、输入框内用 input-leading / input-trailing 提供并自行处理交互）。"
+  ],
+  "whenNotToUse": [
+    "普通文本录入改用 reborn-input。",
+    "从固定选项集中选择改用 reborn-select。"
+  ],
+  "pitfalls": [
+    "web、uniapp 双端可用，但 modelValue 类型不同：web 为 { inputValue, selectValue } 对象，uniapp 为字符串。",
+    "web 端插槽分两族，决定内容落在输入框内还是外：input-leading / input-trailing 转发到内部 reborn-input 的 prefix / suffix，内容落在输入框内部、贴着文本排布并随输入框一起进入激活态（作用域 ui/inputUi/search）；leading / trailing 是搜索框自身的外置插槽，与输入框区并列排在控件行里、被外层边框囊括在内，高度与输入框区一样撑满整行，但获得焦点时不出现任何描边（leading 里放可聚焦的 reborn-select 也不会点亮）。leading 作用域透出 ui（仅结构层样式键，分隔线等装饰样式由插槽内容自行提供），trailing 作用域透出 search() 触发搜索，dropdown 作用域透出 ui/history/selectHistory/removeHistoryItem/clearHistory/selectRecommend；不填插槽则对应区域不渲染，回车仍可搜索。",
+    "外层边框落在控件行（ui.control）并把外置插槽一并囊括在内，默认 border-gray-4；激活态由组件内部的 focus / blur 事件维护而非 CSS focus-within，因此点 leading 里的选择器、trailing 里的按钮都不会出现描边。聚焦描边画在哪一层取决于有无外置插槽：无外置插槽时直接把 control 的边框换成 color 对应色族 5 阶；有 leading / trailing 任一插槽时 control 恒为 gray-4 不变色，改由输入框区（ui.inputWrapper）的 ::before 覆盖层在区内另起一圈同色描边（绝对定位、不参与布局，按尺寸内缩 2 / 3 / 4px，圆角随 shape 与尺寸对齐）。输入框区的水平内边距兼作与外置插槽的间距，按尺寸取 8px（sm）/ 12px（md、lg），覆盖时改 inputWrapper 键。内部 reborn-input 恒为 variant=borderless，inputAttrs 不可覆盖（避免双层描边）。shape 与 reborn-input 的同名 API 对齐（circle 胶囊 / square 统一 rounded-md 令牌、不分尺寸）：底色卡片上半圆角与输入框对齐，面板只保留下半圆角；inputAttrs 其余键会 v-bind 透传给内部输入框，显式 prop 优先。",
+    "组件样式统一浅色令牌、无 dark: 前缀；深色适配经 ui/inputUi 覆盖。showDropdown/shape/inputAttrs 仅 web 端生效。",
+    "两端绑定 v-model:history 后只通过 update:history 请求更新，由父级持有历史；未绑定时才按 historyKey（默认 reborn-search-history）读写本地存储，最多 10 条；Web 端以 history 是否为 undefined 判断是否绑定，未绑定时不发 update:history。两端旧 saveHistory/removeHistory 回调均已移除。",
+    "Web 未声明属性与监听落到根容器；内部输入框属性请用 inputAttrs。",
+    "UniApp 移除未实现 mode/showDropdown/skuAttributes/selectSku；prefix 默认本地搜索图标，extra 提供外置业务入口；不内置站点弹层或远程业务图片。"
+  ],
+  "dependencies": [
+    "@weapp-tailwindcss/merge-v3",
+    "@weapp-tailwindcss/variants-v3",
+    "clsx",
+    "tailwind-merge",
+    "tailwind-variants"
+  ],
+  "install": {
+    "cli": "npx reborn-ui@latest add reborn-search-box"
+  },
+  "sourceRefs": {
+    "web": [
+      "app/components/reborn/ui/reborn-search-box/RebornSearchBox.vue",
+      "app/components/reborn/ui/reborn-search-box/reborn-search-box.config.ts"
+    ],
+    "uniapp": [
+      "packages/uniapp-project/src/components/reborn-search-box/RebornSearchBox.vue",
+      "packages/uniapp-project/src/components/reborn-search-box/reborn-search-box.config.ts"
+    ]
+  },
+  "docPath": "content/2.components/input-and-forms/reborn-search-box.md",
+  "_meta": {
+    "contentHash": "3eaa5108e88a8263804e4d873835ecfe56887a32",
+    "hasOverride": true,
+    "extractors": {
+      "web": "ok",
+      "uniapp": "ok",
+      "docs": "found"
+    }
+  }
+}

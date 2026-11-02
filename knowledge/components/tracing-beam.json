@@ -1,0 +1,79 @@
+{
+  "$schema": "../schema/component.schema.json",
+  "id": "tracing-beam",
+  "title": "跟踪光束",
+  "description": "用于在内容一侧渲染随滚动延伸的渐变光束装饰的容器组件。",
+  "category": "misc",
+  "tags": [
+    "css",
+    "tailwind",
+    "aceternity-ui"
+  ],
+  "platforms": [
+    "web"
+  ],
+  "props": [
+    {
+      "name": "class",
+      "type": "HTMLAttributes[\"class\"]",
+      "required": false,
+      "description": "根容器的自定义类名",
+      "default": "\"\""
+    }
+  ],
+  "events": [],
+  "slots": [
+    {
+      "name": "default",
+      "description": ""
+    }
+  ],
+  "exposes": [],
+  "examples": [
+    {
+      "title": "Web 演示",
+      "path": "app/components/reborn/examples/tracing-beam/TracingBeamDemo.vue",
+      "source": "demo",
+      "platform": "web",
+      "code": "<script setup lang=\"ts\">\n/** 演示用长文，给光束一条可滚动的路径 */\nconst dummyContent = [\n  {\n    title: \"从山顶看下去\",\n    description: [\n      \"光束会跟着滚动进度走完整篇。把页面往下拉，左侧那条线会一路点亮。\",\n      \"适合文档、长文、发布日志这类需要告诉读者「你读到哪了」的场景。\",\n    ],\n    badge: \"Vue\",\n    image:\n      \"https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?auto=format&fit=crop&q=80&w=3540&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D\",\n  },\n  {\n    title: \"夜间的雪线\",\n    description: [\n      \"徽章用 inverted 表面，亮暗两种模式都保持高对比。\",\n      \"缩略图圆角走白名单，不再写 rounded-lg。\",\n    ],\n    badge: \"Nuxt\",\n    image:\n      \"https://images.unsplash.com/photo-1519681393784-d120267933ba?auto=format&fit=crop&q=80&w=3540&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D\",\n  },\n  {\n    title: \"林间小路\",\n    description: [\n      \"内容本身没有填充盒。分隔只靠留白。\",\n    ],\n    badge: \"Reborn UI\",\n    image:\n      \"https://images.unsplash.com/photo-1469474968028-56623f02e42e?auto=format&fit=crop&q=80&w=3506&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D\",\n  },\n];\n</script>\n\n<template>\n  <DemoSection\n    title=\"基础用法\"\n    description=\"左侧光束随滚动点亮；徽章是内容本身的标签，不是脚手架。\"\n  >\n    <TracingBeam class=\"px-6\">\n      <div class=\"relative mx-auto max-w-2xl pt-4\">\n        <div\n          v-for=\"(item, index) in dummyContent\"\n          :key=\"`content-${index}`\"\n          class=\"mb-10\"\n        >\n          <div class=\"bg-inverted text-inverted mb-4 w-fit rounded-full px-2 text-sm\">\n            {{ item.badge }}\n          </div>\n\n          <p class=\"text-highlighted mb-4 text-xl\">\n            {{ item.title }}\n          </p>\n\n          <div class=\"text-muted text-sm\">\n            <img\n              v-if=\"item.image\"\n              :src=\"item.image\"\n              alt=\"文章配图\"\n              class=\"mb-10 rounded-xl object-cover\"\n            >\n            <div>\n              <p\n                v-for=\"(paragraph, idx) in item.description\"\n                :key=\"`desc-${idx}`\"\n                class=\"mb-3\"\n              >\n                {{ paragraph }}\n              </p>\n            </div>\n          </div>\n        </div>\n      </div>\n    </TracingBeam>\n  </DemoSection>\n</template>\n"
+    }
+  ],
+  "related": [],
+  "whenToUse": [
+    "博客、长文页面侧边需要滚动进度光束引导阅读。",
+    "叙事型长页需要跟随滚动的视觉引导线。"
+  ],
+  "whenNotToUse": [
+    "需要条目结构、粘性标签的时间线，改用 timeline。",
+    "需要悬浮展开的滚动进度指示，改用 scroll-island。"
+  ],
+  "pitfalls": [
+    "仅 web 端可用，依赖 motion-v 与 vue-use-spring。",
+    "仅有 class 一个 prop，正文内容全部通过默认插槽传入。",
+    "光束进度由页面滚动驱动，包裹的内容需有足够高度才能看到延伸效果。"
+  ],
+  "dependencies": [
+    "@vueuse/core",
+    "motion-v",
+    "vue-use-spring"
+  ],
+  "install": {
+    "cli": "npx reborn-ui@latest add tracing-beam"
+  },
+  "sourceRefs": {
+    "web": [
+      "app/components/reborn/ui/tracing-beam/TracingBeam.vue",
+      "app/components/reborn/ui/tracing-beam/index.ts"
+    ]
+  },
+  "docPath": "content/2.components/miscellaneous/tracing-beam.md",
+  "_meta": {
+    "contentHash": "454069ee1087d973c71238d6c15292537a60dcb3",
+    "hasOverride": true,
+    "extractors": {
+      "web": "ok",
+      "uniapp": "absent",
+      "docs": "found"
+    }
+  }
+}

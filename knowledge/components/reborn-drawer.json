@@ -1,0 +1,317 @@
+{
+  "$schema": "../schema/component.schema.json",
+  "id": "reborn-drawer",
+  "title": "Drawer 抽屉",
+  "description": "Web 边缘滑入抽屉，支持四向展开、关闭拦截、局部挂载、焦点管理与尺寸调整。",
+  "category": "navigation",
+  "tags": [
+    "vue",
+    "tailwind",
+    "drawer",
+    "overlay"
+  ],
+  "platforms": [
+    "web"
+  ],
+  "props": [
+    {
+      "name": "appendTo",
+      "type": "string | HTMLElement",
+      "required": false,
+      "description": "指定挂载节点，优先于 appendToBody；不传时由 appendToBody 决定。"
+    },
+    {
+      "name": "appendToBody",
+      "type": "boolean",
+      "required": false,
+      "description": "默认挂载 body；关闭后在当前位置的定位父容器内渲染。",
+      "default": "true"
+    },
+    {
+      "name": "lockScroll",
+      "type": "boolean",
+      "required": false,
+      "description": "打开及退场期间锁定页面滚动。",
+      "default": "true"
+    },
+    {
+      "name": "closeOnClickModal",
+      "type": "boolean",
+      "required": false,
+      "description": "点击遮罩是否关闭。",
+      "default": "true"
+    },
+    {
+      "name": "closeOnPressEscape",
+      "type": "boolean",
+      "required": false,
+      "description": "按 ESC 是否关闭，仅最上层抽屉响应。",
+      "default": "true"
+    },
+    {
+      "name": "openDelay",
+      "type": "number",
+      "required": false,
+      "description": "打开延迟，单位毫秒。",
+      "default": "0"
+    },
+    {
+      "name": "closeDelay",
+      "type": "number",
+      "required": false,
+      "description": "关闭延迟，单位毫秒。",
+      "default": "0"
+    },
+    {
+      "name": "destroyOnClose",
+      "type": "boolean",
+      "required": false,
+      "description": "关闭动画结束后销毁子元素。",
+      "default": "false"
+    },
+    {
+      "name": "modal",
+      "type": "boolean",
+      "required": false,
+      "description": "是否显示遮罩颜色。",
+      "default": "true"
+    },
+    {
+      "name": "modalPenetrable",
+      "type": "boolean",
+      "required": false,
+      "description": "仅 modal=false 时允许点击穿透抽屉之外的区域。",
+      "default": "false"
+    },
+    {
+      "name": "direction",
+      "type": "DrawerDirection",
+      "required": false,
+      "description": "抽屉从哪一侧滑入。",
+      "default": "'right'"
+    },
+    {
+      "name": "resizable",
+      "type": "boolean",
+      "required": false,
+      "description": "是否允许指针拖动或方向键调整尺寸。",
+      "default": "false"
+    },
+    {
+      "name": "size",
+      "type": "number | string",
+      "required": false,
+      "description": "左右为宽度、上下为高度；百分比或像素数值。",
+      "default": "'30%'"
+    },
+    {
+      "name": "title",
+      "type": "string",
+      "required": false,
+      "description": "标题内容。",
+      "default": "''"
+    },
+    {
+      "name": "withHeader",
+      "type": "boolean",
+      "required": false,
+      "description": "是否显示头部，关闭时所有头部插槽均不生效。",
+      "default": "false"
+    },
+    {
+      "name": "beforeClose",
+      "type": "(done: (cancel?: boolean) => void) => void",
+      "required": false,
+      "description": "用户关闭前拦截；done(false) 放行，done() / done(true) 取消。"
+    },
+    {
+      "name": "zIndex",
+      "type": "number",
+      "required": false,
+      "description": "基础层级，嵌套时自动递增。",
+      "default": "2000"
+    },
+    {
+      "name": "duration",
+      "type": "number",
+      "required": false,
+      "description": "动画时长，单位毫秒；减少动态效果偏好下自动为零。",
+      "default": "300"
+    },
+    {
+      "name": "ariaLabel",
+      "type": "string",
+      "required": false,
+      "description": "无可见标题时使用的无障碍名称。",
+      "default": "'抽屉'"
+    },
+    {
+      "name": "ui",
+      "type": "DrawerUI",
+      "required": false,
+      "description": "内部各区域的样式覆盖。 可用键（从源码抽取，以此为准）——Web：backdrop、body、close*、extra、footer、header、heading*、resizer、root、scrollbar、scrollbarWrap、title、wrapper。 带 * 的键对应插槽兜底节点：填了同名插槽，组件自带的节点被替换，这个键随之失效。",
+      "default": "() => ({})"
+    },
+    {
+      "name": "modelValue",
+      "type": "boolean",
+      "required": false,
+      "description": "双向绑定值",
+      "vModel": true,
+      "default": "undefined"
+    }
+  ],
+  "events": [
+    {
+      "name": "open",
+      "payload": "[]",
+      "description": "开始打开。"
+    },
+    {
+      "name": "opened",
+      "payload": "[]",
+      "description": "打开动画结束。"
+    },
+    {
+      "name": "close",
+      "payload": "[]",
+      "description": "开始关闭。"
+    },
+    {
+      "name": "closed",
+      "payload": "[]",
+      "description": "关闭动画结束。"
+    },
+    {
+      "name": "openAutoFocus",
+      "payload": "[]",
+      "description": "内容获得自动焦点。模板中写作 @open-auto-focus。"
+    },
+    {
+      "name": "closeAutoFocus",
+      "payload": "[]",
+      "description": "焦点归还原触发元素。模板中写作 @close-auto-focus。"
+    },
+    {
+      "name": "resizeStart",
+      "payload": "[size: number]",
+      "description": "开始调整尺寸，参数为当前像素尺寸。模板中写作 @resize-start。"
+    },
+    {
+      "name": "resize",
+      "payload": "[size: number]",
+      "description": "尺寸变化，参数为当前像素尺寸。"
+    },
+    {
+      "name": "resizeEnd",
+      "payload": "[size: number]",
+      "description": "结束调整尺寸，参数为最终像素尺寸。模板中写作 @resize-end。"
+    },
+    {
+      "name": "update:modelValue",
+      "description": "modelValue 变化时触发（v-model 同步）",
+      "payload": "value: boolean"
+    }
+  ],
+  "slots": [
+    {
+      "name": "default",
+      "props": "(props: { close: () => void }) => unknown",
+      "description": "主体内容"
+    },
+    {
+      "name": "header",
+      "props": "(props: { close: () => void }) => unknown",
+      "description": "覆盖整个头部内部，须开启 withHeader"
+    },
+    {
+      "name": "title",
+      "props": "(props: { close: () => void }) => unknown",
+      "description": "单独替换标题，header 优先"
+    },
+    {
+      "name": "close",
+      "props": "(props: { close: () => void }) => unknown",
+      "description": "单独替换左侧关闭区域，header 优先"
+    },
+    {
+      "name": "extra",
+      "props": "(props: { close: () => void }) => unknown",
+      "description": "头部右侧额外操作区，header 优先"
+    },
+    {
+      "name": "footer",
+      "props": "(props: { close: () => void }) => unknown",
+      "description": "页脚，不传时不渲染"
+    }
+  ],
+  "exposes": [
+    {
+      "name": "close",
+      "description": ""
+    },
+    {
+      "name": "panel",
+      "description": ""
+    }
+  ],
+  "examples": [
+    {
+      "title": "Web 演示",
+      "path": "app/components/reborn/examples/reborn-drawer/RebornDrawerDemo.vue",
+      "source": "demo",
+      "platform": "web",
+      "code": "<script setup lang=\"ts\">\nimport type { PlaygroundControlGroup } from '~/components/common/play-ground/Playground.vue'\nimport type { DrawerDirection } from '~/components/reborn/ui/reborn-drawer'\nimport { computed, shallowRef, useTemplateRef } from 'vue';\nimport DemoNote from '~/components/common/demo/DemoNote.vue'\nimport DemoSection from '~/components/common/demo/DemoSection.vue'\nimport Playground from '~/components/common/play-ground/Playground.vue'\nimport RebornButton from '~/components/reborn/ui/reborn-button/RebornButton.vue'\nimport RebornCheckbox from '~/components/reborn/ui/reborn-checkbox/RebornCheckbox.vue'\nimport RebornDrawer from '~/components/reborn/ui/reborn-drawer/RebornDrawer.vue'\nimport RebornInput from '~/components/reborn/ui/reborn-input/RebornInput.vue'\n\nconst defaults = {\n  direction: 'right' as DrawerDirection, size: '30%', title: '任务详情', withHeader: false,\n  modal: true, modalPenetrable: false, lockScroll: true, closeOnClickModal: true,\n  closeOnPressEscape: true, openDelay: 0, closeDelay: 0, destroyOnClose: false, resizable: false,\n}\nconst state = shallowRef({ ...defaults })\nconst playgroundOpen = shallowRef(false)\nconst lastEvent = shallowRef('尚未打开')\nconst directions: { label: string, value: DrawerDirection }[] = [\n  { label: '右侧', value: 'right' }, { label: '左侧', value: 'left' },\n  { label: '顶部', value: 'top' }, { label: '底部', value: 'bottom' },\n]\nconst controls: PlaygroundControlGroup[] = [\n  { title: '面板', children: [\n    { label: '滑入方向', key: 'direction', component: 'select', props: { options: directions } },\n    { label: '尺寸（百分比或像素）', key: 'size', component: 'input' },\n    { label: '标题', key: 'title', component: 'input' },\n    ...['withHeader', 'resizable', 'destroyOnClose'].map((key, i) => ({ label: ['显示头部', '允许调整尺寸', '关闭后销毁'][i]!, key, component: 'checkbox' as const })),\n  ] },\n  { title: '遮罩与关闭', children: [\n    ...['modal', 'modalPenetrable', 'lockScroll', 'closeOnClickModal', 'closeOnPressEscape'].map((key, i) => ({ label: ['显示遮罩', '无遮罩时穿透', '锁定页面滚动', '点击遮罩关闭', 'ESC 关闭'][i]!, key, component: 'checkbox' as const })),\n    { label: '打开延迟（毫秒）', key: 'openDelay', component: 'input-number', props: { min: 0, step: 100 } },\n    { label: '关闭延迟（毫秒）', key: 'closeDelay', component: 'input-number', props: { min: 0, step: 100 } },\n  ] },\n]\nconst code = computed(() => `<RebornDrawer v-model=\"open\"\\n${Object.entries(state.value).map(([key, value]) => `  ${typeof value === 'string' ? '' : ':'}${key.replace(/[A-Z]/g, char => `-${char.toLowerCase()}`)}=\"${value}\"`).join('\\n')}\\n>\\n  抽屉内容\\n</RebornDrawer>`)\nconst directionOpen = shallowRef(false)\nconst direction = shallowRef<DrawerDirection>('right')\nfunction openDirection(value: DrawerDirection) { direction.value = value; directionOpen.value = true }\nconst slotsOpen = shallowRef(false)\nconst fullHeader = shallowRef(false)\nconst guardOpen = shallowRef(false)\nconst confirmation = shallowRef(false)\nlet pendingClose: ((cancel?: boolean) => void) | undefined\n/** 保留关闭回调，由抽屉内的确认操作决定是否继续。 */\nfunction beforeClose(done: (cancel?: boolean) => void) { pendingClose = done; confirmation.value = true }\nfunction decideClose(cancel: boolean) { pendingClose?.(cancel); pendingClose = undefined; confirmation.value = false }\nconst delayOpen = shallowRef(false)\nconst destroy = shallowRef(false)\nconst delayEvent = shallowRef('等待操作')\nconst maskOpen = shallowRef(false)\nconst penetrate = shallowRef(false)\nconst outsideClicks = shallowRef(0)\nconst localOpen = shallowRef(false)\nconst localTarget = useTemplateRef<HTMLElement>(\"localTarget\");\nconst resizeOpen = shallowRef(false)\nconst resizeInfo = shallowRef('拖动左边缘，或聚焦分隔条后按方向键')\nconst parentOpen = shallowRef(false)\nconst childOpen = shallowRef(false)\n</script>\n\n<template>\n  <div class=\"flex w-full flex-col\">\n    <Playground v-model=\"state\" :controls=\"controls\" :code=\"code\" component-name=\"RebornDrawer\" title=\"交互演练场\" description=\"调节参数后打开抽屉，查看方向、头部、遮罩和延迟关闭的实际效果。\">\n      <template #tag><RebornButton size=\"sm\" variant=\"text\" @click=\"state = { ...defaults }\">重置配置</RebornButton></template>\n      <div class=\"flex flex-col items-center gap-4\">\n        <RebornButton @click=\"playgroundOpen = true\">打开抽屉</RebornButton>\n        <DemoNote>{{ lastEvent }}</DemoNote>\n      </div>\n      <RebornDrawer v-model=\"playgroundOpen\" v-bind=\"state\" @open=\"lastEvent = 'open：开始打开'\" @opened=\"lastEvent = 'opened：打开完成'\" @close=\"lastEvent = 'close：开始关闭'\" @closed=\"lastEvent = 'closed：关闭完成'\">\n        <p class=\"mb-4\">保留当前页面，在抽屉内录入任务信息。</p>\n        <RebornInput placeholder=\"请输入任务名称\" aria-label=\"任务名称\" />\n        <template #footer=\"{ close }\"><RebornButton class=\"w-full\" @click=\"close\">完成并关闭</RebornButton></template>\n      </RebornDrawer>\n    </Playground>\n\n    <DemoSection title=\"方向与尺寸\">\n      <template #description><code>direction</code> 决定滑入边缘；<code>size</code> 在左右方向表示宽度，在上下方向表示高度。</template>\n      <div class=\"flex flex-wrap gap-3\"><RebornButton v-for=\"item in directions\" :key=\"item.value\" variant=\"outlined\" @click=\"openDirection(item.value)\">{{ item.label }}</RebornButton></div>\n      <RebornDrawer v-model=\"directionOpen\" :direction=\"direction\" size=\"40%\" title=\"方向与尺寸\" with-header><p>当前方向：{{ direction }}，尺寸为父容器的 40%。</p></RebornDrawer>\n    </DemoSection>\n\n    <DemoSection title=\"头部与页脚插槽\">\n      <template #description><code>with-header</code> 开启后可独立替换 <code>title</code>、<code>close</code>、<code>extra</code>；<code>header</code> 覆盖三者。</template>\n      <div class=\"flex flex-wrap items-center gap-4\"><RebornCheckbox v-model=\"fullHeader\" label=\"覆盖整个头部\" /><RebornButton variant=\"outlined\" @click=\"slotsOpen = true\">查看插槽</RebornButton></div>\n      <RebornDrawer v-model=\"slotsOpen\" with-header size=\"420\">\n        <template v-if=\"fullHeader\" #header=\"{ close }\"><strong>自定义完整头部</strong><RebornButton size=\"sm\" variant=\"text\" @click=\"close\">返回任务</RebornButton></template>\n        <template #title>编辑任务</template>\n        <template #close=\"{ close }\"><button type=\"button\" class=\"size-5 text-gray-9\" aria-label=\"返回\" @click=\"close\"><Icon name=\"lucide:arrow-left\" class=\"size-5\" /></button></template>\n        <template #extra><span class=\"text-sm text-gray-6\">草稿</span></template>\n        <RebornInput placeholder=\"任务标题\" aria-label=\"任务标题\" />\n        <template #footer=\"{ close }\"><div class=\"flex justify-end gap-3\"><RebornButton variant=\"text\" @click=\"close\">取消</RebornButton><RebornButton @click=\"close\">确定</RebornButton></div></template>\n      </RebornDrawer>\n    </DemoSection>\n\n    <DemoSection title=\"关闭前确认\">\n      <template #description><code>before-close</code> 暂停关闭：<code>done(false)</code> 放行，<code>done()</code> 或 <code>done(true)</code> 取消。</template>\n      <RebornButton variant=\"outlined\" @click=\"guardOpen = true\">编辑未保存任务</RebornButton>\n      <RebornDrawer v-model=\"guardOpen\" with-header title=\"未保存任务\" :before-close=\"beforeClose\" @closed=\"confirmation = false\">\n        <p>点击关闭图标、遮罩、页脚按钮或按 ESC，均先在本面板确认。</p>\n        <div v-if=\"confirmation\" role=\"alert\" class=\"mt-6 flex flex-col gap-4 rounded-lg bg-gray-2 p-4\">\n          <p>放弃本次编辑吗？</p><div class=\"flex gap-3\"><RebornButton variant=\"text\" @click=\"decideClose(true)\">继续编辑</RebornButton><RebornButton @click=\"decideClose(false)\">放弃并关闭</RebornButton></div>\n        </div>\n        <template #footer=\"{ close }\"><RebornButton @click=\"close\">请求关闭</RebornButton></template>\n      </RebornDrawer>\n    </DemoSection>\n\n    <DemoSection title=\"延迟与内容保留\">\n      <template #description><code>open-delay</code> 与 <code>close-delay</code> 均为 500ms；<code>destroy-on-close</code> 控制退场完成后是否销毁输入框。</template>\n      <div class=\"flex flex-wrap items-center gap-4\"><RebornCheckbox v-model=\"destroy\" label=\"关闭后销毁内容\" /><RebornButton variant=\"outlined\" @click=\"delayOpen = true\">延迟打开</RebornButton><RebornButton variant=\"text\" @click=\"delayOpen = false\">取消待打开</RebornButton></div>\n      <DemoNote class=\"mt-3\">{{ delayEvent }}</DemoNote>\n      <RebornDrawer v-model=\"delayOpen\" with-header title=\"内容保留\" :open-delay=\"500\" :close-delay=\"500\" :destroy-on-close=\"destroy\" @open=\"delayEvent = '开始打开'\" @opened=\"delayEvent = '打开完成'\" @close=\"delayEvent = '开始关闭'\" @closed=\"delayEvent = '关闭完成'\">\n        <label class=\"flex flex-col gap-3\">输入后关闭再打开，检查是否保留<input aria-label=\"保留内容测试\" class=\"rounded-md border border-gray-4 px-3 py-2 outline-primary\" placeholder=\"未绑定父级状态的输入框\"></label>\n      </RebornDrawer>\n    </DemoSection>\n\n    <DemoSection title=\"遮罩与穿透\">\n      <template #description>关闭 <code>modal</code> 只去掉遮罩颜色；还需 <code>modal-penetrable</code> 才能操作下层页面，此例同时关闭滚动锁。</template>\n      <div class=\"flex flex-wrap items-center gap-4\"><RebornCheckbox v-model=\"penetrate\" label=\"允许穿透\" /><RebornButton variant=\"outlined\" @click=\"maskOpen = true\">打开无遮罩抽屉</RebornButton><RebornButton variant=\"text\" @click=\"outsideClicks++\">下层按钮：{{ outsideClicks }}</RebornButton></div>\n      <RebornDrawer v-model=\"maskOpen\" with-header title=\"无遮罩抽屉\" :modal=\"false\" :modal-penetrable=\"penetrate\" :lock-scroll=\"false\" :close-on-click-modal=\"false\"><p>允许穿透时可点击左侧页面按钮；否则透明遮罩仍会拦截。</p></RebornDrawer>\n    </DemoSection>\n\n    <DemoSection title=\"父容器内挂载\">\n      <template #description><code>append-to</code> 指定已存在的定位容器，并优先于 <code>append-to-body</code>。</template>\n      <div ref=\"localTarget\" class=\"relative isolate h-72 overflow-hidden rounded-lg border border-gray-3 p-6\">\n        <RebornButton variant=\"outlined\" @click=\"localOpen = true\">在此容器打开</RebornButton>\n        <RebornDrawer v-model=\"localOpen\" :append-to=\"localTarget ?? undefined\" :lock-scroll=\"false\" with-header title=\"局部任务\" size=\"65%\"><p>面板、遮罩和百分比尺寸都受本容器约束。</p></RebornDrawer>\n      </div>\n    </DemoSection>\n\n    <DemoSection title=\"调整尺寸\">\n      <template #description><code>resizable</code> 开启边缘拖动与方向键调整，三个 <code>resize</code> 事件回传像素尺寸。</template>\n      <RebornButton variant=\"outlined\" @click=\"resizeOpen = true\">打开可调整抽屉</RebornButton><DemoNote class=\"mt-3\">{{ resizeInfo }}</DemoNote>\n      <RebornDrawer v-model=\"resizeOpen\" with-header title=\"调整尺寸\" resizable :size=\"400\" @resize-start=\"size => resizeInfo = `开始：${size}px`\" @resize=\"size => resizeInfo = `调整中：${size}px`\" @resize-end=\"size => resizeInfo = `结束：${size}px`\"><p>{{ resizeInfo }}</p></RebornDrawer>\n    </DemoSection>\n\n    <DemoSection title=\"嵌套抽屉\">\n      <template #description>后打开的抽屉自动提高层级；ESC 只关闭最上层，滚动锁在最后一个抽屉关闭后释放。</template>\n      <RebornButton variant=\"outlined\" @click=\"parentOpen = true\">打开父抽屉</RebornButton>\n      <RebornDrawer v-model=\"parentOpen\" with-header title=\"父任务\" size=\"60%\">\n        <RebornButton @click=\"childOpen = true\">打开子任务</RebornButton>\n        <RebornDrawer v-model=\"childOpen\" with-header title=\"子任务\" size=\"35%\"><p>关闭后焦点回到父任务内的打开按钮。</p></RebornDrawer>\n      </RebornDrawer>\n    </DemoSection>\n  </div>\n</template>\n"
+    }
+  ],
+  "related": [
+    "scrollbar"
+  ],
+  "whenToUse": [
+    "使用 direction 与 size 构建不离开原任务的侧边编辑面板。",
+    "使用 beforeClose 在关闭前保存或确认。",
+    "使用 appendTo 在定位父容器内打开面板。",
+    "使用 resizable 允许用户调整面板尺寸。"
+  ],
+  "whenNotToUse": [
+    "居中确认改用 reborn-dialog。",
+    "锚定元素的小型浮层改用 reborn-popover。",
+    "UniApp 手势弹层改用 reborn-popup。"
+  ],
+  "pitfalls": [
+    "withHeader 默认 false，所有头部插槽都受其控制。",
+    "beforeClose 的 done(false) 放行，done() 或 done(true) 取消。",
+    "父组件直接修改 v-model 不经过 beforeClose。",
+    "modalPenetrable 仅 modal=false 时有效，lockScroll 独立控制。",
+    "自定义 appendTo 目标需存在并建立定位上下文。",
+    "modelValue 默认 undefined；缺省与显式 false/undefined/null 均关闭。受控关闭直接发送 update:modelValue，父级拒收时保持父值。"
+  ],
+  "dependencies": [
+    "@vueuse/core",
+    "clsx",
+    "motion-v",
+    "tailwind-merge",
+    "tailwind-variants"
+  ],
+  "install": {
+    "cli": "npx reborn-ui@latest add reborn-drawer"
+  },
+  "sourceRefs": {
+    "web": [
+      "app/components/reborn/ui/reborn-drawer/RebornDrawer.vue",
+      "app/components/reborn/ui/reborn-drawer/drawer.utils.ts",
+      "app/components/reborn/ui/reborn-drawer/index.ts",
+      "app/components/reborn/ui/reborn-drawer/reborn-drawer.config.ts"
+    ]
+  },
+  "docPath": "content/2.components/navigation/reborn-drawer.md",
+  "_meta": {
+    "contentHash": "65fa138cc6432c2131815e0994e8fd490348b879",
+    "hasOverride": true,
+    "extractors": {
+      "web": "ok",
+      "uniapp": "absent",
+      "docs": "found"
+    }
+  }
+}

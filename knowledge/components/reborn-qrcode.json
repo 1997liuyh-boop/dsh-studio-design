@@ -1,0 +1,302 @@
+{
+  "$schema": "../schema/component.schema.json",
+  "id": "reborn-qrcode",
+  "title": "二维码 Qrcode",
+  "description": "用于生成二维码的双端组件，支持前景/背景色、码点样式、中央 Logo 与纠错级别。",
+  "category": "misc",
+  "tags": [
+    "qrcode",
+    "canvas",
+    "svg",
+    "uniapp",
+    "web"
+  ],
+  "platforms": [
+    "web",
+    "uniapp"
+  ],
+  "props": [
+    {
+      "name": "size",
+      "type": "number",
+      "required": false,
+      "description": "二维码尺寸（px）。",
+      "default": "200"
+    },
+    {
+      "name": "foreground",
+      "type": "string",
+      "required": false,
+      "description": "前景色（码点颜色）。",
+      "default": "\"#131313\""
+    },
+    {
+      "name": "background",
+      "type": "string",
+      "required": false,
+      "description": "背景色。",
+      "default": "\"#FFFFFF\""
+    },
+    {
+      "name": "pdColor",
+      "type": "string | null",
+      "required": false,
+      "description": "码眼颜色（不传默认跟随 `foreground`）。",
+      "default": "null"
+    },
+    {
+      "name": "pdRadius",
+      "type": "number",
+      "required": false,
+      "description": "码眼圆角半径（兼容参数）。",
+      "default": "10"
+    },
+    {
+      "name": "text",
+      "type": "string",
+      "required": false,
+      "description": "二维码内容。",
+      "default": "\"https://cool-js.com/\""
+    },
+    {
+      "name": "logo",
+      "type": "string",
+      "required": false,
+      "description": "中央 Logo 图片地址。",
+      "default": "\"\""
+    },
+    {
+      "name": "logoSize",
+      "type": "number",
+      "required": false,
+      "description": "Logo 尺寸（px）。",
+      "default": "40"
+    },
+    {
+      "name": "padding",
+      "type": "number",
+      "required": false,
+      "description": "二维码内边距（px）。",
+      "default": "5"
+    },
+    {
+      "name": "mode",
+      "type": "ClQrcodeMode",
+      "required": false,
+      "description": "码点样式。",
+      "default": "\"circular\""
+    },
+    {
+      "name": "ecc",
+      "type": "eccLevel",
+      "required": false,
+      "description": "纠错级别。",
+      "default": "eccLevel.H"
+    },
+    {
+      "name": "pdOuterRadius",
+      "type": "number",
+      "required": false,
+      "description": "码眼外框圆角。",
+      "default": "undefined"
+    },
+    {
+      "name": "pdInnerRadius",
+      "type": "number",
+      "required": false,
+      "description": "码眼内点圆角。",
+      "default": "undefined"
+    },
+    {
+      "name": "dotsGradient",
+      "type": "any",
+      "required": false,
+      "description": "预留参数，保持与 UniApp 一致。"
+    },
+    {
+      "name": "dotsImage",
+      "type": "string | null",
+      "required": false,
+      "description": "预留参数，保持与 UniApp 一致。"
+    },
+    {
+      "name": "backgroundGradient",
+      "type": "any",
+      "required": false,
+      "description": "预留参数，保持与 UniApp 一致。"
+    },
+    {
+      "name": "backgroundTransparent",
+      "type": "boolean",
+      "required": false,
+      "description": "是否背景透明。"
+    },
+    {
+      "name": "logoOptions",
+      "type": "any",
+      "required": false,
+      "description": "Logo 细节配置（预留参数）。"
+    },
+    {
+      "name": "cornersSquareGradient",
+      "type": "any",
+      "required": false,
+      "description": "预留参数。"
+    },
+    {
+      "name": "cornersDotGradient",
+      "type": "any",
+      "required": false,
+      "description": "预留参数。"
+    },
+    {
+      "name": "cornersSquareOptions",
+      "type": "any",
+      "required": false,
+      "description": "预留参数。"
+    },
+    {
+      "name": "cornersDotOptions",
+      "type": "any",
+      "required": false,
+      "description": "预留参数。"
+    },
+    {
+      "name": "dotsColor",
+      "type": "string",
+      "required": false,
+      "description": "别名：前景色"
+    },
+    {
+      "name": "backgroundColor",
+      "type": "string",
+      "required": false,
+      "description": "别名：背景颜色"
+    },
+    {
+      "name": "logoImage",
+      "type": "string",
+      "required": false,
+      "description": "别名：Logo 图片地址"
+    },
+    {
+      "name": "margin",
+      "type": "number | string",
+      "required": false,
+      "description": "别名：内边距"
+    },
+    {
+      "name": "logoMargin",
+      "type": "number | string",
+      "required": false,
+      "description": "Logo 外部预留边空 (用于遮住背景点点)",
+      "default": "4"
+    },
+    {
+      "name": "logoHideBackgroundDots",
+      "type": "boolean",
+      "required": false,
+      "description": "是否隐藏 Logo 下方的点",
+      "default": "false"
+    },
+    {
+      "name": "logoShadow",
+      "type": "boolean",
+      "required": false,
+      "description": "Logo 是否显示阴影",
+      "default": "false"
+    },
+    {
+      "name": "logoShape",
+      "type": "'circle' | 'square'",
+      "required": false,
+      "description": "Logo 形状: 'circle' | 'square'"
+    },
+    {
+      "name": "dotsType",
+      "type": "ClQrcodeMode",
+      "required": false,
+      "description": "别名：渲染模式"
+    },
+    {
+      "name": "cornersSquareType",
+      "type": "'rect' | 'dot' | 'square' | 'extra-rounded'",
+      "required": false,
+      "description": "定位点 (Eyes) 外框渲染类型: 'rect' (直角), 'extra-rounded' (圆角), 'dot' (圆形)"
+    },
+    {
+      "name": "cornersDotType",
+      "type": "'rect' | 'dot' | 'square'",
+      "required": false,
+      "description": "定位点 (Eyes) 中央内点渲染类型: 'rect' (直角), 'dot' (圆形)"
+    }
+  ],
+  "events": [],
+  "slots": [],
+  "exposes": [
+    {
+      "name": "toPng",
+      "description": ""
+    }
+  ],
+  "examples": [
+    {
+      "title": "Web 演示",
+      "path": "app/components/reborn/examples/reborn-qrcode/RebornQrcodeDemo.vue",
+      "source": "demo",
+      "platform": "web",
+      "code": "<script setup lang=\"ts\">\nimport type { ClQrcodeMode } from \"~/components/reborn/ui/reborn-qrcode\";\nimport { DemoBlock, DemoNote, DemoSection, Playground } from '#components';\nimport { computed, ref } from 'vue';\nimport RebornButton from '~/components/reborn/ui/reborn-button/RebornButton.vue';\nimport { eccLevel } from \"~/components/reborn/ui/reborn-qrcode\";\nimport RebornQrcode from '~/components/reborn/ui/reborn-qrcode/RebornQrcode.vue';\n\n// ─── 交互演练场 ─────────────────────────────────────────────────\n\n/** 码点渲染模式 */\nconst modeOptions: { label: string; value: ClQrcodeMode }[] = [\n  { label: \"圆点 circular\", value: \"circular\" },\n  { label: \"直角 rect\", value: \"rect\" },\n  { label: \"小直角 rectSmall\", value: \"rectSmall\" },\n  { label: \"条纹 line\", value: \"line\" },\n];\n\n/** 定位点（三个大眼睛）的外框与内点样式 */\nconst cornerOptions = [\n  { label: \"默认\", value: \"none\" },\n  { label: \"直角 rect\", value: \"rect\" },\n  { label: \"极圆 extra-rounded\", value: \"extra-rounded\" },\n  { label: \"圆点 dot\", value: \"dot\" },\n];\n\nconst eccOptions = [\n  { label: \"L · 7% 容错\", value: eccLevel.L },\n  { label: \"M · 15% 容错\", value: eccLevel.M },\n  { label: \"Q · 25% 容错\", value: eccLevel.Q },\n  { label: \"H · 30% 容错\", value: eccLevel.H },\n];\n\nconst state = ref<Record<string, any>>({\n  text: \"https://www.leyifan.com/\",\n  ecc: eccLevel.H,\n  mode: \"circular\",\n  padding: 5,\n  foreground: \"#131313\",\n  background: \"#FFFFFF\",\n  backgroundTransparent: false,\n  cornersSquareType: \"extra-rounded\",\n  cornersDotType: \"dot\",\n  logo: \"https://cms-image.leyifan.cn/img_reborn/index/icon-calculator.png\",\n  logoSize: 40,\n  logoMargin: 4,\n  logoHideBackgroundDots: true,\n  logoShadow: false,\n});\n\n/** 演练场控制面板配置 */\nconst controls = [\n  {\n    title: \"内容与容错\",\n    children: [\n      {\n        label: \"二维码内容\",\n        key: \"text\",\n        component: \"input\" as const,\n        defaultValue: \"https://www.leyifan.com/\",\n      },\n      {\n        label: \"纠错级别\",\n        key: \"ecc\",\n        component: \"select\" as const,\n        defaultValue: eccLevel.H,\n        props: { options: eccOptions },\n      },\n      {\n        label: \"内边距（px）\",\n        key: \"padding\",\n        component: \"slider\" as const,\n        defaultValue: 5,\n        props: { min: 0, max: 30, step: 1 },\n      },\n    ],\n  },\n  {\n    title: \"形状与配色\",\n    children: [\n      {\n        label: \"码点形状\",\n        key: \"mode\",\n        component: \"select\" as const,\n        defaultValue: \"circular\",\n        props: { options: modeOptions },\n      },\n      {\n        label: \"定位点外框\",\n        key: \"cornersSquareType\",\n        component: \"select\" as const,\n        defaultValue: \"extra-rounded\",\n        props: { options: cornerOptions },\n      },\n      {\n        label: \"定位点内点\",\n        key: \"cornersDotType\",\n        component: \"select\" as const,\n        defaultValue: \"dot\",\n        props: { options: cornerOptions },\n      },\n      { label: \"前景色\", key: \"foreground\", component: \"color-picker\" as const, defaultValue: \"#131313\" },\n      { label: \"背景色\", key: \"background\", component: \"color-picker\" as const, defaultValue: \"#FFFFFF\" },\n      {\n        label: \"背景透明\",\n        key: \"backgroundTransparent\",\n        component: \"checkbox\" as const,\n        defaultValue: false,\n      },\n    ],\n  },\n  {\n    title: \"Logo 嵌入\",\n    children: [\n      {\n        label: \"Logo 图片地址\",\n        key: \"logo\",\n        component: \"input\" as const,\n        defaultValue: \"https://cms-image.leyifan.cn/img_reborn/index/icon-calculator.png\",\n      },\n      {\n        label: \"Logo 尺寸（px）\",\n        key: \"logoSize\",\n        component: \"slider\" as const,\n        defaultValue: 40,\n        props: { min: 20, max: 80, step: 4 },\n      },\n      {\n        label: \"Logo 留白（px）\",\n        key: \"logoMargin\",\n        component: \"slider\" as const,\n        defaultValue: 4,\n        props: { min: 0, max: 20, step: 1 },\n      },\n      {\n        label: \"隐藏 Logo 下方码点\",\n        key: \"logoHideBackgroundDots\",\n        component: \"checkbox\" as const,\n        defaultValue: true,\n      },\n      { label: \"Logo 投影\", key: \"logoShadow\", component: \"checkbox\" as const, defaultValue: false },\n    ],\n  },\n];\n\n/** 演练场右上角展示的等价代码 */\nconst qrcodeCode = computed(() => {\n  const s = state.value;\n  const props: string[] = [`text=\"${s.text}\"`, `mode=\"${s.mode}\"`];\n\n  if (s.ecc !== eccLevel.H) props.push(`ecc=\"${s.ecc}\"`);\n  if (s.padding !== 5) props.push(`:padding=\"${s.padding}\"`);\n  if (s.foreground !== \"#131313\") props.push(`foreground=\"${s.foreground}\"`);\n  if (s.backgroundTransparent) props.push(\"background-transparent\");\n  else if (s.background !== \"#FFFFFF\") props.push(`background=\"${s.background}\"`);\n  if (s.cornersSquareType !== \"none\") props.push(`corners-square-type=\"${s.cornersSquareType}\"`);\n  if (s.cornersDotType !== \"none\") props.push(`corners-dot-type=\"${s.cornersDotType}\"`);\n  if (s.logo) props.push(`logo=\"${s.logo}\"`, `:logo-size=\"${s.logoSize}\"`);\n  if (s.logoHideBackgroundDots) props.push(\"logo-hide-background-dots\");\n  if (s.logoShadow) props.push(\"logo-shadow\");\n\n  return `<RebornQrcode\\n  ${props.join(\"\\n  \")}\\n/>`;\n});\n\n// ─── 场景演示数据 ───────────────────────────────────────────────\n\n/** 定位点外框样式对照 */\nconst cornerShowcase = [\n  { square: \"rect\", dot: \"rect\", label: \"全直角\" },\n  { square: \"extra-rounded\", dot: \"dot\", label: \"圆角外框 + 圆点\" },\n  { square: \"dot\", dot: \"dot\", label: \"全圆\" },\n] as const;\n\n/** 点阵线性渐变 */\nconst sunsetGradient = {\n  type: \"linear\",\n  direction: \"diagonal\",\n  colorStops: [\n    { offset: 0, color: \"#f59e0b\" },\n    { offset: 1, color: \"#ef4444\" },\n  ],\n};\n\n/** 背景纵向渐变 */\nconst skyGradient = {\n  type: \"linear\",\n  direction: \"vertical\",\n  colorStops: [\n    { offset: 0, color: \"#eff6ff\" },\n    { offset: 1, color: \"#bfdbfe\" },\n  ],\n};\n\n/** 点阵图片纹理地址 */\nconst textureImage =\n  \"https://images.unsplash.com/photo-1534796636912-3b95b3ab5986?q=80&w=1000&auto=format&fit=crop\";\n\n/** 预设风格：点击后直接写回演练场状态 */\nconst presets = [\n  {\n    name: \"极简黑白\",\n    config: {\n      foreground: \"#000000\",\n      background: \"#FFFFFF\",\n      mode: \"rect\",\n      cornersSquareType: \"rect\",\n      cornersDotType: \"rect\",\n    },\n  },\n  {\n    name: \"圆润天蓝\",\n    config: {\n      foreground: \"#3b82f6\",\n      background: \"#eff6ff\",\n      mode: \"circular\",\n      cornersSquareType: \"extra-rounded\",\n      cornersDotType: \"dot\",\n    },\n  },\n  {\n    name: \"优雅暗红\",\n    config: {\n      foreground: \"#991b1b\",\n      background: \"#fef2f2\",\n      mode: \"line\",\n      cornersSquareType: \"extra-rounded\",\n      cornersDotType: \"rect\",\n    },\n  },\n  {\n    name: \"深邃墨绿\",\n    config: {\n      foreground: \"#065f46\",\n      background: \"#ecfdf5\",\n      mode: \"rectSmall\",\n      cornersSquareType: \"dot\",\n      cornersDotType: \"dot\",\n    },\n  },\n];\n\n/** 应用预设到演练场 */\nfunction applyPreset(config: Record<string, any>) {\n  Object.assign(state.value, config);\n}\n</script>\n\n<template>\n  <div class=\"flex w-full min-w-0 flex-col\">\n    <Playground\n      v-model=\"state\"\n      :controls=\"controls\"\n      :code=\"qrcodeCode\"\n      component-name=\"RebornQrcode\"\n      title=\"交互演练场\"\n      description=\"二维码由 Canvas 实时绘制；纠错级别越高，可被 Logo 遮挡的面积越大。\"\n    >\n      <div class=\"flex w-full flex-col items-center gap-4\">\n        <RebornQrcode\n          :text=\"state.text\"\n          :ecc=\"state.ecc\"\n          :mode=\"state.mode\"\n          :padding=\"state.padding\"\n          :foreground=\"state.foreground\"\n          :background=\"state.background\"\n          :background-transparent=\"state.backgroundTransparent\"\n          :corners-square-type=\"state.cornersSquareType\"\n          :corners-dot-type=\"state.cornersDotType\"\n          :logo=\"state.logo\"\n          :logo-size=\"state.logoSize\"\n          :logo-margin=\"state.logoMargin\"\n          :logo-hide-background-dots=\"state.logoHideBackgroundDots\"\n          :logo-shadow=\"state.logoShadow\"\n        />\n\n        <DemoNote tone=\"dimmed\">\n          <span class=\"font-mono break-all\">{{ state.text }}</span>\n        </DemoNote>\n      </div>\n    </Playground>\n\n    <DemoSection\n      title=\"码点形状\"\n      description=\"mode 决定每个码点的绘制方式；line 会把纵向相邻的码点连成条纹，扫码识别率与容错级别相关。\"\n    >\n      <DemoBlock\n        layout=\"row\"\n        align=\"start\"\n      >\n        <div\n          v-for=\"item in modeOptions\"\n          :key=\"item.value\"\n          class=\"flex flex-col items-center gap-2\"\n        >\n          <RebornQrcode\n            :text=\"state.text\"\n            :mode=\"item.value\"\n            :size=\"120\"\n            :padding=\"4\"\n          />\n          <span class=\"text-dimmed text-xs font-medium\">{{ item.label }}</span>\n        </div>\n      </DemoBlock>\n    </DemoSection>\n\n    <DemoSection\n      title=\"定位点样式\"\n      description=\"corners-square-type 与 corners-dot-type 分别控制三个定位点的外框与中心内点。\"\n    >\n      <DemoBlock\n        layout=\"row\"\n        align=\"start\"\n      >\n        <div\n          v-for=\"item in cornerShowcase\"\n          :key=\"item.label\"\n          class=\"flex flex-col items-center gap-2\"\n        >\n          <RebornQrcode\n            :text=\"state.text\"\n            :size=\"120\"\n            :padding=\"4\"\n            :corners-square-type=\"item.square\"\n            :corners-dot-type=\"item.dot\"\n          />\n          <span class=\"text-dimmed text-xs font-medium\">{{ item.label }}</span>\n        </div>\n      </DemoBlock>\n    </DemoSection>\n\n    <DemoSection\n      title=\"渐变与图片纹理\"\n      description=\"dots-gradient / background-gradient 接受 colorStops 配置；dots-image 会以图片填充码点，优先级高于颜色与渐变。\"\n    >\n      <DemoBlock\n        layout=\"row\"\n        align=\"start\"\n      >\n        <div class=\"flex flex-col items-center gap-2\">\n          <RebornQrcode\n            :text=\"state.text\"\n            :size=\"120\"\n            :padding=\"4\"\n            :dots-gradient=\"sunsetGradient\"\n          />\n          <span class=\"text-dimmed text-xs font-medium\">码点渐变 · <code>dots-gradient</code></span>\n        </div>\n\n        <div class=\"flex flex-col items-center gap-2\">\n          <RebornQrcode\n            :text=\"state.text\"\n            :size=\"120\"\n            :padding=\"4\"\n            :background-gradient=\"skyGradient\"\n          />\n          <span class=\"text-dimmed text-xs font-medium\">\n            背景渐变 · <code>background-gradient</code>\n          </span>\n        </div>\n\n        <div class=\"flex flex-col items-center gap-2\">\n          <RebornQrcode\n            :text=\"state.text\"\n            :size=\"120\"\n            :padding=\"4\"\n            :dots-image=\"textureImage\"\n            background=\"#000000\"\n            mode=\"rectSmall\"\n          />\n          <span class=\"text-dimmed text-xs font-medium\">图片纹理 · <code>dots-image</code></span>\n        </div>\n      </DemoBlock>\n    </DemoSection>\n\n    <DemoSection\n      title=\"预设风格\"\n      description=\"点击任意预设即可把整套配色与形状写回上方演练场，便于快速比较。\"\n    >\n      <DemoBlock\n        layout=\"row\"\n        align=\"center\"\n      >\n        <RebornButton\n          v-for=\"preset in presets\"\n          :key=\"preset.name\"\n          variant=\"outlined\"\n          size=\"sm\"\n          :label=\"preset.name\"\n          @click=\"applyPreset(preset.config)\"\n        />\n      </DemoBlock>\n    </DemoSection>\n  </div>\n</template>\n"
+    },
+    {
+      "title": "UniApp 演示",
+      "path": "packages/uniapp-project/src/pages/reborn-qrcode/RebornQrcodeDemo.vue",
+      "source": "demo",
+      "platform": "uniapp",
+      "code": "<script setup lang=\"ts\">\nimport type { ColorTarget, QrConfig, QrGradient } from './types'\nimport { computed, ref, shallowRef } from 'vue'\nimport RebornPage from '@/components/reborn-page/RebornPage.vue'\nimport { eccLevel } from '@/components/reborn-qrcode/draw'\nimport RebornTabPane from '@/components/reborn-tabs/RebornTabPane.vue'\nimport RebornTabs from '@/components/reborn-tabs/RebornTabs.vue'\nimport bg1 from '@/static/1.jpeg'\nimport bg2 from '@/static/2.jpeg'\nimport bg3 from '@/static/3.jpeg'\nimport bg4 from '@/static/4.jpeg'\nimport bg5 from '@/static/5.jpeg'\nimport bg6 from '@/static/6.jpeg'\nimport ColorPickerModal from './components/ColorPickerModal.vue'\nimport ConfigBackground from './components/ConfigBackground.vue'\nimport ConfigBasic from './components/ConfigBasic.vue'\nimport ConfigColor from './components/ConfigColor.vue'\nimport ConfigData from './components/ConfigData.vue'\nimport ConfigLogo from './components/ConfigLogo.vue'\nimport ConfigShape from './components/ConfigShape.vue'\nimport ForegroundImageModal from './components/ForegroundImageModal.vue'\nimport GradientEditorModal from './components/GradientEditorModal.vue'\nimport PreviewSection from './components/PreviewSection.vue'\nimport { createDefaultConfig } from './types'\n\nconst previewRef = ref<InstanceType<typeof PreviewSection> | null>(null)\nconst activeTab = shallowRef('basic')\nconst isGenerating = shallowRef(false)\nconst qrConfig = shallowRef<QrConfig>(createDefaultConfig())\nconst tabs = [\n  { label: '基础', value: 'basic' }, { label: '颜色', value: 'color' },\n  { label: '形状', value: 'shape' }, { label: '背景', value: 'background' },\n  { label: 'Logo', value: 'logo' }, { label: '数据', value: 'data' },\n] as const\nconst marginOptions = [{ value: 0, name: '无' }, { value: 1, name: '小' }, { value: 2, name: '中' }, { value: 3, name: '大' }] as const\nconst errorLevels = [\n  { value: eccLevel.L, name: 'L (7%)' }, { value: eccLevel.M, name: 'M (15%)' },\n  { value: eccLevel.Q, name: 'Q (25%)' }, { value: eccLevel.H, name: 'H (30%)' },\n] as const\nconst dotsStyles = [{ type: 'rect', name: '普通' }, { type: 'circular', name: '圆形' }, { type: 'rectSmall', name: '瓷砖' }, { type: 'line', name: '线性' }] as const\nconst cornersSquareStyles = [{ type: 0, name: '方形' }, { type: 20, name: '圆形' }, { type: 10, name: '圆角' }] as const\nconst cornersDotStyles = [{ type: 0, name: '方形' }, { type: 5, name: '圆角' }, { type: 10, name: '圆形' }] as const\nconst logoSizeOptions = [{ value: 'small', name: '小' }, { value: 'medium', name: '中' }, { value: 'large', name: '大' }] as const\nconst logoMarginOptions = [{ value: 'none', name: '无' }, { value: 'small', name: '小' }, { value: 'medium', name: '中' }, { value: 'large', name: '大' }] as const\nconst showColorPickerModal = shallowRef(false)\nconst showGradientEditorModal = shallowRef(false)\nconst showForegroundImageModal = shallowRef(false)\nconst colorTarget = shallowRef<ColorTarget>('foreground')\nconst gradientTarget = shallowRef<ColorTarget>('foreground')\nconst selectedColor = computed(() => colorTarget.value === 'foreground' ? qrConfig.value.dotsColor : qrConfig.value.backgroundColor)\nconst selectedGradient = computed(() => gradientTarget.value === 'foreground' ? qrConfig.value.dotsGradient : qrConfig.value.backgroundGradient)\nconst modalOpen = computed(() => showColorPickerModal.value || showGradientEditorModal.value || showForegroundImageModal.value)\nconst predefinedForegroundImages = [\n  { id: 1, name: '纹理1', path: bg1 }, { id: 2, name: '纹理2', path: bg2 },\n  { id: 3, name: '纹理3', path: bg3 }, { id: 4, name: '纹理4', path: bg4 },\n  { id: 5, name: '纹理5', path: bg5 }, { id: 6, name: '纹理6', path: bg6 },\n] as const\n\nfunction patchConfig(patch: Partial<QrConfig>) {\n  qrConfig.value = { ...qrConfig.value, ...patch }\n}\nfunction showColorPicker(target: ColorTarget) {\n  colorTarget.value = target\n  showColorPickerModal.value = true\n}\nfunction applyColor(color: string) {\n  patchConfig(colorTarget.value === 'foreground'\n    ? { dotsColor: color, dotsImage: null, dotsGradient: null }\n    : { backgroundColor: color, backgroundTransparent: false, backgroundGradient: null })\n}\nfunction showGradientEditor(target: ColorTarget) {\n  gradientTarget.value = target\n  showGradientEditorModal.value = true\n}\nfunction applyGradient(gradient: QrGradient) {\n  patchConfig(gradientTarget.value === 'foreground'\n    ? { dotsGradient: gradient, dotsColor: '#000000', dotsImage: null }\n    : { backgroundGradient: gradient, backgroundColor: '#ffffff', backgroundTransparent: false })\n}\nfunction setTransparent() {\n  patchConfig({ backgroundTransparent: true, backgroundColor: 'transparent', backgroundGradient: null })\n}\n/** 选用前景图：只换图并清掉渐变，保留 dotsColor（码眼外框、内点与 pdColor 仍取这个颜色） */\nfunction applyForegroundImage(image: string) {\n  patchConfig({ dotsImage: image, dotsGradient: null })\n}\n/** 清除前景图：回到纯色前景，颜色复位为黑色 */\nfunction clearForegroundImage() {\n  patchConfig({ dotsImage: null, dotsColor: '#000000' })\n}\n/** 前景图弹窗「应用」：有图走选图；草稿为空且当前确有前景图才走清除，没选图直接应用不改颜色 */\nfunction onForegroundImageApply(image: string | null) {\n  if (image) applyForegroundImage(image)\n  else if (qrConfig.value.dotsImage) clearForegroundImage()\n}\nfunction removeLogo() { patchConfig({ logoImage: null }) }\nfunction uploadLogo() {\n  uni.chooseImage({ count: 1, success: result => patchConfig({ logoImage: result.tempFilePaths[0] ?? null }) })\n}\nfunction selectPredefinedLogo(image: string) {\n  patchConfig({ logoImage: image })\n  uni.showToast({ title: '已选择', icon: 'success' })\n}\nfunction resetConfig() { qrConfig.value = createDefaultConfig() }\n\nasync function saveQRCode() {\n  if (isGenerating.value || !previewRef.value) return\n  try {\n    isGenerating.value = true\n    const path = await previewRef.value.toPng()\n    if (!path) throw new Error('二维码尚未绘制完成')\n    // #ifdef MP-WEIXIN || APP-PLUS\n    uni.saveImageToPhotosAlbum({ filePath: path, success: () => uni.showToast({ title: '保存成功', icon: 'success' }) })\n    // #endif\n    // #ifdef H5\n    const anchor = document.createElement('a')\n    anchor.href = path\n    anchor.download = 'qrcode.png'\n    anchor.click()\n    // #endif\n  }\n  catch {\n    uni.showToast({ title: '保存失败', icon: 'error' })\n  }\n  finally { isGenerating.value = false }\n}\nasync function shareQRCode() {\n  if (isGenerating.value || !previewRef.value) return\n  try {\n    isGenerating.value = true\n    const path = await previewRef.value.toPng()\n    if (!path) throw new Error('二维码尚未绘制完成')\n    // #ifdef MP-WEIXIN\n    uni.showShareImageMenu({ path })\n    // #endif\n    // #ifdef H5\n    uni.showToast({ title: '长按保存或复制', icon: 'none' })\n    // #endif\n  }\n  catch { uni.showToast({ title: '分享失败', icon: 'error' }) }\n  finally { isGenerating.value = false }\n}\n</script>\n\n<template>\n  <RebornPage title=\"二维码\">\n    <view class=\"flex w-full flex-col\">\n      <PreviewSection ref=\"previewRef\" :config=\"qrConfig\"\n                      :is-generating=\"isGenerating\" :modal-open=\"modalOpen\"\n                      @save=\"saveQRCode\" @share=\"shareQRCode\" @reset=\"resetConfig\" />\n      <view class=\"mt-[24rpx] overflow-hidden rounded-[24rpx] bg-white shadow-[0_4rpx_20rpx_rgba(0,0,0,0.08)]\">\n        <RebornTabs v-model:active-key=\"activeTab\" size=\"md\" hide-content>\n          <RebornTabPane v-for=\"(tab, paneIndex) in tabs\" :key=\"tab.value\" :order=\"paneIndex\" :pane-key=\"tab.value\" :title=\"tab.label\" />\n        </RebornTabs>\n        <view class=\"p-[32rpx]\">\n          <ConfigBasic v-if=\"activeTab === 'basic'\" v-model=\"qrConfig\" :margin-options=\"marginOptions\" :error-levels=\"errorLevels\" />\n          <ConfigColor v-if=\"activeTab === 'color'\" :config=\"qrConfig\" @show-color-picker=\"showColorPicker\"\n                       @show-gradient-editor=\"showGradientEditor\" @show-image-picker=\"showForegroundImageModal = true\" />\n          <ConfigShape v-if=\"activeTab === 'shape'\" v-model=\"qrConfig\" :dots-styles=\"dotsStyles\"\n                       :corners-square-styles=\"cornersSquareStyles\" :corners-dot-styles=\"cornersDotStyles\" />\n          <ConfigBackground v-if=\"activeTab === 'background'\" :config=\"qrConfig\" @show-color-picker=\"showColorPicker\"\n                            @show-gradient-editor=\"showGradientEditor\" @set-transparent=\"setTransparent\" />\n          <ConfigLogo v-if=\"activeTab === 'logo'\" v-model=\"qrConfig\" :logo-size-options=\"logoSizeOptions\"\n                      :logo-margin-options=\"logoMarginOptions\" @upload-logo=\"uploadLogo\" @remove-logo=\"removeLogo\" @select-predefined-logo=\"selectPredefinedLogo\" />\n          <ConfigData v-if=\"activeTab === 'data'\" :config=\"qrConfig\" />\n        </view>\n      </view>\n    </view>\n    <ColorPickerModal v-model:open=\"showColorPickerModal\" :color=\"selectedColor\" @apply=\"applyColor\" />\n    <GradientEditorModal v-model:open=\"showGradientEditorModal\" :gradient=\"selectedGradient\"\n                         :background=\"gradientTarget === 'background'\" @apply=\"applyGradient\" />\n    <ForegroundImageModal v-model:open=\"showForegroundImageModal\" :image=\"qrConfig.dotsImage\"\n                          :images=\"predefinedForegroundImages\" @apply=\"onForegroundImageApply\" />\n  </RebornPage>\n</template>\n"
+    }
+  ],
+  "related": [],
+  "whenToUse": [
+    "分享链接、收款码等需要动态生成二维码的场景。",
+    "需要品牌 Logo 居中展示（logo + logoSize/logoMargin）时。",
+    "需要圆点等自定义码点风格（mode/dotsType，默认 circular）时。",
+    "需要导出图片时（暴露 toPng 方法）。"
+  ],
+  "whenNotToUse": [
+    "展示服务端已生成的二维码图片，直接用 reborn-image。"
+  ],
+  "pitfalls": [
+    "web、uniapp 双端可用。",
+    "text 默认值是示例链接（https://cool-js.com/），务必传入实际内容。",
+    "dotsGradient、backgroundGradient、cornersSquareGradient 等多个参数标注为预留参数，传入可能无实际效果。",
+    "ecc 默认 H 级纠错，加 Logo 时保持高纠错级别更稳妥。"
+  ],
+  "dependencies": [],
+  "install": {
+    "cli": "npx reborn-ui@latest add reborn-qrcode"
+  },
+  "sourceRefs": {
+    "web": [
+      "app/components/reborn/ui/reborn-qrcode/RebornQrcode.vue",
+      "app/components/reborn/ui/reborn-qrcode/index.ts",
+      "app/components/reborn/ui/reborn-qrcode/qrcode.ts",
+      "app/components/reborn/ui/reborn-qrcode/reborn-qrcode.config.ts",
+      "app/components/reborn/ui/reborn-qrcode/types.ts"
+    ],
+    "uniapp": [
+      "packages/uniapp-project/src/components/reborn-qrcode/RebornQrcode.vue",
+      "packages/uniapp-project/src/components/reborn-qrcode/draw.ts",
+      "packages/uniapp-project/src/components/reborn-qrcode/qrcode.ts"
+    ]
+  },
+  "docPath": "content/2.components/miscellaneous/reborn-qrcode.md",
+  "_meta": {
+    "contentHash": "03de94737728ef66300910d12bcbfef10a2cf359",
+    "hasOverride": true,
+    "extractors": {
+      "web": "ok",
+      "uniapp": "ok",
+      "docs": "found"
+    }
+  }
+}

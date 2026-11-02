@@ -1,0 +1,126 @@
+{
+  "$schema": "../schema/component.schema.json",
+  "id": "animated-circular-progressbar",
+  "title": "动画圆形进度条",
+  "description": "用于以圆形仪表盘动画展示当前数值百分比的进度条组件。",
+  "category": "misc",
+  "tags": [
+    "css",
+    "tailwind",
+    "input",
+    "magic-ui"
+  ],
+  "platforms": [
+    "web"
+  ],
+  "props": [
+    {
+      "name": "max",
+      "type": "number",
+      "required": false,
+      "description": "仪表的最大值。",
+      "default": "100"
+    },
+    {
+      "name": "value",
+      "type": "number",
+      "required": false,
+      "description": "仪表当前值。",
+      "default": "0"
+    },
+    {
+      "name": "min",
+      "type": "number",
+      "required": false,
+      "description": "仪表的最小值。",
+      "default": "0"
+    },
+    {
+      "name": "gaugePrimaryColor",
+      "type": "string",
+      "required": false,
+      "description": "仪表主色。",
+      "default": "\"rgb(79 70 229)\""
+    },
+    {
+      "name": "gaugeSecondaryColor",
+      "type": "string",
+      "required": false,
+      "description": "仪表副色。",
+      "default": "\"rgba(0, 0, 0, 0.1)\""
+    },
+    {
+      "name": "class",
+      "type": "string",
+      "required": false,
+      "description": "应用于组件的类名。"
+    },
+    {
+      "name": "circleStrokeWidth",
+      "type": "number",
+      "required": false,
+      "description": "圆形进度条宽度。",
+      "default": "10"
+    },
+    {
+      "name": "showPercentage",
+      "type": "boolean",
+      "required": false,
+      "description": "是否在圆内显示数值。",
+      "default": "true"
+    },
+    {
+      "name": "duration",
+      "type": "number",
+      "required": false,
+      "description": "动画持续时间（秒）。",
+      "default": "1"
+    }
+  ],
+  "events": [],
+  "slots": [],
+  "exposes": [],
+  "examples": [
+    {
+      "title": "Web 演示",
+      "path": "app/components/reborn/examples/animated-circular-progressbar/AnimatedCircularProgressBarDemo.vue",
+      "source": "demo",
+      "platform": "web",
+      "code": "<script setup lang=\"ts\">\nimport { onBeforeUnmount, onMounted, shallowRef } from \"vue\";\n\nconst value = shallowRef(0);\n\nfunction handleIncrement(prev: number) {\n  return prev === 100 ? 0 : prev + 10;\n}\n\nlet interval: ReturnType<typeof setInterval>;\n\nonMounted(() => {\n  value.value = handleIncrement(value.value);\n  interval = setInterval(() => {\n    value.value = handleIncrement(value.value);\n  }, 2000);\n});\n\nonBeforeUnmount(() => {\n  if (interval) {\n    clearInterval(interval);\n  }\n});\n</script>\n\n<template>\n  <div class=\"flex items-center justify-center py-1\">\n    <AnimatedCircularProgressBar\n      :max=\"100\"\n      :min=\"0\"\n      :value=\"value\"\n    />\n  </div>\n</template>\n"
+    }
+  ],
+  "related": [],
+  "whenToUse": [
+    "展示任务完成度、下载或上传进度。",
+    "仪表盘中展示指标占比，数值变化时需要平滑动画。",
+    "需要在圆环中心直接显示百分比数字的场景。"
+  ],
+  "whenNotToUse": [
+    "需要用户拖动改变数值的输入场景，改用 balance-slider 等表单组件。",
+    "静态展示一个数字即可时，无需引入动画进度条。"
+  ],
+  "pitfalls": [
+    "仅 web 端可用。",
+    "duration 单位为秒（默认 1），与其他组件的毫秒单位不同。"
+  ],
+  "dependencies": [],
+  "install": {
+    "cli": "npx reborn-ui@latest add animated-circular-progressbar"
+  },
+  "sourceRefs": {
+    "web": [
+      "app/components/reborn/ui/animated-circular-progressbar/AnimatedCircularProgressBar.vue",
+      "app/components/reborn/ui/animated-circular-progressbar/index.ts"
+    ]
+  },
+  "docPath": "content/2.components/miscellaneous/animated-circular-progressbar.md",
+  "_meta": {
+    "contentHash": "a27a070fc61e03f040fb652e2291abf5da23ca70",
+    "hasOverride": true,
+    "extractors": {
+      "web": "ok",
+      "uniapp": "absent",
+      "docs": "found"
+    }
+  }
+}

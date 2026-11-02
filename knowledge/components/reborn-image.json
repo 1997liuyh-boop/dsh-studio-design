@@ -1,0 +1,287 @@
+{
+  "$schema": "../schema/component.schema.json",
+  "id": "reborn-image",
+  "title": "图片 Image",
+  "description": "用于展示图片并提供预览、加载/错误状态与多种裁剪模式的双端图片组件。",
+  "category": "misc",
+  "tags": [
+    "css",
+    "tailwind",
+    "image",
+    "media",
+    "uniapp",
+    "viewerjs"
+  ],
+  "platforms": [
+    "web",
+    "uniapp"
+  ],
+  "props": [
+    {
+      "name": "customClass",
+      "type": "ClassValue",
+      "required": false,
+      "description": "用于自定义根节点的样式类。"
+    },
+    {
+      "name": "src",
+      "type": "string",
+      "required": true,
+      "description": "**必填**。图片地址。"
+    },
+    {
+      "name": "mode",
+      "type": "typeof imageMode[number]",
+      "required": false,
+      "description": "图片裁剪、缩放的模式",
+      "default": "'aspectFill'"
+    },
+    {
+      "name": "preview",
+      "type": "boolean",
+      "required": false,
+      "description": "是否显示边框",
+      "default": "false"
+    },
+    {
+      "name": "previewList",
+      "type": "string[]",
+      "required": false,
+      "description": "预览时的图片列表。如果不传，默认预览当前 `src`。列表多于 1 张时，预览遮罩左右两侧出现切换箭头。",
+      "default": "[]"
+    },
+    {
+      "name": "height",
+      "type": "string | number",
+      "required": false,
+      "description": "图片高度。数字默认为 px，字符串支持 rpx, %, vw 等。",
+      "default": "120"
+    },
+    {
+      "name": "width",
+      "type": "string | number",
+      "required": false,
+      "description": "图片宽度。数字默认为 px，字符串支持 rpx, %, vw 等。",
+      "default": "120"
+    },
+    {
+      "name": "showLoading",
+      "type": "boolean",
+      "required": false,
+      "description": "是否显示加载状态",
+      "default": "true"
+    },
+    {
+      "name": "lazyLoad",
+      "type": "boolean",
+      "required": false,
+      "description": "是否懒加载",
+      "default": "false"
+    },
+    {
+      "name": "fadeShow",
+      "type": "boolean",
+      "required": false,
+      "description": "图片显示动画效果",
+      "default": "false"
+    },
+    {
+      "name": "webp",
+      "type": "boolean",
+      "required": false,
+      "description": "是否解码webp格式",
+      "default": "false"
+    },
+    {
+      "name": "showMenuByLongpress",
+      "type": "boolean",
+      "required": false,
+      "description": "是否长按显示菜单",
+      "default": "false"
+    },
+    {
+      "name": "round",
+      "type": "boolean",
+      "required": false,
+      "description": "是否显示圆角",
+      "default": "false"
+    },
+    {
+      "name": "loadingType",
+      "type": "typeof LoadingTypes[number]",
+      "required": false,
+      "description": "",
+      "default": "'outline'"
+    },
+    {
+      "name": "loadingSize",
+      "type": "string | number",
+      "required": false,
+      "description": ""
+    },
+    {
+      "name": "ui",
+      "type": "Partial<{\n    root: ClassValue\n    error: ClassValue\n    errorIcon: ClassValue\n    loading: ClassValue\n    loadingIcon: ClassValue\n    inner: ClassValue\n  }>",
+      "required": false,
+      "description": "覆盖子组件样式的 UI 配置对象。 可用键（从源码抽取，以此为准）——UniApp：error、errorIcon*、inner、loading、loadingIcon、root。 带 * 的键对应插槽兜底节点：填了同名插槽，组件自带的节点被替换，这个键随之失效。",
+      "platform": "uniapp"
+    },
+    {
+      "name": "previewToolbar",
+      "type": "string",
+      "required": false,
+      "description": "预览菜单的按钮与顺序：逗号分隔的 token，写法同 RebornPagination 的 layout，未知 token 忽略、传空字符串不显示菜单（仅 Web）",
+      "default": "defaultPreviewToolbar"
+    },
+    {
+      "name": "previewNavbar",
+      "type": "boolean",
+      "required": false,
+      "description": "多图预览时是否显示底部的缩略图列表，默认不显示；单图时始终不显示（仅 Web）",
+      "default": "false"
+    },
+    {
+      "name": "magnifier",
+      "type": "boolean",
+      "required": false,
+      "description": "是否启用放大镜功能",
+      "default": "false"
+    },
+    {
+      "name": "magnifierZoom",
+      "type": "number",
+      "required": false,
+      "description": "放大倍率 (控制透镜部分的放大比例)",
+      "default": "2"
+    },
+    {
+      "name": "magnifierSize",
+      "type": "number",
+      "required": false,
+      "description": "放大镜尺寸 (控制原图上透镜的大小)",
+      "default": "100"
+    },
+    {
+      "name": "magnifierWidth",
+      "type": "number | string",
+      "required": false,
+      "description": "预览窗口宽度 (默认与原图一致)",
+      "default": "\"\""
+    },
+    {
+      "name": "magnifierHeight",
+      "type": "number | string",
+      "required": false,
+      "description": "预览窗口高度 (默认与原图一致)",
+      "default": "\"\""
+    },
+    {
+      "name": "ui",
+      "type": "Partial<{\n\t\troot: ClassValue;\n\t\terror: ClassValue;\n\t\terrorIcon: ClassValue;\n\t\tloading: ClassValue;\n\t\tloadingIcon: ClassValue;\n\t\tinner: ClassValue;\n\t\tmagnifierLens: ClassValue;\n\t\tmagnifierView: ClassValue;\n\t\tmagnifierViewImage: ClassValue;\n\t\tpreviewToolbar: ClassValue;\n\t\tpreviewAction: ClassValue;\n\t\tpreviewActionIcon: ClassValue;\n\t\tpreviewActionText: ClassValue;\n\t\tpreviewArrow: ClassValue;\n\t\tpreviewArrowIcon: ClassValue;\n\t}>",
+      "required": false,
+      "description": "覆盖子组件样式的 UI 配置对象。 可用键（从源码抽取，以此为准）——Web：error、errorIcon*、inner、loading、loadingIcon*、magnifierLens、magnifierView、magnifierViewImage、previewAction、previewActionIcon、previewActionText、previewArrow、previewArrowIcon、previewToolbar、root。 带 * 的键对应插槽兜底节点：填了同名插槽，组件自带的节点被替换，这个键随之失效。",
+      "platform": "web"
+    }
+  ],
+  "events": [
+    {
+      "name": "load",
+      "payload": "[event: unknown]",
+      "description": "图片加载成功时触发。"
+    },
+    {
+      "name": "error",
+      "payload": "[event: unknown]",
+      "description": "图片加载失败时触发。"
+    }
+  ],
+  "slots": [
+    {
+      "name": "error",
+      "description": "自定义错误状态的内容。"
+    },
+    {
+      "name": "loading",
+      "description": "自定义加载状态的内容。"
+    },
+    {
+      "name": "default",
+      "description": "自定义图片上的覆盖内容（如角标）。"
+    }
+  ],
+  "exposes": [
+    {
+      "name": "showPreview",
+      "description": ""
+    }
+  ],
+  "examples": [
+    {
+      "title": "Web 演示",
+      "path": "app/components/reborn/examples/reborn-image/RebornImageDemo.vue",
+      "source": "demo",
+      "platform": "web",
+      "code": "<script setup lang=\"ts\">\nimport { DemoBlock, DemoItem, DemoNote, DemoSection, Icon, Playground } from \"#components\";\nimport { computed, ref, shallowRef } from 'vue';\nimport RebornButton from \"~/components/reborn/ui/reborn-button/RebornButton.vue\";\nimport { imageMode, previewToolbarTokens } from \"~/components/reborn/ui/reborn-image/reborn-image.config\";\nimport RebornImage from \"~/components/reborn/ui/reborn-image/RebornImage.vue\";\n\n/**\n * 演示素材，都取站内图片，不依赖外部图床：\n * - 横图 2400×1600、不透明，原图够大，放大镜和 1:1 预览才看得出细节，圆角也看得见；\n * - 竖图 720×840、透明底、主体是人物，裁剪模式里的拉伸变形与裁切一眼能看出来；\n * - 失败示例指向站内一个不存在的路径，404 立即返回，不用等外部域名超时。\n */\nconst LANDSCAPE = \"/images/lithos/strata.webp\";\nconst LANDSCAPE_ALT = \"/images/lithos/living-strata.webp\";\nconst PORTRAIT = \"/images/depth-image/soldier.webp\";\n/** 200×200 的二维码：四角定位块明显，用来看方位类 mode 露出的是原图哪一块 */\nconst QR_CODE = \"https://cms-image.leyifan.cn/img_reborn/ques-4.jpg\";\nconst BROKEN = \"/images/reborn-image/not-found.webp\";\n\n/**\n * 给裁剪模式的示例画出容器范围。竖图是透明底，不画框就看不出 aspectFit 留空了多少、aspectFill 裁掉了哪里；\n * 这只是演示辅助，不是组件默认样式，所以不写进演练场的传参明细。\n */\nconst BOX_OUTLINE = { root: \"border border-dashed border-gray-4\" };\n\n/** 多图预览列表 */\nconst previewList = [LANDSCAPE, LANDSCAPE_ALT, PORTRAIT];\n\n/** 方位类 mode 不缩放原图，取两个对角加居中做对照 */\nconst positionModes = [\"top left\", \"center\", \"bottom right\"] as const;\n\nconst modeOptions = imageMode.map((m) => ({ label: m, value: m }));\nconst roundedOptions = [\n  { label: \"无圆角（默认）\", value: \"\" },\n  { label: \"rounded-lg\", value: \"rounded-lg\" },\n  { label: \"rounded-xl\", value: \"rounded-xl\" },\n  { label: \"rounded-full\", value: \"rounded-full\" },\n];\n\n// ─── 交互演练场 ─────────────────────────────────────────────────\n\n/**\n * 演练场默认状态。尺寸取 320 × 200 的扁框而不是组件默认的 120 × 120：\n * 竖图放进扁框，切换 mode 时拉伸、留空、裁切的差别最明显；preview 默认打开，单击图片就能看预览。\n */\nconst defaultState: Record<string, any> = {\n  mode: \"aspectFill\",\n  width: 320,\n  height: 200,\n  rounded: \"\",\n  showLoading: true,\n  preview: true,\n  multiple: false,\n  previewNavbar: false,\n  previewToolbar: \"fullscreen, rotateRight, rotateLeft, zoomIn, zoomOut, oneToOne\",\n  magnifier: false,\n  magnifierZoom: 2,\n  magnifierSize: 100,\n};\n\nconst state = shallowRef<Record<string, any>>({ ...defaultState });\n\n/** 演练场实例的事件回显 */\nconst lastEvent = shallowRef(\"等待加载\");\n\n/** load 事件回显原图尺寸：mode 的效果取决于原图与容器的宽高比 */\nfunction onPlaygroundLoad(e: Event) {\n  const img = e.target as HTMLImageElement;\n  lastEvent.value = `load：原图 ${img.naturalWidth} × ${img.naturalHeight}`;\n}\n\n/** 重置演练场配置 */\nfunction resetState() {\n  state.value = { ...defaultState };\n}\n\n/** 演练场控制面板配置 */\nconst controls: any = [\n  {\n    title: \"基础属性\",\n    children: [\n      { label: \"裁剪模式（mode）\", key: \"mode\", component: \"select\" as const, defaultValue: \"aspectFill\", props: { options: modeOptions } },\n      { label: \"宽度（px）\", key: \"width\", component: \"slider\" as const, defaultValue: 320, props: { min: 80, max: 400, step: 20 } },\n      { label: \"高度（px）\", key: \"height\", component: \"slider\" as const, defaultValue: 200, props: { min: 80, max: 400, step: 20 } },\n      { label: \"圆角（custom-class）\", key: \"rounded\", component: \"select\" as const, defaultValue: \"\", props: { options: roundedOptions } },\n      { label: \"显示加载占位\", key: \"showLoading\", component: \"checkbox\" as const, defaultValue: true },\n    ],\n  },\n  {\n    title: \"预览\",\n    children: [\n      { label: \"单击预览\", key: \"preview\", component: \"checkbox\" as const, defaultValue: true },\n      {\n        label: \"多图预览（传 preview-list）\",\n        key: \"multiple\",\n        component: \"checkbox\" as const,\n        defaultValue: false,\n        hide: (_: boolean, s: Record<string, any>) => !s.preview,\n      },\n      {\n        label: \"缩略图列表（多图时生效）\",\n        key: \"previewNavbar\",\n        component: \"checkbox\" as const,\n        defaultValue: false,\n        hide: (_: boolean, s: Record<string, any>) => !s.preview || !s.multiple,\n      },\n      {\n        label: \"菜单按钮（逗号分隔，留空不显示菜单）\",\n        key: \"previewToolbar\",\n        component: \"input\" as const,\n        defaultValue: defaultState.previewToolbar,\n        hide: (_: string, s: Record<string, any>) => !s.preview,\n      },\n    ],\n  },\n  {\n    title: \"放大镜\",\n    children: [\n      { label: \"悬停放大（视口 ≥ 1024px 生效）\", key: \"magnifier\", component: \"checkbox\" as const, defaultValue: false },\n      {\n        label: \"放大倍率\",\n        key: \"magnifierZoom\",\n        component: \"slider\" as const,\n        defaultValue: 2,\n        props: { min: 1.5, max: 5, step: 0.5 },\n        hide: (_: number, s: Record<string, any>) => !s.magnifier,\n      },\n      {\n        label: \"透镜尺寸（px）\",\n        key: \"magnifierSize\",\n        component: \"slider\" as const,\n        defaultValue: 100,\n        props: { min: 40, max: 160, step: 10 },\n        hide: (_: number, s: Record<string, any>) => !s.magnifier,\n      },\n    ],\n  },\n];\n\n/** 演练场右上角展示的传参明细：完整列出当前全部参数（含默认值） */\nconst imageCode = computed(() => {\n  const s = state.value;\n  const lines = [\n    `src=\"${PORTRAIT}\"`,\n    `mode=\"${s.mode}\"`,\n    `:width=\"${s.width}\"`,\n    `:height=\"${s.height}\"`,\n  ];\n  if (s.rounded) lines.push(`custom-class=\"${s.rounded}\"`);\n  lines.push(`:show-loading=\"${s.showLoading}\"`, `:preview=\"${s.preview}\"`);\n  if (s.preview) {\n    if (s.multiple) lines.push(\":preview-list=\\\"previewList\\\"\", `:preview-navbar=\"${s.previewNavbar}\"`);\n    lines.push(`preview-toolbar=\"${s.previewToolbar}\"`);\n  }\n  lines.push(`:magnifier=\"${s.magnifier}\"`);\n  if (s.magnifier) lines.push(`:magnifier-zoom=\"${s.magnifierZoom}\"`, `:magnifier-size=\"${s.magnifierSize}\"`);\n  return `<RebornImage\\n  ${lines.join(\"\\n  \")}\\n/>`;\n});\n\n// ─── 场景演示状态 ───────────────────────────────────────────────\n\n/** 「加载与失败」里失败实例的 error 事件回显 */\nconst errorEcho = shallowRef(\"等待加载\");\n\n/** 「懒加载」的图片，以及各自是否已触发 load */\nconst lazyImages = [LANDSCAPE, PORTRAIT, LANDSCAPE_ALT, QR_CODE];\nconst lazyLoaded = ref<boolean[]>(lazyImages.map(() => false));\nconst lazyLoadedCount = computed(() => lazyLoaded.value.filter(Boolean).length);\n</script>\n\n<template>\n  <div class=\"flex w-full min-w-0 flex-col\">\n    <Playground\n      v-model=\"state\" :controls=\"controls\" :code=\"imageCode\" component-name=\"RebornImage\"\n      title=\"交互演练场\" description=\"调节上方参数，查看裁剪模式、尺寸与圆角的效果；单击图片打开预览，开启放大镜后悬停查看局部。\"\n    >\n      <template #tag>\n        <RebornButton size=\"sm\" variant=\"soft\" color=\"neutral\" @click=\"resetState\">\n          <template #leading>\n            <Icon name=\"lucide:rotate-ccw\" size=\"12\" />\n          </template>\n          重置配置\n        </RebornButton>\n      </template>\n\n      <div class=\"flex w-full flex-col items-center gap-6\">\n        <RebornImage\n          :src=\"PORTRAIT\" :mode=\"state.mode\" :width=\"state.width\" :height=\"state.height\"\n          :custom-class=\"state.rounded\" :show-loading=\"state.showLoading\" :preview=\"state.preview\"\n          :preview-list=\"state.multiple ? previewList : undefined\" :preview-navbar=\"state.previewNavbar\"\n          :preview-toolbar=\"state.previewToolbar\" :magnifier=\"state.magnifier\" :magnifier-zoom=\"state.magnifierZoom\"\n          :magnifier-size=\"state.magnifierSize\" :ui=\"BOX_OUTLINE\" @load=\"onPlaygroundLoad\"\n          @error=\"lastEvent = 'error：图片加载失败'\"\n        />\n\n        <DemoNote tone=\"dimmed\" class=\"text-center text-xs\">\n          <span class=\"font-mono\">{{ lastEvent }}</span>；虚线框是容器范围，只为对比 mode 而加，不在传参明细里\n        </DemoNote>\n      </div>\n    </Playground>\n\n    <DemoSection title=\"基础用法\">\n      <template #description>\n        <code>width</code> / <code>height</code> 传数字按 px 处理，传字符串原样透传，可写 rem、%、vw 等任意 CSS 长度；不传时为 120 × 120。\n      </template>\n      <DemoBlock layout=\"row\" align=\"start\" class=\"gap-8\">\n        <DemoItem label=\"默认 120 × 120\">\n          <RebornImage :src=\"LANDSCAPE\" />\n        </DemoItem>\n        <DemoItem label=\":width=&quot;200&quot; :height=&quot;160&quot;\" mono>\n          <RebornImage :src=\"LANDSCAPE\" :width=\"200\" :height=\"160\" />\n        </DemoItem>\n        <DemoItem label=\"width=&quot;12rem&quot; height=&quot;8rem&quot;\" mono>\n          <RebornImage :src=\"LANDSCAPE\" width=\"12rem\" height=\"8rem\" />\n        </DemoItem>\n      </DemoBlock>\n    </DemoSection>\n\n    <DemoSection title=\"裁剪模式\">\n      <template #description>\n        <code>mode</code> 决定原图怎样放进容器，默认 <code>aspectFill</code>。下面把 720 × 840 的竖图放进扁的横框，宽高比差得越多，几种取值的区别越明显；虚线框是容器范围。\n      </template>\n      <DemoBlock layout=\"stack\" class=\"gap-10\">\n        <DemoBlock layout=\"grid\" :columns=\"3\">\n          <DemoItem label=\"scaleToFill\" mono note=\"拉伸铺满，不保持宽高比，人物被压扁\">\n            <RebornImage :src=\"PORTRAIT\" mode=\"scaleToFill\" :width=\"200\" :height=\"120\" :ui=\"BOX_OUTLINE\" />\n          </DemoItem>\n          <DemoItem label=\"aspectFit\" mono note=\"完整显示原图，容器多出来的部分留空\">\n            <RebornImage :src=\"PORTRAIT\" mode=\"aspectFit\" :width=\"200\" :height=\"120\" :ui=\"BOX_OUTLINE\" />\n          </DemoItem>\n          <DemoItem label=\"aspectFill（默认）\" mono note=\"铺满容器，超出的部分裁掉，取中间\">\n            <RebornImage :src=\"PORTRAIT\" mode=\"aspectFill\" :width=\"200\" :height=\"120\" :ui=\"BOX_OUTLINE\" />\n          </DemoItem>\n        </DemoBlock>\n\n        <div class=\"flex flex-col gap-4\">\n          <DemoBlock layout=\"row\" align=\"start\" class=\"gap-8\">\n            <DemoItem label=\"widthFix + height=&quot;auto&quot;\" mono note=\"宽度固定 120，高度按原图比例算出\">\n              <RebornImage :src=\"PORTRAIT\" mode=\"widthFix\" :width=\"120\" height=\"auto\" :ui=\"BOX_OUTLINE\" />\n            </DemoItem>\n            <DemoItem label=\"heightFix + width=&quot;auto&quot;\" mono note=\"高度固定 120，宽度按原图比例算出\">\n              <RebornImage :src=\"PORTRAIT\" mode=\"heightFix\" width=\"auto\" :height=\"120\" :ui=\"BOX_OUTLINE\" />\n            </DemoItem>\n          </DemoBlock>\n          <DemoNote tone=\"dimmed\">\n            widthFix / heightFix 要把另一边设为 <code>auto</code>：组件给根节点写了固定宽高，不放开的话根节点不会随原图比例伸缩，效果和 aspectFit / aspectFill 没有区别。\n          </DemoNote>\n        </div>\n\n        <div class=\"flex flex-col gap-4\">\n          <DemoBlock layout=\"grid\" :columns=\"3\">\n            <DemoItem v-for=\"m in positionModes\" :key=\"m\" :label=\"m\" mono>\n              <RebornImage :src=\"QR_CODE\" :mode=\"m\" :width=\"120\" :height=\"120\" />\n            </DemoItem>\n          </DemoBlock>\n          <DemoNote tone=\"dimmed\">\n            方位类取值（top、bottom left 等 9 个）不缩放原图，只决定露出原图的哪一块：上面把 200 × 200 的二维码放进 120 × 120 的容器，三个实例露出的定位角各不相同。原图远大于容器时只能看到一小块，这类取值适合原图与容器尺寸接近的场景。\n          </DemoNote>\n        </div>\n      </DemoBlock>\n    </DemoSection>\n\n    <DemoSection title=\"圆角\">\n      <template #description>\n        组件默认不带圆角，与 uniapp 端一致；需要时用 <code>custom-class</code> 或 <code>ui.root</code> 加。根节点自带 <code>overflow-hidden</code>，加载与失败占位也跟着一起变圆。\n      </template>\n      <DemoBlock layout=\"row\" align=\"start\" class=\"gap-8\">\n        <DemoItem label=\"默认\" mono>\n          <RebornImage :src=\"LANDSCAPE\" />\n        </DemoItem>\n        <DemoItem label=\"rounded-lg\" mono>\n          <RebornImage :src=\"LANDSCAPE\" custom-class=\"rounded-lg\" />\n        </DemoItem>\n        <DemoItem label=\"rounded-xl\" mono>\n          <RebornImage :src=\"LANDSCAPE\" custom-class=\"rounded-xl\" />\n        </DemoItem>\n        <DemoItem label=\"rounded-full\" mono>\n          <RebornImage :src=\"LANDSCAPE\" custom-class=\"rounded-full\" />\n        </DemoItem>\n        <DemoItem label=\"失败占位 + rounded-xl\" mono>\n          <RebornImage :src=\"BROKEN\" custom-class=\"rounded-xl\" />\n        </DemoItem>\n      </DemoBlock>\n    </DemoSection>\n\n    <DemoSection title=\"加载与失败\">\n      <template #description>\n        图片加载期间显示灰底转圈占位；加载失败先自动重试 2 次，仍失败才显示失败占位并触发 <code>error</code>。<code>show-loading</code> 为 <code>false</code> 时加载期间不渲染占位。\n      </template>\n      <DemoBlock layout=\"grid\" :columns=\"3\">\n        <DemoItem label=\"加载中（src 为空）\" note=\"空地址不算失败，会一直停在加载占位；懒加载尚未触发时就是这个状态\">\n          <RebornImage src=\"\" :width=\"160\" :height=\"160\" />\n        </DemoItem>\n        <DemoItem label=\"加载失败\" :note=\"errorEcho\">\n          <RebornImage :src=\"BROKEN\" :width=\"160\" :height=\"160\" @error=\"errorEcho = 'error 已触发：重试 2 次后仍失败'\" />\n        </DemoItem>\n        <DemoItem label=\":show-loading=&quot;false&quot;\" mono note=\"加载期间不渲染占位；虚线框只是为了标出图片区域\">\n          <RebornImage src=\"\" :width=\"160\" :height=\"160\" :show-loading=\"false\" :ui=\"BOX_OUTLINE\" />\n        </DemoItem>\n      </DemoBlock>\n    </DemoSection>\n\n    <DemoSection title=\"自定义占位\">\n      <template #description>\n        <code>loading</code> / <code>error</code> 插槽替换占位里的内容，灰底容器仍在；只想改图标大小、颜色时用 <code>ui.loadingIcon</code> / <code>ui.errorIcon</code>，填了插槽这两个键就不再生效。\n      </template>\n      <DemoBlock layout=\"grid\" :columns=\"3\">\n        <DemoItem label=\"#loading 插槽\">\n          <RebornImage src=\"\" :width=\"160\" :height=\"160\">\n            <template #loading>\n              <Icon name=\"svg-spinners:3-dots-fade\" class=\"text-primary size-8\" />\n              <span class=\"text-dimmed mt-2 text-xs\">图片加载中</span>\n            </template>\n          </RebornImage>\n        </DemoItem>\n        <DemoItem label=\"#error 插槽\">\n          <RebornImage :src=\"BROKEN\" :width=\"160\" :height=\"160\">\n            <template #error>\n              <Icon name=\"lucide:image-off\" class=\"text-gray-5 size-8\" />\n              <span class=\"text-dimmed mt-2 text-xs\">图片已失效</span>\n            </template>\n          </RebornImage>\n        </DemoItem>\n        <DemoItem label=\"ui.errorIcon\" mono>\n          <RebornImage :src=\"BROKEN\" :width=\"160\" :height=\"160\" :ui=\"{ errorIcon: 'size-12 text-error' }\" />\n        </DemoItem>\n      </DemoBlock>\n    </DemoSection>\n\n    <DemoSection title=\"叠加内容\">\n      <template #description>\n        默认插槽渲染在图片之上，适合角标、标题条这类叠加层。根节点是 <code>relative</code>，插槽内容用绝对定位贴边即可。\n      </template>\n      <DemoBlock layout=\"row\" align=\"start\" class=\"gap-8\">\n        <RebornImage :src=\"LANDSCAPE\" :width=\"240\" :height=\"160\" custom-class=\"rounded-lg\">\n          <span class=\"bg-error absolute top-2 left-2 rounded px-1.5 py-0.5 text-xs font-medium text-white\">新品</span>\n        </RebornImage>\n        <RebornImage :src=\"PORTRAIT\" :width=\"160\" :height=\"160\" custom-class=\"rounded-lg\">\n          <div class=\"absolute inset-x-0 bottom-0 bg-black/50 px-3 py-1.5 text-xs text-white\">装甲士兵 · 720 × 840</div>\n        </RebornImage>\n      </DemoBlock>\n    </DemoSection>\n\n    <DemoSection title=\"懒加载\">\n      <template #description>\n        开启 <code>lazy-load</code> 后，图片进入视口前 200px 才开始请求，此前停在加载占位。在下面的框里向下滚动，图片会逐张开始加载。\n      </template>\n      <DemoBlock layout=\"stack\" tone=\"inset\">\n        <div class=\"h-64 w-full overflow-y-auto\">\n          <div class=\"text-dimmed flex h-72 items-center justify-center text-xs\">↓ 向下滚动</div>\n          <div class=\"flex flex-wrap gap-4 pb-4\">\n            <RebornImage\n              v-for=\"(src, i) in lazyImages\" :key=\"src\" :src=\"src\" :width=\"140\" :height=\"140\" lazy-load\n              custom-class=\"rounded-lg\" @load=\"lazyLoaded[i] = true\"\n            />\n          </div>\n        </div>\n        <DemoNote tone=\"dimmed\">\n          已加载 {{ lazyLoadedCount }} / {{ lazyImages.length }} 张。放在内部滚动容器里时，200px 的提前量只对窗口生效，图片要真正露出滚动容器才会开始请求。\n        </DemoNote>\n      </DemoBlock>\n    </DemoSection>\n\n    <DemoSection title=\"预览\">\n      <template #description>\n        <code>preview</code> 开启单击预览；传了 <code>preview-list</code> 时可在多图间切换：遮罩两侧有切换箭头，键盘左右键也可以切换。当前图不在列表里时会排到第一张。\n      </template>\n      <DemoBlock layout=\"row\" align=\"start\" class=\"gap-8\">\n        <DemoItem label=\"单图\">\n          <RebornImage :src=\"LANDSCAPE\" preview custom-class=\"rounded-lg\" />\n        </DemoItem>\n        <DemoItem label=\"多图（3 张）\">\n          <RebornImage :src=\"LANDSCAPE\" preview :preview-list=\"previewList\" custom-class=\"rounded-lg\" />\n        </DemoItem>\n      </DemoBlock>\n    </DemoSection>\n\n    <DemoSection title=\"预览菜单\">\n      <template #description>\n        <code>preview-toolbar</code> 按书写顺序决定菜单里出现哪些按钮，写法同分页的 <code>layout</code>，不认识的写法会被忽略；传空字符串不显示菜单，滚轮缩放、拖拽与键盘操作仍然可用。\n      </template>\n      <DemoBlock layout=\"grid\" :columns=\"3\">\n        <DemoItem label=\"只留缩放\" note=\"zoomIn, zoomOut, oneToOne\">\n          <RebornImage :src=\"LANDSCAPE\" preview preview-toolbar=\"zoomIn, zoomOut, oneToOne\" custom-class=\"rounded-lg\" />\n        </DemoItem>\n        <DemoItem label=\"全部 11 个按钮\" note=\"含 reset、prev / next 与两个翻转\">\n          <RebornImage\n            :src=\"LANDSCAPE\" preview :preview-list=\"previewList\" :preview-toolbar=\"previewToolbarTokens.join(', ')\"\n            custom-class=\"rounded-lg\"\n          />\n        </DemoItem>\n        <DemoItem label=\"不显示菜单\" note=\"preview-toolbar=&quot;&quot;\">\n          <RebornImage :src=\"LANDSCAPE\" preview preview-toolbar=\"\" custom-class=\"rounded-lg\" />\n        </DemoItem>\n      </DemoBlock>\n    </DemoSection>\n\n    <DemoSection title=\"缩略图列表\">\n      <template #description>\n        <code>preview-navbar</code> 控制多图预览时底部是否显示缩略图列表，默认不显示；点缩略图可直接跳到对应图片。单图时开了也不显示。\n      </template>\n      <DemoBlock layout=\"row\" align=\"start\" class=\"gap-8\">\n        <DemoItem label=\"默认（不显示）\">\n          <RebornImage :src=\"LANDSCAPE\" preview :preview-list=\"previewList\" custom-class=\"rounded-lg\" />\n        </DemoItem>\n        <DemoItem label=\"preview-navbar\" mono>\n          <RebornImage :src=\"LANDSCAPE\" preview :preview-list=\"previewList\" preview-navbar custom-class=\"rounded-lg\" />\n        </DemoItem>\n      </DemoBlock>\n    </DemoSection>\n\n    <DemoSection title=\"放大镜\">\n      <template #description>\n        <code>magnifier</code> 开启悬停放大，商品详情页常用：透镜在原图上跟随指针，放大后的局部显示在原图右侧。视口窄于 1024px 时不启用，单击改为打开预览。\n      </template>\n      <DemoBlock layout=\"row\" align=\"start\" class=\"gap-8\">\n        <DemoItem label=\"默认\" note=\"透镜 100px、2 倍\">\n          <RebornImage :src=\"LANDSCAPE\" magnifier :width=\"200\" :height=\"200\" />\n        </DemoItem>\n        <DemoItem label=\"小透镜高倍率\" note=\":magnifier-size=&quot;40&quot; :magnifier-zoom=&quot;5&quot;\">\n          <RebornImage :src=\"LANDSCAPE\" magnifier :magnifier-size=\"40\" :magnifier-zoom=\"5\" :width=\"200\" :height=\"200\" />\n        </DemoItem>\n        <DemoItem label=\"自定义预览窗\" note=\"150 × 300，不传时与原图同大\">\n          <RebornImage\n            :src=\"LANDSCAPE\" magnifier :magnifier-size=\"60\" :magnifier-zoom=\"1.5\" :magnifier-width=\"150\"\n            :magnifier-height=\"300\" :width=\"200\" :height=\"200\"\n          />\n        </DemoItem>\n      </DemoBlock>\n    </DemoSection>\n  </div>\n</template>\n"
+    },
+    {
+      "title": "UniApp 演示",
+      "path": "packages/uniapp-project/src/pages/reborn-image/RebornImageDemo.vue",
+      "source": "demo",
+      "platform": "uniapp",
+      "code": "<script setup lang=\"ts\">\nimport { ref, shallowRef } from 'vue'\nimport RebornCard from '@/components/reborn-card/RebornCard.vue'\nimport { imageMode } from '@/components/reborn-image/reborn-image.config'\nimport RebornImage from '@/components/reborn-image/RebornImage.vue'\nimport RebornPage from '@/components/reborn-page/RebornPage.vue'\n\nconst src = shallowRef('https://cms-image.leyifan.cn/img_reborn/ques-4.jpg')\nconst previewList = ref(['https://cms-image.leyifan.cn/resources/image/2026/01/27/767453852479557.png', 'https://cms-image.leyifan.cn/resources/image/2026/01/30/768516482351173.png'])\n</script>\n\n<template>\n  <RebornPage title=\"Image 图片\" description=\"组件是基于 uni-app 原生 image 组件封装的增强版图片组件\">\n    <RebornCard title=\"基础用法\">\n      <RebornImage :src=\"src\" />\n    </RebornCard>\n    <RebornCard title=\"不同裁剪\" custom-class=\"grid grid-cols-4 gap-2 text-24 text-gray-7 dark:text-gray-1\">\n      <view\n        v-for=\"value in imageMode\" :key=\"value\" class=\"\n          flex flex-col items-center justify-center\n        \"\n      >\n        <RebornImage :src=\"src\" :mode=\"value\" />\n        {{ value }}\n      </view>\n    </RebornCard>\n    <RebornCard title=\"预览图片\" custom-class=\"grid grid-cols-4 gap-2 text-24 text-gray-7 dark:text-gray-1\">\n      <view class=\"flex flex-col items-center justify-center\">\n        <RebornImage :src=\"src\" preview />\n        原图\n      </view>\n      <view class=\"flex flex-col items-center justify-center\">\n        <RebornImage :src=\"src\" preview :preview-list=\"previewList\" />\n        预览列表\n      </view>\n    </RebornCard>\n    <RebornCard title=\"状态\" custom-class=\"grid grid-cols-4 gap-2 text-24 text-gray-7 dark:text-gray-1\">\n      <view class=\"flex flex-col items-center justify-center\">\n        <!-- 使用明确不存在的资源演示加载失败。 -->\n        <RebornImage src=\"/static/missing-demo-image.png\" />\n        失败\n      </view>\n      <view class=\"flex flex-col items-center justify-center\">\n        <RebornImage src=\"\" />\n        加载中\n      </view>\n    </RebornCard>\n    <RebornCard title=\"自定义圆角\" custom-class=\"grid grid-cols-4 gap-2 text-24 text-gray-7 dark:text-gray-1\">\n      <view class=\"flex flex-col items-center justify-center\">\n        <RebornImage :src=\"src\" custom-class=\"rounded-full\" />\n        rounded-full\n      </view>\n      <view class=\"flex flex-col items-center justify-center\">\n        <RebornImage :src=\"src\" custom-class=\"rounded-lg\" />\n        rounded-lg\n      </view>\n      <view class=\"flex flex-col items-center justify-center\">\n        <RebornImage :src=\"src\" custom-class=\"rounded-xl\" />\n        rounded-xl\n      </view>\n      <view class=\"flex flex-col items-center justify-center\">\n        <RebornImage :src=\"src\" custom-class=\"rounded-2xl\" />\n        rounded-2xl\n      </view>\n      <view class=\"flex flex-col items-center justify-center\">\n        <RebornImage :src=\"src\" custom-class=\"rounded-3xl\" />\n        rounded-3xl\n      </view>\n      <view class=\"flex flex-col items-center justify-center\">\n        <RebornImage :src=\"src\" custom-class=\"rounded-full\" />\n        rounded-full\n      </view>\n    </RebornCard>\n  </RebornPage>\n</template>\n"
+    }
+  ],
+  "related": [
+    "reborn-loading"
+  ],
+  "whenToUse": [
+    "需要点击放大预览图片（preview + previewList）时。",
+    "需要加载中占位与加载失败占位（showLoading、error 插槽）时。",
+    "商品详情图需要放大镜效果（magnifier 及配套 zoom/size 参数）时。",
+    "uniapp 端需要懒加载、webp 解码、长按菜单等原生 image 能力时。"
+  ],
+  "whenNotToUse": [
+    "仅需在设备外壳中展示截图，改用 iphone-mockup 或 safari-mockup。",
+    "web 端只需悬停局部放大效果，可用 lens。"
+  ],
+  "pitfalls": [
+    "web、uniapp 双端可用。",
+    "src 为必填项；width/height 默认均为 120，mode 默认 aspectFill。",
+    "previewList 不传时默认仅预览当前 src。",
+    "lazyLoad、webp、showMenuByLongpress 等属性对应 uniapp 原生 image 能力。",
+    "magnifier 默认关闭，magnifierZoom 默认 2、magnifierSize 默认 100。"
+  ],
+  "dependencies": [
+    "@vueuse/core",
+    "@weapp-tailwindcss/merge-v3",
+    "@weapp-tailwindcss/variants-v3",
+    "clsx",
+    "tailwind-merge",
+    "tailwind-variants",
+    "viewerjs"
+  ],
+  "install": {
+    "cli": "npx reborn-ui@latest add reborn-image"
+  },
+  "sourceRefs": {
+    "web": [
+      "app/components/reborn/ui/reborn-image/RebornImage.vue",
+      "app/components/reborn/ui/reborn-image/reborn-image.config.ts"
+    ],
+    "uniapp": [
+      "packages/uniapp-project/src/components/reborn-image/RebornImage.vue",
+      "packages/uniapp-project/src/components/reborn-image/index.ts",
+      "packages/uniapp-project/src/components/reborn-image/reborn-image.config.ts"
+    ]
+  },
+  "docPath": "content/2.components/miscellaneous/reborn-image.md",
+  "_meta": {
+    "contentHash": "665c8e93197f6b6196e50515a46fd73fb256be83",
+    "hasOverride": true,
+    "extractors": {
+      "web": "ok",
+      "uniapp": "ok",
+      "docs": "found"
+    }
+  }
+}

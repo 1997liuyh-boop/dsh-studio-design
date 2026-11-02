@@ -1,0 +1,100 @@
+{
+  "$schema": "../schema/component.schema.json",
+  "id": "text-generate-effect",
+  "title": "文字生成效果",
+  "description": "用于让段落文字逐字渐显、可带模糊过渡的入场动画组件。",
+  "category": "effect",
+  "tags": [
+    "css",
+    "tailwind",
+    "aceternity-ui"
+  ],
+  "platforms": [
+    "web"
+  ],
+  "props": [
+    {
+      "name": "words",
+      "type": "string",
+      "required": true,
+      "description": "要展示并生成的文字。",
+      "default": "Required"
+    },
+    {
+      "name": "filter",
+      "type": "boolean",
+      "required": false,
+      "description": "文字的模糊效果。",
+      "default": "true"
+    },
+    {
+      "name": "duration",
+      "type": "number",
+      "required": false,
+      "description": "文字生成动画的持续时间（秒）。",
+      "default": "0.7"
+    },
+    {
+      "name": "delay",
+      "type": "number",
+      "required": false,
+      "description": "动画开始前的延迟（毫秒）。",
+      "default": "0"
+    },
+    {
+      "name": "class",
+      "type": "HTMLAttributes[\"class\"]",
+      "required": false,
+      "description": ""
+    }
+  ],
+  "events": [],
+  "slots": [],
+  "exposes": [],
+  "examples": [
+    {
+      "title": "Web 演示",
+      "path": "app/components/reborn/examples/text-generate-effect/TextGenerateDemo.vue",
+      "source": "demo",
+      "platform": "web",
+      "code": "<template>\n  <div class=\"flex items-center justify-center py-12 max-lg:w-full md:flex-1\">\n    <TextGenerateEffect\n      words=\"Nuxt is an open source framework that makes web development intuitive and powerful. Create performant and production-grade full-stack web apps and websites with confidence.\"\n    />\n  </div>\n</template>\n"
+    }
+  ],
+  "related": [],
+  "whenToUse": [
+    "页面加载时逐字显示引言、产品介绍等段落。",
+    "模拟 AI 生成回答的逐字浮现效果。",
+    "需要通过 delay 控制入场时机的文案区块。"
+  ],
+  "whenNotToUse": [
+    "打字机式逐字输入并删除重打，改用 reborn-typewriter。",
+    "随滚动进度逐词显现，改用 text-scroll-reveal。",
+    "按行整行入场，改用 text-reveal。"
+  ],
+  "pitfalls": [
+    "仅 web 端可用。",
+    "文字通过 words prop 传入（必填），不支持插槽。",
+    "duration 单位为秒（默认 0.7），delay 单位为毫秒（默认 0），两者单位不一致，易混淆。",
+    "filter 默认开启模糊渐显，可传 false 关闭。"
+  ],
+  "dependencies": [],
+  "install": {
+    "cli": "npx reborn-ui@latest add text-generate-effect"
+  },
+  "sourceRefs": {
+    "web": [
+      "app/components/reborn/ui/text-generate-effect/TextGenerateEffect.vue",
+      "app/components/reborn/ui/text-generate-effect/index.ts"
+    ]
+  },
+  "docPath": "content/2.components/text-animations/text-generate-effect.md",
+  "_meta": {
+    "contentHash": "75fbcb11822d1c1b9b0a4d8ccb2067e26d1f3823",
+    "hasOverride": true,
+    "extractors": {
+      "web": "ok",
+      "uniapp": "absent",
+      "docs": "found"
+    }
+  }
+}

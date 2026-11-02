@@ -1,0 +1,140 @@
+{
+  "$schema": "../schema/component.schema.json",
+  "id": "balance-slider",
+  "title": "平衡滑块",
+  "description": "用于在左右两侧间拖动分配比例的双色平衡滑块展示组件。",
+  "category": "form",
+  "tags": [
+    "css",
+    "tailwind",
+    "input"
+  ],
+  "platforms": [
+    "web"
+  ],
+  "props": [
+    {
+      "name": "initialValue",
+      "type": "number",
+      "required": false,
+      "description": "未绑定 `v-model` 时的初始位置（0-100），仅初始化时生效。",
+      "default": "50"
+    },
+    {
+      "name": "leftColor",
+      "type": "string",
+      "required": false,
+      "description": "滑块左侧的背景色（六位十六进制）。",
+      "default": "\"#e68a00\""
+    },
+    {
+      "name": "rightColor",
+      "type": "string",
+      "required": false,
+      "description": "滑块右侧的背景色（六位十六进制）。",
+      "default": "\"#ffffff\""
+    },
+    {
+      "name": "minShiftLimit",
+      "type": "number",
+      "required": false,
+      "description": "启动位移动画的最小阈值。",
+      "default": "40"
+    },
+    {
+      "name": "maxShiftLimit",
+      "type": "number",
+      "required": false,
+      "description": "关闭位移动画的最大阈值。",
+      "default": "68"
+    },
+    {
+      "name": "leftContent",
+      "type": "string",
+      "required": false,
+      "description": "左侧提示中显示的文本。",
+      "default": "\"LEFT\""
+    },
+    {
+      "name": "rightContent",
+      "type": "string",
+      "required": false,
+      "description": "右侧提示中显示的文本。",
+      "default": "\"RIGHT\""
+    },
+    {
+      "name": "indicatorColor",
+      "type": "string",
+      "required": false,
+      "description": "滑块中央指示器的颜色。",
+      "default": "\"#FFFFFF\""
+    },
+    {
+      "name": "borderRadius",
+      "type": "number",
+      "required": false,
+      "description": "左右两块色带的圆角半径，单位 px",
+      "default": "8"
+    },
+    {
+      "name": "modelValue",
+      "type": "number | null",
+      "required": false,
+      "description": "双向绑定值",
+      "vModel": true
+    }
+  ],
+  "events": [
+    {
+      "name": "update:modelValue",
+      "description": "modelValue 变化时触发（v-model 同步）",
+      "payload": "(value: number)"
+    }
+  ],
+  "slots": [],
+  "exposes": [],
+  "examples": [
+    {
+      "title": "Web 演示",
+      "path": "app/components/reborn/examples/balance-slider/BalanceSliderDemo.vue",
+      "source": "demo",
+      "platform": "web",
+      "code": "<script lang=\"ts\" setup>\nimport { useColorMode } from \"#imports\";\nimport { computed } from \"vue\";\n\n// 读取站点现有主题，避免创建会改写全站 class 的独立主题状态\nconst colorMode = useColorMode();\nconst isDark = computed(() => colorMode.value === \"dark\");\nconst rightColor = computed(() => (isDark.value ? \"#FFFFFF\" : \"#000000\"));\nconst indicatorColor = computed(() => (isDark.value ? \"#FFFFFF\" : \"#000000\"));\n</script>\n\n<template>\n  <div class=\"w-full p-4\">\n    <BalanceSlider\n      :right-color=\"rightColor\"\n      left-content=\"COFFEE\"\n      right-content=\"MILK\"\n      :indicator-color=\"indicatorColor\"\n    />\n  </div>\n</template>\n"
+    }
+  ],
+  "related": [],
+  "whenToUse": [
+    "展示两个选项之间的比例倾向（如示例中的 COFFEE / MILK）。",
+    "落地页需要可拖动的双边对比交互区块。",
+    "需要自定义左右背景色与提示文案的比例展示。"
+  ],
+  "whenNotToUse": [
+    "表单中需要校验、步长与刻度的数值滑块，改用 reborn-slider。"
+  ],
+  "pitfalls": [
+    "仅 web 端可用。",
+    "通过 v-model（modelValue，0-100 的数字）读取拖动结果；未绑定时 initialValue 作为初值。",
+    "minShiftLimit / maxShiftLimit（默认 40 / 68）控制位移动画的启停阈值，而非取值范围。",
+    "Web 显式绑定 modelValue 为 undefined/null 时显示比例复位到 initialValue，不回显旧交互副本，也不主动回写父模型。"
+  ],
+  "dependencies": [],
+  "install": {
+    "cli": "npx reborn-ui@latest add balance-slider"
+  },
+  "sourceRefs": {
+    "web": [
+      "app/components/reborn/ui/balance-slider/BalanceSlider.vue",
+      "app/components/reborn/ui/balance-slider/index.ts"
+    ]
+  },
+  "docPath": "content/2.components/input-and-forms/balance-slider.md",
+  "_meta": {
+    "contentHash": "6c5166c8c52b69b1c8a20a57b8a31bddc4eaf0fb",
+    "hasOverride": true,
+    "extractors": {
+      "web": "ok",
+      "uniapp": "absent",
+      "docs": "found"
+    }
+  }
+}

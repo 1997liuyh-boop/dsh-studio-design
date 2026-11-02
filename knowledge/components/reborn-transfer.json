@@ -1,0 +1,321 @@
+{
+  "$schema": "../schema/component.schema.json",
+  "id": "reborn-transfer",
+  "title": "Transfer 穿梭框",
+  "description": "用于在双列列表间移动条目的穿梭框组件，支持搜索过滤、全选、单向模式、撤回、分页、虚拟滚动，以及头部、条目、底部与操作按钮插槽。",
+  "category": "misc",
+  "tags": [
+    "vue",
+    "reborn-transfer"
+  ],
+  "platforms": [
+    "web"
+  ],
+  "props": [
+    {
+      "name": "dataSource",
+      "type": "TransferDataRecord[]",
+      "required": false,
+      "description": "数据源，包含所有可选条目（字段名可通过 field-names 映射）",
+      "default": "() => []"
+    },
+    {
+      "name": "fieldNames",
+      "type": "TransferFieldNames",
+      "required": false,
+      "description": "数据源字段别名 例如后端返回 { id, name, remark, isDisabled } 时可配置为 { key: 'id', label: 'name', description: 'remark', disabled: 'isDisabled' }",
+      "default": "() => ({})"
+    },
+    {
+      "name": "defaultTargetKeys",
+      "type": "string[]",
+      "required": false,
+      "description": "默认已在目标列表（右侧）的条目 key 未绑定 v-model 或目标列表为空时生效；在首次拿到非空 dataSource 时初始化一次，会过滤掉 dataSource 中不存在的 key",
+      "default": "() => []"
+    },
+    {
+      "name": "defaultSelectedKeys",
+      "type": "string[]",
+      "required": false,
+      "description": "首次取得非空数据时默认勾选的 key，按目标列表分配至两侧，禁用项不参与",
+      "default": "() => []"
+    },
+    {
+      "name": "titles",
+      "type": "[string, string]",
+      "required": false,
+      "description": "两个面板的标题，索引 0 为源列表，索引 1 为目标列表",
+      "default": "() => [] as unknown as [string, string]"
+    },
+    {
+      "name": "operationButtons",
+      "type": "TransferOperationButtons",
+      "required": false,
+      "description": "中间操作区三个按钮的自定义配置（图标、文案、样式等） 整个按钮替换用 operation 插槽，只换按钮内部内容用 operation-to-right 等插槽"
+    },
+    {
+      "name": "disabled",
+      "type": "boolean",
+      "required": false,
+      "description": "是否禁用整体穿梭框（包括所有勾选与移动操作）",
+      "default": "false"
+    },
+    {
+      "name": "showSearch",
+      "type": "boolean",
+      "required": false,
+      "description": "是否在两个面板顶部显示搜索框",
+      "default": "false"
+    },
+    {
+      "name": "headerSelect",
+      "type": "\"none\" | \"checkbox\" | \"menu\" | \"both\"",
+      "required": false,
+      "description": "面板头部选择控件模式（variant 为 borderless 时不渲染头部，此项不生效） - 'both'：同时显示全选复选框与下拉菜单（默认） - 'checkbox'：仅显示全选复选框，计数作为复选框文案 - 'menu'：仅显示下拉菜单（RebornSelect 多选，触发器显示计数文案；逐项列出当前面板搜索结果内的全部条目，跨分页，点击切换勾选） - 'none'：隐藏所有选择控件，仅保留标题与计数",
+      "default": "\"both\""
+    },
+    {
+      "name": "searchPlaceholder",
+      "type": "string",
+      "required": false,
+      "description": "搜索框占位符文字",
+      "default": "\"请输入搜索内容\""
+    },
+    {
+      "name": "filterOption",
+      "type": "(inputValue: string, item: TransferDataRecord) => boolean",
+      "required": false,
+      "description": "自定义搜索方法，返回 true 表示条目匹配搜索词（item 为原始数据对象） 不传时按 label 字段做不区分大小写的包含匹配"
+    },
+    {
+      "name": "checkShape",
+      "type": "TransferCheckShape",
+      "required": false,
+      "description": "选中框外观 - square：方形（直角） - rounded：圆角（默认） - circle：圆形",
+      "default": "\"rounded\""
+    },
+    {
+      "name": "variant",
+      "type": "TransferVariant",
+      "required": false,
+      "description": "形态变体 - outlined：8px 圆角描边面板，带头部（默认） - borderless：去掉面板边框与内部分隔线，且不渲染头部（全选、下拉菜单、标题、计数一并隐藏）",
+      "default": "\"outlined\""
+    },
+    {
+      "name": "color",
+      "type": "TransferColor",
+      "required": false,
+      "description": "语义色，决定复选框的勾选色、选中条目的底色、头部下拉的选中项颜色与操作按钮颜色",
+      "default": "\"primary\""
+    },
+    {
+      "name": "oneWay",
+      "type": "boolean",
+      "required": false,
+      "description": "单向模式：仅允许从左向右移动，不可移回 开启后右侧为只读展示，不显示头部全选及条目勾选框； 开启单向模式后移入右侧的条目可逐条撤回，开启前就在右侧的条目（含初始值）不可撤回",
+      "default": "false"
+    },
+    {
+      "name": "showUndo",
+      "type": "boolean",
+      "required": false,
+      "description": "是否显示中间撤回按钮（撤销上一次穿梭操作），默认不显示",
+      "default": "false"
+    },
+    {
+      "name": "pagination",
+      "type": "boolean | TransferPaginationConfig",
+      "required": false,
+      "description": "是否开启列表分页；数据量大时建议开启，避免单页渲染过多条目 传 true 使用默认每页 10 条，或传入 { pageSize, simple } 配置",
+      "default": "false"
+    },
+    {
+      "name": "virtualScroll",
+      "type": "boolean",
+      "required": false,
+      "description": "是否开启虚拟滚动：列表只渲染可视区域附近的条目，滚动时按位置替换，适合上千条数据 开启后每行高度固定为 virtualItemHeight 减去 4px 行间距，面板需要确定的高度（传 height 或由父元素给出）",
+      "default": "false"
+    },
+    {
+      "name": "virtualItemHeight",
+      "type": "number",
+      "required": false,
+      "description": "虚拟滚动的行步长（px），即单行高度加上 4px 行间距 默认 34 对应只有 label 的条目（行高 30）；带 description 的条目行高 52，应传 56；用插槽改了条目内容时须与实际高度一致",
+      "default": "34"
+    },
+    {
+      "name": "virtualBuffer",
+      "type": "number",
+      "required": false,
+      "description": "虚拟滚动在可视区上下各多渲染的条数，快速滚动时减少白屏",
+      "default": "4"
+    },
+    {
+      "name": "width",
+      "type": "string | number",
+      "required": false,
+      "description": "单个面板宽度，两侧相同；不传时按父容器宽度均分 支持数字（px）或 CSS 长度，如 240、'18rem'、'40%'"
+    },
+    {
+      "name": "height",
+      "type": "string | number",
+      "required": false,
+      "description": "组件整体高度；默认不设，由父元素决定（根节点 h-full），列表在面板内用滚动条滚动 支持数字（px）或 CSS 长度，如 320、'20rem'、'50vh'"
+    },
+    {
+      "name": "class",
+      "type": "ClassValue",
+      "required": false,
+      "description": "根节点自定义类名"
+    },
+    {
+      "name": "ui",
+      "type": "TransferUI",
+      "required": false,
+      "description": "仅允许配置中的结构键，各值接受 `ClassValue`（字符串、数组或条件对象），见下方 [自定义样式](#自定义样式ui-属性) 可用键（从源码抽取，以此为准）——Web：checkAll*、headerSelectArrow、headerSelectControls、headerSelectDropdown、headerSelectIconWrapper、headerSelectItem、headerSelectMenu、headerSelectTrigger、item、itemCheck*、itemContent*、itemDesc*、itemLabel*、itemSelected、itemUndoBtn、itemUndoIcon、operationBtn*、operationBtnIcon*、operationBtnIconOnly*、operationBtnLabel*、operations、panel、panelBody*、panelContent、panelCount*、panelEmpty、panelFooter、panelHeader、panelList*、panelPagination、panelSearch、panelTitle*、panelTitleArea、root、searchInput、virtualPhantom*、virtualWindow*。 带 * 的键对应插槽兜底节点：填了同名插槽，组件自带的节点被替换，这个键随之失效。",
+      "default": "{}"
+    },
+    {
+      "name": "modelValue",
+      "type": "string[]",
+      "required": false,
+      "description": "双向绑定值",
+      "vModel": true,
+      "default": "[]"
+    }
+  ],
+  "events": [
+    {
+      "name": "change",
+      "payload": "(e: \"change\", nextTargetKeys: string[], direction: \"right\" | \"left\", moveKeys: string[]): void;",
+      "description": "条目在两列之间转移时触发，携带新目标列表、方向和本次移动的 key 数组"
+    },
+    {
+      "name": "selectChange",
+      "payload": "(e: \"selectChange\", sourceSelectedKeys: string[], targetSelectedKeys: string[]): void;",
+      "description": "任意面板的勾选状态发生变化时触发"
+    },
+    {
+      "name": "undo",
+      "payload": "(\n    e: \"undo\",\n    nextTargetKeys: string[],\n    payload: { direction: \"right\" | \"left\"; moveKeys: string[] },\n  ): void;",
+      "description": "点击撤回按钮，恢复至上一次穿梭前的目标列表"
+    },
+    {
+      "name": "update:modelValue",
+      "description": "modelValue 变化时触发（v-model 同步）",
+      "payload": "(nextTargetKeys: string[])"
+    }
+  ],
+  "slots": [
+    {
+      "name": "title",
+      "props": "(props: TransferTitleSlotProps) => any",
+      "description": "头部左侧的勾选区（默认是全选复选框 + 计数文案），左右面板共用，用 direction 区分"
+    },
+    {
+      "name": "extra",
+      "props": "(props: TransferExtraSlotProps) => any",
+      "description": "头部右侧区域（默认是面板标题）"
+    },
+    {
+      "name": "default",
+      "props": "(props: TransferItemSlotProps) => any",
+      "description": "列表条目内容；渲染在条目复选框的文案位置，复选框本身仍由组件负责"
+    },
+    {
+      "name": "item",
+      "props": "(props: { item: TransferDataRecord }) => any",
+      "description": "旧版条目插槽，作用域只有 { item }；新代码请用 default 插槽，二者同时提供时 default 优先"
+    },
+    {
+      "name": "list",
+      "props": "(props: TransferListSlotProps) => any",
+      "description": "替换整个列表，复用面板搜索、勾选、穿梭与分页逻辑"
+    },
+    {
+      "name": "footer",
+      "props": "(props: TransferFooterSlotProps) => any",
+      "description": "面板底部区域，渲染在分页栏下方"
+    },
+    {
+      "name": "operation",
+      "props": "(props: TransferOperationButtonSlotProps) => any",
+      "description": "整个替换中间操作按钮；不提供时渲染 RebornButton"
+    },
+    {
+      "name": "operation-to-right",
+      "props": "(props: TransferOperationSlotProps) => any",
+      "description": "只替换按钮内部内容（默认的图标 + 文案结构），按钮外壳仍是 RebornButton"
+    },
+    {
+      "name": "operation-to-left",
+      "props": "(props: TransferOperationSlotProps) => any",
+      "description": "只替换「移回左侧」按钮的内部内容"
+    },
+    {
+      "name": "operation-undo",
+      "props": "(props: TransferOperationSlotProps) => any",
+      "description": "只替换「撤回」按钮的内部内容"
+    }
+  ],
+  "exposes": [],
+  "examples": [
+    {
+      "title": "Web 演示",
+      "path": "app/components/reborn/examples/reborn-transfer/RebornTransferDemo.vue",
+      "source": "demo",
+      "platform": "web",
+      "code": "<script setup lang=\"ts\">\nimport type {\n  TransferCheckShape,\n  TransferColor,\n  TransferDataRecord,\n  TransferVariant,\n} from \"~/components/reborn/ui/reborn-transfer/reborn-transfer.config\";\nimport { computed, shallowRef } from \"vue\";\n\nimport RebornBadge from \"~/components/reborn/ui/reborn-badge/RebornBadge.vue\";\nimport RebornCheckbox from \"~/components/reborn/ui/reborn-checkbox/RebornCheckbox.vue\";\nimport RebornSwitch from \"~/components/reborn/ui/reborn-switch/RebornSwitch.vue\";\nimport {\n  transferCheckShapes,\n  transferColors,\n  transferVariants,\n} from \"~/components/reborn/ui/reborn-transfer/reborn-transfer.config\";\nimport RebornTransfer from \"~/components/reborn/ui/reborn-transfer/RebornTransfer.vue\";\nimport { cn } from \"~/lib/utils\";\n\n/** 本演示使用默认字段，同时满足支持字段别名的宽记录契约。 */\ninterface DemoTransferItem extends TransferDataRecord { key: string; label: string; description?: string; disabled?: boolean }\n\n// ─── 交互演练场 ─────────────────────────────────────────────────\n\n/** 演练场固定高度选项 */\nconst transferHeightPresetOptions = [\n  { label: \"不设置（由父元素决定）\", value: \"auto\" },\n  { label: \"280px\", value: 280 },\n  { label: \"360px\", value: 360 },\n  { label: \"420px\", value: 420 },\n] as const;\n\nconst defaultPlaygroundState = {\n  variant: \"outlined\" as TransferVariant,\n  color: \"primary\" as TransferColor,\n  disabled: false,\n  showSearch: false,\n  headerSelect: \"both\",\n  oneWay: false,\n  showUndo: false,\n  checkShape: \"rounded\" as TransferCheckShape,\n  heightPreset: \"auto\" as (typeof transferHeightPresetOptions)[number][\"value\"],\n};\n\nconst defaultPlaygroundTargetKeys = [\"3\", \"6\", \"9\"];\n\nconst state = shallowRef<Record<string, any>>({ ...defaultPlaygroundState });\n\n/** 高度预设为 auto 时不下发 height；演练场容器本身高度为 auto，列表随条目增高 */\nconst playgroundHeight = computed(() => {\n  const preset = state.value.heightPreset;\n  return preset === \"auto\" ? undefined : (preset as number);\n});\n\nconst playgroundTargetKeys = shallowRef([...defaultPlaygroundTargetKeys]);\n\n/** 最近一次触发的事件描述，替代 console 输出 */\nconst lastEvent = shallowRef(\"\");\n\n/** 还原演练场的全部配置与已选项 */\nfunction resetPlaygroundConfig() {\n  state.value = { ...defaultPlaygroundState };\n  playgroundTargetKeys.value = [...defaultPlaygroundTargetKeys];\n  lastEvent.value = \"\";\n}\n\n/** 演练场控制面板配置 */\nconst controls: any = [\n  {\n    title: \"基础属性\",\n    children: [\n      {\n        label: \"形态变体\",\n        key: \"variant\",\n        component: \"select\" as const,\n        defaultValue: \"outlined\",\n        props: {\n          options: transferVariants.map((v) => ({\n            label: v === \"outlined\" ? \"描边 outlined\" : \"无边框 borderless\",\n            value: v,\n          })),\n        },\n      },\n      {\n        label: \"语义色\",\n        key: \"color\",\n        component: \"select\" as const,\n        defaultValue: \"primary\",\n        props: { options: transferColors.map((c) => ({ label: c, value: c })) },\n      },\n      {\n        label: \"选中框形状\",\n        key: \"checkShape\",\n        component: \"select\" as const,\n        defaultValue: \"rounded\",\n        props: {\n          options: transferCheckShapes.map((shape) => ({\n            label: shape === \"square\" ? \"方形\" : shape === \"rounded\" ? \"圆角\" : \"圆形\",\n            value: shape,\n          })),\n        },\n      },\n      {\n        label: \"列表高度\",\n        key: \"heightPreset\",\n        component: \"select\" as const,\n        defaultValue: \"auto\",\n        props: {\n          options: transferHeightPresetOptions.map((item) => ({\n            label: item.label,\n            value: item.value,\n          })),\n        },\n      },\n    ],\n  },\n  {\n    title: \"交互控制\",\n    children: [\n      {\n        label: \"头部选择控件\",\n        key: \"headerSelect\",\n        component: \"select\" as const,\n        defaultValue: \"both\",\n        props: {\n          options: [\n            { label: \"全选复选框\", value: \"checkbox\" },\n            { label: \"扩展下拉菜单\", value: \"menu\" },\n            { label: \"复选框 + 菜单\", value: \"both\" },\n            { label: \"隐藏\", value: \"none\" },\n          ],\n        },\n      },\n      { label: \"禁用整体\", key: \"disabled\", component: \"checkbox\" as const, defaultValue: false },\n      { label: \"显示搜索\", key: \"showSearch\", component: \"checkbox\" as const, defaultValue: false },\n      { label: \"单向模式\", key: \"oneWay\", component: \"checkbox\" as const, defaultValue: false },\n      { label: \"显示撤回\", key: \"showUndo\", component: \"checkbox\" as const, defaultValue: false },\n    ],\n  },\n];\n\nfunction handleChange(nextTargetKeys: string[], direction: \"right\" | \"left\", moveKeys: string[]) {\n  lastEvent.value = `change · 方向 ${direction} · 移动 ${moveKeys.length} 项 · 右侧共 ${nextTargetKeys.length} 项`;\n}\n\nfunction handleSelectChange(sourceSelectedKeys: string[], targetSelectedKeys: string[]) {\n  lastEvent.value = `select-change · 左侧勾选 ${sourceSelectedKeys.length} 项 · 右侧勾选 ${targetSelectedKeys.length} 项`;\n}\n\nfunction handleUndo(\n  nextTargetKeys: string[],\n  payload: { direction: \"right\" | \"left\"; moveKeys: string[] },\n) {\n  lastEvent.value = `undo · 撤回 ${payload.moveKeys.length} 项 · 右侧共 ${nextTargetKeys.length} 项`;\n}\n\n/** 演练场右上角展示的等价代码 */\nconst codeString = computed(() => {\n  const heightAttr =\n    playgroundHeight.value != null ? `\\n  :height=\"${playgroundHeight.value}\"` : \"\";\n  return `<RebornTransfer\n  v-model=\"targetKeys\"\n  :data-source=\"dataSource\"\n  :titles=\"['可选科目', '已选科目']\"\n  variant=\"${state.value.variant}\"\n  color=\"${state.value.color}\"\n  :disabled=\"${state.value.disabled}\"\n  :show-search=\"${state.value.showSearch}\"\n  header-select=\"${state.value.headerSelect}\"\n  :one-way=\"${state.value.oneWay}\"\n  :show-undo=\"${state.value.showUndo}\"\n  check-shape=\"${state.value.checkShape}\"${heightAttr}\n/>`;\n});\n\n/** 演练场数据源 */\nconst playgroundData: DemoTransferItem[] = [\n  { key: \"1\", label: \"语文\", description: \"人教版 · 必修\" },\n  { key: \"2\", label: \"数学\", description: \"人教版 · 必修\" },\n  { key: \"3\", label: \"英语\", description: \"人教版 · 必修\" },\n  { key: \"4\", label: \"物理\", description: \"人教版 · 必修\" },\n  { key: \"5\", label: \"化学\", description: \"人教版 · 选修\" },\n  { key: \"6\", label: \"生物\", description: \"人教版 · 选修\" },\n  { key: \"7\", label: \"历史\", description: \"人教版 · 选修\" },\n  { key: \"8\", label: \"地理\", description: \"人教版 · 选修\" },\n  { key: \"9\", label: \"政治\", description: \"人教版 · 选修\" },\n  { key: \"10\", label: \"美术\", description: \"选课 · 艺体\" },\n];\n\n// ─── 场景演示数据 ───────────────────────────────────────────────\n\n/** 形态变体：两种形态共用一份数据，各自维护已选项 */\nconst variantDemoData: DemoTransferItem[] = [\n  { key: \"bj\", label: \"北京\" },\n  { key: \"sh\", label: \"上海\" },\n  { key: \"gz\", label: \"广州\" },\n  { key: \"sz\", label: \"深圳\" },\n  { key: \"hz\", label: \"杭州\" },\n  { key: \"cd\", label: \"成都\" },\n];\nconst variantOutlinedTargetKeys = shallowRef([\"sh\", \"hz\"]);\nconst variantBorderlessTargetKeys = shallowRef([\"sh\", \"hz\"]);\n\n/** 列表分页：56 条模拟员工数据 */\nconst DEPARTMENTS = [\"研发部\", \"产品部\", \"设计部\", \"运营部\", \"市场部\", \"人力部\"] as const;\n\nconst paginationDemoData: DemoTransferItem[] = Array.from({ length: 56 }, (_, i) => {\n  const no = i + 1;\n  const dept = DEPARTMENTS[i % DEPARTMENTS.length]!;\n  return {\n    key: `emp-${no}`,\n    label: `员工 ${String(no).padStart(2, \"0\")}`,\n    description: `工号 E${10000 + no} · ${dept}`,\n  };\n});\n\nconst paginationTargetKeys = shallowRef([\"emp-3\", \"emp-12\", \"emp-28\", \"emp-41\"]);\n\n/** 虚拟滚动：3000 条只有 label 的商品数据，行高 30 加 4px 行间距正好是默认步长 34 */\nconst SKU_CATEGORIES = [\"数码\", \"家电\", \"服饰\", \"食品\", \"图书\", \"美妆\"] as const;\n\nconst virtualDemoData: DemoTransferItem[] = Array.from({ length: 3000 }, (_, i) => {\n  const no = i + 1;\n  return {\n    key: `sku-${no}`,\n    label: `SKU-${String(no).padStart(4, \"0\")} · ${SKU_CATEGORIES[i % SKU_CATEGORIES.length]}`,\n  };\n});\n\nconst virtualTargetKeys = shallowRef([\"sku-2\", \"sku-15\", \"sku-1024\", \"sku-2999\"]);\n\n/** 自定义搜索方法：通讯录，description 为「工号 · 部门」 */\nconst filterDemoData: DemoTransferItem[] = [\n  { key: \"f1\", label: \"陈晨\", description: \"E10021 · 研发部\" },\n  { key: \"f2\", label: \"苏木木\", description: \"E10035 · 研发部\" },\n  { key: \"f3\", label: \"林涛\", description: \"E10042 · 设计部\" },\n  { key: \"f4\", label: \"赵小雅\", description: \"E10058 · 产品部\" },\n  { key: \"f5\", label: \"王博\", description: \"E10063 · 测试部\" },\n  { key: \"f6\", label: \"孙悦\", description: \"E10077 · 运维部\" },\n  { key: \"f7\", label: \"Lucas Chen\", description: \"E10081 · 设计部\" },\n  { key: \"f8\", label: \"Mia Wang\", description: \"E10094 · 产品部\" },\n];\nconst filterDemoTargetKeys = shallowRef([\"f3\"]);\n\n/** 姓名、工号、部门任一包含搜索词即命中，英文不区分大小写 */\nfunction filterByLabelOrDescription(input: string, item: TransferDataRecord): boolean {\n  const keyword = input.trim().toLowerCase();\n  return [item.label, item.description].some((field) =>\n    String(field ?? \"\").toLowerCase().includes(keyword),\n  );\n}\n\n/** 禁用条目：内置角色不可移除 */\nconst withDisabledData: DemoTransferItem[] = [\n  { key: \"admin\", label: \"超级管理员\", description: \"系统内置，不可移除\", disabled: true },\n  { key: \"editor\", label: \"内容编辑\", description: \"可编辑文章与媒体\" },\n  { key: \"viewer\", label: \"访客\", description: \"只读权限\" },\n  { key: \"ops\", label: \"运维工程师\", description: \"服务器与部署权限\" },\n  { key: \"finance\", label: \"财务\", description: \"查看财务报表\", disabled: true },\n  { key: \"marketing\", label: \"市场推广\", description: \"管理营销活动\" },\n];\nconst withDisabledTargetKeys = shallowRef([\"editor\", \"ops\"]);\n\n/** 单向模式：任务看板 */\nconst oneWayData: DemoTransferItem[] = [\n  { key: \"a\", label: \"待办 · 优化登录流程\", description: \"预计 2 天\" },\n  { key: \"b\", label: \"待办 · 修复支付 Bug\", description: \"预计 0.5 天\" },\n  { key: \"c\", label: \"待办 · 数据看板重构\", description: \"预计 5 天\" },\n  { key: \"d\", label: \"待办 · 增加单元测试\", description: \"预计 3 天\" },\n  { key: \"e\", label: \"待办 · 文档更新\", description: \"预计 1 天\" },\n];\nconst oneWayTargetKeys = shallowRef([\"b\", \"c\"]);\nconst oneWayEnabled = shallowRef(true);\n\n/** 自定义中间操作按钮：区域覆盖 */\nconst customOpData: DemoTransferItem[] = [\n  { key: \"1\", label: \"华北区\" },\n  { key: \"2\", label: \"华东区\" },\n  { key: \"3\", label: \"华南区\" },\n  { key: \"4\", label: \"西南区\" },\n  { key: \"5\", label: \"西北区\" },\n];\nconst customOpTargetKeys = shallowRef([\"2\", \"4\"]);\nconst customOpSlotTargetKeys = shallowRef([\"2\", \"4\"]);\n\n/** operation 插槽示例：按 action 给出按钮文案 */\nconst operationSlotLabels = {\n  toRight: \"加入覆盖\",\n  toLeft: \"移出覆盖\",\n  undo: \"撤销上一步\",\n} as const;\n\n/** 高度跟随父元素：16 个统计指标，超出父元素高度后在列表内滚动 */\nconst heightDemoData: DemoTransferItem[] = [\n  \"访问量\",\n  \"独立访客\",\n  \"跳出率\",\n  \"平均停留时长\",\n  \"新增用户\",\n  \"活跃用户\",\n  \"次日留存率\",\n  \"转化率\",\n  \"客单价\",\n  \"订单数\",\n  \"退款率\",\n  \"复购率\",\n  \"页面加载时长\",\n  \"接口错误率\",\n  \"崩溃率\",\n  \"搜索次数\",\n].map((label, i) => ({ key: `m${i + 1}`, label }));\nconst heightDemoTargetKeys = shallowRef([\"m1\", \"m2\", \"m8\"]);\n\n/** 头部与底部插槽：候选人名单 */\nconst slotDemoData: DemoTransferItem[] = [\n  { key: \"c1\", label: \"周宁\", description: \"一面通过\" },\n  { key: \"c2\", label: \"吴桐\", description: \"二面通过\" },\n  { key: \"c3\", label: \"郑一帆\", description: \"一面通过\" },\n  { key: \"c4\", label: \"冯晓\", description: \"终面通过\" },\n  { key: \"c5\", label: \"何青\", description: \"二面通过\" },\n  { key: \"c6\", label: \"许诺\", description: \"一面通过\" },\n];\nconst slotDemoTargetKeys = shallowRef([\"c4\"]);\n\n/** 自定义条目插槽：成员列表 */\nconst memberData: DemoTransferItem[] = [\n  { key: \"u1\", label: \"陈晨\", description: \"前端工程师 · P5\" },\n  { key: \"u2\", label: \"苏木木\", description: \"后端工程师 · P6\" },\n  { key: \"u3\", label: \"林涛\", description: \"UI 设计师 · D4\" },\n  { key: \"u4\", label: \"赵小雅\", description: \"产品经理 · P5\" },\n  { key: \"u5\", label: \"王博\", description: \"测试工程师 · P4\" },\n  { key: \"u6\", label: \"孙悦\", description: \"运维工程师 · P5\" },\n];\n\n/** 自定义条目示例：右侧默认已穿梭成员 */\nconst memberDefaultTargetKeys = [\"u2\", \"u4\", \"u6\"];\n\n/** 根据姓名生成头像色 */\nfunction getAvatarColor(value: unknown): string {\n  const name = String(value ?? \"\");\n  const colors = [\n    \"bg-primary/15 text-primary\",\n    \"bg-success/15 text-success\",\n    \"bg-info/15 text-info\",\n    \"bg-warning/15 text-warning\",\n    \"bg-secondary/15 text-secondary\",\n  ];\n  const idx = name.charCodeAt(0) % colors.length;\n  return colors[idx]!;\n}\n\n/** 根据描述中的职级生成徽标样式 */\nfunction getRankClass(value: unknown): string {\n  const description = String(value ?? \"\");\n  if (description.includes(\"P6\") || description.includes(\"P7\") || description.includes(\"D5\")) {\n    return \"bg-primary/10 text-primary\";\n  }\n  if (description.includes(\"D4\")) return \"bg-success/10 text-success\";\n  return \"bg-elevated text-muted\";\n}\n</script>\n\n<template>\n  <div class=\"flex w-full min-w-0 flex-col\">\n    <Playground\n      v-model=\"state\"\n      :controls=\"controls\"\n      :code=\"codeString\"\n      component-name=\"RebornTransfer\"\n      title=\"交互演练场\"\n      description=\"切换形态、语义色、头部控件与穿梭方向，实时预览两侧列表的联动表现。\"\n    >\n      <template #tag>\n        <RebornButton\n          variant=\"soft\"\n          size=\"sm\"\n          label=\"重置配置\"\n          @click=\"resetPlaygroundConfig\"\n        >\n          <template #leading>\n            <Icon\n              name=\"lucide:rotate-ccw\"\n              class=\"size-3.5\"\n            />\n          </template>\n        </RebornButton>\n      </template>\n\n      <div class=\"flex w-full flex-col gap-4\">\n        <RebornTransfer\n          v-model=\"playgroundTargetKeys\"\n          :data-source=\"playgroundData\"\n          :titles=\"['可选科目', '已选科目']\"\n          :variant=\"state.variant\"\n          :color=\"state.color\"\n          :height=\"playgroundHeight\"\n          :disabled=\"state.disabled\"\n          :show-search=\"state.showSearch\"\n          :header-select=\"state.headerSelect\"\n          :one-way=\"state.oneWay\"\n          :show-undo=\"state.showUndo\"\n          :check-shape=\"state.checkShape\"\n          class=\"w-full\"\n          @change=\"handleChange\"\n          @select-change=\"handleSelectChange\"\n          @undo=\"handleUndo\"\n        />\n        <DemoNote\n          v-if=\"lastEvent\"\n          tone=\"dimmed\"\n        >\n          最后事件：<code>{{ lastEvent }}</code>\n        </DemoNote>\n      </div>\n    </Playground>\n\n    <DemoSection\n      title=\"形态变体\"\n      description=\"outlined 为带描边与头部的完整面板；borderless 去掉面板边框和头部，适合嵌进已有卡片或弹窗、外层已经提供边界的场景。\"\n    >\n      <DemoBlock layout=\"stack\">\n        <div class=\"flex w-full flex-col gap-2\">\n          <span class=\"text-muted text-sm\">outlined</span>\n          <RebornTransfer\n            v-model=\"variantOutlinedTargetKeys\"\n            :data-source=\"variantDemoData\"\n            :titles=\"['可选城市', '已选城市']\"\n            class=\"w-full\"\n          />\n        </div>\n        <div class=\"flex w-full flex-col gap-2\">\n          <span class=\"text-muted text-sm\">borderless</span>\n          <RebornTransfer\n            v-model=\"variantBorderlessTargetKeys\"\n            :data-source=\"variantDemoData\"\n            variant=\"borderless\"\n            class=\"w-full\"\n          />\n        </div>\n      </DemoBlock>\n      <DemoNote tone=\"dimmed\">\n        borderless 不渲染头部，全选复选框、扩展菜单、标题与计数随之隐藏，此时 <code>titles</code> 与\n        <code>header-select</code> 不生效，只能逐项勾选。\n      </DemoNote>\n    </DemoSection>\n\n    <DemoSection\n      title=\"高度跟随父元素\"\n      description=\"组件不提供尺寸档位，根节点撑满父元素高度。父元素给定高度后，条目超出的部分在列表内滚动，滚动条由 RebornScrollbar 绘制，不占列表宽度。\"\n    >\n      <DemoBlock layout=\"stack\">\n        <div class=\"h-72 w-full\">\n          <RebornTransfer\n            v-model=\"heightDemoTargetKeys\"\n            :data-source=\"heightDemoData\"\n            :titles=\"['可选指标', '已选指标']\"\n            show-search\n            search-placeholder=\"搜索指标\"\n            class=\"w-full\"\n          />\n        </div>\n      </DemoBlock>\n      <DemoNote tone=\"dimmed\">\n        父元素高度为 auto 时组件不限制高度，列表随条目增高；条目较多时给父元素设高度，或直接传\n        <code>height</code>（如 <code>:height=\"320\"</code>）。\n      </DemoNote>\n    </DemoSection>\n\n    <DemoSection\n      title=\"列表分页\"\n      description=\"数据量较大时用 pagination 开启两侧独立分页，每页只渲染固定条数以减轻长列表的滚动与 DOM 压力。\"\n    >\n      <DemoBlock layout=\"stack\">\n        <RebornTransfer\n          v-model=\"paginationTargetKeys\"\n          :data-source=\"paginationDemoData\"\n          :titles=\"['组织全员', '项目组已选']\"\n          :pagination=\"{ pageSize: 8 }\"\n          show-search\n          show-undo\n          search-placeholder=\"按姓名搜索\"\n          class=\"w-full\"\n        />\n      </DemoBlock>\n      <DemoNote tone=\"dimmed\">\n        共 {{ paginationDemoData.length }} 条候选数据，每页 8 条，当前已选\n        {{ paginationTargetKeys.length }} 人。搜索会重置到第 1 页。头部复选框只勾选当前页；下拉菜单逐行列出搜索结果内的全部条目（不受分页限制），点一行切换该条勾选，适合跨页挑人。\n      </DemoNote>\n    </DemoSection>\n\n    <DemoSection\n      title=\"虚拟滚动\"\n      description=\"数据量大又不想分页时，用 virtual-scroll 让列表只渲染可视区附近的条目，滚动时按位置替换。行高固定为 virtual-item-height，面板需要确定的高度，这里传了 height。\"\n    >\n      <DemoBlock layout=\"stack\">\n        <RebornTransfer\n          v-model=\"virtualTargetKeys\"\n          :data-source=\"virtualDemoData\"\n          :titles=\"['全部商品', '已选商品']\"\n          :height=\"360\"\n          virtual-scroll\n          show-search\n          search-placeholder=\"按编号或品类搜索\"\n          class=\"w-full\"\n        />\n      </DemoBlock>\n      <DemoNote tone=\"dimmed\">\n        共 {{ virtualDemoData.length }} 条，当前已选 {{ virtualTargetKeys.length }} 条，滚动时左侧列表的 DOM 里始终只有十几行。\n        <code>virtual-item-height</code> 默认 34，等于只有 label 的行高 30 加 4px 行间距；条目带 description 时要传 56，用插槽改了行高时也要同步改，否则相邻行会重叠或留出空白。头部下拉同样按虚拟列表渲染。\n      </DemoNote>\n    </DemoSection>\n\n    <DemoSection\n      title=\"自定义搜索方法\"\n      description=\"不传 filter-option 时，搜索按 label 做包含匹配，英文不区分大小写。条目的其他字段也要参与搜索时，传入 filter-option 自行判断，返回 true 即保留该条目。\"\n    >\n      <DemoBlock layout=\"stack\">\n        <RebornTransfer\n          v-model=\"filterDemoTargetKeys\"\n          :data-source=\"filterDemoData\"\n          :titles=\"['通讯录', '已邀请']\"\n          :filter-option=\"filterByLabelOrDescription\"\n          show-search\n          search-placeholder=\"姓名、工号或部门\"\n          class=\"w-full\"\n        />\n      </DemoBlock>\n      <DemoNote tone=\"dimmed\">\n        方法签名为 <code>(inputValue, item) =&gt; boolean</code>，<code>item</code> 是 dataSource 里的原始对象，配置了\n        <code>field-names</code> 时要按原始字段名取值。在左侧输入「设计」能找到 Lucas Chen，输入「E1006」能找到王博，默认搜索下只有输入姓名才会命中。\n      </DemoNote>\n    </DemoSection>\n\n    <DemoSection\n      title=\"头部与底部插槽\"\n      description=\"title 插槽替换头部左侧的勾选区，extra 插槽替换右侧标题，footer 插槽渲染在面板底部。左右面板共用同一个插槽，用作用域里的 direction 区分。\"\n    >\n      <DemoBlock layout=\"stack\">\n        <RebornTransfer\n          v-model=\"slotDemoTargetKeys\"\n          :data-source=\"slotDemoData\"\n          :titles=\"['候选人', '拟录用']\"\n          class=\"w-full\"\n        >\n          <template #title=\"{ direction, checked, indeterminate, disabled, checkedCount, total, toggle }\">\n            <RebornCheckbox\n              :model-value=\"checked\"\n              :indeterminate=\"indeterminate\"\n              :disabled=\"disabled\"\n              size=\"sm\"\n              :label=\"`${direction === 'left' ? '待定' : '录用'} ${checkedCount} / ${total}`\"\n              :ui=\"{ label: 'text-sm' }\"\n              @change=\"toggle\"\n            />\n          </template>\n          <template #extra=\"{ direction, title }\">\n            <span class=\"truncate text-sm font-semibold text-gray-9\">{{ title }}</span>\n            <RebornBadge\n              v-if=\"direction === 'right'\"\n              :label=\"`${slotDemoTargetKeys.length} 人`\"\n              color=\"success\"\n              variant=\"soft\"\n              size=\"sm\"\n            />\n          </template>\n          <template #footer=\"{ direction, total, checkedCount }\">\n            <span class=\"text-sm text-gray-7\">\n              {{ direction === \"left\" ? \"候选\" : \"拟录用\" }}共 {{ total }} 人<template v-if=\"checkedCount\">，已勾选 {{ checkedCount }} 人</template>\n            </span>\n          </template>\n        </RebornTransfer>\n      </DemoBlock>\n      <DemoNote tone=\"dimmed\">\n        title 插槽作用域给出 <code>checked</code> / <code>indeterminate</code> / <code>toggle</code>，自绘的全选控件和默认复选框一样只作用于当前页；头部的下拉菜单不在插槽内，仍按\n        <code>header-select</code> 显示。\n      </DemoNote>\n    </DemoSection>\n\n    <DemoSection\n      title=\"禁用条目\"\n      description=\"在 dataSource 中为条目设置 disabled: true，即可禁止该条目被勾选与穿梭。\"\n    >\n      <DemoBlock layout=\"stack\">\n        <RebornTransfer\n          v-model=\"withDisabledTargetKeys\"\n          :data-source=\"withDisabledData\"\n          :titles=\"['全部角色', '已授权角色']\"\n          class=\"w-full\"\n        />\n      </DemoBlock>\n    </DemoSection>\n\n    <DemoSection\n      title=\"单向模式\"\n      description=\"one-way 只保留从左至右的穿梭通道：开启后移入右侧的条目可用行尾的「撤回」按钮逐条退回，开启前就在右侧的条目不可撤回，适合「一经确认不可回退」的流程。\"\n    >\n      <DemoBlock layout=\"stack\">\n        <div class=\"flex items-center gap-3\">\n          <RebornSwitch v-model=\"oneWayEnabled\" />\n          <span class=\"text-muted text-sm\">开启单向模式</span>\n        </div>\n        <RebornTransfer\n          v-model=\"oneWayTargetKeys\"\n          :data-source=\"oneWayData\"\n          :titles=\"['待办任务', '进行中']\"\n          :one-way=\"oneWayEnabled\"\n          header-select=\"menu\"\n          class=\"w-full\"\n        />\n      </DemoBlock>\n      <DemoNote tone=\"dimmed\">\n        「修复支付 Bug」「数据看板重构」是初始值，开启单向模式前就在右侧，没有撤回按钮，在右侧下拉中也置灰；从左侧新移入的条目才能撤回，在下拉中取消选中与点它的「撤回」按钮效果相同。关掉开关再打开，当时已在右侧的条目都会变为不可撤回。\n      </DemoNote>\n    </DemoSection>\n\n    <DemoSection\n      title=\"自定义操作按钮\"\n      description=\"operation-buttons 配置三个操作按钮的图标、文案与悬停提示；要换掉按钮本身（变体、颜色或改用别的组件）时用 operation 插槽。\"\n    >\n      <DemoBlock layout=\"stack\">\n        <RebornTransfer\n          v-model=\"customOpTargetKeys\"\n          :data-source=\"customOpData\"\n          :titles=\"['未覆盖区域', '已覆盖区域']\"\n          show-undo\n          :operation-buttons=\"{\n            toRight: {\n              title: '将选中区域加入覆盖范围',\n              label: '加入',\n              icon: 'lucide:plus',\n              iconClass: 'size-3.5 text-primary',\n              trailingIcon: 'lucide:chevron-right',\n              trailingIconClass: 'size-3.5 opacity-60',\n            },\n            toLeft: {\n              title: '从覆盖范围移除选中区域',\n              label: '移除',\n              icon: 'lucide:minus',\n              iconClass: 'size-3.5 text-warning',\n              trailingIcon: 'lucide:chevron-left',\n              trailingIconClass: 'size-3.5 opacity-60',\n            },\n            undo: {\n              title: '撤销最近一次区域调整',\n              label: '撤销',\n              icon: 'lucide:history',\n              iconClass: 'size-3.5',\n              trailingIcon: 'lucide:rotate-ccw',\n              trailingIconClass: 'size-3 opacity-50',\n            },\n          }\"\n          class=\"w-full\"\n        />\n      </DemoBlock>\n      <DemoBlock layout=\"stack\">\n        <RebornTransfer\n          v-model=\"customOpSlotTargetKeys\"\n          :data-source=\"customOpData\"\n          :titles=\"['未覆盖区域', '已覆盖区域']\"\n          show-undo\n          class=\"w-full\"\n        >\n          <template #operation=\"{ action, config, disabled, onClick }\">\n            <RebornButton\n              size=\"sm\"\n              :variant=\"action === 'undo' ? 'text' : 'outlined'\"\n              :color=\"disabled ? 'neutral' : action === 'toLeft' ? 'warning' : 'primary'\"\n              :disabled=\"disabled\"\n              :title=\"config.title\"\n              :label=\"operationSlotLabels[action]\"\n              @click=\"onClick\"\n            />\n          </template>\n        </RebornTransfer>\n      </DemoBlock>\n      <DemoNote tone=\"dimmed\">\n        operation 插槽按按钮逐个调用，<code>action</code> 区分是哪个按钮（toRight / toLeft /\n        undo），<code>onClick</code> 执行对应操作，禁用时调用不会生效。默认按钮禁用时会改用 neutral 色，自绘按钮建议同样按 <code>disabled</code> 切换颜色，示例即如此处理。只想改按钮内部内容、保留 RebornButton\n        外壳时，用 <code>operation-to-right</code> / <code>operation-to-left</code> /\n        <code>operation-undo</code> 插槽。\n      </DemoNote>\n    </DemoSection>\n\n    <DemoSection\n      title=\"自定义条目\"\n      description=\"default 插槽接管条目文案区域的渲染，作用域提供原始数据 item、所在方向 direction 与勾选状态 checked；条目前的复选框仍由组件渲染。\"\n    >\n      <DemoBlock layout=\"stack\">\n        <RebornTransfer\n          :data-source=\"memberData\"\n          :default-target-keys=\"memberDefaultTargetKeys\"\n          :titles=\"['全部成员', '项目组成员']\"\n          class=\"w-full\"\n        >\n          <template #default=\"{ item }\">\n            <div class=\"flex items-center gap-2.5\">\n              <!-- 头像：取姓名首字，配色由字符编码派生 -->\n              <div\n                :class=\"\n                  cn(\n                    'flex size-7 shrink-0 items-center justify-center rounded-full text-sm font-bold',\n                    getAvatarColor(item.label),\n                  )\n                \"\n              >\n                {{ String(item.label ?? \"\").charAt(0) }}\n              </div>\n              <!-- 姓名与职级 -->\n              <div class=\"min-w-0 flex-1\">\n                <div class=\"text-highlighted truncate text-sm font-medium\">\n                  {{ item.label }}\n                </div>\n                <div\n                  v-if=\"item.description\"\n                  class=\"mt-0.5 flex items-center gap-1.5\"\n                >\n                  <span\n                    :class=\"\n                      cn(\n                        'rounded-sm px-1.5 py-px text-sm font-semibold',\n                        getRankClass(item.description),\n                      )\n                    \"\n                  >\n                    {{ String(item.description ?? \"\").split(\" · \")[1] }}\n                  </span>\n                  <span class=\"text-dimmed truncate text-sm\">\n                    {{ String(item.description ?? \"\").split(\" · \")[0] }}\n                  </span>\n                </div>\n              </div>\n            </div>\n          </template>\n        </RebornTransfer>\n      </DemoBlock>\n      <DemoNote tone=\"dimmed\">\n        旧的 <code>#item</code> 插槽仍可用（作用域只有 <code>item</code>），二者同时提供时 default\n        优先。示例同时用 <code>default-target-keys</code> 预设了右侧的初始成员。\n      </DemoNote>\n    </DemoSection>\n  </div>\n</template>\n"
+    }
+  ],
+  "related": [],
+  "whenToUse": [
+    "权限、角色、人员分配等从候选集中挑选目标集合的场景。",
+    "候选数据量较大，需要搜索过滤（showSearch）、分页（pagination）或虚拟滚动（virtualScroll，上千条又不想分页时）。",
+    "需要撤回上一次移动操作（showUndo + undo 事件）或单向移动（oneWay）。"
+  ],
+  "whenNotToUse": [
+    "简单多选改用 reborn-checkbox 或 reborn-select。",
+    "uniapp 端项目：platforms 仅 web，无 uniapp 实现。"
+  ],
+  "pitfalls": [
+    "platforms 仅 web 端提供。",
+    "v-model 绑定目标列表的 key 数组（string[]），初始值也可用 defaultTargetKeys。",
+    "数据源字段名不匹配时用 fieldNames 映射，不必改造数据。",
+    "headerSelect 控制面板头部勾选形态：none / checkbox / menu / both，默认 both。头部复选框（及 title 插槽的 toggle）只作用于当前页；下拉是 borderless 多选的 RebornSelect，计数文案「选中 N 项」（未勾选时为「N 项」）显示在触发器里，此时复选框不带文案；下拉没有批量操作，逐行列出搜索结果内的全部条目（不受分页限制），点一行切换该条勾选且下拉保持打开，禁用条目不可点；单向模式右侧条目全部呈选中态，只有开启单向模式后移入的条目可以取消选中（即退回左侧）。要一次清空右侧直接把 v-model 置为 []。",
+    "oneWay 下只有开启单向模式后移入右侧的条目可以撤回（行尾「撤回」按钮或在右侧下拉中取消选中）；开启前就在右侧的条目（含 v-model / defaultTargetKeys 初始值）没有撤回按钮、在下拉中置灰，要退回只能直接改 v-model。关掉再开启会以当时右侧的内容重新计算可撤回范围；showUndo 的「撤回上一步」撤销时可撤回范围一并还原。",
+    "不传 filterOption 时搜索按 label 做包含匹配（英文不区分大小写），description 等字段不参与；需要按其他字段搜索时传 (inputValue, item) => boolean，item 是原始数据对象，配置了 fieldNames 时按原始字段名取值。",
+    "variant=\"borderless\" 不渲染面板头部，此时 titles、headerSelect 以及 title / extra 插槽都不生效，只能逐项勾选。",
+    "color 决定复选框勾选色、选中条目底色、头部下拉已选选项颜色以及操作按钮颜色，操作按钮禁用时固定为 neutral；内部复选框已与表单上下文隔离，不触发表单校验、不继承表单尺寸与禁用。",
+    "没有 size 属性：width 控制单个面板宽度（数字按 px，也支持 CSS 长度），未传时两侧按父容器宽度均分；根节点 h-full 撑满父元素高度，父元素高度为 auto 时列表随条目增高不会滚动；条目多时给父元素设高度或传 height（数字按 px）。",
+    "自定义条目用 default 插槽（作用域 item / direction / checked / disabled），只替换文案区域，复选框仍由组件渲染；旧 item 插槽保留，二者同时提供时 default 优先。",
+    "virtualScroll 开启后每行高度固定为 virtualItemHeight 减 4px 行间距：默认 34 只适合只有 label 的条目（行高 30px），带 description 的条目要传 56，用插槽改了条目内容时按实际行高加 4 传入，否则相邻行重叠或留白；面板需要确定的高度（传 height 或父元素给高度）；搜索与翻页会把列表滚回顶部；头部下拉同样按虚拟列表渲染。",
+    "operation 插槽替换整个操作按钮，每个按钮调用一次，用作用域里的 action（toRight / toLeft / undo）区分而不是 key；只改按钮内部内容、保留 RebornButton 外壳时用 operation-to-right / operation-to-left / operation-undo。",
+    "ui.searchInput 作为 class 传给 RebornInput，落在带边框的输入外壳上而不是根节点；要调搜索区内边距改 ui.panelSearch。"
+  ],
+  "dependencies": [
+    "clsx",
+    "tailwind-merge",
+    "tailwind-variants"
+  ],
+  "install": {
+    "cli": "npx reborn-ui@latest add reborn-transfer"
+  },
+  "sourceRefs": {
+    "web": [
+      "app/components/reborn/ui/reborn-transfer/RebornTransfer.vue",
+      "app/components/reborn/ui/reborn-transfer/index.ts",
+      "app/components/reborn/ui/reborn-transfer/reborn-transfer.config.ts"
+    ]
+  },
+  "docPath": "content/2.components/miscellaneous/reborn-transfer.md",
+  "_meta": {
+    "contentHash": "78b6c25c233e70756436c213b8082d07b5a54d57",
+    "hasOverride": true,
+    "extractors": {
+      "web": "ok",
+      "uniapp": "absent",
+      "docs": "found"
+    }
+  }
+}

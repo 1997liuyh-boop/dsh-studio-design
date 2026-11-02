@@ -1,0 +1,94 @@
+{
+  "$schema": "../schema/component.schema.json",
+  "id": "svg-mask",
+  "title": "SVG 遮罩",
+  "description": "用于跟随鼠标以圆形遮罩在两层内容间切换揭示的 SVG 遮罩组件。",
+  "category": "misc",
+  "tags": [
+    "css",
+    "tailwind",
+    "aceternity-ui"
+  ],
+  "platforms": [
+    "web"
+  ],
+  "props": [
+    {
+      "name": "class",
+      "type": "HTMLAttributes[\"class\"]",
+      "required": false,
+      "description": "用于自定义样式的额外 CSS 类。",
+      "default": "\"\""
+    },
+    {
+      "name": "size",
+      "type": "number",
+      "required": false,
+      "description": "遮罩的初始大小（像素）。",
+      "default": "10"
+    },
+    {
+      "name": "revealSize",
+      "type": "number",
+      "required": false,
+      "description": "悬停时遮罩的大小（像素）。",
+      "default": "600"
+    }
+  ],
+  "events": [],
+  "slots": [
+    {
+      "name": "base",
+      "description": ""
+    },
+    {
+      "name": "reveal",
+      "description": ""
+    }
+  ],
+  "exposes": [],
+  "examples": [
+    {
+      "title": "Web 演示",
+      "path": "app/components/reborn/examples/svg-mask/SvgMaskDemo.vue",
+      "source": "demo",
+      "platform": "web",
+      "code": "<template>\n  <div class=\"flex h-[40rem] w-full items-center justify-center overflow-hidden\">\n    <SVGMask class=\"h-[40rem] rounded-md border\">\n      <template #base>\n        The first rule of <span class=\"text-red-500\">MRR Club</span> is you do not talk about MRR\n        Club. The second rule of MRR Club is you DO NOT talk about\n        <span class=\"text-red-500\">MRR Club</span>.\n      </template>\n      <template #reveal>\n        <p class=\"mx-auto max-w-4xl text-center text-4xl font-bold text-slate-800\">\n          The first rule of MRR Club is you do not talk about MRR Club. The second rule of MRR Club\n          is you DO NOT talk about MRR Club.\n        </p>\n      </template>\n    </SVGMask>\n  </div>\n</template>\n"
+    }
+  ],
+  "related": [],
+  "whenToUse": [
+    "双层文案对比揭示：默认层与悬停揭示层展示不同内容。",
+    "需要跟随鼠标移动的聚光灯式内容探索交互。"
+  ],
+  "whenNotToUse": [
+    "需要用户刮开涂层的互动，改用 scratch-to-reveal。",
+    "图片局部放大查看，改用 lens。",
+    "仅对一段文字做悬停揭示，改用 text-hover-effect。"
+  ],
+  "pitfalls": [
+    "仅 web 端可用。",
+    "内容必须分别放入 base 与 reveal 两个具名插槽，无默认插槽。",
+    "size 为初始遮罩尺寸（默认 10 像素），revealSize 为悬停放大后的尺寸（默认 600 像素）。"
+  ],
+  "dependencies": [],
+  "install": {
+    "cli": "npx reborn-ui@latest add svg-mask"
+  },
+  "sourceRefs": {
+    "web": [
+      "app/components/reborn/ui/svg-mask/SVGMask.vue",
+      "app/components/reborn/ui/svg-mask/index.ts"
+    ]
+  },
+  "docPath": "content/2.components/miscellaneous/svg-mask.md",
+  "_meta": {
+    "contentHash": "02ea053ede0b95a54c07934f487ff8cfd14a92d7",
+    "hasOverride": true,
+    "extractors": {
+      "web": "ok",
+      "uniapp": "absent",
+      "docs": "found"
+    }
+  }
+}

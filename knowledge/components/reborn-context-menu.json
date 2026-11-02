@@ -1,0 +1,222 @@
+{
+  "$schema": "../schema/component.schema.json",
+  "id": "reborn-context-menu",
+  "title": "Menu 右键菜单",
+  "description": "用于在目标区域右键、点击、悬浮或划词后弹出操作面板的上下文菜单组件，仅 web 端。",
+  "category": "navigation",
+  "tags": [
+    "vue",
+    "reborn-context-menu"
+  ],
+  "platforms": [
+    "web"
+  ],
+  "props": [
+    {
+      "name": "items",
+      "type": "RebornContextMenuItems",
+      "required": false,
+      "description": "菜单数据，支持单层数组或分组数组",
+      "default": "() => []"
+    },
+    {
+      "name": "size",
+      "type": "ContextMenuSize",
+      "required": false,
+      "description": "菜单尺寸",
+      "default": "\"md\""
+    },
+    {
+      "name": "trigger",
+      "type": "ContextMenuTrigger",
+      "required": false,
+      "description": "触发方式；selection 为划词触发：在触发区内选中文字后，菜单在选区上方弹出",
+      "default": "\"contextmenu\""
+    },
+    {
+      "name": "placement",
+      "type": "Placement",
+      "required": false,
+      "description": "弹出方向与对齐，「方向-对齐」写法，与 reborn-popover、reborn-popconfirm 一致； 未传时右键 / 点击 / 悬浮为 bottom-start，划词为 top（选区上方居中），子菜单为 right-start",
+      "default": "undefined"
+    },
+    {
+      "name": "sideOffset",
+      "type": "number",
+      "required": false,
+      "description": "菜单与锚点的间距（px） @defaultValue 8",
+      "default": "undefined"
+    },
+    {
+      "name": "content",
+      "type": "RebornContextMenuContentProps",
+      "required": false,
+      "description": "旧的定位对象写法（side / align / sideOffset），等价于 placement + sideOffset，仅为兼容保留 @deprecated 请改用 placement / sideOffset",
+      "default": "() => ({})"
+    },
+    {
+      "name": "defaultOpen",
+      "type": "boolean",
+      "required": false,
+      "description": "非受控时的初始展开状态；绑定了 v-model:open 时以绑定值为准",
+      "default": "false"
+    },
+    {
+      "name": "portal",
+      "type": "boolean | string",
+      "required": false,
+      "description": "是否通过 `Teleport` 挂载到 `body` 或指定节点",
+      "default": "true"
+    },
+    {
+      "name": "dismissible",
+      "type": "boolean",
+      "required": false,
+      "description": "是否允许点击外部区域关闭",
+      "default": "true"
+    },
+    {
+      "name": "modal",
+      "type": "boolean",
+      "required": false,
+      "description": "是否显示遮罩层",
+      "default": "false"
+    },
+    {
+      "name": "disabled",
+      "type": "boolean",
+      "required": false,
+      "description": "是否禁用触发区：禁用后右键不再拦截、显示浏览器默认菜单，点击 / 悬浮 / 划词也不弹出",
+      "default": "false"
+    },
+    {
+      "name": "openDelay",
+      "type": "number",
+      "required": false,
+      "description": "hover` 模式下的展开延迟（毫秒）",
+      "default": "40"
+    },
+    {
+      "name": "closeDelay",
+      "type": "number",
+      "required": false,
+      "description": "hover` 模式下的收起延迟（毫秒）",
+      "default": "120"
+    },
+    {
+      "name": "nested",
+      "type": "boolean",
+      "required": false,
+      "description": "是否为嵌套子菜单实例（组件递归渲染 children 时内部使用，默认贴右侧展开且不锁滚动，业务侧一般无需设置）",
+      "default": "false"
+    },
+    {
+      "name": "class",
+      "type": "any",
+      "required": false,
+      "description": "追加到根容器（wrapper）的自定义类名",
+      "default": "undefined"
+    },
+    {
+      "name": "ui",
+      "type": "Partial<{\n    wrapper: ClassValue;\n    trigger: ClassValue;\n    contentWrapper: ClassValue;\n    content: ClassValue;\n    group: ClassValue;\n    separator: ClassValue;\n    item: ClassValue;\n    itemLeading: ClassValue;\n    itemBody: ClassValue;\n    itemLabel: ClassValue;\n    itemDescription: ClassValue;\n    itemTrailing: ClassValue;\n    itemKbd: ClassValue;\n    itemArrow: ClassValue;\n    empty: ClassValue;\n    bridge: ClassValue;\n    mask: ClassValue;\n  }>",
+      "required": false,
+      "description": "UI 样式覆盖配置 可用键（从源码抽取，以此为准）——Web：bridge、content、contentWrapper、empty、group、item、itemArrow、itemBody、itemDescription、itemKbd、itemLabel、itemLeading、itemTrailing、mask、separator、trigger、wrapper。",
+      "default": "() => ({})"
+    },
+    {
+      "name": "open",
+      "type": "boolean | undefined",
+      "required": false,
+      "description": "双向绑定值",
+      "vModel": true,
+      "default": "undefined"
+    }
+  ],
+  "events": [
+    {
+      "name": "select",
+      "payload": "(e: \"select\", item: RebornContextMenuItem, event: MouseEvent, context: RebornContextMenuSelectContext): void;",
+      "description": "点击叶子菜单项时触发；context.selectionText 为划词触发时选中的文字"
+    },
+    {
+      "name": "update:open",
+      "description": "open 变化时触发（v-model 同步）"
+    }
+  ],
+  "slots": [
+    {
+      "name": "default",
+      "description": "触发区内容，在其上右键 / 点击 / 悬浮 / 划词呼出菜单；`selectionText` 为划词触发时当前选中的文字"
+    },
+    {
+      "name": "content",
+      "description": "自定义菜单面板内容（替代 `items` 渲染），`close` 关闭菜单"
+    }
+  ],
+  "exposes": [
+    {
+      "name": "close",
+      "description": "手动关闭当前菜单（同步更新受控/非受控展开状态并触发 update:open）"
+    }
+  ],
+  "examples": [
+    {
+      "title": "Web 演示",
+      "path": "app/components/reborn/examples/reborn-context-menu/RebornContextMenuDemo.vue",
+      "source": "demo",
+      "platform": "web",
+      "code": "<script setup lang=\"ts\">\n\nimport type { RebornContextMenuItem } from \"~/components/reborn/ui/reborn-context-menu/RebornContextMenu.vue\";\nimport { DemoBlock, DemoNote, DemoSection, Icon, Playground } from \"#components\";\nimport { computed, shallowRef } from \"vue\";\nimport RebornContextMenu from \"~/components/reborn/ui/reborn-context-menu/RebornContextMenu.vue\";\n\nconst latestAction = shallowRef(\"等待操作\");\n/** 自定义面板的固定主题选项。 */\nconst paletteTones = [\"Ocean\", \"Glow\", \"Sand\"];\n/** 选中主题后更新回显并关闭面板。 */\nfunction pickTone(tone: string, close: () => void) {\n  latestAction.value = `已切换主题：${tone}`;\n  close();\n}\n\nconst state = shallowRef({\n  size: \"md\" as \"sm\" | \"md\" | \"lg\",\n  modal: false,\n  disabled: false,\n});\n\nconst controls = [\n  {\n    title: \"基础配置\",\n    children: [\n      {\n        label: \"尺寸规格\",\n        key: \"size\",\n        component: \"select\" as const,\n        defaultValue: \"md\",\n        props: {\n          options: [\n            { label: \"SM\", value: \"sm\" },\n            { label: \"MD\", value: \"md\" },\n            { label: \"LG\", value: \"lg\" },\n          ],\n        },\n      },\n      {\n        label: \"禁用触发区\",\n        key: \"disabled\",\n        component: \"checkbox\" as const,\n        defaultValue: false,\n      },\n      {\n        label: \"模态遮罩\",\n        key: \"modal\",\n        component: \"checkbox\" as const,\n        defaultValue: false,\n      },\n    ],\n  },\n];\n\nconst playgroundCode = computed(() => {\n  const attrs = [`:items=\"items\"`, `size=\"${state.value.size}\"`];\n\n  if (state.value.modal) attrs.push(\"modal\");\n  if (state.value.disabled) attrs.push(\"disabled\");\n\n  return `<RebornContextMenu ${attrs.join(\" \")}>\\n  <div class=\"context-target\">右键打开菜单</div>\\n</RebornContextMenu>`;\n});\n\nconst items: RebornContextMenuItem[][] = [\n  [\n    {\n      label: \"快速发布\",\n      description: \"同步推送到预览环境\",\n      icon: \"lucide:rocket\",\n      kbds: [\"Cmd\", \"P\"],\n      color: \"primary\",\n      onSelect: () => {\n        latestAction.value = \"已执行：快速发布\";\n      },\n    },\n    {\n      label: \"复制链接\",\n      icon: \"lucide:copy\",\n      kbds: [\"Cmd\", \"Shift\", \"C\"],\n      onSelect: () => {\n        latestAction.value = \"已执行：复制链接\";\n      },\n    },\n    {\n      label: \"分享到团队\",\n      description: \"打开协同分享面板\",\n      icon: \"lucide:users\",\n      children: [\n        [\n          {\n            label: \"发送到设计组\",\n            icon: \"lucide:pen-tool\",\n            onSelect: () => {\n              latestAction.value = \"已执行：发送到设计组\";\n            },\n          },\n          {\n            label: \"发送到前端组\",\n            icon: \"lucide:code-xml\",\n            onSelect: () => {\n              latestAction.value = \"已执行：发送到前端组\";\n            },\n          },\n        ],\n        [\n          {\n            type: \"separator\",\n          },\n          {\n            label: \"邀请更多成员\",\n            icon: \"lucide:user-plus\",\n            onSelect: () => {\n              latestAction.value = \"已执行：邀请更多成员\";\n            },\n          },\n        ],\n      ],\n    },\n  ],\n  [\n    {\n      label: \"锁定布局\",\n      icon: \"lucide:lock\",\n      disabled: true,\n      onSelect: () => {\n        latestAction.value = \"已执行：锁定布局\";\n      },\n    },\n    {\n      label: \"删除模块\",\n      description: \"该操作不可撤销\",\n      icon: \"lucide:trash-2\",\n      kbds: [\"Del\"],\n      color: \"error\",\n      onSelect: () => {\n        latestAction.value = \"已执行：删除模块\";\n      },\n    },\n  ],\n];\n\n/** 划词菜单：onSelect 的第二个参数带有当前选中的文字 */\nconst selectionItems: RebornContextMenuItem[] = [\n  {\n    label: \"复制\",\n    icon: \"lucide:copy\",\n    onSelect: (_event, context) => {\n      latestAction.value = `已复制：${context.selectionText}`;\n    },\n  },\n  {\n    label: \"搜索\",\n    icon: \"lucide:search\",\n    onSelect: (_event, context) => {\n      latestAction.value = `已搜索：${context.selectionText}`;\n    },\n  },\n  {\n    label: \"高亮标记\",\n    icon: \"lucide:highlighter\",\n    color: \"warning\",\n    onSelect: (_event, context) => {\n      latestAction.value = `已高亮：${context.selectionText}`;\n    },\n  },\n];\n\nconst automationItems: RebornContextMenuItem[][] = [\n  [\n    {\n      label: \"运行 A/B 试验\",\n      description: \"按当前实验配置推送\",\n      icon: \"lucide:sparkles\",\n      color: \"success\",\n      onSelect: () => {\n        latestAction.value = \"已执行：运行 A/B 试验\";\n      },\n    },\n    {\n      label: \"导出周报\",\n      icon: \"lucide:file-down\",\n      kbds: [\"Alt\", \"E\"],\n      onSelect: () => {\n        latestAction.value = \"已执行：导出周报\";\n      },\n    },\n  ],\n  [\n    {\n      label: \"更多自动化\",\n      icon: \"lucide:bot\",\n      children: [\n        [\n          {\n            label: \"生成摘要\",\n            icon: \"lucide:align-left\",\n            onSelect: () => {\n              latestAction.value = \"已执行：生成摘要\";\n            },\n          },\n          {\n            label: \"清理重复数据\",\n            icon: \"lucide:eraser\",\n            onSelect: () => {\n              latestAction.value = \"已执行：清理重复数据\";\n            },\n          },\n        ],\n      ],\n    },\n  ],\n];\n</script>\n\n<template>\n  <div class=\"flex w-full flex-col\">\n    <!-- 交互演练场：Playground 自带标题栏 -->\n    <Playground\n      v-model=\"state\"\n      :controls=\"controls\"\n      component-name=\"RebornContextMenu\"\n      :code=\"playgroundCode\"\n      title=\"右键菜单 Playground\"\n      description=\"右键任意目标区域，体验分组、快捷键、危险操作与子菜单展开\"\n    >\n      <template #extra>\n        <div class=\"flex w-full flex-col gap-4\">\n          <div class=\"flex items-center justify-between\">\n            <h4 class=\"text-highlighted text-sm font-semibold\">操作回执</h4>\n            <span class=\"bg-success/10 text-success rounded-full px-3 py-1 text-xs font-semibold\">Live Feed</span>\n          </div>\n\n          <!-- 回执面板本身就是被演示的反馈载体，属规范里唯一允许的那层浅填充 -->\n          <div class=\"bg-elevated rounded-lg flex min-h-24 flex-col gap-3 p-4\">\n            <div class=\"text-dimmed flex items-center gap-2 text-[11px] tracking-[0.24em] uppercase\">\n              <span class=\"bg-success size-2 animate-pulse rounded-full\" />\n              Latest Event\n            </div>\n            <p class=\"text-default text-sm font-medium\">{{ latestAction }}</p>\n          </div>\n\n          <ul class=\"divide-default divide-y\">\n            <li class=\"flex items-start gap-3 py-3\">\n              <Icon name=\"lucide:mouse-pointer-click\" class=\"text-primary mt-0.5 size-4 shrink-0\" />\n              <div class=\"flex flex-col gap-0.5\">\n                <span class=\"text-default text-sm font-medium\">交互主路径</span>\n                <DemoNote class=\"text-xs\">先在上方读回执，再到下方预览区执行右键操作，视线自上而下更顺。</DemoNote>\n              </div>\n            </li>\n            <li class=\"flex items-start gap-3 py-3\">\n              <Icon name=\"lucide:keyboard\" class=\"text-info mt-0.5 size-4 shrink-0\" />\n              <div class=\"flex flex-col gap-0.5\">\n                <span class=\"text-default text-sm font-medium\">快捷键提示</span>\n                <DemoNote class=\"text-xs\">\n                  <code>kbds</code>\n                  会直接显示在菜单尾部，适合高频动作。\n                </DemoNote>\n              </div>\n            </li>\n            <li class=\"flex items-start gap-3 py-3\">\n              <Icon name=\"lucide:layers\" class=\"text-muted mt-0.5 size-4 shrink-0\" />\n              <div class=\"flex flex-col gap-0.5\">\n                <span class=\"text-default text-sm font-medium\">两级菜单</span>\n                <DemoNote class=\"text-xs\">子菜单悬浮展开，点击叶子节点立即回执。</DemoNote>\n              </div>\n            </li>\n          </ul>\n        </div>\n      </template>\n\n      <RebornContextMenu :items=\"items\" :size=\"state.size\" :modal=\"state.modal\" :disabled=\"state.disabled\">\n        <!-- 右键触发区：只描边不填充，让它可辨认又不形成第二层表面 -->\n        <div class=\"border-default rounded-2xl flex w-full flex-col gap-5 border border-dashed p-5\">\n          <div class=\"flex items-center justify-between\">\n            <div class=\"flex flex-col gap-1\">\n              <span class=\"text-dimmed text-[11px] tracking-[0.24em] uppercase\">Scene Focus</span>\n              <span class=\"text-highlighted text-lg font-bold\">增长实验主画布</span>\n            </div>\n            <Icon name=\"lucide:orbit\" class=\"text-primary size-5\" />\n          </div>\n\n          <div class=\"divide-default grid gap-4 sm:grid-cols-3 sm:gap-0 sm:divide-x\">\n            <div class=\"flex flex-col gap-1 sm:pr-4\">\n              <span class=\"text-dimmed text-[11px] tracking-[0.22em] uppercase\">Traffic</span>\n              <span class=\"text-highlighted text-xl font-bold\">128.4K</span>\n              <span class=\"text-success text-sm\">+18.6%</span>\n            </div>\n            <div class=\"flex flex-col gap-1 sm:px-4\">\n              <span class=\"text-dimmed text-[11px] tracking-[0.22em] uppercase\">Conversion</span>\n              <span class=\"text-highlighted text-xl font-bold\">7.82%</span>\n              <span class=\"text-primary text-sm\">建议继续放量</span>\n            </div>\n            <div class=\"flex flex-col gap-1 sm:pl-4\">\n              <span class=\"text-dimmed text-[11px] tracking-[0.22em] uppercase\">Status</span>\n              <span class=\"text-highlighted flex items-center gap-2 text-xl font-bold\">\n                <span class=\"bg-success size-2 rounded-full\" />\n                Running\n              </span>\n              <span class=\"text-muted text-sm\">右键查看更多操作</span>\n            </div>\n          </div>\n\n          <div class=\"divide-default flex flex-col divide-y\">\n            <div class=\"flex items-center justify-between gap-4 py-3\">\n              <div class=\"flex flex-col\">\n                <span class=\"text-default text-sm font-semibold\">快速发布</span>\n                <DemoNote tone=\"dimmed\" class=\"text-xs\">同步推送到预览环境</DemoNote>\n              </div>\n              <span class=\"bg-primary/10 text-primary rounded-full px-2.5 py-1 text-xs font-semibold\">Cmd P</span>\n            </div>\n            <div class=\"flex items-center justify-between gap-4 py-3\">\n              <div class=\"flex flex-col\">\n                <span class=\"text-default text-sm font-semibold\">分享到团队</span>\n                <DemoNote tone=\"dimmed\" class=\"text-xs\">内含设计组与前端组子菜单</DemoNote>\n              </div>\n              <Icon name=\"lucide:arrow-up-right\" class=\"text-dimmed size-4\" />\n            </div>\n            <div class=\"flex items-center justify-between gap-4 py-3\">\n              <div class=\"flex flex-col\">\n                <span class=\"text-error text-sm font-semibold\">删除模块</span>\n                <DemoNote tone=\"dimmed\" class=\"text-xs\">高风险动作放在视觉底部</DemoNote>\n              </div>\n              <span class=\"bg-error/10 text-error rounded-full px-2.5 py-1 text-xs font-semibold\">Del</span>\n            </div>\n          </div>\n        </div>\n      </RebornContextMenu>\n    </Playground>\n\n    <DemoSection\n      title=\"划词菜单\"\n      description=\"trigger=selection 与浏览器 Selection API 组合：在触发区内选中一段文字，菜单在选区上方居中弹出；onSelect / select 事件的 context.selectionText 为选中的文字，换一段选区会先收起再在新位置展开。\"\n    >\n      <DemoBlock layout=\"stack\">\n        <RebornContextMenu v-slot=\"{ selectionText }\" :items=\"selectionItems\" trigger=\"selection\">\n          <div class=\"flex flex-col gap-3\">\n            <p class=\"border-default text-default rounded-2xl border border-dashed p-5 text-sm leading-7 select-text\">\n              增长实验主画布支持在同一页面内对多个流量分组做 A/B 对比。选中这段文字里的任意片段，例如「流量分组」或「A/B 对比」，松开鼠标后会在选区上方弹出操作菜单；点击菜单项时选区不会被清掉，回调里可以直接拿到选中的文字用于复制、搜索或标记。\n            </p>\n            <DemoNote tone=\"dimmed\">当前选区：{{ selectionText || \"（尚未选择文字）\" }}</DemoNote>\n          </div>\n        </RebornContextMenu>\n      </DemoBlock>\n    </DemoSection>\n\n    <DemoSection title=\"更多用法\" description=\"小尺寸菜单适配二级操作；不传 items 时用 #content 完全自定义菜单面板。\">\n      <DemoBlock layout=\"grid\" align=\"start\" class=\"lg:grid-cols-2\">\n        <RebornContextMenu :items=\"automationItems\" size=\"sm\">\n          <div class=\"border-default rounded-2xl flex flex-col gap-3 border border-dashed p-6\">\n            <div class=\"flex items-center justify-between\">\n              <span class=\"text-info text-xs font-semibold tracking-[0.24em] uppercase\">Automation Board</span>\n              <Icon name=\"lucide:workflow\" class=\"text-info size-5\" />\n            </div>\n            <span class=\"text-highlighted text-lg font-bold\">增长实验自动化</span>\n            <DemoNote class=\"text-sm\">用更轻量的尺寸承载二级操作。适合表格行、资源卡片和工作流节点。</DemoNote>\n          </div>\n        </RebornContextMenu>\n\n        <RebornContextMenu :size=\"state.size\">\n          <template #default>\n            <div class=\"border-default rounded-2xl flex flex-col gap-3 border border-dashed p-6\">\n              <div class=\"flex items-center justify-between\">\n                <span class=\"text-warning text-xs font-semibold tracking-[0.24em] uppercase\">Custom Content</span>\n                <Icon name=\"lucide:palette\" class=\"text-warning size-5\" />\n              </div>\n              <span class=\"text-highlighted text-lg font-bold\">自定义内容插槽</span>\n              <DemoNote class=\"text-sm\">\n                如果不传\n                <code>items</code>，你也可以直接使用\n                <code>#content</code>\n                自定义菜单面板。\n              </DemoNote>\n            </div>\n          </template>\n\n          <template #content=\"{ close }\">\n            <div class=\"flex w-[280px] flex-col gap-4\">\n              <div class=\"flex flex-col gap-1\">\n                <span class=\"text-warning text-xs tracking-[0.24em] uppercase\">Quick Palette</span>\n                <span class=\"text-highlighted text-base font-bold\">场景型快捷面板</span>\n                <DemoNote class=\"text-sm\">适合插入颜色、状态或轻量业务卡片。</DemoNote>\n              </div>\n              <div class=\"grid grid-cols-3 gap-3\">\n                <button\n                  v-for=\"tone in paletteTones\"\n                  :key=\"tone\"\n                  class=\"border-default rounded-lg hover:border-primary/40 hover:text-primary cursor-pointer border px-3 py-3 text-sm font-semibold transition\"\n                  @click=\"pickTone(tone, close)\"\n                >\n                  {{ tone }}\n                </button>\n              </div>\n            </div>\n          </template>\n        </RebornContextMenu>\n      </DemoBlock>\n    </DemoSection>\n  </div>\n</template>\n"
+    }
+  ],
+  "related": [
+    "reborn-transition"
+  ],
+  "whenToUse": [
+    "文件列表、表格行等需要右键呼出操作菜单的区域。",
+    "需要分组、快捷键展示与多级子菜单的数据驱动菜单（items 传入）。",
+    "需要受控展开（v-model:open）或 hover 触发的浮层菜单。",
+    "划词后的自定义操作菜单：trigger=selection 配合浏览器 Selection API，选中文字后在选区上方弹出，onSelect / select 的 context.selectionText 即选中的文字。"
+  ],
+  "whenNotToUse": [
+    "uniapp 端不可用（仅 web）。",
+    "按钮触发的普通下拉操作菜单，改用 reborn-dropdown。",
+    "表单选值场景，改用 reborn-select。"
+  ],
+  "pitfalls": [
+    "仅 web 端可用。",
+    "trigger 默认 contextmenu（右键），hover 模式下 openDelay/closeDelay 才生效；selection 划词触发时点击菜单项不会清掉选区。",
+    "菜单已展开时在另一位置再次右键（或换一段划词）会先收起再在新位置展开，不做平移。",
+    "弹出方向用 placement（与 reborn-popover 一致）+ sideOffset（默认 8，右键触发默认 0 即贴住指针）；未传时按触发方式取默认：右键/点击/悬浮 bottom-start、划词 top（选区上方居中）、子菜单 right-start。旧的 content 对象已废弃但仍可用。",
+    "根菜单为自顶向下的高度展开动画；面板圆角 8px、底色 gray-1（浅色 #FFFFFF）、阴影 0 2px 16px rgba(1,27,70,.1)、内边距 6px，选项 14px、内边距 6/4、间隔 2px。",
+    "portal 默认 true 通过 Teleport 挂载到 body；modal 默认 false 不显示遮罩。",
+    "点击叶子菜单项触发 select 事件（第三个参数为 { selectionText }）；组件暴露 close 方法。",
+    "open 不传即非受控（defaultOpen 为初值）；绑定 v-model:open 时以绑定值为准，初始为 true 会直接展开。"
+  ],
+  "dependencies": [
+    "clsx",
+    "tailwind-merge",
+    "tailwind-variants"
+  ],
+  "install": {
+    "cli": "npx reborn-ui@latest add reborn-context-menu"
+  },
+  "sourceRefs": {
+    "web": [
+      "app/components/reborn/ui/reborn-context-menu/RebornContextMenu.vue",
+      "app/components/reborn/ui/reborn-context-menu/context-menu-singleton.ts",
+      "app/components/reborn/ui/reborn-context-menu/index.ts",
+      "app/components/reborn/ui/reborn-context-menu/reborn-context-menu.config.ts"
+    ]
+  },
+  "docPath": "content/2.components/navigation/reborn-context-menu.md",
+  "_meta": {
+    "contentHash": "967594c07d72df40783ca357d4d1ff50443e792d",
+    "hasOverride": true,
+    "extractors": {
+      "web": "ok",
+      "uniapp": "absent",
+      "docs": "found"
+    }
+  }
+}

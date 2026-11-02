@@ -1,0 +1,666 @@
+{
+  "$schema": "../schema/component.schema.json",
+  "id": "reborn-date-picker",
+  "title": "DatePicker 日期选择器",
+  "description": "双端日期选择器：web 下拉日期面板支持 16 种类型，uniapp 底部弹出滚轮选年月日时分秒与范围。",
+  "category": "form",
+  "tags": [
+    "calendar",
+    "date",
+    "picker",
+    "select",
+    "uniapp"
+  ],
+  "platforms": [
+    "web",
+    "uniapp"
+  ],
+  "props": [
+    {
+      "name": "title",
+      "type": "string",
+      "required": false,
+      "description": "底部弹出层的标题。",
+      "default": "'请选择'"
+    },
+    {
+      "name": "headers",
+      "type": "string[]",
+      "required": false,
+      "description": "各滚轮列的表头文字，按列顺序取前几项。",
+      "default": "() => ['年', '月', '日', '时', '分', '秒']"
+    },
+    {
+      "name": "placeholder",
+      "type": "string",
+      "required": false,
+      "description": "〔选择框〕单值与多选类型的占位文本；缺省时随类型取「请选择日期」「请选择月份」等。",
+      "default": "'请选择'"
+    },
+    {
+      "name": "showTrigger",
+      "type": "boolean",
+      "required": false,
+      "description": "是否渲染内置触发器；关闭后通过 `open()` 自行唤起弹出层。",
+      "default": "true"
+    },
+    {
+      "name": "disabled",
+      "type": "boolean",
+      "required": false,
+      "description": "〔选择框〕是否禁用，可被外层 `RebornForm` 覆盖。",
+      "default": "false"
+    },
+    {
+      "name": "confirmText",
+      "type": "string",
+      "required": false,
+      "description": "「确定」按钮文字。",
+      "default": "'确定'"
+    },
+    {
+      "name": "showConfirm",
+      "type": "boolean",
+      "required": false,
+      "description": "是否显示底部「确定」按钮。",
+      "default": "true"
+    },
+    {
+      "name": "cancelText",
+      "type": "string",
+      "required": false,
+      "description": "「取消」按钮文字。",
+      "default": "'取消'"
+    },
+    {
+      "name": "showCancel",
+      "type": "boolean",
+      "required": false,
+      "description": "是否显示底部「取消」按钮。",
+      "default": "true"
+    },
+    {
+      "name": "format",
+      "type": "string",
+      "required": false,
+      "description": "〔选择框〕触发器展示文本的 dayjs 格式，不影响绑定值；缺省值见「基础用法」。",
+      "default": "''"
+    },
+    {
+      "name": "valueFormat",
+      "type": "string",
+      "required": false,
+      "description": "〔共用〕绑定值的 dayjs 格式；为空时绑定值为 `Date` 对象。",
+      "default": "''"
+    },
+    {
+      "name": "start",
+      "type": "string",
+      "required": false,
+      "description": "〔面板〕可选日期的最早边界（含）。",
+      "default": "'1970-01-01 00:00:00'"
+    },
+    {
+      "name": "end",
+      "type": "string",
+      "required": false,
+      "description": "〔面板〕可选日期的最晚边界（含）。",
+      "default": "'2099-12-31 23:59:59'"
+    },
+    {
+      "name": "type",
+      "type": "DatePickerType",
+      "required": false,
+      "description": "〔共用〕选择器类型，决定粒度与单选 / 多选 / 范围。",
+      "default": "'second'"
+    },
+    {
+      "name": "rangeable",
+      "type": "boolean",
+      "required": false,
+      "description": "开启起止区间选择，弹出层顶部出现「开始 / 结束」卡片与快捷项。",
+      "default": "false"
+    },
+    {
+      "name": "startPlaceholder",
+      "type": "string",
+      "required": false,
+      "description": "〔选择框〕范围类型开始栏的占位文本；缺省时随类型取「开始日期」「开始月份」等。",
+      "default": "'开始日期'"
+    },
+    {
+      "name": "endPlaceholder",
+      "type": "string",
+      "required": false,
+      "description": "〔选择框〕范围类型结束栏的占位文本；缺省时随类型取「结束日期」「结束月份」等。",
+      "default": "'结束日期'"
+    },
+    {
+      "name": "rangeSeparator",
+      "type": "string",
+      "required": false,
+      "description": "〔选择框〕范围类型起止之间的分隔符。",
+      "default": "'至'"
+    },
+    {
+      "name": "showShortcuts",
+      "type": "boolean",
+      "required": false,
+      "description": "范围模式是否显示快捷项。",
+      "default": "true"
+    },
+    {
+      "name": "shortcuts",
+      "type": "DatePickerShortcut[]",
+      "required": false,
+      "description": "〔面板〕快捷选项，非空时显示快捷侧栏。",
+      "default": "() => []"
+    },
+    {
+      "name": "clearable",
+      "type": "boolean",
+      "required": false,
+      "description": "〔选择框〕有值时悬停触发器显示清空按钮，与箭头共用尾部位置。",
+      "default": "true"
+    },
+    {
+      "name": "size",
+      "type": "'sm' | 'md' | 'lg'",
+      "required": false,
+      "description": "〔共用〕尺寸档位，同时下发给面板；可被外层 `RebornForm` 覆盖。",
+      "default": "'md'",
+      "options": [
+        "sm",
+        "md",
+        "lg"
+      ]
+    },
+    {
+      "name": "color",
+      "type": "'primary' | 'success' | 'info' | 'warning' | 'error' | 'neutral'",
+      "required": false,
+      "description": "〔共用〕触发器聚焦 / 展开描边色，同时下发给面板决定选中色。",
+      "default": "'primary'",
+      "options": [
+        "primary",
+        "success",
+        "info",
+        "warning",
+        "error",
+        "neutral"
+      ]
+    },
+    {
+      "name": "triggerUi",
+      "type": "Partial<TriggerUiShape>",
+      "required": false,
+      "description": "〔选择框〕触发器盒子与浮层外壳的样式覆盖，键位见「子组件样式入口」。",
+      "default": "() => ({})"
+    },
+    {
+      "name": "popupUi",
+      "type": "Partial<PopupUiShape>",
+      "required": false,
+      "description": "底部弹出层（RebornPopup）样式覆盖对象，可重写遮罩、面板、头部、标题等区域",
+      "default": "() => ({})"
+    },
+    {
+      "name": "pickerUi",
+      "type": "Partial<PickerUiShape>",
+      "required": false,
+      "description": "滚轮选择器（RebornPickerView）样式覆盖对象，可重写表头、选项、指示器等区域",
+      "default": "() => ({})"
+    },
+    {
+      "name": "ui",
+      "type": "Partial<DatePickerUiShape>",
+      "required": false,
+      "description": "组件自身样式覆盖对象，可重写范围选择区、快捷选项、底部按钮等区域 可用键（从源码抽取，以此为准）——UniApp：cancel、cancelButton、confirm、confirmButton、footer、popupOp、rangeBox、rangeEnd、rangePlaceholder、rangeStart、rangeValues、rangeValueText、separator、shortcutItem、shortcuts、wrapper。",
+      "default": "() => ({})",
+      "platform": "uniapp"
+    },
+    {
+      "name": "modelValue",
+      "type": "string",
+      "required": false,
+      "description": "双向绑定值",
+      "vModel": true,
+      "default": "null"
+    },
+    {
+      "name": "values",
+      "type": "string[]",
+      "required": false,
+      "description": "双向绑定值",
+      "vModel": true,
+      "default": "[]"
+    },
+    {
+      "name": "disabledMethod",
+      "type": "DatePickerPanelProps[\"disabledMethod\"]",
+      "required": false,
+      "description": "逐项判定是否禁用，返回 true 即不可选；unit 标识判定粒度（date / week / month / quarter / year）"
+    },
+    {
+      "name": "disabledHours",
+      "type": "DatePickerPanelProps[\"disabledHours\"]",
+      "required": false,
+      "description": "返回需禁用的小时数组，仅 datetime / datetimerange 生效"
+    },
+    {
+      "name": "disabledMinutes",
+      "type": "DatePickerPanelProps[\"disabledMinutes\"]",
+      "required": false,
+      "description": "返回需禁用的分钟数组，仅 datetime / datetimerange 生效"
+    },
+    {
+      "name": "disabledSeconds",
+      "type": "DatePickerPanelProps[\"disabledSeconds\"]",
+      "required": false,
+      "description": "返回需禁用的秒数组，仅 datetime / datetimerange 生效"
+    },
+    {
+      "name": "disabledMilliseconds",
+      "type": "DatePickerPanelProps[\"disabledMilliseconds\"]",
+      "required": false,
+      "description": "返回需禁用的毫秒数组，仅 datetime / datetimerange 生效"
+    },
+    {
+      "name": "activeType",
+      "type": "DatePickerPanelProps[\"activeType\"]",
+      "required": false,
+      "description": "面板选中态表现：fill 背景 / fillRound 背景正圆 / outline 描边加文字 / text 仅文字",
+      "default": "\"fill\""
+    },
+    {
+      "name": "shortcutPosition",
+      "type": "DatePickerPanelProps[\"shortcutPosition\"]",
+      "required": false,
+      "description": "快捷选项侧栏位置，默认在日期面板左侧",
+      "default": "\"left\""
+    },
+    {
+      "name": "showWeekNumber",
+      "type": "boolean",
+      "required": false,
+      "description": "日期视图左侧显示 ISO 周数（week / weekrange 类型不生效）",
+      "default": "false"
+    },
+    {
+      "name": "unlinkPanels",
+      "type": "boolean",
+      "required": false,
+      "description": "范围选择时取消两个面板之间的联动，左右面板各自翻页",
+      "default": "false"
+    },
+    {
+      "name": "singlePanel",
+      "type": "boolean",
+      "required": false,
+      "description": "范围选择时只显示一个面板",
+      "default": "false"
+    },
+    {
+      "name": "showToday",
+      "type": "boolean",
+      "required": false,
+      "description": "面板底部显示「今天」栏：点击选中当前时间所在的日 / 周 / 月 / 季度 / 年，文案随类型变为今天、此刻、本周、本月、本季度、今年",
+      "default": "false"
+    },
+    {
+      "name": "highlightToday",
+      "type": "boolean",
+      "required": false,
+      "description": "是否高亮今天 / 本月 / 本季度 / 今年，默认关闭，不影响已选样式",
+      "default": "false"
+    },
+    {
+      "name": "defaultValue",
+      "type": "DatePickerPanelProps[\"defaultValue\"]",
+      "required": false,
+      "description": "未选值时面板打开所展示的日期，只决定面板定位到哪个月 / 年，不写入绑定值；缺省时展示当天。 范围类型可传数组：第一项定位左面板，开启 unlinkPanels 时第二项定位右面板。字符串按 valueFormat 解析，数字视为时间戳"
+    },
+    {
+      "name": "collapseTags",
+      "type": "boolean",
+      "required": false,
+      "description": "多选类型把超出的标签合并为一段 “+N” 文字",
+      "default": "false"
+    },
+    {
+      "name": "collapseTagsTooltip",
+      "type": "boolean",
+      "required": false,
+      "description": "折叠文字悬停时以气泡展示被折叠的具体日期（需先开启 collapseTags）",
+      "default": "false"
+    },
+    {
+      "name": "maxCollapseTags",
+      "type": "number",
+      "required": false,
+      "description": "折叠前最多展示的标签个数，仅在 collapseTags 开启时生效",
+      "default": "1"
+    },
+    {
+      "name": "loading",
+      "type": "boolean",
+      "required": false,
+      "description": "加载中：触发器箭头替换为转圈图标并隐藏清空按钮；日期面板照常可操作",
+      "default": "false"
+    },
+    {
+      "name": "variant",
+      "type": "(typeof datePickerVariants)[number]",
+      "required": false,
+      "description": "形态变体：描边 / 填充 / 无边框 / 下划线",
+      "default": "\"outlined\""
+    },
+    {
+      "name": "class",
+      "type": "any",
+      "required": false,
+      "description": "自定义类名"
+    },
+    {
+      "name": "showArrow",
+      "type": "boolean",
+      "required": false,
+      "description": "是否显示箭头",
+      "default": "true"
+    },
+    {
+      "name": "arrowAnimation",
+      "type": "boolean",
+      "required": false,
+      "description": "展开时尾部图标是否旋转，默认关闭以保持日历图标方向不变",
+      "default": "false"
+    },
+    {
+      "name": "icon",
+      "type": "string",
+      "required": false,
+      "description": "箭头图标名",
+      "default": "\"lucide:calendar\""
+    },
+    {
+      "name": "prefixIcon",
+      "type": "string",
+      "required": false,
+      "description": "触发器前缀图标名；同时提供 #prefix 插槽时以插槽为准"
+    },
+    {
+      "name": "closeOn",
+      "type": "SelectTriggerProps[\"closeOn\"]",
+      "required": false,
+      "description": "关闭下拉的时机（透传给 RebornSelectTrigger）： - 'mousedown'（默认）：外部一有动静即收——面板外按下左键 / 右键 / 中键、滚轮、触摸立即收起， 页面滚动同样收起；面板内部的滚动、无关容器的滚动不受影响 - 'click'：在触发器外完成一次点击后才收起，期间页面滚动时面板跟随触发器",
+      "default": "\"mousedown\""
+    },
+    {
+      "name": "portal",
+      "type": "SelectTriggerProps[\"portal\"]",
+      "required": false,
+      "description": "浮层是否传送到 body（默认 true）。 关掉后浮层留在触发器内，会随父容器一起滚动、也一起被 overflow 裁剪。",
+      "default": "true"
+    },
+    {
+      "name": "autoAdjustOverflow",
+      "type": "SelectTriggerProps[\"autoAdjustOverflow\"]",
+      "required": false,
+      "description": "下拉框是否自动调整位置：下方空间不足且上方更宽裕时向上展开；关闭后固定向下",
+      "default": "true"
+    },
+    {
+      "name": "panelUi",
+      "type": "DatePickerPanelProps[\"ui\"]",
+      "required": false,
+      "description": "日期面板的 UI 配置，原样透传给 RebornDatePickerPanel 的 ui"
+    },
+    {
+      "name": "ui",
+      "type": "Partial<{\n    panel: ClassValue;\n    dropdownHeader: ClassValue;\n    dropdownFooter: ClassValue;\n    tagList: ClassValue;\n    tag: ClassValue;\n    tagLabel: ClassValue;\n    tagClose: ClassValue;\n    tagCloseIcon: ClassValue;\n    collapseTag: ClassValue;\n  }>",
+      "required": false,
+      "description": "下拉浮层内部与多选标签的 UI 微调配置 可用键（从源码抽取，以此为准）——Web：collapseTag*、dropdownFooter、dropdownHeader、panel、tag*、tagClose*、tagCloseIcon*、tagLabel*、tagList*。 带 * 的键对应插槽兜底节点：填了同名插槽，组件自带的节点被替换，这个键随之失效。",
+      "platform": "web"
+    }
+  ],
+  "events": [
+    {
+      "name": "change",
+      "payload": "[value: string]",
+      "description": "〔共用〕绑定值写回后触发；清空与移除标签同样触发。写回时机见「简介」。"
+    },
+    {
+      "name": "range-change",
+      "payload": "[value: string[]]",
+      "description": "与 `update:values` 同时触发，参数相同。"
+    },
+    {
+      "name": "update:modelValue",
+      "description": "modelValue 变化时触发（v-model 同步）",
+      "payload": "(value: any)"
+    },
+    {
+      "name": "update:values",
+      "description": "values 变化时触发（v-model 同步）",
+      "payload": "(value: string[])"
+    },
+    {
+      "name": "remove-tag",
+      "payload": "(e: \"remove-tag\", value: any): void;",
+      "description": "多选类型下移除单个标签，回传被移除的值"
+    },
+    {
+      "name": "clear",
+      "payload": "(e: \"clear\"): void;",
+      "description": "点击清空按钮"
+    },
+    {
+      "name": "visible-change",
+      "payload": "(e: \"visible-change\", visible: boolean): void;",
+      "description": "下拉框展开 / 收起"
+    },
+    {
+      "name": "calendar-change",
+      "payload": "(e: \"calendar-change\", value: [Date, Date | null]): void;",
+      "description": "范围类型点选日期时触发：第一次点选只有开始日期，结束日期为 null"
+    },
+    {
+      "name": "panel-change",
+      "payload": "(e: \"panel-change\", date: Date | [Date, Date], mode: \"month\" | \"year\", view: ViewType): void;",
+      "description": "面板翻页、切换视图或下钻时触发，参数含义与 RebornDatePickerPanel 相同"
+    }
+  ],
+  "slots": [
+    {
+      "name": "tag",
+      "description": "替换触发器里的展示内容，用于把已选日期渲染成标签等自定义样式。"
+    },
+    {
+      "name": "cover",
+      "props": "(props: TriggerSlotProps) => any",
+      "description": "完全接管触发器内部（连同尾部图标区）"
+    },
+    {
+      "name": "default",
+      "props": "(props: TriggerSlotProps) => any",
+      "description": "自定义触发器的文本区，尾部图标区保留"
+    },
+    {
+      "name": "header",
+      "props": "() => any",
+      "description": "面板上方的页头"
+    },
+    {
+      "name": "footer",
+      "props": "() => any",
+      "description": "面板下方的页脚"
+    },
+    {
+      "name": "cell",
+      "props": "(props: DatePickerCell) => any",
+      "description": "自定义单元格内容，对应 RebornDatePickerPanel 的 default 插槽"
+    },
+    {
+      "name": "prev-month",
+      "props": "() => any",
+      "description": "上个月图标"
+    },
+    {
+      "name": "next-month",
+      "props": "() => any",
+      "description": "下个月图标"
+    },
+    {
+      "name": "prev-year",
+      "props": "() => any",
+      "description": "上一年图标"
+    },
+    {
+      "name": "next-year",
+      "props": "() => any",
+      "description": "下一年图标"
+    },
+    {
+      "name": "prefix",
+      "props": "() => any",
+      "description": "触发器前缀内容（位于文本之前），提供后忽略 prefixIcon"
+    }
+  ],
+  "exposes": [
+    {
+      "name": "open",
+      "description": "打开底部选择弹出层（禁用状态下无效）；可传入回调，在确认时接收选中值"
+    },
+    {
+      "name": "close",
+      "description": "关闭底部选择弹出层（不触发确认）"
+    },
+    {
+      "name": "clear",
+      "description": "清空已选值并触发 change / range-change 事件"
+    },
+    {
+      "name": "confirm",
+      "description": "以当前滚轮选中值执行确认逻辑（范围不完整或倒序时会提示并中断），随后关闭弹出层"
+    },
+    {
+      "name": "setValue",
+      "description": "设置非范围模式的当前选中值（空值时重置为当前时间，仅更新内部状态，不触发事件）"
+    },
+    {
+      "name": "setValues",
+      "description": "设置范围模式的开始/结束值数组（仅更新内部状态，不触发事件）"
+    },
+    {
+      "name": "setRange",
+      "description": "切换范围模式当前编辑项：0 为开始时间，1 为结束时间"
+    }
+  ],
+  "examples": [
+    {
+      "title": "Web 演示 · RebornDatePickerDemo",
+      "path": "app/components/reborn/examples/reborn-date-picker/RebornDatePickerDemo.vue",
+      "source": "demo",
+      "platform": "web",
+      "code": "<script setup lang=\"ts\">\n/**\n * 日期选择器演示。文档站与知识库按本文件的文本抽取章节：Playground 的 title 与每个 DemoSection 的\n * title、描述都写在这里（字面量）；状态较多的章节只把卡片内容拆进同目录的子组件。\n */\nimport type { DatePickerPlaygroundConfig } from \"./RebornDatePickerPlaygroundDemo.vue\";\nimport type { DatePickerType } from \"~/components/reborn/ui/reborn-date-picker-panel/reborn-date-picker-panel.config\";\nimport { DemoBlock, DemoItem, DemoNote, DemoSection, Icon, Playground } from \"#components\";\nimport { computed, ref, shallowRef, watch } from \"vue\";\nimport RebornButton from \"~/components/reborn/ui/reborn-button/RebornButton.vue\";\nimport { datePickerTypes } from \"~/components/reborn/ui/reborn-date-picker-panel/reborn-date-picker-panel.config\";\nimport { datePickerColors, datePickerSizes, datePickerVariants } from \"~/components/reborn/ui/reborn-date-picker/reborn-date-picker.config\";\nimport RebornDatePicker from \"~/components/reborn/ui/reborn-date-picker/RebornDatePicker.vue\";\nimport {\n  arrayValueTypes,\n  disableByUnit,\n  disableWeekend,\n  formatDisplay,\n  rangeShortcuts,\n  singleShortcuts,\n  valueFormatOf,\n} from \"../_shared/date-demo-utils\";\nimport DateDemoCell from \"../_shared/DateDemoCell.vue\";\nimport RebornDatePickerEventsDemo from \"./RebornDatePickerEventsDemo.vue\";\nimport RebornDatePickerFormDemo from \"./RebornDatePickerFormDemo.vue\";\nimport RebornDatePickerPlaygroundDemo from \"./RebornDatePickerPlaygroundDemo.vue\";\n\n// ─── 交互演练场 ─────────────────────────────────────────────────\n\n/** 演练场状态：业务值 pickerValue 与外观、行为参数各自具有明确类型 */\ninterface PlaygroundState extends DatePickerPlaygroundConfig {\n  pickerValue: string | string[] | null;\n}\n\n/** 演练场默认配置，与组件自身默认值保持一致 */\nconst defaultState: PlaygroundState = {\n  pickerValue: \"2024-04-03\",\n  type: \"date\",\n  size: \"md\",\n  color: \"primary\",\n  variant: \"outlined\",\n  activeType: \"fill\",\n  placeholder: \"\",\n  showArrow: true,\n  arrowAnimation: false,\n  clearable: true,\n  loading: false,\n  disabled: false,\n  collapseTags: false,\n  collapseTagsTooltip: false,\n  maxCollapseTags: 1,\n  closeOn: \"mousedown\",\n  portal: true,\n  shortcuts: false,\n  shortcutPosition: \"left\",\n  showWeekNumber: false,\n  unlinkPanels: false,\n  singlePanel: false,\n  showToday: false,\n  highlightToday: false,\n};\n\n/** 演练场当前配置：控制面板整体替换对象，绑定值由预览区经 v-model:value 写回 */\nconst state = ref<PlaygroundState>({ ...defaultState });\n\n/** 预览区的重建标记：重置配置或切换类型后预览区重新挂载，它持有的事件日志随之清空 */\nconst previewKey = shallowRef(0);\n\n/** 重置演练场配置，事件日志一并清空 */\nfunction resetState() {\n  state.value = { ...defaultState };\n  previewKey.value++;\n}\n\n/** 不同类型对应的取值精度不同，格式需要随之切换 */\nconst valueFormat = computed(() => valueFormatOf(state.value.type));\n\n/** 演练场的快捷项只接给日期粒度的单值与范围类型，其余类型的面板不渲染日期网格，给了也对不上 */\nconst playgroundShortcuts = computed(() => {\n  if (!state.value.shortcuts) return [];\n  const type = state.value.type;\n  if (type === \"date\" || type === \"datetime\") return singleShortcuts;\n  if (type === \"daterange\" || type === \"datetimerange\") return rangeShortcuts;\n  return [];\n});\n\n/**\n * 演练场控制面板配置：按参数的作用对象分组。\n * DatePicker 由选择框（触发器与浮层）和内部 RebornDatePickerPanel 组成，分开摆放才能看出某个参数改的是哪一部分。\n */\nconst controls = [\n  {\n    title: \"共用参数（两者同时生效）\",\n    children: [\n      {\n        label: \"选择类型（type）\",\n        key: \"type\",\n        component: \"select\" as const,\n        defaultValue: \"date\",\n        props: { options: datePickerTypes.map((t) => ({ label: t, value: t })) },\n      },\n      {\n        label: \"尺寸规格\",\n        key: \"size\",\n        component: \"select\" as const,\n        defaultValue: \"md\",\n        props: { options: datePickerSizes.map((s) => ({ label: s.toUpperCase(), value: s })) },\n      },\n      {\n        label: \"主题颜色\",\n        key: \"color\",\n        component: \"select\" as const,\n        defaultValue: \"primary\",\n        props: { options: datePickerColors.map((c) => ({ label: c, value: c })) },\n      },\n    ],\n  },\n  {\n    title: \"选择框参数\",\n    children: [\n      {\n        label: \"形态变体\",\n        key: \"variant\",\n        component: \"select\" as const,\n        defaultValue: \"outlined\",\n        props: { options: datePickerVariants.map((v) => ({ label: v, value: v })) },\n      },\n      {\n        label: \"占位文本（留空按类型给默认值）\",\n        key: \"placeholder\",\n        component: \"input\" as const,\n        defaultValue: \"\",\n      },\n      { label: \"显示箭头\", key: \"showArrow\", component: \"checkbox\" as const, defaultValue: true },\n      { label: \"箭头旋转动画\", key: \"arrowAnimation\", component: \"checkbox\" as const, defaultValue: false },\n      { label: \"可清空\", key: \"clearable\", component: \"checkbox\" as const, defaultValue: true },\n      { label: \"加载中\", key: \"loading\", component: \"checkbox\" as const, defaultValue: false },\n      { label: \"禁用状态\", key: \"disabled\", component: \"checkbox\" as const, defaultValue: false },\n      { label: \"折叠标签（仅多选类型）\", key: \"collapseTags\", component: \"checkbox\" as const, defaultValue: false },\n      {\n        label: \"折叠标签悬停提示\",\n        key: \"collapseTagsTooltip\",\n        component: \"checkbox\" as const,\n        defaultValue: false,\n      },\n      {\n        label: \"折叠前最多展示的标签数\",\n        key: \"maxCollapseTags\",\n        component: \"input-number\" as const,\n        defaultValue: 1,\n        props: { min: 0, max: 6 },\n      },\n      {\n        label: \"关闭时机（close-on）\",\n        key: \"closeOn\",\n        component: \"select\" as const,\n        defaultValue: \"mousedown\",\n        props: {\n          options: [\n            { label: \"外部点击后 click\", value: \"click\" },\n            { label: \"外部按下时 mousedown\", value: \"mousedown\" },\n          ],\n        },\n      },\n      { label: \"浮层传送到 body（portal）\", key: \"portal\", component: \"checkbox\" as const, defaultValue: true },\n    ],\n  },\n  {\n    title: \"面板参数（透传给 reborn-date-picker-panel）\",\n    children: [\n      {\n        label: \"选中样式（active-type）\",\n        key: \"activeType\",\n        component: \"select\" as const,\n        defaultValue: \"fill\",\n        props: {\n          options: [\n            { label: \"背景 fill\", value: \"fill\" },\n            { label: \"背景正圆 fillRound\", value: \"fillRound\" },\n            { label: \"描边加文字 outline\", value: \"outline\" },\n            { label: \"仅文字 text\", value: \"text\" },\n          ],\n        },\n      },\n      {\n        label: \"显示快捷选项（date / daterange 及带时间的变体）\",\n        key: \"shortcuts\",\n        component: \"checkbox\" as const,\n        defaultValue: false,\n      },\n      {\n        label: \"快捷选项位置\",\n        key: \"shortcutPosition\",\n        component: \"select\" as const,\n        defaultValue: \"left\",\n        props: {\n          options: [\n            { label: \"左侧\", value: \"left\" },\n            { label: \"右侧\", value: \"right\" },\n          ],\n        },\n      },\n      {\n        label: \"显示周数（week 类型无效）\",\n        key: \"showWeekNumber\",\n        component: \"checkbox\" as const,\n        defaultValue: false,\n      },\n      {\n        label: \"取消面板联动（仅范围类型）\",\n        key: \"unlinkPanels\",\n        component: \"checkbox\" as const,\n        defaultValue: false,\n      },\n      {\n        label: \"只显示一个面板（仅范围类型）\",\n        key: \"singlePanel\",\n        component: \"checkbox\" as const,\n        defaultValue: false,\n      },\n      {\n        label: \"底部显示「今天」栏\",\n        key: \"showToday\",\n        component: \"checkbox\" as const,\n        defaultValue: false,\n      },\n      { label: \"高亮今天（默认关闭）\", key: \"highlightToday\", component: \"checkbox\" as const, defaultValue: false },\n    ],\n  },\n];\n\n/** 演练场右上角展示的等价代码：完整列出当前所有参数（含默认值），顺序与控制面板分组一致 */\nconst pickerCode = computed(() => {\n  const s = state.value;\n  const props: string[] = [\n    'v-model=\"value\"',\n    `type=\"${s.type}\"`,\n    `value-format=\"${valueFormat.value}\"`,\n    `size=\"${s.size}\"`,\n    `color=\"${s.color}\"`,\n    `variant=\"${s.variant}\"`,\n  ];\n  if (s.placeholder) props.push(`placeholder=\"${s.placeholder}\"`);\n  props.push(\n    `:show-arrow=\"${s.showArrow}\"`,\n    `:arrow-animation=\"${s.arrowAnimation}\"`,\n    `:clearable=\"${s.clearable}\"`,\n    `:loading=\"${s.loading}\"`,\n    `:disabled=\"${s.disabled}\"`,\n    `:collapse-tags=\"${s.collapseTags}\"`,\n    `:collapse-tags-tooltip=\"${s.collapseTagsTooltip}\"`,\n    `:max-collapse-tags=\"${s.maxCollapseTags}\"`,\n    `close-on=\"${s.closeOn}\"`,\n    `:portal=\"${s.portal}\"`,\n    `active-type=\"${s.activeType}\"`,\n    playgroundShortcuts.value.length ? ':shortcuts=\"shortcuts\"' : ':shortcuts=\"[]\"',\n    `shortcut-position=\"${s.shortcutPosition}\"`,\n    `:show-week-number=\"${s.showWeekNumber}\"`,\n    `:unlink-panels=\"${s.unlinkPanels}\"`,\n    `:single-panel=\"${s.singlePanel}\"`,\n    `:show-today=\"${s.showToday}\"`,\n    `:highlight-today=\"${s.highlightToday}\"`,\n    '@change=\"onChange\"',\n    '@visible-change=\"onVisibleChange\"',\n    '@calendar-change=\"onCalendarChange\"',\n    '@panel-change=\"onPanelChange\"',\n    '@clear=\"onClear\"',\n    '@remove-tag=\"onRemoveTag\"',\n  );\n\n  return `<RebornDatePicker\\n  ${props.join(\"\\n  \")}\\n/>`;\n});\n\n/**\n * 切换类型时重置绑定值：单值与数组形态不同，取值精度也不同，沿用旧值会被按新格式误读；\n * 旧类型的事件日志也不再有参考价值，预览区随之重建。\n * 重置配置回到默认类型时保留默认值，否则刚恢复的示例值会被立刻清掉。\n */\nwatch(\n  () => state.value.type,\n  (newType: DatePickerType) => {\n    if (newType === defaultState.type && state.value.pickerValue === defaultState.pickerValue) return;\n    state.value.pickerValue = arrayValueTypes.includes(newType) ? [] : null;\n    previewKey.value++;\n  },\n);\n\n// ─── 场景演示状态 ───────────────────────────────────────────────\n\n/** 不传 value-format：绑定值是 Date 对象 */\nconst basicDateValue = shallowRef<Date | null>(null);\n\n/** 传 value-format：绑定值是字符串 */\nconst basicStringValue = shallowRef<string | null>(\"2024-04-03\");\n\n/** 只改展示格式，绑定值仍按 value-format 输出 */\nconst basicFormatValue = shallowRef<string | null>(\"2024-04-03\");\n\n/** 按周：绑定值是这一周的 [周日, 周六] */\nconst weekValue = shallowRef<string[]>([]);\n\n/** 按月 */\nconst monthValue = shallowRef<string | null>(\"2024-04\");\n\n/** 按季度：值用 Q 令牌输出 */\nconst quarterValue = shallowRef<string | null>(\"2024-Q2\");\n\n/** 按年 */\nconst yearValue = shallowRef<string | null>(\"2024\");\n\n/** 日期时间 */\nconst datetimeValue = shallowRef<string | null>(null);\n\n/** 带周数的日期 */\nconst weekNumberValue = shallowRef<string | null>(\"2024-04-03\");\n\n/** 日期范围 */\nconst dateRangeValue = shallowRef<string[]>([\"2024-04-08\", \"2024-04-12\"]);\n\n/** 日期时间范围 */\nconst datetimeRangeValue = shallowRef<string[]>([]);\n\n/** 月份范围 */\nconst monthRangeValue = shallowRef<string[]>([]);\n\n/** 取消联动：起止相隔数月，两侧面板各自停在所属月份 */\nconst unlinkedRangeValue = shallowRef<string[]>([\"2024-01-15\", \"2024-06-10\"]);\n\n/** 单面板范围 */\nconst singleRangeValue = shallowRef<string[]>([\"2024-04-08\", \"2024-04-12\"]);\n\n/** 年份范围 */\nconst yearRangeValue = shallowRef<string[]>([\"2021\", \"2024\"]);\n\n/** 多选日期，标签逐行铺开 */\nconst multiDatesValue = shallowRef<string[]>([\"2024-04-01\", \"2024-04-03\", \"2024-04-08\", \"2024-04-15\"]);\n\n/** 多选月份，超出部分折叠为 +N */\nconst multiMonthsValue = shallowRef<string[]>([\"2024-01\", \"2024-03\", \"2024-05\", \"2024-07\"]);\n\n/** 多选日期，折叠后悬停查看 */\nconst multiTooltipValue = shallowRef<string[]>([\"2024-04-01\", \"2024-04-03\", \"2024-04-08\", \"2024-04-15\", \"2024-04-22\"]);\n\n/** 四种形态共用一个值，便于对比同一内容在不同形态下的表现 */\nconst variantValue = shallowRef<string | null>(\"2024-04-03\");\n\n/** 三档尺寸共用一个多选值，顺带对比标签在各档的字号 */\nconst sizeValue = shallowRef<string[]>([\"2024-04-01\", \"2024-04-03\"]);\n\n/** 七种配色各自的值，展开后面板选中色随之变化 */\nconst colorValues = ref<Record<string, string[]>>(\n  Object.fromEntries(datePickerColors.map((c) => [c, [\"2024-04-08\", \"2024-04-12\"]])),\n);\n\n/** 限定在 2024 年 4 月之内 */\nconst boundedValue = shallowRef<string | null>(\"2024-04-10\");\n\n/** 周末不可选 */\nconst weekendValue = shallowRef<string | null>(null);\n\n/** 按粒度禁用 */\nconst unitValue = shallowRef<string | null>(null);\n\n/** 禁用夜间时段 */\nconst hoursValue = shallowRef<string | null>(null);\n\n/** 只开放 9:00-18:00，其余小时在时间列里置灰 */\nfunction disableNightHours() {\n  return [0, 1, 2, 3, 4, 5, 6, 7, 8, 19, 20, 21, 22, 23];\n}\n\n/** 单值快捷项 */\nconst singleShortcutValue = shallowRef<string | null>(null);\n\n/** 范围快捷项 */\nconst rangeShortcutValue = shallowRef<string[]>([]);\n\n/** 日期：点「今天」选中当天并收起 */\nconst todayDateValue = shallowRef<string | null>(null);\n\n/** 月份：文案变为「本月」 */\nconst todayMonthValue = shallowRef<string | null>(null);\n\n/** 日期时间：文案变为「此刻」，时分秒取点击时的时间 */\nconst todayDatetimeValue = shallowRef<string | null>(null);\n\n/** 日期范围：起止都落在今天 */\nconst todayRangeValue = shallowRef<string[]>([]);\n\n/** 只能选过去的日期 */\nconst todayPastValue = shallowRef<string | null>(null);\n\n/** 今天及以后不可选：今天被禁用时「今天」栏同步置灰、点击无效 */\nfunction disableFromToday(date: Date) {\n  const today = new Date();\n  today.setHours(0, 0, 0, 0);\n  return date.getTime() >= today.getTime();\n}\n\n/** 加载中的值 */\nconst loadingValue = shallowRef<string | null>(\"2024-04-03\");\n\n/** 禁用的单值 */\nconst disabledValue = shallowRef<string | null>(\"2024-04-03\");\n\n/** 禁用的范围 */\nconst disabledRangeValue = shallowRef<string[]>([\"2024-04-08\", \"2024-04-12\"]);\n\n/** 页头页脚示例的值 */\nconst headerFooterValue = shallowRef<string | null>(null);\n\n/** default 插槽示例的值 */\nconst slotTriggerValue = shallowRef<string[]>([\"2024-04-08\", \"2024-04-12\"]);\n\n/** cover 插槽示例的值 */\nconst coverValue = shallowRef<string | null>(null);\n\n/** 虚线触发器的值 */\nconst customTriggerValue = shallowRef<string[]>([\"2024-04-08\", \"2024-04-12\"]);\n\n/** 节假日示例：停在 2024 年 4 月，清明假期就在眼前 */\nconst cellValue = shallowRef<string | null>(\"2024-04-03\");\n\n/** 导航图标示例 */\nconst navIconValue = shallowRef<string[]>([\"2024-04-08\", \"2024-04-12\"]);\n\n/** 自定义面板选中色的值 */\nconst customPanelValue = shallowRef<string[]>([\"2024-04-08\", \"2024-04-12\"]);\n\n/** 自定义标签与页头的值 */\nconst customTagValue = shallowRef<string[]>([\"2024-04-01\", \"2024-04-03\", \"2024-04-08\"]);\n\n/** 首尾用 dayActive，中间项用 dayInRange；两者都要把 hover 写上，否则悬停会被灰底盖掉 */\nconst customRangeUi = {\n  dayActive: \"bg-success text-success-foreground rounded-full hover:bg-success\",\n  dayInRange: \"bg-green-1 text-success rounded-none hover:bg-green-1\",\n};\n</script>\n\n<template>\n  <div class=\"flex flex-col gap-8\">\n    <!-- 交互演练场 -->\n    <Playground\n      v-model=\"state\"\n      :controls=\"controls\"\n      :code=\"pickerCode\"\n      component-name=\"RebornDatePicker\"\n      title=\"交互演练场\"\n      description=\"上方参数按作用对象分组：共用参数同时作用于选择框与面板，选择框参数只改触发器与浮层，面板参数透传给内部 RebornDatePickerPanel。下方可查看绑定值与事件顺序。\"\n    >\n      <template #tag>\n        <RebornButton size=\"sm\" variant=\"soft\" color=\"neutral\" @click=\"resetState\">\n          <template #leading>\n            <Icon name=\"lucide:rotate-ccw\" size=\"12\" />\n          </template>\n          重置配置\n        </RebornButton>\n      </template>\n\n      <!-- 预览区：选择器、绑定值回显与事件日志 -->\n      <RebornDatePickerPlaygroundDemo\n        :key=\"previewKey\"\n        v-model:value=\"state.pickerValue\"\n        :config=\"state\"\n        :value-format=\"valueFormat\"\n        :shortcuts=\"playgroundShortcuts\"\n      />\n    </Playground>\n\n    <!-- 基础用法 -->\n    <DemoSection title=\"基础用法\" class=\"relative z-30\">\n      <template #description>\n        点击触发器展开日期面板，选中后自动收起。不传\n        <code>value-format</code>\n        时绑定值是 Date 对象，传了则按格式输出字符串；<code>format</code>\n        只改触发器里的展示文本，不影响绑定值。全部类型支持手动输入：年用 <code>YYYY</code>，月用 <code>YYYY-MM</code>，季度用 <code>YYYY-Q1</code>，日期和周用 <code>YYYY-MM-DD</code>，日期时间用 <code>YYYY-MM-DD HH:mm:ss</code>；回车或离开输入框后确认，多选用逗号追加，悬停只预览。\n      </template>\n      <DemoBlock layout=\"grid\" :columns=\"3\" align=\"start\">\n        <DemoItem label=\"绑定 Date 对象\" note=\"没有 value-format，选中后拿到的是 Date\">\n          <RebornDatePicker v-model=\"basicDateValue\" class=\"w-full\" />\n          <DemoNote tone=\"dimmed\">\n            <span class=\"font-mono text-xs\">{{ formatDisplay(basicDateValue) }}</span>\n          </DemoNote>\n        </DemoItem>\n        <DemoItem label=\"绑定字符串\" note=\"可输入 YYYY-MM-DD，回车确认；无效日期恢复原值\">\n          <RebornDatePicker v-model=\"basicStringValue\" value-format=\"YYYY-MM-DD\" class=\"w-full\" />\n          <DemoNote tone=\"dimmed\">\n            <span class=\"font-mono text-xs\">{{ formatDisplay(basicStringValue) }}</span>\n          </DemoNote>\n        </DemoItem>\n        <DemoItem label=\"自定义展示格式\" note=\"触发器显示中文日期，绑定值仍是 YYYY-MM-DD\">\n          <RebornDatePicker\n            v-model=\"basicFormatValue\"\n            value-format=\"YYYY-MM-DD\"\n            format=\"YYYY 年 M 月 D 日\"\n            class=\"w-full\"\n          />\n          <DemoNote tone=\"dimmed\">\n            <span class=\"font-mono text-xs\">{{ formatDisplay(basicFormatValue) }}</span>\n          </DemoNote>\n        </DemoItem>\n      </DemoBlock>\n    </DemoSection>\n\n    <!-- 选择类型 -->\n    <DemoSection title=\"选择类型\" class=\"relative z-20\">\n      <template #description>\n        <code>type</code>\n        决定面板粒度与绑定值形态；占位文本缺省时随类型切换，如「请选择月份」「请选择季度」。<code>datetime</code>\n        需要在面板里调时分秒，选完日期不会立即收起。\n      </template>\n      <DemoBlock layout=\"grid\" :columns=\"3\" align=\"start\">\n        <DemoItem label=\"week\" mono note=\"绑定值是这一周的 [周日, 周六]\">\n          <RebornDatePicker v-model=\"weekValue\" type=\"week\" value-format=\"YYYY-MM-DD\" class=\"w-full\" />\n        </DemoItem>\n        <DemoItem label=\"month\" mono>\n          <RebornDatePicker v-model=\"monthValue\" type=\"month\" value-format=\"YYYY-MM\" class=\"w-full\" />\n        </DemoItem>\n        <DemoItem label=\"quarter\" mono note=\"value-format 用 Q 令牌输出 2024-Q2\">\n          <RebornDatePicker v-model=\"quarterValue\" type=\"quarter\" value-format=\"YYYY-[Q]Q\" class=\"w-full\" />\n        </DemoItem>\n        <DemoItem label=\"year\" mono>\n          <RebornDatePicker v-model=\"yearValue\" type=\"year\" value-format=\"YYYY\" class=\"w-full\" />\n        </DemoItem>\n        <DemoItem label=\"datetime\" mono note=\"日期与时间都选定即写回，点面板外收起\">\n          <RebornDatePicker v-model=\"datetimeValue\" type=\"datetime\" value-format=\"YYYY-MM-DD HH:mm:ss\" class=\"w-full\" />\n        </DemoItem>\n        <DemoItem label=\"show-week-number\" mono note=\"日期视图左侧多一列 ISO 周数\">\n          <RebornDatePicker v-model=\"weekNumberValue\" value-format=\"YYYY-MM-DD\" show-week-number class=\"w-full\" />\n        </DemoItem>\n      </DemoBlock>\n      <DemoNote tone=\"dimmed\">\n        当前值：week\n        <code class=\"font-mono text-xs\">{{ formatDisplay(weekValue) }}</code>，quarter\n        <code class=\"font-mono text-xs\">{{ formatDisplay(quarterValue) }}</code>，datetime\n        <code class=\"font-mono text-xs\">{{ formatDisplay(datetimeValue) }}</code>\n      </DemoNote>\n    </DemoSection>\n\n    <!-- 范围选择 -->\n    <DemoSection title=\"范围选择\" class=\"relative z-10\">\n      <template #description>\n        范围类型的触发器分成开始、结束两栏，起止都选定才写回绑定值；只点了开始日期就收起，这个半成品会被丢弃。<code>unlink-panels</code>\n        让左右面板各自翻页，<code>single-panel</code>\n        只保留一个面板。\n      </template>\n      <DemoBlock layout=\"grid\" :columns=\"3\" align=\"start\">\n        <DemoItem label=\"daterange\" mono>\n          <RebornDatePicker v-model=\"dateRangeValue\" type=\"daterange\" value-format=\"YYYY-MM-DD\" class=\"w-full\" />\n        </DemoItem>\n        <DemoItem label=\"datetimerange\" mono note=\"format 省掉秒，两栏才放得下\">\n          <RebornDatePicker\n            v-model=\"datetimeRangeValue\"\n            type=\"datetimerange\"\n            value-format=\"YYYY-MM-DD HH:mm\"\n            format=\"YYYY-MM-DD HH:mm\"\n            class=\"w-full\"\n          />\n        </DemoItem>\n        <DemoItem label=\"monthrange\" mono note=\"自定义分隔符与两栏占位\">\n          <RebornDatePicker\n            v-model=\"monthRangeValue\"\n            type=\"monthrange\"\n            value-format=\"YYYY-MM\"\n            range-separator=\"→\"\n            start-placeholder=\"入职月份\"\n            end-placeholder=\"离职月份\"\n            class=\"w-full\"\n          />\n        </DemoItem>\n        <DemoItem label=\"unlink-panels\" mono note=\"1 月与 6 月分列两侧，不必逐月翻到终点\">\n          <RebornDatePicker\n            v-model=\"unlinkedRangeValue\"\n            type=\"daterange\"\n            value-format=\"YYYY-MM-DD\"\n            unlink-panels\n            class=\"w-full\"\n          />\n        </DemoItem>\n        <DemoItem label=\"single-panel\" mono note=\"浮层宽度减半，适合侧栏等窄区域\">\n          <RebornDatePicker\n            v-model=\"singleRangeValue\"\n            type=\"daterange\"\n            value-format=\"YYYY-MM-DD\"\n            single-panel\n            class=\"w-full\"\n          />\n        </DemoItem>\n        <DemoItem label=\"yearrange\" mono>\n          <RebornDatePicker v-model=\"yearRangeValue\" type=\"yearrange\" value-format=\"YYYY\" class=\"w-full\" />\n        </DemoItem>\n      </DemoBlock>\n      <DemoNote tone=\"dimmed\">\n        daterange 当前值：<code class=\"font-mono text-xs\">{{ formatDisplay(dateRangeValue) }}</code>\n      </DemoNote>\n    </DemoSection>\n\n    <!-- 多选与标签折叠 -->\n    <DemoSection title=\"多选与标签折叠\" class=\"relative z-1\">\n      <template #description>\n        <code>dates</code>\n        /\n        <code>months</code>\n        /\n        <code>years</code>\n        /\n        <code>quarters</code>\n        每点一项立即写回，面板保持展开以便继续勾选。已选项以标签展示，默认逐行铺开；开启\n        <code>collapse-tags</code>\n        后超出\n        <code>max-collapse-tags</code>\n        的部分合并为 +N，触发器高度保持不变。\n      </template>\n      <DemoBlock layout=\"grid\" :columns=\"3\" align=\"start\">\n        <DemoItem label=\"标签换行\" note=\"未开启折叠，触发器随标签增高\">\n          <RebornDatePicker v-model=\"multiDatesValue\" type=\"dates\" value-format=\"YYYY-MM-DD\" class=\"w-full\" />\n        </DemoItem>\n        <DemoItem label=\"collapse-tags\" mono note=\"只露出第一个标签，其余合并为 +N\">\n          <RebornDatePicker\n            v-model=\"multiMonthsValue\"\n            type=\"months\"\n            value-format=\"YYYY-MM\"\n            collapse-tags\n            class=\"w-full\"\n          />\n        </DemoItem>\n        <DemoItem label=\"collapse-tags-tooltip\" mono note=\"max-collapse-tags=2，悬停 +N 查看被折叠的日期\">\n          <RebornDatePicker\n            v-model=\"multiTooltipValue\"\n            type=\"dates\"\n            value-format=\"YYYY-MM-DD\"\n            collapse-tags\n            collapse-tags-tooltip\n            :max-collapse-tags=\"2\"\n            class=\"w-full\"\n          />\n        </DemoItem>\n      </DemoBlock>\n      <DemoNote tone=\"dimmed\">\n        点标签上的 × 可单独移除一项。dates 当前值：<code class=\"font-mono text-xs break-all\">{{ formatDisplay(multiDatesValue) }}</code>\n      </DemoNote>\n    </DemoSection>\n\n    <!-- 形态、尺寸与配色 -->\n    <DemoSection title=\"形态、尺寸与配色\">\n      <template #description>\n        <code>variant</code>、<code>size</code>、<code>color</code>\n        与 RebornSelect 共用同一套类名，同一表单里两者并排时高度、描边与聚焦色一致。<code>color</code>\n        还会下发给面板，决定选中日期的底色。\n      </template>\n      <DemoBlock layout=\"grid\" :columns=\"4\" align=\"start\">\n        <DemoItem v-for=\"variant in datePickerVariants\" :key=\"variant\" :label=\"variant\" mono>\n          <RebornDatePicker v-model=\"variantValue\" :variant=\"variant\" value-format=\"YYYY-MM-DD\" class=\"w-full\" />\n        </DemoItem>\n      </DemoBlock>\n      <DemoBlock layout=\"grid\" :columns=\"3\" align=\"start\">\n        <DemoItem v-for=\"size in datePickerSizes\" :key=\"size\" :label=\"size\" mono>\n          <RebornDatePicker v-model=\"sizeValue\" type=\"dates\" :size=\"size\" value-format=\"YYYY-MM-DD\" class=\"w-full\" />\n        </DemoItem>\n      </DemoBlock>\n      <DemoBlock layout=\"grid\" :columns=\"4\" align=\"start\">\n        <DemoItem v-for=\"color in datePickerColors\" :key=\"color\" :label=\"color\" mono>\n          <RebornDatePicker\n            v-model=\"colorValues[color]\"\n            type=\"daterange\"\n            :color=\"color\"\n            value-format=\"YYYY-MM-DD\"\n            class=\"w-full\"\n          />\n        </DemoItem>\n      </DemoBlock>\n    </DemoSection>\n\n    <!-- 可选范围与禁用日期 -->\n    <DemoSection title=\"可选范围与禁用日期\">\n      <template #description>\n        <code>start</code>\n        /\n        <code>end</code>\n        圈定整体可选区间；<code>disabled-method</code>\n        逐项判定，第二个参数\n        <code>unit</code>\n        标明当前是日、周、月、季度还是年粒度；<code>disabled-hours</code>\n        等方法只作用于带时间的类型。\n      </template>\n      <DemoBlock layout=\"grid\" :columns=\"4\" align=\"start\">\n        <DemoItem label=\"start + end\" mono note=\"只能选 2024 年 4 月\">\n          <RebornDatePicker\n            v-model=\"boundedValue\"\n            value-format=\"YYYY-MM-DD\"\n            start=\"2024-04-01\"\n            end=\"2024-04-30\"\n            class=\"w-full\"\n          />\n        </DemoItem>\n        <DemoItem label=\"禁用周末\" note=\"只在日期粒度判定\">\n          <RebornDatePicker\n            v-model=\"weekendValue\"\n            value-format=\"YYYY-MM-DD\"\n            :disabled-method=\"disableWeekend\"\n            class=\"w-full\"\n          />\n        </DemoItem>\n        <DemoItem label=\"按粒度禁用\" note=\"月份只开放 3-8 月，年份禁用 2024 年以前\">\n          <RebornDatePicker\n            v-model=\"unitValue\"\n            type=\"month\"\n            value-format=\"YYYY-MM\"\n            :disabled-method=\"disableByUnit\"\n            class=\"w-full\"\n          />\n        </DemoItem>\n        <DemoItem label=\"disabled-hours\" mono note=\"只开放 9:00-18:00\">\n          <RebornDatePicker\n            v-model=\"hoursValue\"\n            type=\"datetime\"\n            value-format=\"YYYY-MM-DD HH:mm:ss\"\n            :disabled-hours=\"disableNightHours\"\n            class=\"w-full\"\n          />\n        </DemoItem>\n      </DemoBlock>\n    </DemoSection>\n\n    <!-- 快捷选项 -->\n    <DemoSection title=\"快捷选项\">\n      <template #description>\n        <code>shortcuts</code>\n        列出常用日期，<code>shortcut-position</code> 可设置在面板左侧或右侧，点击后直接写回并收起。<code>value</code>\n        写成函数才能每次点击都按当天重新计算，范围类型的函数返回 [起点, 终点]。\n      </template>\n      <DemoBlock layout=\"grid\" :columns=\"2\" align=\"start\">\n        <DemoItem label=\"单值 · 左侧快捷选项\">\n          <RebornDatePicker\n            v-model=\"singleShortcutValue\"\n            value-format=\"YYYY-MM-DD\"\n            :shortcuts=\"singleShortcuts\"\n            class=\"w-full\"\n          />\n          <DemoNote tone=\"dimmed\">\n            <span class=\"font-mono text-xs\">{{ formatDisplay(singleShortcutValue) }}</span>\n          </DemoNote>\n        </DemoItem>\n        <DemoItem label=\"范围 · 右侧快捷选项\">\n          <RebornDatePicker\n            v-model=\"rangeShortcutValue\"\n            type=\"daterange\"\n            value-format=\"YYYY-MM-DD\"\n            :shortcuts=\"rangeShortcuts\"\n            shortcut-position=\"right\"\n            class=\"w-full\"\n          />\n          <DemoNote tone=\"dimmed\">\n            <span class=\"font-mono text-xs\">{{ formatDisplay(rangeShortcutValue) }}</span>\n          </DemoNote>\n        </DemoItem>\n      </DemoBlock>\n    </DemoSection>\n\n    <!-- 今天栏 -->\n    <DemoSection title=\"今天栏\">\n      <template #description>\n        <code>show-today</code>\n        在面板底部加一栏，点击选中当前时间所在的单位，文案随类型变为今天、本周、本月、本季度、今年；<code>datetime</code>\n        显示「此刻」，时分秒取点击时的时间。今天被\n        <code>start</code>\n        /\n        <code>end</code>\n        /\n        <code>disabled-method</code>\n        排除时，这一栏置灰且点击无效。\n      </template>\n      <DemoBlock layout=\"grid\" :columns=\"2\" align=\"start\">\n        <DemoItem label=\"date\">\n          <RebornDatePicker v-model=\"todayDateValue\" value-format=\"YYYY-MM-DD\" show-today class=\"w-full\" />\n          <DemoNote tone=\"dimmed\">\n            <span class=\"font-mono text-xs\">{{ formatDisplay(todayDateValue) }}</span>\n          </DemoNote>\n        </DemoItem>\n        <DemoItem label=\"month\">\n          <RebornDatePicker v-model=\"todayMonthValue\" type=\"month\" value-format=\"YYYY-MM\" show-today class=\"w-full\" />\n          <DemoNote tone=\"dimmed\">\n            <span class=\"font-mono text-xs\">{{ formatDisplay(todayMonthValue) }}</span>\n          </DemoNote>\n        </DemoItem>\n        <DemoItem label=\"datetime\">\n          <RebornDatePicker\n            v-model=\"todayDatetimeValue\"\n            type=\"datetime\"\n            value-format=\"YYYY-MM-DD HH:mm:ss\"\n            show-today\n            class=\"w-full\"\n          />\n          <DemoNote tone=\"dimmed\">\n            <span class=\"font-mono text-xs\">{{ formatDisplay(todayDatetimeValue) }}</span>\n          </DemoNote>\n        </DemoItem>\n        <DemoItem label=\"daterange\">\n          <RebornDatePicker\n            v-model=\"todayRangeValue\"\n            type=\"daterange\"\n            value-format=\"YYYY-MM-DD\"\n            show-today\n            class=\"w-full\"\n          />\n          <DemoNote tone=\"dimmed\">\n            <span class=\"font-mono text-xs\">{{ formatDisplay(todayRangeValue) }}</span>\n          </DemoNote>\n        </DemoItem>\n        <DemoItem label=\"今天不可选\">\n          <RebornDatePicker\n            v-model=\"todayPastValue\"\n            value-format=\"YYYY-MM-DD\"\n            placeholder=\"只能选过去的日期\"\n            :disabled-method=\"disableFromToday\"\n            show-today\n            class=\"w-full\"\n          />\n          <DemoNote tone=\"dimmed\">\n            <span class=\"font-mono text-xs\">{{ formatDisplay(todayPastValue) }}</span>\n          </DemoNote>\n        </DemoItem>\n      </DemoBlock>\n    </DemoSection>\n\n    <!-- 加载与禁用 -->\n    <DemoSection title=\"加载与禁用\">\n      <template #description>\n        <code>loading</code>\n        把尾部图标换成转圈并隐藏清空按钮，只作用于触发器，面板照常可选；<code>disabled</code>\n        后触发器置灰、点击无响应。\n      </template>\n      <DemoBlock layout=\"grid\" :columns=\"3\" align=\"start\">\n        <DemoItem label=\"loading\" mono>\n          <RebornDatePicker v-model=\"loadingValue\" value-format=\"YYYY-MM-DD\" loading class=\"w-full\" />\n        </DemoItem>\n        <DemoItem label=\"disabled\" mono>\n          <RebornDatePicker v-model=\"disabledValue\" value-format=\"YYYY-MM-DD\" disabled class=\"w-full\" />\n        </DemoItem>\n        <DemoItem label=\"范围类型禁用\">\n          <RebornDatePicker\n            v-model=\"disabledRangeValue\"\n            type=\"daterange\"\n            value-format=\"YYYY-MM-DD\"\n            disabled\n            class=\"w-full\"\n          />\n        </DemoItem>\n      </DemoBlock>\n    </DemoSection>\n\n    <!-- 页头与页脚 -->\n    <DemoSection title=\"页头与页脚\" class=\"relative z-30\">\n      <template #description>\n        <code>header</code>\n        /\n        <code>footer</code>\n        插槽分别渲染在面板上方和下方，自带分隔线，适合放说明文字或提示。\n      </template>\n      <DemoBlock layout=\"stack\">\n        <DemoItem label=\"预约日期\">\n          <RebornDatePicker\n            v-model=\"headerFooterValue\"\n            value-format=\"YYYY-MM-DD\"\n            :disabled-method=\"disableWeekend\"\n            class=\"w-full max-w-xs\"\n          >\n            <template #header>请选择到店日期</template>\n            <template #footer>\n              <span class=\"flex items-center gap-1\">\n                <Icon name=\"lucide:info\" class=\"size-3.5\" />\n                周末门店休息，不可预约\n              </span>\n            </template>\n          </RebornDatePicker>\n        </DemoItem>\n      </DemoBlock>\n    </DemoSection>\n\n    <!-- 自定义单元格与导航图标 -->\n    <DemoSection title=\"自定义单元格与导航图标\" class=\"relative z-20\">\n      <template #description>\n        <code>cell</code> 插槽接管每个格子的内容，作用域参数与面板的 <code>default</code> 插槽相同；<code>prev-month</code> /\n        <code>next-month</code> / <code>prev-year</code> / <code>next-year</code> 替换翻页按钮里的图标。\n      </template>\n      <DemoBlock layout=\"grid\" :columns=\"2\" align=\"start\">\n        <DemoItem label=\"节假日标注\" note=\"2024 年 4 月，清明假期标「休」，调休标「班」\">\n          <RebornDatePicker v-model=\"cellValue\" value-format=\"YYYY-MM-DD\" class=\"w-full\">\n            <template #cell=\"{ type, text, date, selected }\">\n              <DateDemoCell :type=\"type\" :text=\"text\" :date=\"date\" :selected=\"selected\" />\n            </template>\n          </RebornDatePicker>\n        </DemoItem>\n        <DemoItem label=\"自定义翻页图标\" note=\"年用带竖线的箭头，月用普通箭头\">\n          <RebornDatePicker v-model=\"navIconValue\" type=\"daterange\" value-format=\"YYYY-MM-DD\" class=\"w-full\">\n            <template #prev-year>\n              <Icon name=\"lucide:arrow-left-to-line\" class=\"size-4\" />\n            </template>\n            <template #prev-month>\n              <Icon name=\"lucide:arrow-left\" class=\"size-4\" />\n            </template>\n            <template #next-month>\n              <Icon name=\"lucide:arrow-right\" class=\"size-4\" />\n            </template>\n            <template #next-year>\n              <Icon name=\"lucide:arrow-right-to-line\" class=\"size-4\" />\n            </template>\n          </RebornDatePicker>\n        </DemoItem>\n      </DemoBlock>\n      <DemoNote tone=\"dimmed\">\n        日、月、季度、年四种视图共用 cell 插槽，必须按 type\n        分支并补回默认文案，否则切到月视图会只剩数字；选中格的角标不写颜色，跟随选中文字色，避免与选中底色撞色。翻页插槽替换的是默认图标，尺寸需要自己给。\n      </DemoNote>\n    </DemoSection>\n\n    <!-- 自定义触发器 -->\n    <DemoSection title=\"自定义触发器\" class=\"relative z-10\">\n      <template #description>\n        <code>default</code>\n        插槽只替换触发器的文本区，尾部箭头与清空按钮保留；<code>cover</code>\n        插槽连同尾部图标区一起接管。两者的作用域参数都有\n        <code>displayText</code>、<code>placeholder</code>、<code>isOpen</code>\n        和\n        <code>ui</code>，其中\n        <code>ui</code>\n        可复用组件内置的类名。\n      </template>\n      <DemoBlock layout=\"grid\" :columns=\"2\" align=\"start\">\n        <DemoItem label=\"default 插槽\" mono note=\"前置图标 + 复用 ui.triggerText()\">\n          <RebornDatePicker v-model=\"slotTriggerValue\" type=\"daterange\" value-format=\"YYYY-MM-DD\" class=\"w-full\">\n            <template #default=\"{ displayText, placeholder, ui }\">\n              <span class=\"flex min-w-0 flex-1 items-center gap-2\">\n                <Icon name=\"lucide:plane\" class=\"text-primary size-4 shrink-0\" />\n                <span :class=\"displayText ? ui.triggerText() : ui.placeholder()\">{{ displayText || placeholder }}</span>\n              </span>\n            </template>\n          </RebornDatePicker>\n        </DemoItem>\n        <DemoItem label=\"cover 插槽\" mono note=\"整块替换为渐变卡片\">\n          <RebornDatePicker\n            v-model=\"coverValue\"\n            value-format=\"YYYY-MM-DD\"\n            :trigger-ui=\"{ trigger: 'h-auto p-0 border-none bg-transparent' }\"\n            class=\"w-full\"\n          >\n            <template #cover=\"{ displayText, placeholder, isOpen }\">\n              <div\n                class=\"flex w-full cursor-pointer items-center gap-3 rounded-2xl bg-linear-to-r from-violet-500 to-fuchsia-500 px-5 py-3.5 text-white transition-all active:scale-[0.98]\"\n              >\n                <Icon name=\"lucide:calendar-heart\" class=\"size-5 shrink-0\" />\n                <div class=\"flex min-w-0 flex-1 flex-col\">\n                  <span class=\"text-xs opacity-80\">纪念日</span>\n                  <span class=\"truncate font-medium\">{{ displayText || placeholder }}</span>\n                </div>\n                <Icon\n                  name=\"lucide:chevron-down\"\n                  class=\"size-4 shrink-0 transition-transform\"\n                  :class=\"isOpen ? 'rotate-180' : ''\"\n                />\n              </div>\n            </template>\n          </RebornDatePicker>\n        </DemoItem>\n      </DemoBlock>\n    </DemoSection>\n\n    <!-- 事件 -->\n    <DemoSection title=\"事件\" class=\"relative z-1\">\n      <template #description>\n        除 RebornSelect 已有的 <code>change</code>、<code>clear</code>、<code>remove-tag</code>、<code>visible-change</code>\n        外，还转发面板的 <code>calendar-change</code>（仅范围类型）与 <code>panel-change</code>。通过实例调用\n        <code>clear()</code> 与点清空按钮效果相同。\n      </template>\n      <!-- 两个选择器、调用按钮与事件日志由子组件维护 -->\n      <RebornDatePickerEventsDemo />\n      <DemoNote tone=\"dimmed\">\n        范围类型点下起点就会抛 calendar-change，此时终点为 null；change 要等起止都选定才抛，紧接着是 visible-change\n        false。多选类型每勾一项都抛 change，面板不收起。\n      </DemoNote>\n    </DemoSection>\n\n    <!-- 与表单联动 -->\n    <DemoSection title=\"与表单联动\">\n      <template #description>\n        放进 RebornFormItem 后，选中值会触发 change 校验，收起面板会触发 blur 校验，出错时触发器描边变红；表单的\n        <code>size</code> 与 <code>disabled</code> 同样会下发。\n      </template>\n      <!-- 表单、校验规则与提交结果由子组件维护 -->\n      <RebornDatePickerFormDemo />\n    </DemoSection>\n\n    <!-- 自定义样式 -->\n    <DemoSection title=\"自定义样式\">\n      <template #description>\n        样式分三条通道：<code>trigger-ui</code>\n        覆盖触发器盒子（含范围两栏与分隔符），<code>panel-ui</code>\n        原样透传给日期面板，<code>ui</code>\n        覆盖浮层页头页脚与多选标签。\n      </template>\n      <DemoBlock layout=\"grid\" :columns=\"3\" align=\"start\">\n        <DemoItem label=\"trigger-ui\" mono note=\"虚线大圆角，分隔符改为主题色\">\n          <RebornDatePicker\n            v-model=\"customTriggerValue\"\n            type=\"daterange\"\n            value-format=\"YYYY-MM-DD\"\n            :trigger-ui=\"{\n              trigger: 'border-dashed border-2 rounded-2xl border-indigo-200 dark:border-indigo-800 px-4 h-14',\n              rangeSeparator: 'text-primary',\n            }\"\n            class=\"w-full\"\n          />\n        </DemoItem>\n        <DemoItem label=\"panel-ui\" mono note=\"首尾正圆、区间浅绿\">\n          <RebornDatePicker\n            v-model=\"customPanelValue\"\n            type=\"daterange\"\n            value-format=\"YYYY-MM-DD\"\n            :panel-ui=\"customRangeUi\"\n            class=\"w-full\"\n          />\n        </DemoItem>\n        <DemoItem label=\"ui\" mono note=\"标签改为主题色浅底，页头加粗\">\n          <RebornDatePicker\n            v-model=\"customTagValue\"\n            type=\"dates\"\n            value-format=\"YYYY-MM-DD\"\n            :ui=\"{ tag: 'border-primary/30 bg-primary/10 text-primary', dropdownHeader: 'font-medium text-gray-9' }\"\n            class=\"w-full\"\n          >\n            <template #header>可多选，已选 {{ customTagValue.length }} 天</template>\n          </RebornDatePicker>\n        </DemoItem>\n      </DemoBlock>\n    </DemoSection>\n  </div>\n</template>\n"
+    },
+    {
+      "title": "Web 演示 · RebornDatePickerEventsDemo",
+      "path": "app/components/reborn/examples/reborn-date-picker/RebornDatePickerEventsDemo.vue",
+      "source": "demo",
+      "platform": "web",
+      "code": "<script setup lang=\"ts\">\n/**\n * 「事件」章节的卡片内容：两个选择器、实例调用按钮与事件日志。\n * 章节标题、描述与说明留在 RebornDatePickerDemo.vue，文档站按那个文件抽取章节。\n */\nimport { DemoBlock, DemoItem } from \"#components\";\nimport { shallowRef, useTemplateRef } from \"vue\";\nimport RebornButton from \"~/components/reborn/ui/reborn-button/RebornButton.vue\";\nimport RebornDatePicker from \"~/components/reborn/ui/reborn-date-picker/RebornDatePicker.vue\";\nimport { createHandlers, useEventLog } from \"../_shared/date-demo-utils\";\n\n/** 范围选择的值 */\nconst eventRangeValue = shallowRef<string[]>([]);\n\n/** 多选的值 */\nconst eventMultiValue = shallowRef<string[]>([\"2024-04-01\", \"2024-04-03\"]);\n\n/** 用于演示通过实例调用 clear() */\nconst eventPicker = useTemplateRef<InstanceType<typeof RebornDatePicker>>(\"eventPicker\");\n\n/** 「事件」分组的日志保留最近 8 条 */\nconst { logs: eventLogs, push: pushLog, clear: clearLogs } = useEventLog(8);\n\n/** 「事件」分组的事件监听 */\nconst eventHandlers = createHandlers(pushLog);\n</script>\n\n<template>\n  <DemoBlock layout=\"grid\" :columns=\"2\" align=\"start\">\n    <DemoItem label=\"范围选择\">\n      <RebornDatePicker\n        ref=\"eventPicker\"\n        v-model=\"eventRangeValue\"\n        type=\"daterange\"\n        value-format=\"YYYY-MM-DD\"\n        class=\"w-full\"\n        @change=\"eventHandlers.onChange\"\n        @visible-change=\"eventHandlers.onVisibleChange\"\n        @calendar-change=\"eventHandlers.onCalendarChange\"\n        @panel-change=\"eventHandlers.onPanelChange\"\n        @clear=\"eventHandlers.onClear\"\n      />\n    </DemoItem>\n    <DemoItem label=\"多选\">\n      <RebornDatePicker\n        v-model=\"eventMultiValue\"\n        type=\"dates\"\n        value-format=\"YYYY-MM-DD\"\n        class=\"w-full\"\n        @change=\"eventHandlers.onChange\"\n        @visible-change=\"eventHandlers.onVisibleChange\"\n        @panel-change=\"eventHandlers.onPanelChange\"\n        @clear=\"eventHandlers.onClear\"\n        @remove-tag=\"eventHandlers.onRemoveTag\"\n      />\n    </DemoItem>\n  </DemoBlock>\n  <div class=\"flex gap-2\">\n    <RebornButton size=\"sm\" variant=\"outlined\" @click=\"eventPicker?.clear()\">调用 clear()</RebornButton>\n    <RebornButton size=\"sm\" variant=\"soft\" color=\"neutral\" @click=\"clearLogs\">清空日志</RebornButton>\n  </div>\n  <ul class=\"flex flex-col gap-1 font-mono text-xs\">\n    <li v-for=\"log in eventLogs\" :key=\"log.id\" class=\"text-gray-7 break-all\">\n      <span class=\"text-primary\">{{ log.name }}</span>\n      {{ log.detail }}\n    </li>\n    <li v-if=\"!eventLogs.length\" class=\"text-gray-5\">操作上面两个选择器，事件会按时间倒序出现在这里</li>\n  </ul>\n</template>\n"
+    },
+    {
+      "title": "Web 演示 · RebornDatePickerFormDemo",
+      "path": "app/components/reborn/examples/reborn-date-picker/RebornDatePickerFormDemo.vue",
+      "source": "demo",
+      "platform": "web",
+      "code": "<script setup lang=\"ts\">\n/**\n * 「与表单联动」章节的卡片内容：表单、校验规则与提交结果回显。\n * 章节标题与描述留在 RebornDatePickerDemo.vue，文档站按那个文件抽取章节。\n */\nimport { DemoNote } from \"#components\";\nimport { reactive, shallowRef, useTemplateRef } from \"vue\";\nimport { z } from \"zod\";\nimport RebornButton from \"~/components/reborn/ui/reborn-button/RebornButton.vue\";\nimport RebornDatePicker from \"~/components/reborn/ui/reborn-date-picker/RebornDatePicker.vue\";\nimport RebornForm from \"~/components/reborn/ui/reborn-form/RebornForm.vue\";\nimport RebornFormItem from \"~/components/reborn/ui/reborn-form/RebornFormItem.vue\";\nimport { formatDisplay } from \"../_shared/date-demo-utils\";\n\n/** 表单数据：单值未选时是 null，范围未选时是 [] */\nconst formModel = reactive<{ departDate: string | null; tripRange: string[] }>({\n  departDate: null,\n  tripRange: [],\n});\n\n/** 表单实例 */\nconst formRef = useTemplateRef<InstanceType<typeof RebornForm>>(\"formRef\");\n\n/** 校验结果回显 */\nconst formResult = shallowRef(\"\");\n\n/** 校验规则：null 过不了 z.string()，[] 过不了 length(2)，两种「未选」都能拦下 */\nconst formRules = z.object({\n  departDate: z.string({ message: \"请选择出发日期\" }).min(1, \"请选择出发日期\"),\n  tripRange: z.array(z.string()).length(2, \"请选择行程区间\"),\n});\n\n/** 提交前整体校验 */\nasync function submitForm() {\n  const valid = await formRef.value?.validate();\n  formResult.value = valid\n    ? `校验通过：${formatDisplay(formModel.departDate)}，${formatDisplay(formModel.tripRange)}`\n    : \"校验未通过\";\n}\n\n/** 重置表单与回显 */\nfunction resetForm() {\n  formRef.value?.resetFields();\n  formResult.value = \"\";\n}\n</script>\n\n<template>\n  <RebornForm\n    ref=\"formRef\"\n    :model-value=\"formModel\"\n    :rules=\"formRules\"\n    label-width=\"100px\"\n    label-position=\"left\"\n    size=\"md\"\n    :trigger=\"['change', 'blur']\"\n    class=\"w-full max-w-lg\"\n  >\n    <RebornFormItem label=\"出发日期\" prop=\"departDate\">\n      <RebornDatePicker v-model=\"formModel.departDate\" value-format=\"YYYY-MM-DD\" class=\"w-full\" />\n    </RebornFormItem>\n    <RebornFormItem label=\"行程区间\" prop=\"tripRange\">\n      <RebornDatePicker v-model=\"formModel.tripRange\" type=\"daterange\" value-format=\"YYYY-MM-DD\" class=\"w-full\" />\n    </RebornFormItem>\n    <RebornFormItem>\n      <div class=\"flex gap-2\">\n        <RebornButton @click=\"submitForm\">校验并提交</RebornButton>\n        <RebornButton color=\"neutral\" variant=\"outlined\" @click=\"resetForm\">重置</RebornButton>\n      </div>\n    </RebornFormItem>\n  </RebornForm>\n  <DemoNote v-if=\"formResult\" tone=\"dimmed\">\n    <span class=\"font-mono text-xs\">{{ formResult }}</span>\n  </DemoNote>\n</template>\n"
+    },
+    {
+      "title": "Web 演示 · RebornDatePickerPlaygroundDemo",
+      "path": "app/components/reborn/examples/reborn-date-picker/RebornDatePickerPlaygroundDemo.vue",
+      "source": "demo",
+      "platform": "web",
+      "code": "<script setup lang=\"ts\">\n/**\n * 日期选择器演练场的预览区：只负责渲染选择器、回显绑定值和记录事件日志。\n * Playground 外壳、配置状态与控制面板留在 RebornDatePickerDemo.vue，文档站按那个文件抽取演练场标题。\n */\nimport type { DatePickerType } from \"~/components/reborn/ui/reborn-date-picker-panel/reborn-date-picker-panel.config\";\nimport type { datePickerColors, datePickerSizes, datePickerVariants } from \"~/components/reborn/ui/reborn-date-picker/reborn-date-picker.config\";\nimport type { DatePickerProps } from \"~/components/reborn/ui/reborn-date-picker/RebornDatePicker.vue\";\nimport { DemoNote } from \"#components\";\nimport RebornDatePicker from \"~/components/reborn/ui/reborn-date-picker/RebornDatePicker.vue\";\nimport { createHandlers, formatDisplay, useEventLog } from \"../_shared/date-demo-utils\";\n\n/** 演练场的外观与行为参数：由主演示文件持有，控制面板整体替换后经 config 传入 */\nexport interface DatePickerPlaygroundConfig {\n  type: DatePickerType;\n  size: (typeof datePickerSizes)[number];\n  color: (typeof datePickerColors)[number];\n  variant: (typeof datePickerVariants)[number];\n  activeType: \"fill\" | \"fillRound\" | \"outline\" | \"text\";\n  placeholder: string;\n  showArrow: boolean;\n  arrowAnimation: boolean;\n  clearable: boolean;\n  loading: boolean;\n  disabled: boolean;\n  collapseTags: boolean;\n  collapseTagsTooltip: boolean;\n  maxCollapseTags: number;\n  closeOn: \"mousedown\" | \"click\";\n  portal: boolean;\n  /** 是否显示快捷项；实际传给组件的列表见 shortcuts 属性 */\n  shortcuts: boolean;\n  shortcutPosition: \"left\" | \"right\";\n  showWeekNumber: boolean;\n  unlinkPanels: boolean;\n  singlePanel: boolean;\n  showToday: boolean;\n  highlightToday: boolean;\n}\n\ninterface Props {\n  /** 演练场当前配置，只读 */\n  config: DatePickerPlaygroundConfig;\n  /** 按选择类型推导的 value-format */\n  valueFormat: string;\n  /** 当前类型适用的快捷项；未开启或类型不支持时为空数组 */\n  shortcuts: NonNullable<DatePickerProps[\"shortcuts\"]>;\n}\ndefineProps<Props>();\n\n/** 绑定值：切换类型与重置由主文件处理，这里只把选择结果写回 */\nconst value = defineModel<string | string[] | null>(\"value\", { required: true });\n\n/** 演练场事件日志：展开、收起与提交会连着抛好几个事件，保留最近 5 条，足够看清一次展开到收起的完整顺序 */\nconst { logs: playgroundLogs, push: logPlayground } = useEventLog(5);\n\n/** 演练场的事件监听 */\nconst playgroundHandlers = createHandlers(logPlayground);\n</script>\n\n<template>\n  <div class=\"flex w-full max-w-md flex-col gap-4 pb-40\">\n    <RebornDatePicker\n      v-model=\"value\"\n      :type=\"config.type\"\n      :value-format=\"valueFormat\"\n      :size=\"config.size\"\n      :color=\"config.color\"\n      :variant=\"config.variant\"\n      :active-type=\"config.activeType\"\n      :placeholder=\"config.placeholder || undefined\"\n      :show-arrow=\"config.showArrow\"\n      :arrow-animation=\"config.arrowAnimation\"\n      :clearable=\"config.clearable\"\n      :loading=\"config.loading\"\n      :disabled=\"config.disabled\"\n      :collapse-tags=\"config.collapseTags\"\n      :collapse-tags-tooltip=\"config.collapseTagsTooltip\"\n      :max-collapse-tags=\"config.maxCollapseTags\"\n      :close-on=\"config.closeOn\"\n      :portal=\"config.portal\"\n      :shortcuts=\"shortcuts\"\n      :shortcut-position=\"config.shortcutPosition\"\n      :show-week-number=\"config.showWeekNumber\"\n      :unlink-panels=\"config.unlinkPanels\"\n      :single-panel=\"config.singlePanel\"\n      :show-today=\"config.showToday\"\n      :highlight-today=\"config.highlightToday\"\n      @change=\"playgroundHandlers.onChange\"\n      @visible-change=\"playgroundHandlers.onVisibleChange\"\n      @calendar-change=\"playgroundHandlers.onCalendarChange\"\n      @panel-change=\"playgroundHandlers.onPanelChange\"\n      @clear=\"playgroundHandlers.onClear\"\n      @remove-tag=\"playgroundHandlers.onRemoveTag\"\n    />\n    <DemoNote tone=\"dimmed\">\n      当前绑定值：<code class=\"break-all\">{{ formatDisplay(value) }}</code>\n    </DemoNote>\n    <ul class=\"flex flex-col gap-1 font-mono text-xs\">\n      <li v-for=\"log in playgroundLogs\" :key=\"log.id\" class=\"text-gray-7 break-all\">\n        <span class=\"text-primary\">{{ log.name }}</span>\n        {{ log.detail }}\n      </li>\n      <li v-if=\"!playgroundLogs.length\" class=\"text-gray-5\">\n        展开下拉、选择日期或清空，这里会按时间倒序列出触发的事件\n      </li>\n    </ul>\n  </div>\n</template>\n"
+    },
+    {
+      "title": "UniApp 演示",
+      "path": "packages/uniapp-project/src/pages/reborn-date-picker/RebornDatePickerDemo.vue",
+      "source": "demo",
+      "platform": "uniapp",
+      "code": "<script setup lang=\"ts\">\nimport type { DatePickerShortcut } from '@/components/reborn-date-picker/types'\nimport { ref, shallowRef } from 'vue'\nimport RebornButton from '@/components/reborn-button/RebornButton.vue'\nimport RebornCard from '@/components/reborn-card/RebornCard.vue'\nimport { datePickerColors, datePickerSizes } from '@/components/reborn-date-picker/reborn-date-picker.config'\nimport RebornDatePicker from '@/components/reborn-date-picker/RebornDatePicker.vue'\nimport RebornPage from '@/components/reborn-page/RebornPage.vue'\nimport RebornText from '@/components/reborn-text/RebornText.vue'\nimport RebornRadio from '@/components/reborn-radio/RebornRadio.vue'\nimport RebornRadioGroup from '@/components/reborn-radio/RebornRadioGroup.vue'\n\n// 1. 基础用法\n\n// 2. 固定开始、结束日期\nconst date2 = shallowRef('')\n\n// 3. 自定义触发器\nconst date3 = shallowRef('')\nconst datePickerRef3 = ref<InstanceType<typeof RebornDatePicker> | null>(null)\nconst currentSize = shallowRef<typeof datePickerSizes[number]>(datePickerSizes[0])\nconst currentColor = shallowRef<typeof datePickerColors[number]>(datePickerColors[0])\n\nfunction openDatePicker3() {\n    datePickerRef3.value?.open((value: any) => {\n        uni.showToast({ title: `选择了: ${value}`, icon: 'none' })\n    })\n}\n\n// 4. 范围选择\nconst rangeValues = ref<string[]>([])\n\n// 5. 自定义快捷选项\nconst rangeValues2 = ref<string[]>([])\nconst customShortcuts: DatePickerShortcut[] = [\n    { label: '今天', value: ['2026-02-27', '2026-02-27'] },\n    { label: '本周', value: ['2026-02-23', '2026-02-27'] },\n    { label: '本月', value: ['2026-02-01', '2026-02-28'] },\n    { label: '上月', value: ['2026-01-01', '2026-01-31'] },\n    { label: '今年', value: ['2026-01-01', '2026-12-31'] },\n]\n\n// 6. 自定义日期格式\nconst dateFormat = shallowRef('')\nconst currentType = shallowRef<'year' | 'month' | 'date' | 'hour' | 'minute' | 'second'>('date')\nconst typeOptions = [\n    { label: 'YYYY', value: 'year' },\n    { label: 'YYYY-MM', value: 'month' },\n    { label: 'YYYY-MM-DD', value: 'date' },\n    { label: 'YYYY-MM-DD HH', value: 'hour' },\n    { label: 'YYYY-MM-DD HH:mm', value: 'minute' },\n    { label: 'YYYY-MM-DD HH:mm:ss', value: 'second' },\n] as const\n</script>\n\n<template>\n    <RebornPage title=\"日期选择器\" description=\"用于选择日期/时间的组件，支持范围选择和多种日期格式。\">\n        <RebornCard title=\"playground\">\n            <RebornText color=\"neutral\">\n                基础用法\n            </RebornText>\n            <RebornDatePicker v-model=\"dateFormat\" :type=\"currentType\" placeholder=\"选择日期\" :color=\"currentColor\"\n                :size=\"currentSize\" />\n            <RebornText color=\"neutral\">\n                插槽\n            </RebornText>\n            <RebornDatePicker v-model=\"dateFormat\" :type=\"currentType\" placeholder=\"选择日期\" :color=\"currentColor\"\n                :size=\"currentSize\">\n                <template #tag>\n                    <RebornText color=\"neutral\">\n                        插槽： {{ dateFormat }}\n                    </RebornText>\n                </template>\n            </RebornDatePicker>\n        </RebornCard>\n        <RebornCard title=\"配置\">\n            <RebornText color=\"neutral\">\n                尺寸：\n            </RebornText>\n            <RebornRadioGroup v-model=\"currentSize\">\n                <RebornRadio v-for=\"s in datePickerSizes\" :key=\"s\" :value=\"s\">\n                    {{ s }}\n                </RebornRadio>\n            </RebornRadioGroup>\n            <RebornText color=\"neutral\">\n                按钮颜色：\n            </RebornText>\n            <RebornRadioGroup v-model=\"currentColor\">\n                <RebornRadio v-for=\"item in datePickerColors\" :key=\"item\" :value=\"item\">\n                    <!-- radio 插槽完全接管渲染，做成纯色板选择 -->\n                    <template #radio=\"{ checked }\">\n                        <view class=\"relative flex size-[40rpx]\">\n                            <view v-if=\"checked\"\n                                class=\"absolute inline-flex h-full w-full animate-ping rounded-full opacity-75\"\n                                :class=\"`bg-${item}`\">\n                            </view>\n                            <view class=\"relative inline-flex size-[40rpx] rounded-full\" :class=\"`bg-${item}`\"></view>\n                        </view>\n                    </template>\n                </RebornRadio>\n            </RebornRadioGroup>\n            <RebornText color=\"neutral\">\n                格式化：\n            </RebornText>\n            <!-- 尺寸改由 Group 统一下发，单个 Radio 不再接收 size -->\n            <RebornRadioGroup v-model=\"currentType\" size=\"sm\">\n                <RebornRadio v-for=\"item in typeOptions\" :key=\"item.value\" :value=\"item.value\">\n                    {{ item.label }}\n                </RebornRadio>\n            </RebornRadioGroup>\n        </RebornCard>\n\n        <RebornCard title=\"固定开始、结束日期\" custom-class=\"space-y-4\">\n            <view class=\"text-xs text-gray-4\">\n                通过 start 和 end 属性限制可选日期范围。\n            </view>\n            <RebornDatePicker v-model=\"date2\" type=\"date\" start=\"2025-01-01\" end=\"2026-12-31\" :color=\"currentColor\"\n                placeholder=\"选择日期 (2025~2026)\" />\n            <view class=\"text-xs text-surface-500\">\n                当前值：{{ date2 || '未选择' }}\n            </view>\n        </RebornCard>\n\n        <RebornCard title=\"自定义触发器\" custom-class=\"space-y-4\">\n            <view class=\"text-xs text-gray-4\">\n                通过 show-trigger 隐藏默认触发器，使用 ref 调用 open 方法打开。\n            </view>\n            <RebornButton variant=\"outlined\" color=\"primary\" @tap=\"openDatePicker3\">\n                打开日期选择器\n            </RebornButton>\n            <RebornDatePicker ref=\"datePickerRef3\" v-model=\"date3\" type=\"date\" :show-trigger=\"false\"\n                :color=\"currentColor\" />\n            <view class=\"text-xs text-surface-500\">\n                当前值：{{ date3 || '未选择' }}\n            </view>\n        </RebornCard>\n\n        <!-- 4. 范围选择 -->\n        <RebornCard title=\"范围选择\" custom-class=\"space-y-4\">\n            <view class=\"text-xs text-gray-4\">\n                通过 rangeable 开启范围选择模式，使用 v-model:values 绑定范围值。\n            </view>\n            <RebornDatePicker v-model:values=\"rangeValues\" type=\"date\" :rangeable=\"true\" start-placeholder=\"开始日期\"\n                :color=\"currentColor\" end-placeholder=\"结束日期\" />\n            <view class=\"text-xs text-surface-500\">\n                当前范围：{{ rangeValues.length > 0 && rangeValues[0] ? `${rangeValues[0]} 至 ${rangeValues[1]}` : '未选择' }}\n            </view>\n        </RebornCard>\n\n        <!-- 5. 自定义快捷选项 -->\n        <RebornCard title=\"自定义快捷选项\" custom-class=\"space-y-4\">\n            <view class=\"text-xs text-gray-4\">\n                通过 shortcuts 属性自定义快捷选项，需配合 rangeable 使用。\n            </view>\n            <RebornDatePicker v-model:values=\"rangeValues2\" type=\"date\" :rangeable=\"true\" :shortcuts=\"customShortcuts\"\n                :color=\"currentColor\" :show-shortcuts=\"true\" />\n            <view class=\"text-xs text-surface-500\">\n                当前范围：{{ rangeValues2.length > 0 && rangeValues2[0] ? `${rangeValues2[0]} 至 ${rangeValues2[1]}` : '未选择'\n                }}\n            </view>\n        </RebornCard>\n\n    </RebornPage>\n</template>\n"
+    }
+  ],
+  "related": [
+    "reborn-badge",
+    "reborn-button",
+    "reborn-date-picker-panel",
+    "reborn-loading",
+    "reborn-picker-view",
+    "reborn-popup",
+    "reborn-select-trigger",
+    "reborn-text",
+    "reborn-tooltip"
+  ],
+  "whenToUse": [
+    "表单中的日期字段，需要与 reborn-select、reborn-input 保持同一套 variant 与 size。",
+    "按年、季度、月、周、日或日期时间选择（type），或选择区间（daterange、weekrange 等范围类型，起止相隔远时配 unlinkPanels）；weekrange 的起止自动吸附到整周的周日与周六。",
+    "一次勾选多个日期（dates/months/quarters/years），标签过多时用 collapseTags 折叠为 +N。",
+    "需要接入 RebornForm 校验：写回触发 change 校验，点击外部收起触发 blur 校验。",
+    "触发器左侧需要固定图标或文字（如「入住」），用 prefixIcon 或 #prefix 插槽，插槽优先。",
+    "未选值时希望面板打开在指定月份（如只能预约下个月），用 defaultValue 定位视图。",
+    "UniApp 端选日期或时间：type 决定滚轮精确到 year/month/date/hour/minute/second，rangeable 开启起止区间（值绑定在 v-model:values），内置「今天、近7天」等快捷项。"
+  ],
+  "whenNotToUse": [
+    "日期面板常驻页面、不需要触发器，改用 reborn-date-picker-panel。",
+    "只选时分秒，改用 reborn-time-picker。",
+    "UniApp 端滚轮要常驻页面或内容不是日期，改用 reborn-picker-view。"
+  ],
+  "pitfalls": [
+    "web 端的面板参数（type、valueFormat、start/end、disabledMethod、shortcuts、showWeekNumber、unlinkPanels、singlePanel、showToday、defaultValue）原样透传给 reborn-date-picker-panel；uniapp 端没有日期面板，这些面板类参数中只有 type、valueFormat、start/end、shortcuts 同名存在且含义不同。",
+    "写回时机随类型不同：单值与范围选定即写回并收起，多选每点一项写回且不收起，datetime/datetimerange 值完整时写回但不自动收起；范围只选了起点就收起会被丢弃。",
+    "清空后单值为 null、多选与范围为 []，不是空字符串；不传 valueFormat 时绑定值为 Date / Date[]。",
+    "样式分三条通道：triggerUi 管触发器盒子与浮层外壳（triggerUi.arrow 是浮层小箭头，不是尾部日历图标），panelUi 原样透传给面板，ui 管页头页脚与多选标签。",
+    "web 端原生属性透传到触发器根节点：id、style、data-*、aria-* 与未声明事件都落在 RebornSelectTrigger 的根元素上并随父级更新，宽度可直接用 style 或 class 设置；clear() 通过实例调用时不检查 disabled。",
+    "defaultValue 不是初始值：只决定未选值时面板展示哪个月，不写入 v-model；绑定值已有日期时被忽略，需要预填值请直接给 v-model 赋值。",
+    "两端 type 取值不通用：daterange、dates 等只在 web 有效，hour/minute/second 只在 uniapp 有效；uniapp 端选范围要开 rangeable 并用 v-model:values 绑定、监听 range-change，不是 v-model 数组。",
+    "uniapp 端只在点「确定」或清空时写回，拨滚轮、点快捷项不写回；绑定值始终是字符串，清空为空字符串（单值）或 []（范围）。",
+    "uniapp 端由 reborn-select-date 改名而来：导入路径改为 components/reborn-date-picker/RebornDatePicker.vue，labelFormat 改名为 format；ui.wrapper 与 ui.popupOp 是预留键，写入不生效。"
+  ],
+  "dependencies": [
+    "@weapp-tailwindcss/merge-v3",
+    "@weapp-tailwindcss/variants-v3",
+    "clsx",
+    "lodash-es",
+    "tailwind-merge",
+    "tailwind-variants"
+  ],
+  "install": {
+    "cli": "npx reborn-ui@latest add reborn-date-picker"
+  },
+  "sourceRefs": {
+    "web": [
+      "app/components/reborn/ui/reborn-date-picker/RebornDatePicker.vue",
+      "app/components/reborn/ui/reborn-date-picker/index.ts",
+      "app/components/reborn/ui/reborn-date-picker/reborn-date-picker.config.ts",
+      "app/components/reborn/ui/reborn-date-picker/reborn-date-picker.input.ts"
+    ],
+    "uniapp": [
+      "packages/uniapp-project/src/components/reborn-date-picker/RebornDatePicker.vue",
+      "packages/uniapp-project/src/components/reborn-date-picker/reborn-date-picker.config.ts",
+      "packages/uniapp-project/src/components/reborn-date-picker/types.ts"
+    ]
+  },
+  "docPath": "content/2.components/input-and-forms/reborn-date-picker.md",
+  "_meta": {
+    "contentHash": "990567fba3ae7643cc4e81d31a6878ea4a2520b6",
+    "hasOverride": true,
+    "extractors": {
+      "web": "ok",
+      "uniapp": "ok",
+      "docs": "found"
+    }
+  }
+}

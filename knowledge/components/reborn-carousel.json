@@ -1,0 +1,331 @@
+{
+  "$schema": "../schema/component.schema.json",
+  "id": "reborn-carousel",
+  "title": "Carousel 走马灯",
+  "description": "用于循环展示多个内容项的轮播组件，支持多项显示、卡片模式与纵向布局，仅 web 端。",
+  "category": "navigation",
+  "tags": [
+    "css",
+    "tailwind",
+    "carousel",
+    "slider",
+    "motion"
+  ],
+  "platforms": [
+    "web"
+  ],
+  "props": [
+    {
+      "name": "slidesPerView",
+      "type": "number | \"auto\"",
+      "required": false,
+      "description": "每屏数量，默认 1；数字至少为 1，支持小数或 auto。",
+      "default": "undefined"
+    },
+    {
+      "name": "slidesPerview",
+      "type": "number | \"auto\"",
+      "required": false,
+      "description": "每屏可见的幻灯片数量，或指定为 'auto' 根据内容内在尺寸决定",
+      "default": "1"
+    },
+    {
+      "name": "spaceBetween",
+      "type": "number",
+      "required": false,
+      "description": "幻灯片之间的横向/纵向间距 (px)，平面单项占满视口时为零。",
+      "default": "0"
+    },
+    {
+      "name": "centeredSlides",
+      "type": "boolean",
+      "required": false,
+      "description": "是否将当前活动的幻灯片居中对齐展示",
+      "default": "false"
+    },
+    {
+      "name": "loop",
+      "type": "boolean",
+      "required": false,
+      "description": "是否开启无限循环无缝无障碍滚动",
+      "default": "false"
+    },
+    {
+      "name": "autoplay",
+      "type": "boolean | CarouselAutoplay",
+      "required": false,
+      "description": "是否自动播放：可直接传布尔值，或传包含 delay 时延的配置对象",
+      "default": "false"
+    },
+    {
+      "name": "pagination",
+      "type": "CarouselPagination | null",
+      "required": false,
+      "description": "分页器配置对象，为 null 时不显示任何分页元素",
+      "default": "null"
+    },
+    {
+      "name": "trigger",
+      "type": "CarouselTrigger",
+      "required": false,
+      "description": "指示器交互触发方式 (鼠标 hover 或鼠标 click)",
+      "default": "\"hover\""
+    },
+    {
+      "name": "indicatorPosition",
+      "type": "CarouselIndicatorPosition",
+      "required": false,
+      "description": "分页指示器在布局中的摆放位置",
+      "default": "\"inside\""
+    },
+    {
+      "name": "arrow",
+      "type": "CarouselArrowMode",
+      "required": false,
+      "description": "控制箭头的显隐交互模式",
+      "default": "\"hover\""
+    },
+    {
+      "name": "motionBlur",
+      "type": "boolean",
+      "required": false,
+      "description": "在滑动转场动画期间是否启用动态的高级运动模糊视觉特效",
+      "default": "false"
+    },
+    {
+      "name": "height",
+      "type": "string | number",
+      "required": false,
+      "description": "轮播图主体容器的外观高度",
+      "default": "\"auto\""
+    },
+    {
+      "name": "type",
+      "type": "CarouselType",
+      "required": false,
+      "description": "轮播图结构展现风格：'default' 标准平面 | 'card' 3D卡片堆叠",
+      "default": "\"default\""
+    },
+    {
+      "name": "direction",
+      "type": "CarouselDirection",
+      "required": false,
+      "description": "转场滚动的主轴轴线方向 (水平或垂直)",
+      "default": "\"horizontal\""
+    },
+    {
+      "name": "initialSlide",
+      "type": "number",
+      "required": false,
+      "description": "初始加载时首先渲染定位在第几张幻灯片 (从 0 开始计数)",
+      "default": "0"
+    },
+    {
+      "name": "breakpoints",
+      "type": "Record<number, RebornCarouselBreakpoint>",
+      "required": false,
+      "description": "响应式断点控制映射表，Key 为最小视口宽度 (px)，Value 为断点配置",
+      "default": "() => ({})"
+    },
+    {
+      "name": "grabCursor",
+      "type": "boolean",
+      "required": false,
+      "description": "当鼠标悬浮在轮播图区域时，是否展示为可抓取抓紧的手势光标",
+      "default": "false"
+    },
+    {
+      "name": "draggable",
+      "type": "boolean",
+      "required": false,
+      "description": "是否允许鼠标拖动；未传时跟随 grabCursor，触屏仍使用原生滚动。",
+      "default": "undefined"
+    },
+    {
+      "name": "keyboard",
+      "type": "boolean",
+      "required": false,
+      "description": "是否启用方向键及 Home / End 导航，默认 true。",
+      "default": "true"
+    },
+    {
+      "name": "autoSize",
+      "type": "boolean",
+      "required": false,
+      "description": "是否禁止强行将幻灯片等宽拉伸，完全使用其内在元素宽高尺寸",
+      "default": "false"
+    },
+    {
+      "name": "indicatorOffset",
+      "type": "number",
+      "required": false,
+      "description": "指示器相对于底边界或右边界的偏移间距 (px)，默认 8；progress 始终贴边，不受此参数影响。",
+      "default": "8"
+    },
+    {
+      "name": "thumbs",
+      "type": "CarouselThumbs | null",
+      "required": false,
+      "description": "底部或侧边联动缩略图面板的特定配置",
+      "default": "null"
+    },
+    {
+      "name": "color",
+      "type": "CarouselColor",
+      "required": false,
+      "description": "取对应色板第 6 阶，控制线段和圆点激活项悬停色、当前页文字悬停色、按钮激活色与进度条填充色。",
+      "default": "\"primary\""
+    },
+    {
+      "name": "class",
+      "type": "ClassValue",
+      "required": false,
+      "description": "自定义挂载在组件最外层根节点的 CSS 类名",
+      "default": "—"
+    },
+    {
+      "name": "ui",
+      "type": "CarouselUI",
+      "required": false,
+      "description": "组件内置各个细分 UI 元素块的样式类名覆盖集，支持高度定制化",
+      "default": "() => ({})"
+    },
+    {
+      "name": "modelValue",
+      "type": "number | null",
+      "required": false,
+      "description": "双向绑定值",
+      "vModel": true,
+      "default": "null"
+    }
+  ],
+  "events": [
+    {
+      "name": "change",
+      "payload": "(e: \"change\", value: number): void;",
+      "description": "幻灯片当前活动索引发生实质性改变时触发此事件"
+    },
+    {
+      "name": "update:modelValue",
+      "description": "modelValue 变化时触发（v-model 同步）"
+    }
+  ],
+  "slots": [
+    {
+      "name": "default",
+      "props": "() => VNode[]",
+      "description": "每个有效直接子节点为一项，Fragment 展开，注释与空文本忽略。"
+    },
+    {
+      "name": "prev",
+      "props": "(props: { prev: () => void; disabled: boolean }) => VNode[]",
+      "description": "替换上一项按钮；需自行应用 disabled。"
+    },
+    {
+      "name": "next",
+      "props": "(props: { next: () => void; disabled: boolean }) => VNode[]",
+      "description": "替换下一项按钮；需自行应用 disabled。"
+    },
+    {
+      "name": "indicators",
+      "props": "(props: { activeIndex: number; count: number; goTo: (index: number) => void }) => VNode[]",
+      "description": "替换默认分页；仍需 pagination 非空、位置非 none、display 非 never；hover 显隐同样生效。"
+    }
+  ],
+  "exposes": [
+    {
+      "name": "next",
+      "description": "平滑滚动切换到下一张：loop 下可从末张无缝回到首张，非 loop 已在末张时无操作；触发 change 并重置自动播放计时"
+    },
+    {
+      "name": "prev",
+      "description": "平滑滚动切换到上一张：loop 下可从首张无缝回到末张，非 loop 已在首张时无操作；触发 change 并重置自动播放计时"
+    },
+    {
+      "name": "goTo",
+      "description": "goTo(index)：带平滑滚动动画跳转到指定索引（从 0 起，loop 下越界自动取模），同步 v-model、触发 change 并重置自动播放计时"
+    },
+    {
+      "name": "pause",
+      "description": "暂停自动播放，直到调用 resume。"
+    },
+    {
+      "name": "resume",
+      "description": "恢复自动播放，仍遵循暂停条件。"
+    },
+    {
+      "name": "activeIndex",
+      "description": "当前真实索引，只读。"
+    },
+    {
+      "name": "isPlaying",
+      "description": "自动播放计时器是否正在运行，只读。"
+    }
+  ],
+  "examples": [
+    {
+      "title": "Web 演示",
+      "path": "app/components/reborn/examples/reborn-carousel/RebornCarouselDemo.vue",
+      "source": "demo",
+      "platform": "web",
+      "code": "<script setup lang=\"ts\">\nimport type { PlaygroundControlGroup } from \"~/components/common/play-ground/Playground.vue\";\nimport type { CarouselArrowMode, CarouselColor, CarouselDirection, CarouselExpose, CarouselIndicatorDisplayMode, CarouselIndicatorPosition, CarouselPagination, CarouselThumbsPosition, CarouselTrigger, CarouselType } from \"~/components/reborn/ui/reborn-carousel/types\";\nimport { DemoNote, DemoSection, Icon, Playground } from \"#components\";\nimport { computed, ref, shallowRef, useTemplateRef } from \"vue\";\nimport RebornButton from \"~/components/reborn/ui/reborn-button/RebornButton.vue\";\nimport { carouselArrowModes, carouselColors, carouselDirections, carouselIndicatorDisplayModes, carouselIndicatorPositions, carouselIndicatorTypes, carouselTriggers, carouselTypes } from \"~/components/reborn/ui/reborn-carousel/reborn-carousel.config\";\nimport RebornCarousel from \"~/components/reborn/ui/reborn-carousel/RebornCarousel.vue\";\nimport HeroBanner from \"./components/HeroBanner.vue\";\n\n// ─── 交互演练场 ─────────────────────────────────────────────────\n/** 演练场默认状态，与组件的独立参数轴对应。 */\nconst defaultState = {\n  slidesPerView: 1 as number | \"auto\",\n  spaceBetween: 16,\n  direction: \"horizontal\" as CarouselDirection,\n  type: \"default\" as CarouselType,\n  arrow: \"hover\" as CarouselArrowMode,\n  indicatorPosition: \"inside\" as CarouselIndicatorPosition,\n  paginationType: \"line\" as NonNullable<CarouselPagination[\"type\"]>,\n  trigger: \"hover\" as CarouselTrigger,\n  indicatorBackground: true,\n  paginationDisplay: \"always\" as CarouselIndicatorDisplayMode,\n  paginationClickable: true,\n  color: \"primary\" as CarouselColor,\n  autoplay: false,\n  delay: 3000,\n  pauseOnHover: true,\n  pauseOnFocus: true,\n  loop: true,\n  centeredSlides: false,\n  motionBlur: false,\n  autoSize: false,\n  grabCursor: true,\n  draggable: true,\n  keyboard: true,\n  indicatorOffset: 8,\n  showThumbs: false,\n  thumbsPosition: \"bottom\" as CarouselThumbsPosition,\n  thumbsArrow: \"hover\" as CarouselArrowMode,\n  thumbsLoop: false,\n};\nconst state = ref({ ...defaultState });\n/** 当前索引和事件回显。 */\nconst activeIndex = shallowRef(0);\nconst lastEvent = shallowRef(\"尚未切换\");\nconst changeCount = shallowRef(0);\nconst previewController = useTemplateRef<CarouselExpose>(\"previewController\");\n/** 仅统计真实切换事件，外部重置模型不冒充组件事件。 */\nfunction onChange(index: number) {\n  changeCount.value++;\n  lastEvent.value = `change：第 ${index + 1} 项（索引 ${index}）`;\n}\n/** 重置参数、索引和交互反馈。 */\nfunction resetState() {\n  state.value = { ...defaultState };\n  activeIndex.value = 0;\n  lastEvent.value = \"尚未切换\";\n  changeCount.value = 0;\n}\n/** 预设均从默认配置开始，避免先前场景的参数混入。 */\nconst presets: { label: string; props: Partial<typeof defaultState> }[] = [\n  { label: \"基础轮播\", props: {} },\n  {\n    label: \"悬停指示\",\n    props: { paginationDisplay: \"hover\", paginationType: \"dot\", trigger: \"click\", indicatorPosition: \"outside\" },\n  },\n  { label: \"纵向浏览\", props: { direction: \"vertical\", paginationType: \"button\", arrow: \"always\", trigger: \"click\" } },\n  {\n    label: \"多项卡片\",\n    props: {\n      slidesPerView: 2,\n      type: \"card\",\n      centeredSlides: true,\n      paginationType: \"fraction\",\n      indicatorPosition: \"outside\",\n      arrow: \"always\",\n    },\n  },\n];\n/** 应用快捷预设并回到首项。 */\nfunction applyPreset(preset: (typeof presets)[number]) {\n  resetState();\n  state.value = { ...defaultState, ...preset.props };\n  lastEvent.value = `已应用：${preset.label}`;\n}\n/** 不显示分页时收起无效控件，保留配置值以便再次开启。 */\nfunction isPaginationHidden(config: Record<string, unknown>) {\n  return config.indicatorPosition === \"none\" || config.paginationDisplay === \"never\";\n}\n/** 配置枚举同时供组件类型和演练场选项使用。 */\nconst options = (values: readonly string[]) => values.map((value) => ({ label: value, value }));\nconst controls: PlaygroundControlGroup[] = [\n  {\n    title: \"布局\",\n    children: [\n      {\n        label: \"每屏数量\",\n        key: \"slidesPerView\",\n        component: \"select\" as const,\n        defaultValue: 1,\n        props: { options: [1, 2, 3, \"auto\"].map((value) => ({ label: String(value), value })) },\n      },\n      {\n        label: \"多项 / 卡片间距（px）\",\n        key: \"spaceBetween\",\n        component: \"slider\" as const,\n        defaultValue: 16,\n        props: { min: 0, max: 48, step: 4 },\n        hide: (_value, config) => config.slidesPerView === 1 && config.type === \"default\" && !config.autoSize,\n      },\n      {\n        label: \"方向\",\n        key: \"direction\",\n        component: \"select\" as const,\n        defaultValue: \"horizontal\",\n        props: { options: options(carouselDirections) },\n      },\n      {\n        label: \"模式\",\n        key: \"type\",\n        component: \"select\" as const,\n        defaultValue: \"default\",\n        props: { options: options(carouselTypes) },\n      },\n      { label: \"居中\", key: \"centeredSlides\", component: \"checkbox\" as const, defaultValue: false },\n      { label: \"内容决定尺寸\", key: \"autoSize\", component: \"checkbox\" as const, defaultValue: false },\n      { label: \"动态模糊\", key: \"motionBlur\", component: \"checkbox\" as const, defaultValue: false },\n    ],\n  },\n  {\n    title: \"指示器\",\n    children: [\n      {\n        label: \"指示器位置\",\n        key: \"indicatorPosition\",\n        component: \"select\" as const,\n        defaultValue: \"inside\",\n        props: { options: options(carouselIndicatorPositions) },\n      },\n      {\n        label: \"显示模式\",\n        key: \"paginationDisplay\",\n        component: \"select\",\n        defaultValue: \"always\",\n        props: { options: options(carouselIndicatorDisplayModes) },\n        hide: (_value, config) => config.indicatorPosition === \"none\",\n      },\n      {\n        label: \"指示器类型\",\n        key: \"paginationType\",\n        component: \"select\" as const,\n        defaultValue: \"line\",\n        props: { options: options(carouselIndicatorTypes) },\n        hide: (_value, config) => isPaginationHidden(config),\n      },\n      {\n        label: \"指示器背景\",\n        key: \"indicatorBackground\",\n        component: \"checkbox\" as const,\n        defaultValue: true,\n        hide: (_value, config) => isPaginationHidden(config) || config.paginationType === \"progress\",\n      },\n      {\n        label: \"允许指示器切换\",\n        key: \"paginationClickable\",\n        component: \"checkbox\",\n        defaultValue: true,\n        hide: (_value, config) =>\n          isPaginationHidden(config) || [\"progress\", \"fraction\"].includes(config.paginationType),\n      },\n      {\n        label: \"指示器触发\",\n        key: \"trigger\",\n        component: \"select\" as const,\n        defaultValue: \"hover\",\n        props: { options: options(carouselTriggers) },\n        hide: (_value, config) =>\n          isPaginationHidden(config) ||\n          !config.paginationClickable ||\n          [\"progress\", \"fraction\"].includes(config.paginationType),\n      },\n      {\n        label: \"指示器偏移（px）\",\n        key: \"indicatorOffset\",\n        component: \"slider\" as const,\n        defaultValue: 8,\n        props: { min: 0, max: 48, step: 4 },\n        hide: (_value, config) => isPaginationHidden(config) || config.paginationType === \"progress\",\n      },\n      {\n        label: \"配色\",\n        key: \"color\",\n        component: \"select\" as const,\n        defaultValue: \"primary\",\n        props: { options: options(carouselColors) },\n        hide: (_value, config) => isPaginationHidden(config),\n      },\n    ],\n  },\n  {\n    title: \"操作\",\n    children: [\n      {\n        label: \"箭头\",\n        key: \"arrow\",\n        component: \"select\" as const,\n        defaultValue: \"hover\",\n        props: { options: options(carouselArrowModes) },\n      },\n      { label: \"循环\", key: \"loop\", component: \"checkbox\" as const, defaultValue: true },\n      { label: \"鼠标拖动\", key: \"draggable\", component: \"checkbox\" as const, defaultValue: true },\n      { label: \"抓取光标\", key: \"grabCursor\", component: \"checkbox\" as const, defaultValue: true },\n      { label: \"键盘导航\", key: \"keyboard\", component: \"checkbox\" as const, defaultValue: true },\n    ],\n  },\n  {\n    title: \"自动播放\",\n    children: [\n      { label: \"自动播放\", key: \"autoplay\", component: \"checkbox\" as const, defaultValue: false },\n      {\n        label: \"间隔（ms）\",\n        key: \"delay\",\n        component: \"slider\" as const,\n        defaultValue: 3000,\n        props: { min: 800, max: 6000, step: 200 },\n        hide: (_value, config) => !config.autoplay,\n      },\n      {\n        label: \"悬停暂停\",\n        key: \"pauseOnHover\",\n        component: \"checkbox\" as const,\n        defaultValue: true,\n        hide: (_value, config) => !config.autoplay,\n      },\n      {\n        label: \"键盘聚焦暂停\",\n        key: \"pauseOnFocus\",\n        component: \"checkbox\" as const,\n        defaultValue: true,\n        hide: (_value, config) => !config.autoplay,\n      },\n    ],\n  },\n  {\n    title: \"缩略图\",\n    children: [\n      { label: \"显示缩略图\", key: \"showThumbs\", component: \"checkbox\" as const, defaultValue: false },\n      {\n        label: \"缩略图位置\",\n        key: \"thumbsPosition\",\n        component: \"select\" as const,\n        defaultValue: \"bottom\",\n        props: { options: options([\"top\", \"bottom\", \"left\", \"right\"]) },\n        hide: (_value, config) => !config.showThumbs,\n      },\n      {\n        label: \"缩略图箭头\",\n        key: \"thumbsArrow\",\n        component: \"select\" as const,\n        defaultValue: \"hover\",\n        props: { options: options(carouselArrowModes) },\n        hide: (_value, config) => !config.showThumbs,\n      },\n      {\n        label: \"缩略图循环\",\n        key: \"thumbsLoop\",\n        component: \"checkbox\" as const,\n        defaultValue: false,\n        hide: (_value, config) => !config.showThumbs,\n      },\n    ],\n  },\n];\n/** 全量参数绑定与代码展示共用一份配置，避免预览与复制代码不一致。 */\nconst previewProps = computed(() => {\n  const {\n    paginationType,\n    paginationDisplay,\n    paginationClickable,\n    indicatorBackground,\n    showThumbs,\n    thumbsPosition,\n    thumbsArrow,\n    thumbsLoop,\n    delay,\n    pauseOnHover,\n    pauseOnFocus,\n    ...rest\n  } = state.value;\n  return {\n    ...rest,\n    height: 280,\n    pagination: {\n      type: paginationType,\n      display: paginationDisplay,\n      clickable: paginationClickable,\n      indicatorBackground,\n    },\n    autoplay: rest.autoplay ? { delay, pauseOnHover, pauseOnFocus } : false,\n    thumbs: showThumbs ? { position: thumbsPosition, arrow: thumbsArrow, loop: thumbsLoop } : null,\n  };\n});\nconst carouselCode = computed(\n  () =>\n    `<RebornCarousel\\n  v-model=\"activeIndex\"\\n${Object.entries(previewProps.value)\n      .map(\n        ([key, value]) =>\n          `  :${key.replace(/[A-Z]/g, (letter) => `-${letter.toLowerCase()}`)}='${JSON.stringify(value)}'`,\n      )\n      .join(\n        \"\\n\",\n      )}\\n  @change=\"onChange\"\\n>\\n  <div v-for=\"item in items\" :key=\"item.id\">{{ item.title }}</div>\\n</RebornCarousel>`,\n);\n\n// ─── 场景演示状态 ───────────────────────────────────────────────\n/** 场景内容只承载轮播展示，不额外堆叠外围装饰。 */\nconst slides = [\n  { id: 1, title: \"城市漫步\", description: \"街区路线与沿途记录\", tone: \"bg-primary/15\" },\n  { id: 2, title: \"山间步道\", description: \"步道路线与出行准备\", tone: \"bg-success/15\" },\n  { id: 3, title: \"海边日落\", description: \"海岸路线与拍摄时间\", tone: \"bg-warning/15\" },\n  { id: 4, title: \"夜间观察\", description: \"观测地点与天气条件\", tone: \"bg-info/15\" },\n];\n/** 与组件的末个可视组边界一致，非循环多项显示不留下无效的下一张按钮。 */\nconst canPreviewNext = computed(\n  () =>\n    state.value.loop ||\n    activeIndex.value + (state.value.slidesPerView === \"auto\" ? 1 : state.value.slidesPerView) < slides.length,\n);\nconst controller = useTemplateRef<CarouselExpose>(\"controller\");\nconst controlledIndex = shallowRef(0);\nconst paginationBackground = shallowRef(true);\nconst paginationDisplay = shallowRef<CarouselIndicatorDisplayMode>(\"always\");\nconst paginationPositions = [\"inside\", \"outside\"] as const;\nconst paginationLabels: Record<NonNullable<CarouselPagination[\"type\"]>, string> = {\n  line: \"线性\",\n  dot: \"圆点\",\n  progress: \"进度条\",\n  fraction: \"文字\",\n  button: \"按钮\",\n};\nconst dynamicSlides = ref([...slides]);\nconst dynamicIndex = shallowRef(0);\n/** 数据增删演示，删除当前末项后由组件同步合法索引。 */\nfunction addSlide() {\n  const id = Math.max(0, ...dynamicSlides.value.map((slide) => slide.id)) + 1;\n  dynamicSlides.value.push({ id, title: `新增内容 ${id}`, description: \"运行时插槽更新\", tone: \"bg-secondary/15\" });\n}\nfunction removeSlide() {\n  dynamicSlides.value.pop();\n}\n</script>\n\n<template>\n  <div class=\"flex w-full min-w-0 flex-col\">\n    <Playground\n      v-model=\"state\"\n      :controls=\"controls\"\n      :code=\"carouselCode\"\n      component-name=\"RebornCarousel\"\n      title=\"交互演练场\"\n      description=\"按布局、指示器、操作、自动播放和缩略图分组调节参数，或应用预设，查看页码和切换事件。\"\n    >\n      <template #tag>\n        <RebornButton size=\"sm\" color=\"neutral\" variant=\"text\" @click=\"resetState\">重置</RebornButton>\n      </template>\n      <!-- 回显独占一行，避免文字更新挤压轮播宽度、移动指示器并打断切换动画。 -->\n      <div class=\"flex w-full min-w-0 flex-col gap-4\">\n        <div class=\"flex flex-wrap items-center gap-2\" role=\"group\" aria-label=\"快捷预设\">\n          <span class=\"text-sm text-gray-7\">快捷预设</span>\n          <RebornButton\n            v-for=\"preset in presets\"\n            :key=\"preset.label\"\n            size=\"sm\"\n            variant=\"outlined\"\n            color=\"neutral\"\n            @click=\"applyPreset(preset)\"\n          >\n            {{ preset.label }}\n          </RebornButton>\n        </div>\n        <RebornCarousel ref=\"previewController\" v-model=\"activeIndex\" v-bind=\"previewProps\" @change=\"onChange\">\n          <div\n            v-for=\"slide in slides\"\n            :key=\"slide.id\"\n            class=\"flex h-full w-full flex-col items-center justify-center gap-3 px-6 text-gray-9\"\n            :class=\"slide.tone\"\n          >\n            <h3 class=\"text-xl font-medium\">{{ slide.title }}</h3>\n            <p class=\"text-base\">{{ slide.description }}</p>\n          </div>\n        </RebornCarousel>\n        <div class=\"flex flex-wrap items-center gap-2\" role=\"group\" aria-label=\"轮播操作\">\n          <RebornButton\n            size=\"sm\"\n            variant=\"outlined\"\n            :disabled=\"!state.loop && activeIndex === 0\"\n            @click=\"previewController?.prev()\"\n          >\n            上一张\n          </RebornButton>\n          <RebornButton size=\"sm\" variant=\"outlined\" :disabled=\"!canPreviewNext\" @click=\"previewController?.next()\">\n            下一张\n          </RebornButton>\n          <span class=\"text-sm text-gray-7 tabular-nums\">第 {{ activeIndex + 1 }} / {{ slides.length }} 项</span>\n        </div>\n        <DemoNote tone=\"dimmed\" aria-live=\"polite\">\n          {{ lastEvent }}；当前索引 {{ activeIndex }}；已切换 {{ changeCount }} 次。\n        </DemoNote>\n      </div>\n    </Playground>\n\n    <DemoSection title=\"基础用法\">\n      <template #description>\n        <code>initialSlide</code>\n        设置首张；<code>loop</code>\n        开启循环，未传\n        <code>v-model</code>\n        时也生效。\n      </template>\n      <RebornCarousel :initial-slide=\"1\" :height=\"240\" loop arrow=\"always\" :pagination=\"{ type: 'dot' }\">\n        <div\n          v-for=\"slide in slides\"\n          :key=\"slide.id\"\n          class=\"flex h-full items-center justify-center text-xl text-gray-9\"\n          :class=\"slide.tone\"\n        >\n          {{ slide.title }}\n        </div>\n      </RebornCarousel>\n      <DemoNote tone=\"dimmed\">\n        单项占满视口时相邻内容无间距；多项显示、卡片或自动尺寸仍使用\n        <code>spaceBetween</code>。\n      </DemoNote>\n    </DemoSection>\n\n    <DemoSection title=\"分页指示器\">\n      <template #description>\n        <code>pagination.type</code>\n        选择五种内置分页；<code>pagination.indicatorBackground</code>\n        控制半透明底色、毛玻璃与阴影；<code>pagination.display</code>\n        独立控制显示模式，进度条也遵循该模式。\n      </template>\n      <div class=\"mb-4 flex flex-wrap gap-4\">\n        <div class=\"flex gap-2\" role=\"group\" aria-label=\"指示器背景\">\n          <RebornButton\n            size=\"sm\"\n            :variant=\"paginationBackground ? 'filled' : 'outlined'\"\n            :aria-pressed=\"paginationBackground\"\n            @click=\"paginationBackground = true\"\n          >\n            显示背景\n          </RebornButton>\n          <RebornButton\n            size=\"sm\"\n            :variant=\"paginationBackground ? 'outlined' : 'filled'\"\n            :aria-pressed=\"!paginationBackground\"\n            @click=\"paginationBackground = false\"\n          >\n            隐藏背景\n          </RebornButton>\n        </div>\n        <div class=\"flex flex-wrap gap-2\" role=\"group\" aria-label=\"指示器显示模式\">\n          <RebornButton\n            v-for=\"display in carouselIndicatorDisplayModes\"\n            :key=\"display\"\n            size=\"sm\"\n            :variant=\"paginationDisplay === display ? 'filled' : 'outlined'\"\n            :aria-pressed=\"paginationDisplay === display\"\n            @click=\"paginationDisplay = display\"\n          >\n            {{ display === \"hover\" ? \"悬停 / 聚焦显示\" : display === \"always\" ? \"始终显示\" : \"不显示\" }}\n          </RebornButton>\n        </div>\n      </div>\n      <div class=\"flex flex-col gap-6\">\n        <div v-for=\"paginationType in carouselIndicatorTypes\" :key=\"paginationType\" class=\"flex min-w-0 flex-col gap-3\">\n          <p class=\"text-base font-medium text-gray-9\">\n            {{ paginationLabels[paginationType] }}\n            <code>{{ paginationType }}</code>\n          </p>\n          <div class=\"grid gap-4 md:grid-cols-2\">\n            <div v-for=\"position in paginationPositions\" :key=\"position\" class=\"flex min-w-0 flex-col gap-2\">\n              <p class=\"text-sm text-gray-7\">{{ position === \"inside\" ? \"内部 inside\" : \"外部 outside\" }}</p>\n              <RebornCarousel\n                :height=\"180\"\n                loop\n                arrow=\"always\"\n                trigger=\"click\"\n                :indicator-position=\"position\"\n                :pagination=\"{\n                  type: paginationType,\n                  display: paginationDisplay,\n                  indicatorBackground: paginationBackground,\n                }\"\n              >\n                <div\n                  v-for=\"slide in slides\"\n                  :key=\"slide.id\"\n                  class=\"flex h-full items-center justify-center text-lg text-gray-9\"\n                  :class=\"slide.tone\"\n                >\n                  {{ slide.title }}\n                </div>\n              </RebornCarousel>\n            </div>\n          </div>\n        </div>\n      </div>\n      <DemoNote tone=\"dimmed\">\n        <code>indicatorOffset</code>\n        默认 8px；外层保留溢出以显示 outside 分页的背景投影，轮播内容仍独立裁剪。<code>line</code>\n        为 24×2px；<code>dot</code>\n        普通项 6×6px、激活项 10×6px 描边；<code>progress</code>\n        高 2px，表示当前第几张 / 总张数，不是自动播放倒计时。<code>color</code>\n        使用对应色板第 6 阶：<code>line</code>\n        /\n        <code>dot</code>\n        可点击的激活项悬停时变色，<code>button</code>\n        激活项与\n        <code>progress</code>\n        填充直接着色；<code>fraction</code>\n        仅当前页文字自身悬停时变色，容器悬停时总数加粗，宽度由文字撑开。<code>display=\"hover\"</code>\n        在悬停或键盘聚焦轮播时显示，无悬停能力的触屏设备保持显示；隐藏时不拦截点击，也不收起外部分页占位。\n      </DemoNote>\n    </DemoSection>\n\n    <DemoSection title=\"多项显示与响应式\">\n      <template #description>\n        <code>slidesPerView</code>\n        控制每屏数量，<code>breakpoints</code>\n        按窗口最小宽度覆盖布局。\n      </template>\n      <RebornCarousel\n        :slides-per-view=\"1\"\n        :space-between=\"16\"\n        :breakpoints=\"{ 640: { slidesPerView: 2 }, 1024: { slidesPerView: 3 } }\"\n        :height=\"200\"\n        arrow=\"always\"\n        :pagination=\"{ type: 'button' }\"\n        indicator-position=\"outside\"\n      >\n        <div\n          v-for=\"slide in slides\"\n          :key=\"slide.id\"\n          class=\"flex h-full items-center justify-center text-lg text-gray-9\"\n          :class=\"slide.tone\"\n        >\n          {{ slide.title }}\n        </div>\n      </RebornCarousel>\n      <DemoNote tone=\"dimmed\">\n        未到 640px 显示 1 项，640px 起显示 2 项，1024px 起显示 3 项；旧参数\n        <code>slidesPerview</code>\n        仍兼容。\n      </DemoNote>\n    </DemoSection>\n\n    <DemoSection title=\"卡片与自动尺寸\">\n      <template #description>\n        <code>type=\"card\"</code>\n        配合\n        <code>slidesPerView=\"auto\"</code>\n        和\n        <code>centeredSlides</code>，内容宽度决定卡片尺寸。\n      </template>\n      <RebornCarousel\n        type=\"card\"\n        slides-per-view=\"auto\"\n        :space-between=\"16\"\n        :height=\"260\"\n        centered-slides\n        loop\n        arrow=\"always\"\n        :pagination=\"{ type: 'line' }\"\n        indicator-position=\"outside\"\n      >\n        <div\n          v-for=\"slide in slides\"\n          :key=\"slide.id\"\n          class=\"flex h-full w-72 flex-col items-center justify-center gap-3 rounded-xl p-6 text-gray-9\"\n          :class=\"slide.tone\"\n        >\n          <h3 class=\"text-xl\">{{ slide.title }}</h3>\n          <p class=\"text-base\">{{ slide.description }}</p>\n        </div>\n      </RebornCarousel>\n    </DemoSection>\n\n    <DemoSection title=\"纵向轮播\">\n      <template #description>\n        <code>direction=\"vertical\"</code>\n        需要明确高度；方向键改为上下，箭头与指示器同步纵向排列。\n      </template>\n      <RebornCarousel direction=\"vertical\" :height=\"240\" arrow=\"always\" :pagination=\"{ type: 'button' }\" color=\"info\">\n        <div\n          v-for=\"slide in slides\"\n          :key=\"slide.id\"\n          class=\"flex h-full items-center justify-center text-xl text-gray-9\"\n          :class=\"slide.tone\"\n        >\n          {{ slide.title }}\n        </div>\n      </RebornCarousel>\n    </DemoSection>\n\n    <DemoSection title=\"缩略图导航\">\n      <template #description>\n        <code>thumbs</code>\n        支持四个方向；缩略图和主图共用索引，不会把页面滚动到主图位置。\n      </template>\n      <HeroBanner />\n    </DemoSection>\n\n    <DemoSection title=\"自动播放与实例控制\">\n      <template #description>\n        <code>autoplay</code>\n        可设置暂停策略，<code>pause()</code>\n        的暂停状态保持到调用\n        <code>resume()</code>。\n      </template>\n      <div class=\"mb-4 flex flex-wrap gap-2\">\n        <RebornButton size=\"sm\" variant=\"outlined\" @click=\"controller?.prev()\">上一项</RebornButton>\n        <RebornButton size=\"sm\" variant=\"outlined\" @click=\"controller?.next()\">下一项</RebornButton>\n        <RebornButton size=\"sm\" variant=\"text\" @click=\"controller?.goTo(0)\">回到首项</RebornButton>\n        <RebornButton size=\"sm\" variant=\"text\" @click=\"controlledIndex = slides.length - 1\">模型切到末项</RebornButton>\n        <RebornButton size=\"sm\" variant=\"text\" @click=\"controller?.pause()\">暂停</RebornButton>\n        <RebornButton size=\"sm\" @click=\"controller?.resume()\">继续</RebornButton>\n      </div>\n      <RebornCarousel\n        ref=\"controller\"\n        v-model=\"controlledIndex\"\n        loop\n        :autoplay=\"{ delay: 3000, pauseOnHover: true, pauseOnFocus: true }\"\n        :height=\"240\"\n        :pagination=\"{ type: 'fraction' }\"\n        indicator-position=\"outside\"\n      >\n        <div\n          v-for=\"slide in slides\"\n          :key=\"slide.id\"\n          class=\"flex h-full items-center justify-center text-xl text-gray-9\"\n          :class=\"slide.tone\"\n        >\n          {{ slide.title }}\n        </div>\n      </RebornCarousel>\n      <DemoNote tone=\"dimmed\">\n        当前索引 {{ controlledIndex }}；{{\n          controller?.isPlaying ? \"正在计时\" : \"已暂停\"\n        }}。页面隐藏时暂停，恢复可见后重新计时。\n      </DemoNote>\n    </DemoSection>\n\n    <DemoSection title=\"动态内容与交互\">\n      <template #description>\n        <code>draggable</code>\n        启用鼠标拖动，<code>keyboard</code>\n        控制键盘导航；动态删项后自动修正索引。\n      </template>\n      <div class=\"mb-4 flex gap-2\">\n        <RebornButton size=\"sm\" @click=\"addSlide\">增加内容</RebornButton>\n        <RebornButton size=\"sm\" variant=\"outlined\" :disabled=\"!dynamicSlides.length\" @click=\"removeSlide\">\n          删除末项\n        </RebornButton>\n      </div>\n      <RebornCarousel\n        v-model=\"dynamicIndex\"\n        loop\n        draggable\n        grab-cursor\n        :height=\"240\"\n        :pagination=\"{ type: 'button' }\"\n        arrow=\"always\"\n      >\n        <div\n          v-for=\"slide in dynamicSlides\"\n          :key=\"slide.id\"\n          class=\"flex h-full flex-col items-center justify-center gap-3 text-gray-9\"\n          :class=\"slide.tone\"\n        >\n          <h3 class=\"text-xl\">{{ slide.title }}</h3>\n          <input\n            class=\"rounded-md border border-gray-3 bg-gray-1 px-3 py-2 text-base\"\n            aria-label=\"轮播内输入框\"\n            placeholder=\"方向键在输入框内不切换轮播\"\n          >\n        </div>\n      </RebornCarousel>\n      <DemoNote tone=\"dimmed\">\n        {{ dynamicSlides.length }} 项，当前索引\n        {{ dynamicIndex }}；按住拖拽时保持跟手，松手后吸附到最近项；输入框保留原生编辑行为。\n      </DemoNote>\n    </DemoSection>\n\n    <DemoSection title=\"自定义导航与样式\">\n      <template #description>\n        <code>prev</code>\n        /\n        <code>next</code>\n        提供禁用状态，<code>indicators</code>\n        提供\n        <code>goTo</code>；<code>ui</code>\n        覆盖对应样式键。\n      </template>\n      <RebornCarousel\n        :height=\"240\"\n        arrow=\"always\"\n        :pagination=\"{ type: 'dot' }\"\n        indicator-position=\"outside\"\n        :indicator-offset=\"12\"\n        :ui=\"{ root: 'rounded-xl' }\"\n      >\n        <div\n          v-for=\"slide in slides\"\n          :key=\"slide.id\"\n          class=\"flex h-full items-center justify-center text-xl text-gray-9\"\n          :class=\"slide.tone\"\n        >\n          {{ slide.title }}\n        </div>\n        <template #prev=\"{ prev, disabled }\">\n          <RebornButton\n            circle\n            size=\"sm\"\n            class=\"pointer-events-auto\"\n            :disabled=\"disabled\"\n            aria-label=\"上一项\"\n            @click=\"prev\"\n          >\n            <Icon name=\"lucide:chevron-left\" />\n          </RebornButton>\n        </template>\n        <template #next=\"{ next, disabled }\">\n          <RebornButton\n            circle\n            size=\"sm\"\n            class=\"pointer-events-auto\"\n            :disabled=\"disabled\"\n            aria-label=\"下一项\"\n            @click=\"next\"\n          >\n            <Icon name=\"lucide:chevron-right\" />\n          </RebornButton>\n        </template>\n        <template #indicators=\"{ activeIndex: current, count, goTo }\">\n          <div class=\"flex gap-2\">\n            <RebornButton\n              v-for=\"index in count\"\n              :key=\"index\"\n              size=\"sm\"\n              :variant=\"current === index - 1 ? 'filled' : 'text'\"\n              :aria-current=\"current === index - 1 ? 'true' : undefined\"\n              @click=\"goTo(index - 1)\"\n            >\n              {{ index }}\n            </RebornButton>\n          </div>\n        </template>\n      </RebornCarousel>\n    </DemoSection>\n  </div>\n</template>\n"
+    }
+  ],
+  "related": [
+    "reborn-progress"
+  ],
+  "whenToUse": [
+    "首页 banner、图片或卡片列表的自动轮播展示。",
+    "需要一屏显示多项（slidesPerView）并按断点响应式调整的横向滑动列表。",
+    "需要缩略图联动（thumbs）、自定义箭头/指示器插槽的轮播场景。"
+  ],
+  "whenNotToUse": [
+    "uniapp 端不可用（仅 web），小程序轮播需另行实现。",
+    "苹果卡片风格的展示型轮播，改用 apple-card-carousel。",
+    "轮播用户评价文案，改用 testimonial-slider 或 animated-testimonials。"
+  ],
+  "pitfalls": [
+    "仅 web 端可用。",
+    "modelValue 可 v-model 双向绑定当前索引；modelValue 为空时才使用 initialSlide。",
+    "loop 与 autoplay 默认均为 false，需显式开启；arrow 默认 hover 显示。",
+    "height 默认 \"auto\" 随内容自适应；组件对外暴露 next/prev/goTo/pause/resume 方法可编程控制。",
+    "推荐 slidesPerView，旧 slidesPerview 继续兼容；同层新拼写优先，断点覆盖基础参数。",
+    "draggable 未传时跟随 grabCursor；pause() 持续暂停直到 resume()，导航不会解除暂停。",
+    "背景开关为 pagination.indicatorBackground，默认 true；line / dot 使用 p-2、bg-gray-1/80 和 ring-1 ring-inset ring-gray-10/15，其中 inside line 改用 bg-gray-10/30 和 ring-gray-1/20 衬托 gray-1 激活项；fraction / button 保留 bg-gray-1/30。四种分页开启背景时均使用 backdrop-blur-xl（24px 毛玻璃）、shadow-[0_0_8px_rgb(0_0_0/0.18)] 与胶囊圆角；阴影横纵偏移均为 0、模糊半径为 8px，均匀环绕四周。false 移除底色、内描边、毛玻璃与阴影，line / dot 留白恢复 p-0.5，不改变指示项配色。progress 不使用底板，自定义 indicators 插槽需自行控制。",
+    "显示模式为 pagination.display：hover / always / never，默认 always，不是顶层参数；hover 在轮播悬停或键盘聚焦时显示，无悬停能力的触屏设备保持可见，隐藏不拦截点击或焦点且保留外部分页占位。",
+    "pagination.display=never 不挂载内置分页或 indicators 插槽；pagination=null、indicatorPosition=none 或内容不足两项也隐藏分页。display 不改变索引、箭头、自动播放或 trigger 的切页方式。自定义 indicators 插槽仍受 display 和 ui.indicatorWrapper 控制。",
+    "pagination.type 支持 line、dot、progress、fraction、button；progress 复用 RebornProgress 显示当前第几张 / 总张数，不是自动播放倒计时，inside 贴顶、outside 紧贴底部，不受背景和 indicatorOffset 影响。",
+    "indicatorOffset 默认 8px，支持 0；横向内部控制底边距离、外部控制顶部间距，纵向控制右侧距离或外部左侧间距，progress 始终贴边。",
+    "wrapper 使用 overflow-visible 保留 outside 分页的背景投影，轮播内容由 root / viewport 独立裁剪；业务祖先若有 overflow-hidden，需预留投影空间或下移裁剪，增加 z-index 无法突破祖先裁剪。",
+    "color 通过 reborn-carousel.config.ts 的 Tailwind 类在 indicators 节点定义局部 --carousel-color，映射为 primary→brand-6、secondary→secondary-6、success→green-6、info→blue-6、warning→orange-6、error→red-6、neutral→gray-6，对应 --color-* 色板变量。line 可点击的激活项悬停时改变填充色，dot 可点击的激活项悬停时改变描边色；未悬停和未激活项仍使用原有灰阶，clickable=false 时不变色。button 激活项直接使用该色，容器仍为 px-2 py-1（左右 8px、上下 4px）；progress 经 currentColor 使用该色填充；fraction 仅当前页文字自身悬停时变色，容器悬停时总数加粗。",
+    "平面单项占满视口时忽略 spaceBetween；多项、card、autoSize 和自动宽度仍保留间距。",
+    "按住鼠标拖拽时不会提前归位克隆片，松手后才吸附、同步索引并完成循环归位。"
+  ],
+  "dependencies": [
+    "clsx",
+    "motion-v",
+    "tailwind-merge",
+    "tailwind-variants"
+  ],
+  "install": {
+    "cli": "npx reborn-ui@latest add reborn-carousel"
+  },
+  "sourceRefs": {
+    "web": [
+      "app/components/reborn/ui/reborn-carousel/RebornCarousel.vue",
+      "app/components/reborn/ui/reborn-carousel/index.ts",
+      "app/components/reborn/ui/reborn-carousel/reborn-carousel.config.ts",
+      "app/components/reborn/ui/reborn-carousel/types.ts"
+    ]
+  },
+  "docPath": "content/2.components/navigation/reborn-carousel.md",
+  "_meta": {
+    "contentHash": "1397c8c6befa16c35cb7380b99626647fd813cd3",
+    "hasOverride": true,
+    "extractors": {
+      "web": "ok",
+      "uniapp": "absent",
+      "docs": "found"
+    }
+  }
+}

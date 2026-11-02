@@ -1,0 +1,92 @@
+{
+  "$schema": "../schema/component.schema.json",
+  "id": "flip-card",
+  "title": "翻转卡片",
+  "description": "用于沿 X 或 Y 轴 180 度翻转、展示正反两面内容的卡片组件。",
+  "category": "data-display",
+  "tags": [
+    "css",
+    "tailwind",
+    "card"
+  ],
+  "platforms": [
+    "web"
+  ],
+  "props": [
+    {
+      "name": "rotate",
+      "type": "\"x\" | \"y\"",
+      "required": false,
+      "description": "传入希望沿哪个轴翻转。",
+      "default": "\"y\""
+    },
+    {
+      "name": "class",
+      "type": "string",
+      "required": false,
+      "description": "应用于组件的类名。"
+    }
+  ],
+  "events": [],
+  "slots": [
+    {
+      "name": "default",
+      "description": "前面显示的内容。"
+    },
+    {
+      "name": "back",
+      "description": "背面显示的内容。"
+    }
+  ],
+  "exposes": [],
+  "examples": [
+    {
+      "title": "Web 演示 · FlipCardDemo",
+      "path": "app/components/reborn/examples/flip-card/FlipCardDemo.vue",
+      "source": "demo",
+      "platform": "web",
+      "code": "<template>\n  <DemoSection\n    title=\"基础用法\"\n    description=\"默认沿 Y 轴翻转，默认插槽是正面、#back 插槽是背面；两面尺寸由父容器决定，需保持一致以免翻转时跳动。\"\n  >\n    <DemoBlock\n      layout=\"stack\"\n      align=\"center\"\n    >\n      <FlipCard>\n        <template #default>\n          <img\n            src=\"https://images.unsplash.com/photo-1525373698358-041e3a460346?w=600&auto=format&fit=crop&q=60&ixlib=rb-4.0.3\"\n            alt=\"卡片正面配图\"\n            class=\"rounded-3xl size-full object-cover\"\n          >\n          <div class=\"absolute bottom-4 left-4 text-xl font-bold text-white\">Reborn UI</div>\n        </template>\n        <template #back>\n          <div class=\"flex min-h-full flex-col gap-2 text-white\">\n            <h3 class=\"text-xl font-bold\">Reborn UI</h3>\n            <p class=\"border-current/30 mt-1 border-t py-4 text-base leading-normal font-medium\">\n              Reborn UI 提供了一套设计精良、可直接复用的动效组件，既包含团队自研的组件，也收录了社区贡献的实现。\n            </p>\n          </div>\n        </template>\n      </FlipCard>\n    </DemoBlock>\n  </DemoSection>\n</template>\n"
+    },
+    {
+      "title": "Web 演示 · FlipCardHorizontalDemo",
+      "path": "app/components/reborn/examples/flip-card/FlipCardHorizontalDemo.vue",
+      "source": "demo",
+      "platform": "web",
+      "code": "<template>\n  <div class=\"flex items-center justify-center\">\n    <FlipCard rotate=\"x\">\n      <template #default>\n        <img\n          src=\"https://images.unsplash.com/photo-1525373698358-041e3a460346?w=600&auto=format&fit=crop&q=60&ixlib=rb-4.0.3\"\n          alt=\"卡片正面配图\"\n          class=\"rounded-3xl size-full object-cover\"\n        >\n      </template>\n      <template #back>\n        <div class=\"flex min-h-full flex-col gap-2 text-white\">\n          <h3 class=\"text-xl font-bold\">Reborn UI</h3>\n          <p class=\"border-current/30 mt-1 border-t py-4 text-base leading-normal font-medium\">\n            把 rotate 设为 x 即可改为沿 X 轴上下翻转，其余用法与默认方向完全一致。\n          </p>\n        </div>\n      </template>\n    </FlipCard>\n  </div>\n</template>\n"
+    }
+  ],
+  "related": [],
+  "whenToUse": [
+    "正面放图片、背面放说明文字的双面信息卡。",
+    "团队成员、产品简介等需要翻面查看详情的卡片。"
+  ],
+  "whenNotToUse": [
+    "需要鼠标跟随的 3D 透视浮起，改用 card-3d。",
+    "文字悬停揭示效果，改用 text-reveal-card。"
+  ],
+  "pitfalls": [
+    "仅 web 端可用。",
+    "正面内容放默认插槽，背面内容放 back 插槽。",
+    "rotate 仅接受 \"x\" 或 \"y\"（默认 \"y\"），决定翻转轴向。"
+  ],
+  "dependencies": [],
+  "install": {
+    "cli": "npx reborn-ui@latest add flip-card"
+  },
+  "sourceRefs": {
+    "web": [
+      "app/components/reborn/ui/flip-card/FlipCard.vue",
+      "app/components/reborn/ui/flip-card/index.ts"
+    ]
+  },
+  "docPath": "content/2.components/cards/flip-card.md",
+  "_meta": {
+    "contentHash": "dbb38b0f4732cdb86d97b5cc8d93d84ce079054e",
+    "hasOverride": true,
+    "extractors": {
+      "web": "ok",
+      "uniapp": "absent",
+      "docs": "found"
+    }
+  }
+}

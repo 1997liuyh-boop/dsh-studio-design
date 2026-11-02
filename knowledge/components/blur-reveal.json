@@ -1,0 +1,106 @@
+{
+  "$schema": "../schema/component.schema.json",
+  "id": "blur-reveal",
+  "title": "模糊揭示",
+  "description": "用于让子元素依次从模糊状态淡入上移进场的揭示动画组件。",
+  "category": "effect",
+  "tags": [
+    "css",
+    "tailwind",
+    "magic-ui"
+  ],
+  "platforms": [
+    "web"
+  ],
+  "props": [
+    {
+      "name": "duration",
+      "type": "number",
+      "required": false,
+      "description": "模糊淡入动画的持续时间。",
+      "default": "1"
+    },
+    {
+      "name": "delay",
+      "type": "number",
+      "required": false,
+      "description": "子组件依次揭示的延迟。",
+      "default": "2"
+    },
+    {
+      "name": "blur",
+      "type": "string",
+      "required": false,
+      "description": "应用于子组件的模糊量。",
+      "default": "\"20px\""
+    },
+    {
+      "name": "yOffset",
+      "type": "number",
+      "required": false,
+      "description": "入场动画的垂直偏移距离。",
+      "default": "20"
+    },
+    {
+      "name": "class",
+      "type": "string",
+      "required": false,
+      "description": ""
+    }
+  ],
+  "events": [],
+  "slots": [
+    {
+      "name": "default",
+      "props": "() => VNode[]",
+      "description": "需要逐个模糊显现的内容，每个顶层节点各自做一次动画"
+    }
+  ],
+  "exposes": [],
+  "examples": [
+    {
+      "title": "Web 演示",
+      "path": "app/components/reborn/examples/blur-reveal/BlurRevealDemo.vue",
+      "source": "demo",
+      "platform": "web",
+      "code": "<template>\n  <DemoSection title=\"基础用法\">\n    <ClientOnly>\n      <BlurReveal\n        :delay=\"0.2\"\n        :duration=\"0.75\"\n        class=\"p-8\"\n      >\n        <h2 class=\"text-highlighted text-3xl font-bold tracking-tighter sm:text-5xl\">你好 👋</h2>\n        <span class=\"text-muted text-xl tracking-tighter text-pretty sm:text-3xl\">\n          最近怎么样？\n        </span>\n      </BlurReveal>\n    </ClientOnly>\n  </DemoSection>\n</template>\n"
+    }
+  ],
+  "related": [],
+  "whenToUse": [
+    "落地页标题与副标题依次模糊淡入的首屏动画。",
+    "多个子元素需要按顺序逐个进场的内容区块。",
+    "需要自定义模糊量（blur）与垂直偏移（yOffset）的入场效果。"
+  ],
+  "whenNotToUse": [
+    "需要色块滑开式的揭示效果，改用 box-reveal。",
+    "文字逐词淡入生成，改用 text-generate-effect。"
+  ],
+  "pitfalls": [
+    "仅 web 端可用，依赖 motion-v。",
+    "duration 与 delay 单位为秒（默认 1 和 2），delay 控制子元素间的依次揭示间隔。",
+    "子内容通过默认插槽传入，示例中外层包裹了 ClientOnly。"
+  ],
+  "dependencies": [
+    "motion-v"
+  ],
+  "install": {
+    "cli": "npx reborn-ui@latest add blur-reveal"
+  },
+  "sourceRefs": {
+    "web": [
+      "app/components/reborn/ui/blur-reveal/BlurReveal.vue",
+      "app/components/reborn/ui/blur-reveal/index.ts"
+    ]
+  },
+  "docPath": "content/2.components/text-animations/blur-reveal.md",
+  "_meta": {
+    "contentHash": "3005a1a4f15435036f3da8f5bc9c844eec58818e",
+    "hasOverride": true,
+    "extractors": {
+      "web": "ok",
+      "uniapp": "absent",
+      "docs": "found"
+    }
+  }
+}

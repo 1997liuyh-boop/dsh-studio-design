@@ -1,0 +1,171 @@
+{
+  "$schema": "../schema/component.schema.json",
+  "id": "reborn-chip",
+  "title": "Chip 角标",
+  "description": "用于在元素角标位置显示提示点或数字标记的组件，双端可用。",
+  "category": "basic",
+  "tags": [
+    "chip",
+    "dot",
+    "corner-mark",
+    "uniapp"
+  ],
+  "platforms": [
+    "web",
+    "uniapp"
+  ],
+  "props": [
+    {
+      "name": "color",
+      "type": "typeof chipColors[number]",
+      "required": false,
+      "description": "语义色：solid / textDot 用作底色，outline / textOutline 用作描边与文字色",
+      "default": "'primary'"
+    },
+    {
+      "name": "size",
+      "type": "typeof chipSizes[number]",
+      "required": false,
+      "description": "尺寸档位，各变体的具体尺寸不同：圆点 8~12rpx、圆环外径 16~32rpx、文字角标高 32~48rpx",
+      "default": "'md'"
+    },
+    {
+      "name": "variant",
+      "type": "ChipVariant",
+      "required": false,
+      "description": "视觉变体：solid 实心圆点、outline 空心圆环、textDot 实心文字角标、textOutline 描边文字角标。 不传时按 text 自动选择：有文本取 textDot，否则取 solid。"
+    },
+    {
+      "name": "text",
+      "type": "string | number",
+      "required": false,
+      "description": "角标文本，仅 textDot / textOutline 渲染；按真值判断，0 与空字符串都不显示"
+    },
+    {
+      "name": "position",
+      "type": "typeof chipPositions[number]",
+      "required": false,
+      "description": "角标吸附在宿主的哪个角",
+      "default": "'top-right'"
+    },
+    {
+      "name": "inset",
+      "type": "boolean",
+      "required": false,
+      "description": "为 true 时取消向外平移，角标整个落在宿主内部",
+      "default": "false"
+    },
+    {
+      "name": "standalone",
+      "type": "boolean",
+      "required": false,
+      "description": "只给角标节点追加 absolute，而角标节点本身已是 absolute，目前没有可见效果",
+      "default": "false"
+    },
+    {
+      "name": "customClass",
+      "type": "any",
+      "required": false,
+      "description": "追加到根元素的自定义类名"
+    },
+    {
+      "name": "show",
+      "type": "boolean",
+      "required": false,
+      "description": "双向绑定值",
+      "vModel": true,
+      "default": "undefined"
+    },
+    {
+      "name": "class",
+      "type": "ClassValue",
+      "required": false,
+      "description": "追加到根元素的自定义类名"
+    },
+    {
+      "name": "ui",
+      "type": "ChipUI",
+      "required": false,
+      "description": "按内部结构键（root/base/label）覆盖对应节点的样式类 可用键（从源码抽取，以此为准）——Web：base、label、root。"
+    }
+  ],
+  "events": [
+    {
+      "name": "update:show",
+      "description": "show 变化时触发（v-model 同步）",
+      "payload": "(value: boolean)"
+    }
+  ],
+  "slots": [
+    {
+      "name": "default",
+      "description": "宿主内容，角标以它的外框为定位基准。"
+    }
+  ],
+  "exposes": [],
+  "examples": [
+    {
+      "title": "Web 演示",
+      "path": "app/components/reborn/examples/reborn-chip/RebornChipDemo.vue",
+      "source": "demo",
+      "platform": "web",
+      "code": "<script setup lang=\"ts\">\n\nimport { DemoBlock, DemoNote, DemoSection, Icon, Playground, UAvatar } from \"#components\";\nimport { computed, shallowRef } from \"vue\";\nimport RebornButton from \"~/components/reborn/ui/reborn-button/RebornButton.vue\";\nimport { chipColors, chipPositions, chipSizes, chipVariants } from \"~/components/reborn/ui/reborn-chip/reborn-chip.config\";\nimport RebornChip from \"~/components/reborn/ui/reborn-chip/RebornChip.vue\";\nimport RebornRadio from \"~/components/reborn/ui/reborn-radio/RebornRadio.vue\";\nimport RebornRadioGroup from \"~/components/reborn/ui/reborn-radio/RebornRadioGroup.vue\";\n\n/**\n * 角标锚点占位样式：只描边不填充。\n * 角标必须挂在一个宿主元素上才看得出定位效果，这里用虚线框表示\"任意宿主\"，\n * 既说明了演示语义，又不会在画布上再叠一层背景。\n */\nconst anchorClass = \"border-default rounded-lg border border-dashed\";\n\n/** 渲染文本节点的变体，用于在矩阵里区分「圆点类」与「文字类」 */\nconst textVariants: string[] = [\"textDot\", \"textOutline\"];\n\n// ─── 交互演练场 ─────────────────────────────────────────────────\n\n/** 演练场默认状态 */\nconst defaultState: Record<string, any> = {\n  variant: \"textDot\",\n  color: \"primary\",\n  size: \"md\",\n  text: \"9\",\n  position: \"top-right\",\n  inset: false,\n  show: true,\n};\n\nconst state = shallowRef<Record<string, any>>({ ...defaultState });\n\n/** 重置演练场配置 */\nfunction resetState() {\n  state.value = { ...defaultState };\n}\n\n/** 演练场控制面板配置 */\nconst controls = [\n  {\n    title: \"基础属性\",\n    children: [\n      {\n        label: \"视觉变体\",\n        key: \"variant\",\n        component: \"select\" as const,\n        defaultValue: \"textDot\",\n        props: { options: chipVariants.map((v) => ({ label: v, value: v })) },\n      },\n      {\n        label: \"颜色主题\",\n        key: \"color\",\n        component: \"select\" as const,\n        defaultValue: \"primary\",\n        props: {\n          // Playground 的 select 走 RebornSelect，选项字段是 options（不是 items）\n          options: chipColors.map((c) => ({ label: c.charAt(0).toUpperCase() + c.slice(1), value: c })),\n        },\n      },\n      {\n        label: \"尺寸规格\",\n        key: \"size\",\n        component: \"select\" as const,\n        defaultValue: \"md\",\n        props: { options: chipSizes.map((s) => ({ label: s.toUpperCase(), value: s })) },\n      },\n      {\n        label: \"标签文本（仅 textDot / textOutline 显示）\",\n        key: \"text\",\n        component: \"input\" as const,\n        defaultValue: \"9\",\n      },\n    ],\n  },\n  {\n    title: \"布局与状态\",\n    children: [\n      {\n        label: \"显示位置\",\n        key: \"position\",\n        component: \"select\" as const,\n        defaultValue: \"top-right\",\n        props: { options: chipPositions.map((p) => ({ label: p, value: p })) },\n      },\n      {\n        label: \"内嵌模式\",\n        key: \"inset\",\n        component: \"checkbox\" as const,\n        defaultValue: false,\n      },\n      {\n        label: \"显示状态\",\n        key: \"show\",\n        component: \"checkbox\" as const,\n        defaultValue: true,\n      },\n    ],\n  },\n];\n\n/** 演练场右上角的传参明细：完整列出当前所有参数（含默认值） */\nconst chipCode = computed(() => {\n  const s = state.value;\n  const props: string[] = [\n    `variant=\"${s.variant}\"`,\n    `color=\"${s.color}\"`,\n    `size=\"${s.size}\"`,\n    `text=\"${s.text}\"`,\n    `position=\"${s.position}\"`,\n    `:inset=\"${s.inset}\"`,\n    `:show=\"${s.show}\"`,\n  ];\n  return `<RebornChip\\n  ${props.join(\"\\n  \")}\\n>\\n  <Icon name=\"lucide:bell\" />\\n</RebornChip>`;\n});\n\n// ─── 场景演示状态 ───────────────────────────────────────────────\n\n/** 位置与内嵌演示：分段按钮选中的角落，两个宿主共用，便于对比 inset 前后 */\nconst positionValue = shallowRef<(typeof chipPositions)[number]>(\"top-right\");\n\n/** 显隐控制演示：组件内部不会改写 show，由外部按钮切换 */\nconst hasUnread = shallowRef(true);\n</script>\n\n<template>\n  <div class=\"flex w-full min-w-0 flex-col\">\n    <Playground\n      v-model=\"state\"\n      :controls=\"controls\"\n      :code=\"chipCode\"\n      component-name=\"RebornChip\"\n      title=\"交互演练场\"\n      description=\"调节上方参数，实时查看角标在不同变体、语义色、尺寸与吸附位置下的表现。\"\n    >\n      <template #tag>\n        <RebornButton size=\"sm\" variant=\"soft\" color=\"neutral\" @click=\"resetState\">\n          <template #leading>\n            <Icon name=\"lucide:rotate-ccw\" size=\"12\" />\n          </template>\n          重置配置\n        </RebornButton>\n      </template>\n\n      <div class=\"flex flex-col items-center gap-6\">\n        <RebornChip\n          :variant=\"state.variant\"\n          :color=\"state.color\"\n          :size=\"state.size\"\n          :text=\"state.text\"\n          :position=\"state.position\"\n          :inset=\"state.inset\"\n          :show=\"state.show\"\n        >\n          <div :class=\"anchorClass\" class=\"text-dimmed flex size-24 items-center justify-center\">\n            <Icon name=\"lucide:bell\" class=\"size-8\" />\n          </div>\n        </RebornChip>\n        <DemoNote v-if=\"!textVariants.includes(state.variant)\" tone=\"dimmed\">\n          {{ state.variant }} 是纯图形角标，最大外径只有 16px，放不下文字，所以标签文本不显示。\n        </DemoNote>\n      </div>\n    </Playground>\n\n    <DemoSection title=\"基础用法\">\n      <template #description>\n        把宿主元素放进默认插槽，角标默认吸附在右上角。不传\n        <code>variant</code>\n        时按\n        <code>text</code>\n        自动选择：传了文本是\n        <code>textDot</code>\n        计数角标，不传是\n        <code>solid</code>\n        纯圆点。\n      </template>\n      <DemoBlock layout=\"row\" align=\"center\" class=\"gap-10\">\n        <RebornChip text=\"9\">\n          <div :class=\"anchorClass\" class=\"text-dimmed flex size-12 items-center justify-center\">\n            <Icon name=\"lucide:bell\" class=\"size-6\" />\n          </div>\n        </RebornChip>\n\n        <RebornChip text=\"99+\" size=\"lg\">\n          <div :class=\"anchorClass\" class=\"text-dimmed flex size-12 items-center justify-center\">\n            <Icon name=\"lucide:mail\" class=\"size-6\" />\n          </div>\n        </RebornChip>\n\n        <RebornChip>\n          <div :class=\"anchorClass\" class=\"text-dimmed flex size-12 items-center justify-center\">\n            <Icon name=\"lucide:message-circle\" class=\"size-6\" />\n          </div>\n        </RebornChip>\n      </DemoBlock>\n    </DemoSection>\n\n    <DemoSection title=\"变体：圆点、圆环与文字角标\">\n      <template #description>\n        <code>variant</code>\n        有四种取值：<code>solid</code>\n        实心圆点、<code>outline</code>\n        空心圆环只表达「有状态」；<code>textDot</code>\n        实心、<code>textOutline</code>\n        描边两种会渲染\n        <code>text</code>。描边类变体垫了纸面色底，宿主内容不会透过圆环空洞或衬在文字下面。\n      </template>\n      <DemoBlock layout=\"row\" align=\"end\" class=\"gap-10\">\n        <div v-for=\"v in chipVariants\" :key=\"v\" class=\"flex flex-col items-center gap-4\">\n          <RebornChip :variant=\"v\" color=\"error\" text=\"8\">\n            <div :class=\"anchorClass\" class=\"size-12\" />\n          </RebornChip>\n          <span class=\"text-dimmed text-xs font-medium\">{{ v }}</span>\n        </div>\n      </DemoBlock>\n    </DemoSection>\n\n    <DemoSection title=\"颜色：7 种语义色\">\n      <template #description>\n        <code>color</code>\n        统一取色阶的 6 阶：<code>solid</code>\n        /\n        <code>textDot</code>\n        用作底色，<code>outline</code>\n        /\n        <code>textOutline</code>\n        用作描边与文字色，默认\n        <code>primary</code>。按提醒的紧急程度选色，例如未读与告警用\n        <code>error</code>。\n      </template>\n      <DemoBlock layout=\"stack\">\n        <div class=\"w-full overflow-x-auto\">\n          <div class=\"grid min-w-max grid-cols-[7rem_repeat(7,4.5rem)] items-center gap-y-8\">\n            <span />\n            <span v-for=\"c in chipColors\" :key=\"c\" class=\"text-dimmed text-center text-xs font-medium\">{{ c }}</span>\n            <template v-for=\"v in chipVariants\" :key=\"v\">\n              <span class=\"text-dimmed text-xs font-medium\">{{ v }}</span>\n              <div v-for=\"c in chipColors\" :key=\"c\" class=\"flex justify-center\">\n                <RebornChip :variant=\"v\" :color=\"c\" text=\"8\">\n                  <div :class=\"anchorClass\" class=\"size-10\" />\n                </RebornChip>\n              </div>\n            </template>\n          </div>\n        </div>\n      </DemoBlock>\n    </DemoSection>\n\n    <DemoSection title=\"尺寸：三档\">\n      <template #description>\n        <code>size</code>\n        只有\n        <code>sm</code>\n        /\n        <code>md</code>\n        /\n        <code>lg</code>\n        三档，具体像素随变体不同：圆点直径 4 / 5 / 6px，圆环外径 8 / 12 / 16px，文字角标高 16 / 20 / 24px、字号比高度小\n        4px。文字超过一个字符时角标横向撑成胶囊，高度不变。\n      </template>\n      <DemoBlock layout=\"stack\">\n        <div class=\"w-full overflow-x-auto\">\n          <div class=\"grid min-w-max grid-cols-[7rem_repeat(3,6rem)] items-center gap-y-8\">\n            <span />\n            <span v-for=\"s in chipSizes\" :key=\"s\" class=\"text-dimmed text-center text-xs font-medium\">{{ s }}</span>\n            <template v-for=\"v in chipVariants\" :key=\"v\">\n              <span class=\"text-dimmed text-xs font-medium\">{{ v }}</span>\n              <div v-for=\"s in chipSizes\" :key=\"s\" class=\"flex justify-center\">\n                <RebornChip :variant=\"v\" :size=\"s\" color=\"error\" :text=\"textVariants.includes(v) ? '99+' : undefined\">\n                  <div :class=\"anchorClass\" class=\"size-12\" />\n                </RebornChip>\n              </div>\n            </template>\n          </div>\n        </div>\n      </DemoBlock>\n    </DemoSection>\n\n    <DemoSection title=\"位置与内嵌：position 与 inset\">\n      <template #description>\n        <code>position</code>\n        选择四角之一；默认角标中心压在宿主角上（向外平移半个自身），<code>inset</code>\n        取消平移，让角标整个落在宿主内部。\n      </template>\n      <DemoBlock layout=\"stack\" class=\"gap-6\">\n        <RebornRadioGroup v-model=\"positionValue\" type=\"button\">\n          <RebornRadio v-for=\"p in chipPositions\" :key=\"p\" :value=\"p\">\n            {{ p }}\n          </RebornRadio>\n        </RebornRadioGroup>\n        <!-- 角标默认向外平移半个自身，四周留出 px-3 / gap-6 的余量，切到下方两角时不压住说明文字 -->\n        <div class=\"flex flex-wrap items-end gap-x-16 gap-y-8 px-3\">\n          <div class=\"flex flex-col items-center gap-6\">\n            <RebornChip :position=\"positionValue\" color=\"error\" text=\"3\">\n              <div :class=\"anchorClass\" class=\"size-16\" />\n            </RebornChip>\n            <span class=\"text-dimmed text-xs font-medium\">默认 · 中心压在角上</span>\n          </div>\n          <div class=\"flex flex-col items-center gap-6\">\n            <RebornChip :position=\"positionValue\" color=\"success\" text=\"3\" inset>\n              <div :class=\"anchorClass\" class=\"size-16\" />\n            </RebornChip>\n            <span class=\"text-dimmed text-xs font-medium\">inset · 落在宿主内部</span>\n          </div>\n        </div>\n      </DemoBlock>\n    </DemoSection>\n\n    <DemoSection title=\"显隐控制：v-model:show\">\n      <template #description>\n        <code>show</code>\n        为\n        <code>false</code>\n        时不渲染角标节点，宿主内容不受影响；组件自身没有关闭交互，显隐完全由外部赋值驱动。\n      </template>\n      <DemoBlock layout=\"row\" align=\"center\" class=\"gap-10\">\n        <RebornChip v-model:show=\"hasUnread\" text=\"3\" color=\"error\">\n          <div :class=\"anchorClass\" class=\"text-dimmed flex size-12 items-center justify-center\">\n            <Icon name=\"lucide:inbox\" class=\"size-6\" />\n          </div>\n        </RebornChip>\n        <RebornButton size=\"sm\" color=\"neutral\" variant=\"outlined\" @click=\"hasUnread = !hasUnread\">\n          {{ hasUnread ? \"标为已读\" : \"模拟新消息\" }}\n        </RebornButton>\n      </DemoBlock>\n    </DemoSection>\n\n    <DemoSection\n      title=\"组合场景：在线状态、未读圆点与促销标\"\n      description=\"角标叠在头像、图标按钮与操作按钮上，分别表达在线状态、有未读和活动标记。\"\n    >\n      <DemoBlock layout=\"row\" align=\"center\" class=\"gap-10\">\n        <div class=\"flex flex-col items-center gap-3\">\n          <!-- 头像在线状态：inset 让圆环嵌入圆形边缘内部 -->\n          <RebornChip variant=\"outline\" color=\"success\" size=\"md\" inset position=\"bottom-right\">\n            <UAvatar src=\"https://github.com/benjamincanac.png\" size=\"xl\" />\n          </RebornChip>\n          <span class=\"text-dimmed text-xs font-medium\">\n            在线状态 ·\n            <code>outline</code>\n            +\n            <code>inset</code>\n          </span>\n        </div>\n\n        <div class=\"flex flex-col items-center gap-3\">\n          <!-- 未读小红点：不传 text 自动取 solid -->\n          <RebornChip color=\"error\" size=\"lg\">\n            <RebornButton color=\"neutral\" variant=\"circle\" size=\"lg\">\n              <template #leading>\n                <Icon name=\"lucide:mail\" class=\"size-6\" />\n              </template>\n            </RebornButton>\n          </RebornChip>\n          <span class=\"text-dimmed text-xs font-medium\">\n            未读圆点 ·\n            <code>solid</code>\n          </span>\n        </div>\n\n        <div class=\"flex flex-col items-center gap-3\">\n          <RebornChip variant=\"textOutline\" color=\"warning\" text=\"SALE\" size=\"sm\">\n            <RebornButton label=\"立即解锁\" color=\"neutral\" variant=\"filled\" />\n          </RebornChip>\n          <span class=\"text-dimmed text-xs font-medium\">\n            按钮促销标 ·\n            <code>textOutline</code>\n          </span>\n        </div>\n      </DemoBlock>\n    </DemoSection>\n  </div>\n</template>\n"
+    },
+    {
+      "title": "UniApp 演示",
+      "path": "packages/uniapp-project/src/pages/reborn-chip/RebornChipDemo.vue",
+      "source": "demo",
+      "platform": "uniapp",
+      "code": "<script setup lang=\"ts\">\nimport { shallowRef } from 'vue'\nimport RebornCard from '@/components/reborn-card/RebornCard.vue'\nimport { chipColors, chipPositions, chipSizes, chipVariants } from '@/components/reborn-chip/reborn-chip.config'\nimport RebornChip from '@/components/reborn-chip/RebornChip.vue'\nimport RebornInput from '@/components/reborn-input/RebornInput.vue'\nimport RebornPage from '@/components/reborn-page/RebornPage.vue'\nimport RebornRadio from '@/components/reborn-radio/RebornRadio.vue'\nimport RebornRadioGroup from '@/components/reborn-radio/RebornRadioGroup.vue'\nimport RebornSwitch from '@/components/reborn-switch/RebornSwitch.vue'\n\n/**\n * 角标锚点占位样式：只描边不填充。\n * 角标必须挂在一个宿主元素上才看得出定位效果，这里用虚线框表示「任意宿主」。\n */\nconst anchorClass = 'size-[96rpx] rounded-ui-md border-[length:2rpx] border-dashed border-gray-4'\n\n/** 渲染文本节点的变体，用于在矩阵里区分「圆点类」与「文字类」 */\nconst textVariants: string[] = ['textDot', 'textOutline']\n\n/** 色板选择器的底色：写成完整类名，动态拼接的 `bg-${c}` Tailwind 扫描不到 */\nconst swatchClass: Record<(typeof chipColors)[number], string> = {\n  primary: 'bg-primary',\n  secondary: 'bg-secondary',\n  success: 'bg-success',\n  info: 'bg-info',\n  warning: 'bg-warning',\n  error: 'bg-error',\n  neutral: 'bg-neutral',\n}\n\n// 演练场状态\nconst variant = shallowRef<(typeof chipVariants)[number]>('textDot')\nconst color = shallowRef<(typeof chipColors)[number]>('primary')\nconst size = shallowRef<(typeof chipSizes)[number]>('md')\nconst position = shallowRef<(typeof chipPositions)[number]>('top-right')\nconst text = shallowRef('9')\nconst inset = shallowRef(false)\nconst showChip = shallowRef(true)\n\n/** 显隐控制演示：组件内部不会改写 show，由外部按钮切换 */\nconst hasUnread = shallowRef(true)\n</script>\n\n<template>\n  <RebornPage title=\"Chip 角标\" description=\"叠加在宿主元素角上的圆点或计数角标，用于提示未读、在线等状态。\">\n    <!-- 交互演练场 -->\n    <RebornCard title=\"交互演练场\" custom-class=\"overflow-hidden\">\n      <!-- 预览区 -->\n      <view\n        class=\"\n          flex min-h-[300rpx] flex-col items-center justify-center gap-[24rpx]\n          bg-gray-2\n        \"\n      >\n        <RebornChip\n          v-model:show=\"showChip\" :variant=\"variant\" :color=\"color\" :size=\"size\" :position=\"position\"\n          :text=\"text\" :inset=\"inset\"\n        >\n          <view\n            class=\"\n              flex size-[160rpx] items-center justify-center rounded-ui-md\n              border-[length:2rpx] border-dashed border-gray-4\n            \"\n          >\n            <text class=\"text-24 text-gray-6\">宿主</text>\n          </view>\n        </RebornChip>\n        <text\n          v-if=\"!textVariants.includes(variant)\"\n          class=\"px-[32rpx] text-center text-24 text-gray-6\"\n        >\n          {{ variant }} 是纯图形角标，最大外径只有 32rpx，放不下文字，所以标签文本不显示。\n        </text>\n      </view>\n\n      <!-- 控制项 -->\n      <view class=\"flex flex-col gap-[16rpx]\">\n        <text class=\"text-24 font-medium text-gray-6\">视觉变体</text>\n        <RebornRadioGroup v-model=\"variant\">\n          <RebornRadio v-for=\"item in chipVariants\" :key=\"item\" :value=\"item\">\n            {{ item }}\n          </RebornRadio>\n        </RebornRadioGroup>\n      </view>\n\n      <view class=\"flex flex-col gap-[16rpx]\">\n        <text class=\"text-24 font-medium text-gray-6\">颜色主题</text>\n        <RebornRadioGroup v-model=\"color\">\n          <RebornRadio v-for=\"item in chipColors\" :key=\"item\" :value=\"item\">\n            <!-- radio 插槽完全接管渲染，做成纯色板选择 -->\n            <template #radio=\"{ checked }\">\n              <view\n                class=\"\n                  size-[40rpx] rounded-full border-[length:4rpx] border-solid\n                \"\n                :class=\"[\n                  swatchClass[item],\n                  checked ? 'border-gray-8' : 'border-transparent',\n                ]\"\n              />\n            </template>\n          </RebornRadio>\n        </RebornRadioGroup>\n      </view>\n\n      <view class=\"flex flex-col gap-[16rpx]\">\n        <text class=\"text-24 font-medium text-gray-6\">尺寸规格</text>\n        <RebornRadioGroup v-model=\"size\">\n          <RebornRadio v-for=\"item in chipSizes\" :key=\"item\" :value=\"item\">\n            {{ item }}\n          </RebornRadio>\n        </RebornRadioGroup>\n      </view>\n\n      <view class=\"flex flex-col gap-[16rpx]\">\n        <text class=\"text-24 font-medium text-gray-6\">显示位置</text>\n        <RebornRadioGroup v-model=\"position\">\n          <RebornRadio v-for=\"item in chipPositions\" :key=\"item\" :value=\"item\">\n            {{ item }}\n          </RebornRadio>\n        </RebornRadioGroup>\n      </view>\n\n      <view class=\"flex flex-col gap-[16rpx]\">\n        <text class=\"text-24 font-medium text-gray-6\">标签文本（仅 textDot / textOutline 显示）</text>\n        <RebornInput v-model=\"text\" placeholder=\"输入角标文本\" />\n      </view>\n\n      <view class=\"flex flex-col gap-[16rpx]\">\n        <text class=\"text-24 font-medium text-gray-6\">内嵌模式</text>\n        <RebornSwitch v-model=\"inset\" active-label=\"内嵌\" inactive-label=\"压角\" />\n      </view>\n\n      <view class=\"flex flex-col gap-[16rpx]\">\n        <text class=\"text-24 font-medium text-gray-6\">显示状态</text>\n        <RebornSwitch v-model=\"showChip\" active-label=\"显示\" inactive-label=\"隐藏\" />\n      </view>\n    </RebornCard>\n\n    <!-- 基础用法 -->\n    <RebornCard title=\"基础用法\">\n      <text class=\"text-24 text-gray-6\">不传 variant 时按 text 自动选择：传了文本是 textDot 计数角标，不传是 solid 纯圆点。</text>\n      <view class=\"flex flex-wrap items-center gap-[64rpx] p-[24rpx]\">\n        <RebornChip text=\"9\">\n          <view :class=\"anchorClass\" />\n        </RebornChip>\n        <RebornChip text=\"99+\" size=\"lg\">\n          <view :class=\"anchorClass\" />\n        </RebornChip>\n        <RebornChip>\n          <view :class=\"anchorClass\" />\n        </RebornChip>\n      </view>\n    </RebornCard>\n\n    <!-- 变体 -->\n    <RebornCard title=\"变体：圆点、圆环与文字角标\">\n      <text class=\"text-24 text-gray-6\">solid / outline 只表达「有状态」；textDot / textOutline 会渲染 text。描边类变体垫了纸面色底。</text>\n      <view class=\"flex flex-wrap items-end gap-[64rpx] p-[24rpx]\">\n        <view\n          v-for=\"v in chipVariants\"\n          :key=\"v\"\n          class=\"flex flex-col items-center gap-[24rpx]\"\n        >\n          <RebornChip :variant=\"v\" color=\"error\" text=\"8\">\n            <view :class=\"anchorClass\" />\n          </RebornChip>\n          <text class=\"text-24 text-gray-6\">{{ v }}</text>\n        </view>\n      </view>\n    </RebornCard>\n\n    <!-- 颜色 -->\n    <RebornCard title=\"颜色：7 种语义色\">\n      <view v-for=\"v in chipVariants\" :key=\"v\" class=\"flex flex-col gap-[16rpx]\">\n        <text class=\"text-24 font-medium text-gray-6\">{{ v }}</text>\n        <view class=\"flex flex-wrap items-center gap-[48rpx] p-[24rpx]\">\n          <RebornChip v-for=\"c in chipColors\" :key=\"c\" :variant=\"v\" :color=\"c\" text=\"8\">\n            <view\n              class=\"\n                size-[64rpx] rounded-ui-md border-[length:2rpx] border-dashed\n                border-gray-4\n              \"\n            />\n          </RebornChip>\n        </view>\n      </view>\n    </RebornCard>\n\n    <!-- 尺寸 -->\n    <RebornCard title=\"尺寸：三档\">\n      <text class=\"text-24 text-gray-6\">圆点直径 8 / 10 / 12rpx，圆环外径 16 / 24 / 32rpx，文字角标高 32 / 40 / 48rpx。</text>\n      <view v-for=\"v in chipVariants\" :key=\"v\" class=\"flex flex-col gap-[16rpx]\">\n        <text class=\"text-24 font-medium text-gray-6\">{{ v }}</text>\n        <view class=\"flex flex-wrap items-center gap-[64rpx] p-[24rpx]\">\n          <view\n            v-for=\"s in chipSizes\"\n            :key=\"s\"\n            class=\"flex flex-col items-center gap-[24rpx]\"\n          >\n            <RebornChip :variant=\"v\" :size=\"s\" color=\"error\" :text=\"textVariants.includes(v) ? '99+' : undefined\">\n              <view :class=\"anchorClass\" />\n            </RebornChip>\n            <text class=\"text-24 text-gray-6\">{{ s }}</text>\n          </view>\n        </view>\n      </view>\n    </RebornCard>\n\n    <!-- 位置与内嵌 -->\n    <RebornCard title=\"位置与内嵌：position 与 inset\">\n      <text class=\"text-24 text-gray-6\">默认角标中心压在宿主角上，inset 取消平移，让角标整个落在宿主内部。</text>\n      <view class=\"flex flex-wrap items-center gap-[64rpx] p-[24rpx]\">\n        <view\n          v-for=\"p in chipPositions\"\n          :key=\"p\"\n          class=\"flex flex-col items-center gap-[24rpx]\"\n        >\n          <RebornChip :position=\"p\" color=\"error\" text=\"3\">\n            <view :class=\"anchorClass\" />\n          </RebornChip>\n          <text class=\"text-24 text-gray-6\">{{ p }}</text>\n        </view>\n        <view\n          v-for=\"p in chipPositions\"\n          :key=\"`inset-${p}`\"\n          class=\"flex flex-col items-center gap-[24rpx]\"\n        >\n          <RebornChip :position=\"p\" color=\"success\" size=\"lg\" inset>\n            <view :class=\"anchorClass\" />\n          </RebornChip>\n          <text class=\"text-24 text-gray-6\">{{ p }} · inset</text>\n        </view>\n      </view>\n    </RebornCard>\n\n    <!-- 显隐控制 -->\n    <RebornCard title=\"显隐控制：v-model:show\">\n      <text class=\"text-24 text-gray-6\">show 为 false 时不渲染角标节点；组件自身没有关闭交互，显隐完全由外部赋值驱动。</text>\n      <view class=\"flex flex-wrap items-center gap-[64rpx] p-[24rpx]\">\n        <RebornChip v-model:show=\"hasUnread\" text=\"3\" color=\"error\">\n          <view :class=\"anchorClass\" />\n        </RebornChip>\n        <view\n          class=\"\n            rounded-ui-md border-[length:2rpx] border-solid border-gray-4\n            px-[24rpx] py-[12rpx] text-28 text-gray-8\n          \"\n          @tap=\"hasUnread = !hasUnread\"\n        >\n          {{ hasUnread ? '标为已读' : '模拟新消息' }}\n        </view>\n      </view>\n    </RebornCard>\n\n    <!-- 组合场景 -->\n    <RebornCard title=\"组合场景：在线状态、未读圆点与促销标\">\n      <view class=\"flex flex-wrap items-center gap-[64rpx] p-[24rpx]\">\n        <view class=\"flex flex-col items-center gap-[24rpx]\">\n          <!-- 头像在线状态：inset 让圆环嵌入圆形边缘内部 -->\n          <RebornChip variant=\"outline\" color=\"success\" inset position=\"bottom-right\">\n            <image\n              src=\"https://github.com/benjamincanac.png\"\n              class=\"size-[96rpx] rounded-full\"\n            />\n          </RebornChip>\n          <text class=\"text-24 text-gray-6\">在线状态</text>\n        </view>\n        <view class=\"flex flex-col items-center gap-[24rpx]\">\n          <!-- 未读小红点：不传 text 自动取 solid -->\n          <RebornChip color=\"error\" size=\"lg\">\n            <view\n              class=\"\n                flex size-[80rpx] items-center justify-center rounded-full\n                bg-gray-3\n              \"\n            >\n              <text class=\"text-24 text-gray-7\">消息</text>\n            </view>\n          </RebornChip>\n          <text class=\"text-24 text-gray-6\">未读圆点</text>\n        </view>\n        <view class=\"flex flex-col items-center gap-[24rpx]\">\n          <RebornChip variant=\"textOutline\" color=\"warning\" text=\"SALE\" size=\"sm\">\n            <view\n              class=\"\n                rounded-ui-md bg-gray-8 px-[32rpx] py-[16rpx] text-28\n                text-gray-1\n              \"\n            >\n              立即解锁\n            </view>\n          </RebornChip>\n          <text class=\"text-24 text-gray-6\">按钮促销标</text>\n        </view>\n      </view>\n    </RebornCard>\n  </RebornPage>\n</template>\n"
+    }
+  ],
+  "related": [],
+  "whenToUse": [
+    "图标、头像或按钮右上角显示未读数量（text 传数字或文本）。",
+    "仅需红点提醒而无文字的消息提示（不传 text 即为小圆点）。",
+    "需要通过 v-model:show 动态控制标记显隐的场景。"
+  ],
+  "whenNotToUse": [
+    "独立展示状态文字标签（非角标叠加），改用 reborn-badge。"
+  ],
+  "pitfalls": [
+    "web 与 uniapp 双端可用。",
+    "默认以默认插槽内容为锚点定位（position 默认 top-right），无宿主独立使用时需设 standalone。",
+    "inset 使标记内嵌于宿主边缘，与 position 组合调整贴合位置。",
+    "web 端 size 为 xs(10px) / sm(12px) 时按纯圆点渲染：圆点装不下最小字号令牌（--text-sm 12px），组件不渲染文本节点，传了 text 也不显示。需要带文字的角标请用 md 及以上。",
+    "两端 size 档位不同：web 为 xs–xl 五档（px 标尺），uniapp 为 3xs–3xl 九档（rpx 标尺），同名 size 在两端不等价。",
+    "两端 show 模型默认 undefined；未传时可见，显式 false/undefined/null 隐藏，不派发初始化更新。UniApp 使用实际 MP 原始属性缓存识别动态绑定，移除绑定后恢复本地状态。"
+  ],
+  "dependencies": [
+    "@weapp-tailwindcss/merge-v3",
+    "@weapp-tailwindcss/variants-v3",
+    "clsx",
+    "tailwind-merge",
+    "tailwind-variants"
+  ],
+  "install": {
+    "cli": "npx reborn-ui@latest add reborn-chip"
+  },
+  "sourceRefs": {
+    "web": [
+      "app/components/reborn/ui/reborn-chip/RebornChip.vue",
+      "app/components/reborn/ui/reborn-chip/index.ts",
+      "app/components/reborn/ui/reborn-chip/reborn-chip.config.ts"
+    ],
+    "uniapp": [
+      "packages/uniapp-project/src/components/reborn-chip/RebornChip.vue",
+      "packages/uniapp-project/src/components/reborn-chip/index.ts",
+      "packages/uniapp-project/src/components/reborn-chip/reborn-chip.config.ts"
+    ]
+  },
+  "docPath": "content/2.components/button/reborn-chip.md",
+  "_meta": {
+    "contentHash": "9148e4f07055105b7e51a2260d8be546909a9334",
+    "hasOverride": true,
+    "extractors": {
+      "web": "ok",
+      "uniapp": "ok",
+      "docs": "found"
+    }
+  }
+}

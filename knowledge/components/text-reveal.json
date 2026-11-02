@@ -1,0 +1,108 @@
+{
+  "$schema": "../schema/component.schema.json",
+  "id": "text-reveal",
+  "title": "文字揭示",
+  "description": "用于基于 GSAP SplitText 将段落按行依次入场的文字动画组件。",
+  "category": "effect",
+  "tags": [
+    "css",
+    "tailwind",
+    "gsap"
+  ],
+  "platforms": [
+    "web"
+  ],
+  "props": [
+    {
+      "name": "class",
+      "type": "HTMLAttributes[\"class\"]",
+      "required": false,
+      "description": "内层文字容器的额外类。"
+    },
+    {
+      "name": "containerClass",
+      "type": "HTMLAttributes[\"class\"]",
+      "required": false,
+      "description": "外层容器的额外类。"
+    },
+    {
+      "name": "duration",
+      "type": "number",
+      "required": false,
+      "description": "逐行揭示的动画时长。",
+      "default": "0.6"
+    },
+    {
+      "name": "delay",
+      "type": "number",
+      "required": false,
+      "description": "动画开始前的延迟。",
+      "default": "0.2"
+    },
+    {
+      "name": "stagger",
+      "type": "number",
+      "required": false,
+      "description": "每行揭示之间的动画间隔。",
+      "default": "0.1"
+    }
+  ],
+  "events": [],
+  "slots": [
+    {
+      "name": "default",
+      "description": "按实际换行拆分并执行入场动画的文本。"
+    }
+  ],
+  "exposes": [],
+  "examples": [
+    {
+      "title": "Web 演示",
+      "path": "app/components/reborn/examples/text-reveal/TextRevealDemo.vue",
+      "source": "demo",
+      "platform": "web",
+      "code": "<template>\n  <div class=\"flex items-center justify-center p-8\">\n    <TextReveal class=\"text-center text-4xl leading-relaxed font-semibold\">\n      With Reborn UI, you can build beautiful websites powered by Vue and Nuxt in record time.\n    </TextReveal>\n  </div>\n</template>\n"
+    }
+  ],
+  "related": [],
+  "whenToUse": [
+    "Hero 区段落需要逐行升起的入场动画。",
+    "需要用 stagger 控制行与行之间错落节奏的标题动画。"
+  ],
+  "whenNotToUse": [
+    "逐字渐显效果，改用 text-generate-effect。",
+    "随滚动进度逐词显现，改用 text-scroll-reveal。",
+    "逐字上提的错落动画，改用 letter-pullup。"
+  ],
+  "pitfalls": [
+    "仅 web 端可用，依赖 gsap（SplitText）。",
+    "文字通过默认插槽传入。",
+    "duration（默认 0.6）、delay（默认 0.2）、stagger（默认 0.1）均为 GSAP 时间参数（秒）。",
+    "内外层样式分别用 class 与 containerClass 控制。",
+    "组件按插槽渲染结果判断是否重新拆分：插槽文字或 duration / delay / stagger 变化才重播入场动画；插槽里只有属性变化时重建拆分但沿用原进度；渲染结果不变的重渲染（v-for 动态插槽、内联 class 数组）不做处理。",
+    "拆分后的行 / 词元素没有 scoped 属性，自定义样式需用 :deep()。",
+    "插槽里子组件自身的更新不会同步到拆分后的文字，需要变化的文字由父组件直接写进插槽，或变化时给 TextReveal 换 key。"
+  ],
+  "dependencies": [
+    "gsap"
+  ],
+  "install": {
+    "cli": "npx reborn-ui@latest add text-reveal"
+  },
+  "sourceRefs": {
+    "web": [
+      "app/components/reborn/ui/text-reveal/TextReveal.vue",
+      "app/components/reborn/ui/text-reveal/index.ts"
+    ]
+  },
+  "docPath": "content/2.components/text-animations/text-reveal.md",
+  "_meta": {
+    "contentHash": "00d8894acc755f98ba0f86c912ff4ead3099f539",
+    "hasOverride": true,
+    "extractors": {
+      "web": "ok",
+      "uniapp": "absent",
+      "docs": "found"
+    }
+  }
+}

@@ -1,0 +1,120 @@
+{
+  "$schema": "../schema/component.schema.json",
+  "id": "book",
+  "title": "书本",
+  "description": "用于展示 3D 书本封面并在悬停时播放动画的展示组件。",
+  "category": "misc",
+  "tags": [
+    "css",
+    "tailwind",
+    "x-ui"
+  ],
+  "platforms": [
+    "web"
+  ],
+  "props": [
+    {
+      "name": "class",
+      "type": "HTMLAttributes[\"class\"]",
+      "required": false,
+      "description": "应用于组件的额外类。"
+    },
+    {
+      "name": "duration",
+      "type": "number",
+      "required": false,
+      "description": "动画持续时间（毫秒）。",
+      "default": "1000"
+    },
+    {
+      "name": "color",
+      "type": "BookColor",
+      "required": false,
+      "description": "书本渐变的配色主题。",
+      "default": "\"zinc\""
+    },
+    {
+      "name": "isStatic",
+      "type": "boolean",
+      "required": false,
+      "description": "为 true 时禁用悬停动画。",
+      "default": "false"
+    },
+    {
+      "name": "size",
+      "type": "BookSize",
+      "required": false,
+      "description": "书本尺寸变体。",
+      "default": "\"md\""
+    },
+    {
+      "name": "radius",
+      "type": "BookRadius",
+      "required": false,
+      "description": "书本圆角变体。",
+      "default": "\"md\""
+    },
+    {
+      "name": "shadowSize",
+      "type": "BookShadowSize",
+      "required": false,
+      "description": "阴影大小变体。",
+      "default": "\"lg\""
+    }
+  ],
+  "events": [],
+  "slots": [
+    {
+      "name": "default",
+      "description": ""
+    }
+  ],
+  "exposes": [],
+  "examples": [
+    {
+      "title": "Web 演示",
+      "path": "app/components/reborn/examples/book/BookDemo.vue",
+      "source": "demo",
+      "platform": "web",
+      "code": "<template>\n  <DemoSection title=\"基础用法\">\n    <DemoBlock\n      layout=\"stack\"\n      align=\"center\"\n    >\n      <Book>\n        <BookHeader>\n          <Icon\n            name=\"heroicons:book-open-solid\"\n            size=\"24\"\n          />\n        </BookHeader>\n        <BookTitle>\n          <h1>那本书</h1>\n        </BookTitle>\n        <BookDescription>\n          <p>把鼠标移上来看看动画。</p>\n        </BookDescription>\n      </Book>\n    </DemoBlock>\n  </DemoSection>\n</template>\n"
+    }
+  ],
+  "related": [],
+  "whenToUse": [
+    "文档、电子书、课程等资源的封面入口展示。",
+    "需要按 zinc 等配色主题与 size / radius / shadowSize 变体快速定制的书本视觉。",
+    "落地页中需要悬停动画点缀的内容卡片。"
+  ],
+  "whenNotToUse": [
+    "常规内容卡片，改用 reborn-card。",
+    "需要正反两面内容切换的卡片，改用 flip-card。"
+  ],
+  "pitfalls": [
+    "仅 web 端可用。",
+    "封面内容需用配套子组件组织：BookHeader、BookTitle、BookDescription。",
+    "isStatic 为 true 时禁用悬停动画；duration 单位为毫秒（默认 1000）。"
+  ],
+  "dependencies": [],
+  "install": {
+    "cli": "npx reborn-ui@latest add book"
+  },
+  "sourceRefs": {
+    "web": [
+      "app/components/reborn/ui/book/Book.vue",
+      "app/components/reborn/ui/book/BookDescription.vue",
+      "app/components/reborn/ui/book/BookHeader.vue",
+      "app/components/reborn/ui/book/BookTitle.vue",
+      "app/components/reborn/ui/book/index.ts"
+    ]
+  },
+  "docPath": "content/2.components/miscellaneous/book.md",
+  "_meta": {
+    "contentHash": "702b3bdf248d749bc9630b2c75c60a81fbf9f930",
+    "hasOverride": true,
+    "extractors": {
+      "web": "ok",
+      "uniapp": "absent",
+      "docs": "found"
+    }
+  }
+}

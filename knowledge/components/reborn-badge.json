@@ -1,0 +1,279 @@
+{
+  "$schema": "../schema/component.schema.json",
+  "id": "reborn-badge",
+  "title": "Badge 徽章",
+  "description": "双端状态标签：支持四种风格、胶囊、可关闭与可选中；Web 额外支持独立圆形参数。",
+  "category": "basic",
+  "tags": [
+    "css",
+    "tailwind",
+    "badge",
+    "uniapp",
+    "cross-platform"
+  ],
+  "platforms": [
+    "web",
+    "uniapp"
+  ],
+  "props": [
+    {
+      "name": "gap",
+      "type": "boolean",
+      "required": false,
+      "description": "多个徽标并排时是否自动添加左间距。",
+      "default": "false"
+    },
+    {
+      "name": "label",
+      "type": "string | number",
+      "required": false,
+      "description": "徽标显示的文本内容。"
+    },
+    {
+      "name": "color",
+      "type": "BadgeColor",
+      "required": false,
+      "description": "语义化颜色，详见下方配置。",
+      "default": "'primary'"
+    },
+    {
+      "name": "variant",
+      "type": "BadgeVariant",
+      "required": false,
+      "description": "视觉风格：`filled`, `outlined`, `soft`, `subtle` 等。",
+      "default": "'filled'"
+    },
+    {
+      "name": "size",
+      "type": "BadgeSize",
+      "required": false,
+      "description": "尺寸规格：`sm`, `md`, `lg`。",
+      "default": "'md'"
+    },
+    {
+      "name": "icon",
+      "type": "string",
+      "required": false,
+      "description": "直接传入图标类名。Web 端建议使用插槽。"
+    },
+    {
+      "name": "square",
+      "type": "boolean",
+      "required": false,
+      "description": "是否为正方形（等宽高）。",
+      "default": "false"
+    },
+    {
+      "name": "round",
+      "type": "boolean",
+      "required": false,
+      "description": "圆角标签：与按钮一致变为全圆角胶囊",
+      "default": "false"
+    },
+    {
+      "name": "check",
+      "type": "boolean",
+      "required": false,
+      "description": "可选中模式：作为类复选框的 Check Tag 使用，配合 v-model:checked",
+      "default": "false"
+    },
+    {
+      "name": "disabled",
+      "type": "boolean",
+      "required": false,
+      "description": "是否禁用（可选中模式下屏蔽选中与关闭交互）",
+      "default": "false"
+    },
+    {
+      "name": "closable",
+      "type": "boolean",
+      "required": false,
+      "description": "是否显示关闭按钮。",
+      "default": "false"
+    },
+    {
+      "name": "closeIcon",
+      "type": "string",
+      "required": false,
+      "description": "Web 默认为 `i-lucide-x`；UniApp 默认为 `i-mdi-close-circle`。",
+      "default": "'i-mdi-close-circle'"
+    },
+    {
+      "name": "customClass",
+      "type": "any",
+      "required": false,
+      "description": "徽标主体类名（避免 UniApp 原生 class 冲突），与 `ui.base` 落在同一节点。"
+    },
+    {
+      "name": "ui",
+      "type": "{\n    root?: string\n    base?: string\n    label?: string\n    leadingIcon?: string\n    trailingIcon?: string\n    closeButton?: string\n    closeIcon?: string\n  }",
+      "required": false,
+      "description": "深度定制内部各组件样式的对象。 可用键（从源码抽取，以此为准）——Web：base、closeButton、closeIcon*、label、leadingIcon、root、trailingIcon。UniApp：base、closeButton、closeIcon、label、leadingIcon、root、trailingIcon。 带 * 的键对应插槽兜底节点：填了同名插槽，组件自带的节点被替换，这个键随之失效。",
+      "default": "{}"
+    },
+    {
+      "name": "show",
+      "type": "boolean",
+      "required": false,
+      "description": "双向绑定值",
+      "vModel": true,
+      "default": "undefined`（未绑定时可见）"
+    },
+    {
+      "name": "checked",
+      "type": "boolean",
+      "required": false,
+      "description": "双向绑定值",
+      "vModel": true,
+      "default": "undefined`（未绑定时未选中）"
+    },
+    {
+      "name": "as",
+      "type": "any",
+      "required": false,
+      "description": "该组件应渲染为的元素或组件。 @defaultValue 'span'",
+      "default": "'span'"
+    },
+    {
+      "name": "circle",
+      "type": "boolean",
+      "required": false,
+      "description": "固定等宽高的圆形，优先于 round 与 square；适合短数字或单个图标。",
+      "default": "false"
+    },
+    {
+      "name": "beforeClose",
+      "type": "(e: MouseEvent) => boolean | Promise<boolean>",
+      "required": false,
+      "description": "关闭前的钩子。返回 false 或返回 rejected 的 promise 将停止关闭。"
+    },
+    {
+      "name": "class",
+      "type": "ClassValue",
+      "required": false,
+      "description": "徽标主体类名，与 `ui.base` 落在同一节点；外层动画容器的类名用 `ui.root`。"
+    }
+  ],
+  "events": [
+    {
+      "name": "update:show",
+      "payload": "[value: boolean]",
+      "description": "v-model:show` 同步事件。"
+    },
+    {
+      "name": "update:checked",
+      "payload": "[value: boolean]",
+      "description": "v-model:checked` 同步事件。"
+    },
+    {
+      "name": "close",
+      "payload": "[ev: unknown]",
+      "description": "点击关闭按钮、徽章隐藏后触发"
+    },
+    {
+      "name": "click",
+      "payload": "[ev: unknown]",
+      "description": "点击徽章时触发"
+    },
+    {
+      "name": "change",
+      "payload": "[checked: boolean]",
+      "description": "可选中模式下选中态切换时触发，载荷为切换后的新值"
+    }
+  ],
+  "slots": [
+    {
+      "name": "leading",
+      "props": "(props: { ui: any }) => any",
+      "description": "前置内容，通常用于图标、小头像。"
+    },
+    {
+      "name": "default",
+      "props": "(props: { ui: any }) => any",
+      "description": "徽标主体内容，覆盖 `label`。"
+    },
+    {
+      "name": "trailing",
+      "props": "(props: { ui: any }) => any",
+      "description": "后置内容。"
+    },
+    {
+      "name": "close",
+      "props": "(props: { ui: any, close: (e: unknown) => void }) => any",
+      "description": "自定义关闭按钮。"
+    }
+  ],
+  "exposes": [],
+  "examples": [
+    {
+      "title": "Web 演示",
+      "path": "app/components/reborn/examples/reborn-badge/RebornBadgeDemo.vue",
+      "source": "demo",
+      "platform": "web",
+      "code": "<script setup lang=\"ts\">\nimport { DemoBlock, DemoNote, DemoSection, Icon, Playground } from \"#components\";\nimport { computed, ref, shallowRef } from \"vue\";\nimport { badgeColors, badgeSizes, badgeVariants } from \"~/components/reborn/ui/reborn-badge/reborn-badge.config\";\nimport RebornBadge from \"~/components/reborn/ui/reborn-badge/RebornBadge.vue\";\n\n// ─── 交互演练场 ─────────────────────────────────────────────────\n\nconst state = ref<Record<string, any>>({\n  label: \"乐一番\",\n  color: \"primary\",\n  variant: \"filled\",\n  size: \"md\",\n  closable: false,\n  square: false,\n  round: false,\n  circle: false,\n  show: true,\n});\n\n/** 演练场控制面板配置 */\nconst controls = [\n  {\n    title: \"内容与外观\",\n    children: [\n      { label: \"标签文本\", key: \"label\", component: \"input\" as const, defaultValue: \"乐一番\" },\n      {\n        label: \"预设色彩\",\n        key: \"color\",\n        component: \"select\" as const,\n        defaultValue: \"primary\",\n        props: { options: badgeColors.map((c) => ({ label: c, value: c })) },\n      },\n      {\n        label: \"视觉风格\",\n        key: \"variant\",\n        component: \"select\" as const,\n        defaultValue: \"filled\",\n        props: { options: badgeVariants.map((v) => ({ label: v, value: v })) },\n      },\n      {\n        label: \"尺寸规格\",\n        key: \"size\",\n        component: \"select\" as const,\n        defaultValue: \"md\",\n        props: { options: badgeSizes.map((s) => ({ label: s.toUpperCase(), value: s })) },\n      },\n    ],\n  },\n  {\n    title: \"状态控制\",\n    children: [\n      { label: \"可关闭\", key: \"closable\", component: \"checkbox\" as const, defaultValue: false },\n      { label: \"正方形\", key: \"square\", component: \"checkbox\" as const, defaultValue: false },\n      { label: \"圆形（circle，优先于 round）\", key: \"circle\", component: \"checkbox\" as const, defaultValue: false },\n      { label: \"圆角（round）\", key: \"round\", component: \"checkbox\" as const, defaultValue: false },\n      { label: \"显示（v-model:show）\", key: \"show\", component: \"checkbox\" as const, defaultValue: true },\n    ],\n  },\n];\n\n/** 演练场右上角展示的等价代码 */\nconst badgeCode = computed(() => {\n  const s = state.value;\n  const props: string[] = [`label=\"${s.label}\"`];\n\n  if (s.color !== \"primary\") props.push(`color=\"${s.color}\"`);\n  if (s.variant !== \"filled\") props.push(`variant=\"${s.variant}\"`);\n  if (s.size !== \"md\") props.push(`size=\"${s.size}\"`);\n  if (s.closable) props.push(\"closable\");\n  if (s.square) props.push(\"square\");\n  if (s.round) props.push(\"round\");\n  if (s.circle) props.push(\"circle\");\n\n  return `<RebornBadge\\n  ${props.join(\"\\n  \")}\\n/>`;\n});\n\n// ─── 场景演示状态 ───────────────────────────────────────────────\n\n/** 可选中标签演示数据：四种视觉风格各一个 */\nconst checkTags = ref(\n  badgeVariants.map((v, i) => ({\n    label: [\"热销\", \"新品\", \"包邮\", \"自营\"][i] ?? v,\n    variant: v as (typeof badgeVariants)[number],\n    checked: i === 0,\n  })),\n);\n\n/** 最近一次 change 事件回显 */\nconst lastChanged = shallowRef(\"\");\n\nfunction handleCheckChange(index: number, checked: boolean) {\n  const item = checkTags.value[index];\n  if (item) lastChanged.value = `${item.label} → ${checked}`;\n}\n\n/** 最近一次关闭事件，替代 console 输出 */\nconst lastClosed = shallowRef(\"\");\n\nfunction handleClose(label: string) {\n  lastClosed.value = label;\n}\n\n/**\n * 关闭前的异步校验：返回 false 可阻止本次关闭\n */\nfunction beforeCloseVerify(): Promise<boolean> {\n  // eslint-disable-next-line no-alert -- 演示关闭前确认，只有用户操作时触发\n  return Promise.resolve(window.confirm(\"确定要删除这个标签吗？\"));\n}\n</script>\n\n<template>\n  <div class=\"flex w-full min-w-0 flex-col\">\n    <Playground\n      v-model=\"state\"\n      :controls=\"controls\"\n      :code=\"badgeCode\"\n      component-name=\"RebornBadge\"\n      title=\"交互演练场\"\n      description=\"组合色彩、风格与尺寸；勾选「可关闭」后点击叉号会通过 v-model:show 收起徽标。\"\n    >\n      <RebornBadge\n        v-model:show=\"state.show\"\n        :label=\"state.label\"\n        :color=\"state.color\"\n        :variant=\"state.variant\"\n        :size=\"state.size\"\n        :closable=\"state.closable\"\n        :square=\"state.square\"\n        :round=\"state.round\"\n        :circle=\"state.circle\"\n      />\n    </Playground>\n\n    <DemoSection\n      title=\"变体矩阵\"\n      description=\"四种视觉风格 × 七种预设色彩，filled 用于强调，outlined 与 subtle 更适合密集列表。\"\n    >\n      <DemoBlock layout=\"stack\">\n        <div v-for=\"v in badgeVariants\" :key=\"v\" class=\"flex flex-col gap-2\">\n          <span class=\"text-dimmed text-xs font-medium\">\n            {{ v }} ·\n            <code>variant</code>\n          </span>\n          <div class=\"flex flex-wrap items-center gap-3\">\n            <RebornBadge v-for=\"c in badgeColors\" :key=\"c\" :variant=\"v\" :color=\"c\" size=\"sm\" :label=\"c\" />\n          </div>\n        </div>\n      </DemoBlock>\n    </DemoSection>\n\n    <DemoSection\n      title=\"形状\"\n      description=\"round 为胶囊，circle 为固定等宽高的圆形；同时开启时 circle 优先，颜色仍由 variant 与 color 决定。\"\n    >\n      <DemoBlock layout=\"row\" align=\"center\">\n        <RebornBadge v-for=\"v in badgeVariants\" :key=\"v\" :variant=\"v\" color=\"primary\" round :label=\"v\" />\n        <RebornBadge color=\"success\" variant=\"soft\" round closable label=\"可关闭胶囊\" />\n        <RebornBadge v-for=\"v in badgeVariants\" :key=\"`circle-${v}`\" :variant=\"v\" circle :label=\"8\" />\n        <RebornBadge v-for=\"s in badgeSizes\" :key=\"s\" :size=\"s\" variant=\"outlined\" round circle :label=\"0\" />\n        <RebornBadge variant=\"soft\" circle aria-label=\"收藏\">\n          <template #leading=\"{ ui }\"><Icon name=\"lucide:star\" :class=\"ui.leadingIcon()\" /></template>\n        </RebornBadge>\n      </DemoBlock>\n    </DemoSection>\n\n    <DemoNote>\n      圆形适合单个图标或短数字；长文本或关闭按钮请使用普通形状或\n      <code>round</code>，避免内容裁切。\n    </DemoNote>\n\n    <DemoSection\n      title=\"可选中标签\"\n      description=\"开启 check 后即为类复选框的 Check Tag：点击切换 v-model:checked 并触发 change，未选中时退为灰阶；disabled 可禁用交互。\"\n    >\n      <DemoBlock layout=\"row\" align=\"center\">\n        <RebornBadge\n          v-for=\"(item, index) in checkTags\"\n          :key=\"item.label\"\n          v-model:checked=\"item.checked\"\n          check\n          :variant=\"item.variant\"\n          color=\"primary\"\n          :label=\"`${item.variant} · ${item.label}`\"\n          @change=\"handleCheckChange(index, $event)\"\n        />\n        <RebornBadge check disabled variant=\"soft\" color=\"primary\" label=\"disabled\" />\n      </DemoBlock>\n\n      <DemoNote tone=\"dimmed\">\n        <template v-if=\"lastChanged\">\n          最近变更：<code>{{ lastChanged }}</code>\n        </template>\n        <template v-else>\n          点击任意标签即可在此看到\n          <code>change</code>\n          事件回显。\n        </template>\n      </DemoNote>\n    </DemoSection>\n\n    <DemoSection\n      title=\"图标集成\"\n      description=\"leading 与 trailing 插槽用于放置图标；配合 square 可做成纯图标的方形徽标。\"\n    >\n      <DemoBlock layout=\"row\" align=\"center\">\n        <RebornBadge color=\"primary\" variant=\"soft\">\n          <template #leading>\n            <Icon name=\"lucide:star\" class=\"size-3.5 fill-current\" />\n          </template>\n          Star\n        </RebornBadge>\n\n        <RebornBadge color=\"success\" variant=\"outlined\">\n          <template #trailing>\n            <Icon name=\"lucide:check-circle\" class=\"size-3.5\" />\n          </template>\n          Completed\n        </RebornBadge>\n\n        <RebornBadge color=\"error\" variant=\"filled\" size=\"lg\" square>\n          <template #default=\"{ ui }\">\n            <Icon name=\"lucide:heart\" :class=\"ui.label()\" />\n          </template>\n        </RebornBadge>\n\n        <RebornBadge color=\"neutral\" variant=\"subtle\" size=\"sm\">\n          <template #leading>\n            <Icon name=\"lucide:settings\" class=\"size-3\" />\n          </template>\n          Settings\n        </RebornBadge>\n      </DemoBlock>\n    </DemoSection>\n\n    <DemoSection\n      title=\"关闭交互\"\n      description=\"closable 开启内置关闭按钮；before-close 返回 false 或 Promise<false> 可拦截本次关闭。\"\n    >\n      <DemoBlock layout=\"row\" align=\"center\">\n        <RebornBadge color=\"info\" variant=\"soft\" label=\"可关闭标签\" closable @close=\"handleClose('可关闭标签')\" />\n\n        <RebornBadge color=\"warning\" variant=\"subtle\" closable>\n          <template #close=\"{ close }\">\n            <span\n              class=\"bg-warning/20 hover:bg-warning/40 rounded-sm ms-2 cursor-pointer px-1 text-[10px]\"\n              @click=\"close\"\n            >\n              HIDE\n            </span>\n          </template>\n          自定义关闭\n        </RebornBadge>\n\n        <RebornBadge\n          color=\"success\"\n          variant=\"filled\"\n          label=\"异步确认关闭\"\n          closable\n          :before-close=\"beforeCloseVerify\"\n          @close=\"handleClose('异步确认关闭')\"\n        />\n      </DemoBlock>\n\n      <DemoNote tone=\"dimmed\">\n        <template v-if=\"lastClosed\">\n          最近关闭：<code>{{ lastClosed }}</code>\n        </template>\n        <template v-else>\n          关闭任意一个徽标即可在此看到\n          <code>close</code>\n          事件回显。\n        </template>\n      </DemoNote>\n    </DemoSection>\n\n    <DemoSection\n      title=\"插槽扩展\"\n      description=\"leading 插槽可承载头像、等级角标等任意结构，配合 ui 与 class 微调内边距。\"\n    >\n      <DemoBlock layout=\"row\" align=\"center\">\n        <RebornBadge color=\"neutral\" variant=\"outlined\" class=\"px-1 py-0\">\n          <template #leading>\n            <div\n              class=\"bg-primary text-inverted flex size-6 items-center justify-center rounded-full text-[10px] font-bold\"\n            >\n              A\n            </div>\n          </template>\n          <span class=\"ms-1\">Avatar Support</span>\n        </RebornBadge>\n\n        <RebornBadge\n          color=\"neutral\"\n          variant=\"outlined\"\n          label=\"新品・未开封\"\n          size=\"lg\"\n          class=\"pl-0\"\n          :ui=\"{ label: 'text-sm' }\"\n        >\n          <template #leading>\n            <div\n              class=\"flex h-full flex-col items-center justify-center bg-linear-to-b from-[#919191] to-[#3C3C3C] px-1 text-white\"\n            >\n              <p class=\"text-[8px]\">N</p>\n              <span class=\"text-[4px]\">RANK</span>\n            </div>\n          </template>\n        </RebornBadge>\n      </DemoBlock>\n    </DemoSection>\n  </div>\n</template>\n"
+    },
+    {
+      "title": "UniApp 演示",
+      "path": "packages/uniapp-project/src/pages/reborn-badge/RebornBadgeDemo.vue",
+      "source": "demo",
+      "platform": "uniapp",
+      "code": "<script setup lang=\"ts\">\nimport { ref, shallowRef } from 'vue'\nimport { badgeColors, badgeSizes, badgeVariants } from '@/components/reborn-badge/reborn-badge.config'\nimport RebornBadge from '@/components/reborn-badge/RebornBadge.vue'\nimport RebornCard from '@/components/reborn-card/RebornCard.vue'\nimport RebornInput from '@/components/reborn-input/RebornInput.vue'\nimport RebornPage from '@/components/reborn-page/RebornPage.vue'\nimport RebornRadio from '@/components/reborn-radio/RebornRadio.vue'\nimport RebornRadioGroup from '@/components/reborn-radio/RebornRadioGroup.vue'\nimport RebornSwitch from '@/components/reborn-switch/RebornSwitch.vue'\n\n// 演练场状态\nconst color = shallowRef<(typeof badgeColors)[number]>('primary')\nconst variant = shallowRef<(typeof badgeVariants)[number]>('filled')\nconst size = shallowRef<(typeof badgeSizes)[number]>('md')\nconst label = shallowRef('乐一番')\nconst closable = shallowRef(false)\nconst round = shallowRef(false)\nconst showBadge = shallowRef(true)\n\n/** 可选中标签演示数据：四种视觉风格各一个 */\nconst checkTags = ref(\n  badgeVariants.map((v, i) => ({\n    label: ['热销', '新品', '包邮', '自营'][i] ?? v,\n    variant: v as (typeof badgeVariants)[number],\n    checked: i === 0,\n  })),\n)\n\n/** 处理关闭事件 */\nfunction handleClose() {\n  uni.showToast({ title: '徽标已关闭！', icon: 'none' })\n}\n\n/** 处理可选中标签的 change 事件 */\nfunction handleCheckChange(label: string, checked: boolean) {\n  uni.showToast({ title: `${label} → ${checked ? '选中' : '取消'}`, icon: 'none' })\n}\n</script>\n\n<template>\n  <RebornPage title=\"Badge 徽标\" description=\"用于展示状态、数量或重要标识的微型标签。支持多种色彩、感官风格及交互状态。\">\n    <!-- 交互演练场 -->\n    <RebornCard title=\"交互演练场\" custom-class=\"overflow-hidden p-0\">\n      <!-- 预览区 -->\n      <view class=\"flex-1 p-10 flex items-center justify-center min-h-[300rpx] bg-blue-1\">\n        <RebornBadge\n          v-model:show=\"showBadge\" :color=\"color\" :variant=\"variant\" :size=\"size\" :label=\"label\"\n          :closable=\"closable\" :round=\"round\" @close=\"handleClose\"\n        />\n      </view>\n      <!-- 控制项 -->\n      <view class=\"space-y-2\">\n        <text class=\"text-[10px] font-bold uppercase tracking-widest text-slate-400\">内容文本</text>\n        <RebornInput v-model=\"label\" placeholder=\"输入标签文字\" />\n      </view>\n\n      <view class=\"space-y-2\">\n        <text class=\"text-[10px] font-bold uppercase tracking-widest text-slate-400\">预设色彩</text>\n        <RebornRadioGroup v-model=\"color\">\n          <RebornRadio v-for=\"item in badgeColors\" :key=\"item\" :value=\"item\">\n            <!-- radio 插槽完全接管渲染，做成纯色板选择 -->\n            <template #radio=\"{ checked }\">\n              <view class=\"relative flex size-[40rpx]\">\n                <view\n                  v-if=\"checked\" class=\"absolute inline-flex h-full w-full animate-ping rounded-full opacity-75\"\n                  :class=\"`bg-${item}`\"\n                />\n                <view class=\"relative inline-flex size-[40rpx] rounded-full\" :class=\"`bg-${item}`\" />\n              </view>\n            </template>\n          </RebornRadio>\n        </RebornRadioGroup>\n      </view>\n\n      <view class=\"space-y-2\">\n        <text class=\"text-[10px] font-bold uppercase tracking-widest text-slate-400\">视觉风格</text>\n        <RebornRadioGroup v-model=\"variant\">\n          <RebornRadio v-for=\"item in badgeVariants\" :key=\"item\" :value=\"item\">\n            {{ item }}\n          </RebornRadio>\n        </RebornRadioGroup>\n      </view>\n\n      <view class=\"space-y-2\">\n        <text class=\"text-[10px] font-bold uppercase tracking-widest text-slate-400\">尺寸规格</text>\n        <RebornRadioGroup v-model=\"size\">\n          <RebornRadio v-for=\"item in badgeSizes\" :key=\"item\" :value=\"item\">\n            {{ item }}\n          </RebornRadio>\n        </RebornRadioGroup>\n      </view>\n\n      <view class=\"space-y-2\">\n        <view class=\"text-[10px] font-bold uppercase tracking-widest text-slate-400\">关闭图标</view>\n        <RebornSwitch v-model=\"closable\" active-label=\"显示\" inactive-label=\"隐藏\" />\n      </view>\n\n      <view class=\"space-y-2\">\n        <view class=\"text-[10px] font-bold uppercase tracking-widest text-slate-400\">圆角（round）</view>\n        <RebornSwitch v-model=\"round\" active-label=\"圆角\" inactive-label=\"直角\" />\n      </view>\n\n      <view class=\"space-y-2\">\n        <view class=\"text-[10px] font-bold uppercase tracking-widest text-slate-400\">显示控制</view>\n        <RebornSwitch v-model=\"showBadge\" active-label=\"显示\" inactive-label=\"隐藏\" />\n      </view>\n    </RebornCard>\n\n    <!-- 变体矩阵 -->\n    <RebornCard title=\"变体矩阵 (Variants Matrix)\">\n      <view v-for=\"v in badgeVariants\" :key=\"v\">\n        <text class=\"text-[10px] font-mono text-slate-400 uppercase tracking-widest\">{{ v }}</text>\n        <view class=\"flex flex-wrap items-center gap-1\">\n          <RebornBadge v-for=\"c in badgeColors\" :key=\"c\" :variant=\"v\" :color=\"c\" size=\"sm\" :label=\"c\" />\n        </view>\n      </view>\n    </RebornCard>\n\n    <!-- 圆角标签 -->\n    <RebornCard title=\"圆角标签 (Round)\">\n      <view class=\"flex flex-wrap items-center gap-2\">\n        <RebornBadge v-for=\"v in badgeVariants\" :key=\"v\" :variant=\"v\" color=\"primary\" round :label=\"v\" />\n        <RebornBadge color=\"success\" variant=\"soft\" round closable label=\"可关闭胶囊\" />\n      </view>\n    </RebornCard>\n\n    <!-- 可选中标签 -->\n    <RebornCard title=\"可选中标签 (Check Tag)\">\n      <view class=\"flex flex-wrap items-center gap-2\">\n        <RebornBadge\n          v-for=\"item in checkTags\" :key=\"item.label\" v-model:checked=\"item.checked\" check\n          :variant=\"item.variant\" color=\"primary\" :label=\"`${item.variant} · ${item.label}`\"\n          @change=\"handleCheckChange(item.label, $event)\"\n        />\n        <RebornBadge check disabled variant=\"soft\" color=\"primary\" label=\"disabled\" />\n      </view>\n    </RebornCard>\n\n    <!-- 图标与插槽 -->\n    <RebornCard title=\"图标集成 (Icons)\">\n      <view>\n        <RebornBadge icon=\"i-lucide-check\" label=\"Success\" color=\"success\" />\n        <RebornBadge icon=\"i-lucide-alert-circle\" label=\"Warning\" color=\"warning\" gap />\n        <RebornBadge icon=\"i-lucide-info\" label=\"Info\" color=\"info\" gap />\n        <RebornBadge icon=\"i-lucide-star\" square color=\"primary\" variant=\"soft\" gap />\n      </view>\n    </RebornCard>\n  </RebornPage>\n</template>\n"
+    }
+  ],
+  "related": [
+    "reborn-transition"
+  ],
+  "whenToUse": [
+    "标记条目状态（成功/警告/错误等语义色）或数量时。",
+    "需要类复选框的可选中筛选标签时（check + v-model:checked + change）。",
+    "标签需要可关闭交互，含关闭前异步确认（beforeClose）时。",
+    "需要 v-model:show 控制徽标显隐时。"
+  ],
+  "whenNotToUse": [
+    "独立的按钮操作，改用 reborn-button。",
+    "仅需在角标位置挂小圆点/数字提示，改用 reborn-chip。"
+  ],
+  "pitfalls": [
+    "web 与 uniapp 双端可用；closeIcon 默认值双端不同（web 为 i-lucide-x，uniapp 为 i-mdi-close-circle）。",
+    "icon prop 仅 UniApp 支持；Web 使用 leading/trailing 插槽。",
+    "uniapp 端为避免原生 class 冲突提供了 customClass。",
+    "Web 端 class 只落在徽标主体（与 ui.base 同一节点），不会加到外层动画容器；给外层容器加布局类（w-full、外边距）用 ui.root。",
+    "默认插槽内容会覆盖 label；gap 用于多个徽标并排时自动加左间距。",
+    "check 未选中态会把配色整体退为灰阶；disabled 同时屏蔽选中切换与关闭交互。",
+    "配色取数字色阶（subtle/soft 背景 2 阶、边框 4 阶、文字 6 阶，filled 背景 6 阶）；uniapp 端无 secondary 色阶且 gray 只到 8 阶，secondary/neutral 表现与 web 端略有差异。",
+    "Web 新增 circle 固定等宽高，优先于 round 与 square，配色仍由 variant 决定；UniApp 暂无 circle。圆形适合短数字或单图标，不建议放长文本或关闭按钮。",
+    "两端 show/checked 模型默认 undefined：未绑定时内部默认可见/未选中，显式 undefined/null 按隐藏/未选中处理；绑定后严格受控，关闭或切换只派发 update:show / update:checked，父级不回写就保持父值。"
+  ],
+  "dependencies": [
+    "@weapp-tailwindcss/merge-v3",
+    "@weapp-tailwindcss/variants-v3",
+    "clsx",
+    "tailwind-merge",
+    "tailwind-variants"
+  ],
+  "install": {
+    "cli": "npx reborn-ui@latest add reborn-badge"
+  },
+  "sourceRefs": {
+    "web": [
+      "app/components/reborn/ui/reborn-badge/RebornBadge.vue",
+      "app/components/reborn/ui/reborn-badge/index.ts",
+      "app/components/reborn/ui/reborn-badge/reborn-badge.config.ts"
+    ],
+    "uniapp": [
+      "packages/uniapp-project/src/components/reborn-badge/RebornBadge.vue",
+      "packages/uniapp-project/src/components/reborn-badge/index.ts",
+      "packages/uniapp-project/src/components/reborn-badge/reborn-badge.config.ts"
+    ]
+  },
+  "docPath": "content/2.components/button/reborn-badge.md",
+  "_meta": {
+    "contentHash": "82fb774835f6ceb6ab38a94b02f1df2af539705c",
+    "hasOverride": true,
+    "extractors": {
+      "web": "ok",
+      "uniapp": "ok",
+      "docs": "found"
+    }
+  }
+}
