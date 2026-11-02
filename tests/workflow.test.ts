@@ -67,3 +67,16 @@ test('项目没有声明脚本时不执行任何命令', async () => {
   await assert.rejects(previews.start({ packageManager: 'npm', scripts: {} } as Project, 'session-test', 'dev'))
   assert.equal(ran, false)
 })
+
+test('进程未输出日志时仍展示宿主记录的失败原因', async () => {
+  const read = () => ({ text: '', nextOffset: 0, lossy: false })
+  const previews = new Previews({
+    shell: { resolve: value => value, execute: async () => ({ status: 'completed', exitCode: 3221225794, done: Promise.resolve(), kill: () => false, observed: { stdout: { readFrom: read }, stderr: { readFrom: read } } }) },
+    jobs: { start(spec) { spec.run(); return 'bash-failed' }, get: () => ({ status: 'failed', detail: 'exit code: 3221225794' }), kill: () => 'already-finished' },
+  })
+  const project: Project = { root: 'D:/fixture', name: 'fixture', packageManager: 'npm', scripts: { dev: 'vite' }, dependencies: {}, framework: 'Vue', platform: 'web', config: {}, configFiles: [], components: [], warnings: [] }
+  const state = await previews.start(project, 'session-test', 'dev')
+  assert.equal(state.state, 'failed')
+  assert.match(state.log, /3221225794/)
+  await previews.dispose()
+})

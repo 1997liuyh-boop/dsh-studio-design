@@ -14,7 +14,7 @@ export interface PreviewHost {
   shell?: { resolve(input: object): object; execute(spec: object): Promise<Execution> }
   jobs?: {
     start(spec: { kind: 'bash'; label: string; owner: string; output: { channel: 'stdout' | 'stderr'; read(offset: number): OutputRead }[]; run(): { cancel(): void; done: Promise<{ status: 'completed' | 'killed' | 'failed'; detail?: string }> } }): string
-    get(id: string, owner: string): { status: string }
+    get(id: string, owner: string): { status: string; detail?: string }
     kill(id: string, owner: string, reason: string): string
   }
 }
@@ -29,8 +29,9 @@ export class Previews {
     const entry = this.entries.get(root)
     if (!entry || !this.host.jobs) return { state: 'idle', jobId: '', command: '', url: '', log: '' }
     const execution = entry.execution
-    const log = [entry.error, execution?.observed.stdout.readFrom(0).text, execution?.observed.stderr.readFrom(0).text].filter(Boolean).join('\n').replace(/\x1b\[[0-9;]*m/g, '').slice(-64000)
-    const status = this.host.jobs.get(entry.jobId, entry.owner).status
+    const job = this.host.jobs.get(entry.jobId, entry.owner)
+    const status = job.status
+    const log = [entry.error, execution?.observed.stdout.readFrom(0).text, execution?.observed.stderr.readFrom(0).text, status === 'failed' ? '预览启动失败：' + (job.detail || '未返回退出原因，请检查 dsh Shell 日志') : ''].filter(Boolean).join('\n').replace(/\x1b\[[0-9;]*m/g, '').slice(-64000)
     const state = status === 'running' ? execution ? 'running' : 'starting' : ['completed', 'failed', 'killed', 'stopping'].includes(status) ? status as PreviewState['state'] : 'starting'
     let url = ''
     if (execution?.status === 'running') {
