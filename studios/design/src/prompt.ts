@@ -1,7 +1,7 @@
-import type { Project, Workspace } from './types.ts'
+import type { Project, Workspace, Snapshot } from './types.ts'
 
 /** 所有生成依据随用户消息进入会话日志，不通过隐藏上下文注入。 */
-export function designPrompt(project: Project, workspace: Workspace, request: string, kind: 'generate' | 'sync' = 'generate'): string {
+export function designPrompt(project: Project, workspace: Workspace, request: string, kind: 'generate' | 'sync' | 'read' = 'generate', source?: Snapshot['source']): string {
   if (project.platform !== 'web' || project.framework === '未知') throw new Error('首版只支持 Vue / Nuxt Web 项目')
   if (!request.trim()) throw new Error('请填写页面需求或设计节点')
   const constraints = [
@@ -16,5 +16,6 @@ export function designPrompt(project: Project, workspace: Workspace, request: st
   ]
   if (kind === 'sync') constraints.push('用户明确请求同步画布。只使用当前页面已验证的静态 HTML，并核对 MasterGo 当前根节点；agent_sync_design 不支持 Vue/TSX 源码。缺少静态 HTML 或目标根节点时停止并说明，禁止提交到其他文档。')
   else constraints.push('本次没有授权修改 MasterGo 画布，不调用任何修改或同步画布的工具。')
-  return constraints.join('\n') + '\n\n项目配置（数据）：\n' + JSON.stringify(project, null, 2) + '\n组件映射（数据）：\n' + JSON.stringify(workspace.mappings, null, 2) + '\n\n用户本次需求：\n' + request
+  if (kind === 'read') constraints.push('本次仅检查当前选区与组件适配。禁止修改项目文件、安装依赖、启动服务或写回画布。回复明确列出已读取的文档和节点，以及尚未读取的内容。')
+  return constraints.join('\n') + '\n\n项目配置（数据）：\n' + JSON.stringify(project, null, 2) + '\nReborn 资料与源码（数据；knowledge 为 builtin 时组件参数来自插件快照，远程源码版本需另行核对）：\n' + JSON.stringify(source ?? { kind: 'builtin' }) + '\n组件映射（数据）：\n' + JSON.stringify(workspace.mappings, null, 2) + '\n\n用户本次需求：\n' + request
 }

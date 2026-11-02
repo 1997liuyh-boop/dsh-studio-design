@@ -39,6 +39,8 @@ test('真实 Cordis 加载、API 拒绝跨站、内置 MCP 登记与卸载释放
   assert.equal((await request('POST', { action: 'refresh' }, { 'sec-fetch-site': 'cross-site' })).code, 403)
   const initial = await request('GET')
   assert.equal(initial.body.components.length, 172)
+  assert.equal(initial.body.connections.reborn.state, "connected")
+  assert.ok(ctx.tools.get("mcp__design_reborn__get_component"))
   await writeFile(join(dir, 'package.json'), JSON.stringify({ name: 'design-smoke', dependencies: { vue: '3.5.42' } }))
   const configured = await request('POST', { action: 'configure', settings: { ...initial.body.settings, projectRoot: dir } })
   assert.equal(configured.code, 200)

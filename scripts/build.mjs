@@ -12,7 +12,7 @@ const pkg = JSON.parse(await readFile(join(dir, 'package.json'), 'utf8'))
 await mkdir(join(dir, 'lib'), { recursive: true }); await mkdir(join(dir, 'static'), { recursive: true })
 const css = async path => (await postcss([tailwind()]).process(await readFile(path, 'utf8'), { from: path })).css
 await build({ entryPoints: [join(dir, 'src/index.ts')], outfile: join(dir, 'lib/index.js'), bundle: true, platform: 'node', format: 'esm', target: 'node22', define: { STUDIO_PROJECT: JSON.stringify(project) } })
-await build({ entryPoints: [join(root, 'packages/sdk/client.tsx')], outfile: join(dir, 'lib/client.js'), bundle: true, platform: 'browser', format: 'cjs', jsx: 'automatic', external: ['react', 'react/jsx-runtime'],
+await build({ entryPoints: [join(dir, 'src/client.tsx')], outfile: join(dir, 'lib/client.js'), bundle: true, platform: 'browser', format: 'cjs', jsx: 'automatic', external: ['react', 'react/jsx-runtime'],
   define: { STUDIO_PROJECT: JSON.stringify(project), STUDIO_PROJECT_ORDER: String(project.order), STUDIO_CARD_CSS: JSON.stringify(await css(join(root, 'packages/sdk/card.css'))) },
   banner: { js: `window.__ModuleLoader__.load({id:${JSON.stringify(pkg.name)},factory:(require)=>{var module={exports:{}};var exports=module.exports;` }, footer: { js: 'return module.exports;}});' } })
 await build({ entryPoints: [join(dir, 'src/main.ts')], outfile: join(dir, 'static/app.js'), bundle: true, platform: 'browser', format: 'esm', minify: true,

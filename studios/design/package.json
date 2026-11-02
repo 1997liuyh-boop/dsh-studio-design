@@ -1,16 +1,64 @@
 {
-  "name": "dsh-studio-design", "version": "0.1.0", "type": "module", "license": "MIT",
+  "name": "dsh-studio-design",
+  "version": "0.2.0",
+  "type": "module",
+  "license": "MIT",
   "description": "MasterGo 与 Reborn UI 设计协作工作室",
-  "engines": { "node": ">=22.19" },
-  "repository": { "type": "git", "url": "https://github.com/1997liuyh-boop/dsh-studio-design.git" },
-  "main": "lib/index.js",
-  "exports": { ".": "./lib/index.js", "./client": "./lib/client.js", "./package.json": "./package.json" },
-  "files": ["lib", "static", "reborn", "studio.json", "dsh.plugin.json", "cordis.patch.yml", "README.md", "LICENSE", "UPSTREAM.json"],
-  "dsh": {
-    "bundle": { "patch": "./cordis.patch.yml" },
-    "client": { "platform": "web", "inject": ["@deepseek-ai/dsh-client-ui-slots"] },
-    "compatibility": { "dsh": "0.2.1-rc.2", "dshReleases": { "0.2.1-rc.2": "experimental" } }
+  "engines": {
+    "node": ">=22.19"
   },
-  "peerDependencies": { "dsh-studio-projects": "^0.5.0", "dsh-worktable": "^0.6.0", "@deepseek-ai/dsh-mcp-client": "*" },
-  "peerDependenciesMeta": { "dsh-studio-projects": { "optional": true }, "dsh-worktable": { "optional": true }, "@deepseek-ai/dsh-mcp-client": { "optional": true } }
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/1997liuyh-boop/dsh-studio-design.git"
+  },
+  "main": "lib/index.js",
+  "exports": {
+    ".": "./lib/index.js",
+    "./client": "./lib/client.js",
+    "./package.json": "./package.json"
+  },
+  "files": [
+    "lib",
+    "static",
+    "reborn",
+    "studio.json",
+    "dsh.plugin.json",
+    "cordis.patch.yml",
+    "README.md",
+    "LICENSE",
+    "UPSTREAM.json"
+  ],
+  "dsh": {
+    "bundle": {
+      "patch": "./cordis.patch.yml"
+    },
+    "client": {
+      "platform": "web",
+      "inject": [
+        "@deepseek-ai/dsh-client-ui-slots"
+      ]
+    },
+    "compatibility": {
+      "dsh": "0.2.1-rc.2",
+      "dshReleases": {
+        "0.2.1-rc.2": "experimental"
+      }
+    }
+  },
+  "peerDependencies": {
+    "dsh-studio-projects": "^0.5.0",
+    "dsh-worktable": "^0.6.0",
+    "@deepseek-ai/dsh-mcp-client": "*"
+  },
+  "peerDependenciesMeta": {
+    "dsh-studio-projects": {
+      "optional": true
+    },
+    "dsh-worktable": {
+      "optional": true
+    },
+    "@deepseek-ai/dsh-mcp-client": {
+      "optional": true
+    }
+  }
 }

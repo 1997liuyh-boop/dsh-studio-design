@@ -7,7 +7,7 @@ import type { Mapping, Settings, Workspace } from './types.ts'
 
 /** 默认连接使用已锁定的 MasterGo 包及随插件分发的 Reborn MCP。 */
 export function defaults(): Settings {
-  return { schemaVersion: 1, projectRoot: '', rebornRoot: '', mastergo: { command: 'npx', args: ['-y', '@mastergo/vibe-mcp@1.0.32', '--url=http://127.0.0.1:30678'] }, reborn: { command: '', args: [] } }
+  return { schemaVersion: 1, projectRoot: '', rebornRoot: '', rebornSource: 'builtin', rebornRepository: 'https://github.com/1997liuyh-boop/Reborn-UI', rebornRef: 'main', rebornCommit: '', mastergo: { command: 'npx', args: ['-y', '@mastergo/vibe-mcp@1.0.32', '--url=http://127.0.0.1:30678'] }, reborn: { command: '', args: [] } }
 }
 /** 校验可持久化配置；命令按参数数组传给官方传输层。 */
 export function settings(input: unknown): Settings {
@@ -18,7 +18,11 @@ export function settings(input: unknown): Settings {
     if (!Array.isArray(value.args) || value.args.length > 32) throw new Error('MCP 参数必须是 JSON 数组')
     return { command: text(value.command, 2048), args: value.args.map(item => text(item, 4096)) }
   }
-  return { schemaVersion: 1, projectRoot: text(value.projectRoot), rebornRoot: text(value.rebornRoot), mastergo: connection(value.mastergo), reborn: connection(value.reborn) }
+  const rebornRoot = text(value.rebornRoot)
+  const source = value.rebornSource ?? (rebornRoot ? 'local' : 'builtin')
+  if (source !== 'builtin' && source !== 'local' && source !== 'github') throw new Error('未知 Reborn 资料来源')
+  if (value.rebornKnowledge !== undefined && typeof value.rebornKnowledge !== 'boolean') throw new Error('Reborn 资料状态无效')
+  return { schemaVersion: 1, projectRoot: text(value.projectRoot), rebornRoot, rebornSource: source, rebornRepository: text(value.rebornRepository ?? defaults().rebornRepository), rebornRef: text(value.rebornRef ?? 'main', 256), rebornCommit: text(value.rebornCommit ?? '', 64), rebornCachedRepository: text(value.rebornCachedRepository ?? ''), rebornKnowledge: value.rebornKnowledge !== false, mastergo: connection(value.mastergo), reborn: connection(value.reborn) }
 }
 /** 预览只接受本机服务，隔离 iframe 不获得宿主同源权限。 */
 export function previewUrl(input: unknown): string {

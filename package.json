@@ -1,10 +1,12 @@
 {
   "name": "dsh-studio-design-source",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "private": true,
   "type": "module",
   "license": "MIT",
-  "engines": { "node": ">=22.19" },
+  "engines": {
+    "node": ">=22.19"
+  },
   "scripts": {
     "build": "node scripts/build.mjs",
     "check": "vue-tsc --noEmit && node scripts/check.mjs",

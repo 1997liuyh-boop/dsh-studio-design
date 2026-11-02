@@ -42,6 +42,12 @@ export interface Settings {
   schemaVersion: 1
   projectRoot: string
   rebornRoot: string
+  rebornSource?: 'builtin' | 'local' | 'github'
+  rebornRepository?: string
+  rebornRef?: string
+  rebornCommit?: string
+  rebornCachedRepository?: string
+  rebornKnowledge?: boolean
   mastergo: ConnectionSpec
   reborn: ConnectionSpec
 }
@@ -55,4 +61,15 @@ export interface Snapshot {
   workspace: Workspace | null
   components: Component[]
   connections: Record<'mastergo' | 'reborn', ConnectionStatus>
+  preview?: PreviewState
+  source?: { kind: string; root: string; commit: string; repository: string; knowledge?: 'repository' | 'builtin' }
+}
+
+/** 只关联本工作室创建的后台任务，不接管外部服务。 */
+export interface PreviewState {
+  state: 'idle' | 'starting' | 'ready' | 'running' | 'completed' | 'failed' | 'killed' | 'stopping'
+  jobId: string
+  url: string
+  log: string
+  command: string
 }
