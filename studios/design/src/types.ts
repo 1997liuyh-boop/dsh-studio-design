@@ -46,6 +46,7 @@ export interface Settings {
   rebornRepository?: string
   rebornRef?: string
   rebornCommit?: string
+  rebornContentCommit?: string
   rebornCachedRepository?: string
   rebornKnowledge?: boolean
   mastergo: ConnectionSpec
@@ -62,7 +63,7 @@ export interface Snapshot {
   components: Component[]
   connections: Record<'mastergo' | 'reborn', ConnectionStatus>
   preview?: PreviewState
-  source?: { kind: string; root: string; commit: string; repository: string; knowledge?: 'repository' | 'builtin' }
+  source?: { kind: string; root: string; commit: string; contentCommit?: string; repository: string; knowledge?: 'repository' | 'builtin' }
 }
 
 /** 只关联本工作室创建的后台任务，不接管外部服务。 */

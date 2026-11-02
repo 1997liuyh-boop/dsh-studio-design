@@ -8,7 +8,7 @@
 2. 从本仓库 GitHub Actions 下载插件包，解压下载的 artifact，或按下方步骤构建。
 3. 退出桌面应用后，在您的 dsh 安装中运行 `dsh plugin --profile desktop add <设计工作室 tgz 的绝对路径>`，然后重新启动应用。开发源码宿主使用 `pnpm dsh plugin --profile desktop add <路径>`。不要使用 npm 安装整个源码根目录。
 4. 从工作室列表打开「设计工作室」，选择 Vue / Nuxt Web 项目文件夹，或填写绝对路径，点击「读取并保存」。
-5. 打开 MasterGo 桌面端及目标文档，在 MCP 面板确认服务地址，内置 Reborn 自动连接，点击 MasterGo 的「连接」。默认使用 `@mastergo/vibe-mcp@1.0.32` 和 `http://127.0.0.1:30678`；地址不同可在高级配置中修改参数数组并保存。
+5. 打开 MasterGo 桌面端及目标文档，在 MCP 面板确认服务地址，内置 Reborn 自动连接，点击 MasterGo 的「连接」。默认使用 `@mastergo/vibe-mcp@1.0.32` 和 `http://127.0.0.1:30678`；在“MasterGo 可视化配置”填写桌面服务地址与适配器版本并保存，无需 Token。设计资料写入所选项目的 `.mastergo`；项目切换后重新连接。旧版自定义命令及参数保留在高级模式。
 6. 选择 MasterGo 页面或根节点，点击「读取当前选区」查看真实读取摘要。组件选择与映射默认收起，可留空让 dsh 分析；已有映射继续按项目保留。
 7. 填写页面需求并交给 dsh。每个项目绑定一个普通 dsh 会话，使用主程序配置的模型；主窗口与悬浮球可查看同一会话，也可在主窗口切换模型、审批工具和停止任务。插件不保存模型密钥。
 8. 从项目已有脚本选择 dev / preview，点击「启动预览」。插件通过 dsh Shell 和 Jobs 运行，展示日志、后台任务及真实本机地址，也可停止本工作室创建的服务。手动启动的服务可以输入地址查看。
@@ -19,7 +19,21 @@
 
 目前 `reborn-ui-mcp` 尚未在 npm 发布。本插件内置来源锁定的官方 MCP、知识库、内联示例和写作规范，构建时打包到子进程中。首版快照包含 172 个组件，支持查询 Props、Events、Slots、平台、示例及 CLI 安装建议。安装建议不代表对应 npm CLI 已发布，生成时仍需核查实际可用的 CLI 与项目锁定版本。
 
-资料来源支持内置快照、本地目录及 GitHub 仓库。本地目录可以直接选择，需已有有效的 knowledge；GitHub 获取仓库文件并固定实际提交，仅验证和读取知识库与源码，不安装依赖、不执行仓库脚本。仓库没有生成后的 knowledge/components 时，源码仍可供 dsh 查阅，组件参数明确继续使用内置快照；具有完整知识库时才切换查询资料。失败保留当前资料。内置 Reborn 自动连接，不依赖业务项目；只切换项目不重启它。自定义命令仍需显式连接。MCP 启动参数是命令行 argv，不是组件 Props，普通使用保持默认即可。
+资料来源支持内置快照、本地目录及 GitHub 仓库。本地支持已生成的源码根、MCP 分发目录、完整知识包或直接选择 knowledge 文件夹；GitHub 获取仓库文件并固定实际提交，仅验证和读取知识库与源码，不安装依赖、不执行仓库脚本。仓库没有生成后的 knowledge/components 时，源码仍可供 dsh 查阅，组件参数明确继续使用内置快照；具有完整知识库时才切换查询资料。失败保留当前资料。内置 Reborn 自动连接，不依赖业务项目；只切换项目不重启它。自定义命令仍需显式连接。MCP 启动参数是命令行 argv，不是组件 Props，普通使用保持默认即可。
+
+## GitHub 完整知识库与项目规则
+
+Reborn 源码仓库不提交完整的生成知识库。点击“使用完整 GitHub 知识库”，会填入本仓库和 `knowledge` 分支；点击“获取并固定版本”后使用云端构建的完整资料，页面同时显示缓存提交与对应 Reborn 源码提交。原始 Reborn GitHub 链接仍可使用；缺少生成资料时明确沿用内置快照。
+
+[Build latest Reborn knowledge](https://github.com/1997liuyh-boop/dsh-studio-design/actions/workflows/refresh-reborn.yml) 在本仓库 main 推送、手动运行和每 6 小时执行。流程从 Reborn main 的干净检出安装锁定依赖，依次构建 registry、知识库并验证，再构建插件、发布只含数据的 knowledge 分支及下载产物。Reborn 刚推送后可手动运行此流程立即生成；不会自动升级已安装的 dsh 插件。失败不会发布半成品，工作室获取失败保留原缓存。
+
+在 dsh 工作区打开目标项目会话，再点“使用当前工作区”，显式同步目录并核查路径。只读取主视图已持有会话的 cwd；没有明确项目时提示选择文件夹，不借用后台会话。切换工作区不会静默替换工作室项目。
+
+也可以直接在该工作区会话输入：`@设计工作室 使用当前会话的工作区，先检查 AGENTS.md、项目主题和已有组件，再按 MasterGo 当前选区实现页面，优先复用项目组件，其次使用 Reborn，执行项目已有检查。` @ 使用的是当前会话；工作室页面按钮仍使用按项目绑定的开发会话。MasterGo 相关任务需先在相同项目目录下完成连接。
+
+“生成项目设计规则”使用普通 dsh 会话，无需 MasterGo；支持从非 Vue 项目归纳规则，页面生成仍仅支持 Vue / Nuxt Web。模型读取真实配置、主题和代表页面，定向写入 `docs/design-rules.md`，在 `AGENTS.md` 添加一次引用，保留原约束并为规则列出文件依据，不修改业务代码。生成后可在 dsh 会话审阅改动。
+
+Reborn 高级命令只有 `--kb-dir <目录>`（环境变量 `REBORN_KB_DIR`）与 `--spec-dir <目录>`（`REBORN_SPEC_DIR`）。前者包含 index.json 和 components，后者是已打包的写作规范。stdio 无需端口、模型或 Token。内置模式自动传递路径，自定义 argv 示例：`["D:/reborn/mcp.js", "--kb-dir", "D:/reborn/knowledge", "--spec-dir", "D:/reborn/spec"]`，命令为 node。
 
 ## 开发和打包
 
@@ -33,7 +47,7 @@ npm test
 npm run pack
 ```
 
-产物为 `artifacts/dsh-studio-design-0.2.0.tgz`，SHA256 记录在 `artifacts/manifest.json`。GitHub Actions 在 Windows 和 Linux 运行构建、类型检查、行为测试和打包，上传安装包与摘要。`npm run test:host` 需要 `DSH_HARNESS_ROOT` 指向已构建的 dsh 源码检出，用于真实 Cordis 加载、路由与 MCP 连接验证。
+产物为 `artifacts/dsh-studio-design-0.3.0.tgz`，SHA256 记录在 `artifacts/manifest.json`。GitHub Actions 在 Windows 和 Linux 运行构建、类型检查、行为测试和打包，上传安装包与摘要。`npm run test:host` 需要 `DSH_HARNESS_ROOT` 指向已构建的 dsh 源码检出，用于真实 Cordis 加载、路由与 MCP 连接验证。
 
 更新内置 Reborn：在干净的 Reborn 检出生成知识库后，运行 `node scripts/sync-reborn.mjs <Reborn-UI 目录>`。提交更新后的 `upstream/reborn` 与 `REBORN-SNAPSHOT.json`，重新检查与打包。共享 SDK 源码和摘要位于 `packages/sdk` 与 `SDK-SNAPSHOT.json`，整份同步，禁止私改协议。
 

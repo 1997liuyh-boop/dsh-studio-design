@@ -1,4 +1,4 @@
-import { readFile, writeFile, mkdir, readdir, copyFile } from 'node:fs/promises'
+import { readFile, writeFile, mkdir, readdir, rm } from 'node:fs/promises'
 import { resolve, join, relative, isAbsolute } from 'node:path'
 import { fileURLToPath } from 'node:url'
 import { execFileSync } from 'node:child_process'
@@ -10,6 +10,8 @@ const source = resolve(process.argv[2]), target = join(root, 'upstream/reborn')
 const commit = execFileSync('git', ['-C', source, 'rev-parse', 'HEAD'], { encoding: 'utf8' }).trim()
 execFileSync('git', ['-C', source, 'diff', '--quiet', 'HEAD'])
 const hashes = []
+// 清理本脚本拥有的生成目录，避免已删除组件留在新快照中。
+await rm(join(target, 'knowledge/components'), { recursive: true, force: true })
 async function save(path, body) {
   body = Buffer.isBuffer(body) ? body.toString('utf8').replaceAll('\r\n', '\n') : body
   await mkdir(resolve(target, path, '..'), { recursive: true })

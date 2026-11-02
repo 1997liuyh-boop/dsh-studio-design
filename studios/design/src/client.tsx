@@ -1,10 +1,12 @@
 /** 设计工作室卡片与受限的目录选择桥接。 */
-import { apply as applyCard, inject } from '../../../packages/sdk/client.tsx'
-export { inject }
+import { apply as applyCard } from '../../../packages/sdk/client.tsx'
+import { currentWorkspace, type WorkspaceSessions } from './workspace.ts'
+export const inject = ['slots', 'sessions']
 
 /** 只为当前可见的设计工作室页面请求宿主目录选择。 */
-export function apply(ctx: Parameters<typeof applyCard>[0]): void {
+export function apply(ctx: Parameters<typeof applyCard>[0] & { sessions: WorkspaceSessions }): void {
   applyCard(ctx)
+  const sessions = ctx.sessions
   ctx.effect(() => {
     let active = true, pending = false
     const receive = async (event: MessageEvent) => {
@@ -16,7 +18,8 @@ export function apply(ctx: Parameters<typeof applyCard>[0]): void {
       try {
         const native = (window as Window & { __DSH_DIRECTORY_PICKER__?: { pick(): Promise<string | null> } }).__DSH_DIRECTORY_PICKER__
         let path: string | null
-        if (native) path = await native.pick()
+        if (event.data.kind === 'workspace') path = currentWorkspace(sessions)
+        else if (native) path = await native.pick()
         else {
           const rpcId = crypto.randomUUID()
           const response = await fetch('/api/directoryPicker/pick', { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify({ type: 'client-request', rpcId, method: 'directoryPicker/pick', payload: { args: {} } }) })

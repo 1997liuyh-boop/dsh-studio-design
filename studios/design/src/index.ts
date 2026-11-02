@@ -5,7 +5,7 @@ import { Store, settings } from './storage.ts'
 import { catalog, inspectProject, object, text } from './project.ts'
 import { Connections, type McpFiber } from './connections.ts'
 import type { Project } from './types.ts'
-import { syncSource, validateSource } from './source.ts'
+import { syncSource, locateSource } from './source.ts'
 import { Previews, type PreviewHost } from './preview.ts'
 
 /** 插件注册名与安装包一致。 */
@@ -52,22 +52,28 @@ export async function apply(ctx: Host): Promise<void> {
   }
   ctx.effect(() => async () => { closed = true; lifetime.abort(); await mutations; await previews.dispose(); await connections.dispose() }, '设计工作室：结束在途操作并关闭 MCP 连接')
   await connectBuiltin()
-  const snapshot = async () => ({ settings: config, project, projectError, workspace: project ? await store.workspace(project.root) : null, components: await catalog(join(sourceRoot() || builtin, 'knowledge')), connections: connections.snapshot(), preview: project ? await previews.snapshot(project.root) : undefined, source: { kind: codeRoot() ? config.rebornSource : 'builtin', root: codeRoot() || builtin, knowledge: sourceRoot() ? 'repository' : 'builtin', commit: config.rebornCommit || '', repository: config.rebornCachedRepository || config.rebornRepository || '' } })
+  const snapshot = async () => ({ settings: config, project, projectError, workspace: project ? await store.workspace(project.root) : null, components: await catalog(join(sourceRoot() || builtin, 'knowledge')), connections: connections.snapshot(), preview: project ? await previews.snapshot(project.root) : undefined, source: { kind: codeRoot() ? config.rebornSource : 'builtin', root: codeRoot() || builtin, knowledge: sourceRoot() ? 'repository' : 'builtin', commit: config.rebornCommit || '', contentCommit: config.rebornContentCommit || '', repository: config.rebornCachedRepository || config.rebornRepository || '' } })
   const dispatch = async (input: Record<string, unknown>) => {
     if (closed) throw new Error('设计工作室正在卸载')
     if (input.action === 'configure') {
       const next = settings(input.settings)
       const inspected = next.projectRoot ? await inspectProject(next.projectRoot) : null
       next.projectRoot = inspected?.root ?? ''
-      if (next.rebornSource === 'local') await validateSource(next.rebornRoot)
+      if (next.rebornSource === 'local') {
+        const local = await locateSource(next.rebornRoot)
+        next.rebornRoot = local.root; next.rebornContentCommit = local.contentCommit
+        next.rebornCommit = ''; next.rebornCachedRepository = ''; next.rebornKnowledge = true
+      }
       if (next.rebornSource === 'github') {
         // 待获取的地址与已经验证的缓存分别保存，下载失败时保留可用版本。
         next.rebornRoot = config.rebornSource === 'github' ? config.rebornRoot : ''
         next.rebornCommit = config.rebornSource === 'github' ? config.rebornCommit : ''
         next.rebornCachedRepository = config.rebornCachedRepository || config.rebornRepository
         next.rebornKnowledge = config.rebornSource === 'github' ? config.rebornKnowledge : false
+        next.rebornContentCommit = config.rebornSource === 'github' ? config.rebornContentCommit : ''
       }
-      if (JSON.stringify([next.mastergo, next.reborn, next.rebornRoot, next.rebornSource]) !== JSON.stringify([config.mastergo, config.reborn, config.rebornRoot, config.rebornSource])) await connections.disconnect()
+      if (next.projectRoot !== config.projectRoot || JSON.stringify(next.mastergo) !== JSON.stringify(config.mastergo)) await connections.disconnect('mastergo')
+      if (JSON.stringify([next.reborn, next.rebornRoot, next.rebornSource]) !== JSON.stringify([config.reborn, config.rebornRoot, config.rebornSource])) await connections.disconnect('reborn')
       await store.saveSettings(next)
       config = next; project = inspected; projectError = ''
       await connectBuiltin()
@@ -75,16 +81,17 @@ export async function apply(ctx: Host): Promise<void> {
       if (config.rebornSource !== 'github') throw new Error('请先选择 GitHub 资料来源')
       const source = await syncSource(join(store.dir, 'sources'), config.rebornRepository || '', config.rebornRef || 'main', lifetime.signal)
       if (closed) throw new Error('工作室已关闭')
-      const next = { ...config, rebornRoot: source.root, rebornCommit: source.commit, rebornCachedRepository: config.rebornRepository, rebornKnowledge: source.knowledge }
+      const next = { ...config, rebornRoot: source.root, rebornCommit: source.commit, rebornContentCommit: source.contentCommit, rebornCachedRepository: config.rebornRepository, rebornKnowledge: source.knowledge }
       await store.saveSettings(next)
-      await connections.disconnect()
+      await connections.disconnect('reborn')
       config = next
       await connectBuiltin()
     } else if (input.action === 'connect') {
       const target = input.target
       if (target !== 'mastergo' && target !== 'reborn') throw new Error('未知连接')
+      if (target === 'mastergo' && !project) throw new Error('请先选择项目，MasterGo 将把设计资料写入该项目的 .mastergo 目录')
       const spec = target === 'reborn' && !config.reborn.command ? builtinSpec() : config[target]
-      await connections.connect(target, spec, builtin)
+      await connections.connect(target, spec, target === 'mastergo' ? project!.root : builtin)
     } else if (input.action === 'preview-start') {
       if (!project) throw new Error('请先读取项目')
       const workspace = await store.workspace(project.root)

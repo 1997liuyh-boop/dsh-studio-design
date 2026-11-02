@@ -51,9 +51,9 @@ export class Connections {
     if (fiber) { await fiber.dispose(); this.fibers.delete(name) }
     this.statuses[name] = { state: 'disconnected', message: '已断开' }
   }
-  /** 切换项目或卸载时等待连接中的操作结束，再释放两个传输。 */
-  async disconnect(): Promise<void> {
-    const task = this.queue.then(async () => { await this.disconnectOne('mastergo'); await this.disconnectOne('reborn') })
+  /** 项目切换仅释放 MasterGo；省略名称时释放全部连接。 */
+  async disconnect(name?: 'mastergo' | 'reborn'): Promise<void> {
+    const task = this.queue.then(async () => { if (name) await this.disconnectOne(name); else { await this.disconnectOne('mastergo'); await this.disconnectOne('reborn') } })
     this.queue = task.catch(() => {})
     await task
   }

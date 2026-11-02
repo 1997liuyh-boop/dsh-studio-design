@@ -32,3 +32,20 @@ test('卸载中止正在握手的连接，并拒绝后续连接', async () => {
   assert.equal(connections.snapshot().mastergo.state, 'disconnected')
   await assert.rejects(connections.connect('mastergo', { command: 'node', args: [] }, '/project'), /已卸载/)
 })
+
+test('切换项目释放 MasterGo，Reborn 连接不被一起重启', async () => {
+  const disposed: string[] = [], specifications: Record<string, unknown>[] = []
+  const connections = new Connections(async config => {
+    specifications.push(config)
+    return { async await() {}, async dispose() { disposed.push(String(config.serverName)) } }
+  }, () => true)
+  try {
+    await connections.connect('mastergo', { command: 'npx', args: [] }, '/selected-project')
+    await connections.connect('reborn', { command: 'node', args: [] }, '/plugin-owned')
+    await connections.disconnect('mastergo')
+    assert.deepEqual(disposed, ['design_mastergo'])
+    assert.equal(specifications[0].cwd, '/selected-project')
+    assert.equal(connections.snapshot().reborn.state, 'connected')
+    assert.equal(connections.snapshot().mastergo.state, 'disconnected')
+  } finally { await connections.dispose() }
+})
