@@ -1,6 +1,6 @@
 {
   "repository": "https://github.com/1997liuyh-boop/Reborn-UI",
-  "commit": "130c4f78a60745c77d59fe8f858d2b9430ad7feb",
+  "commit": "6ee9bcb91a68db16f758b00ecce9a9d3d5e55703",
   "files": [
     {
       "path": "LICENSE",
@@ -464,7 +464,7 @@
     },
     {
       "path": "knowledge/components/reborn-result.json",
-      "sha256": "cb9d032d54d1e3043f733d440b7d62d18cb2b67cdf8b007a89a9a7692a93d034"
+      "sha256": "8400cac86bfbde986148c7593c3950f8739ae01a1d374946ac3e3a3339ae2001"
     },
     {
       "path": "knowledge/components/reborn-root-portal.json",

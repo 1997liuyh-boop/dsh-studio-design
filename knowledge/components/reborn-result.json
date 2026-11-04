@@ -62,7 +62,7 @@
   "slots": [
     {
       "name": "icon",
-      "description": "图标区内容，替换默认字形。`icon` 不为 `null` 时圆形底板与语义色淡底保留；`icon` 为 `null` 时底板退化为无尺寸透明容器，且该插槽是让图标区继续渲染的唯一途径。"
+      "description": "图标区内容，替换默认字形。`icon` 不为 `null` 时图标区尺寸与语义色保留（UniApp 另保留圆形淡底）；`icon` 为 `null` 时底板退化为无尺寸透明容器，且该插槽是让图标区继续渲染的唯一途径。"
     },
     {
       "name": "title",
@@ -145,7 +145,7 @@
   },
   "docPath": "content/2.components/miscellaneous/reborn-result.md",
   "_meta": {
-    "contentHash": "7aa305b11d3af7bad4c8d671c9eac869634631c2",
+    "contentHash": "96aa9f4599aedb691fe87bebf4747b35a5476b85",
     "hasOverride": true,
     "extractors": {
       "web": "ok",
