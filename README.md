@@ -11,6 +11,10 @@ Git 安装使用已提交的 lib/ 与静态资源。开发时执行 npm install 
 
 把 MasterGo 设计稿、Reborn UI 组件和 dsh 的项目会话连在一起。设计任务直接使用 dsh 当前会话的工作区和模型，聊天与悬浮球共享记录。
 
+设计工作室是独立安装、独立启停和独立更新的工作室，不随共享工作台或其他业务工作室自动安装。共享工作台只提供容器和控制入口；未安装本包时，工作室列表不会显示设计工作室业务页面。
+
+主要功能包括 MasterGo MCP 节点读取、内置提示词查看与复制、Reborn 组件和变体检索、节点优化、原始图标与切图登记、项目设计规则生成、预览检查、几何/像素对照和交互断言。MasterGo、Reborn 知识库和项目预览均按当前项目会话隔离。
+
 ## 开始使用
 
 1. 在 dsh 左侧工作区打开项目会话。
@@ -95,3 +99,7 @@ compare 之后调用 `design_review(stage=interact)`（需本会话 check 通过
 设计中的原始 SVG、图片和形状必须导出落盘并逐项登记使用路径，普通图标也不能遗漏。组件映射记录节点语义及 project/reborn/custom 来源；搜索、标签页、表格、轮播等不能统一映射为 Button 加 CSS。项目组件填写源码依据，自定义组件说明兼容原因。
 
 还原按 plan、check、compare、interact、verify 执行。plan 同时登记真实交互期望，check 校验组件和原图，compare 实测几何与像素，interact 在宿主侧执行交互并截图，verify 登记证据（有 interact 报告时直接采用）。evidence-recorded 只表示证据文件已登记，不能证明像素一致或替代视觉对照；未完成项必须明确保留。
+
+## 更新已安装插件
+
+GitHub 代码提交不会自动更新 Desktop profile 中已经锁定的安装版本。请通过插件管理器重新安装本仓库来源；旧共享组合库的用户请先按[控制层迁移步骤](https://github.com/1997liuyh-boop/dsh-studio-library#更新与旧组合库迁移)保留现有子工作室，再移除旧组合库。工作室内升级需要已发布的适配安装包。
