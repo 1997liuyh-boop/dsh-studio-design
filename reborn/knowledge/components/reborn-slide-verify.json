@@ -1,0 +1,364 @@
+{
+  "$schema": "../schema/component.schema.json",
+  "id": "reborn-slide-verify",
+  "title": "滑块验证",
+  "description": "用于人机校验的滑块验证组件，向右拖动超过阈值即通过，支持失败回弹与自动重置。",
+  "category": "misc",
+  "tags": [
+    "uniapp",
+    "form",
+    "verification"
+  ],
+  "aliases": [
+    "slide verify",
+    "滑块验证",
+    "人机验证",
+    "滑动验证"
+  ],
+  "platforms": [
+    "uniapp"
+  ],
+  "props": [
+    {
+      "name": "customClass",
+      "type": "any",
+      "required": false,
+      "description": "自定义 class",
+      "default": "''"
+    },
+    {
+      "name": "customStyle",
+      "type": "any",
+      "required": false,
+      "description": "自定义 style",
+      "default": "''"
+    },
+    {
+      "name": "ui",
+      "type": "SlideVerifyUI",
+      "required": false,
+      "description": "样式覆盖 可用键（从源码抽取，以此为准）——UniApp：content、progress、root、text*、thumb、thumbIcon*、track、verifiedProgress、verifiedText、verifiedThumb、verifiedThumbIcon、verifiedTrack。 带 * 的键对应插槽兜底节点：填了同名插槽，组件自带的节点被替换，这个键随之失效。",
+      "default": "() => ({})"
+    },
+    {
+      "name": "size",
+      "type": "'sm' | 'md' | 'lg'",
+      "required": false,
+      "description": "尺寸",
+      "default": "'md'",
+      "options": [
+        "sm",
+        "md",
+        "lg"
+      ]
+    },
+    {
+      "name": "color",
+      "type": "'primary' | 'secondary' | 'success' | 'info' | 'warning' | 'error' | 'neutral'",
+      "required": false,
+      "description": "主题色",
+      "default": "'primary'",
+      "options": [
+        "primary",
+        "secondary",
+        "success",
+        "info",
+        "warning",
+        "error",
+        "neutral"
+      ]
+    },
+    {
+      "name": "shape",
+      "type": "'pill' | 'square'",
+      "required": false,
+      "description": "滑动容器形态，pill 为胶囊形，square 为项目规范圆角的方形",
+      "default": "'pill'",
+      "options": [
+        "pill",
+        "square"
+      ]
+    },
+    {
+      "name": "disabled",
+      "type": "boolean",
+      "required": false,
+      "description": "是否禁用",
+      "default": "false"
+    },
+    {
+      "name": "loading",
+      "type": "boolean",
+      "required": false,
+      "description": "是否加载中",
+      "default": "false"
+    },
+    {
+      "name": "threshold",
+      "type": "number",
+      "required": false,
+      "description": "通过阈值，0.92 表示滑到 92% 即通过",
+      "default": "0.92"
+    },
+    {
+      "name": "showThresholdText",
+      "type": "boolean",
+      "required": false,
+      "description": "是否根据通过阈值自动生成默认提示文案",
+      "default": "false"
+    },
+    {
+      "name": "thresholdText",
+      "type": "string",
+      "required": false,
+      "description": "阈值提示文案模板，使用 {threshold} 插入百分比",
+      "default": "'拖动超过 {threshold}% 完成验证'"
+    },
+    {
+      "name": "duration",
+      "type": "number",
+      "required": false,
+      "description": "回弹与通过动画时长，单位 ms",
+      "default": "220"
+    },
+    {
+      "name": "defaultText",
+      "type": "string",
+      "required": false,
+      "description": "默认提示文案",
+      "default": "'向右滑动完成验证'"
+    },
+    {
+      "name": "successText",
+      "type": "string",
+      "required": false,
+      "description": "通过文案",
+      "default": "'验证通过'"
+    },
+    {
+      "name": "loadingText",
+      "type": "string",
+      "required": false,
+      "description": "加载文案",
+      "default": "'验证中...'"
+    },
+    {
+      "name": "splitText",
+      "type": "boolean",
+      "required": false,
+      "description": "是否启用左右分层文案，开启后左侧进度区域展示通过文案，右侧展示默认文案",
+      "default": "true"
+    },
+    {
+      "name": "failText",
+      "type": "string",
+      "required": false,
+      "description": "未通过文案",
+      "default": "'请拖动到最右侧'"
+    },
+    {
+      "name": "showFailText",
+      "type": "boolean",
+      "required": false,
+      "description": "未通过时是否展示失败文案",
+      "default": "true"
+    },
+    {
+      "name": "failDuration",
+      "type": "number",
+      "required": false,
+      "description": "未通过文案展示时长，单位 ms",
+      "default": "900"
+    },
+    {
+      "name": "autoReset",
+      "type": "boolean",
+      "required": false,
+      "description": "通过后是否自动重置",
+      "default": "false"
+    },
+    {
+      "name": "resetDelay",
+      "type": "number",
+      "required": false,
+      "description": "自动重置延迟，单位 ms",
+      "default": "1200"
+    },
+    {
+      "name": "thumbIcon",
+      "type": "string",
+      "required": false,
+      "description": "默认滑块图标",
+      "default": "'i-lucide-chevrons-right'"
+    },
+    {
+      "name": "successIcon",
+      "type": "string",
+      "required": false,
+      "description": "通过滑块图标",
+      "default": "'i-lucide-check'"
+    },
+    {
+      "name": "loadingIcon",
+      "type": "string",
+      "required": false,
+      "description": "加载滑块图标",
+      "default": "'i-svg-spinners-180-ring-with-bg'"
+    },
+    {
+      "name": "defaultVerified",
+      "type": "boolean",
+      "required": false,
+      "description": "初始是否已验证通过，无需外部 ref(true) + v-model",
+      "default": "false"
+    },
+    {
+      "name": "showToast",
+      "type": "boolean",
+      "required": false,
+      "description": "验证通过后是否自动弹出 Toast 提示",
+      "default": "false"
+    },
+    {
+      "name": "toastText",
+      "type": "string",
+      "required": false,
+      "description": "Toast 提示文案，默认使用 successText",
+      "default": "''"
+    },
+    {
+      "name": "width",
+      "type": "string",
+      "required": false,
+      "description": "滑动容器宽度，支持任意 CSS 单位（如 '600rpx'、'80%'），默认撑满父容器",
+      "default": "''"
+    },
+    {
+      "name": "modelValue",
+      "type": "boolean",
+      "required": false,
+      "description": "双向绑定值",
+      "vModel": true,
+      "default": "undefined"
+    }
+  ],
+  "events": [
+    {
+      "name": "start",
+      "payload": "(e: 'start', payload: SlideVerifyPayload): void",
+      "description": "开始拖动（触摸开始且通过交互校验后）"
+    },
+    {
+      "name": "drag",
+      "payload": "(e: 'drag', payload: SlideVerifyPayload): void",
+      "description": "拖动过程中连续触发"
+    },
+    {
+      "name": "success",
+      "payload": "(e: 'success', payload: SlideVerifyPayload): void",
+      "description": "达到阈值并完成验证"
+    },
+    {
+      "name": "fail",
+      "payload": "(e: 'fail', payload: SlideVerifyPayload): void",
+      "description": "松手时未达阈值"
+    },
+    {
+      "name": "reset",
+      "payload": "(e: 'reset'): void",
+      "description": "调用 `reset` 或自动重置将状态清空时"
+    },
+    {
+      "name": "change",
+      "payload": "(e: 'change', value: boolean): void",
+      "description": "v-model` 对应布尔值变化（与表单 `validate('change')` 联动）"
+    },
+    {
+      "name": "update:modelValue",
+      "description": "modelValue 变化时触发（v-model 同步）",
+      "payload": "value: boolean"
+    }
+  ],
+  "slots": [
+    {
+      "name": "default",
+      "props": "(props: { verified: boolean, loading: boolean, progress: number, text: string, ui: any }) => any",
+      "description": "中间文案区：`text` 为当前展示文案（与内部 `displayText` 一致）；提供后**不再**使用内置 `splitText` 分层叠层"
+    },
+    {
+      "name": "thumb",
+      "props": "(props: { verified: boolean, loading: boolean, progress: number, icon: string, ui: any }) => any",
+      "description": "滑块内容：`icon` 为当前应展示的图标 class；默认渲染为带 `icon` 的视图"
+    }
+  ],
+  "exposes": [
+    {
+      "name": "reset",
+      "description": ""
+    },
+    {
+      "name": "verify",
+      "description": ""
+    }
+  ],
+  "examples": [
+    {
+      "title": "Web 演示",
+      "path": "app/components/reborn/examples/reborn-slide-verify/RebornSlideVerifyDemo.vue",
+      "source": "demo",
+      "platform": "web",
+      "code": "<template>\n  <div class=\"border-default rounded-lg border border-dashed p-6 text-center\">\n    <DemoNote>Web 端暂未提供此组件，请在 UniApp 端查看。</DemoNote>\n  </div>\n</template>\n"
+    },
+    {
+      "title": "UniApp 演示",
+      "path": "packages/uniapp-project/src/pages/reborn-slide-verify/RebornSlideVerifyDemo.vue",
+      "source": "demo",
+      "platform": "uniapp",
+      "code": "<script setup lang=\"ts\">\nimport type {\n    SlideVerifyColor,\n    SlideVerifySize,\n} from '@/components/reborn-slide-verify/reborn-slide-verify.config'\nimport { computed, ref, shallowRef } from 'vue'\nimport RebornButton from '@/components/reborn-button/RebornButton.vue'\nimport RebornCard from '@/components/reborn-card/RebornCard.vue'\nimport RebornPage from '@/components/reborn-page/RebornPage.vue'\nimport RebornSlider from '@/components/reborn-slider/RebornSlider.vue'\nimport RebornSwitch from '@/components/reborn-switch/RebornSwitch.vue'\nimport {\n    slideVerifyColors,\n    slideVerifySizes,\n} from '@/components/reborn-slide-verify/reborn-slide-verify.config'\nimport RebornSlideVerify from '@/components/reborn-slide-verify/RebornSlideVerify.vue'\n\nconst basicRef = ref<InstanceType<typeof RebornSlideVerify> | null>(null)\nconst basicVerified = shallowRef(false)\nconst customVerified = shallowRef(false)\nconst slotVerified = shallowRef(false)\nconst thresholdSliderValue = shallowRef(70)\nconst currentColor = shallowRef<SlideVerifyColor>('primary')\nconst currentSize = shallowRef<SlideVerifySize>('md')\nconst isDisabled = shallowRef(false)\nconst isLoading = shallowRef(false)\nconst splitText = shallowRef(true)\nconst showFailText = shallowRef(true)\nconst isSquare = shallowRef(false)\nconst widthPercent = shallowRef(100)\nconst currentWidth = computed(() => widthPercent.value === 100 ? '' : `${widthPercent.value}%`)\nconst logs = ref<string[]>(['等待滑动验证'])\nconst statusTextClass = 'text-24 text-gray-5 dark:text-gray-3'\nconst colorDotBaseClass = 'size-6 rounded-full shadow-sm transition-transform'\n\n/** 事件记录最多保留的条数，长时间操作也不会让列表无限增长 */\nconst maxLogCount = 6\n\n/** 新记录插到最前，超出上限的旧记录丢弃 */\nfunction addLog(text: string) {\n    logs.value.unshift(`${new Date().toLocaleTimeString()} ${text}`)\n    if (logs.value.length > maxLogCount) logs.value.splice(maxLogCount)\n}\n\nfunction handleSuccess(name: string) {\n    addLog(`${name} 验证通过`)\n}\n\nfunction handleFail(name: string) {\n    addLog(`${name} 未滑动到终点`)\n}\n\nfunction resetBasic() {\n    basicRef.value?.reset()\n    logs.value = []\n    addLog('基础示例已重置')\n}\n\nfunction verifyBasic() {\n    basicRef.value?.verify()\n}\n\nfunction handleThresholdChange() {\n    customVerified.value = false\n}\n\nfunction getColorDotClass(color: SlideVerifyColor) {\n    return currentColor.value === color ? 'scale-110' : ''\n}\n\nfunction getShieldIcon(verified: boolean) {\n    return verified ? 'i-lucide-shield-check' : 'i-lucide-shield'\n}\n\n</script>\n\n<template>\n    <RebornPage title=\"滑块验证\" description=\"通过滑动操作完成安全验证，适用于登录、提交等二次确认场景。\">\n        <RebornCard title=\"基础用法\" custom-class=\"space-y-4\" overflow-visible>\n            <RebornSlideVerify ref=\"basicRef\" v-model=\"basicVerified\" show-toast @success=\"handleSuccess('基础示例')\"\n                @fail=\"handleFail('基础示例')\"  />\n\n            <view class=\"flex flex-row items-center justify-between gap-3\">\n                <text :class=\"statusTextClass\">\n                    当前状态：{{ basicVerified ? '已通过' : '未通过' }}\n                </text>\n                <view class=\"flex flex-row gap-2\">\n                    <RebornButton size=\"sm\" variant=\"outlined\" color=\"neutral\" @tap=\"resetBasic\">\n                        重置\n                    </RebornButton>\n                    <RebornButton size=\"sm\" @tap=\"verifyBasic\" color=\"primary\">\n                        直接通过\n                    </RebornButton>\n                </view>\n            </view>\n        </RebornCard>\n\n        <RebornCard title=\"动态配置\" custom-class=\"space-y-4\" overflow-visible>\n            <RebornSlideVerify v-model=\"customVerified\" :size=\"currentSize\" :color=\"currentColor\" :disabled=\"isDisabled\"\n                :loading=\"isLoading\" :threshold=\"thresholdSliderValue\" show-threshold-text\n                threshold-text=\"拖动超过 {threshold}% 完成当前配置\" :split-text=\"splitText\"\n                fail-text=\"未达到通过阈值，请继续向右滑动\" :show-fail-text=\"showFailText\"\n                :width=\"currentWidth\" :shape=\"isSquare ? 'square' : 'pill'\"\n                @success=\"handleSuccess('动态配置')\"\n                @fail=\"handleFail('动态配置')\" />\n\n            <view class=\"flex flex-col gap-3\">\n                <view class=\"flex flex-row items-center justify-between gap-3\">\n                    <text class=\"text-sm text-slate-500\">尺寸</text>\n                    <view class=\"flex flex-row flex-wrap justify-end gap-2\">\n                        <RebornButton v-for=\"size in slideVerifySizes\" :key=\"size\" size=\"xs\"\n                            :variant=\"currentSize === size ? 'filled' : 'outlined'\"\n                            :color=\"currentSize === size ? 'primary' : 'neutral'\" @tap=\"currentSize = size\">\n                            {{ size }}\n                        </RebornButton>\n                    </view>\n                </view>\n\n                <view class=\"flex flex-row items-center justify-between gap-3\">\n                    <text class=\"text-sm text-slate-500\">颜色</text>\n                    <view class=\"flex flex-row flex-wrap justify-end gap-2\">\n                        <view v-for=\"color in slideVerifyColors\" :key=\"color\"\n                            :class=\"[colorDotBaseClass, getColorDotClass(color)]\"\n                            :style=\"{ backgroundColor: `var(--color-${color}, ${color === 'neutral' ? '#737373' : ''})` }\"\n                            @tap=\"currentColor = color\" />\n                    </view>\n                </view>\n\n                <view class=\"flex flex-row items-center justify-between\">\n                    <text class=\"text-sm text-slate-500 dark:text-gray-3\">容器宽度</text>\n                    <view class=\"rounded-full px-[20rpx] py-[6rpx]\"\n                        :style=\"{ backgroundColor: `color-mix(in srgb, var(--color-${currentColor}) 15%, transparent)` }\">\n                        <text class=\"text-26 font-semibold tabular-nums\"\n                            :style=\"{ color: `var(--color-${currentColor})` }\">\n                            {{ widthPercent }}%\n                        </text>\n                    </view>\n                </view>\n\n                <RebornSlider v-model=\"widthPercent\" :min=\"50\" :max=\"100\" :step=\"1\" :color=\"currentColor\"\n                    @change=\"customVerified = false\" />\n\n                <view class=\"flex flex-row items-center justify-between\">\n                    <text class=\"text-sm text-slate-500 dark:text-gray-3\">通过阈值</text>\n                    <view class=\"rounded-full px-[20rpx] py-[6rpx]\"\n                        :style=\"{ backgroundColor: `color-mix(in srgb, var(--color-${currentColor}) 15%, transparent)` }\">\n                        <text class=\"text-26 font-semibold tabular-nums\"\n                            :style=\"{ color: `var(--color-${currentColor})` }\">\n                            {{ thresholdSliderValue }}%\n                        </text>\n                    </view>\n                </view>\n\n                <RebornSlider v-model=\"thresholdSliderValue\" :min=\"50\" :max=\"99\" :step=\"1\" :color=\"currentColor\"\n                    @change=\"handleThresholdChange\" />\n\n                <view class=\"flex justify-between\">\n                    <text class=\"text-sm text-slate-500\">加载</text>\n                    <RebornSwitch v-model=\"isLoading\" />\n                </view>\n                <view class=\"flex justify-between\">\n                    <text class=\"text-sm text-slate-500\">禁用</text>\n                    <RebornSwitch v-model=\"isDisabled\" />\n                </view>\n                <view class=\"flex justify-between\">\n                    <text class=\"text-sm text-slate-500\">失败提示</text>\n                    <RebornSwitch v-model=\"showFailText\" />\n                </view>\n                <view class=\"flex justify-between\">\n                    <text class=\"text-sm text-slate-500\">分层文案</text>\n                    <RebornSwitch v-model=\"splitText\" />\n                </view>\n                <view class=\"flex justify-between\">\n                    <text class=\"text-sm text-slate-500\">方形</text>\n                    <RebornSwitch v-model=\"isSquare\" @change=\"customVerified = false\" />\n                </view>\n\n            </view>\n        </RebornCard>\n\n        <RebornCard title=\"尺寸展示\" custom-class=\"space-y-2\" overflow-visible>\n            <view v-for=\"size in slideVerifySizes\" :key=\"size\" class=\"space-y-2\">\n                <text class=\"font-medium text-sm text-slate-500\">{{ size }}</text>\n                <RebornSlideVerify :size=\"size\" color=\"success\" auto-reset @success=\"handleSuccess(`${size} 尺寸`)\" />\n            </view>\n        </RebornCard>\n\n        <RebornCard title=\"状态演示\" custom-class=\"space-y-4\" overflow-visible>\n            <RebornSlideVerify disabled default-text=\"禁用状态，无法拖动\" />\n            <RebornSlideVerify loading default-text=\"正在校验中\" />\n            <RebornSlideVerify default-verified success-text=\"已完成安全校验\" />\n            <RebornSlideVerify default-text=\"这是一段比较长的验证提示文案，用于观察内容溢出时的截断表现\" fail-text=\"还差一点，请继续向右滑动\" />\n        </RebornCard>\n\n        <RebornCard title=\"样式覆盖与插槽\" custom-class=\"space-y-4\" overflow-visible>\n            <RebornSlideVerify v-model=\"slotVerified\" color=\"warning\" thumb-icon=\"i-lucide-chevron-right\" success-icon=\"i-lucide-check-check\" :ui=\"{\n                track: 'bg-green-50 border-green-100 dark:bg-green-950 dark:border-green-800',\n                progress: 'bg-gradient-to-r from-green-200 to-emerald-300',\n                thumb: 'h-[84rpx] w-[84rpx] bg-white border-green-200 text-green-400 shadow-[0_8rpx_24rpx_rgba(34,197,94,0.20)]',\n                thumbIcon: 'text-green-400',\n                text: 'text-green-400 dark:text-green-300',\n                verifiedTrack: 'bg-green-100 border-green-200 dark:bg-green-900 dark:border-green-700',\n                verifiedProgress: 'bg-gradient-to-r from-green-400 to-emerald-500',\n                verifiedText: 'text-green-700 dark:text-green-200',\n                verifiedThumb: 'h-[84rpx] w-[84rpx] bg-green-500 border-green-400 text-white shadow-[0_8rpx_28rpx_rgba(34,197,94,0.45)]',\n                verifiedThumbIcon: 'text-white',\n            }\" @success=\"handleSuccess('自定义插槽')\">\n                <template #default=\"{ verified, progress, ui }\">\n                    <view class=\"flex flex-row items-center gap-2\">\n                        <view :class=\"[getShieldIcon(verified), verified ? ui.text() : 'text-green-400 dark:text-green-300']\"\n                            class=\"text-32\" />\n                        <text :class=\"verified ? ui.text() : 'text-green-500 dark:text-green-400'\" class=\"text-30 font-semibold\">\n                            {{ verified ? '安全验证已完成' : `安全验证 ${progress}%` }}\n                        </text>\n                    </view>\n                </template>\n\n                <template #thumb=\"{ icon, ui }\">\n                    <view :class=\"[icon, ui.thumbIcon({ class: 'size-[32rpx] text-[32rpx]' })]\" />\n                </template>\n            </RebornSlideVerify>\n        </RebornCard>\n    <RebornCard title=\"事件记录（最近 6 条）\"><text class=\"block whitespace-pre-line text-[24rpx] text-gray-500\">{{ logs.join('\\n') }}</text></RebornCard>\n    </RebornPage>\n</template>\n"
+    }
+  ],
+  "related": [],
+  "whenToUse": [
+    "登录、注册、发送验证码前的轻量级人机校验。",
+    "表单中需要一个「已验证」布尔字段（v-model 绑定，change 与表单校验联动）。",
+    "需要通过 loading / disabled 控制验证时机，或验证通过后自动重置（autoReset + resetDelay）。"
+  ],
+  "whenNotToUse": [
+    "web 端项目：platforms 仅 uniapp，web 端无对应实现。",
+    "在数值区间内取值改用 reborn-slider。"
+  ],
+  "pitfalls": [
+    "platforms 仅 uniapp 端提供。",
+    "threshold 默认 0.92（滑到约 92% 即通过）；若传大于 1 的数（如 92），内部会除以 100 当作比例。",
+    "splitText 默认 true 的左右分层文案，仅在未使用默认插槽、未验证、非加载、非失败展示时生效。",
+    "showToast 通过后调用 uni.showToast，toastText 为空时用 successText。",
+    "defaultVerified 只在未传 modelValue 时初始化本地值；显式 false/null/undefined 均为未通过，不会被 defaultVerified=true 覆盖。父级拒收通过请求时保持父值；移除绑定恢复本地值，初始化不发 update:modelValue/change/success。"
+  ],
+  "dependencies": [
+    "@weapp-tailwindcss/merge-v3",
+    "@weapp-tailwindcss/variants-v3",
+    "clsx",
+    "tailwind-merge",
+    "tailwind-variants"
+  ],
+  "install": {
+    "cli": "npx reborn-ui@latest add reborn-slide-verify"
+  },
+  "sourceRefs": {
+    "uniapp": [
+      "packages/uniapp-project/src/components/reborn-slide-verify/RebornSlideVerify.vue",
+      "packages/uniapp-project/src/components/reborn-slide-verify/index.ts",
+      "packages/uniapp-project/src/components/reborn-slide-verify/reborn-slide-verify.config.ts"
+    ]
+  },
+  "docPath": "content/2.components/miscellaneous/reborn-slide-verify.md",
+  "_meta": {
+    "contentHash": "ccc260ff19f49ca2cfc0692a10808f33dfe10dae",
+    "hasOverride": true,
+    "extractors": {
+      "web": "absent",
+      "uniapp": "ok",
+      "docs": "found"
+    }
+  }
+}

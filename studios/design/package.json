@@ -1,15 +1,17 @@
 {
   "name": "dsh-studio-design",
-  "version": "0.4.0",
+  "version": "0.4.1",
   "type": "module",
   "license": "MIT",
   "description": "MasterGo 与 Reborn UI 设计协作工作室",
   "engines": {
-    "node": ">=22.19"
+    "node": ">=22.19",
+    "dsh": "0.2.1-rc.2 || >=0.2.2-rc.1 <0.2.2"
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/1997liuyh-boop/dsh-studio-design.git"
+    "url": "https://github.com/1997liuyh-boop/dsh-studio-design.git",
+    "directory": "studios/design"
   },
   "main": "lib/index.js",
   "exports": {
@@ -26,7 +28,8 @@
     "cordis.patch.yml",
     "README.md",
     "LICENSE",
-    "UPSTREAM.json"
+    "UPSTREAM.json",
+    "scripts/start.ps1"
   ],
   "dsh": {
     "bundle": {
@@ -49,7 +52,9 @@
   "peerDependencies": {
     "dsh-studio-projects": "^0.5.0",
     "dsh-worktable": "^0.6.0",
-    "@deepseek-ai/dsh-mcp-client": "*"
+    "@deepseek-ai/dsh-mcp-client": "*",
+    "@deepseek-ai/dsh-tools": "*",
+    "playwright": ">=1.49"
   },
   "peerDependenciesMeta": {
     "dsh-studio-projects": {
@@ -60,6 +65,38 @@
     },
     "@deepseek-ai/dsh-mcp-client": {
       "optional": true
+    },
+    "playwright": {
+      "optional": true
     }
+  },
+  "homepage": "https://github.com/1997liuyh-boop/dsh-studio-design#readme",
+  "bugs": {
+    "url": "https://github.com/1997liuyh-boop/dsh-studio-design/issues"
+  },
+  "keywords": [
+    "dsh",
+    "dsh-plugin",
+    "studio"
+  ],
+  "scripts": {
+    "build": "node scripts/build.mjs",
+    "check": "node scripts/check-install.mjs"
+  },
+  "devDependencies": {
+    "@modelcontextprotocol/sdk": "1.12.0",
+    "@tailwindcss/postcss": "4.3.3",
+    "@types/node": "22.20.1",
+    "@types/react": "19.2.15",
+    "@vue/compiler-sfc": "3.5.42",
+    "esbuild": "0.28.2",
+    "postcss": "8.5.32",
+    "react": "19.2.6",
+    "tailwindcss": "4.3.3",
+    "tsx": "4.22.4",
+    "typescript": "6.0.3",
+    "vue": "3.5.42",
+    "vue-tsc": "3.2.5",
+    "zod": "3.25.76"
   }
 }

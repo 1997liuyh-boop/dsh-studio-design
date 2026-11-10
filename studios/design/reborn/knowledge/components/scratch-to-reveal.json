@@ -1,0 +1,114 @@
+{
+  "$schema": "../schema/component.schema.json",
+  "id": "scratch-to-reveal",
+  "title": "刮刮乐揭示",
+  "description": "用于刮开渐变涂层后显示隐藏内容的互动刮刮乐组件。",
+  "category": "effect",
+  "tags": [
+    "css",
+    "tailwind",
+    "magic-ui"
+  ],
+  "aliases": [],
+  "platforms": [
+    "web"
+  ],
+  "props": [
+    {
+      "name": "class",
+      "type": "string",
+      "required": false,
+      "description": "应用于组件的类名。",
+      "default": "\"\""
+    },
+    {
+      "name": "width",
+      "type": "number",
+      "required": true,
+      "description": "刮刮区域的宽度。",
+      "default": "\"\""
+    },
+    {
+      "name": "height",
+      "type": "number",
+      "required": true,
+      "description": "刮刮区域的高度。",
+      "default": "\"\""
+    },
+    {
+      "name": "minScratchPercentage",
+      "type": "number",
+      "required": false,
+      "description": "视为完成的最小刮开比例（0 到 100 之间）。",
+      "default": "50"
+    },
+    {
+      "name": "gradientColors",
+      "type": "[string, string, string]",
+      "required": false,
+      "description": "刮刮效果的渐变颜色。",
+      "default": "() => [\"#A97CF8\", \"#F38CB8\", \"#FDCC92\"]"
+    }
+  ],
+  "events": [
+    {
+      "name": "complete",
+      "payload": "[]",
+      "description": "刮开完成时调用的回调函数。"
+    }
+  ],
+  "slots": [
+    {
+      "name": "default",
+      "description": "刮开后显示的文字或内容。"
+    }
+  ],
+  "exposes": [],
+  "examples": [
+    {
+      "title": "Web 演示",
+      "path": "app/components/reborn/examples/scratch-to-reveal/ScratchToRevealDemo.vue",
+      "source": "demo",
+      "platform": "web",
+      "code": "<script lang=\"ts\" setup>\nimport { shallowRef } from \"vue\";\nconst completed = shallowRef(false);\n\nfunction handleComplete() {\n  completed.value = true;\n}\n</script>\n\n<template>\n  <DemoSection\n    title=\"基础用法\"\n    description=\"涂层本身是刮刮卡的主体表面；刮开超过一半面积后触发 complete。\"\n  >\n    <DemoBlock\n      layout=\"stack\"\n      align=\"center\"\n    >\n      <ScratchToReveal\n        :width=\"250\"\n        :height=\"250\"\n        :min-scratch-percentage=\"50\"\n        class=\"border-default bg-elevated mx-auto flex items-center justify-center overflow-hidden rounded-3xl border-2\"\n        :gradient-colors=\"['#A97CF8', '#F38CB8', '#FDCC92']\"\n        @complete=\"handleComplete\"\n      >\n        <div class=\"text-8xl\">🥳</div>\n      </ScratchToReveal>\n      <DemoNote\n        v-if=\"completed\"\n        tone=\"dimmed\"\n      >\n        已刮开\n      </DemoNote>\n    </DemoBlock>\n  </DemoSection>\n</template>\n"
+    }
+  ],
+  "related": [],
+  "whenToUse": [
+    "抽奖、优惠券等需要用户刮开涂层的互动玩法。",
+    "彩蛋内容揭示，刮开比例达标后通过 complete 事件发奖或跳转。",
+    "需要自定义涂层渐变色（gradientColors）的营销区块。"
+  ],
+  "whenNotToUse": [
+    "悬停即揭示内容，改用 svg-mask 或 text-reveal-card。",
+    "无需交互的渐显入场效果，改用 blur-reveal。"
+  ],
+  "pitfalls": [
+    "仅 web 端可用，依赖 motion-v。",
+    "width 与 height 为必填数字，决定刮刮区域大小。",
+    "minScratchPercentage 取值 0-100（默认 50），刮开比例达到后触发 complete 事件。",
+    "隐藏内容通过默认插槽传入。"
+  ],
+  "dependencies": [
+    "motion-v"
+  ],
+  "install": {
+    "cli": "npx reborn-ui@latest add scratch-to-reveal"
+  },
+  "sourceRefs": {
+    "web": [
+      "app/components/reborn/ui/scratch-to-reveal/ScratchToReveal.vue",
+      "app/components/reborn/ui/scratch-to-reveal/index.ts"
+    ]
+  },
+  "docPath": "content/2.components/special-effects/scratch-to-reveal.md",
+  "_meta": {
+    "contentHash": "d071b350c4aedfbacb95201f3fa29c668d0a9be0",
+    "hasOverride": true,
+    "extractors": {
+      "web": "ok",
+      "uniapp": "absent",
+      "docs": "found"
+    }
+  }
+}

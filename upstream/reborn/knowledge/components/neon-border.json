@@ -9,6 +9,7 @@
     "tailwind",
     "border"
   ],
+  "aliases": [],
   "platforms": [
     "web"
   ],
@@ -93,7 +94,7 @@
   },
   "docPath": "content/2.components/special-effects/neon-border.md",
   "_meta": {
-    "contentHash": "ab491c0d52e51535ea871f73acd54eac03bae321",
+    "contentHash": "7180503f1bf69ba044cae095ebf1d46ef0b4ecf1",
     "hasOverride": true,
     "extractors": {
       "web": "ok",

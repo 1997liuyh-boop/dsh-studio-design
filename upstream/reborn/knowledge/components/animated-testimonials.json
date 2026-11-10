@@ -9,6 +9,11 @@
     "tailwind",
     "aceternity-ui"
   ],
+  "aliases": [
+    "评价轮播",
+    "用户评价",
+    "testimonial"
+  ],
   "platforms": [
     "web"
   ],
@@ -77,7 +82,7 @@
   },
   "docPath": "content/2.components/miscellaneous/animated-testimonials.md",
   "_meta": {
-    "contentHash": "5461646bdfe1180961120d91129fdf09c2b18ded",
+    "contentHash": "ecdfd9f46d32301be0f92e09ccd991b6decd68be",
     "hasOverride": true,
     "extractors": {
       "web": "ok",

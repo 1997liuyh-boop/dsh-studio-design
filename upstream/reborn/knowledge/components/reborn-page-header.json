@@ -10,6 +10,12 @@
     "navigation",
     "breadcrumb"
   ],
+  "aliases": [
+    "page header",
+    "页头",
+    "页面标题",
+    "返回标题栏"
+  ],
   "platforms": [
     "web"
   ],
@@ -128,7 +134,7 @@
   },
   "docPath": "content/2.components/navigation/reborn-page-header.md",
   "_meta": {
-    "contentHash": "c9b5ffac6e786f229615598f39c0b35681f0f932",
+    "contentHash": "88d97c41af08b1fa43f680be564d37c238de5faa",
     "hasOverride": true,
     "extractors": {
       "web": "ok",

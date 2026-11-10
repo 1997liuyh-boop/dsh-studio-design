@@ -9,6 +9,7 @@
     "tailwind",
     "gallery"
   ],
+  "aliases": [],
   "platforms": [
     "web"
   ],
@@ -74,7 +75,7 @@
   },
   "docPath": "content/2.components/miscellaneous/photo-gallery.md",
   "_meta": {
-    "contentHash": "7ed39dfe67b4af5f45e3f783c2bb11ad55f84d1b",
+    "contentHash": "251e884a0b7802b1ec389d8d9b6f34fc6de4d23f",
     "hasOverride": true,
     "extractors": {
       "web": "ok",

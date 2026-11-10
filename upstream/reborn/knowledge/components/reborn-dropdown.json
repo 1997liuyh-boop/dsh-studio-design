@@ -5,6 +5,14 @@
   "description": "当页面上的操作命令过多时用于收纳操作元素的下拉菜单，点击或移入触点展开，选择后触发 select，仅 web 端。",
   "category": "misc",
   "tags": [],
+  "aliases": [
+    "dropdown",
+    "下拉菜单",
+    "操作菜单",
+    "更多操作",
+    "菜单",
+    "action menu"
+  ],
   "platforms": [
     "web"
   ],
@@ -58,10 +66,15 @@
     },
     {
       "name": "trigger",
-      "type": "DropdownTrigger",
+      "type": "'click' | 'hover' | 'manual'",
       "required": false,
       "description": "触发下拉的行为，移动端不支持 hover；manual 由使用者通过插槽下发的 open / close / toggle 或 v-model:popup-visible 控制 @defaultValue 'click'",
-      "default": "'click'"
+      "default": "'click'",
+      "options": [
+        "click",
+        "hover",
+        "manual"
+      ]
     },
     {
       "name": "popupOffset",
@@ -229,7 +242,7 @@
   },
   "docPath": "content/2.components/miscellaneous/reborn-dropdown.md",
   "_meta": {
-    "contentHash": "d7832af0dec4a396d2c46e597b384615ca0d795f",
+    "contentHash": "a44d574776150c354070b2f781e8d0f71e4744d2",
     "hasOverride": true,
     "extractors": {
       "web": "ok",

@@ -1,0 +1,486 @@
+{
+  "$schema": "../schema/component.schema.json",
+  "id": "reborn-button",
+  "title": "Button 按钮",
+  "description": "双端基础按钮：7 种语义色，Web 支持 5 种风格与独立胶囊、圆形参数，以及加载与禁用状态。",
+  "category": "basic",
+  "tags": [
+    "css",
+    "tailwind",
+    "button",
+    "uniapp"
+  ],
+  "aliases": [
+    "button",
+    "按钮",
+    "btn",
+    "操作按钮",
+    "主按钮",
+    "次按钮",
+    "文字按钮",
+    "链接按钮",
+    "加载按钮"
+  ],
+  "platforms": [
+    "web",
+    "uniapp"
+  ],
+  "props": [
+    {
+      "name": "label",
+      "type": "string",
+      "required": false,
+      "description": "按钮文本内容；提供 default 插槽时被插槽内容覆盖"
+    },
+    {
+      "name": "color",
+      "type": "'primary' | 'secondary' | 'success' | 'info' | 'warning' | 'error' | 'neutral'",
+      "required": false,
+      "description": "语义色：primary/secondary/success/info/warning/error/neutral，默认 primary",
+      "default": "'primary'",
+      "options": [
+        "primary",
+        "secondary",
+        "success",
+        "info",
+        "warning",
+        "error",
+        "neutral"
+      ]
+    },
+    {
+      "name": "variant",
+      "type": "'filled' | 'outlined' | 'soft' | 'subtle' | 'text' | 'round' | 'circle'",
+      "required": false,
+      "description": "视觉风格：filled / outlined / soft / subtle / text，默认 filled。Web 的 round / circle 取值仅保留旧样式兼容，新代码使用独立同名布尔参数；UniApp 仍通过这两个变体设置形状。",
+      "default": "'filled'",
+      "options": [
+        "filled",
+        "outlined",
+        "soft",
+        "subtle",
+        "text",
+        "round",
+        "circle"
+      ],
+      "platform": "uniapp"
+    },
+    {
+      "name": "size",
+      "type": "'xs' | 'sm' | 'default' | 'md' | 'lg' | 'xl' | '2xl'",
+      "required": false,
+      "description": "尺寸：xs/sm/default/md/lg/xl/2xl（default 与 md 等高），默认 md 本条为 UniApp 端取值，另一端另有同名条目。",
+      "default": "'md'",
+      "options": [
+        "xs",
+        "sm",
+        "default",
+        "md",
+        "lg",
+        "xl",
+        "2xl"
+      ],
+      "platform": "uniapp"
+    },
+    {
+      "name": "loading",
+      "type": "boolean",
+      "required": false,
+      "description": "是否加载中；显示加载动画并禁用点击",
+      "default": "false"
+    },
+    {
+      "name": "disabled",
+      "type": "boolean",
+      "required": false,
+      "description": "是否禁用按钮",
+      "default": "false"
+    },
+    {
+      "name": "fluid",
+      "type": "boolean",
+      "required": false,
+      "description": "是否为 flex-1 布局",
+      "default": "false"
+    },
+    {
+      "name": "gap",
+      "type": "boolean",
+      "required": false,
+      "description": "是否间隔按钮",
+      "default": "false"
+    },
+    {
+      "name": "block",
+      "type": "boolean",
+      "required": false,
+      "description": "是否块级元素",
+      "default": "false"
+    },
+    {
+      "name": "customClass",
+      "type": "any",
+      "required": false,
+      "description": "追加到根节点的自定义类名（对应 Web 端 class）"
+    },
+    {
+      "name": "ui",
+      "type": "any",
+      "required": false,
+      "description": "细粒度样式覆盖对象，键为 base/inner/label/loading 可用键（从源码抽取，以此为准）——UniApp：base、inner、label*、loading。 带 * 的键对应插槽兜底节点：填了同名插槽，组件自带的节点被替换，这个键随之失效。",
+      "platform": "uniapp"
+    },
+    {
+      "name": "hoverClass",
+      "type": "string",
+      "required": false,
+      "description": "按钮点击态样式类"
+    },
+    {
+      "name": "hoverStopPropagation",
+      "type": "boolean",
+      "required": false,
+      "description": "是否阻止点击态冒泡"
+    },
+    {
+      "name": "hoverStartTime",
+      "type": "number",
+      "required": false,
+      "description": "按住后出现点击态的延迟时间，单位毫秒",
+      "default": "20"
+    },
+    {
+      "name": "hoverStayTime",
+      "type": "number",
+      "required": false,
+      "description": "手指松开后点击态保留时间，单位毫秒",
+      "default": "70"
+    },
+    {
+      "name": "formType",
+      "type": "string",
+      "required": false,
+      "description": "表单提交类型（submit/reset），配合 form 组件使用"
+    },
+    {
+      "name": "openType",
+      "type": "string",
+      "required": false,
+      "description": "小程序开放能力类型（contact/getPhoneNumber/openSetting/launchApp/chooseAvatar 等），对应事件见 emits"
+    },
+    {
+      "name": "lang",
+      "type": "string",
+      "required": false,
+      "description": "语言"
+    },
+    {
+      "name": "sessionFrom",
+      "type": "string",
+      "required": false,
+      "description": "会话来源"
+    },
+    {
+      "name": "sendMessageTitle",
+      "type": "string",
+      "required": false,
+      "description": "会话标题"
+    },
+    {
+      "name": "sendMessagePath",
+      "type": "string",
+      "required": false,
+      "description": "会话路径"
+    },
+    {
+      "name": "sendMessageImg",
+      "type": "string",
+      "required": false,
+      "description": "会话图片"
+    },
+    {
+      "name": "showMessageCard",
+      "type": "boolean",
+      "required": false,
+      "description": "显示会话卡片"
+    },
+    {
+      "name": "appParameter",
+      "type": "string",
+      "required": false,
+      "description": "打开 APP 时，向 APP 传递的参数"
+    },
+    {
+      "name": "groupId",
+      "type": "string",
+      "required": false,
+      "description": "群ID"
+    },
+    {
+      "name": "guildId",
+      "type": "string",
+      "required": false,
+      "description": "公会ID"
+    },
+    {
+      "name": "publicId",
+      "type": "string",
+      "required": false,
+      "description": "公众号ID"
+    },
+    {
+      "name": "phoneNumberNoQuotaToast",
+      "type": "boolean",
+      "required": false,
+      "description": "手机号获取失败时是否弹出错误提示"
+    },
+    {
+      "name": "createliveactivity",
+      "type": "boolean",
+      "required": false,
+      "description": "是否创建直播活动"
+    },
+    {
+      "name": "variant",
+      "type": "'filled' | 'outlined' | 'soft' | 'subtle' | 'text'",
+      "required": false,
+      "description": "视觉风格：filled / outlined / soft / subtle / text；旧 round / circle 仅保留兼容，新用法请使用同名布尔参数 本条为 Web 端取值，另一端另有同名条目。",
+      "default": "'filled'",
+      "options": [
+        "filled",
+        "outlined",
+        "soft",
+        "subtle",
+        "text"
+      ],
+      "platform": "web"
+    },
+    {
+      "name": "round",
+      "type": "boolean",
+      "required": false,
+      "description": "全圆角胶囊，只改变形状。",
+      "default": "false"
+    },
+    {
+      "name": "circle",
+      "type": "boolean",
+      "required": false,
+      "description": "固定等宽高的圆形，优先于 round；配合纯图标使用。",
+      "default": "false"
+    },
+    {
+      "name": "size",
+      "type": "'sm' | 'md' | 'lg'",
+      "required": false,
+      "description": "尺寸，sm/md/lg 共 3 档，高度依次 24/32/40px，水平内边距统一 12px，默认 md；显式设置时优先于所在表单的 size，未设置时跟随表单 本条为 Web 端取值，另一端另有同名条目。",
+      "default": "'md'",
+      "options": [
+        "sm",
+        "md",
+        "lg"
+      ],
+      "platform": "web"
+    },
+    {
+      "name": "borderStyle",
+      "type": "'solid' | 'dashed'",
+      "required": false,
+      "description": "边框线型：solid 实线 / dashed 虚线，默认 solid；边框宽度固定 1px，对有边框的变体（outlined / subtle）生效",
+      "default": "'solid'",
+      "options": [
+        "solid",
+        "dashed"
+      ]
+    },
+    {
+      "name": "class",
+      "type": "ClassValue",
+      "required": false,
+      "description": "追加到根元素的自定义类名"
+    },
+    {
+      "name": "ui",
+      "type": "ButtonUI",
+      "required": false,
+      "description": "细粒度样式覆盖对象，键为 base/label/leadingIcon/leadingAvatar/leadingAvatarSize/trailingIcon 可用键（从源码抽取，以此为准）——Web：base、label*、leadingAvatar、leadingAvatarSize、leadingIcon、trailingIcon。 带 * 的键对应插槽兜底节点：填了同名插槽，组件自带的节点被替换，这个键随之失效。",
+      "platform": "web"
+    }
+  ],
+  "events": [
+    {
+      "name": "click",
+      "payload": "[event: unknown]",
+      "description": "点击时触发；`disabled` 或 `loading` 时不触发。为原生 click 透传。"
+    },
+    {
+      "name": "tap",
+      "payload": "[event: unknown]",
+      "description": "与 `click` 同时派发，便于沿用 `@tap` 写法。"
+    },
+    {
+      "name": "getuserinfo",
+      "payload": "[event: unknown]",
+      "description": "openType=\"getUserInfo\"`，`e.detail` 含 `userInfo` 等。"
+    },
+    {
+      "name": "contact",
+      "payload": "[event: unknown]",
+      "description": "openType=\"contact\"` 客服会话回调，`e.detail.path` / `query` 为消息参数。"
+    },
+    {
+      "name": "getphonenumber",
+      "payload": "[event: unknown]",
+      "description": "openType=\"getPhoneNumber\"`，`e.detail.code` 用于服务端换取手机号。"
+    },
+    {
+      "name": "error",
+      "payload": "[event: unknown]",
+      "description": "开放能力调用出错时触发，`e.detail` 含错误信息。"
+    },
+    {
+      "name": "opensetting",
+      "payload": "[event: unknown]",
+      "description": "openType=\"openSetting\"` 打开授权设置页后回调，`e.detail.authSetting` 为授权结果。"
+    },
+    {
+      "name": "launchapp",
+      "payload": "[event: unknown]",
+      "description": "openType=\"launchApp\"` 打开 APP 成功时触发。"
+    },
+    {
+      "name": "chooseavatar",
+      "payload": "[event: unknown]",
+      "description": "openType=\"chooseAvatar\"`（微信），`e.detail.avatarUrl` 为所选头像临时路径。"
+    },
+    {
+      "name": "chooseaddress",
+      "payload": "[event: unknown]",
+      "description": "openType=\"chooseAddress\"`（QQ）选择收货地址后回调。"
+    },
+    {
+      "name": "chooseinvoicetitle",
+      "payload": "[event: unknown]",
+      "description": "openType=\"chooseInvoiceTitle\"`（QQ）选择发票抬头后回调。"
+    },
+    {
+      "name": "addgroupapp",
+      "payload": "[event: unknown]",
+      "description": "openType=\"addGroupApp\"`（QQ）添加群应用后回调。"
+    },
+    {
+      "name": "subscribe",
+      "payload": "[event: unknown]",
+      "description": "openType=\"subscribe\"`（QQ）订阅号订阅结果回调。"
+    },
+    {
+      "name": "login",
+      "payload": "[event: unknown]",
+      "description": "openType=\"login\"`（QQ）登录回调，`e.detail` 含登录 code。"
+    },
+    {
+      "name": "getrealtimephonenumber",
+      "payload": "[event: unknown]",
+      "description": "openType=\"getRealtimePhoneNumber\"`（微信）实时手机号验证回调。"
+    },
+    {
+      "name": "agreeprivacyauthorization",
+      "payload": "[event: unknown]",
+      "description": "openType=\"agreePrivacyAuthorization\"`（微信）用户同意隐私协议后回调。"
+    }
+  ],
+  "slots": [
+    {
+      "name": "leading",
+      "props": "(props: { ui: any, loading: boolean }) => any",
+      "description": "前置内容（常放图标），作用域含 loading 状态；loading 时被加载动画替代"
+    },
+    {
+      "name": "default",
+      "props": "(props: { ui: any }) => any",
+      "description": "按钮主体内容，优先于 label prop 渲染"
+    },
+    {
+      "name": "trailing",
+      "props": "(props: { ui: any }) => any",
+      "description": "后置内容（常放图标）；loading 时不渲染"
+    }
+  ],
+  "exposes": [],
+  "examples": [
+    {
+      "title": "Web 演示",
+      "path": "app/components/reborn/examples/reborn-button/RebornButtonDemo.vue",
+      "source": "demo",
+      "platform": "web",
+      "code": "<script setup lang=\"ts\">\nimport { DemoBlock, DemoNote, DemoSection, Icon, Playground } from \"#components\";\nimport { computed, ref, shallowRef } from \"vue\";\nimport { buttonBorderStyles, buttonColors, buttonSizes, buttonVariants } from \"~/components/reborn/ui/reborn-button/reborn-button.config\";\nimport RebornButton from \"~/components/reborn/ui/reborn-button/RebornButton.vue\";\nimport RebornCheckbox from \"~/components/reborn/ui/reborn-checkbox/RebornCheckbox.vue\";\nimport RebornForm from \"~/components/reborn/ui/reborn-form/RebornForm.vue\";\n\nconst colorOptions = buttonColors.map((c) => ({ label: c.charAt(0).toUpperCase() + c.slice(1), value: c }));\nconst variantOptions = buttonVariants.map((v) => ({ label: v.charAt(0).toUpperCase() + v.slice(1), value: v }));\nconst sizeOptions = buttonSizes.map((s) => ({ label: s.toUpperCase(), value: s as (typeof buttonSizes)[number] }));\nconst borderStyleOptions = buttonBorderStyles.map((b) => ({\n  label: b === \"solid\" ? \"实线 Solid\" : \"虚线 Dashed\",\n  value: b as (typeof buttonBorderStyles)[number],\n}));\n\n// ─── 交互演练场 ─────────────────────────────────────────────────\n\n/** 演练场默认状态 */\nconst defaultState: Record<string, any> = {\n  color: \"primary\",\n  variant: \"filled\",\n  size: \"md\",\n  borderStyle: \"solid\",\n  disabled: false,\n  loading: false,\n  round: false,\n  circle: false,\n};\n\nconst state = shallowRef<Record<string, any>>({ ...defaultState });\n\n/** 点击计数，让预览区的交互「有回应」 */\nconst clickCount = shallowRef(0);\nfunction onClick() {\n  clickCount.value++;\n}\n\n/** 重置演练场配置 */\nfunction resetState() {\n  state.value = { ...defaultState };\n  clickCount.value = 0;\n}\n\n/** 演练场控制面板配置 */\nconst controls: any = [\n  {\n    title: \"基础属性\",\n    children: [\n      {\n        label: \"配色方案\",\n        key: \"color\",\n        component: \"select\" as const,\n        defaultValue: \"primary\",\n        props: { options: colorOptions },\n      },\n      {\n        label: \"风格变体\",\n        key: \"variant\",\n        component: \"select\" as const,\n        defaultValue: \"filled\",\n        props: { options: variantOptions },\n      },\n      {\n        label: \"尺寸规格\",\n        key: \"size\",\n        component: \"select\" as const,\n        defaultValue: \"md\",\n        props: { options: sizeOptions },\n      },\n      {\n        label: \"边框线型（对 outlined / subtle 生效）\",\n        key: \"borderStyle\",\n        component: \"select\" as const,\n        defaultValue: \"solid\",\n        props: { options: borderStyleOptions },\n      },\n    ],\n  },\n  {\n    title: \"形状\",\n    children: [\n      { label: \"胶囊（round）\", key: \"round\", component: \"checkbox\" as const, defaultValue: false },\n      { label: \"圆形（circle，优先于 round）\", key: \"circle\", component: \"checkbox\" as const, defaultValue: false },\n    ],\n  },\n  {\n    title: \"状态\",\n    children: [\n      { label: \"禁用状态\", key: \"disabled\", component: \"checkbox\" as const, defaultValue: false },\n      { label: \"加载状态\", key: \"loading\", component: \"checkbox\" as const, defaultValue: false },\n    ],\n  },\n];\n\n/** 演练场右上角展示的传参明细（按钮无 v-model，需手动拼接）：完整列出当前所有参数（含默认值） */\nconst buttonCode = computed(() => {\n  const s = state.value;\n  const props: string[] = [\n    `color=\"${s.color}\"`,\n    `variant=\"${s.variant}\"`,\n    `size=\"${s.size}\"`,\n    `border-style=\"${s.borderStyle}\"`,\n    `:disabled=\"${s.disabled}\"`,\n    `:loading=\"${s.loading}\"`,\n    `:round=\"${s.round}\"`,\n    `:circle=\"${s.circle}\"`,\n  ];\n  if (s.circle) props.push('aria-label=\"收藏\"');\n  const content = s.circle ? '<Icon name=\"lucide:star\" />' : \"按钮\";\n  return `<RebornButton\\n  ${props.join(\"\\n  \")}\\n>\\n  ${content}\\n</RebornButton>`;\n});\n\n// ─── 场景演示状态 ───────────────────────────────────────────────\n\nconst gap = shallowRef(true);\n/** 仅演示表单尺寸继承，无需定义字段。 */\nconst formModel = ref({});\n/** 有边框的视觉风格。 */\nconst borderedVariants = [\"outlined\", \"subtle\"] as const;\n</script>\n\n<template>\n  <div class=\"flex w-full flex-col\">\n    <Playground\n      v-model=\"state\"\n      :controls=\"controls\"\n      :code=\"buttonCode\"\n      component-name=\"RebornButton\"\n      title=\"交互演练场\"\n      description=\"调节上方参数，实时查看按钮表现。\"\n    >\n      <template #tag>\n        <RebornButton size=\"sm\" variant=\"soft\" color=\"neutral\" @click=\"resetState\">\n          <template #leading>\n            <Icon name=\"lucide:rotate-ccw\" size=\"12\" />\n          </template>\n          重置配置\n        </RebornButton>\n      </template>\n\n      <div class=\"flex w-full flex-col items-center gap-8\">\n        <div class=\"flex flex-wrap items-center justify-center gap-6\">\n          <RebornButton\n            :color=\"state.color\"\n            :variant=\"state.variant\"\n            :size=\"state.size\"\n            :disabled=\"state.disabled\"\n            :loading=\"state.loading\"\n            :border-style=\"state.borderStyle\"\n            :round=\"state.round\"\n            :circle=\"state.circle\"\n            :aria-label=\"state.circle ? `收藏（已点击 ${clickCount} 次）` : undefined\"\n            @click=\"onClick\"\n          >\n            <Icon v-if=\"state.circle\" name=\"lucide:star\" />\n            <template v-else>点我交互 ({{ clickCount }})</template>\n          </RebornButton>\n\n          <RebornButton\n            :color=\"state.color\"\n            variant=\"filled\"\n            circle\n            aria-label=\"收藏\"\n            :size=\"state.size\"\n            :disabled=\"state.disabled\"\n            :loading=\"state.loading\"\n          >\n            <Icon name=\"lucide:sparkles\" />\n          </RebornButton>\n\n          <RebornButton\n            :color=\"state.color\"\n            variant=\"outlined\"\n            :size=\"state.size\"\n            :border-style=\"state.borderStyle\"\n            :disabled=\"state.disabled\"\n            :loading=\"state.loading\"\n          >\n            <template #leading>\n              <Icon name=\"lucide:shopping-cart\" />\n            </template>\n            带图标\n          </RebornButton>\n        </div>\n\n        <DemoNote tone=\"dimmed\" class=\"font-mono text-xs\">\n          Props: { color: '{{ state.color }}', variant: '{{ state.variant }}', size: '{{ state.size }}', borderStyle:\n          '{{ state.borderStyle }}', round: {{ state.round }}, circle: {{ state.circle }} }\n        </DemoNote>\n      </div>\n    </Playground>\n\n    <DemoSection title=\"基础用法\">\n      <DemoBlock layout=\"row\">\n        <RebornButton label=\"确认提交\" />\n        <RebornButton>默认插槽文本</RebornButton>\n      </DemoBlock>\n    </DemoSection>\n\n    <DemoSection title=\"颜色与变体\">\n      <DemoBlock layout=\"stack\" class=\"gap-4\">\n        <div v-for=\"v in buttonVariants\" :key=\"v\" class=\"flex flex-wrap items-center gap-3\">\n          <p class=\"text-dimmed w-16 text-xs italic\">{{ v }}</p>\n          <RebornButton v-for=\"c in buttonColors\" :key=\"c\" :variant=\"v\" :color=\"c\" size=\"sm\">\n            {{ c }}\n          </RebornButton>\n        </div>\n      </DemoBlock>\n\n      <DemoBlock layout=\"stack\" class=\"gap-6\">\n        <div class=\"text-default flex flex-wrap items-baseline gap-3 text-sm\">\n          <span>行内混排示例：</span>\n          <RebornButton variant=\"text\" color=\"primary\">查看详情</RebornButton>\n          <span>/</span>\n          <RebornButton variant=\"text\" color=\"error\">删除</RebornButton>\n          <span>/</span>\n          <RebornButton variant=\"text\" color=\"neutral\">取消</RebornButton>\n        </div>\n      </DemoBlock>\n\n      <DemoBlock layout=\"stack\" class=\"gap-5\">\n        <div v-for=\"v in borderedVariants\" :key=\"v\" class=\"flex flex-col gap-3\">\n          <p class=\"text-muted text-xs font-medium\">{{ v }}</p>\n          <div v-for=\"bs in borderStyleOptions\" :key=\"bs.value\" class=\"flex flex-wrap items-center gap-3\">\n            <p class=\"text-dimmed w-20 text-xs italic\">{{ bs.value }}</p>\n            <RebornButton v-for=\"c in buttonColors\" :key=\"c\" :variant=\"v\" :color=\"c\" :border-style=\"bs.value\" size=\"sm\">\n              {{ c }}\n            </RebornButton>\n          </div>\n        </div>\n      </DemoBlock>\n    </DemoSection>\n\n    <DemoSection title=\"尺寸\">\n      <DemoBlock layout=\"stack\" class=\"gap-6\">\n        <div class=\"flex flex-wrap items-end gap-3\">\n          <RebornButton v-for=\"s in sizeOptions\" :key=\"s.value\" :size=\"s.value\" color=\"primary\">\n            {{ s.label }}\n          </RebornButton>\n        </div>\n        <div>\n          <RebornButton\n            v-for=\"s in sizeOptions\"\n            :key=\"s.value\"\n            :size=\"s.value\"\n            circle\n            aria-label=\"收藏\"\n            color=\"secondary\"\n            gap\n          >\n            <Icon name=\"lucide:star\" />\n          </RebornButton>\n        </div>\n      </DemoBlock>\n    </DemoSection>\n\n    <DemoSection title=\"形状\">\n      <template #description>\n        <code>round</code>\n        只改变圆角；<code>circle</code>\n        固定等宽高，二者同时开启时圆形优先，配色仍由\n        <code>variant</code>\n        决定。\n      </template>\n      <DemoBlock layout=\"stack\">\n        <div v-for=\"v in buttonVariants\" :key=\"v\" class=\"flex items-center gap-3\">\n          <span class=\"text-muted w-16 text-sm\">{{ v }}</span>\n          <RebornButton :variant=\"v\" round>胶囊</RebornButton>\n          <RebornButton :variant=\"v\" circle aria-label=\"收藏\"><Icon name=\"lucide:star\" /></RebornButton>\n          <RebornButton :variant=\"v\" round circle aria-label=\"添加\"><Icon name=\"lucide:plus\" /></RebornButton>\n          <RebornButton :variant=\"v\" round disabled>禁用</RebornButton>\n          <RebornButton :variant=\"v\" circle disabled aria-label=\"不可收藏\"><Icon name=\"lucide:star\" /></RebornButton>\n        </div>\n      </DemoBlock>\n      <DemoNote>\n        新用法不改变风格的禁用配色；旧\n        <code>variant=\"round\"</code>\n        /\n        <code>variant=\"circle\"</code>\n        仍保留原样式。\n      </DemoNote>\n    </DemoSection>\n\n    <DemoSection title=\"加载与禁用\">\n      <DemoBlock layout=\"row\">\n        <RebornButton loading>保存中</RebornButton>\n        <RebornButton disabled>不可用</RebornButton>\n        <RebornButton variant=\"outlined\" circle loading aria-label=\"正在保存\">\n          <Icon name=\"lucide:check\" />\n        </RebornButton>\n      </DemoBlock>\n    </DemoSection>\n\n    <DemoSection title=\"图标插槽\">\n      <DemoBlock layout=\"row\">\n        <RebornButton>\n          <template #leading><Icon name=\"lucide:mail\" /></template>\n          邮箱登录\n        </RebornButton>\n        <RebornButton variant=\"outlined\">\n          下一步\n          <template #trailing><Icon name=\"lucide:arrow-right\" /></template>\n        </RebornButton>\n      </DemoBlock>\n    </DemoSection>\n\n    <DemoSection title=\"布局：块级与间隔\">\n      <DemoBlock layout=\"stack\" class=\"gap-4\">\n        <RebornCheckbox v-model=\"gap\" label=\"开启间隔\" />\n        <div class=\"flex flex-wrap items-center\">\n          <RebornButton color=\"primary\" :gap=\"gap\">确认提交</RebornButton>\n          <RebornButton color=\"neutral\" variant=\"outlined\" :gap=\"gap\">取消</RebornButton>\n          <RebornButton color=\"error\" variant=\"soft\" :gap=\"gap\">删除</RebornButton>\n        </div>\n      </DemoBlock>\n\n      <DemoBlock layout=\"grid\" class=\"sm:grid-cols-2 lg:grid-cols-2\">\n        <div class=\"flex flex-col items-center gap-3\">\n          <DemoNote tone=\"dimmed\" class=\"text-xs\">胶囊组</DemoNote>\n          <div class=\"flex items-center\">\n            <RebornButton color=\"warning\" class=\"w-[110px] rounded-l-full px-6\">加入购物车</RebornButton>\n            <RebornButton color=\"error\" class=\"w-[110px] rounded-r-full px-6\">立即购买</RebornButton>\n          </div>\n        </div>\n        <div class=\"flex flex-col items-center gap-3\">\n          <DemoNote tone=\"dimmed\" class=\"text-xs\">垂直功能</DemoNote>\n          <div class=\"flex\">\n            <RebornButton color=\"warning\" variant=\"filled\" class=\"h-auto w-16 flex-col gap-1 rounded-r-none py-3\">\n              <Icon name=\"lucide:share-2\" size=\"18\" />\n              <span class=\"text-[10px]\">分享</span>\n            </RebornButton>\n            <RebornButton color=\"secondary\" variant=\"filled\" class=\"h-auto w-16 flex-col gap-1 rounded-none! py-3\">\n              <Icon name=\"lucide:message-square\" size=\"18\" />\n              <span class=\"text-[10px]\">咨询</span>\n            </RebornButton>\n            <RebornButton color=\"error\" variant=\"filled\" class=\"h-auto w-16 flex-col gap-1 rounded-l-none py-3\">\n              <Icon name=\"lucide:heart\" size=\"18\" />\n              <span class=\"text-[10px]\">点赞</span>\n            </RebornButton>\n          </div>\n        </div>\n      </DemoBlock>\n    </DemoSection>\n\n    <DemoSection title=\"与表单组联动\">\n      <DemoBlock layout=\"row\">\n        <RebornForm :model-value=\"formModel\" size=\"lg\">\n          <RebornButton size=\"sm\" variant=\"outlined\" circle aria-label=\"添加\"><Icon name=\"lucide:plus\" /></RebornButton>\n        </RebornForm>\n      </DemoBlock>\n      <DemoNote>\n        表单尺寸覆盖自身\n        <code>size</code>，圆形按钮也跟随表单高度。\n      </DemoNote>\n    </DemoSection>\n  </div>\n</template>\n"
+    },
+    {
+      "title": "UniApp 演示",
+      "path": "packages/uniapp-project/src/pages/reborn-button/RebornButtonDemo.vue",
+      "source": "demo",
+      "platform": "uniapp",
+      "code": "<script setup lang=\"ts\">\nimport { shallowRef } from 'vue'\nimport RebornPage from '@/components/reborn-page/RebornPage.vue'\nimport RebornCard from '@/components/reborn-card/RebornCard.vue'\nimport RebornColorPicker from '@/components/reborn-color-picker/RebornColorPicker.vue'\nimport RebornText from '@/components/reborn-text/RebornText.vue'\nimport RebornButton from '@/components/reborn-button/RebornButton.vue'\nimport RebornSwitch from '@/components/reborn-switch/RebornSwitch.vue'\nimport { buttonColors, buttonVariants, buttonSizes } from '@/components/reborn-button/reborn-button.config'\nimport RebornRadio from '@/components/reborn-radio/RebornRadio.vue'\nimport RebornRadioGroup from '@/components/reborn-radio/RebornRadioGroup.vue'\n\n// 演练场状态\nconst demoVariant = shallowRef<(typeof buttonVariants)[number]>('filled')\nconst demoColor = shallowRef<(typeof buttonColors)[number]>('primary')\nconst demoSize = shallowRef<(typeof buttonSizes)[number]>('md')\nconst demoLoading = shallowRef(false)\nconst demoDisabled = shallowRef(false)\nconst demoLabel = 'Reborn UI'\nconst customButtonColor = shallowRef('#6366f1')\n\n// 选项映射\nconst variantOptions = (buttonVariants as unknown as string[]).map(v => ({ label: v.charAt(0).toUpperCase() + v.slice(1), value: v as (typeof buttonVariants)[number] }))\nconst colorOptions = (buttonColors as unknown as string[]).map(c => ({ label: c.charAt(0).toUpperCase() + c.slice(1), value: c as (typeof buttonColors)[number] }))\nconst baseSizeOptions = buttonSizes.map(s => ({ label: s.toUpperCase(), value: s as (typeof buttonSizes)[number] }))\n\n\nfunction handleClick() {\n  copyContent('Reborn UI')\n  uni.showToast({\n    title: 'click',\n    icon: 'none',\n  })\n}\nfunction copyContent(text: string) {\n  uni.setClipboardData({\n    data: text, // 要复制的字符串\n    success() {\n      // 复制成功后的回调\n      uni.showToast({\n        title: '复制成功',\n        icon: 'success',\n        duration: 2000,\n      })\n    },\n    fail(err) {\n      // 复制失败后的回调\n      uni.showToast({\n        title: '复制失败',\n        icon: 'none',\n      })\n      console.error('复制失败:', err)\n    },\n  })\n}\n</script>\n\n<template>\n  <RebornPage title=\"Button 按钮\" description=\"就是按钮 用于触发操作或导航到另一个页面\">\n    <RebornCard title=\"基础用法\" overflow-visible>\n      <view class=\"relative overflow-hidden rounded-xl bg-slate-50 dark:bg-slate-900/40\">\n        <!-- 装饰背景 -->\n        <view\n          class=\"absolute -right-20 -top-20 size-48 rounded-full bg-primary/20 blur-3xl transition-transform duration-1000\" />\n        <view class=\"absolute -left-20 -bottom-20 size-48 rounded-full bg-blue-500/15 blur-3xl\" />\n        <view class=\"absolute inset-0 bg-linear-to-tr from-transparent via-primary/5 to-transparent\" />\n\n        <view class=\"\n              relative flex min-h-[220px] flex-col items-center justify-center gap-4 rounded-xl border\n              border-white/40 p-8 shadow-2xl backdrop-blur-xl bg-white/20\n              dark:border-white/10 dark:bg-black/30\n            \">\n          <RebornButton :variant=\"demoVariant\" :color=\"demoColor\" :size=\"demoSize\" :loading=\"demoLoading\"\n            :disabled=\"demoDisabled\" @click=\"handleClick\">\n            {{ demoLabel }}\n          </RebornButton>\n\n          <view class=\"mt-4 flex gap-2\">\n            <RebornButton :size=\"demoSize\" variant=\"circle\" :color=\"demoColor\" :loading=\"demoLoading\"\n              :disabled=\"demoDisabled\">\n              <view class=\"i-lucide-plus\" />\n            </RebornButton>\n            <RebornButton :size=\"demoSize\" variant=\"circle\" :color=\"demoColor\" :loading=\"demoLoading\"\n              :disabled=\"demoDisabled\">\n              <view class=\"i-lucide-share-2\" />\n            </RebornButton>\n          </view>\n        </view>\n      </view>\n\n      <RebornText :size=\"28\" color=\"neutral\" class=\"mt-8 font-semibold\">\n        按钮类型 (Variants)\n      </RebornText>\n      <view class=\"flex flex-wrap gap-2\">\n        <RebornButton v-for=\"item in variantOptions\" :key=\"item.value\" variant=\"outlined\"\n          :color=\"demoVariant === item.value ? 'primary' : 'neutral'\" size=\"sm\" custom-class=\"rounded-full\"\n          @click=\"demoVariant = item.value\">\n          {{ item.label }}\n        </RebornButton>\n      </view>\n\n      <RebornText :size=\"28\" color=\"neutral\" class=\"mt-6 font-semibold\">\n        按钮颜色 (Colors)\n      </RebornText>\n      <RebornRadioGroup v-model=\"demoColor\">\n        <RebornRadio v-for=\"item in colorOptions\" :key=\"item.value\" :value=\"item.value\">\n          <!-- radio 插槽完全接管渲染，做成纯色板选择 -->\n          <template #radio=\"{ checked }\">\n            <view class=\"relative flex size-[40rpx]\">\n              <view v-if=\"checked\" class=\"absolute inline-flex h-full w-full animate-ping rounded-full opacity-75\"\n                :class=\"`bg-${item.value}`\">\n              </view>\n              <view class=\"relative inline-flex size-[40rpx] rounded-full\" :class=\"`bg-${item.value}`\"></view>\n            </view>\n          </template>\n        </RebornRadio>\n      </RebornRadioGroup>\n\n      <RebornText :size=\"28\" color=\"neutral\" class=\"mt-6 font-semibold\">\n        标准尺寸 (Base Sizes)\n      </RebornText>\n      <view class=\"flex flex-wrap gap-2\">\n        <RebornButton v-for=\"item in baseSizeOptions\" :key=\"item.value\" variant=\"outlined\"\n          :color=\"demoSize === item.value ? 'primary' : 'neutral'\" size=\"sm\" custom-class=\"rounded-full\"\n          @click=\"demoSize = item.value\">\n          {{ item.label }}\n        </RebornButton>\n      </view>\n\n      <RebornText :size=\"28\" color=\"neutral\" class=\"mt-6 font-semibold\">\n        其他状态 (States)\n      </RebornText>\n      <view class=\"flex flex-col gap-4\">\n        <RebornSwitch v-model=\"demoLoading\" active-label=\"加载中 (Loading)\" inactive-label=\"取消加载\" />\n        <RebornSwitch v-model=\"demoDisabled\" active-label=\"禁用 (Disabled)\" inactive-label=\"启用\" />\n      </view>\n    </RebornCard>\n\n    <RebornCard title=\"图标与文本\" overflow-visible>\n      <view class=\"flex flex-wrap gap-4\">\n        <RebornButton :loading=\"demoLoading\">\n          <template #leading>\n            <view class=\"i-lucide-mail size-4\" />\n          </template>\n          Login with Email\n        </RebornButton>\n\n        <RebornButton variant=\"outlined\" color=\"secondary\" :loading=\"demoLoading\">\n          Next Step\n          <template #trailing>\n            <view class=\"i-lucide-arrow-right size-4\" />\n          </template>\n        </RebornButton>\n\n        <RebornButton variant=\"soft\" color=\"success\" :loading=\"demoLoading\">\n          <template #leading>\n            <view class=\"i-lucide-check size-4\" />\n          </template>\n          Completed\n        </RebornButton>\n      </view>\n\n      <view class=\"mt-6 flex flex-wrap items-center gap-4\">\n        <RebornButton size=\"sm\" variant=\"circle\" :loading=\"demoLoading\">\n          <view class=\"i-lucide-plus\" />\n        </RebornButton>\n        <RebornButton size=\"md\" variant=\"circle\" :loading=\"demoLoading\">\n          <view class=\"i-lucide-settings\" />\n        </RebornButton>\n        <RebornButton size=\"lg\" variant=\"circle\" :loading=\"demoLoading\">\n          <view class=\"i-lucide-user\" />\n        </RebornButton>\n        <RebornButton size=\"xl\" variant=\"circle\" color=\"error\" :loading=\"demoLoading\">\n          <view class=\"i-lucide-trash-2\" />\n        </RebornButton>\n      </view>\n    </RebornCard>\n\n    <RebornCard title=\"组合展示\" overflow-visible>\n      <view class=\"flex flex-col gap-6\">\n        <view class=\"flex flex-col gap-2\">\n          <RebornText :size=\"24\" color=\"neutral\">\n            不同 Variant 下的 Loading 表现 (Primary Color)\n          </RebornText>\n          <view class=\"flex flex-wrap gap-3\">\n            <RebornButton variant=\"filled\" loading>Filled</RebornButton>\n            <RebornButton variant=\"outlined\" loading>Outlined</RebornButton>\n            <RebornButton variant=\"soft\" loading>Soft</RebornButton>\n            <RebornButton variant=\"subtle\" loading>Subtle</RebornButton>\n          </view>\n        </view>\n\n        <view class=\"flex flex-col gap-2\">\n          <RebornText :size=\"24\" color=\"neutral\">\n            不同 Color 下的 Loading 表现 (Subtle Variant)\n          </RebornText>\n          <view class=\"flex flex-wrap gap-3\">\n            <RebornButton color=\"success\" variant=\"subtle\" loading>Success</RebornButton>\n            <RebornButton color=\"warning\" variant=\"subtle\" loading>Warning</RebornButton>\n            <RebornButton color=\"error\" variant=\"subtle\" loading>Error</RebornButton>\n            <RebornButton color=\"info\" variant=\"subtle\" loading>Info</RebornButton>\n          </view>\n        </view>\n      </view>\n    </RebornCard>\n\n    <!-- 自定义颜色：通过 CSS 变量 + customClass 传入任意色值 -->\n    <RebornCard title=\"高级自定义\" overflow-visible>\n      <view class=\"flex flex-col gap-4\">\n        <view class=\"flex flex-wrap items-center gap-3\">\n          <RebornText :size=\"28\" color=\"neutral\">\n            自定义主题色\n          </RebornText>\n          <RebornColorPicker v-model=\"customButtonColor\" placement=\"top-start\" :side-offset=\"8\" />\n          <RebornText color=\"neutral\" :size=\"24\" class=\"text-24\">\n            {{ customButtonColor }}\n          </RebornText>\n        </view>\n        <view class=\"flex flex-wrap gap-3\" :style=\"{ '--btn-custom': customButtonColor }\">\n          <RebornButton\n            custom-class=\"!bg-[var(--btn-custom)] !border-[var(--btn-custom)] border border-solid text-white shadow-lg active:scale-95\"\n            @click=\"handleClick\">\n            Filled Custom\n          </RebornButton>\n          <RebornButton variant=\"outlined\"\n            custom-class=\"!border-[var(--btn-custom)] !text-[var(--btn-custom)] border border-solid bg-transparent\"\n            @click=\"handleClick\">\n            Outlined Custom\n          </RebornButton>\n        </view>\n      </view>\n    </RebornCard>\n  </RebornPage>\n</template>\n"
+    }
+  ],
+  "related": [
+    "reborn-loading"
+  ],
+  "whenToUse": [
+    "表单提交、确认/取消、保存等常规操作触发。",
+    "需要按强度分层的按钮体系：主操作 filled、次操作 outlined、弱操作 text。",
+    "需要语义色表达操作后果，例如删除用 error、完成用 success。",
+    "需要 leading/trailing 插槽放置图标的图文按钮。",
+    "小程序开放能力场景（open-type 获取手机号、客服会话等）。"
+  ],
+  "whenNotToUse": [
+    "不可点击、只表示状态或分类的小标签（「已完成」「热门」「VIP」，即 Element / Ant 的 Tag），改用 reborn-badge：按钮会被读屏器报成可操作元素，视觉上也会引导用户去点。",
+    "图标、头像或按钮右上角的数字或红点（Element / Ant 的 Badge），改用 reborn-chip。",
+    "一组互斥切换项、选中块滑动（Ant 的 Segmented、Element 的 radio-button），改用 reborn-segmented 或 reborn-radio 的按钮形态。",
+    "页面固定位置的悬浮操作入口，改用 reborn-fab。",
+    "仅 web 的营销风格按钮特效，可改用 gradient-button、ripple-button 或 shimmer-button。",
+    "纯跳转、无副作用的导航链接，优先使用链接语义元素而非按钮。"
+  ],
+  "pitfalls": [
+    "Web round / circle 为独立形状参数，circle 优先；旧 variant=\"round\" / \"circle\" 保留配色和禁用样式。新 filled + round/circle 遵循 Filled 禁用配色，迁移可能改变外观。UniApp 本轮不变，仍使用形状变体。",
+    "loading 为 true 时隐含禁用，不再派发 click/tap，无需额外绑 disabled；trailing 插槽在加载态不渲染。",
+    "text 通常用 !h-auto !px-0 使高度随文字；Web 同时开启 circle 时按 size 固定等宽高，且表单尺寸优先于自身 size。",
+    "borderStyle 仅 Web 提供，对 outlined/subtle 生效，包含叠加 round/circle 布尔参数的组合；filled/soft/text 及旧 round/circle 变体不受影响。",
+    "open-type 系列 props（openType/sessionFrom/appParameter 等）与 getphonenumber、contact 等事件仅在小程序开放能力场景生效，H5/APP 端无效。",
+    "两端尺寸档位不同：web 为 sm/md/lg（px），uniapp 为 xs~2xl 共 7 档（rpx），其中 default 与 md 等价。",
+    "表单组禁用传导不同：uniapp 端 Form 的 disabled 会强制禁用组内按钮，web 端按钮禁用态只由自身 disabled/loading 决定。",
+    "uniapp 的 fluid 为预留 prop，尚未接入样式；需要等宽填充请改用 block 或外层 flex 布局。"
+  ],
+  "dependencies": [
+    "@weapp-tailwindcss/merge-v3",
+    "@weapp-tailwindcss/variants-v3",
+    "clsx",
+    "tailwind-merge",
+    "tailwind-variants"
+  ],
+  "install": {
+    "cli": "npx reborn-ui@latest add reborn-button"
+  },
+  "sourceRefs": {
+    "web": [
+      "app/components/reborn/ui/reborn-button/RebornButton.vue",
+      "app/components/reborn/ui/reborn-button/index.ts",
+      "app/components/reborn/ui/reborn-button/reborn-button.config.ts"
+    ],
+    "uniapp": [
+      "packages/uniapp-project/src/components/reborn-button/RebornButton.vue",
+      "packages/uniapp-project/src/components/reborn-button/index.ts",
+      "packages/uniapp-project/src/components/reborn-button/reborn-button.config.ts"
+    ]
+  },
+  "docPath": "content/2.components/button/reborn-button.md",
+  "_meta": {
+    "contentHash": "1afa7fe3a23ac752d66a3efd84abc037aabcdebc",
+    "hasOverride": true,
+    "extractors": {
+      "web": "ok",
+      "uniapp": "ok",
+      "docs": "found"
+    }
+  }
+}

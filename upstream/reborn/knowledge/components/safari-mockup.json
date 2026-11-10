@@ -10,6 +10,7 @@
     "device-mockup",
     "magic-ui"
   ],
+  "aliases": [],
   "platforms": [
     "web"
   ],
@@ -83,7 +84,7 @@
   },
   "docPath": "content/2.components/device-mocks/safari-mockup.md",
   "_meta": {
-    "contentHash": "ac345b1544f7082010192e7a2a4028d4d04072a2",
+    "contentHash": "9788790dfd7cb6fa4f149f2a2a3a87bdc520a01e",
     "hasOverride": true,
     "extractors": {
       "web": "ok",

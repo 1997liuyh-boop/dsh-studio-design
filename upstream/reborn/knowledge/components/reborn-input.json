@@ -10,6 +10,13 @@
     "input",
     "uniapp"
   ],
+  "aliases": [
+    "input",
+    "输入框",
+    "文本框",
+    "text field",
+    "单行输入"
+  ],
   "platforms": [
     "web",
     "uniapp"
@@ -50,31 +57,55 @@
     },
     {
       "name": "size",
-      "type": "typeof inputSizes[number]",
+      "type": "'sm' | 'md' | 'lg'",
       "required": false,
       "description": "尺寸：sm/md/lg，影响高度与字号",
-      "default": "'sm'"
+      "default": "'sm'",
+      "options": [
+        "sm",
+        "md",
+        "lg"
+      ]
     },
     {
       "name": "color",
-      "type": "typeof inputColors[number]",
+      "type": "'primary' | 'secondary' | 'success' | 'info' | 'warning' | 'error' | 'neutral'",
       "required": false,
       "description": "聚焦时描边 / 下划线 / 分割线的高亮颜色",
-      "default": "'primary'"
+      "default": "'primary'",
+      "options": [
+        "primary",
+        "secondary",
+        "success",
+        "info",
+        "warning",
+        "error",
+        "neutral"
+      ]
     },
     {
       "name": "variant",
-      "type": "typeof inputVariants[number]",
+      "type": "'outlined' | 'filled' | 'borderless' | 'underlined'",
       "required": false,
       "description": "形态变体： outlined 底色描边／filled 灰底填充（默认，聚焦转白底 + 描边）／ borderless 无边框／underlined 仅下划线（圆角强制为 0，此时 shape 不再生效）。",
-      "default": "'filled'"
+      "default": "'filled'",
+      "options": [
+        "outlined",
+        "filled",
+        "borderless",
+        "underlined"
+      ]
     },
     {
       "name": "shape",
-      "type": "typeof inputShapes[number]",
+      "type": "'circle' | 'square'",
       "required": false,
       "description": "外形轮廓：circle 为胶囊圆角，square 按尺寸取圆角令牌（4/6/8rpx）",
-      "default": "'square'"
+      "default": "'square'",
+      "options": [
+        "circle",
+        "square"
+      ]
     },
     {
       "name": "customClass",
@@ -267,9 +298,15 @@
     },
     {
       "name": "resize",
-      "type": "(typeof inputResizes)[number]",
+      "type": "'none' | 'both' | 'horizontal' | 'vertical'",
       "required": false,
-      "description": "控制 textarea 是否能被用户缩放（CSS resize）"
+      "description": "控制 textarea 是否能被用户缩放（CSS resize）",
+      "options": [
+        "none",
+        "both",
+        "horizontal",
+        "vertical"
+      ]
     },
     {
       "name": "autocomplete",
@@ -547,7 +584,8 @@
   "whenNotToUse": [
     "数字步进增减改用 reborn-input-number。",
     "验证码分格输入改用 reborn-input-otp。",
-    "带历史记录、推荐词下拉的搜索改用 reborn-search-box。"
+    "带历史记录、推荐词下拉的搜索改用 reborn-search-box。",
+    "多行文本录入，改用 reborn-textarea。"
   ],
   "pitfalls": [
     "web、uniapp 双端可用。",
@@ -579,7 +617,7 @@
   },
   "docPath": "content/2.components/input-and-forms/reborn-input.md",
   "_meta": {
-    "contentHash": "23ce1f1bdf5836d76e9a2197d756f45b7ba83aec",
+    "contentHash": "317b6e0181a7b74e22a3ebc1762996a9604cc902",
     "hasOverride": true,
     "extractors": {
       "web": "ok",

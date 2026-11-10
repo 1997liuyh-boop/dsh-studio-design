@@ -10,6 +10,7 @@
     "card",
     "aceternity-ui"
   ],
+  "aliases": [],
   "platforms": [
     "web"
   ],
@@ -136,7 +137,7 @@
   },
   "docPath": "content/2.components/cards/apple-card-carousel.md",
   "_meta": {
-    "contentHash": "97ea0007cec9e4a6157bf2561a0edaae18374d98",
+    "contentHash": "7d6a9db6a7489979b7263629c9b993250e400c85",
     "hasOverride": true,
     "extractors": {
       "web": "ok",

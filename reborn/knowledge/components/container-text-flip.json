@@ -1,0 +1,114 @@
+{
+  "$schema": "../schema/component.schema.json",
+  "id": "container-text-flip",
+  "title": "容器文字翻转",
+  "description": "用于循环翻转一组单词、容器宽度随词宽平滑过渡的文字组件。",
+  "category": "effect",
+  "tags": [
+    "css",
+    "tailwind",
+    "aceternity-ui"
+  ],
+  "aliases": [],
+  "platforms": [
+    "web"
+  ],
+  "props": [
+    {
+      "name": "words",
+      "type": "string[]",
+      "required": false,
+      "description": "循环显示的单词数组。",
+      "default": "() => [\"better\", \"modern\", \"beautiful\", \"awesome\"]"
+    },
+    {
+      "name": "interval",
+      "type": "number",
+      "required": false,
+      "description": "单词切换间隔（毫秒）。",
+      "default": "3000"
+    },
+    {
+      "name": "animationDuration",
+      "type": "number",
+      "required": false,
+      "description": "过渡动画时长（毫秒）。",
+      "default": "700"
+    },
+    {
+      "name": "class",
+      "type": "string",
+      "required": false,
+      "description": "应用于容器的额外 CSS 类。"
+    },
+    {
+      "name": "textClass",
+      "type": "string",
+      "required": false,
+      "description": "应用于文字的额外 CSS 类。"
+    }
+  ],
+  "events": [],
+  "slots": [],
+  "exposes": [],
+  "examples": [
+    {
+      "title": "Web 演示 · ContainerTextFlipDemo",
+      "path": "app/components/reborn/examples/container-text-flip/ContainerTextFlipDemo.vue",
+      "source": "demo",
+      "platform": "web",
+      "code": "<template>\n  <div class=\"flex w-full items-center justify-center\">\n    <ContainerTextFlip />\n  </div>\n</template>\n"
+    },
+    {
+      "title": "Web 演示 · ContainerTextFlipHeroDemo",
+      "path": "app/components/reborn/examples/container-text-flip/ContainerTextFlipHeroDemo.vue",
+      "source": "demo",
+      "platform": "web",
+      "code": "<script lang=\"ts\" setup>\nimport { Motion } from \"motion-v\";\n</script>\n\n<template>\n  <div class=\"flex w-full items-center justify-center\">\n    <Motion\n      as=\"h1\"\n      :initial=\"{\n        opacity: 0,\n      }\"\n      :while-in-view=\"{\n        opacity: 1,\n      }\"\n      class=\"relative mb-6 max-w-2xl text-left text-4xl leading-normal font-bold tracking-tight text-zinc-700 md:text-7xl dark:text-zinc-100\"\n      layout\n    >\n      <div class=\"inline-block\">\n        Make your websites look 10x\n        <ContainerTextFlip :words=\"['better', 'modern', 'beautiful', 'awesome']\" />\n      </div>\n    </Motion>\n  </div>\n</template>\n"
+    },
+    {
+      "title": "Web 演示 · ContainerTextFlipStandardDemo",
+      "path": "app/components/reborn/examples/container-text-flip/ContainerTextFlipStandardDemo.vue",
+      "source": "demo",
+      "platform": "web",
+      "code": "<template>\n  <div class=\"flex w-full items-center justify-center\">\n    <ContainerTextFlip :words=\"['better', 'modern', 'Tyler Durden', 'awesome']\" />\n  </div>\n</template>\n"
+    }
+  ],
+  "related": [],
+  "whenToUse": [
+    "标题中轮换展示多个卖点词，且词长差异大、需要容器宽度跟随动画。",
+    "需要分别用 class / textClass 控制容器与文字样式的轮换词场景。"
+  ],
+  "whenNotToUse": [
+    "只需句中单词翻转、不需要容器宽度动画，改用 flip-words。",
+    "需要文字形变过渡效果，改用 morphing-text。"
+  ],
+  "pitfalls": [
+    "仅 web 端可用，依赖 @vueuse/core 与 motion-v。",
+    "interval（默认 3000）与 animationDuration（默认 700）单位均为毫秒。",
+    "无事件抛出，切换时机无法在外部监听；需要动画事件时改用 flip-words。"
+  ],
+  "dependencies": [
+    "@vueuse/core",
+    "motion-v"
+  ],
+  "install": {
+    "cli": "npx reborn-ui@latest add container-text-flip"
+  },
+  "sourceRefs": {
+    "web": [
+      "app/components/reborn/ui/container-text-flip/ContainerTextFlip.vue",
+      "app/components/reborn/ui/container-text-flip/index.ts"
+    ]
+  },
+  "docPath": "content/2.components/text-animations/container-text-flip.md",
+  "_meta": {
+    "contentHash": "4de19c97ff7b51197c7e153faa5aa569c70b8e4d",
+    "hasOverride": true,
+    "extractors": {
+      "web": "ok",
+      "uniapp": "absent",
+      "docs": "found"
+    }
+  }
+}

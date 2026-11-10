@@ -1,0 +1,248 @@
+{
+  "$schema": "../schema/component.schema.json",
+  "id": "reborn-descriptions",
+  "title": "Descriptions 描述列表",
+  "description": "以键值对展示只读信息，支持边框、尺寸、水平或垂直布局、响应式列数及跨行跨列，仅 Web 端。",
+  "category": "misc",
+  "tags": [
+    "css",
+    "tailwind",
+    "descriptions",
+    "detail"
+  ],
+  "aliases": [
+    "descriptions",
+    "描述列表",
+    "详情",
+    "键值对",
+    "信息展示"
+  ],
+  "platforms": [
+    "web"
+  ],
+  "props": [
+    {
+      "name": "title",
+      "type": "string",
+      "required": false,
+      "description": "描述列表的标题，显示在最顶部"
+    },
+    {
+      "name": "extra",
+      "type": "string",
+      "required": false,
+      "description": "描述列表的操作区域，显示在右上方；复杂内容用同名插槽"
+    },
+    {
+      "name": "bordered",
+      "type": "boolean",
+      "required": false,
+      "description": "是否展示边框，开启后标签单元格带底色",
+      "default": "false"
+    },
+    {
+      "name": "colon",
+      "type": "boolean",
+      "required": false,
+      "description": "是否显示 label 后面的冒号，可被单项的 colon 覆盖",
+      "default": "true"
+    },
+    {
+      "name": "column",
+      "type": "number | DescriptionsResponsive",
+      "required": false,
+      "description": "一行的列数，可写成按断点取值的对象",
+      "default": "3"
+    },
+    {
+      "name": "layout",
+      "type": "'horizontal' | 'vertical'",
+      "required": false,
+      "description": "描述布局",
+      "default": "\"horizontal\"",
+      "options": [
+        "horizontal",
+        "vertical"
+      ]
+    },
+    {
+      "name": "size",
+      "type": "'sm' | 'md' | 'lg'",
+      "required": false,
+      "description": "列表的大小，对应单元格行高 36 / 48 / 56px",
+      "default": "\"md\"",
+      "options": [
+        "sm",
+        "md",
+        "lg"
+      ]
+    },
+    {
+      "name": "items",
+      "type": "DescriptionsItem[]",
+      "required": false,
+      "description": "描述列表项内容，与默认插槽二选一"
+    },
+    {
+      "name": "labelWidth",
+      "type": "string",
+      "required": false,
+      "description": "标签单元格的最小宽度，如 '120px'"
+    },
+    {
+      "name": "labelAlign",
+      "type": "'left' | 'center' | 'right'",
+      "required": false,
+      "description": "标签水平对齐",
+      "default": "\"left\"",
+      "options": [
+        "left",
+        "center",
+        "right"
+      ]
+    },
+    {
+      "name": "contentAlign",
+      "type": "'left' | 'center' | 'right'",
+      "required": false,
+      "description": "内容水平对齐",
+      "default": "\"left\"",
+      "options": [
+        "left",
+        "center",
+        "right"
+      ]
+    },
+    {
+      "name": "class",
+      "type": "any",
+      "required": false,
+      "description": "追加到根元素的自定义类名"
+    },
+    {
+      "name": "ui",
+      "type": "Partial<{\n    root?: any;\n    header?: any;\n    titleWrapper?: any;\n    title?: any;\n    extra?: any;\n    tableWrapper?: any;\n    body?: any;\n    cell?: any;\n    label?: any;\n    content?: any;\n    colon?: any;\n  }>",
+      "required": false,
+      "description": "按内部结构键覆盖各节点类名，键位见文档「自定义样式（ui）」 可用键（从源码抽取，以此为准）——Web：body、cell、colon、content、extra、header、label、root、tableWrapper、title、titleWrapper。"
+    },
+    {
+      "name": "label",
+      "type": "string",
+      "required": false,
+      "description": "内容的描述，即左侧标签文字；富内容改用 label 插槽"
+    },
+    {
+      "name": "span",
+      "type": "DescriptionsSpan",
+      "required": false,
+      "description": "包含列的数量，'filled' 表示铺满当前行剩余部分，也可按断点取值",
+      "default": "1"
+    },
+    {
+      "name": "rowspan",
+      "type": "number",
+      "required": false,
+      "description": "占据的数据行数，默认 1；垂直布局的一组标签与内容算一行",
+      "default": "1"
+    },
+    {
+      "name": "labelClass",
+      "type": "string",
+      "required": false,
+      "description": "追加到本项标签节点的类名"
+    },
+    {
+      "name": "contentClass",
+      "type": "string",
+      "required": false,
+      "description": "追加到本项内容节点的类名"
+    }
+  ],
+  "events": [],
+  "slots": [
+    {
+      "name": "title",
+      "props": "(props: Record<string, never>) => any",
+      "description": "自定义标题内容，优先于 title 属性"
+    },
+    {
+      "name": "extra",
+      "props": "(props: Record<string, never>) => any",
+      "description": "自定义右上方操作区，优先于 extra 属性"
+    },
+    {
+      "name": "default",
+      "props": "(props: Record<string, never>) => any",
+      "description": "放置 RebornDescriptionsItem 子组件"
+    },
+    {
+      "name": "label",
+      "props": "(props: Record<string, never>) => any",
+      "description": "本项的标签，优先于 label 属性"
+    }
+  ],
+  "exposes": [],
+  "examples": [
+    {
+      "title": "Web 演示",
+      "path": "app/components/reborn/examples/reborn-descriptions/RebornDescriptionsDemo.vue",
+      "source": "demo",
+      "platform": "web",
+      "code": "<script setup lang=\"ts\">\n\nimport type { DescriptionsItem } from \"~/components/reborn/ui/reborn-descriptions/RebornDescriptions.vue\";\nimport { DemoBlock, DemoNote, DemoSection, Icon, Playground } from \"#components\";\nimport { computed, shallowRef } from \"vue\";\nimport RebornButton from \"~/components/reborn/ui/reborn-button/RebornButton.vue\";\nimport { descriptionsAligns, descriptionsLayouts, descriptionsSizes } from \"~/components/reborn/ui/reborn-descriptions/reborn-descriptions.config\";\nimport RebornDescriptions from \"~/components/reborn/ui/reborn-descriptions/RebornDescriptions.vue\";\nimport RebornDescriptionsItem from \"~/components/reborn/ui/reborn-descriptions/RebornDescriptionsItem.vue\";\n\n/** 各尺寸档对应的单元格行高，用于在面板与说明里标注具体像素 */\nconst sizeHeights: Record<string, number> = { sm: 36, md: 48, lg: 56 };\n\nconst layoutLabels: Record<string, string> = {\n  horizontal: \"水平 Horizontal\",\n  vertical: \"垂直 Vertical\",\n};\n\nconst alignLabels: Record<string, string> = {\n  left: \"左对齐 Left\",\n  center: \"居中 Center\",\n  right: \"右对齐 Right\",\n};\n\nconst layoutOptions = descriptionsLayouts.map((v) => ({ label: layoutLabels[v]!, value: v }));\nconst sizeOptions = descriptionsSizes.map((s) => ({ label: `${s.toUpperCase()}（${sizeHeights[s]}px）`, value: s }));\nconst alignOptions = descriptionsAligns.map((a) => ({ label: alignLabels[a]!, value: a }));\nconst columnOptions = [1, 2, 3, 4].map((n) => ({ label: `${n} 列`, value: n }));\n\n// ─── 交互演练场 ─────────────────────────────────────────────────\n\n/** 演练场展示的字段，最后一项跨 2 列以便观察分行 */\nconst profileItems: DescriptionsItem[] = [\n  { label: \"用户名\", value: \"周茂茂\" },\n  { label: \"手机号\", value: \"181 0000 0000\" },\n  { label: \"所在地\", value: \"浙江 杭州\" },\n  { label: \"账号状态\", value: \"正常\" },\n  { label: \"联系地址\", value: \"浙江省杭州市西湖区工专路 77 号 3 单元 501\", span: 2 },\n];\n\n/** 演练场默认状态，与组件默认值保持一致 */\nconst defaultState: Record<string, any> = {\n  bordered: false,\n  layout: \"horizontal\",\n  size: \"md\",\n  column: 3,\n  colon: true,\n  labelAlign: \"left\",\n  contentAlign: \"left\",\n  labelWidth: \"\",\n};\n\nconst state = shallowRef<Record<string, any>>({ ...defaultState });\n\n/** 重置演练场配置 */\nfunction resetState() {\n  state.value = { ...defaultState };\n}\n\n/** 演练场控制面板配置 */\nconst controls: any = [\n  {\n    title: \"基础属性\",\n    children: [\n      { label: \"展示边框\", key: \"bordered\", component: \"checkbox\" as const, defaultValue: false },\n      {\n        label: \"描述布局\",\n        key: \"layout\",\n        component: \"select\" as const,\n        defaultValue: \"horizontal\",\n        props: { options: layoutOptions },\n      },\n      {\n        label: \"尺寸规格\",\n        key: \"size\",\n        component: \"select\" as const,\n        defaultValue: \"md\",\n        props: { options: sizeOptions },\n      },\n      {\n        label: \"一行列数\",\n        key: \"column\",\n        component: \"select\" as const,\n        defaultValue: 3,\n        props: { options: columnOptions },\n      },\n    ],\n  },\n  {\n    title: \"标签与对齐\",\n    children: [\n      { label: \"显示冒号（仅无边框 + 水平生效）\", key: \"colon\", component: \"checkbox\" as const, defaultValue: true },\n      {\n        label: \"标签对齐\",\n        key: \"labelAlign\",\n        component: \"select\" as const,\n        defaultValue: \"left\",\n        props: { options: alignOptions },\n      },\n      {\n        label: \"内容对齐\",\n        key: \"contentAlign\",\n        component: \"select\" as const,\n        defaultValue: \"left\",\n        props: { options: alignOptions },\n      },\n      {\n        label: \"标签最小宽度\",\n        key: \"labelWidth\",\n        component: \"input\" as const,\n        defaultValue: \"\",\n        props: { placeholder: \"如 120px\" },\n      },\n    ],\n  },\n];\n\n/** 演练场右上角展示的传参明细：完整列出当前所有参数（含默认值） */\nconst descriptionsCode = computed(() => {\n  const s = state.value;\n  const attrs: string[] = [\n    `title=\"用户信息\"`,\n    `:bordered=\"${s.bordered}\"`,\n    `layout=\"${s.layout}\"`,\n    `size=\"${s.size}\"`,\n    `:column=\"${s.column}\"`,\n    `:colon=\"${s.colon}\"`,\n    `label-align=\"${s.labelAlign}\"`,\n    `content-align=\"${s.contentAlign}\"`,\n  ];\n  if (s.labelWidth) attrs.push(`label-width=\"${s.labelWidth}\"`);\n  attrs.push(`:items=\"items\"`);\n  return `<RebornDescriptions\\n  ${attrs.join(\"\\n  \")}\\n/>`;\n});\n\n// ─── 场景演示数据 ───────────────────────────────────────────────\n\n/** 数据驱动写法的字段 */\nconst orderItems: DescriptionsItem[] = [\n  { label: \"订单编号\", value: \"RB-2024-0917-0031\" },\n  { label: \"下单时间\", value: \"2024-09-17 14:32\" },\n  { label: \"支付方式\", value: \"余额支付\" },\n  { label: \"实付金额\", value: \"¥ 1,280.00\" },\n];\n\n/** 内容交给具名插槽渲染的字段，slot 值对应 content-{name} */\nconst serviceItems: DescriptionsItem[] = [\n  { label: \"服务名称\", value: \"reborn-gateway\" },\n  { label: \"运行状态\", slot: \"status\" },\n  { label: \"实例数\", value: 6 },\n  { label: \"最近部署\", value: \"12 分钟前\" },\n];\n\n/** 响应式列数演示：窄容器降到 1 列，宽容器回到 3 列 */\nconst responsiveItems: DescriptionsItem[] = [\n  { label: \"环境\", value: \"生产\" },\n  { label: \"区域\", value: \"华东 1\" },\n  { label: \"版本\", value: \"v2.14.3\" },\n  { label: \"负责人\", value: \"周茂茂\" },\n  { label: \"告警\", value: \"0 条\" },\n  { label: \"SLA\", value: \"99.95%\" },\n];\n\n/** 跨列演示：前两项各占 1 列，第三项吃掉整行 */\nconst spanItems: DescriptionsItem[] = [\n  { label: \"商品\", value: \"机械键盘 87 键\" },\n  { label: \"数量\", value: 2 },\n  { label: \"规格\", value: \"白光 / 茶轴 / 有线\", span: 2 },\n  { label: \"备注\", value: \"买家留言：请在工作日送达，收货前电话联系。\", span: \"filled\" },\n];\n</script>\n\n<template>\n  <div class=\"flex w-full flex-col\">\n    <Playground\n      v-model=\"state\"\n      :controls=\"controls\"\n      :code=\"descriptionsCode\"\n      component-name=\"RebornDescriptions\"\n      title=\"交互演练场\"\n      description=\"调节上方参数，观察列数、边框与行高的变化。\"\n    >\n      <template #tag>\n        <RebornButton size=\"sm\" variant=\"soft\" color=\"neutral\" @click=\"resetState\">\n          <template #leading>\n            <Icon name=\"lucide:rotate-ccw\" size=\"12\" />\n          </template>\n          重置配置\n        </RebornButton>\n      </template>\n\n      <div class=\"flex w-full flex-col items-center gap-8\">\n        <RebornDescriptions\n          class=\"w-full\"\n          title=\"用户信息\"\n          :bordered=\"state.bordered\"\n          :layout=\"state.layout\"\n          :size=\"state.size\"\n          :column=\"state.column\"\n          :colon=\"state.colon\"\n          :label-align=\"state.labelAlign\"\n          :content-align=\"state.contentAlign\"\n          :label-width=\"state.labelWidth || undefined\"\n          :items=\"profileItems\"\n        >\n          <template #extra>\n            <RebornButton size=\"sm\" variant=\"outlined\" color=\"neutral\">编辑</RebornButton>\n          </template>\n        </RebornDescriptions>\n\n        <DemoNote tone=\"dimmed\" class=\"font-mono text-xs\">\n          Props: { bordered: {{ state.bordered }}, layout: '{{ state.layout }}', column: {{ state.column }}, size: '{{\n            state.size\n          }}' } → 行高 {{ sizeHeights[state.size] }}px\n        </DemoNote>\n      </div>\n    </Playground>\n\n    <DemoSection\n      title=\"数据驱动与子组件写法\"\n      description=\"items 适合字段来自接口的场景；子组件写法适合内容里要塞图标、链接、状态色的场景。两者取其一，同时传入时 items 优先。\"\n    >\n      <DemoBlock layout=\"stack\" class=\"gap-8\">\n        <RebornDescriptions bordered title=\"items 数组\" :column=\"2\" :items=\"orderItems\" />\n\n        <RebornDescriptions bordered title=\"RebornDescriptionsItem 子组件\" :column=\"2\">\n          <RebornDescriptionsItem label=\"订单编号\">RB-2024-0917-0031</RebornDescriptionsItem>\n          <RebornDescriptionsItem label=\"支付状态\">\n            <span class=\"text-success inline-flex items-center gap-[4px]\">\n              <Icon name=\"lucide:circle-check\" size=\"14\" />\n              已支付\n            </span>\n          </RebornDescriptionsItem>\n          <RebornDescriptionsItem label=\"收货地址\" span=\"filled\">\n            浙江省杭州市西湖区工专路 77 号 3 单元 501\n          </RebornDescriptionsItem>\n        </RebornDescriptions>\n\n        <RebornDescriptions bordered title=\"items 配合具名插槽\" :column=\"2\" :items=\"serviceItems\">\n          <template #content-status>\n            <span class=\"text-success inline-flex items-center gap-[4px]\">\n              <Icon name=\"lucide:circle-check\" size=\"14\" />\n              运行中\n            </span>\n          </template>\n        </RebornDescriptions>\n      </DemoBlock>\n\n      <DemoNote\n        text=\"item 上写 slot: 'status'，内容就交给名为 content-status 的插槽渲染；标签同理，用 labelSlot 指向 label-{name}。\"\n      />\n    </DemoSection>\n\n    <DemoSection\n      title=\"边框与底色\"\n      description=\"bordered 默认关闭：标签与内容同格相邻，靠冒号分隔，适合嵌在卡片里的轻量信息区。开启后标签独占带底色的单元格，适合需要逐格对齐的详情页。\"\n    >\n      <DemoBlock layout=\"stack\" class=\"gap-8\">\n        <RebornDescriptions title=\"无边框（默认）\" :column=\"2\" :items=\"orderItems\" />\n        <RebornDescriptions bordered title=\"有边框\" :column=\"2\" :items=\"orderItems\" />\n      </DemoBlock>\n\n      <DemoNote\n        text=\"冒号只在「无边框 + 水平」下渲染：带边框时标签已有底色单元格作边界，垂直布局时标签独占一行，再加冒号是重复表达。\"\n      />\n    </DemoSection>\n\n    <DemoSection\n      title=\"布局与列数\"\n      description=\"layout 决定标签与内容是同行还是上下两行；column 决定一行放几项，写成对象时按断点取值。\"\n    >\n      <DemoBlock layout=\"stack\" class=\"gap-8\">\n        <RebornDescriptions bordered layout=\"vertical\" title=\"垂直布局\" :column=\"3\" :items=\"orderItems\" />\n\n        <div class=\"flex w-full flex-col gap-4\">\n          <div class=\"w-[360px] max-w-full\">\n            <RebornDescriptions\n              bordered\n              title=\"容器 360px\"\n              :column=\"{ xs: 1, sm: 2, lg: 3 }\"\n              :items=\"responsiveItems\"\n            />\n          </div>\n          <RebornDescriptions bordered title=\"容器撑满\" :column=\"{ xs: 1, sm: 2, lg: 3 }\" :items=\"responsiveItems\" />\n        </div>\n      </DemoBlock>\n\n      <DemoNote\n        text=\"断点比对的是组件容器宽度而非视口宽度：上面两个列表参数完全相同，只因外层容器一个 360px、一个撑满，列数才不一样。\"\n      />\n    </DemoSection>\n\n    <DemoSection\n      title=\"跨列与铺满\"\n      description=\"span 是数字时占固定列数，超出当前行剩余列会换行；写 'filled' 表示吃掉当前行剩下的所有列。\"\n    >\n      <DemoBlock layout=\"stack\">\n        <RebornDescriptions bordered :column=\"3\" :items=\"spanItems\" />\n      </DemoBlock>\n\n      <DemoNote\n        text=\"每行末项会自动延伸补齐剩余列，否则带边框时会缺格、边线断在半路。所以 'filled' 的真正用途是把它写在非末项上，强行让后续项换到下一行。\"\n      />\n    </DemoSection>\n\n    <DemoSection\n      title=\"标题与操作区\"\n      description=\"title 显示在最顶部，extra 显示在右上方，两者都有同名插槽可放富内容。\"\n    >\n      <DemoBlock layout=\"stack\">\n        <RebornDescriptions bordered :column=\"2\" :items=\"orderItems\">\n          <template #title>\n            <span class=\"inline-flex items-center gap-[8px]\">\n              <Icon name=\"lucide:receipt-text\" class=\"text-primary\" size=\"20\" />\n              订单详情\n            </span>\n          </template>\n          <template #extra>\n            <RebornButton size=\"sm\" variant=\"outlined\" color=\"neutral\">导出</RebornButton>\n            <RebornButton size=\"sm\" color=\"primary\">再次购买</RebornButton>\n          </template>\n        </RebornDescriptions>\n      </DemoBlock>\n\n      <DemoNote text=\"标题固定 24px / 字重 500，不随 size 变化；size 只影响单元格行高（36 / 48 / 56px）。\" />\n    </DemoSection>\n  </div>\n</template>\n"
+    }
+  ],
+  "related": [],
+  "whenToUse": [
+    "详情页、信息面板中成组罗列只读字段，数据直接来自接口数组时传 items 即可渲染。",
+    "字段值需要图标、状态色、链接等富内容时，用 RebornDescriptionsItem 子组件，或给 item 写 slot 指向 content-{name} 具名插槽。",
+    "信息区要像表格一样逐格对齐时开 bordered，标签会独占带 bg-gray-2 底色的单元格。",
+    "同一份信息要塞进宽窄不同的容器时，column 写成 { xs: 1, sm: 2, lg: 3 } 按断点降列。",
+    "个别字段明显更长时用 span 占多列，或写 'filled' 吃掉当前连续空列；同一字段需要对应旁边多条信息时用 rowspan 跨行。"
+  ],
+  "whenNotToUse": [
+    "uniapp 端不可用（仅 web）。",
+    "字段需要录入、校验与提交时，改用 reborn-form。",
+    "多条同构记录要按列横向比较时不适用：描述列表没有表头概念，一项就是一个独立字段。",
+    "只有一两条短文本、不需要成列对齐时，改用 reborn-text。"
+  ],
+  "pitfalls": [
+    "仅 web 端可用。",
+    "本版本对旧 API 做了破坏性重写：border / direction / responsive / rounded / labelBackground / contentBackground / labelColor / contentColor / labelBold / contentBold / labelLineHeight / contentLineHeight 全部移除；border → bordered，direction → layout，responsive → 把 column 写成断点对象，配色与字重覆盖统一改走 ui 或 class。",
+    "items 与默认插槽二选一，同时传入时 items 优先，插槽内容被忽略。",
+    "冒号只在「无边框 + 水平」下渲染，bordered 或 vertical 时 colon 会被静默忽略。",
+    "每行末项会自动延伸补齐右侧连续空列，遇到跨行占用则停止；写在最后一项上的 span: 'filled' 没有可观察效果，它只有写在非末项上才有意义。",
+    "rowspan 默认 1，小数向下取整，无效值按 1 处理。跨行与跨列共同参与排布，后续项避开已占用的列，放不下会换行；垂直布局的一组标签行与内容行按一个数据行计算，标签只在起始行显示。",
+    "响应式断点比对的是组件容器宽度而不是视口宽度，同一份 column 参数在侧栏和主区域会得到不同列数。",
+    "labelAlign / contentAlign 在「无边框 + 水平」下几乎不可见：标签与内容是同一单元格内的两个 flex 子项，宽度被内容撑满，只有同时设了足够大的 labelWidth 时 labelAlign 才会显现。",
+    "size 只在 bordered 下生效：它改的是单元格行高（36 / 48 / 56px）与上下内边距。标题固定 24px、左右内边距固定 16px 都不随 size 变化；无边框形态完全不吃这套值，那里的行距是固定的 4px（标签与内容之间）与 16px（项与项之间）。行高按最小高度生效，内容换行时该行会照常撑开。",
+    "标签与内容的轻重关系随 bordered 反转：带边框时标签 gray-9、内容 gray-8（标签更重，靠字段名逐格定位）；无边框时没有底色与边线作分层，改成标签 gray-7、内容 gray-9（内容更重）。需要另一套关系时用 ui.label / ui.content 覆盖。",
+    "bordered 的外框是直角，组件不加圆角；需要圆角时用 ui.tableWrapper 补。"
+  ],
+  "dependencies": [
+    "@vueuse/core",
+    "clsx",
+    "tailwind-merge",
+    "tailwind-variants"
+  ],
+  "install": {
+    "cli": "npx reborn-ui@latest add reborn-descriptions"
+  },
+  "sourceRefs": {
+    "web": [
+      "app/components/reborn/ui/reborn-descriptions/RebornDescriptions.vue",
+      "app/components/reborn/ui/reborn-descriptions/RebornDescriptionsItem.vue",
+      "app/components/reborn/ui/reborn-descriptions/index.ts",
+      "app/components/reborn/ui/reborn-descriptions/reborn-descriptions.config.ts"
+    ]
+  },
+  "docPath": "content/2.components/miscellaneous/reborn-descriptions.md",
+  "_meta": {
+    "contentHash": "0e37255c29b51af97025e5bb5879a4388b3e43ff",
+    "hasOverride": true,
+    "extractors": {
+      "web": "ok",
+      "uniapp": "absent",
+      "docs": "found"
+    }
+  }
+}

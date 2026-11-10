@@ -12,6 +12,12 @@
     "uniapp",
     "viewerjs"
   ],
+  "aliases": [
+    "image",
+    "图片",
+    "图片预览",
+    "img"
+  ],
   "platforms": [
     "web",
     "uniapp"
@@ -31,10 +37,26 @@
     },
     {
       "name": "mode",
-      "type": "typeof imageMode[number]",
+      "type": "'scaleToFill' | 'aspectFit' | 'aspectFill' | 'widthFix' | 'heightFix' | 'top' | 'bottom' | 'center' | 'left' | 'right' | 'top left' | 'top right' | 'bottom left' | 'bottom right'",
       "required": false,
       "description": "图片裁剪、缩放的模式",
-      "default": "'aspectFill'"
+      "default": "'aspectFill'",
+      "options": [
+        "scaleToFill",
+        "aspectFit",
+        "aspectFill",
+        "widthFix",
+        "heightFix",
+        "top",
+        "bottom",
+        "center",
+        "left",
+        "right",
+        "top left",
+        "top right",
+        "bottom left",
+        "bottom right"
+      ]
     },
     {
       "name": "preview",
@@ -276,7 +298,7 @@
   },
   "docPath": "content/2.components/miscellaneous/reborn-image.md",
   "_meta": {
-    "contentHash": "665c8e93197f6b6196e50515a46fd73fb256be83",
+    "contentHash": "25d5703b8111f5e69513104e83d1eeeda08afd52",
     "hasOverride": true,
     "extractors": {
       "web": "ok",

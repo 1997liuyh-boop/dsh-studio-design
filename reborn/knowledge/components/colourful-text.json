@@ -1,0 +1,95 @@
+{
+  "$schema": "../schema/component.schema.json",
+  "id": "colourful-text",
+  "title": "彩色文字",
+  "description": "用于让文字逐字符循环变换颜色并动画的标题点缀组件。",
+  "category": "effect",
+  "tags": [
+    "css",
+    "tailwind",
+    "aceternity-ui"
+  ],
+  "aliases": [],
+  "platforms": [
+    "web"
+  ],
+  "props": [
+    {
+      "name": "text",
+      "type": "string",
+      "required": true,
+      "description": "要渲染的文字，每个字符都会单独进行颜色和动效动画。",
+      "default": "\"black\""
+    },
+    {
+      "name": "colors",
+      "type": "string[]",
+      "required": false,
+      "description": "文字使用的颜色列表。",
+      "default": "() => [\n    \"rgb(131, 179, 32)\",\n    \"rgb(47, 195, 106)\",\n    \"rgb(42, 169, 210)\",\n    \"rgb(4, 112, 202)\",\n    \"rgb(107, 10, 255)\",\n    \"rgb(183, 0, 218)\",\n    \"rgb(218, 0, 171)\",\n    \"rgb(230, 64, 92)\",\n    \"rgb(232, 98, 63)\",\n    \"rgb(249, 129, 47)\",\n  ]"
+    },
+    {
+      "name": "startColor",
+      "type": "string",
+      "required": false,
+      "description": "字符的初始颜色。",
+      "default": "\"rgb(255,255,255)\""
+    },
+    {
+      "name": "duration",
+      "type": "number",
+      "required": false,
+      "description": "动画持续时间（秒）。",
+      "default": "0.5"
+    }
+  ],
+  "events": [],
+  "slots": [],
+  "exposes": [],
+  "examples": [
+    {
+      "title": "Web 演示",
+      "path": "app/components/reborn/examples/colourful-text/ColourfulTextDemo.vue",
+      "source": "demo",
+      "platform": "web",
+      "code": "<script setup lang=\"ts\">\nimport { Motion } from \"motion-v\";\n</script>\n\n<template>\n  <DemoSection\n    title=\"基础用法\"\n    description=\"深色舞台是彩色文字效果的一部分，两种模式都保持深色。\"\n  >\n    <div class=\"relative flex h-[28rem] w-full items-center justify-center overflow-hidden rounded-xl bg-gray-10 dark:bg-gray-1\">\n      <Motion\n        as=\"img\"\n        src=\"https://assets.aceternity.com/linear-demo.webp\"\n        class=\"pointer-events-none absolute inset-0 size-full [mask-image:radial-gradient(circle,transparent,black_80%)] object-cover\"\n        :initial=\"{ opacity: 0 }\"\n        :while-in-view=\"{\n          opacity: 0.5,\n        }\"\n        :transition=\"{\n          duration: 1,\n        }\"\n      />\n      <div>\n        <h1 class=\"relative z-2 text-center font-sans text-2xl font-bold text-white md:text-5xl\">\n          你能找到的最好的 <ColourfulText text=\"组件\" />\n        </h1>\n      </div>\n    </div>\n  </DemoSection>\n</template>\n"
+    }
+  ],
+  "related": [],
+  "whenToUse": [
+    "大标题中需要突出的关键词逐字符变色动画。",
+    "需要自定义颜色列表（colors）循环播放的文字点缀。"
+  ],
+  "whenNotToUse": [
+    "需要发光/光泽扫过的文字，改用 radiant-text。",
+    "需要闪光粒子点缀的文字，改用 sparkles-text。",
+    "整词循环切换而非变色，改用 flip-words。"
+  ],
+  "pitfalls": [
+    "仅 web 端可用，依赖 motion-v。",
+    "text 为必填，动画按单个字符独立进行。",
+    "colors 默认提供 10 个 rgb 颜色；startColor 是字符初始色（默认白色）；duration 单位为秒（默认 0.5）。"
+  ],
+  "dependencies": [
+    "motion-v"
+  ],
+  "install": {
+    "cli": "npx reborn-ui@latest add colourful-text"
+  },
+  "sourceRefs": {
+    "web": [
+      "app/components/reborn/ui/colourful-text/ColourfulText.vue",
+      "app/components/reborn/ui/colourful-text/index.ts"
+    ]
+  },
+  "docPath": "content/2.components/text-animations/colorful-text.md",
+  "_meta": {
+    "contentHash": "ef6f80bdaa61515c74d92a2f43cb87152aef4945",
+    "hasOverride": true,
+    "extractors": {
+      "web": "ok",
+      "uniapp": "absent",
+      "docs": "found"
+    }
+  }
+}

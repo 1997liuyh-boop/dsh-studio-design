@@ -1,0 +1,307 @@
+{
+  "$schema": "../schema/component.schema.json",
+  "id": "reborn-select-trigger",
+  "title": "reborn-select-trigger",
+  "description": "用于各类下拉类组件复用的浮层容器内部基础组件，只负责定位、展开收起与外部点击判定。",
+  "category": "misc",
+  "tags": [],
+  "aliases": [],
+  "platforms": [
+    "web",
+    "uniapp"
+  ],
+  "props": [
+    {
+      "name": "text",
+      "type": "string",
+      "required": false,
+      "description": "显示文本",
+      "default": "''"
+    },
+    {
+      "name": "placeholder",
+      "type": "string",
+      "required": false,
+      "description": "占位符",
+      "default": "'请选择'"
+    },
+    {
+      "name": "disabled",
+      "type": "boolean",
+      "required": false,
+      "description": "是否禁用",
+      "default": "false"
+    },
+    {
+      "name": "focus",
+      "type": "boolean",
+      "required": false,
+      "description": "是否聚焦",
+      "default": "false"
+    },
+    {
+      "name": "size",
+      "type": "'sm' | 'md' | 'lg'",
+      "required": false,
+      "description": "尺寸",
+      "default": "'md'",
+      "options": [
+        "sm",
+        "md",
+        "lg"
+      ]
+    },
+    {
+      "name": "color",
+      "type": "'primary' | 'secondary' | 'success' | 'info' | 'warning' | 'error' | 'neutral'",
+      "required": false,
+      "description": "颜色",
+      "default": "'primary'",
+      "options": [
+        "primary",
+        "secondary",
+        "success",
+        "info",
+        "warning",
+        "error",
+        "neutral"
+      ]
+    },
+    {
+      "name": "clearable",
+      "type": "boolean",
+      "required": false,
+      "description": "",
+      "default": "true"
+    },
+    {
+      "name": "ui",
+      "type": "Partial<{\n    wrapper: ClassValue\n    content: ClassValue\n    text: ClassValue\n    placeholder: ClassValue\n    iconWrapper: ClassValue\n    clearIcon: ClassValue\n    arrowIcon: ClassValue\n  }>",
+      "required": false,
+      "description": "样式覆盖 可用键（从源码抽取，以此为准）——UniApp：arrowIcon*、clearIcon*、content、iconWrapper、placeholder*、text*、wrapper。 带 * 的键对应插槽兜底节点：填了同名插槽，组件自带的节点被替换，这个键随之失效。",
+      "platform": "uniapp"
+    },
+    {
+      "name": "customClass",
+      "type": "any",
+      "required": false,
+      "description": "自定义 class"
+    },
+    {
+      "name": "isOpen",
+      "type": "boolean",
+      "required": false,
+      "description": "浮层是否展开",
+      "default": "false"
+    },
+    {
+      "name": "class",
+      "type": "any",
+      "required": false,
+      "description": ""
+    },
+    {
+      "name": "ui",
+      "type": "SelectTriggerUI",
+      "required": false,
+      "description": "可用键（从源码抽取，以此为准）——Web：arrow、dropdown、dropdownInner、wrapper。",
+      "platform": "web"
+    },
+    {
+      "name": "closeOn",
+      "type": "\"click\" | \"mousedown\"",
+      "required": false,
+      "description": "关闭下拉的时机： - 'mousedown'（默认）：外部一有动静就收起——在触发器（含下拉面板）外按下任意鼠标键 （左键 / 右键 / 中键）、滚动滚轮、触摸按下立即收起； 带动触发器位移的滚动（页面滚动、触发器所在容器滚动）同样收起。 面板内部的列表滚动、页面上无关容器的滚动（如轮播图自动播放）不算外部动静，不会误收。 - 'click'：在触发器（含下拉面板）外完成一次点击后才收起，期间页面滚动时面板跟随触发器",
+      "default": "\"mousedown\""
+    },
+    {
+      "name": "scrollToActive",
+      "type": "(instant?: boolean) => void",
+      "required": false,
+      "description": ""
+    },
+    {
+      "name": "portal",
+      "type": "boolean",
+      "required": false,
+      "description": "是否把浮层传送到 body。 默认开启：浮层留在触发器内时会被任意祖先的 overflow 裁掉 （典型场景：RebornDialog 的 panel 恒为 overflow-hidden，scrollable 时 body 还叠一层 overflow-y-auto）， 而 z-index 只决定绘制顺序、无法突破裁剪。 开启后浮层传送到 body，并使用文档坐标锚定触发器，页面滚动时不依赖 JS 每帧重算。 仅当调用方确实需要浮层随父容器一起滚动、一起被裁剪时才关掉。",
+      "default": "true"
+    },
+    {
+      "name": "container",
+      "type": "string | HTMLElement",
+      "required": false,
+      "description": "浮层传送的目标容器，默认 body，仅 portal 开启时生效。 传选择器字符串或 DOM 元素皆可；目标容器必须已经在文档里， 否则 Teleport 找不到挂载点会直接报错。",
+      "default": "\"body\""
+    },
+    {
+      "name": "side",
+      "type": "'auto' | 'top' | 'bottom' | 'left' | 'right'",
+      "required": false,
+      "description": "浮层展开方向： - 'auto'（默认）：向下展开，下方空间不足且上方更宽裕时自动向上 - 显式 top / bottom / left / right：按指定方向展开，该侧空间不足且对侧更宽裕时翻转",
+      "default": "\"auto\"",
+      "options": [
+        "auto",
+        "top",
+        "bottom",
+        "left",
+        "right"
+      ]
+    },
+    {
+      "name": "align",
+      "type": "'start' | 'center' | 'end'",
+      "required": false,
+      "description": "浮层在交叉轴上的对齐：start 与触发器起点对齐（默认）、center 居中、end 与终点对齐；仅传送模式生效",
+      "default": "\"start\"",
+      "options": [
+        "start",
+        "center",
+        "end"
+      ]
+    },
+    {
+      "name": "offset",
+      "type": "number",
+      "required": false,
+      "description": "浮层与触发器的间距（px）；不传时无箭头取 4、带箭头取 12，留够箭头伸出面板的长度",
+      "default": "undefined"
+    },
+    {
+      "name": "arrow",
+      "type": "boolean",
+      "required": false,
+      "description": "是否显示指向触发器的小箭头",
+      "default": "false"
+    },
+    {
+      "name": "autoAdjustOverflow",
+      "type": "boolean",
+      "required": false,
+      "description": "下拉框是否自动调整位置：目标侧空间不足时翻转到对侧（auto 方向下即「下方不足改向上」）。 关闭后严格按 side 展开（auto 视为 bottom），不再依据视口余量翻转。",
+      "default": "true"
+    }
+  ],
+  "events": [
+    {
+      "name": "open",
+      "payload": "(e: 'open'): void",
+      "description": ""
+    },
+    {
+      "name": "clear",
+      "payload": "(e: 'clear'): void",
+      "description": ""
+    },
+    {
+      "name": "keydown",
+      "payload": "(e: \"keydown\", event: KeyboardEvent): void;",
+      "description": ""
+    },
+    {
+      "name": "enter",
+      "payload": "(e: \"enter\"): void;",
+      "description": ""
+    },
+    {
+      "name": "afterEnter",
+      "payload": "(e: \"afterEnter\"): void;",
+      "description": ""
+    },
+    {
+      "name": "close",
+      "payload": "(e: \"close\", event?: Event): void;",
+      "description": "在触发器外发生了 closeOn 指定的鼠标事件，请求父组件收起下拉；附带原始事件供父组件二次判定"
+    }
+  ],
+  "slots": [
+    {
+      "name": "default",
+      "description": ""
+    },
+    {
+      "name": "clear-icon",
+      "description": ""
+    },
+    {
+      "name": "arrow-icon",
+      "description": ""
+    },
+    {
+      "name": "trigger",
+      "props": "(props: { isOpen: boolean }) => any",
+      "description": "触发器内容，结构与样式由调用方决定；isOpen 为浮层当前是否展开"
+    },
+    {
+      "name": "content",
+      "props": "() => any",
+      "description": "浮层内容"
+    }
+  ],
+  "exposes": [
+    {
+      "name": "dropdownRef",
+      "description": ""
+    },
+    {
+      "name": "dropdownScrollRef",
+      "description": "浮层的滚动容器；传送后它是 body 的子节点，不能再从组件根节点里找"
+    },
+    {
+      "name": "contains",
+      "description": "供外部做「点击是否落在触发器或浮层内」的判定，传送后不能只判组件根节点"
+    }
+  ],
+  "examples": [],
+  "related": [
+    "reborn-transition"
+  ],
+  "whenToUse": [
+    "自研新的下拉类组件时，复用统一的浮层能力（传送到 body、向上翻转、随页面滚动跟随触发器）。",
+    "需要统一控制浮层展开收起行为（enter / afterEnter / close 事件，isOpen 状态）时作为底层容器。"
+  ],
+  "whenNotToUse": [
+    "只想要一个「输入框式触发器盒子」（占位符、清空按钮、箭头旋转）时，改用 reborn-field-trigger。",
+    "业务中直接做数据选择时，改用成品组件 reborn-select、reborn-date-picker 或 reborn-time-picker。"
+  ],
+  "pitfalls": [
+    "web 与 uniapp 双端均有实现，但这是内部基础组件，无独立文档页与演示示例。",
+    "web 端已拆分：本组件只剩浮层，触发器盒子迁到 reborn-field-trigger；uniapp 端仍是触发器与浮层合体的旧实现，双端 API 暂时不一致。",
+    "触发器结构经 trigger 插槽由调用方自行渲染，浮层内容经 content 插槽传入。",
+    "外层 wrapper 带 group 与 tabindex，触发器必须渲染在 trigger 插槽内，group-focus 系列聚焦样式才生效。",
+    "portal 默认 true，浮层传送到 body；closeOn 默认 mousedown（外部按下、滚轮、触摸或包含锚点的滚动即收起，面板及已登记的嵌套浮层内不算外部），可改为 click（外部完成一次点击才收起）。select、date-picker、time-picker、tree-select、cascader（经 triggerProps）、dropdown、breadcrumb（经 dropdown-props）都透传该参数且默认一致。",
+    "知识条目中 props / events 描述大量缺失，使用前建议直接查阅源码（RebornSelectTrigger.vue）。"
+  ],
+  "dependencies": [
+    "@weapp-tailwindcss/merge-v3",
+    "@weapp-tailwindcss/variants-v3",
+    "clsx",
+    "tailwind-merge",
+    "tailwind-variants"
+  ],
+  "install": {
+    "cli": "npx reborn-ui@latest add reborn-select-trigger"
+  },
+  "sourceRefs": {
+    "web": [
+      "app/components/reborn/ui/reborn-select-trigger/RebornSelectTrigger.vue",
+      "app/components/reborn/ui/reborn-select-trigger/reborn-select-trigger.config.ts"
+    ],
+    "uniapp": [
+      "packages/uniapp-project/src/components/reborn-select-trigger/RebornSelectTrigger.vue",
+      "packages/uniapp-project/src/components/reborn-select-trigger/index.ts",
+      "packages/uniapp-project/src/components/reborn-select-trigger/reborn-select-trigger.config.ts"
+    ]
+  },
+  "docPath": null,
+  "_meta": {
+    "contentHash": "e0870da2999f8687e681278185655b3855e5655e",
+    "hasOverride": true,
+    "extractors": {
+      "web": "ok",
+      "uniapp": "ok",
+      "docs": "missing"
+    }
+  },
+  "internal": true
+}

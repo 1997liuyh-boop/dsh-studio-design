@@ -1,0 +1,99 @@
+{
+  "$schema": "../schema/component.schema.json",
+  "id": "direction-aware-hover",
+  "title": "方向感知悬停卡片",
+  "description": "用于根据鼠标进入方向滑入内容覆盖层的图片悬停卡片组件。",
+  "category": "data-display",
+  "tags": [
+    "css",
+    "tailwind",
+    "card",
+    "aceternity-ui"
+  ],
+  "aliases": [],
+  "platforms": [
+    "web"
+  ],
+  "props": [
+    {
+      "name": "imageUrl",
+      "type": "string",
+      "required": true,
+      "description": "要显示的图片 URL。",
+      "default": "必填"
+    },
+    {
+      "name": "childrenClass",
+      "type": "string",
+      "required": false,
+      "description": "内容覆盖层的额外 CSS 类。",
+      "default": "undefined"
+    },
+    {
+      "name": "imageClass",
+      "type": "string",
+      "required": false,
+      "description": "图片元素的额外 CSS 类。",
+      "default": "undefined"
+    },
+    {
+      "name": "class",
+      "type": "string",
+      "required": false,
+      "description": "卡片容器的额外 CSS 类。",
+      "default": "undefined"
+    }
+  ],
+  "events": [],
+  "slots": [
+    {
+      "name": "default",
+      "description": ""
+    }
+  ],
+  "exposes": [],
+  "examples": [
+    {
+      "title": "Web 演示",
+      "path": "app/components/reborn/examples/direction-aware-hover/DirectionAwareHoverDemo.vue",
+      "source": "demo",
+      "platform": "web",
+      "code": "<script setup lang=\"ts\">\n/**\n * 方向感知悬停演示\n *\n * 卡片本身就是被演示的对象：图片、遮罩、内容层都由组件渲染，\n * 因此这里不再额外套任何背景盒，只按分组排列。\n */\nconst images = {\n  landscape:\n    \"https://images.unsplash.com/photo-1728755833852-2c138c84cfb1?q=80&w=2672&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D\",\n  city: \"https://images.unsplash.com/photo-1522075469751-3a6694fb2f61?ixlib=rb-1.2.1&auto=format&fit=crop&w=634&q=80\",\n  food: \"https://images.unsplash.com/photo-1664710476481-1213c456c56c?q=80&w=2672&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D\",\n  mountain: \"https://images.unsplash.com/photo-1506905925346-21bda4d32df4?q=80&w=2670&auto=format&fit=crop\",\n  forest: \"https://images.unsplash.com/photo-1441974231531-c6227db76b6e?q=80&w=2671&auto=format&fit=crop\",\n};\n</script>\n\n<template>\n  <div class=\"flex w-full min-w-0 flex-col\">\n    <DemoSection\n      title=\"基础用法\"\n      description=\"桌面端把鼠标移入卡片，遮罩会从鼠标进入的那一侧滑入；移动端改为点击触发，3 秒后自动收起。只需传入 image-url，内容写在默认插槽里。\"\n    >\n      <DemoBlock\n        layout=\"row\"\n        align=\"start\"\n      >\n        <DirectionAwareHover :image-url=\"images.landscape\">\n          <h4 class=\"text-lg font-semibold\">\n            自然风光\n          </h4>\n          <p class=\"mt-1 text-sm opacity-90\">\n            探索山野之间的辽阔\n          </p>\n        </DirectionAwareHover>\n\n        <DirectionAwareHover :image-url=\"images.mountain\">\n          <h4 class=\"text-lg font-semibold\">\n            雪山之巅\n          </h4>\n          <p class=\"mt-1 text-sm opacity-90\">\n            触摸云层之上的静谧\n          </p>\n        </DirectionAwareHover>\n      </DemoBlock>\n    </DemoSection>\n\n    <DemoSection\n      title=\"自定义样式\"\n      description=\"class 作用在卡片外框，image-class 作用在图片，children-class 作用在内容层；三者都会与组件默认类合并，可用来改圆角、缩放与内容底部的渐变遮罩。\"\n    >\n      <DemoBlock\n        layout=\"row\"\n        align=\"start\"\n      >\n        <!-- 改圆角 + 内容层加底部渐变，保证文字在浅色图片上依然可读 -->\n        <DirectionAwareHover\n          :image-url=\"images.city\"\n          class=\"rounded-3xl\"\n          children-class=\"inset-x-0 bottom-0 bg-linear-to-t from-black/80 to-transparent p-4\"\n        >\n          <h4 class=\"text-lg font-semibold\">\n            城市夜色\n          </h4>\n          <p class=\"mt-1 text-sm opacity-90\">\n            穿行在霓虹之间\n          </p>\n        </DirectionAwareHover>\n\n        <!-- 圆形卡片：仅靠 class 即可改变外框形状 -->\n        <DirectionAwareHover\n          :image-url=\"images.forest\"\n          class=\"rounded-full\"\n          image-class=\"sepia transition-[filter] duration-700 hover:sepia-0\"\n          children-class=\"inset-0 flex items-center justify-center p-4 text-center\"\n        >\n          <div>\n            <h4 class=\"text-lg font-bold\">\n              林间小径\n            </h4>\n            <p class=\"text-sm opacity-90\">\n              悬停时褪去复古滤镜\n            </p>\n          </div>\n        </DirectionAwareHover>\n      </DemoBlock>\n    </DemoSection>\n\n    <DemoSection\n      title=\"内容层放置交互元素\"\n      description=\"内容层的 z-index 高于遮罩，可以直接放按钮等可点击元素。\"\n    >\n      <DemoBlock\n        layout=\"row\"\n        align=\"start\"\n      >\n        <DirectionAwareHover\n          :image-url=\"images.food\"\n          class=\"rounded-3xl\"\n          children-class=\"inset-x-0 bottom-0 bg-linear-to-t from-black/90 via-black/40 to-transparent p-4\"\n        >\n          <h4 class=\"text-lg font-semibold\">\n            风味料理\n          </h4>\n          <p class=\"mt-1 text-sm opacity-90\">\n            品味每一道匠心之作\n          </p>\n          <RebornButton\n            class=\"mt-3\"\n            size=\"sm\"\n            color=\"primary\"\n            variant=\"filled\"\n            label=\"查看菜谱\"\n          />\n        </DirectionAwareHover>\n      </DemoBlock>\n    </DemoSection>\n  </div>\n</template>\n"
+    }
+  ],
+  "related": [],
+  "whenToUse": [
+    "图片墙 / 作品集卡片，悬停时从进入方向滑出标题说明。",
+    "需要在图片上叠加自定义覆盖层内容（文字、按钮）的悬停交互。"
+  ],
+  "whenNotToUse": [
+    "只需高光光泽效果，改用 glare-card。",
+    "需要鼠标跟随的 3D 透视，改用 card-3d。"
+  ],
+  "pitfalls": [
+    "仅 web 端可用。",
+    "imageUrl 为必填；覆盖层内容通过默认插槽传入。",
+    "覆盖层与图片样式分别用 childrenClass / imageClass 定制，class 作用于卡片容器。",
+    "示例说明移动端通过点按（tap）触发覆盖层效果。"
+  ],
+  "dependencies": [],
+  "install": {
+    "cli": "npx reborn-ui@latest add direction-aware-hover"
+  },
+  "sourceRefs": {
+    "web": [
+      "app/components/reborn/ui/direction-aware-hover/DirectionAwareHover.vue",
+      "app/components/reborn/ui/direction-aware-hover/index.ts"
+    ]
+  },
+  "docPath": "content/2.components/cards/direction-aware-hover.md",
+  "_meta": {
+    "contentHash": "17e8eac974fb60d4fd7f9391eddf8132cef46aeb",
+    "hasOverride": true,
+    "extractors": {
+      "web": "ok",
+      "uniapp": "absent",
+      "docs": "found"
+    }
+  }
+}

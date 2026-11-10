@@ -9,6 +9,7 @@
     "tailwind",
     "aceternity-ui"
   ],
+  "aliases": [],
   "platforms": [
     "web"
   ],
@@ -61,7 +62,7 @@
   },
   "docPath": "content/2.components/miscellaneous/animated-tooltip.md",
   "_meta": {
-    "contentHash": "113f2b4317f91c7bf4d5886fb6404e4a867c42ac",
+    "contentHash": "6653f3249b1cb305e8fc6681bcb03f5f78103b77",
     "hasOverride": true,
     "extractors": {
       "web": "ok",

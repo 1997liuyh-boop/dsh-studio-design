@@ -9,6 +9,12 @@
     "reborn-color-picker",
     "uniapp"
   ],
+  "aliases": [
+    "color picker",
+    "取色",
+    "颜色选择",
+    "调色板"
+  ],
   "platforms": [
     "web",
     "uniapp"
@@ -179,7 +185,7 @@
   },
   "docPath": "content/2.components/input-and-forms/reborn-color-picker.md",
   "_meta": {
-    "contentHash": "9fa16a23d5b290a506093be2096f2d7a60ad0d27",
+    "contentHash": "0f1f219205e506cdb5553e89a35bfbd0c097f775",
     "hasOverride": true,
     "extractors": {
       "web": "ok",

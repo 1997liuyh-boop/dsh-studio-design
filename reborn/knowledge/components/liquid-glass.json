@@ -1,0 +1,191 @@
+{
+  "$schema": "../schema/component.schema.json",
+  "id": "liquid-glass",
+  "title": "液态玻璃",
+  "description": "用于以 SVG 位移贴图与通道偏移模拟液态玻璃折射的容器组件。",
+  "category": "effect",
+  "tags": [
+    "svg",
+    "filter",
+    "glassmorphism"
+  ],
+  "aliases": [],
+  "platforms": [
+    "web"
+  ],
+  "props": [
+    {
+      "name": "radius",
+      "type": "number",
+      "required": false,
+      "description": "圆角大小（px）",
+      "default": "16"
+    },
+    {
+      "name": "border",
+      "type": "number",
+      "required": false,
+      "description": "边框厚度比例（相对于最短边）",
+      "default": "0.07"
+    },
+    {
+      "name": "lightness",
+      "type": "number",
+      "required": false,
+      "description": "位移贴图的亮度（0-100）",
+      "default": "50"
+    },
+    {
+      "name": "displace",
+      "type": "number",
+      "required": false,
+      "description": "高斯模糊偏移量（feGaussianBlur stdDeviation）",
+      "default": "14"
+    },
+    {
+      "name": "blend",
+      "type": "string",
+      "required": false,
+      "description": "SVG 渐变混合模式",
+      "default": "\"difference\""
+    },
+    {
+      "name": "xChannel",
+      "type": "\"R\" | \"G\" | \"B\"",
+      "required": false,
+      "description": "位移贴图 X 通道",
+      "default": "\"R\""
+    },
+    {
+      "name": "yChannel",
+      "type": "\"R\" | \"G\" | \"B\"",
+      "required": false,
+      "description": "位移贴图 Y 通道",
+      "default": "\"B\""
+    },
+    {
+      "name": "alpha",
+      "type": "number",
+      "required": false,
+      "description": "位移贴图 alpha 透明度",
+      "default": "0.93"
+    },
+    {
+      "name": "blur",
+      "type": "number",
+      "required": false,
+      "description": "位移贴图模糊半径（px）",
+      "default": "11"
+    },
+    {
+      "name": "rOffset",
+      "type": "number",
+      "required": false,
+      "description": "红通道位移偏移量",
+      "default": "0"
+    },
+    {
+      "name": "gOffset",
+      "type": "number",
+      "required": false,
+      "description": "绿通道位移偏移量",
+      "default": "10"
+    },
+    {
+      "name": "bOffset",
+      "type": "number",
+      "required": false,
+      "description": "蓝通道位移偏移量",
+      "default": "20"
+    },
+    {
+      "name": "scale",
+      "type": "number",
+      "required": false,
+      "description": "位移强度（负值向内折射）",
+      "default": "-180"
+    },
+    {
+      "name": "frost",
+      "type": "number",
+      "required": false,
+      "description": "磨砂背景透明度",
+      "default": "0.05"
+    },
+    {
+      "name": "position",
+      "type": "\"fixed\" | \"absolute\" | \"relative\" | \"sticky\"",
+      "required": false,
+      "description": "容器定位方式 - `fixed`：全屏浮层（默认） - `absolute`：相对父容器定位 - `relative`：普通文档流",
+      "default": "\"fixed\""
+    },
+    {
+      "name": "class",
+      "type": "HTMLAttributes[\"class\"]",
+      "required": false,
+      "description": "内层插槽容器的额外 class"
+    },
+    {
+      "name": "containerClass",
+      "type": "HTMLAttributes[\"class\"]",
+      "required": false,
+      "description": "外层效果容器的额外 class"
+    }
+  ],
+  "events": [],
+  "slots": [
+    {
+      "name": "default",
+      "description": "需要包裹在液态玻璃效果内部显示的内容。"
+    }
+  ],
+  "exposes": [],
+  "examples": [
+    {
+      "title": "Web 演示",
+      "path": "app/components/reborn/examples/liquid-glass/LiquidGlassDemo.vue",
+      "source": "demo",
+      "platform": "web",
+      "code": "<script setup lang=\"ts\">\nimport {\n  PATTERN_BACKGROUND_DIRECTION,\n  PATTERN_BACKGROUND_MASK,\n  PATTERN_BACKGROUND_SPEED,\n  PATTERN_BACKGROUND_VARIANT,\n} from \"../../ui/pattern-background\";\n</script>\n\n<template>\n  <div class=\"relative flex h-96 w-full items-center justify-center overflow-hidden\">\n    <PatternBackground :animate=\"true\" :direction=\"PATTERN_BACKGROUND_DIRECTION.Bottom\"\n      :variant=\"PATTERN_BACKGROUND_VARIANT.BigDot\" class=\"flex h-144 w-full items-center justify-center\"\n      :speed=\"PATTERN_BACKGROUND_SPEED.Slow\" :mask=\"PATTERN_BACKGROUND_MASK.EllipseTop\" />\n    <LiquidGlass container-class=\"fixed top-1/2 z-999999\">\n      <div class=\"flex min-h-16 w-full items-center justify-center px-12 py-4\">\n        Enjoy the Liquid Glass. Try scrolling through the page.\n      </div>\n    </LiquidGlass>\n    <div class=\"bg-dot-secondary absolute inset-0\" />\n  </div>\n</template>\n"
+    }
+  ],
+  "related": [],
+  "whenToUse": [
+    "悬浮工具条、Dock 等浮层需要玻璃折射质感时。",
+    "卡片或强调区域需要比普通毛玻璃更强的折射效果时。"
+  ],
+  "whenNotToUse": [
+    "普通半透明背景用 Tailwind backdrop-blur 即可，无需本组件。",
+    "需要动态边框强调，改用 neon-border。"
+  ],
+  "pitfalls": [
+    "仅 web 端可用，基于 SVG filter（位移贴图 + RGB 通道偏移）。",
+    "position 默认为 fixed，嵌入文档流时需显式改为 relative 或 absolute。",
+    "参数较多（scale、displace、blur、rOffset/gOffset/bOffset 等）且相互影响，建议从默认值微调。",
+    "class 作用于内层插槽容器，containerClass 作用于外层效果容器。"
+  ],
+  "dependencies": [
+    "clsx",
+    "tailwind-merge"
+  ],
+  "install": {
+    "cli": "npx reborn-ui@latest add liquid-glass"
+  },
+  "sourceRefs": {
+    "web": [
+      "app/components/reborn/ui/liquid-glass/LiquidGlass.vue",
+      "app/components/reborn/ui/liquid-glass/index.ts",
+      "app/components/reborn/ui/liquid-glass/liquid-glass.config.ts"
+    ]
+  },
+  "docPath": "content/2.components/special-effects/liquid-glass.md",
+  "_meta": {
+    "contentHash": "a77a466816ff15aced3b13cf9a3fd0852fcd485b",
+    "hasOverride": true,
+    "extractors": {
+      "web": "ok",
+      "uniapp": "absent",
+      "docs": "found"
+    }
+  }
+}

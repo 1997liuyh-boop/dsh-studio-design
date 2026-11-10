@@ -9,6 +9,12 @@
     "tailwind",
     "aceternity-ui"
   ],
+  "aliases": [
+    "时间线动效",
+    "滚动时间线",
+    "sticky timeline",
+    "叙事时间线"
+  ],
   "platforms": [
     "web"
   ],
@@ -69,7 +75,8 @@
   ],
   "whenNotToUse": [
     "只需内容侧边的滚动光束装饰，改用 tracing-beam。",
-    "展示多步骤加载状态，改用 multi-step-loader。"
+    "展示多步骤加载状态，改用 multi-step-loader。",
+    "展示审批记录、操作日志等数据节点的时间线（带时间戳、颜色与加载态），改用 reborn-timeline。"
   ],
   "pitfalls": [
     "仅 web 端可用，依赖 motion-v。",
@@ -91,7 +98,7 @@
   },
   "docPath": "content/2.components/miscellaneous/timeline.md",
   "_meta": {
-    "contentHash": "8bc0129fa4e4c217a88f112bebc6a5d6fc214d76",
+    "contentHash": "bee925c905b9a236184428f54db27c82034fef84",
     "hasOverride": true,
     "extractors": {
       "web": "ok",

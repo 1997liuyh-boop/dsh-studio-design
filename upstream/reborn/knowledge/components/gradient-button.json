@@ -9,6 +9,7 @@
     "tailwind",
     "button"
   ],
+  "aliases": [],
   "platforms": [
     "web"
   ],
@@ -107,7 +108,7 @@
   },
   "docPath": "content/2.components/button/gradient-button.md",
   "_meta": {
-    "contentHash": "acecce3efb8bf3cf36515aac2771bb1acfaf547f",
+    "contentHash": "74dcd3a1807b7418408771cd0c9fddcb2dee6754",
     "hasOverride": true,
     "extractors": {
       "web": "ok",

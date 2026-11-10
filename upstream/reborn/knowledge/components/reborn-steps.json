@@ -11,6 +11,14 @@
     "workflow",
     "navigation"
   ],
+  "aliases": [
+    "steps",
+    "步骤条",
+    "步骤",
+    "stepper",
+    "流程步骤",
+    "进度步骤"
+  ],
   "platforms": [
     "web"
   ],
@@ -31,9 +39,15 @@
     },
     {
       "name": "placement",
-      "type": "StepsPlacement",
+      "type": "'top' | 'bottom' | 'left' | 'right'",
       "required": false,
-      "description": "标题与描述相对节点的位置；优先于父级 placement 与默认位置"
+      "description": "标题与描述相对节点的位置；优先于父级 placement 与默认位置",
+      "options": [
+        "top",
+        "bottom",
+        "left",
+        "right"
+      ]
     },
     {
       "name": "icon",
@@ -56,9 +70,18 @@
     },
     {
       "name": "color",
-      "type": "StepsColor",
+      "type": "'primary' | 'secondary' | 'success' | 'info' | 'warning' | 'error' | 'neutral'",
       "required": false,
       "description": "步骤主题色；未指定时继承父级，最终默认 primary；错误和成功使用对应状态色",
+      "options": [
+        "primary",
+        "secondary",
+        "success",
+        "info",
+        "warning",
+        "error",
+        "neutral"
+      ],
       "default": "'primary'"
     },
     {
@@ -84,10 +107,14 @@
     },
     {
       "name": "direction",
-      "type": "StepsDirection",
+      "type": "'horizontal' | 'vertical'",
       "required": false,
       "description": "步骤排列方向",
-      "default": "'horizontal'"
+      "default": "'horizontal'",
+      "options": [
+        "horizontal",
+        "vertical"
+      ]
     },
     {
       "name": "overallProgress",
@@ -97,17 +124,31 @@
     },
     {
       "name": "processStatus",
-      "type": "StepsStatus",
+      "type": "'wait' | 'process' | 'finish' | 'error' | 'success'",
       "required": false,
       "description": "当前步骤状态",
-      "default": "'process'"
+      "default": "'process'",
+      "options": [
+        "wait",
+        "process",
+        "finish",
+        "error",
+        "success"
+      ]
     },
     {
       "name": "finishStatus",
-      "type": "StepsStatus",
+      "type": "'wait' | 'process' | 'finish' | 'error' | 'success'",
       "required": false,
       "description": "当前步骤之前的状态",
-      "default": "'finish'"
+      "default": "'finish'",
+      "options": [
+        "wait",
+        "process",
+        "finish",
+        "error",
+        "success"
+      ]
     },
     {
       "name": "alignCenter",
@@ -125,24 +166,39 @@
     },
     {
       "name": "size",
-      "type": "StepsSize",
+      "type": "'sm' | 'md' | 'lg'",
       "required": false,
       "description": "标记与文字尺寸",
-      "default": "'md'"
+      "default": "'md'",
+      "options": [
+        "sm",
+        "md",
+        "lg"
+      ]
     },
     {
       "name": "type",
-      "type": "StepsType",
+      "type": "'default' | 'dot' | 'text'",
       "required": false,
       "description": "外观类型：圆形数字、点状标记或无标记的文本步骤",
-      "default": "'default'"
+      "default": "'default'",
+      "options": [
+        "default",
+        "dot",
+        "text"
+      ]
     },
     {
       "name": "lineType",
-      "type": "StepsLineType",
+      "type": "'solid' | 'dashed' | 'arrow'",
       "required": false,
       "description": "连接方式：实线、原生虚线或箭头",
-      "default": "'solid'"
+      "default": "'solid'",
+      "options": [
+        "solid",
+        "dashed",
+        "arrow"
+      ]
     },
     {
       "name": "active",
@@ -251,7 +307,7 @@
   },
   "docPath": "content/2.components/navigation/reborn-steps.md",
   "_meta": {
-    "contentHash": "850736e7c19a447e6530cdbdec416672a39533d9",
+    "contentHash": "acb22b86b80ab1ca8e38b0574f4b33b1cb1d0c7d",
     "hasOverride": true,
     "extractors": {
       "web": "ok",

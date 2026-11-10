@@ -1,0 +1,458 @@
+{
+  "$schema": "../schema/component.schema.json",
+  "id": "reborn-popup",
+  "title": "Popup 弹出层",
+  "description": "UniApp 弹出层，支持四向或居中显示、底部手势关闭、圆角与安全区适配。",
+  "category": "navigation",
+  "tags": [
+    "uniapp",
+    "tailwind",
+    "popup"
+  ],
+  "aliases": [
+    "popup",
+    "弹出层",
+    "底部弹层",
+    "action sheet",
+    "bottom sheet",
+    "半屏弹窗"
+  ],
+  "platforms": [
+    "uniapp"
+  ],
+  "props": [
+    {
+      "name": "customClass",
+      "type": "string",
+      "required": false,
+      "description": "自定义根元素类名",
+      "default": "''"
+    },
+    {
+      "name": "customStyle",
+      "type": "string",
+      "required": false,
+      "description": "自定义根元素样式",
+      "default": "''"
+    },
+    {
+      "name": "position",
+      "type": "'center' | 'top' | 'right' | 'bottom' | 'left'",
+      "required": false,
+      "description": "弹出位置：top, bottom, left, right, center",
+      "default": "'bottom'",
+      "options": [
+        "center",
+        "top",
+        "right",
+        "bottom",
+        "left"
+      ]
+    },
+    {
+      "name": "transition",
+      "type": "TransitionName",
+      "required": false,
+      "description": "自定义过渡动画名称"
+    },
+    {
+      "name": "closeOnClickModal",
+      "type": "boolean",
+      "required": false,
+      "description": "是否可以通过点击遮罩层关闭",
+      "default": "true"
+    },
+    {
+      "name": "maskClosable",
+      "type": "boolean",
+      "required": false,
+      "description": "是否可以通过点击遮罩层关闭 (别名)",
+      "default": "undefined"
+    },
+    {
+      "name": "duration",
+      "type": "number | boolean",
+      "required": false,
+      "description": "动画时长 (单位ms)，设为 false 则禁用动画",
+      "default": "300"
+    },
+    {
+      "name": "modal",
+      "type": "boolean",
+      "required": false,
+      "description": "是否需要遮罩层",
+      "default": "true"
+    },
+    {
+      "name": "showMask",
+      "type": "boolean",
+      "required": false,
+      "description": "是否需要遮罩层 (别名)",
+      "default": "undefined"
+    },
+    {
+      "name": "zIndex",
+      "type": "number",
+      "required": false,
+      "description": "弹出层的层级 z-index",
+      "default": "25"
+    },
+    {
+      "name": "overlayZIndex",
+      "type": "number",
+      "required": false,
+      "description": "弹出层的层级 z-index (别名)",
+      "default": "undefined"
+    },
+    {
+      "name": "modalStyle",
+      "type": "string",
+      "required": false,
+      "description": "遮罩层的自定义样式",
+      "default": "''"
+    },
+    {
+      "name": "safeAreaInsetBottom",
+      "type": "boolean",
+      "required": false,
+      "description": "是否开启底部安全区域适配",
+      "default": "true"
+    },
+    {
+      "name": "safeAreaInsetTop",
+      "type": "boolean",
+      "required": false,
+      "description": "是否开启顶部安全区域适配",
+      "default": "true"
+    },
+    {
+      "name": "lazyRender",
+      "type": "boolean",
+      "required": false,
+      "description": "是否在显示时才渲染内容",
+      "default": "true"
+    },
+    {
+      "name": "lockScroll",
+      "type": "boolean",
+      "required": false,
+      "description": "是否在出现时将 body 滚动锁定",
+      "default": "true"
+    },
+    {
+      "name": "title",
+      "type": "string",
+      "required": false,
+      "description": "弹出层的标题",
+      "default": "''"
+    },
+    {
+      "name": "showHeader",
+      "type": "boolean",
+      "required": false,
+      "description": "是否显示头部（包含标题和关闭按钮）",
+      "default": "true"
+    },
+    {
+      "name": "showClose",
+      "type": "boolean",
+      "required": false,
+      "description": "是否显示关闭按钮",
+      "default": "true"
+    },
+    {
+      "name": "size",
+      "type": "number | string",
+      "required": false,
+      "description": "弹出层的大小 (宽度或高度)",
+      "default": "undefined"
+    },
+    {
+      "name": "swipeClose",
+      "type": "boolean",
+      "required": false,
+      "description": "是否开启手势滑动关闭 (仅限底部位置)",
+      "default": "true"
+    },
+    {
+      "name": "swipeCloseThreshold",
+      "type": "number",
+      "required": false,
+      "description": "手势滑动关闭的触发阈值（手指竖直位移 px，不与阻尼位移混用）",
+      "default": "120"
+    },
+    {
+      "name": "ui",
+      "type": "Partial<{\n    base?: any\n    inner?: any\n    draw?: any\n    header?: any\n    title?: any\n    closeIcon?: any\n  }>",
+      "required": false,
+      "description": "按内部结构键覆盖各节点类名，键位见文档「自定义样式（ui）」 可用键（从源码抽取，以此为准）——UniApp：base、closeIcon、draw、header、inner、title。"
+    },
+    {
+      "name": "rootPortal",
+      "type": "boolean",
+      "required": false,
+      "description": "是否使用 reborn-root-portal (别名)",
+      "default": "false"
+    },
+    {
+      "name": "enablePortal",
+      "type": "boolean",
+      "required": false,
+      "description": "是否使用 reborn-root-portal",
+      "default": "false"
+    },
+    {
+      "name": "color",
+      "type": "'primary' | 'secondary' | 'success' | 'info' | 'warning' | 'error' | 'neutral'",
+      "required": false,
+      "description": "主题色 (影响手势滑块等)",
+      "default": "'neutral'",
+      "options": [
+        "primary",
+        "secondary",
+        "success",
+        "info",
+        "warning",
+        "error",
+        "neutral"
+      ]
+    },
+    {
+      "name": "round",
+      "type": "boolean",
+      "required": false,
+      "description": "是否显示圆角样式",
+      "default": "true"
+    },
+    {
+      "name": "modelValue",
+      "type": "boolean",
+      "required": false,
+      "description": "双向绑定值",
+      "vModel": true,
+      "default": "undefined"
+    },
+    {
+      "name": "model",
+      "type": "boolean",
+      "required": false,
+      "description": ""
+    },
+    {
+      "name": "panelDuration",
+      "type": "number | boolean",
+      "required": true,
+      "description": ""
+    },
+    {
+      "name": "overlayStyle",
+      "type": "string",
+      "required": true,
+      "description": ""
+    },
+    {
+      "name": "panelStyle",
+      "type": "string",
+      "required": true,
+      "description": ""
+    },
+    {
+      "name": "transitionName",
+      "type": "TransitionName | TransitionName[]",
+      "required": true,
+      "description": ""
+    },
+    {
+      "name": "rootClass",
+      "type": "Record<string, () => string>",
+      "required": true,
+      "description": ""
+    },
+    {
+      "name": "hasHeaderSlot",
+      "type": "boolean",
+      "required": true,
+      "description": "使用方是否写了 #header 插槽，由外层按自己的 $slots 判断后传入。 小程序编译器把转发的具名插槽一律记为「已传入」，本组件的 $slots.header 在小程序端恒为真， 不能靠插槽后备内容兜底标题，只能由这个显式 prop 决定渲染插槽还是标题。"
+    }
+  ],
+  "events": [
+    {
+      "name": "before-enter",
+      "payload": "[]",
+      "description": "进入过渡开始前触发"
+    },
+    {
+      "name": "enter",
+      "payload": "[]",
+      "description": "进入过渡进行中触发（面板开始滑入）"
+    },
+    {
+      "name": "before-leave",
+      "payload": "[]",
+      "description": "离开过渡开始前触发"
+    },
+    {
+      "name": "leave",
+      "payload": "[]",
+      "description": "离开过渡进行中触发（面板开始滑出）"
+    },
+    {
+      "name": "after-leave",
+      "payload": "[]",
+      "description": "离开过渡结束后触发"
+    },
+    {
+      "name": "after-enter",
+      "payload": "[]",
+      "description": "进入过渡结束后触发"
+    },
+    {
+      "name": "click-modal",
+      "payload": "[]",
+      "description": "点击遮罩层时触发"
+    },
+    {
+      "name": "close",
+      "payload": "[]",
+      "description": "仅在组件内部关闭时触发（点遮罩、点关闭图标、下滑手势），外部改 `v-model` 不触发"
+    },
+    {
+      "name": "open",
+      "payload": "[]",
+      "description": "进入过渡开始前触发（与 `before-enter` 同时）"
+    },
+    {
+      "name": "opened",
+      "payload": "[]",
+      "description": "进入过渡结束后触发（与 `after-enter` 同时）"
+    },
+    {
+      "name": "closed",
+      "payload": "[]",
+      "description": "离开过渡结束后触发（与 `after-leave` 同时）"
+    },
+    {
+      "name": "update:modelValue",
+      "description": "modelValue 变化时触发（v-model 同步）",
+      "payload": "(value: boolean)"
+    },
+    {
+      "name": "clickModal",
+      "payload": "[event?: any]",
+      "description": ""
+    },
+    {
+      "name": "beforeEnter",
+      "payload": "[event?: any]",
+      "description": ""
+    },
+    {
+      "name": "afterEnter",
+      "payload": "[event?: any]",
+      "description": ""
+    },
+    {
+      "name": "beforeLeave",
+      "payload": "[event?: any]",
+      "description": ""
+    },
+    {
+      "name": "afterLeave",
+      "payload": "[event?: any]",
+      "description": ""
+    },
+    {
+      "name": "swipeStart",
+      "payload": "[event?: any]",
+      "description": ""
+    },
+    {
+      "name": "swipeMove",
+      "payload": "[event?: any]",
+      "description": ""
+    },
+    {
+      "name": "swipeEnd",
+      "payload": "[event?: any]",
+      "description": ""
+    },
+    {
+      "name": "swipeCancel",
+      "payload": "[event?: any]",
+      "description": ""
+    }
+  ],
+  "slots": [
+    {
+      "name": "header",
+      "description": "替换默认标题文本；关闭图标仍保留在右侧，`showHeader` 为 `false` 时不渲染"
+    },
+    {
+      "name": "default",
+      "description": "面板主体内容，直接渲染在 `inner` 节点内，没有内边距与滚动包装"
+    }
+  ],
+  "exposes": [
+    {
+      "name": "handleClose",
+      "description": "手动关闭弹出层（等价于把 v-model 置为 false，会正常走关闭事件与动画）"
+    }
+  ],
+  "examples": [
+    {
+      "title": "UniApp 演示",
+      "path": "packages/uniapp-project/src/pages/reborn-popup/RebornPopupDemo.vue",
+      "source": "demo",
+      "platform": "uniapp",
+      "code": "<script setup lang=\"ts\">\nimport { shallowRef } from 'vue'\nimport RebornPage from '@/components/reborn-page/RebornPage.vue'\nimport RebornCard from '@/components/reborn-card/RebornCard.vue'\nimport RebornImage from '@/components/reborn-image/RebornImage.vue'\nimport RebornButton from '@/components/reborn-button/RebornButton.vue'\nimport RebornRadioGroup from '@/components/reborn-radio/RebornRadioGroup.vue'\nimport RebornPopup from '@/components/reborn-popup/RebornPopup.vue'\nimport RebornSwitch from '@/components/reborn-switch/RebornSwitch.vue'\nimport type { PopupPosition } from '@/components/reborn-popup/reborn-popup.config'\n\nconst direction = shallowRef<PopupPosition>('bottom')\nconst show = shallowRef(false)\nconst showMask = shallowRef(true)\nconst showHeader = shallowRef(true)\nconst showClose = shallowRef(true)\nconst swipeClose = shallowRef(true)\nconst round = shallowRef(true)\nconst src = shallowRef('https://cms-image.leyifan.cn/img_reborn/ques-4.jpg')\nconst directions: { label: string; value: PopupPosition }[] = [\n  { label: '底部', value: 'bottom' },\n  { label: '顶部', value: 'top' },\n  { label: '左侧', value: 'left' },\n  { label: '右侧', value: 'right' },\n  { label: '中间', value: 'center' },\n]\n</script>\n\n<template>\n  <RebornPage title=\"Popup 弹出层\">\n    <RebornCard title=\"基础用法\">\n      <view class=\"flex flex-col gap-4\">\n        <view class=\"text-sm text-gray-500\">\n          方向：\n        </view>\n        <!-- options 传入后由组自行渲染选项，无需再写子项 -->\n        <RebornRadioGroup v-model=\"direction\" :options=\"directions\" />\n        <view class=\"text-sm text-gray-500 flex items-center gap-2 justify-between\">\n          是否显示遮罩：\n          <RebornSwitch v-model=\"showMask\" activeLabel=\"显示\" inactiveLabel=\"隐藏\" />\n        </view>\n        <view class=\"text-sm text-gray-500 flex items-center gap-2 justify-between\">\n          是否显示头部：\n          <RebornSwitch v-model=\"showHeader\" activeLabel=\"显示\" inactiveLabel=\"隐藏\" />\n        </view>\n        <view class=\"text-sm text-gray-500 flex items-center gap-2 justify-between\">\n          是否显示关闭按钮：\n          <RebornSwitch v-model=\"showClose\" activeLabel=\"显示\" inactiveLabel=\"隐藏\" />\n        </view>\n        <view class=\"text-sm text-gray-500 flex items-center gap-2 justify-between\">\n          是否显示拖拽关闭：\n          <RebornSwitch v-model=\"swipeClose\" activeLabel=\"显示\" inactiveLabel=\"隐藏\" />\n        </view>\n        <view class=\"text-sm text-gray-500 flex items-center gap-2 justify-between\">\n          是否圆角：\n          <RebornSwitch v-model=\"round\" activeLabel=\"显示\" inactiveLabel=\"隐藏\" />\n        </view>\n        <RebornButton @click=\"show = true\">打开弹窗</RebornButton>\n      </view>\n    </RebornCard>\n\n    <RebornPopup v-model=\"show\" :position=\"direction\" :show-mask=\"showMask\" :show-header=\"showHeader\"\n      :show-close=\"showClose\" :swipe-close=\"swipeClose\" :round=\"round\">\n      <template #header>\n        <text class=\"text-24 text-gray-9\">方向：{{ direction }}</text>\n      </template>\n      <view class=\"p-4 h-full flex items-center justify-center bg-white\">\n        <RebornImage :src=\"src\" preview width=\"400\" height=\"400\" />\n      </view>\n    </RebornPopup>\n  </RebornPage>\n</template>\n"
+    }
+  ],
+  "related": [
+    "reborn-overlay",
+    "reborn-root-portal",
+    "reborn-transition"
+  ],
+  "whenToUse": [
+    "position=bottom 构建移动端底部操作面板，swipeClose 支持下滑关闭。",
+    "position=left/right 构建侧边选择器。",
+    "rootPortal 解决小程序原生组件层级问题。"
+  ],
+  "whenNotToUse": [
+    "Web 抽屉改用 reborn-drawer。",
+    "锚定元素的小型浮层改用 reborn-popover。",
+    "只需要背景遮罩改用 reborn-overlay。"
+  ],
+  "pitfalls": [
+    "仅 UniApp；Web 已迁移为 reborn-drawer。",
+    "swipeClose 仅 bottom 生效，swipeCloseThreshold 默认 120px。",
+    "showMask、maskClosable、overlayZIndex 别名优先。",
+    "默认 lazyRender=true，安全区适配默认开启。",
+    "size 未传时不限制尺寸，传入后实际应用且 customStyle 可覆盖。showMask/maskClosable/overlayZIndex 未传时回退 modal/closeOnClickModal/zIndex，显式值优先。",
+    "modelValue 默认 undefined；未传时本地初始关闭，显式 false/null/undefined 均关闭。传值后 close() 等操作只请求更新，父级拒收保持父值；移除绑定恢复本地值，初始化不派发 update:modelValue。"
+  ],
+  "dependencies": [
+    "@weapp-tailwindcss/variants-v3",
+    "tailwind-variants"
+  ],
+  "install": {
+    "cli": "npx reborn-ui@latest add reborn-popup"
+  },
+  "sourceRefs": {
+    "uniapp": [
+      "packages/uniapp-project/src/components/reborn-popup/RebornPopup.vue",
+      "packages/uniapp-project/src/components/reborn-popup/RebornPopupPanel.vue",
+      "packages/uniapp-project/src/components/reborn-popup/index.ts",
+      "packages/uniapp-project/src/components/reborn-popup/reborn-popup.config.ts"
+    ]
+  },
+  "docPath": "content/2.components/navigation/reborn-popup.md",
+  "_meta": {
+    "contentHash": "ed629aba1561c2910f8253ab4b9cbb88c83ad843",
+    "hasOverride": true,
+    "extractors": {
+      "web": "absent",
+      "uniapp": "ok",
+      "docs": "found"
+    }
+  }
+}

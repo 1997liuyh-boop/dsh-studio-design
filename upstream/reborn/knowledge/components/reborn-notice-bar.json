@@ -5,6 +5,13 @@
   "description": "用于循环播放一组消息通知的通告栏组件，支持水平滚动与垂直轮播。",
   "category": "navigation",
   "tags": [],
+  "aliases": [
+    "notice bar",
+    "通知栏",
+    "通告栏",
+    "公告栏",
+    "滚动公告"
+  ],
   "platforms": [
     "web",
     "uniapp"
@@ -235,7 +242,7 @@
   },
   "docPath": "content/2.components/navigation/reborn-notice-bar.md",
   "_meta": {
-    "contentHash": "5c9cbec1866576e237b26d337371cbf033f0d1b0",
+    "contentHash": "5a7930dbe93b94772e372887a41e4bbde73d3ea6",
     "hasOverride": true,
     "extractors": {
       "web": "ok",

@@ -1,0 +1,252 @@
+{
+  "$schema": "../schema/component.schema.json",
+  "id": "reborn-popconfirm",
+  "title": "Popconfirm 气泡确认框",
+  "description": "点击触发的轻量确认气泡，标题、描述加确认取消按钮，适合低风险操作的二次确认。",
+  "category": "misc",
+  "tags": [
+    "popconfirm",
+    "confirm",
+    "feedback",
+    "popover"
+  ],
+  "aliases": [
+    "popconfirm",
+    "气泡确认",
+    "二次确认",
+    "确认气泡",
+    "删除确认"
+  ],
+  "platforms": [
+    "web"
+  ],
+  "props": [
+    {
+      "name": "title",
+      "type": "string",
+      "required": false,
+      "description": "标题文字，14px 标题色（gray-10）。"
+    },
+    {
+      "name": "description",
+      "type": "string",
+      "required": false,
+      "description": "描述文字，14px 辅助色（gray-8），与标题间隔 8px。"
+    },
+    {
+      "name": "confirmText",
+      "type": "string",
+      "required": false,
+      "description": "确认按钮文字。",
+      "default": "'确定'"
+    },
+    {
+      "name": "cancelText",
+      "type": "string",
+      "required": false,
+      "description": "取消按钮文字。",
+      "default": "'取消'"
+    },
+    {
+      "name": "confirmColor",
+      "type": "ButtonProps['color']",
+      "required": false,
+      "description": "确认按钮语义色，取值同按钮组件。",
+      "default": "'primary'"
+    },
+    {
+      "name": "cancelColor",
+      "type": "ButtonProps['color']",
+      "required": false,
+      "description": "取消按钮语义色，取值同按钮组件。",
+      "default": "'neutral'"
+    },
+    {
+      "name": "hideCancel",
+      "type": "boolean",
+      "required": false,
+      "description": "隐藏取消按钮，仅保留确认。",
+      "default": "false"
+    },
+    {
+      "name": "loading",
+      "type": "boolean",
+      "required": false,
+      "description": "确认按钮加载中；加载时点击确认不会自动关闭气泡，配合 v-model:open 做异步确认。",
+      "default": "false"
+    },
+    {
+      "name": "placement",
+      "type": "PopconfirmPlacement",
+      "required": false,
+      "description": "出现方向与对齐方式，取值与 reborn-tooltip 一致；默认 top（触发器上方居中）。",
+      "default": "undefined"
+    },
+    {
+      "name": "sideOffset",
+      "type": "number",
+      "required": false,
+      "description": "箭头尖端与触发器的间距，默认 4px；隐藏箭头时从面板边缘计算。",
+      "default": "undefined"
+    },
+    {
+      "name": "content",
+      "type": "PopoverContentProps",
+      "required": false,
+      "description": "旧的定位对象写法（side / align / sideOffset），等价于 placement + sideOffset，仅为兼容保留。 @deprecated 请改用 placement / sideOffset。",
+      "default": "undefined"
+    },
+    {
+      "name": "arrow",
+      "type": "boolean",
+      "required": false,
+      "description": "是否显示指向触发器的箭头。",
+      "default": "true"
+    },
+    {
+      "name": "portal",
+      "type": "boolean | string",
+      "required": false,
+      "description": "传送目标，false 表示原地渲染。",
+      "default": "true"
+    },
+    {
+      "name": "dismissible",
+      "type": "boolean",
+      "required": false,
+      "description": "点击外部（含 iframe 内）是否关闭气泡。",
+      "default": "true"
+    },
+    {
+      "name": "closeOnScroll",
+      "type": "boolean",
+      "required": false,
+      "description": "页面或触发器所在容器滚动时是否关闭气泡；关闭后气泡跟随触发器移动。",
+      "default": "true"
+    },
+    {
+      "name": "defaultOpen",
+      "type": "boolean",
+      "required": false,
+      "description": "非受控模式的初始显隐。",
+      "default": "false"
+    },
+    {
+      "name": "class",
+      "type": "ClassValue",
+      "required": false,
+      "description": "追加到触发器外层容器的类名。"
+    },
+    {
+      "name": "ui",
+      "type": "PopconfirmUi & { popover?: PopoverProps['ui'] }",
+      "required": false,
+      "description": "结构键样式覆盖；popover 键透传给底层气泡（wrapper/content/arrow 等）。 可用键（从源码抽取，以此为准）——Web：body、description、footer、header、popover、title。"
+    },
+    {
+      "name": "open",
+      "type": "boolean",
+      "required": false,
+      "description": "双向绑定值",
+      "vModel": true
+    }
+  ],
+  "events": [
+    {
+      "name": "confirm",
+      "payload": "(e: 'confirm'): void;",
+      "description": "点击确认按钮时触发。"
+    },
+    {
+      "name": "cancel",
+      "payload": "(e: 'cancel'): void;",
+      "description": "点击取消按钮时触发。"
+    },
+    {
+      "name": "update:open",
+      "description": "open 变化时触发（v-model 同步）",
+      "payload": "(open: boolean)"
+    }
+  ],
+  "slots": [
+    {
+      "name": "default",
+      "props": "(props: { open: boolean }) => unknown",
+      "description": "触发元素。"
+    },
+    {
+      "name": "title",
+      "props": "() => unknown",
+      "description": "自定义标题内容，优先于 title 属性。"
+    },
+    {
+      "name": "description",
+      "props": "() => unknown",
+      "description": "自定义描述内容，优先于 description 属性。"
+    },
+    {
+      "name": "footer",
+      "props": "(props: { confirm: () => void; cancel: () => void }) => unknown",
+      "description": "自定义按钮区，参数提供确认与取消回调。"
+    }
+  ],
+  "exposes": [
+    {
+      "name": "close",
+      "description": "手动关闭气泡。"
+    }
+  ],
+  "examples": [
+    {
+      "title": "Web 演示",
+      "path": "app/components/reborn/examples/reborn-popconfirm/RebornPopconfirmDemo.vue",
+      "source": "demo",
+      "platform": "web",
+      "code": "<script setup lang=\"ts\">\nimport type { PlaygroundControlGroup } from '~/components/common/play-ground/Playground.vue';\nimport type { PopconfirmPlacement, PopconfirmProps } from '~/components/reborn/ui/reborn-popconfirm/RebornPopconfirm.vue';\nimport { computed, onBeforeUnmount, ref, shallowRef } from 'vue';\nimport DemoBlock from '~/components/common/demo/DemoBlock.vue';\nimport DemoNote from '~/components/common/demo/DemoNote.vue';\nimport DemoSection from '~/components/common/demo/DemoSection.vue';\nimport Playground from '~/components/common/play-ground/Playground.vue';\nimport RebornButton from '~/components/reborn/ui/reborn-button/RebornButton.vue';\nimport RebornPopconfirm from '~/components/reborn/ui/reborn-popconfirm/RebornPopconfirm.vue';\nimport { placements } from '~/lib/placement';\n\n/** 12 种基础方位，取值与 reborn-tooltip 的 placement 完全一致。 */\nconst placementOptions = placements.map(value => ({ label: value, value }));\n\n/** 参考 Tooltip 的环绕布局，按钮简称与实际弹出方向一一对应。 */\nconst placementExamples = [\n  { placement: 'top-start', label: 'TL', cell: 'col-start-2 row-start-1' },\n  { placement: 'top', label: 'Top', cell: 'col-start-3 row-start-1' },\n  { placement: 'top-end', label: 'TR', cell: 'col-start-4 row-start-1' },\n  { placement: 'left-start', label: 'LT', cell: 'col-start-1 row-start-2' },\n  { placement: 'right-start', label: 'RT', cell: 'col-start-5 row-start-2' },\n  { placement: 'left', label: 'Left', cell: 'col-start-1 row-start-3' },\n  { placement: 'right', label: 'Right', cell: 'col-start-5 row-start-3' },\n  { placement: 'left-end', label: 'LB', cell: 'col-start-1 row-start-4' },\n  { placement: 'right-end', label: 'RB', cell: 'col-start-5 row-start-4' },\n  { placement: 'bottom-start', label: 'BL', cell: 'col-start-2 row-start-5' },\n  { placement: 'bottom', label: 'Bottom', cell: 'col-start-3 row-start-5' },\n  { placement: 'bottom-end', label: 'BR', cell: 'col-start-4 row-start-5' },\n] as const;\n/** 触发器撑满网格单元格，按钮宽度一致，方位对比不受文字长短影响 */\nconst fullWidthTriggerUi: PopconfirmProps['ui'] = { popover: { trigger: 'w-full' } };\n\n// ─── 交互演练场 ─────────────────────────────────────────────────\n\n/** 主要属性轴的默认状态。 */\nconst defaultState = {\n  title: '确定删除这条数据吗？',\n  description: '删除后不可恢复，关联的引用也会一并失效。',\n  confirmText: '确定',\n  cancelText: '取消',\n  placement: 'top' as PopconfirmPlacement,\n  sideOffset: 8,\n  arrow: true,\n  hideCancel: false,\n  dismissible: true,\n  closeOnScroll: true,\n};\nconst state = ref({ ...defaultState });\n\n/** 重置所有演练轴。 */\nfunction resetState() {\n  state.value = { ...defaultState };\n}\n\n/** 面板覆盖文案、定位与按钮配置。 */\nconst controls: PlaygroundControlGroup[] = [\n  { title: '内容', children: [\n    { label: '标题', key: 'title', component: 'input', defaultValue: defaultState.title },\n    { label: '描述（留空隐藏）', key: 'description', component: 'input', defaultValue: defaultState.description },\n    { label: '确认按钮文字', key: 'confirmText', component: 'input', defaultValue: '确定' },\n    { label: '取消按钮文字', key: 'cancelText', component: 'input', defaultValue: '取消' },\n  ] },\n  { title: '定位与按钮', children: [\n    { label: '气泡位置', key: 'placement', component: 'select', defaultValue: 'top', props: { options: placementOptions } },\n    { label: '与触发器间距', key: 'sideOffset', component: 'slider', defaultValue: 8, props: { min: 0, max: 24, step: 1 } },\n    { label: '显示箭头', key: 'arrow', component: 'checkbox', defaultValue: true },\n    { label: '隐藏取消按钮', key: 'hideCancel', component: 'checkbox', defaultValue: false },\n  ] },\n  { title: '关闭方式', children: [\n    { label: '点击外部关闭 dismissible', key: 'dismissible', component: 'checkbox', defaultValue: true },\n    { label: '滚动关闭 closeOnScroll', key: 'closeOnScroll', component: 'checkbox', defaultValue: true },\n  ] },\n];\n\n/** 完整参数代码，可复制到真实页面。 */\nconst popconfirmCode = computed(() => {\n  const s = state.value;\n  return `<RebornPopconfirm\\n  title=\"${s.title}\"\\n  description=\"${s.description}\"\\n  confirm-text=\"${s.confirmText}\"\\n  cancel-text=\"${s.cancelText}\"\\n  placement=\"${s.placement}\"\\n  :side-offset=\"${s.sideOffset}\"\\n  :arrow=\"${s.arrow}\"\\n  :hide-cancel=\"${s.hideCancel}\"\\n  :dismissible=\"${s.dismissible}\"\\n  :close-on-scroll=\"${s.closeOnScroll}\"\\n  @confirm=\"onConfirm\"\\n  @cancel=\"onCancel\"\\n>\\n  <RebornButton size=\"sm\" variant=\"outlined\" color=\"neutral\">删除</RebornButton>\\n</RebornPopconfirm>`;\n});\n\n// ─── 场景演示状态 ───────────────────────────────────────────────\n\n/** 记录最近一次操作，展示事件确实已触发。 */\nconst lastAction = shallowRef('等待操作');\n\n/** 异步确认：加载期间气泡保持打开，完成后手动关闭。 */\nconst asyncOpen = shallowRef(false);\nconst asyncLoading = shallowRef(false);\nlet asyncTimer: ReturnType<typeof setTimeout> | null = null;\n\nfunction onAsyncConfirm() {\n  if (asyncLoading.value) return;\n  asyncLoading.value = true;\n  lastAction.value = '异步删除中…';\n  if (asyncTimer) clearTimeout(asyncTimer);\n  asyncTimer = setTimeout(() => {\n    asyncTimer = null;\n    asyncLoading.value = false;\n    asyncOpen.value = false;\n    lastAction.value = '异步删除完成';\n  }, 1200);\n}\n/** 页面卸载时取消尚未完成的模拟请求。 */\nonBeforeUnmount(() => {\n  if (asyncTimer !== null) clearTimeout(asyncTimer);\n  asyncTimer = null;\n});\n</script>\n\n<template>\n  <div class=\"flex w-full flex-col\">\n    <Playground v-model=\"state\" :controls=\"controls\" :code=\"popconfirmCode\" component-name=\"RebornPopconfirm\" title=\"交互演练场\" description=\"调整文案、定位与按钮配置，点击触发按钮实时预览气泡确认框。\">\n      <template #tag>\n        <RebornButton size=\"sm\" variant=\"soft\" color=\"neutral\" @click=\"resetState\">\n          <template #leading><span class=\"icon-[lucide--rotate-ccw] size-[12px]\" /></template>\n          重置配置\n        </RebornButton>\n      </template>\n      <div class=\"flex w-full min-w-0 flex-col items-center gap-6 py-16\">\n        <RebornPopconfirm\n          :title=\"state.title\" :description=\"state.description || undefined\" :confirm-text=\"state.confirmText\" :cancel-text=\"state.cancelText\"\n          :placement=\"state.placement\" :side-offset=\"state.sideOffset\" :arrow=\"state.arrow\" :hide-cancel=\"state.hideCancel\"\n          :dismissible=\"state.dismissible\" :close-on-scroll=\"state.closeOnScroll\"\n          @confirm=\"lastAction = '点击了确认'\" @cancel=\"lastAction = '点击了取消'\"\n        >\n          <RebornButton size=\"sm\" variant=\"outlined\" color=\"neutral\">删除</RebornButton>\n        </RebornPopconfirm>\n        <DemoNote tone=\"dimmed\" class=\"font-mono text-xs\">{{ lastAction }}</DemoNote>\n      </div>\n    </Playground>\n\n    <DemoSection title=\"基础用法\" description=\"默认插槽放触发器，点击后在上方弹出确认气泡；confirm / cancel 事件对应两个按钮，点击外部同样关闭。\">\n      <DemoBlock layout=\"row\" class=\"gap-6 py-10\">\n        <RebornPopconfirm title=\"确定删除这条数据吗？\" description=\"删除后不可恢复，关联的引用也会一并失效。\" @confirm=\"lastAction = '基础用法：确认'\" @cancel=\"lastAction = '基础用法：取消'\">\n          <RebornButton size=\"sm\" variant=\"outlined\" color=\"error\">删除</RebornButton>\n        </RebornPopconfirm>\n        <RebornPopconfirm title=\"确认提交本次修改？\" @confirm=\"lastAction = '仅标题：确认'\">\n          <RebornButton size=\"sm\">仅标题</RebornButton>\n        </RebornPopconfirm>\n      </DemoBlock>\n    </DemoSection>\n\n    <DemoSection title=\"弹出方位：placement 十二向\">\n      <template #description>\n        <code>placement</code> 取值与 <code>reborn-tooltip</code> 完全一致：四个方向各带 <code>-start</code> / <code>-end</code> 对齐，共 12 种；超出视口时自动翻转到对侧，<code>sideOffset</code> 调整与触发器的间距。\n      </template>\n      <DemoBlock layout=\"stack\" align=\"center\" class=\"py-14\">\n        <div class=\"grid w-full max-w-[528px] grid-cols-5 gap-2 sm:gap-3\">\n          <div v-for=\"item in placementExamples\" :key=\"item.placement\" :class=\"item.cell\">\n            <RebornPopconfirm title=\"确定执行该操作吗？\" :placement=\"item.placement\" class=\"w-full\" :ui=\"fullWidthTriggerUi\">\n              <RebornButton size=\"sm\" class=\"w-full px-1\" :aria-label=\"item.placement\">{{ item.label }}</RebornButton>\n            </RebornPopconfirm>\n          </div>\n        </div>\n      </DemoBlock>\n    </DemoSection>\n\n    <DemoSection title=\"按钮定制：文案、语义色与隐藏取消\" description=\"confirmColor / cancelColor 换语义色，confirmText / cancelText 换文案，hideCancel 只留确认按钮。\">\n      <DemoBlock layout=\"row\" class=\"gap-6 py-10\">\n        <RebornPopconfirm title=\"确定移除该成员吗？\" description=\"移除后对方将立即失去项目访问权限。\" confirm-color=\"error\" confirm-text=\"移除\" cancel-text=\"再想想\">\n          <RebornButton size=\"sm\" variant=\"outlined\" color=\"error\">危险操作</RebornButton>\n        </RebornPopconfirm>\n        <RebornPopconfirm title=\"已阅读并知晓以上提醒？\" hide-cancel confirm-text=\"知道了\">\n          <RebornButton size=\"sm\" variant=\"outlined\" color=\"neutral\">仅确认</RebornButton>\n        </RebornPopconfirm>\n      </DemoBlock>\n    </DemoSection>\n\n    <DemoSection title=\"异步确认：loading 与 v-model:open\" description=\"loading 让确认按钮进入加载态且点击不再自动关闭，配合 v-model:open 在异步完成后手动收起。\">\n      <DemoBlock layout=\"row\" class=\"gap-6 py-10\">\n        <RebornPopconfirm v-model:open=\"asyncOpen\" title=\"确定删除所选的 3 项吗？\" description=\"删除请求完成前请勿关闭页面。\" :loading=\"asyncLoading\" confirm-color=\"error\" confirm-text=\"删除\" @confirm=\"onAsyncConfirm\" @cancel=\"lastAction = '异步删除已取消'\">\n          <RebornButton size=\"sm\" variant=\"outlined\" color=\"error\">异步删除</RebornButton>\n        </RebornPopconfirm>\n        <DemoNote tone=\"dimmed\">{{ lastAction }}</DemoNote>\n      </DemoBlock>\n    </DemoSection>\n\n    <DemoSection title=\"点击外部与滚动关闭\">\n      <template #description>\n        默认点击气泡外部或滚动页面就收起（<code>dismissible</code>、<code>closeOnScroll</code> 都为 true）；关掉 <code>closeOnScroll</code> 后气泡跟着触发器移动；关掉 <code>dismissible</code> 后只能点按钮、再次点击触发器或调用 <code>close()</code> 关闭。\n      </template>\n      <DemoBlock layout=\"row\" class=\"gap-6 py-10\">\n        <RebornPopconfirm title=\"点外部或滚动页面试试\" @confirm=\"lastAction = '默认：确认'\">\n          <RebornButton size=\"sm\">默认</RebornButton>\n        </RebornPopconfirm>\n        <RebornPopconfirm title=\"滚动时气泡跟随按钮\" :close-on-scroll=\"false\" @confirm=\"lastAction = '滚动跟随：确认'\">\n          <RebornButton size=\"sm\" variant=\"outlined\">滚动时跟随</RebornButton>\n        </RebornPopconfirm>\n        <RebornPopconfirm title=\"必须点按钮才能关闭\" :dismissible=\"false\" :close-on-scroll=\"false\" @confirm=\"lastAction = '必须确认：确认'\">\n          <RebornButton size=\"sm\" variant=\"outlined\" color=\"neutral\">只能点按钮关闭</RebornButton>\n        </RebornPopconfirm>\n      </DemoBlock>\n      <DemoNote tone=\"dimmed\">\n        只有带动触发器位移的滚动才会收起：滚动的是与按钮无关的容器（如页面里的另一块列表）时气泡保持打开。\n      </DemoNote>\n    </DemoSection>\n\n    <DemoSection title=\"自定义内容：标题与按钮区插槽\" description=\"title / description 插槽替换文字内容，footer 插槽接管按钮区并拿到 confirm / cancel 回调。\">\n      <DemoBlock layout=\"row\" class=\"gap-6 py-10\">\n        <RebornPopconfirm description=\"发布后将对全部用户可见，可随时在后台下线。\" @confirm=\"lastAction = '自定义标题：确认'\">\n          <template #title>\n            <span class=\"inline-flex items-center gap-[4px]\">\n              <span class=\"icon-[lucide--rocket] size-[14px] text-primary\" />\n              确认发布新版本？\n            </span>\n          </template>\n          <RebornButton size=\"sm\">自定义标题</RebornButton>\n        </RebornPopconfirm>\n        <RebornPopconfirm title=\"对本次改动满意吗？\">\n          <template #footer=\"{ confirm, cancel }\">\n            <RebornButton size=\"sm\" variant=\"text\" color=\"neutral\" @click=\"cancel\">不满意</RebornButton>\n            <RebornButton size=\"sm\" variant=\"soft\" color=\"success\" @click=\"confirm\">满意</RebornButton>\n          </template>\n          <RebornButton size=\"sm\" variant=\"outlined\" color=\"neutral\">自定义按钮区</RebornButton>\n        </RebornPopconfirm>\n      </DemoBlock>\n    </DemoSection>\n  </div>\n</template>\n"
+    }
+  ],
+  "related": [
+    "reborn-button",
+    "reborn-popover"
+  ],
+  "whenToUse": [
+    "删除单条数据、退出编辑等低风险操作的二次确认。",
+    "确认内容一两句话能说清、不需要打断全局的场景。"
+  ],
+  "whenNotToUse": [
+    "高风险、不可逆或需要展示较多上下文的确认，使用 reborn-dialog。",
+    "纯展示性气泡使用 reborn-popover，纯文字提示使用 reborn-tooltip。"
+  ],
+  "pitfalls": [
+    "仅支持 Web。基于 reborn-popover 定位（click 模式），按钮为 reborn-button 的 sm 档。",
+    "布局固定：气泡内边距 12px，标题（14px gray-10）与描述（14px gray-8）间隔 8px，按钮区与文字区间隔 16px、按钮间隔 8px 右对齐。",
+    "loading 时点击确认不自动关闭，异步确认需配合 v-model:open 手动收起；取消、点击外部与滚动不受 loading 影响，需要时把 dismissible 与 closeOnScroll 设为 false。",
+    "footer 插槽的 confirm/cancel 回调会触发事件并按 loading 规则关闭，直接自绘按钮不调用回调则不会关闭。",
+    "placement / sideOffset / arrow / portal / dismissible / closeOnScroll 与 reborn-popover 语义一致，定位默认 top + 4px（从箭头尖端计算）；旧的 content 对象已废弃但仍可用。"
+  ],
+  "dependencies": [
+    "clsx",
+    "tailwind-merge",
+    "tailwind-variants"
+  ],
+  "install": {
+    "cli": "npx reborn-ui@latest add reborn-popconfirm"
+  },
+  "sourceRefs": {
+    "web": [
+      "app/components/reborn/ui/reborn-popconfirm/RebornPopconfirm.vue",
+      "app/components/reborn/ui/reborn-popconfirm/index.ts",
+      "app/components/reborn/ui/reborn-popconfirm/reborn-popconfirm.config.ts"
+    ]
+  },
+  "docPath": "content/2.components/miscellaneous/reborn-popconfirm.md",
+  "_meta": {
+    "contentHash": "26327b3625ed75770ed0e4ed6ab3d2221db75e49",
+    "hasOverride": true,
+    "extractors": {
+      "web": "ok",
+      "uniapp": "absent",
+      "docs": "found"
+    }
+  }
+}

@@ -1,0 +1,148 @@
+{
+  "$schema": "../schema/component.schema.json",
+  "id": "apple-card-carousel",
+  "title": "Apple 卡片轮播",
+  "description": "用于以 Apple 官网风格横向滚动卡片、点击展开为模态详情的轮播组件。",
+  "category": "data-display",
+  "tags": [
+    "css",
+    "tailwind",
+    "card",
+    "aceternity-ui"
+  ],
+  "aliases": [],
+  "platforms": [
+    "web"
+  ],
+  "props": [
+    {
+      "name": "height",
+      "type": "number | string",
+      "required": false,
+      "description": "高度属性；使用 `fill` 时会省略。",
+      "default": "undefined"
+    },
+    {
+      "name": "width",
+      "type": "number | string",
+      "required": false,
+      "description": "宽度属性；使用 `fill` 时会省略。",
+      "default": "undefined"
+    },
+    {
+      "name": "src",
+      "type": "string",
+      "required": true,
+      "description": "图片源地址。_必填。_",
+      "default": "**—**"
+    },
+    {
+      "name": "class",
+      "type": "string",
+      "required": false,
+      "description": "通过 `cn()` 合并的额外类名。",
+      "default": "\"\""
+    },
+    {
+      "name": "alt",
+      "type": "string",
+      "required": false,
+      "description": "图片的替代文本。",
+      "default": "\"Background of a beautiful view\""
+    },
+    {
+      "name": "fill",
+      "type": "boolean",
+      "required": false,
+      "description": "若为 `true`，通过工具类设置 `width:100%; height:100%`。",
+      "default": "false"
+    },
+    {
+      "name": "card",
+      "type": "Card",
+      "required": true,
+      "description": "卡片数据对象。",
+      "default": "—"
+    },
+    {
+      "name": "index",
+      "type": "number",
+      "required": true,
+      "description": "卡片在轮播中的位置。",
+      "default": "—"
+    },
+    {
+      "name": "layout",
+      "type": "boolean",
+      "required": false,
+      "description": "启用共享布局的 FLIP 动画。",
+      "default": "false"
+    },
+    {
+      "name": "initialScroll",
+      "type": "number",
+      "required": false,
+      "description": "挂载时应用的水平滚动偏移量（px）。",
+      "default": "0"
+    }
+  ],
+  "events": [],
+  "slots": [
+    {
+      "name": "default",
+      "description": ""
+    }
+  ],
+  "exposes": [],
+  "examples": [
+    {
+      "title": "Web 演示",
+      "path": "app/components/reborn/examples/apple-card-carousel/AppleCardCarouselDemo.vue",
+      "source": "demo",
+      "platform": "web",
+      "code": "<script lang=\"ts\" setup>\nconst data = [\n  {\n    category: \"人工智能\",\n    title: \"用 AI 做更多事。\",\n    src: \"https://images.unsplash.com/photo-1593508512255-86ab42a8e620?q=80&w=3556&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D\",\n  },\n  {\n    category: \"效率\",\n    title: \"把生产力再抬一档。\",\n    src: \"https://images.unsplash.com/photo-1531554694128-c4c6665f59c2?q=80&w=3387&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D\",\n  },\n  {\n    category: \"产品\",\n    title: \"全新 Apple Vision Pro。\",\n    src: \"https://images.unsplash.com/photo-1713869791518-a770879e60dc?q=80&w=2333&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D\",\n  },\n  {\n    category: \"产品\",\n    title: \"iPhone 15 Pro Max 地图。\",\n    src: \"https://images.unsplash.com/photo-1599202860130-f600f4948364?q=80&w=2515&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D\",\n  },\n  {\n    category: \"iOS\",\n    title: \"拍照，又进步了一点。\",\n    src: \"https://images.unsplash.com/photo-1602081957921-9137a5d6eaee?q=80&w=2793&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D\",\n  },\n  {\n    category: \"招聘\",\n    title: \"招一位 Staff 软件工程师。\",\n    src: \"https://images.unsplash.com/photo-1511984804822-e16ba72f5848?q=80&w=2048&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D\",\n  },\n];\n</script>\n\n<template>\n  <DemoSection\n    title=\"基础用法\"\n    description=\"卡片展开后的内容区是卡片自己的表面，用 elevated 填充，不再套中性色硬编码。\"\n  >\n    <div class=\"w-full overflow-hidden\">\n      <AppleCardCarousel>\n        <AppleCarouselItem\n          v-for=\"(card, index) in data\"\n          :key=\"index\"\n          :index=\"index\"\n        >\n          <AppleCard\n            :card=\"card\"\n            :index=\"index\"\n            :layout=\"true\"\n          >\n            <div\n              :key=\"`dummy-content${index}`\"\n              class=\"bg-elevated rounded-3xl mb-4 p-8 md:p-14\"\n            >\n              <p class=\"text-muted mx-auto max-w-3xl text-base md:text-2xl\">\n                <span class=\"text-highlighted font-bold\">第一法则：大胆展示你的作品。</span>\n                随手记下待办、课堂笔记；需要转成文字也没问题。\n              </p>\n              <img\n                src=\"https://assets.aceternity.com/macbook.png\"\n                alt=\"MacBook 示意图\"\n                height=\"500\"\n                width=\"500\"\n                class=\"mx-auto size-full object-contain md:size-1/2\"\n              >\n            </div>\n          </AppleCard>\n        </AppleCarouselItem>\n      </AppleCardCarousel>\n    </div>\n  </DemoSection>\n</template>\n"
+    }
+  ],
+  "related": [],
+  "whenToUse": [
+    "产品特性、案例故事的横向卡片陈列。",
+    "图文卡片需要点击放大查看详情内容的场景。",
+    "落地页需要平滑滚动控制与模糊加载图片的轮播。"
+  ],
+  "whenNotToUse": [
+    "两组内容的滑动对比，改用 compare。",
+    "单张卡片的悬停 3D 交互，改用 card-3d。"
+  ],
+  "pitfalls": [
+    "仅 web 端可用。",
+    "需组合 AppleCardCarousel、AppleCarouselItem、AppleCard 多个子组件使用。",
+    "AppleCard 的 card 与 index 为必填 prop，卡片详情内容通过默认插槽传入。"
+  ],
+  "dependencies": [
+    "@vueuse/core",
+    "motion-v"
+  ],
+  "install": {
+    "cli": "npx reborn-ui@latest add apple-card-carousel"
+  },
+  "sourceRefs": {
+    "web": [
+      "app/components/reborn/ui/apple-card-carousel/AppleBlurImage.vue",
+      "app/components/reborn/ui/apple-card-carousel/AppleCard.vue",
+      "app/components/reborn/ui/apple-card-carousel/AppleCardCarousel.vue",
+      "app/components/reborn/ui/apple-card-carousel/AppleCarouselContext.ts",
+      "app/components/reborn/ui/apple-card-carousel/AppleCarouselItem.vue",
+      "app/components/reborn/ui/apple-card-carousel/index.ts"
+    ]
+  },
+  "docPath": "content/2.components/cards/apple-card-carousel.md",
+  "_meta": {
+    "contentHash": "7d6a9db6a7489979b7263629c9b993250e400c85",
+    "hasOverride": true,
+    "extractors": {
+      "web": "ok",
+      "uniapp": "absent",
+      "docs": "found"
+    }
+  }
+}

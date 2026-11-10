@@ -10,6 +10,12 @@
     "textarea",
     "uniapp"
   ],
+  "aliases": [
+    "textarea",
+    "多行输入",
+    "文本域",
+    "多行文本"
+  ],
   "platforms": [
     "web",
     "uniapp"
@@ -17,10 +23,19 @@
   "props": [
     {
       "name": "color",
-      "type": "typeof textareaColors[number]",
+      "type": "'primary' | 'secondary' | 'success' | 'info' | 'warning' | 'error' | 'neutral'",
       "required": false,
       "description": "颜色",
-      "default": "'primary'"
+      "default": "'primary'",
+      "options": [
+        "primary",
+        "secondary",
+        "success",
+        "info",
+        "warning",
+        "error",
+        "neutral"
+      ]
     },
     {
       "name": "customClass",
@@ -38,10 +53,15 @@
     },
     {
       "name": "size",
-      "type": "typeof textareaSizes[number]",
+      "type": "'sm' | 'md' | 'lg'",
       "required": false,
       "description": "尺寸",
-      "default": "'md'"
+      "default": "'md'",
+      "options": [
+        "sm",
+        "md",
+        "lg"
+      ]
     },
     {
       "name": "border",
@@ -354,7 +374,7 @@
   },
   "docPath": "content/2.components/input-and-forms/reborn-textarea.md",
   "_meta": {
-    "contentHash": "d41009e555b4d292bdf217ea8cf926ee3ce45833",
+    "contentHash": "b1e0851c2116984301ffd0767bf8045018990d62",
     "hasOverride": true,
     "extractors": {
       "web": "ok",

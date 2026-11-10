@@ -11,6 +11,11 @@
     "form",
     "web"
   ],
+  "aliases": [
+    "tree select",
+    "树选择",
+    "树形下拉"
+  ],
   "platforms": [
     "web"
   ],
@@ -347,7 +352,7 @@
   },
   "docPath": "content/2.components/input-and-forms/reborn-tree-select.md",
   "_meta": {
-    "contentHash": "c7d1cf453bda534b99898bee5ca68cb76a9b22f6",
+    "contentHash": "5739de472e059db0ea8101c4e7fab90a709965bb",
     "hasOverride": true,
     "extractors": {
       "web": "ok",

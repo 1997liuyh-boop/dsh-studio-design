@@ -11,6 +11,7 @@
     "ogl",
     "webgl"
   ],
+  "aliases": [],
   "platforms": [
     "web"
   ],
@@ -132,7 +133,7 @@
   },
   "docPath": "content/2.components/miscellaneous/shader-toy.md",
   "_meta": {
-    "contentHash": "f009c343966a4244c60544d1dbbfcc703d96ca7c",
+    "contentHash": "cc93348f2dee6fdfe93374794afe54cf7ec6e4ec",
     "hasOverride": true,
     "extractors": {
       "web": "ok",

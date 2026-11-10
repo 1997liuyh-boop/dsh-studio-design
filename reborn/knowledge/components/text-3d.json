@@ -1,0 +1,141 @@
+{
+  "$schema": "../schema/component.schema.json",
+  "id": "text-3d",
+  "title": "3D 文字",
+  "description": "用于以描边加双层阴影模拟 3D 立体字并可选晃动动画的文字组件。",
+  "category": "effect",
+  "tags": [
+    "css",
+    "tailwind",
+    "3d"
+  ],
+  "aliases": [],
+  "platforms": [
+    "web"
+  ],
+  "props": [
+    {
+      "name": "textColor",
+      "type": "string",
+      "required": false,
+      "description": "主文字颜色。",
+      "default": "\"white\""
+    },
+    {
+      "name": "letterSpacing",
+      "type": "number",
+      "required": false,
+      "description": "字符间距，单位为 `ch`。",
+      "default": "-0.1"
+    },
+    {
+      "name": "strokeColor",
+      "type": "string",
+      "required": false,
+      "description": "描边颜色。",
+      "default": "\"black\""
+    },
+    {
+      "name": "shadowColor",
+      "type": "string",
+      "required": false,
+      "description": "阴影颜色。",
+      "default": "\"yellow\""
+    },
+    {
+      "name": "strokeSize",
+      "type": "number",
+      "required": false,
+      "description": "描边厚度（像素）。",
+      "default": "20"
+    },
+    {
+      "name": "shadow1Size",
+      "type": "number",
+      "required": false,
+      "description": "第一层阴影尺寸（像素）。",
+      "default": "7"
+    },
+    {
+      "name": "shadow2Size",
+      "type": "number",
+      "required": false,
+      "description": "第二层阴影尺寸（像素）。",
+      "default": "10"
+    },
+    {
+      "name": "class",
+      "type": "HTMLAttributes[\"class\"]",
+      "required": false,
+      "description": "用于自定义样式的额外 CSS 类。",
+      "default": "\"\""
+    },
+    {
+      "name": "animate",
+      "type": "boolean",
+      "required": false,
+      "description": "为 `true` 时启用晃动动画。",
+      "default": "true"
+    },
+    {
+      "name": "animationDuration",
+      "type": "number",
+      "required": false,
+      "description": "晃动动画时长（毫秒）。",
+      "default": "1500"
+    }
+  ],
+  "events": [],
+  "slots": [
+    {
+      "name": "default",
+      "description": ""
+    }
+  ],
+  "exposes": [],
+  "examples": [
+    {
+      "title": "Web 演示",
+      "path": "app/components/reborn/examples/text-3d/Text3dDemo.vue",
+      "source": "demo",
+      "platform": "web",
+      "code": "<template>\n  <DemoSection\n    title=\"基础用法\"\n    description=\"3D 文字需要深色舞台才看得清阴影层；两种模式都保持深色。\"\n  >\n    <div class=\"flex flex-col items-center justify-center overflow-hidden rounded-xl bg-gray-10 px-4 py-16 dark:bg-gray-1\">\n      <Text3d\n        class=\"text-8xl font-bold max-md:text-7xl\"\n        shadow-color=\"red\"\n      >\n        3D\n      </Text3d>\n      <Text3d\n        class=\"text-8xl font-black max-md:text-7xl\"\n        shadow-color=\"skyblue\"\n        :animate=\"false\"\n      >\n        就是\n      </Text3d>\n      <Text3d class=\"text-8xl font-bold max-md:text-7xl\">厉害</Text3d>\n    </div>\n  </DemoSection>\n</template>\n"
+    }
+  ],
+  "related": [],
+  "whenToUse": [
+    "落地页大标题需要漫画、立体风格的装饰字。",
+    "需要自定义描边（strokeColor/strokeSize）与双层阴影颜色尺寸的标题。",
+    "需要逐个单词控制是否晃动动画（animate）的组合标题。"
+  ],
+  "whenNotToUse": [
+    "悬停渐变描边交互，改用 text-hover-effect。",
+    "轻量的线条阴影效果，改用 line-shadow-text。"
+  ],
+  "pitfalls": [
+    "仅 web 端可用。",
+    "文字通过默认插槽传入。",
+    "animate 默认开启晃动动画，animationDuration 单位为毫秒（默认 1500）。",
+    "letterSpacing 单位是 ch（默认 -0.1），不是像素。"
+  ],
+  "dependencies": [],
+  "install": {
+    "cli": "npx reborn-ui@latest add text-3d"
+  },
+  "sourceRefs": {
+    "web": [
+      "app/components/reborn/ui/text-3d/Text3d.vue",
+      "app/components/reborn/ui/text-3d/index.ts"
+    ]
+  },
+  "docPath": "content/2.components/text-animations/3d-text.md",
+  "_meta": {
+    "contentHash": "70be3d781913ec31b8704bd28e1c7b1f7a53cf65",
+    "hasOverride": true,
+    "extractors": {
+      "web": "ok",
+      "uniapp": "absent",
+      "docs": "found"
+    }
+  }
+}

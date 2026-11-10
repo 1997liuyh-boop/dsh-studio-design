@@ -5,6 +5,7 @@
   "description": "表单类下拉组件共用的触发器盒子内部基础组件，提供输入框式外观（边框、尺寸、占位符、清空按钮、箭头）。",
   "category": "misc",
   "tags": [],
+  "aliases": [],
   "platforms": [
     "web"
   ],
@@ -46,24 +47,44 @@
     },
     {
       "name": "size",
-      "type": "(typeof fieldTriggerSizes)[number]",
+      "type": "'sm' | 'md' | 'lg'",
       "required": false,
       "description": "",
-      "default": "\"md\""
+      "default": "\"md\"",
+      "options": [
+        "sm",
+        "md",
+        "lg"
+      ]
     },
     {
       "name": "color",
-      "type": "(typeof fieldTriggerColors)[number]",
+      "type": "'primary' | 'secondary' | 'success' | 'info' | 'warning' | 'error' | 'neutral'",
       "required": false,
       "description": "",
-      "default": "\"primary\""
+      "default": "\"primary\"",
+      "options": [
+        "primary",
+        "secondary",
+        "success",
+        "info",
+        "warning",
+        "error",
+        "neutral"
+      ]
     },
     {
       "name": "variant",
-      "type": "(typeof fieldTriggerVariants)[number]",
+      "type": "'outlined' | 'filled' | 'borderless' | 'underlined'",
       "required": false,
       "description": "形态变体：描边 / 填充 / 无边框 / 下划线",
-      "default": "\"outlined\""
+      "default": "\"outlined\"",
+      "options": [
+        "outlined",
+        "filled",
+        "borderless",
+        "underlined"
+      ]
     },
     {
       "name": "icon",
@@ -171,7 +192,7 @@
   },
   "docPath": null,
   "_meta": {
-    "contentHash": "254b2576339c663dc9ac61f93ac4ecb298dbd899",
+    "contentHash": "2f6e8e924de56fdf3288b0ecb279650d6b7bcf4d",
     "hasOverride": true,
     "extractors": {
       "web": "ok",

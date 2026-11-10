@@ -10,16 +10,26 @@
     "picker-view",
     "form"
   ],
+  "aliases": [],
   "platforms": [
     "uniapp"
   ],
   "props": [
     {
       "name": "color",
-      "type": "typeof pickerColors[number]",
+      "type": "'primary' | 'secondary' | 'success' | 'info' | 'warning' | 'error' | 'neutral'",
       "required": false,
       "description": "颜色",
-      "default": "'primary'"
+      "default": "'primary'",
+      "options": [
+        "primary",
+        "secondary",
+        "success",
+        "info",
+        "warning",
+        "error",
+        "neutral"
+      ]
     },
     {
       "name": "headers",
@@ -144,7 +154,7 @@
   },
   "docPath": "content/2.components/input-and-forms/reborn-picker-view.md",
   "_meta": {
-    "contentHash": "2def387eacfe1ca3f9eda48d83d2a46bbfb87fb4",
+    "contentHash": "bb99a4c9163d60fed8525f5badb8d680a04dfbd4",
     "hasOverride": true,
     "extractors": {
       "web": "absent",

@@ -1,0 +1,272 @@
+{
+  "$schema": "../schema/component.schema.json",
+  "id": "reborn-transition",
+  "title": "Transition 过渡",
+  "description": "用于控制内容显隐过渡动画的容器组件，内置 fade、slide、zoom 等动画名称。",
+  "category": "misc",
+  "tags": [],
+  "aliases": [
+    "transition",
+    "过渡",
+    "动画过渡"
+  ],
+  "platforms": [
+    "web",
+    "uniapp"
+  ],
+  "props": [
+    {
+      "name": "customClass",
+      "type": "string",
+      "required": false,
+      "description": "组件自定义类名",
+      "default": "''"
+    },
+    {
+      "name": "customStyle",
+      "type": "string",
+      "required": false,
+      "description": "组件自定义样式",
+      "default": "''"
+    },
+    {
+      "name": "show",
+      "type": "boolean",
+      "required": false,
+      "description": "是否展示组件",
+      "default": "false"
+    },
+    {
+      "name": "duration",
+      "type": "Record<string, number> | number | boolean",
+      "required": false,
+      "description": "过渡动画持续时间，单位 ms。可传入对象如 `{ enter: 300, leave: 300 }`。传入 `false` 为禁用动画",
+      "default": "300"
+    },
+    {
+      "name": "lazyRender",
+      "type": "boolean",
+      "required": false,
+      "description": "是否懒加载，为 `true` 时，只有在第一次出现时才会渲染内部元素",
+      "default": "false"
+    },
+    {
+      "name": "name",
+      "type": "TransitionName | TransitionName[]",
+      "required": false,
+      "description": "过渡动画名称，可选值为 `fade` `fade-up` `fade-down` `fade-left` `fade-right` `slide-up` `slide-down` `slide-left` `slide-right` `zoom-in` `zoom-out",
+      "default": "'fade'"
+    },
+    {
+      "name": "destroy",
+      "type": "boolean",
+      "required": false,
+      "description": "是否在隐藏时销毁内容",
+      "default": "true"
+    },
+    {
+      "name": "enterClass",
+      "type": "string",
+      "required": false,
+      "description": "",
+      "default": "''"
+    },
+    {
+      "name": "enterActiveClass",
+      "type": "string",
+      "required": false,
+      "description": "",
+      "default": "''"
+    },
+    {
+      "name": "enterToClass",
+      "type": "string",
+      "required": false,
+      "description": "",
+      "default": "''"
+    },
+    {
+      "name": "leaveClass",
+      "type": "string",
+      "required": false,
+      "description": "",
+      "default": "''"
+    },
+    {
+      "name": "leaveActiveClass",
+      "type": "string",
+      "required": false,
+      "description": "",
+      "default": "''"
+    },
+    {
+      "name": "leaveToClass",
+      "type": "string",
+      "required": false,
+      "description": "",
+      "default": "''"
+    },
+    {
+      "name": "disableTouchMove",
+      "type": "boolean",
+      "required": false,
+      "description": "(仅UniApp) 是否禁用触摸移动",
+      "default": "false"
+    },
+    {
+      "name": "appear",
+      "type": "boolean",
+      "required": false,
+      "description": "",
+      "default": "false"
+    },
+    {
+      "name": "collapse",
+      "type": "boolean",
+      "required": false,
+      "description": "",
+      "default": "undefined"
+    },
+    {
+      "name": "enterFromClass",
+      "type": "string",
+      "required": false,
+      "description": ""
+    },
+    {
+      "name": "leaveFromClass",
+      "type": "string",
+      "required": false,
+      "description": ""
+    }
+  ],
+  "events": [
+    {
+      "name": "click",
+      "payload": "[]",
+      "description": "点击组件时触发"
+    },
+    {
+      "name": "before-enter",
+      "payload": "[]",
+      "description": "进入前触发"
+    },
+    {
+      "name": "enter",
+      "payload": "[]",
+      "description": "进入中触发"
+    },
+    {
+      "name": "before-leave",
+      "payload": "[]",
+      "description": "离开前触发"
+    },
+    {
+      "name": "leave",
+      "payload": "[]",
+      "description": "离开中触发"
+    },
+    {
+      "name": "after-leave",
+      "payload": "[]",
+      "description": "离开后触发"
+    },
+    {
+      "name": "after-enter",
+      "payload": "[]",
+      "description": "进入后触发"
+    },
+    {
+      "name": "beforeEnter",
+      "payload": "(e: 'beforeEnter', el: Element): void;",
+      "description": ""
+    },
+    {
+      "name": "afterEnter",
+      "payload": "(e: 'afterEnter', el: Element): void;",
+      "description": ""
+    },
+    {
+      "name": "beforeLeave",
+      "payload": "(e: 'beforeLeave', el: Element): void;",
+      "description": ""
+    },
+    {
+      "name": "afterLeave",
+      "payload": "(e: 'afterLeave', el: Element): void;",
+      "description": ""
+    }
+  ],
+  "slots": [
+    {
+      "name": "default",
+      "description": ""
+    }
+  ],
+  "exposes": [
+    {
+      "name": "el",
+      "description": ""
+    }
+  ],
+  "examples": [
+    {
+      "title": "Web 演示",
+      "path": "app/components/reborn/examples/reborn-transition/RebornTransitionDemo.vue",
+      "source": "demo",
+      "platform": "web",
+      "code": "<script lang=\"ts\" setup>\nimport type { TransitionName } from \"~/components/reborn/ui/reborn-transition/reborn-transition.config\";\nimport { computed, onBeforeUnmount, shallowRef } from \"vue\";\nimport { transitionStyles } from \"~/components/reborn/ui/reborn-transition/reborn-transition.config\";\n\n/** 内置动画名称，直接取自组件配置，避免手工维护列表 */\nconst transitionNames = Object.keys(transitionStyles) as TransitionName[];\n\nconst state = shallowRef<Record<string, any>>({\n  name: \"fade-up\" as TransitionName,\n  duration: 500,\n  hold: 1500,\n});\n\n/** 演练场控制面板配置 */\nconst controls = [\n  {\n    title: \"动画配置\",\n    children: [\n      {\n        label: \"动画名称\",\n        key: \"name\",\n        component: \"select\" as const,\n        defaultValue: \"fade-up\",\n        props: { options: transitionNames.map((n) => ({ label: n, value: n })) },\n      },\n      {\n        label: \"动画时长 (ms)\",\n        key: \"duration\",\n        component: \"slider\" as const,\n        defaultValue: 500,\n        props: { min: 100, max: 2000, step: 50 },\n      },\n      {\n        label: \"停留时长 (ms)\",\n        key: \"hold\",\n        component: \"slider\" as const,\n        defaultValue: 1500,\n        props: { min: 500, max: 4000, step: 100 },\n      },\n    ],\n  },\n];\n\n/** 演练场右上角展示的等价代码 */\nconst transitionCode = computed(\n  () =>\n    `<RebornTransition\\n  :show=\"show\"\\n  name=\"${state.value.name}\"\\n  :duration=\"${state.value.duration}\"\\n>\\n  <div class=\"...\">内容</div>\\n</RebornTransition>`,\n);\n\nconst show = shallowRef(false);\nconst customShow = shallowRef(false);\n\nlet timer: ReturnType<typeof setTimeout> | null = null;\nlet frame: number | null = null;\n\n/** 播放内置动画：显示后按停留时长自动收起 */\nfunction play() {\n  if (timer) clearTimeout(timer);\n  if (frame !== null) cancelAnimationFrame(frame);\n  show.value = false;\n\n  // 下一帧再置为 true，保证连续点击时能重新触发入场\n  frame = requestAnimationFrame(() => {\n    frame = null;\n    show.value = true;\n    timer = setTimeout(() => {\n      show.value = false;\n    }, state.value.hold);\n  });\n}\n\nlet customTimer: ReturnType<typeof setTimeout> | null = null;\n\n/** 播放自定义动画类 */\nfunction playCustom() {\n  if (customTimer) clearTimeout(customTimer);\n  customShow.value = true;\n  customTimer = setTimeout(() => {\n    customShow.value = false;\n  }, 1200);\n}\n\nonBeforeUnmount(() => {\n  if (frame !== null) cancelAnimationFrame(frame);\n  if (timer) clearTimeout(timer);\n  if (customTimer) clearTimeout(customTimer);\n});\n</script>\n\n<template>\n  <div class=\"flex w-full min-w-0 flex-col\">\n    <Playground\n      v-model=\"state\"\n      :controls=\"controls\"\n      :code=\"transitionCode\"\n      component-name=\"RebornTransition\"\n      title=\"交互演练场\"\n      description=\"show 控制显隐，name 指定内置动画，duration 可传数字或 { enter, leave } 分别设置进出场时长。\"\n    >\n      <template #tag>\n        <RebornButton\n          size=\"sm\"\n          variant=\"soft\"\n          color=\"primary\"\n          label=\"播放动画\"\n          @click=\"play\"\n        >\n          <template #leading>\n            <Icon\n              name=\"lucide:play\"\n              size=\"12\"\n            />\n          </template>\n        </RebornButton>\n      </template>\n\n      <!-- 动画舞台：滑动类动画需要一个有边界的可视区域才说得清，此处仅描边不填充 -->\n      <div\n        class=\"border-default rounded-xl relative flex h-44 w-full items-center justify-center overflow-hidden border\"\n      >\n        <span\n          v-if=\"!show\"\n          class=\"text-dimmed text-sm\"\n        >点击右上角「播放动画」预览</span>\n\n        <RebornTransition\n          :show=\"show\"\n          :name=\"state.name\"\n          :duration=\"state.duration\"\n          class=\"absolute\"\n        >\n          <div\n            class=\"bg-primary rounded-lg flex size-24 items-center justify-center text-xs font-medium text-white\"\n          >\n            {{ state.name }}\n          </div>\n        </RebornTransition>\n      </div>\n    </Playground>\n\n    <DemoSection\n      title=\"自定义动画类\"\n    >\n      <template #description>\n        通过 <code>enter-from-class</code> / <code>enter-active-class</code> / <code>enter-to-class</code> 与对应离场类定义起止样式和曲线，<code>duration</code> 对象分别设置进出场时长。\n      </template>\n      <DemoBlock layout=\"stack\">\n        <RebornButton\n          size=\"sm\"\n          variant=\"outlined\"\n          color=\"neutral\"\n          label=\"播放自定义动画\"\n          @click=\"playCustom\"\n        >\n          <template #leading>\n            <Icon\n              name=\"lucide:play\"\n              size=\"12\"\n            />\n          </template>\n        </RebornButton>\n\n        <div\n          class=\"border-default rounded-xl relative flex h-44 w-full items-center justify-center overflow-hidden border\"\n        >\n          <span\n            v-if=\"!customShow\"\n            class=\"text-dimmed text-sm\"\n          >进场旋转 180° 飞入，离场反向飞出</span>\n\n          <RebornTransition\n            :show=\"customShow\"\n            :duration=\"{ enter: 700, leave: 1000 }\"\n            enter-from-class=\"custom-enter\"\n            enter-active-class=\"custom-enter-active\"\n            enter-to-class=\"custom-enter-to\"\n            leave-from-class=\"custom-leave\"\n            leave-active-class=\"custom-leave-active\"\n            leave-to-class=\"custom-leave-to\"\n            class=\"absolute\"\n          >\n            <div\n              class=\"bg-error rounded-lg flex size-24 items-center justify-center text-xs font-medium text-white\"\n            >\n              custom\n            </div>\n          </RebornTransition>\n        </div>\n      </DemoBlock>\n    </DemoSection>\n  </div>\n</template>\n\n<style scoped>\n/* 自定义动画：进场从左上角旋转飞入，离场向右下角旋转飞出 */\n:deep(.custom-enter-active),\n:deep(.custom-leave-active) {\n  transition-property: transform, opacity;\n}\n\n:deep(.custom-enter) {\n  transform: translate3d(-100px, -100px, 0) rotate(-180deg);\n  opacity: 0;\n}\n\n:deep(.custom-leave-to) {\n  transform: translate3d(100px, 100px, 0) rotate(180deg);\n  opacity: 0;\n}\n</style>\n"
+    },
+    {
+      "title": "UniApp 演示",
+      "path": "packages/uniapp-project/src/pages/reborn-transition/RebornTransitionDemo.vue",
+      "source": "demo",
+      "platform": "uniapp",
+      "code": "<script setup lang=\"ts\">\nimport type { TransitionName } from '@/components/reborn-transition/RebornTransition.vue'\nimport { onUnload } from '@dcloudio/uni-app'\nimport { shallowRef } from 'vue'\n\nimport RebornButton from '@/components/reborn-button/RebornButton.vue'\nimport RebornCard from '@/components/reborn-card/RebornCard.vue'\nimport RebornPage from '@/components/reborn-page/RebornPage.vue'\nimport RebornTransition from '@/components/reborn-transition/RebornTransition.vue'\n\nconst show = shallowRef(false)\nconst customShow = shallowRef(false)\nconst name = shallowRef<TransitionName>('fade-up')\nlet hideTimer: ReturnType<typeof setTimeout> | undefined\nlet customTimer: ReturnType<typeof setTimeout> | undefined\nonUnload(() => {\n    clearTimeout(hideTimer)\n    clearTimeout(customTimer)\n})\n\nfunction fade() {\n    transition('fade')\n}\nfunction fadeUp() {\n    transition('fade-up')\n}\nfunction fadeDown() {\n    transition('fade-down')\n}\nfunction fadeLeft() {\n    transition('fade-left')\n}\nfunction fadeRight() {\n    transition('fade-right')\n}\nfunction slideUp() {\n    transition('slide-up')\n}\nfunction slideDown() {\n    transition('slide-down')\n}\nfunction slideLeft() {\n    transition('slide-left')\n}\nfunction slideRight() {\n    transition('slide-right')\n}\nfunction zoomIn() {\n    transition('zoom-in')\n}\nfunction zoomOut() {\n    transition('zoom-out')\n}\nfunction custom() {\n    clearTimeout(customTimer)\n    customShow.value = true\n    customTimer = setTimeout(() => {\n        customShow.value = false\n    }, 1200)\n}\nfunction transition(n: TransitionName) {\n    clearTimeout(hideTimer)\n    name.value = n\n    show.value = true\n    hideTimer = setTimeout(() => {\n        show.value = false\n    }, 1200)\n}\n</script>\n<template>\n    <RebornPage title=\"动画\" description=\"用于在元素进入或离开时应用过渡效果。\">\n        <view class=\"text-20\">\n            1.2s后会消失\n        </view>\n        <view class=\"h-20 w-full bg-blue-2 rounded-lg\">\n            <RebornTransition :show=\"show\" :name=\"name\" :duration=\"500\">\n                <view\n                    class=\"w-16 h-16 bg-red-500 flex items-center justify-center text-white rounded-lg shadow-lg text-20\">\n                    {{ name }}\n                </view>\n            </RebornTransition>\n            <RebornTransition :show=\"customShow\" :duration=\"{ enter: 700, leave: 1000 }\" enter-class=\"custom-enter\"\n                enter-active-class=\"custom-enter-active\" enter-to-class=\"custom-enter-to\" leave-class=\"custom-leave\"\n                leave-active-class=\"custom-leave-active\" leave-to-class=\"custom-leave-to\" custom-class=\"block\">\n                <view\n                    class=\"w-16 h-16 bg-red-500 flex items-center justify-center text-white rounded-lg shadow-lg text-20\">\n                    {{ name }}\n                </view>\n            </RebornTransition>\n        </view>\n        <RebornCard title=\"Fade 动画\" custom-class=\"grid grid-cols-3 gap-2\">\n            <RebornButton variant=\"soft\" @click=\"fade\" size=\"sm\">fade</RebornButton>\n            <RebornButton variant=\"soft\" @click=\"fadeUp\" size=\"sm\">fade-up</RebornButton>\n            <RebornButton variant=\"soft\" @click=\"fadeDown\" size=\"sm\">fade-down</RebornButton>\n            <RebornButton variant=\"soft\" @click=\"fadeLeft\" size=\"sm\">fade-left</RebornButton>\n            <RebornButton variant=\"soft\" @click=\"fadeRight\" size=\"sm\">fade-right</RebornButton>\n        </RebornCard>\n        <RebornCard title=\"Slide 动画\" custom-class=\"grid grid-cols-3 gap-2\">\n            <RebornButton variant=\"soft\" @click=\"slideUp\" size=\"sm\">slide-up</RebornButton>\n            <RebornButton variant=\"soft\" @click=\"slideDown\" size=\"sm\">slide-down</RebornButton>\n            <RebornButton variant=\"soft\" @click=\"slideLeft\" size=\"sm\">slide-left</RebornButton>\n            <RebornButton variant=\"soft\" @click=\"slideRight\" size=\"sm\">slide-right</RebornButton>\n        </RebornCard>\n        <RebornCard title=\"Zoom 动画\" custom-class=\"grid grid-cols-3 gap-2\">\n            <RebornButton variant=\"soft\" @click=\"zoomIn\" size=\"sm\">zoom-in</RebornButton>\n            <RebornButton variant=\"soft\" @click=\"zoomOut\" size=\"sm\">zoom-out</RebornButton>\n        </RebornCard>\n        <RebornCard title=\"自定义 动画\" custom-class=\"grid grid-cols-3 gap-2\">\n            <RebornButton variant=\"soft\" @click=\"custom\" size=\"sm\">custom</RebornButton>\n        </RebornCard>\n    </RebornPage>\n</template>\n\n<style lang=\"scss\" scoped>\n:deep(.custom-enter-active),\n:deep(.custom-leave-active) {\n    transition-property: transform;\n}\n\n:deep(.custom-enter) {\n    transform: translate3d(-100px, -100px, 0) rotate(-180deg);\n}\n\n:deep(.custom-leave-to) {\n    transform: translate3d(100px, 100px, 0) rotate(180deg);\n}\n</style>\n"
+    }
+  ],
+  "related": [],
+  "whenToUse": [
+    "自定义弹层、浮层的进出场动画（show 受控显隐）。",
+    "内容首次出现才渲染（lazyRender）或隐藏即销毁（destroy）的显隐容器。",
+    "需要完全自定义动画类名（enterClass / enterActiveClass / leaveToClass 等）。"
+  ],
+  "whenNotToUse": [
+    "web 端简单显隐动画可直接用 Vue 内置 Transition。",
+    "只是给已有弹层加动画时，reborn-drawer / reborn-popup / reborn-dialog 等组件已内置过渡。"
+  ],
+  "pitfalls": [
+    "web 与 uniapp 双端均可用。",
+    "通过 show prop 受控显隐而非 v-if；destroy 默认 true，隐藏时会销毁内容。",
+    "name 支持传单个动画名或数组组合多个动画。",
+    "disableTouchMove 仅 uniapp 端生效。"
+  ],
+  "dependencies": [
+    "motion-v"
+  ],
+  "install": {
+    "cli": "npx reborn-ui@latest add reborn-transition"
+  },
+  "sourceRefs": {
+    "web": [
+      "app/components/reborn/ui/reborn-transition/RebornTransition.vue",
+      "app/components/reborn/ui/reborn-transition/index.ts",
+      "app/components/reborn/ui/reborn-transition/reborn-transition.config.ts"
+    ],
+    "uniapp": [
+      "packages/uniapp-project/src/components/reborn-transition/RebornTransition.vue",
+      "packages/uniapp-project/src/components/reborn-transition/index.ts",
+      "packages/uniapp-project/src/components/reborn-transition/reborn-transition.config.ts"
+    ]
+  },
+  "docPath": "content/2.components/miscellaneous/reborn-transition.md",
+  "_meta": {
+    "contentHash": "fcbafac63115a9a8fe956a5ecf4e557cf8dde7c1",
+    "hasOverride": true,
+    "extractors": {
+      "web": "ok",
+      "uniapp": "ok",
+      "docs": "found"
+    }
+  }
+}

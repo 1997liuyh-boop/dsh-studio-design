@@ -1,0 +1,89 @@
+{
+  "$schema": "../schema/component.schema.json",
+  "id": "file-upload",
+  "title": "文件上传",
+  "description": "用于拖放或点击选择文件、带动效展示区的文件上传入口组件。",
+  "category": "form",
+  "tags": [
+    "css",
+    "tailwind",
+    "input",
+    "aceternity-ui"
+  ],
+  "aliases": [
+    "拖放上传",
+    "上传动效",
+    "dropzone"
+  ],
+  "platforms": [
+    "web"
+  ],
+  "props": [
+    {
+      "name": "class",
+      "type": "HTMLAttributes[\"class\"]",
+      "required": false,
+      "description": "用于容器元素的额外样式类。"
+    }
+  ],
+  "events": [
+    {
+      "name": "change",
+      "payload": "[files: File[]]",
+      "description": "选择或拖入文件后触发，参数为当前累计的全部文件（副本，修改它不影响组件内部列表）"
+    }
+  ],
+  "slots": [
+    {
+      "name": "default",
+      "description": "背景装饰层插槽，渲染在上传区域后方的绝对定位容器内（带径向渐变遮罩），通常放置 `FileUploadGrid`。"
+    }
+  ],
+  "exposes": [],
+  "examples": [
+    {
+      "title": "Web 演示",
+      "path": "app/components/reborn/examples/file-upload/FileUploadDemo.vue",
+      "source": "demo",
+      "platform": "web",
+      "code": "<template>\n  <DemoSection\n    title=\"基础用法\"\n    description=\"虚线框是组件自己的拖放区，不是脚手架。\"\n  >\n    <DemoBlock layout=\"stack\">\n      <FileUpload class=\"border-default rounded-xl border border-dashed\">\n        <FileUploadGrid />\n      </FileUpload>\n    </DemoBlock>\n  </DemoSection>\n</template>\n"
+    }
+  ],
+  "related": [],
+  "whenToUse": [
+    "表单中需要拖拽上传文件的交互入口。",
+    "需要配合 FileUploadGrid 网格背景的视觉化上传区块。"
+  ],
+  "whenNotToUse": [
+    "需要上传进度、文件列表增删等受控管理：组件未提供相关 props / exposes。",
+    "需要真正发起上传请求并展示每个文件的进度与结果，改用 reborn-upload：本组件只是带动效的选择入口。"
+  ],
+  "pitfalls": [
+    "仅 web 端可用，依赖 motion-v。",
+    "所选文件通过 change 事件抛出（payload 为 File[] 副本，监听写 @change），组件本身不含上传请求逻辑，需在回调中自行处理。",
+    "背景网格是独立子组件 FileUploadGrid，需放入默认插槽。"
+  ],
+  "dependencies": [
+    "motion-v"
+  ],
+  "install": {
+    "cli": "npx reborn-ui@latest add file-upload"
+  },
+  "sourceRefs": {
+    "web": [
+      "app/components/reborn/ui/file-upload/FileUpload.vue",
+      "app/components/reborn/ui/file-upload/FileUploadGrid.vue",
+      "app/components/reborn/ui/file-upload/index.ts"
+    ]
+  },
+  "docPath": "content/2.components/input-and-forms/file-upload.md",
+  "_meta": {
+    "contentHash": "48480625855376fbda987f3fb804268a8e98b45b",
+    "hasOverride": true,
+    "extractors": {
+      "web": "ok",
+      "uniapp": "absent",
+      "docs": "found"
+    }
+  }
+}

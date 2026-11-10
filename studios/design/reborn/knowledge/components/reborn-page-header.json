@@ -1,0 +1,145 @@
+{
+  "$schema": "../schema/component.schema.json",
+  "id": "reborn-page-header",
+  "title": "PageHeader 页头",
+  "description": "页面顶部的返回区 + 标题 + 内容 + 操作栏，可在上方叠面包屑；路径较浅时代替面包屑提供返回入口。",
+  "category": "navigation",
+  "tags": [
+    "page-header",
+    "header",
+    "navigation",
+    "breadcrumb"
+  ],
+  "aliases": [
+    "page header",
+    "页头",
+    "页面标题",
+    "返回标题栏"
+  ],
+  "platforms": [
+    "web"
+  ],
+  "props": [
+    {
+      "name": "icon",
+      "type": "string | Component",
+      "required": false,
+      "description": "返回区的图标：Iconify 图标名或组件；传空字符串不显示图标 @defaultValue 'lucide:arrow-left'",
+      "default": "\"lucide:arrow-left\""
+    },
+    {
+      "name": "title",
+      "type": "string",
+      "required": false,
+      "description": "主标题；为空时显示「返回」 @defaultValue ''",
+      "default": "\"\""
+    },
+    {
+      "name": "content",
+      "type": "string",
+      "required": false,
+      "description": "标题右侧的内容，与标题之间用竖线分隔；为空且未传 #content 插槽时不渲染分割线 @defaultValue ''",
+      "default": "\"\""
+    },
+    {
+      "name": "class",
+      "type": "any",
+      "required": false,
+      "description": "追加到根容器的类名"
+    },
+    {
+      "name": "ui",
+      "type": "PageHeaderUI",
+      "required": false,
+      "description": "按结构键覆盖各节点样式 可用键（从源码抽取，以此为准）——Web：back、breadcrumb、content、divider、extra、header、icon、left、main、root、title。",
+      "default": "() => ({})"
+    }
+  ],
+  "events": [
+    {
+      "name": "back",
+      "payload": "[event: MouseEvent | KeyboardEvent]",
+      "description": "点击返回区（图标 + 标题）或在返回区按下 Enter / 空格时触发"
+    }
+  ],
+  "slots": [
+    {
+      "name": "breadcrumb",
+      "description": "标题行上方的面包屑。"
+    },
+    {
+      "name": "icon",
+      "description": "替换图标内容，24px 图标盒子保留。"
+    },
+    {
+      "name": "title",
+      "description": "替换标题内容，可与标签等组合。"
+    },
+    {
+      "name": "content",
+      "description": "替换内容；传了它即使 `content` 为空也会渲染分割线。"
+    },
+    {
+      "name": "extra",
+      "description": "标题行右侧的扩展操作。"
+    },
+    {
+      "name": "default",
+      "description": "标题行下方的正文。"
+    }
+  ],
+  "exposes": [],
+  "examples": [
+    {
+      "title": "Web 演示",
+      "path": "app/components/reborn/examples/reborn-page-header/RebornPageHeaderDemo.vue",
+      "source": "demo",
+      "platform": "web",
+      "code": "<script setup lang=\"ts\">\nimport type { PageHeaderUI } from \"~/components/reborn/ui/reborn-page-header/reborn-page-header.config\";\nimport { DemoBlock, DemoNote, DemoSection, Icon, Playground } from \"#components\";\nimport { computed, ref, shallowRef } from 'vue';\nimport RebornBadge from \"~/components/reborn/ui/reborn-badge/RebornBadge.vue\";\nimport RebornBreadcrumb from \"~/components/reborn/ui/reborn-breadcrumb/RebornBreadcrumb.vue\";\nimport RebornButton from \"~/components/reborn/ui/reborn-button/RebornButton.vue\";\nimport RebornPageHeader from \"~/components/reborn/ui/reborn-page-header/RebornPageHeader.vue\";\n\n/** 演示用的面包屑路径 */\nconst routes = [\n  { label: \"首页\", path: \"#\" },\n  { label: \"组件\", path: \"#\" },\n  { label: \"页头\" },\n];\n\n/** 图标选项：none 表示传空字符串，不显示图标 */\nconst iconOptions = [\n  { label: \"lucide:arrow-left（默认）\", value: \"lucide:arrow-left\" },\n  { label: \"lucide:chevron-left\", value: \"lucide:chevron-left\" },\n  { label: \"lucide:house\", value: \"lucide:house\" },\n  { label: \"不显示（空字符串）\", value: \"none\" },\n];\n\n/** 组合示例用的面包屑路径 */\nconst detailRoutes = [\n  { label: \"订单管理\", path: \"#\" },\n  { label: \"订单列表\", path: \"#\" },\n  { label: \"订单详情\" },\n];\n/** 组合示例：去掉左右与顶部边框，只保留底边，与下方内容区衔接 */\nconst bottomBorderUi: PageHeaderUI = { root: 'border-x-0 border-t-0' };\n\n// ─── 交互演练场 ─────────────────────────────────────────────────\n\n/** 演练场默认状态：取设计稿「标准页头」的文案 */\nconst defaultState: Record<string, any> = {\n  title: \"重塑控件库\",\n  content: \"PC端企业级控件库V1.0\",\n  icon: \"lucide:arrow-left\",\n  breadcrumb: false,\n  extra: false,\n};\n\nconst state = ref<Record<string, any>>({ ...defaultState });\n\n/** 返回区被触发的次数 */\nconst backCount = shallowRef(0);\n\n/** 重置演练场配置 */\nfunction resetState() {\n  state.value = { ...defaultState };\n  backCount.value = 0;\n}\n\n/** 演练场控制面板配置 */\nconst controls: any = [\n  {\n    title: \"基础属性\",\n    children: [\n      { label: \"主标题\", key: \"title\", component: \"input\" as const, defaultValue: defaultState.title },\n      { label: \"内容\", key: \"content\", component: \"input\" as const, defaultValue: defaultState.content },\n      { label: \"图标\", key: \"icon\", component: \"select\" as const, defaultValue: \"lucide:arrow-left\", props: { options: iconOptions } },\n    ],\n  },\n  {\n    title: \"插槽\",\n    children: [\n      { label: \"面包屑（#breadcrumb）\", key: \"breadcrumb\", component: \"checkbox\" as const, defaultValue: false },\n      { label: \"扩展操作（#extra）\", key: \"extra\", component: \"checkbox\" as const, defaultValue: false },\n    ],\n  },\n];\n\n/** 演练场右上角展示的等价代码：完整列出当前全部参数 */\nconst pageHeaderCode = computed(() => {\n  const s = state.value;\n  const slotLines = [\n    ...(s.breadcrumb ? [\"  <template #breadcrumb>\", \"    <RebornBreadcrumb :routes=\\\"routes\\\" />\", \"  </template>\"] : []),\n    ...(s.extra ? [\"  <template #extra>\", \"    <RebornButton>编辑</RebornButton>\", \"  </template>\"] : []),\n  ];\n  return [\n    \"<RebornPageHeader\",\n    `  title=\"${s.title}\"`,\n    `  content=\"${s.content}\"`,\n    `  icon=\"${s.icon === \"none\" ? \"\" : s.icon}\"`,\n    `  @back=\"onBack\"${slotLines.length ? \"\" : \"\\n/>\"}`,\n    ...(slotLines.length ? [\">\", ...slotLines, \"</RebornPageHeader>\"] : []),\n  ].join(\"\\n\");\n});\n\n// ─── 场景演示状态 ─────────────────────────────────────────────────\n\n/** 「返回事件」一节的回显 */\nconst lastBack = shallowRef(\"尚未触发\");\n\nfunction onBack(event: MouseEvent | KeyboardEvent) {\n  lastBack.value = event instanceof KeyboardEvent ? `键盘触发（${event.key === \" \" ? \"空格\" : event.key}）` : \"鼠标点击触发\";\n}\n</script>\n\n<template>\n  <div class=\"flex w-full min-w-0 flex-col\">\n    <Playground\n      v-model=\"state\" :controls=\"controls\" :code=\"pageHeaderCode\" component-name=\"RebornPageHeader\"\n      title=\"交互演练场\" description=\"调节上方参数，查看标题、内容、图标与面包屑、扩展操作两个插槽在页头里的排布。\"\n    >\n      <template #tag>\n        <RebornButton size=\"sm\" variant=\"soft\" color=\"neutral\" @click=\"resetState\">\n          <template #leading>\n            <Icon name=\"lucide:rotate-ccw\" size=\"12\" />\n          </template>\n          重置配置\n        </RebornButton>\n      </template>\n\n      <div class=\"flex w-full flex-col gap-4\">\n        <RebornPageHeader\n          :title=\"state.title\" :content=\"state.content\" :icon=\"state.icon === 'none' ? '' : state.icon\" class=\"w-full\"\n          @back=\"backCount++\"\n        >\n          <template v-if=\"state.breadcrumb\" #breadcrumb>\n            <RebornBreadcrumb :routes=\"routes\" />\n          </template>\n          <template v-if=\"state.extra\" #extra>\n            <RebornButton>编辑</RebornButton>\n          </template>\n        </RebornPageHeader>\n        <DemoNote tone=\"dimmed\" class=\"font-mono text-xs\">\n          back 已触发 {{ backCount }} 次；点击图标或标题都算，Tab 聚焦后按 Enter / 空格同样触发。\n        </DemoNote>\n      </div>\n    </Playground>\n\n    <DemoSection title=\"标准页头\">\n      <template #description>\n        <code>title</code> 是主标题，<code>content</code> 是右侧的补充说明，两者之间自动加一条竖线；适合没有层级路径的详情页。\n      </template>\n      <DemoBlock layout=\"stack\">\n        <RebornPageHeader title=\"重塑控件库\" content=\"PC端企业级控件库V1.0\" class=\"w-full\" />\n        <RebornPageHeader title=\"重塑控件库\" class=\"w-full\" />\n      </DemoBlock>\n      <DemoNote tone=\"dimmed\">\n        第二个没有传 content：分割线随之不渲染，标题后面不会留一条孤零零的竖线。\n      </DemoNote>\n    </DemoSection>\n\n    <DemoSection title=\"带面包屑页头\">\n      <template #description>\n        <code>#breadcrumb</code> 插槽放在标题行上方，间隔 24px，同时交代层级路径与当前页面。\n      </template>\n      <DemoBlock layout=\"stack\">\n        <RebornPageHeader title=\"重塑控件库\" content=\"PC端企业级控件库V1.0\" class=\"w-full\">\n          <template #breadcrumb>\n            <RebornBreadcrumb :routes=\"routes\" />\n          </template>\n        </RebornPageHeader>\n      </DemoBlock>\n    </DemoSection>\n\n    <DemoSection title=\"组合示例\">\n      <template #description>\n        面包屑 + 标题 + 状态标签 + 操作按钮的完整页头；标签放进 <code>#title</code> 插槽，按钮放进 <code>#extra</code>，用 <code>ui.root</code> 只保留底边，下方接内容区。\n      </template>\n      <DemoBlock layout=\"stack\">\n        <div class=\"flex w-full flex-col gap-4\">\n          <RebornPageHeader content=\"下单时间 2026-10-16 10:24\" :ui=\"bottomBorderUi\">\n            <template #breadcrumb>\n              <RebornBreadcrumb :routes=\"detailRoutes\" />\n            </template>\n            <template #title>\n              <span class=\"flex items-center gap-2\">\n                订单 #20261016001\n                <RebornBadge label=\"待发货\" color=\"warning\" variant=\"soft\" />\n              </span>\n            </template>\n            <template #extra>\n              <RebornButton variant=\"outlined\" color=\"neutral\">\n                打印\n              </RebornButton>\n              <RebornButton>发货</RebornButton>\n            </template>\n          </RebornPageHeader>\n          <div class=\"text-gray-8 flex h-60 items-center justify-center border border-dashed border-gray-4 bg-gray-2 px-6 text-base\">\n            这里是内容区域。内容区域可以是文字、图片、表单、表格等形式的信息内容。\n          </div>\n        </div>\n      </DemoBlock>\n    </DemoSection>\n\n    <DemoSection title=\"图标与插槽\">\n      <template #description>\n        <code>icon</code> 接受 Iconify 图标名或组件，传空字符串不显示图标；<code>#icon</code> / <code>#title</code> / <code>#content</code> 插槽分别替换对应节点的内容，样式容器保留。\n      </template>\n      <DemoBlock layout=\"stack\">\n        <RebornPageHeader icon=\"lucide:chevron-left\" title=\"chevron-left 图标\" content=\"icon 换成任意 Iconify 图标\" class=\"w-full\" />\n        <RebornPageHeader icon=\"\" title=\"不显示图标\" content=\"icon 传空字符串\" class=\"w-full\" />\n        <RebornPageHeader class=\"w-full\">\n          <template #icon>\n            <Icon name=\"lucide:circle-arrow-left\" class=\"text-primary size-6\" />\n          </template>\n          <template #content>\n            <span class=\"text-primary\">#content 插槽</span>可以放任意内容\n          </template>\n        </RebornPageHeader>\n      </DemoBlock>\n      <DemoNote tone=\"dimmed\">\n        第三个没有传 title，标题显示默认的「返回」。\n      </DemoNote>\n    </DemoSection>\n\n    <DemoSection title=\"返回事件\">\n      <template #description>\n        点击返回区（图标 + 标题）派发 <code>back</code>，组件不做任何跳转；返回上一页、关闭抽屉等行为由回调决定。\n      </template>\n      <DemoBlock layout=\"stack\">\n        <RebornPageHeader title=\"返回列表\" content=\"点击左侧或 Tab 聚焦后按 Enter\" class=\"w-full\" @back=\"onBack\" />\n        <DemoNote tone=\"dimmed\" class=\"font-mono text-xs\">\n          最近一次：{{ lastBack }}\n        </DemoNote>\n      </DemoBlock>\n    </DemoSection>\n  </div>\n</template>\n"
+    }
+  ],
+  "related": [],
+  "whenToUse": [
+    "详情页、编辑页需要返回上一级：title 写当前页面名，@back 里调用 router.back()。",
+    "既要返回又要交代层级路径：#breadcrumb 插槽放 RebornBreadcrumb。",
+    "页面级操作（编辑、删除、发布）固定在标题旁：放进 #extra 插槽。",
+    "标题旁显示状态：在 #title 插槽里把标题文字和 RebornBadge 排在一起。"
+  ],
+  "whenNotToUse": [
+    "只展示层级路径、没有返回动作，改用 reborn-breadcrumb。",
+    "整站共用的顶部导航栏（Logo、菜单），改用 reborn-header 或 reborn-layout。",
+    "弹窗、抽屉自己的标题栏，用 reborn-dialog / reborn-drawer 自带的 title。"
+  ],
+  "pitfalls": [
+    "仅 web 端可用。",
+    "默认四周 1px gray-2 描边（设计稿样式），作为页面顶部时常用 :ui=\"{ root: 'border-x-0 border-t-0' }\" 只留底边。",
+    "组件不做跳转，back 只是通知；不监听 back 时点击返回区没有任何效果。",
+    "返回区（图标 + 标题）整体可点击、可 Tab 聚焦，icon=\"\" 隐藏图标后标题仍会派发 back。",
+    "title 为空且无 #title 插槽时显示「返回」；content 为空且无 #content 插槽时分割线也不渲染。"
+  ],
+  "dependencies": [
+    "clsx",
+    "tailwind-merge",
+    "tailwind-variants"
+  ],
+  "install": {
+    "cli": "npx reborn-ui@latest add reborn-page-header"
+  },
+  "sourceRefs": {
+    "web": [
+      "app/components/reborn/ui/reborn-page-header/RebornPageHeader.vue",
+      "app/components/reborn/ui/reborn-page-header/index.ts",
+      "app/components/reborn/ui/reborn-page-header/reborn-page-header.config.ts"
+    ]
+  },
+  "docPath": "content/2.components/navigation/reborn-page-header.md",
+  "_meta": {
+    "contentHash": "88d97c41af08b1fa43f680be564d37c238de5faa",
+    "hasOverride": true,
+    "extractors": {
+      "web": "ok",
+      "uniapp": "absent",
+      "docs": "found"
+    }
+  }
+}

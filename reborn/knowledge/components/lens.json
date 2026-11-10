@@ -1,0 +1,124 @@
+{
+  "$schema": "../schema/component.schema.json",
+  "id": "lens",
+  "title": "放大镜",
+  "description": "用于在图片等插槽内容上叠加圆形放大镜的局部放大组件。",
+  "category": "misc",
+  "tags": [
+    "css",
+    "tailwind",
+    "aceternity-ui"
+  ],
+  "aliases": [
+    "放大镜",
+    "magnifier"
+  ],
+  "platforms": [
+    "web"
+  ],
+  "props": [
+    {
+      "name": "zoomFactor",
+      "type": "number",
+      "required": false,
+      "description": "镜头的放大倍率。",
+      "default": "1.5"
+    },
+    {
+      "name": "lensSize",
+      "type": "number",
+      "required": false,
+      "description": "镜头直径（像素）。",
+      "default": "170"
+    },
+    {
+      "name": "position",
+      "type": "{\n    x: number;\n    y: number;\n  }",
+      "required": false,
+      "description": "静态模式下镜头的位置。",
+      "default": "() => ({ x: 200, y: 150 })"
+    },
+    {
+      "name": "isStatic",
+      "type": "boolean",
+      "required": false,
+      "description": "为 `true` 时镜头固定；否则跟随鼠标。",
+      "default": "false"
+    },
+    {
+      "name": "hovering",
+      "type": "boolean",
+      "required": false,
+      "description": "双向绑定值",
+      "vModel": true
+    }
+  ],
+  "events": [
+    {
+      "name": "update:hovering",
+      "description": "hovering 变化时触发（v-model 同步）",
+      "payload": "(value: boolean)"
+    }
+  ],
+  "slots": [
+    {
+      "name": "default",
+      "description": "被放大的内容，基础层与镜头层分别渲染。"
+    }
+  ],
+  "exposes": [],
+  "examples": [
+    {
+      "title": "Web 演示 · LensDemo",
+      "path": "app/components/reborn/examples/lens/LensDemo.vue",
+      "source": "demo",
+      "platform": "web",
+      "code": "<script setup lang=\"ts\">\nconst hovering = shallowRef(false);\n\n</script>\n\n<template>\n  <DemoSection\n    title=\"基础用法\"\n    description=\"鼠标移入图片后出现圆形放大镜；下方文案在悬停时轻微模糊，突出镜头焦点。\"\n  >\n    <DemoBlock\n      layout=\"stack\"\n      align=\"center\"\n    >\n      <!-- 深色舞台是放大镜效果的一部分，两种模式都保持深色 -->\n      <div class=\"rounded-3xl relative w-full max-w-lg overflow-hidden bg-gray-10 p-8 dark:bg-gray-1\">\n        <Rays />\n        <Beams />\n        <div class=\"relative z-10\">\n          <Lens\n            v-model:hovering=\"hovering\"\n          >\n            <img\n              src=\"https://images.unsplash.com/photo-1713869820987-519844949a8a?q=80&w=3500&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D\"\n              alt=\"Vision Pro 配图\"\n              width=\"500\"\n              height=\"500\"\n              class=\"rounded-xl\"\n            >\n          </Lens>\n          <div\n            :style=\"{ filter: hovering ? 'blur(2px)' : 'blur(0px)' }\"\n            class=\"relative z-20 py-4 text-white\"\n          >\n            <h3 class=\"text-left text-2xl font-bold\">Apple Vision Pro</h3>\n            <p class=\"text-gray-6 mt-4 text-left\">\n              空间计算头显，把数字内容叠到现实空间里。把鼠标移到图片上即可局部放大。\n            </p>\n          </div>\n        </div>\n      </div>\n    </DemoBlock>\n  </DemoSection>\n</template>\n"
+    },
+    {
+      "title": "Web 演示 · StaticLensDemo",
+      "path": "app/components/reborn/examples/lens/StaticLensDemo.vue",
+      "source": "demo",
+      "platform": "web",
+      "code": "<template>\n  <div class=\"rounded-3xl relative w-full max-w-lg overflow-hidden bg-gray-10 p-8 dark:bg-gray-1\">\n    <Rays />\n    <Beams />\n    <div class=\"relative z-10\">\n      <Lens is-static>\n        <img\n          src=\"https://images.unsplash.com/photo-1713869820987-519844949a8a?q=80&w=3500&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D\"\n          alt=\"Vision Pro 配图\"\n          width=\"500\"\n          height=\"500\"\n          class=\"rounded-xl\"\n        >\n      </Lens>\n      <div class=\"relative z-20 py-4 text-white\">\n        <h3 class=\"text-left text-2xl font-bold\">Apple Vision Pro</h3>\n        <p class=\"text-gray-6 mt-4 text-left\">\n          is-static 时镜头固定在预设位置，不再跟随鼠标。\n        </p>\n      </div>\n    </div>\n  </div>\n</template>\n"
+    }
+  ],
+  "related": [],
+  "whenToUse": [
+    "商品图、设计稿等需要鼠标悬停局部放大查看细节时。",
+    "需要固定位置的静态放大展示（isStatic + position）。",
+    "需要联动外部 UI（如放大时模糊周边文案）时，配合 v-model:hovering。"
+  ],
+  "whenNotToUse": [
+    "整图点击放大预览，改用 reborn-image。",
+    "两图对比查看，改用 compare。"
+  ],
+  "pitfalls": [
+    "仅 web 端可用，依赖 motion-v。",
+    "isStatic 为 true 时镜头固定在 position 指定坐标，不跟随鼠标。",
+    "悬停状态用 v-model:hovering 双向绑定（事件为 update:hovering）；原 hover-update 事件已移除。",
+    "zoomFactor 默认 1.5，lensSize 为镜头直径（默认 170px）。"
+  ],
+  "dependencies": [
+    "motion-v"
+  ],
+  "install": {
+    "cli": "npx reborn-ui@latest add lens"
+  },
+  "sourceRefs": {
+    "web": [
+      "app/components/reborn/ui/lens/Lens.vue",
+      "app/components/reborn/ui/lens/index.ts"
+    ]
+  },
+  "docPath": "content/2.components/miscellaneous/lens.md",
+  "_meta": {
+    "contentHash": "4975efec8dcf58c92dbe3d3957dc640ceacf0c42",
+    "hasOverride": true,
+    "extractors": {
+      "web": "ok",
+      "uniapp": "absent",
+      "docs": "found"
+    }
+  }
+}

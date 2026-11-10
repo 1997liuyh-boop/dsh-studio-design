@@ -9,6 +9,7 @@
     "tailwind",
     "3d"
   ],
+  "aliases": [],
   "platforms": [
     "web"
   ],
@@ -129,7 +130,7 @@
   },
   "docPath": "content/2.components/text-animations/3d-text.md",
   "_meta": {
-    "contentHash": "84e1078e5acc200762cc8f0f9db73b2f8da3c6ab",
+    "contentHash": "70be3d781913ec31b8704bd28e1c7b1f7a53cf65",
     "hasOverride": true,
     "extractors": {
       "web": "ok",

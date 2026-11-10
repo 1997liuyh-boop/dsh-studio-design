@@ -10,6 +10,11 @@
     "input",
     "aceternity-ui"
   ],
+  "aliases": [
+    "拖放上传",
+    "上传动效",
+    "dropzone"
+  ],
   "platforms": [
     "web"
   ],
@@ -50,7 +55,8 @@
     "需要配合 FileUploadGrid 网格背景的视觉化上传区块。"
   ],
   "whenNotToUse": [
-    "需要上传进度、文件列表增删等受控管理：组件未提供相关 props / exposes。"
+    "需要上传进度、文件列表增删等受控管理：组件未提供相关 props / exposes。",
+    "需要真正发起上传请求并展示每个文件的进度与结果，改用 reborn-upload：本组件只是带动效的选择入口。"
   ],
   "pitfalls": [
     "仅 web 端可用，依赖 motion-v。",
@@ -72,7 +78,7 @@
   },
   "docPath": "content/2.components/input-and-forms/file-upload.md",
   "_meta": {
-    "contentHash": "b1aea40dd55b65ba2eb13f232126f7e071bfed88",
+    "contentHash": "48480625855376fbda987f3fb804268a8e98b45b",
     "hasOverride": true,
     "extractors": {
       "web": "ok",

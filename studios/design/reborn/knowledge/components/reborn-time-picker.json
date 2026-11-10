@@ -1,0 +1,461 @@
+{
+  "$schema": "../schema/component.schema.json",
+  "id": "reborn-time-picker",
+  "title": "TimePicker 时间选择器",
+  "description": "Web 单点时间录入：支持时分秒六种组合、手动输入、两种中心选中样式，并保留范围与毫秒选择。",
+  "category": "form",
+  "tags": [
+    "vue",
+    "tailwind",
+    "time-picker",
+    "input"
+  ],
+  "aliases": [
+    "time picker",
+    "时间选择",
+    "选时间"
+  ],
+  "platforms": [
+    "web"
+  ],
+  "props": [
+    {
+      "name": "modelValue",
+      "type": "string | string[]",
+      "required": false,
+      "description": "双向绑定值",
+      "default": "\"\"",
+      "vModel": true
+    },
+    {
+      "name": "variant",
+      "type": "\"filled\" | \"outlined\"",
+      "required": false,
+      "description": "中心选中区域的填充或上下描边",
+      "default": "\"filled\""
+    },
+    {
+      "name": "disabled",
+      "type": "boolean",
+      "required": false,
+      "description": "禁用面板全部交互",
+      "default": "false"
+    },
+    {
+      "name": "format",
+      "type": "string",
+      "required": false,
+      "description": "时间格式与可见列",
+      "default": "\"HH:mm:ss\""
+    },
+    {
+      "name": "isRange",
+      "type": "boolean",
+      "required": false,
+      "description": "范围选择",
+      "default": "false"
+    },
+    {
+      "name": "followSystemTime",
+      "type": "boolean",
+      "required": false,
+      "description": "空值时是否以当前系统时间初始化；已有绑定值优先",
+      "default": "false"
+    },
+    {
+      "name": "interaction",
+      "type": "'scroll' | 'click'",
+      "required": false,
+      "description": "scroll：滚动停止后选中并居中；click：仅点击选中并置顶",
+      "default": "\"scroll\"",
+      "options": [
+        "scroll",
+        "click"
+      ]
+    },
+    {
+      "name": "arrowControl",
+      "type": "boolean",
+      "required": false,
+      "description": "显示上下步进按钮",
+      "default": "false"
+    },
+    {
+      "name": "showFooter",
+      "type": "boolean",
+      "required": false,
+      "description": "是否显示底部操作区，包含自定义 footer 插槽",
+      "default": "true"
+    },
+    {
+      "name": "size",
+      "type": "'sm' | 'md' | 'lg'",
+      "required": false,
+      "description": "触发器尺寸",
+      "default": "\"md\"",
+      "options": [
+        "sm",
+        "md",
+        "lg"
+      ]
+    },
+    {
+      "name": "color",
+      "type": "'primary' | 'secondary' | 'success' | 'info' | 'warning' | 'error' | 'neutral'",
+      "required": false,
+      "description": "语义色",
+      "default": "\"primary\"",
+      "options": [
+        "primary",
+        "secondary",
+        "success",
+        "info",
+        "warning",
+        "error",
+        "neutral"
+      ]
+    },
+    {
+      "name": "class",
+      "type": "any",
+      "required": false,
+      "description": "追加到面板根元素的自定义类名",
+      "default": "—"
+    },
+    {
+      "name": "disabledHours",
+      "type": "DisabledHours",
+      "required": false,
+      "description": "禁用小时",
+      "default": "() => []"
+    },
+    {
+      "name": "disabledMinutes",
+      "type": "DisabledMinutes",
+      "required": false,
+      "description": "禁用分钟",
+      "default": "() => []"
+    },
+    {
+      "name": "disabledSeconds",
+      "type": "DisabledSeconds",
+      "required": false,
+      "description": "禁用秒",
+      "default": "() => []"
+    },
+    {
+      "name": "disabledMilliseconds",
+      "type": "DisabledMilliseconds",
+      "required": false,
+      "description": "返回需禁用的毫秒数组，入参为当前时、分、秒；范围模式下可按 role 区分开始/结束面板",
+      "default": "() => []"
+    },
+    {
+      "name": "ui",
+      "type": "Partial<{\n    wrapper: ClassValue;\n    body: ClassValue;\n    rangeWrapper: ClassValue;\n    rangeSeparator: ClassValue;\n    section: ClassValue;\n    columns: ClassValue;\n    column: ClassValue;\n    arrowButton: ClassValue;\n    list: ClassValue;\n    listPaddingStart: ClassValue;\n    listPaddingEnd: ClassValue;\n    item: ClassValue;\n    itemActive: ClassValue;\n    itemDisabled: ClassValue;\n    itemIdle: ClassValue;\n    indicator: ClassValue;\n    mask: ClassValue;\n    footer: ClassValue;\n  }>",
+      "required": false,
+      "description": "选择器内部样式 可用键（从源码抽取，以此为准）——Web：RebornTimePanel → arrowButton、body、column、columns、footer、indicator、item、itemActive、itemDisabled、itemIdle、list、listPaddingEnd、listPaddingStart、mask、rangeSeparator、rangeWrapper、section、wrapper；RebornTimePicker → dropdown、input、placeholder*、rangeText*、separator*、triggerText*、wrapper。 带 * 的键对应插槽兜底节点：填了同名插槽，组件自带的节点被替换，这个键随之失效。",
+      "default": "—"
+    },
+    {
+      "name": "panelVariant",
+      "type": "TimePanelProps[\"variant\"]",
+      "required": false,
+      "description": "中心选中区域的形态，独立于触发器",
+      "default": "\"filled\""
+    },
+    {
+      "name": "allowInput",
+      "type": "boolean",
+      "required": false,
+      "description": "单点模式下允许手动输入时间",
+      "default": "true"
+    },
+    {
+      "name": "icon",
+      "type": "string",
+      "required": false,
+      "description": "尾部图标名称",
+      "default": "\"lucide:clock-3\""
+    },
+    {
+      "name": "closeOn",
+      "type": "SelectTriggerProps[\"closeOn\"]",
+      "required": false,
+      "description": "与选择器一致：mousedown（默认）在外部按下、滚轮或页面滚动时关闭，内部滚动不关闭；click 在外部点击完成后关闭。",
+      "default": "\"mousedown\""
+    },
+    {
+      "name": "panelUi",
+      "type": "TimePanelProps[\"ui\"]",
+      "required": false,
+      "description": "面板内部样式覆盖",
+      "default": "—"
+    },
+    {
+      "name": "placeholder",
+      "type": "string",
+      "required": false,
+      "description": "单点占位符",
+      "default": "\"请选择时间\""
+    },
+    {
+      "name": "startPlaceholder",
+      "type": "string",
+      "required": false,
+      "description": "范围起点占位符",
+      "default": "\"开始时间\""
+    },
+    {
+      "name": "endPlaceholder",
+      "type": "string",
+      "required": false,
+      "description": "范围终点占位符",
+      "default": "\"结束时间\""
+    },
+    {
+      "name": "rangeSeparator",
+      "type": "string",
+      "required": false,
+      "description": "范围文本分隔符",
+      "default": "\"~\""
+    },
+    {
+      "name": "clearable",
+      "type": "boolean",
+      "required": false,
+      "description": "是否显示清空按钮",
+      "default": "true"
+    },
+    {
+      "name": "bordered",
+      "type": "boolean",
+      "required": false,
+      "description": "是否显示边框",
+      "default": "true"
+    },
+    {
+      "name": "showArrow",
+      "type": "boolean",
+      "required": false,
+      "description": "是否显示箭头",
+      "default": "true"
+    },
+    {
+      "name": "arrowAnimation",
+      "type": "boolean",
+      "required": false,
+      "description": "展开时箭头是否旋转",
+      "default": "true"
+    },
+    {
+      "name": "portal",
+      "type": "SelectTriggerProps[\"portal\"]",
+      "required": false,
+      "description": "浮层是否传送到 body（默认 true）。 关掉后浮层留在触发器内，会随父容器一起滚动、也一起被 overflow 裁剪。",
+      "default": "true"
+    },
+    {
+      "name": "autoAdjustOverflow",
+      "type": "SelectTriggerProps[\"autoAdjustOverflow\"]",
+      "required": false,
+      "description": "下拉框是否自动调整位置：下方空间不足且上方更宽裕时向上展开；关闭后固定向下",
+      "default": "true"
+    },
+    {
+      "name": "triggerUi",
+      "type": "SelectTriggerProps[\"ui\"] & FieldTriggerProps[\"ui\"]",
+      "required": false,
+      "description": "触发器 (Trigger) 的 UI 微调配置：触发器盒子与浮层的键混写在一起，组件内部自动拆分下发",
+      "default": "—"
+    },
+    {
+      "name": "panelId",
+      "type": "string",
+      "required": true,
+      "description": ""
+    },
+    {
+      "name": "role",
+      "type": "TimeRangeRole",
+      "required": true,
+      "description": ""
+    },
+    {
+      "name": "unit",
+      "type": "'hour' | 'minute' | 'second' | 'millisecond'",
+      "required": true,
+      "description": "",
+      "options": [
+        "hour",
+        "minute",
+        "second",
+        "millisecond"
+      ]
+    },
+    {
+      "name": "max",
+      "type": "number",
+      "required": true,
+      "description": ""
+    },
+    {
+      "name": "value",
+      "type": "number",
+      "required": true,
+      "description": ""
+    },
+    {
+      "name": "available",
+      "type": "ReadonlySet<number>",
+      "required": true,
+      "description": ""
+    },
+    {
+      "name": "classes",
+      "type": "{ disabled: string; active: string; idle: string }",
+      "required": true,
+      "description": ""
+    }
+  ],
+  "events": [
+    {
+      "name": "change",
+      "payload": "(e: \"change\", value: string | string[]): void;",
+      "description": "有效选择、输入或清空"
+    },
+    {
+      "name": "clear",
+      "payload": "(e: \"clear\"): void;",
+      "description": "点击底部「清空」按钮清空值后触发"
+    },
+    {
+      "name": "confirm",
+      "payload": "(e: \"confirm\", value: string | string[]): void;",
+      "description": "点击底部「确定」按钮时触发，携带当前选中值（范围模式为 [start, end]）"
+    },
+    {
+      "name": "update:modelValue",
+      "description": "modelValue 变化时触发（v-model 同步）"
+    },
+    {
+      "name": "invalid",
+      "payload": "(e: \"invalid\", value: string): void;",
+      "description": "输入格式错误或时间被禁用"
+    },
+    {
+      "name": "visibleChange",
+      "payload": "(e: \"visibleChange\", visible: boolean): void;",
+      "description": "面板显隐，模板使用 `@visible-change"
+    },
+    {
+      "name": "focus",
+      "payload": "(e: \"focus\", event: FocusEvent): void;",
+      "description": "默认单点输入框获得焦点"
+    },
+    {
+      "name": "blur",
+      "payload": "(e: \"blur\", event: FocusEvent): void;",
+      "description": "默认单点输入框失焦"
+    },
+    {
+      "name": "select",
+      "payload": "[value: number]",
+      "description": ""
+    }
+  ],
+  "slots": [
+    {
+      "name": "footer",
+      "description": "自定义面板底部，仅 showFooter 为 true 时渲染"
+    },
+    {
+      "name": "cover",
+      "description": "覆盖共享触发器内容"
+    },
+    {
+      "name": "default",
+      "description": "自定义触发器内容，替换后不再提供默认文本输入"
+    }
+  ],
+  "exposes": [
+    {
+      "name": "syncColumns",
+      "description": ""
+    },
+    {
+      "name": "clear",
+      "description": ""
+    },
+    {
+      "name": "confirm",
+      "description": ""
+    }
+  ],
+  "examples": [
+    {
+      "title": "Web 演示",
+      "path": "app/components/reborn/examples/reborn-time-picker/RebornTimePickerDemo.vue",
+      "source": "demo",
+      "platform": "web",
+      "code": "<script setup lang=\"ts\">\nimport type { PlaygroundControlGroup } from \"~/components/common/play-ground/Playground.vue\";\nimport { DemoBlock, DemoNote, DemoSection, Playground } from \"#components\";\nimport { computed, ref, shallowRef } from \"vue\";\nimport RebornButton from \"~/components/reborn/ui/reborn-button/RebornButton.vue\";\nimport {\n  timePanelInteractions,\n  timePanelVariants,\n  timePickerColors,\n  timePickerSizes,\n} from \"~/components/reborn/ui/reborn-time-picker/reborn-time-panel.config\";\nimport RebornTimePanel from \"~/components/reborn/ui/reborn-time-picker/RebornTimePanel.vue\";\nimport RebornTimePicker from \"~/components/reborn/ui/reborn-time-picker/RebornTimePicker.vue\";\n\n// ─── 交互演练场 ─────\nconst defaultState: Record<string, any> = {\n  value: \"09:30:15\",\n  size: \"md\",\n  color: \"primary\",\n  variant: \"outlined\",\n  panelVariant: \"filled\",\n  interaction: \"click\",\n  arrowControl: false,\n  allowInput: true,\n  disabled: false,\n  clearable: true,\n  closeOn: \"mousedown\",\n  showFooter: true,\n};\n// 时间选择会直接回写嵌套字段，保留深层响应以同步预览和代码明细。\nconst state = ref({ ...defaultState });\nconst lastEvent = shallowRef(\"\");\n\n/** 恢复初始配置和时间，同时清空交互反馈。 */\nfunction resetState() {\n  state.value = { ...defaultState };\n  lastEvent.value = \"\";\n}\n/** 复制代码包含当前时间及全部演练参数。 */\nconst timePickerCode = computed(() => `<script setup lang=\"ts\">\nimport { shallowRef } from 'vue';\nimport RebornTimePicker from '~/components/reborn/ui/reborn-time-picker/RebornTimePicker.vue';\nconst value = shallowRef(${JSON.stringify(state.value.value)});\n<\\/script>\n\n<template>\n  <RebornTimePicker\n    v-model=\"value\"\n    interaction=\"${state.value.interaction}\"\n    size=\"${state.value.size}\"\n    color=\"${state.value.color}\"\n    variant=\"${state.value.variant}\"\n    :arrow-control=\"${state.value.arrowControl}\"${state.value.interaction === \"scroll\" ? `\\n    panel-variant=\"${state.value.panelVariant}\"` : \"\"}\n    :allow-input=\"${state.value.allowInput}\"\n    close-on=\"${state.value.closeOn}\"\n    :show-footer=\"${state.value.showFooter}\"\n    :clearable=\"${state.value.clearable}\"\n    :disabled=\"${state.value.disabled}\"\n  />\n</template>`);\nconst variants = [\"outlined\", \"filled\", \"borderless\", \"underlined\"] as const;\nconst controls: PlaygroundControlGroup[] = [\n  {\n    title: \"选取行为\",\n    children: [\n      {\n        label: \"选取方式\",\n        key: \"interaction\",\n        component: \"select\",\n        defaultValue: \"click\",\n        props: {\n          options: timePanelInteractions.map(value => ({\n            label: value === \"scroll\" ? \"滚动居中（默认）\" : \"点击置顶\",\n            value,\n          })),\n        },\n      },\n      {\n        label: \"显示上下切换按钮\",\n        key: \"arrowControl\",\n        component: \"checkbox\",\n        defaultValue: false,\n      },\n      {\n        label: \"滚动中心形态\",\n        key: \"panelVariant\",\n        component: \"select\",\n        defaultValue: \"filled\",\n        hide: (value, values) => values.interaction !== \"scroll\",\n        props: { options: timePanelVariants.map(value => ({ label: value, value })) },\n      },\n      {\n        label: \"关闭时机\",\n        key: \"closeOn\",\n        component: \"select\",\n        defaultValue: \"mousedown\",\n        props: {\n          options: [\n            { label: \"点击完成（click）\", value: \"click\" },\n            { label: \"按下即关闭（mousedown）\", value: \"mousedown\" },\n          ],\n        },\n      },\n    ],\n  },\n  {\n    title: \"外观\",\n    children: [\n      {\n        label: \"尺寸\",\n        key: \"size\",\n        component: \"select\" as const,\n        defaultValue: \"md\",\n        props: { options: timePickerSizes.map((value) => ({ label: value, value })) },\n      },\n      {\n        label: \"颜色\",\n        key: \"color\",\n        component: \"select\" as const,\n        defaultValue: \"primary\",\n        props: { options: timePickerColors.map((value) => ({ label: value, value })) },\n      },\n      {\n        label: \"输入框形态\",\n        key: \"variant\",\n        component: \"select\" as const,\n        defaultValue: \"outlined\",\n        props: { options: variants.map((value) => ({ label: value, value })) },\n      },\n    ],\n  },\n  {\n    title: \"输入与状态\",\n    children: [\n      { label: \"显示底部操作\", key: \"showFooter\", component: \"checkbox\" as const, defaultValue: true },\n      { label: \"允许输入\", key: \"allowInput\", component: \"checkbox\" as const, defaultValue: true },\n      { label: \"允许清空\", key: \"clearable\", component: \"checkbox\" as const, defaultValue: true },\n      { label: \"禁用\", key: \"disabled\", component: \"checkbox\" as const, defaultValue: false },\n    ],\n  },\n];\n\n// ─── 场景演示状态 ─────\nconst empty = shallowRef(\"\");\nconst selected = shallowRef(\"12:30:45\");\nconst inputMessage = shallowRef(\"\");\nconst formats = ref([\n  { label: \"时分秒\", format: \"HH:mm:ss\", value: \"09:30:15\" },\n  { label: \"时\", format: \"HH\", value: \"09\" },\n  { label: \"分\", format: \"mm\", value: \"30\" },\n  { label: \"秒\", format: \"ss\", value: \"15\" },\n  { label: \"时分\", format: \"HH:mm\", value: \"09:30\" },\n  { label: \"分秒\", format: \"mm:ss\", value: \"30:15\" },\n]);\nconst limitedValue = shallowRef(\"12:30:15\");\nconst rangeValue = ref([\"09:00:00\", \"18:00:00\"]);\nconst arrowValue = shallowRef(\"14:20:00\");\nconst preciseValue = shallowRef(\"10:20:30.123\");\nconst footerValue = shallowRef(\"08:30:00\");\nconst noFooterValue = shallowRef(\"09:30:00\");\n\n/** 禁用凌晨与深夜，输入和滚动选择遵循同一规则。 */\nfunction disabledHours() {\n  return [0, 1, 2, 3, 4, 23];\n}\n/** 十二点只允许后半小时。 */\nfunction disabledMinutes(hour: number) {\n  return hour === 12 ? Array.from({ length: 30 }, (_, index) => index) : [];\n}\nfunction disabledSeconds() {\n  return [0, 1, 2, 3, 4];\n}\nfunction onInvalid(value: string) {\n  inputMessage.value = `未写入无效时间：${value}，请使用 HH:mm:ss。`;\n}\n</script>\n\n<template>\n  <div class=\"flex w-full min-w-0 flex-col\">\n    <Playground\n      v-model=\"state\"\n      :controls=\"controls\"\n      :code=\"timePickerCode\"\n      component-name=\"RebornTimePicker\"\n      title=\"交互演练场\"\n      description=\"切换点击置顶与滚动居中，对比时间列的选取行为、颜色和上下切换按钮。\"\n    >\n      <template #tag>\n        <RebornButton size=\"sm\" variant=\"soft\" color=\"neutral\" @click=\"resetState\">\n          重置配置\n        </RebornButton>\n      </template>\n      <div class=\"flex w-full min-w-0 flex-col items-center gap-3\">\n        <RebornTimePicker\n          v-model=\"state.value\"\n          :interaction=\"state.interaction\"\n          :arrow-control=\"state.arrowControl\"\n          :size=\"state.size\"\n          :color=\"state.color\"\n          :variant=\"state.variant\"\n          :panel-variant=\"state.panelVariant\"\n          :allow-input=\"state.allowInput\"\n          :close-on=\"state.closeOn\"\n          :show-footer=\"state.showFooter\"\n          :clearable=\"state.clearable\"\n          :disabled=\"state.disabled\"\n          aria-label=\"演练场时间\"\n          class=\"max-w-xs\"\n          @change=\"lastEvent = '已更新选中值'\"\n          @confirm=\"lastEvent = '已确认时间'\"\n          @invalid=\"lastEvent = `无效输入：${$event}，请使用 HH:mm:ss。`\"\n        />\n        <DemoNote tone=\"dimmed\">\n          <template v-if=\"state.interaction === 'click'\">\n            点击选中并置顶，滚动只浏览；选中背景跟随颜色，首尾不循环。\n          </template>\n          <template v-else>\n            滚动停止后选中并居中，首尾不循环；中心形态仅在此模式生效。\n          </template>\n        </DemoNote>\n        <DemoNote tone=\"dimmed\" role=\"status\" aria-live=\"polite\">\n          当前值：{{ state.value || \"空\" }}；{{ lastEvent || \"尚未操作\" }}。\n        </DemoNote>\n      </div>\n    </Playground>\n\n    <DemoSection title=\"基础与输入\">\n      <template #description>\n        默认使用 <code>HH:mm:ss</code>，输入后按回车或失焦提交；非法时间不会写入绑定值。\n      </template>\n      <DemoBlock\n        layout=\"grid\"\n        align=\"start\"\n      >\n        <div class=\"flex flex-col gap-3\">\n          <span class=\"text-gray-6 text-sm\">默认空值</span>\n          <RebornTimePicker\n            v-model=\"empty\"\n            interaction=\"click\"\n            aria-label=\"默认空值时间\"\n            @invalid=\"onInvalid\"\n            @change=\"inputMessage = ''\"\n          />\n          <DemoNote tone=\"dimmed\">绑定值：{{ empty || \"空\" }}；打开面板不会自动填值。</DemoNote>\n        </div>\n        <div class=\"flex flex-col gap-3\">\n          <span class=\"text-gray-6 text-sm\">已选与可编辑</span>\n          <RebornTimePicker\n            v-model=\"selected\"\n            interaction=\"click\"\n            aria-label=\"已选时间\"\n            @invalid=\"onInvalid\"\n            @change=\"inputMessage = ''\"\n          />\n          <DemoNote tone=\"dimmed\">绑定值：{{ selected }}</DemoNote>\n        </div>\n      </DemoBlock>\n      <DemoNote\n        v-if=\"inputMessage\"\n        role=\"status\"\n      >\n        {{ inputMessage }}\n      </DemoNote>\n    </DemoSection>\n\n    <DemoSection title=\"时间精度\">\n      <template #description>\n        <code>format</code> 决定显示的时间列与输入格式，不显示的单位按零处理。\n      </template>\n      <DemoBlock\n        layout=\"grid\"\n        align=\"start\"\n      >\n        <div\n          v-for=\"item in formats\"\n          :key=\"item.format\"\n          class=\"flex flex-col gap-3\"\n        >\n          <span class=\"text-gray-6 text-sm\">{{ item.label }} · {{ item.format }}</span>\n          <RebornTimePicker\n            v-model=\"item.value\"\n            interaction=\"click\"\n            :format=\"item.format\"\n            :aria-label=\"item.label\"\n          />\n          <DemoNote tone=\"dimmed\">{{ item.value }}</DemoNote>\n        </div>\n      </DemoBlock>\n    </DemoSection>\n\n    <DemoSection title=\"触发器变体\">\n      <template #description>\n        <code>variant</code> 沿用选择器的四种形态，与\n        <code>panelVariant</code> 相互独立。\n      </template>\n      <DemoBlock\n        layout=\"grid\"\n        align=\"start\"\n      >\n        <div\n          v-for=\"variant in variants\"\n          :key=\"variant\"\n          class=\"flex flex-col gap-3\"\n        >\n          <span class=\"text-gray-6 text-sm\">{{ variant }}</span>\n          <RebornTimePicker\n            v-model=\"selected\"\n            interaction=\"click\"\n            :variant=\"variant\"\n          />\n        </div>\n      </DemoBlock>\n    </DemoSection>\n\n    <DemoSection title=\"交互与面板\">\n      <template #description>\n        <code>interaction=\"click\"</code> 只在点击后选中并置顶，滚动用于浏览；\n        选中背景使用对应色板第 1 阶，未选项悬停为 <code>gray-2</code>。\n      </template>\n      <RebornTimePanel v-model=\"selected\" interaction=\"click\" class=\"border-gray-2 rounded-lg border\" />\n      <DemoNote tone=\"dimmed\">\n        组件默认使用 scroll：滚动停止后选中并居中，首尾不循环。\n        可在交互演练场切换选取方式，滚动模式下通过 panelVariant 对比填充与上下细线。\n      </DemoNote>\n    </DemoSection>\n\n    <DemoSection title=\"尺寸与颜色\">\n      <template #description>\n        <code>size</code> 控制触发器尺寸，<code>color</code> 同时控制触发器与填充中心色，时间项保持\n        14px。\n      </template>\n      <DemoBlock\n        layout=\"grid\"\n        align=\"start\"\n      >\n        <RebornTimePicker\n          v-for=\"size in timePickerSizes\"\n          :key=\"size\"\n          v-model=\"selected\"\n          interaction=\"click\"\n          :size=\"size\"\n          :aria-label=\"size\"\n        />\n        <RebornTimePicker\n          v-for=\"color in timePickerColors\"\n          :key=\"color\"\n          v-model=\"selected\"\n          interaction=\"click\"\n          :color=\"color\"\n          :aria-label=\"color\"\n        />\n      </DemoBlock>\n    </DemoSection>\n\n    <DemoSection title=\"禁用与可选时间\">\n      <template #description>\n        <code>disabled</code>\n        禁止交互；<code>disabledHours</code>、<code>disabledMinutes</code>、<code>disabledSeconds</code>\n        排除指定选项。\n      </template>\n      <DemoBlock\n        layout=\"grid\"\n        align=\"start\"\n      >\n        <RebornTimePicker\n          v-model=\"limitedValue\"\n          interaction=\"click\"\n          :disabled-hours=\"disabledHours\"\n          :disabled-minutes=\"disabledMinutes\"\n          :disabled-seconds=\"disabledSeconds\"\n          aria-label=\"受限时间\"\n        />\n        <RebornTimePicker\n          interaction=\"click\"\n          model-value=\"08:00:00\"\n          disabled\n          aria-label=\"禁用时间\"\n        />\n        <RebornTimePicker\n          interaction=\"click\"\n          disabled\n          placeholder=\"禁用空值\"\n        />\n        <RebornTimePicker\n          interaction=\"click\"\n          model-value=\"08:00:00\"\n          :allow-input=\"false\"\n          aria-label=\"仅面板选择\"\n        />\n      </DemoBlock>\n      <DemoNote tone=\"dimmed\">\n        禁用 0–4 点和 23 点；12 点仅允许后半小时；每分钟前 5\n        秒不可选。「此刻」会校正到可选时间。\n      </DemoNote>\n    </DemoSection>\n\n    <DemoSection title=\"范围与步进\">\n      <template #description>\n        保留 <code>isRange</code>、<code>arrowControl</code>\n        和毫秒格式，范围模式通过面板选取而非文本输入。\n      </template>\n      <DemoBlock layout=\"stack\">\n        <RebornTimePicker\n          v-model=\"rangeValue\"\n          interaction=\"click\"\n          is-range\n          class=\"max-w-md\"\n        />\n        <RebornTimePicker\n          v-model=\"arrowValue\"\n          interaction=\"click\"\n          arrow-control\n          class=\"max-w-xs\"\n        />\n        <RebornTimePicker\n          v-model=\"preciseValue\"\n          interaction=\"click\"\n          format=\"HH:mm:ss.SSS\"\n          class=\"max-w-xs\"\n        />\n        <DemoNote tone=\"dimmed\">\n          范围：{{ rangeValue.join(\" 至 \") }}；步进：{{ arrowValue }}；毫秒：{{\n            preciseValue\n          }}\n        </DemoNote>\n      </DemoBlock>\n    </DemoSection>\n\n    <DemoSection title=\"关闭时机\">\n      <template #description>\n        <code>closeOn</code> 与 <code>reborn-select</code> 一致：默认 <code>mousedown</code>，也可选 <code>click</code>。\n      </template>\n      <DemoBlock layout=\"grid\" :columns=\"2\">\n        <RebornTimePicker interaction=\"click\" close-on=\"mousedown\" aria-label=\"外部按下即关闭\" placeholder=\"mousedown（默认）：外部按下即关闭\" />\n        <RebornTimePicker interaction=\"click\" close-on=\"click\" aria-label=\"点击完成后关闭\" placeholder=\"click：外部点击后关闭\" />\n      </DemoBlock>\n      <DemoNote tone=\"dimmed\">\n        mousedown 模式在外部按下任意鼠标键或页面滚动时关闭，内部时间列滚动不关闭；click 模式等待外部点击完成。\n      </DemoNote>\n    </DemoSection>\n\n    <DemoSection title=\"自定义底部\">\n      <template #description>\n        <code>showFooter</code> 控制整个底部区域是否显示；<code>footer</code> 提供 <code>confirm</code>、<code>clear</code> 和\n        <code>now</code>，可完全替换默认等宽居中的「此刻 / 确定」操作，并自行编排布局。\n      </template>\n      <DemoBlock>\n        <RebornTimePicker\n          v-model=\"footerValue\"\n          interaction=\"click\"\n          class=\"max-w-xs\"\n        >\n          <template #footer=\"{ clear, now, confirm }\">\n            <RebornButton\n              size=\"sm\"\n              variant=\"text\"\n              @click=\"clear\"\n            >\n              清空\n            </RebornButton>\n            <RebornButton\n              size=\"sm\"\n              variant=\"text\"\n              @click=\"now\"\n            >\n              此刻\n            </RebornButton>\n            <RebornButton\n              size=\"sm\"\n              variant=\"filled\"\n              @click=\"confirm\"\n            >\n              确定\n            </RebornButton>\n          </template>\n        </RebornTimePicker>\n      </DemoBlock>\n      <DemoBlock>\n        <RebornTimePicker\n          v-model=\"noFooterValue\"\n          interaction=\"click\"\n          :show-footer=\"false\"\n          aria-label=\"隐藏底部操作\"\n          class=\"max-w-xs\"\n        />\n      </DemoBlock>\n      <DemoNote tone=\"dimmed\">\n        隐藏底部后，选取时间仍会更新绑定值；可点击外部或按 Escape 收起面板，不会自动触发 confirm。\n      </DemoNote>\n    </DemoSection>\n  </div>\n</template>\n"
+    }
+  ],
+  "related": [
+    "reborn-button",
+    "reborn-field-trigger",
+    "reborn-select-trigger",
+    "scrollbar"
+  ],
+  "whenToUse": [
+    "精确到秒的单点录入：format 默认 HH:mm:ss，allowInput 支持手动输入。",
+    "按 format 选择 HH、mm、ss、HH:mm 或 mm:ss，减少无关时间列。",
+    "使用 panelVariant 在 filled 和 outlined 中心样式之间切换，variant 独立控制触发器。",
+    "通过 disabledHours、disabledMinutes、disabledSeconds 排除指定时间，输入与选择遵循相同规则。",
+    "使用 isRange 选择起止时段，modelValue 为 [start, end]。"
+  ],
+  "whenNotToUse": [
+    "选择日期或日期加时间，改用 reborn-date-picker。",
+    "选择上午、下午等文案时段，改用 reborn-select。",
+    "UniApp 项目改用 reborn-date-picker（type 设为 minute 或 second），本组件仅支持 Web。"
+  ],
+  "pitfalls": [
+    "打开空值面板不会自动写值；点击或滚动选择会即时提交，确定只结束选择。",
+    "手动输入严格匹配 format，非法或被禁用值触发 invalid，不覆盖已提交值。",
+    "allowInput 仅作用于默认单点触发器，范围和自定义触发器通过面板选择。",
+    "此刻按禁用规则校正；没有可选组合则不确认、不写入。",
+    "时间项统一 29px、视口 174px；通过 panelUi 更改行高时应同步 indicator 与 list。",
+    "portal 默认 true，关闭后浮层可能被父容器裁剪。",
+    "范围会自动排序，不表示跨午夜的倒序区间。"
+  ],
+  "dependencies": [
+    "clsx",
+    "dayjs",
+    "tailwind-merge",
+    "tailwind-variants"
+  ],
+  "install": {
+    "cli": "npx reborn-ui@latest add reborn-time-picker"
+  },
+  "sourceRefs": {
+    "web": [
+      "app/components/reborn/ui/reborn-time-picker/RebornTimePanel.vue",
+      "app/components/reborn/ui/reborn-time-picker/RebornTimePicker.vue",
+      "app/components/reborn/ui/reborn-time-picker/TimePanelOptions.vue",
+      "app/components/reborn/ui/reborn-time-picker/index.ts",
+      "app/components/reborn/ui/reborn-time-picker/reborn-time-panel.config.ts",
+      "app/components/reborn/ui/reborn-time-picker/reborn-time-picker.config.ts",
+      "app/components/reborn/ui/reborn-time-picker/time-picker.utils.ts"
+    ]
+  },
+  "docPath": "content/2.components/input-and-forms/reborn-time-picker.md",
+  "_meta": {
+    "contentHash": "c02fb636cb7aa4c41e39212f8a7229a193a5e4c8",
+    "hasOverride": true,
+    "extractors": {
+      "web": "ok",
+      "uniapp": "absent",
+      "docs": "found"
+    }
+  }
+}

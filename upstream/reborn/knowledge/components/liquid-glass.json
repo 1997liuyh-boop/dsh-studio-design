@@ -9,6 +9,7 @@
     "filter",
     "glassmorphism"
   ],
+  "aliases": [],
   "platforms": [
     "web"
   ],
@@ -179,7 +180,7 @@
   },
   "docPath": "content/2.components/special-effects/liquid-glass.md",
   "_meta": {
-    "contentHash": "355eb49af6694d1cc5cd465033b369cfed2efa55",
+    "contentHash": "a77a466816ff15aced3b13cf9a3fd0852fcd485b",
     "hasOverride": true,
     "extractors": {
       "web": "ok",

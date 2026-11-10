@@ -10,6 +10,11 @@
     "input",
     "magic-ui"
   ],
+  "aliases": [
+    "圆形进度",
+    "环形进度动画",
+    "circular progress"
+  ],
   "platforms": [
     "web"
   ],
@@ -97,7 +102,8 @@
   ],
   "whenNotToUse": [
     "需要用户拖动改变数值的输入场景，改用 balance-slider 等表单组件。",
-    "静态展示一个数字即可时，无需引入动画进度条。"
+    "静态展示一个数字即可时，无需引入动画进度条。",
+    "表单或任务进度等常规进度展示，改用 reborn-progress：本组件只做圆形仪表盘动画。"
   ],
   "pitfalls": [
     "仅 web 端可用。",
@@ -115,7 +121,7 @@
   },
   "docPath": "content/2.components/miscellaneous/animated-circular-progressbar.md",
   "_meta": {
-    "contentHash": "a27a070fc61e03f040fb652e2291abf5da23ca70",
+    "contentHash": "da05928f630d52760f7ed9d6d8f19ccb40adb815",
     "hasOverride": true,
     "extractors": {
       "web": "ok",

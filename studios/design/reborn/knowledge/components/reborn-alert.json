@@ -1,0 +1,313 @@
+{
+  "$schema": "../schema/component.schema.json",
+  "id": "reborn-alert",
+  "title": "Alert 警告提示",
+  "description": "静态警告提示条：四种消息类型、六种视觉变体、顶部公告模式与消息轮播通知栏，支持 Web 与 UniApp。",
+  "category": "misc",
+  "tags": [
+    "alert",
+    "notice",
+    "banner",
+    "marquee",
+    "uniapp"
+  ],
+  "aliases": [
+    "alert",
+    "警告",
+    "警告提示",
+    "提示条",
+    "横幅",
+    "banner",
+    "公告",
+    "告警",
+    "页内提示"
+  ],
+  "platforms": [
+    "web",
+    "uniapp"
+  ],
+  "props": [
+    {
+      "name": "type",
+      "type": "'info' | 'success' | 'warning' | 'error'",
+      "required": false,
+      "description": "警告提示的类型，决定默认图标与配色，默认 info",
+      "default": "'info'",
+      "options": [
+        "info",
+        "success",
+        "warning",
+        "error"
+      ]
+    },
+    {
+      "name": "variant",
+      "type": "'filled' | 'outlined' | 'soft' | 'subtle' | 'text' | 'round'",
+      "required": false,
+      "description": "视觉变体，对齐 reborn-button 的同名变体（不含 circle），默认 soft",
+      "default": "'soft'",
+      "options": [
+        "filled",
+        "outlined",
+        "soft",
+        "subtle",
+        "text",
+        "round"
+      ]
+    },
+    {
+      "name": "color",
+      "type": "'primary' | 'secondary' | 'success' | 'info' | 'warning' | 'error' | 'neutral'",
+      "required": false,
+      "description": "配色覆盖；缺省时由 type 映射",
+      "options": [
+        "primary",
+        "secondary",
+        "success",
+        "info",
+        "warning",
+        "error",
+        "neutral"
+      ]
+    },
+    {
+      "name": "showIcon",
+      "type": "boolean",
+      "required": false,
+      "description": "是否展示图标，默认 true",
+      "default": "true"
+    },
+    {
+      "name": "closable",
+      "type": "boolean",
+      "required": false,
+      "description": "是否展示关闭按钮，默认 false",
+      "default": "false"
+    },
+    {
+      "name": "title",
+      "type": "string",
+      "required": false,
+      "description": "警告提示的标题"
+    },
+    {
+      "name": "banner",
+      "type": "boolean",
+      "required": false,
+      "description": "是否作为顶部公告使用（去除边框和圆角），默认 false",
+      "default": "false"
+    },
+    {
+      "name": "center",
+      "type": "boolean",
+      "required": false,
+      "description": "内容是否居中显示，默认 false",
+      "default": "false"
+    },
+    {
+      "name": "icon",
+      "type": "string",
+      "required": false,
+      "description": "自定义图标类名（如 i-lucide-star，也可用 icon 插槽）",
+      "default": "按 `type` 取"
+    },
+    {
+      "name": "closeIcon",
+      "type": "string",
+      "required": false,
+      "description": "关闭按钮的图标类名",
+      "default": "'i-lucide-x'"
+    },
+    {
+      "name": "messages",
+      "type": "string[]",
+      "required": false,
+      "description": "轮播消息列表：传入即变为消息轮播通知栏，多条消息垂直轮播展示"
+    },
+    {
+      "name": "interval",
+      "type": "number",
+      "required": false,
+      "description": "轮播间隔时间，单位毫秒，默认 3000",
+      "default": "3000"
+    },
+    {
+      "name": "direction",
+      "type": "'vertical' | 'horizontal'",
+      "required": false,
+      "description": "轮播方向：vertical 垂直切换，horizontal 全部消息拼成一行水平跑马灯滚动，默认 vertical",
+      "default": "'vertical'",
+      "options": [
+        "vertical",
+        "horizontal"
+      ]
+    },
+    {
+      "name": "speed",
+      "type": "number",
+      "required": false,
+      "description": "水平跑马灯的滚动速率，单位 px/s，默认 60",
+      "default": "60"
+    },
+    {
+      "name": "rows",
+      "type": "number",
+      "required": false,
+      "description": "垂直轮播时同时展示的行数；大于 1 时多条消息同时可见并逐行向上滚动，默认 1",
+      "default": "1"
+    },
+    {
+      "name": "customClass",
+      "type": "string",
+      "required": false,
+      "description": "自定义根节点类名",
+      "default": "''"
+    },
+    {
+      "name": "ui",
+      "type": "AlertUI",
+      "required": false,
+      "description": "按语义化结构覆盖各节点样式 可用键（从源码抽取，以此为准）——UniApp：action、carouselItem、carouselWrapper、closeButton、closeIcon*、content、description、icon、marquee、marqueeItem、marqueeWrapper、root、title。 带 * 的键对应插槽兜底节点：填了同名插槽，组件自带的节点被替换，这个键随之失效。",
+      "default": "() => ({})",
+      "platform": "uniapp"
+    },
+    {
+      "name": "show",
+      "type": "boolean",
+      "required": false,
+      "description": "双向绑定值",
+      "vModel": true,
+      "default": "undefined"
+    },
+    {
+      "name": "class",
+      "type": "any",
+      "required": false,
+      "description": "根节点类名，与 `ui.root` 一起并入根节点。"
+    },
+    {
+      "name": "ui",
+      "type": "AlertUI",
+      "required": false,
+      "description": "按语义化结构覆盖各节点样式 可用键（从源码抽取，以此为准）——Web：action、carouselItem、carouselList、carouselWrapper、closeButton、closeIcon*、content、description、icon、marquee、marqueeItem、marqueeWrapper、root、title。 带 * 的键对应插槽兜底节点：填了同名插槽，组件自带的节点被替换，这个键随之失效。",
+      "platform": "web"
+    }
+  ],
+  "events": [
+    {
+      "name": "update:show",
+      "payload": "[value: boolean]",
+      "description": "点击关闭按钮时以 `false` 触发，供 `v-model:show` 使用。"
+    },
+    {
+      "name": "close",
+      "payload": "[ev: unknown]",
+      "description": "点击关闭按钮时触发"
+    },
+    {
+      "name": "afterClose",
+      "payload": "[]",
+      "description": "关闭动画结束后触发（模板中以 @after-close 监听，与 web 端声明保持一致）"
+    },
+    {
+      "name": "change",
+      "payload": "[index: number]",
+      "description": "轮播消息切换时触发"
+    }
+  ],
+  "slots": [
+    {
+      "name": "icon",
+      "description": "替换默认图标；`show-icon` 为 `false` 时不渲染。"
+    },
+    {
+      "name": "title",
+      "description": "替换标题内容；即使没有 `title` 属性，传了该插槽也会渲染标题行。"
+    },
+    {
+      "name": "message",
+      "description": "轮播模式下单条消息的渲染。"
+    },
+    {
+      "name": "default",
+      "description": "提示正文；轮播模式下不渲染。"
+    },
+    {
+      "name": "action",
+      "description": "操作区，位于内容右侧、关闭按钮左侧。"
+    },
+    {
+      "name": "close-element",
+      "description": "替换关闭图标，需开启 `closable`；外层已绑定关闭点击。"
+    }
+  ],
+  "exposes": [],
+  "examples": [
+    {
+      "title": "Web 演示",
+      "path": "app/components/reborn/examples/reborn-alert/RebornAlertDemo.vue",
+      "source": "demo",
+      "platform": "web",
+      "code": "<script setup lang=\"ts\">\nimport {\n  alertTypes,\n  alertVariants,\n} from \"~/components/reborn/ui/reborn-alert/reborn-alert.config\";\nimport RebornAlert from \"~/components/reborn/ui/reborn-alert/RebornAlert.vue\";\nimport RebornButton from \"~/components/reborn/ui/reborn-button/RebornButton.vue\";\n\nconst typeOptions = alertTypes.map((t) => ({ label: t, value: t }));\nconst variantOptions = alertVariants.map((v) => ({ label: v, value: v }));\n\n// ─── 交互演练场 ─────────────────────────────────────────────────\n\n/** 演练场默认值，重置时恢复全部配置 */\nconst defaultState = {\n  type: \"info\" as const,\n  variant: \"filled\" as const,\n  title: \"\",\n  content: \"这是一条警告提示的内容\",\n  showIcon: true,\n  closable: false,\n  banner: false,\n  center: false,\n};\nconst state = ref({ ...defaultState });\nconst playgroundShow = shallowRef(true);\n\n/** 任意参数变更后恢复演练场提示 */\nwatch(state, () => { playgroundShow.value = true; }, { deep: true });\n\n\n/** 演练场控制面板配置 */\nconst controls = [\n  {\n    title: \"内容与外观\",\n    children: [\n      {\n        label: \"消息类型\",\n        key: \"type\",\n        component: \"select\" as const,\n        defaultValue: \"info\",\n        props: { options: typeOptions },\n      },\n      {\n        label: \"视觉变体\",\n        key: \"variant\",\n        component: \"select\" as const,\n        defaultValue: \"filled\",\n        props: { options: variantOptions },\n      },\n      { label: \"标题\", key: \"title\", component: \"input\" as const, defaultValue: \"\" },\n      { label: \"提示内容\", key: \"content\", component: \"input\" as const, defaultValue: \"这是一条警告提示的内容\" },\n    ],\n  },\n  {\n    title: \"行为与布局\",\n    children: [\n      { label: \"展示图标\", key: \"showIcon\", component: \"checkbox\" as const, defaultValue: true },\n      { label: \"展示关闭按钮\", key: \"closable\", component: \"checkbox\" as const, defaultValue: false },\n      { label: \"顶部公告模式（banner）\", key: \"banner\", component: \"checkbox\" as const, defaultValue: false },\n      { label: \"内容居中\", key: \"center\", component: \"checkbox\" as const, defaultValue: false },\n    ],\n  },\n];\n\n/** 演练场右上角展示的等价代码 */\nconst alertCode = computed(() => {\n  const s = state.value;\n  const attrs: string[] = [`type=\"${s.type}\"`];\n  if (s.variant !== \"filled\") attrs.push(`variant=\"${s.variant}\"`);\n  if (s.title) attrs.push(`title=\"${s.title}\"`);\n  if (!s.showIcon) attrs.push(':show-icon=\"false\"');\n  if (s.closable) attrs.push(\"closable\");\n  if (s.banner) attrs.push(\"banner\");\n  if (s.center) attrs.push(\"center\");\n  return `<RebornAlert ${attrs.join(\" \")}>${s.content}</RebornAlert>`;\n});\n\n// ─── 场景演示 ───────────────────────────────────────────────────\n\n/** 可关闭示例的显隐状态与关闭动画回调 */\nconst closableShow = shallowRef(true);\nconst afterCloseLog = shallowRef(\"\");\nfunction handleAfterClose() {\n  afterCloseLog.value = \"after-close 已触发（关闭动画结束）\";\n}\n\n/** 轮播通知栏消息 */\nconst noticeMessages = [\n  \"系统将于今晚 24:00 进行升级维护\",\n  \"组件库已更新，可查看版本说明\",\n  \"文档站已支持双端演示与在线运行\",\n  \"组件库知识库与 AI 助手已上线，欢迎试用\",\n];\nconst noticeIndex = shallowRef(0);\n\n/** 自定义关闭元素示例的显隐状态 */\nconst closeElementShow = shallowRef(true);\n/** 重置配置与场景回显 */\nfunction resetState() {\n  state.value = { ...defaultState };\n  playgroundShow.value = true;\n  closableShow.value = true;\n  afterCloseLog.value = \"\";\n  noticeIndex.value = 0;\n  closeElementShow.value = true;\n}\n</script>\n\n<template>\n  <div class=\"flex w-full min-w-0 flex-col\">\n    <Playground\n      v-model=\"state\"\n      :controls=\"controls\"\n      :code=\"alertCode\"\n      component-name=\"RebornAlert\"\n      title=\"交互演练场\"\n      description=\"调节参数实时预览警告提示；banner 模式会去除边框和圆角作为顶部公告使用。\"\n    >\n      <template #tag>\n        <RebornButton size=\"sm\" variant=\"soft\" color=\"neutral\" @click=\"resetState\">\n          重置配置\n        </RebornButton>\n      </template>\n      <RebornAlert\n        v-model:show=\"playgroundShow\"\n        :type=\"state.type\"\n        :variant=\"state.variant\"\n        :title=\"state.title || undefined\"\n        :show-icon=\"state.showIcon\"\n        :closable=\"state.closable\"\n        :banner=\"state.banner\"\n        :center=\"state.center\"\n      >\n        {{ state.content }}\n      </RebornAlert>\n    </Playground>\n\n    <DemoSection title=\"基础用法\">\n      <template #description>\n        <code>type</code> 同时决定默认图标与配色，支持 <code>info</code>、<code>success</code>、<code>warning</code>、<code>error</code> 四种类型；中性提示可使用 <code>color=\"neutral\"</code>。\n      </template>\n      <DemoBlock layout=\"stack\">\n        <RebornAlert v-for=\"t in alertTypes\" :key=\"t\" :type=\"t\">\n          这是一条 {{ t }} 类型的警告提示\n        </RebornAlert>\n      </DemoBlock>\n    </DemoSection>\n\n    <DemoSection title=\"变体：六种 variant\">\n      <template #description>\n        <code>variant</code> 默认 <code>filled</code>，使用一阶浅底、灰色文字与六阶圆形图标底色，中性配色使用灰色二阶底；<code>round</code> 使用语义色实底与白字，圆角为胶囊。\n      </template>\n      <DemoBlock layout=\"stack\">\n        <RebornAlert v-for=\"v in alertVariants\" :key=\"v\" type=\"success\" :variant=\"v\">\n          {{ v }} 变体的警告提示\n        </RebornAlert>\n      </DemoBlock>\n    </DemoSection>\n\n    <DemoSection title=\"标题与操作区：title 与 action 插槽\">\n      <template #description>\n        <code>title</code> 属性（或 <code>title</code> 插槽）设置加粗标题；<code>action</code> 插槽放在关闭按钮左侧，适合放一个跳转或处理按钮。\n      </template>\n      <DemoBlock layout=\"stack\">\n        <RebornAlert type=\"warning\" title=\"存储空间不足\">\n          当前可用空间不足 10%，可能影响新数据写入，请及时清理。\n          <template #action>\n            <RebornButton size=\"sm\" color=\"warning\" variant=\"outlined\">\n              去清理\n            </RebornButton>\n          </template>\n        </RebornAlert>\n      </DemoBlock>\n    </DemoSection>\n\n    <DemoSection title=\"关闭与受控显隐：closable 与 v-model:show\">\n      <template #description>\n        <code>closable</code> 展示关闭按钮，点击后把 <code>show</code> 置为 <code>false</code> 并触发 <code>close</code>；200ms 淡出结束后触发 <code>after-close</code>。绑定 <code>v-model:show</code> 才能从外部重新唤起。\n      </template>\n      <DemoBlock layout=\"stack\">\n        <RebornAlert v-model:show=\"closableShow\" type=\"info\" closable @after-close=\"handleAfterClose\">\n          点击右侧按钮关闭这条提示\n        </RebornAlert>\n        <div class=\"flex items-center gap-3\">\n          <RebornButton v-if=\"!closableShow\" size=\"sm\" @click=\"closableShow = true; afterCloseLog = ''\">\n            重新显示\n          </RebornButton>\n          <span v-if=\"afterCloseLog\" class=\"text-sm text-gray-6\">{{ afterCloseLog }}</span>\n        </div>\n      </DemoBlock>\n    </DemoSection>\n\n    <DemoSection title=\"自定义关闭元素：close-element 插槽\">\n      <template #description>\n        <code>close-element</code> 插槽替换默认的关闭图标，仍需开启 <code>closable</code>。插槽外层已绑定关闭点击，插槽内的元素点击会冒泡触发关闭，无需再调用作用域参数 <code>close</code>。\n      </template>\n      <DemoBlock layout=\"stack\">\n        <RebornAlert v-model:show=\"closeElementShow\" type=\"warning\" closable>\n          检测到新版本，刷新页面后生效。\n          <template #close-element>\n            <span class=\"whitespace-nowrap text-xs\">不再提示</span>\n          </template>\n        </RebornAlert>\n        <RebornButton v-if=\"!closeElementShow\" size=\"sm\" class=\"self-start\" @click=\"closeElementShow = true\">\n          重新显示\n        </RebornButton>\n      </DemoBlock>\n    </DemoSection>\n\n    <DemoSection title=\"顶部公告与居中：banner 与 center\">\n      <template #description>\n        <code>banner</code> 去除圆角与边框，适合贴着页面顶部通栏铺开；<code>center</code> 让图标与内容整体居中。\n      </template>\n      <DemoBlock layout=\"stack\">\n        <RebornAlert title=\"重要消息提示\" type=\"warning\" banner closable>\n          注意：本环境为演示环境，数据每日凌晨重置。\n          <template #action>\n            <div class=\"flex flex-col gap-1\">\n              <RebornButton size=\"sm\">\n                确定\n              </RebornButton>\n              <RebornButton size=\"sm\" variant=\"subtle\" color=\"warning\">\n                收到\n              </RebornButton>\n            </div>\n          </template>\n        </RebornAlert>\n        <RebornAlert type=\"error\" banner center closable>\n          服务当前不可用，请稍后重试。\n        </RebornAlert>\n      </DemoBlock>\n    </DemoSection>\n\n    <DemoSection title=\"消息轮播：messages、direction 与 rows\">\n      <template #description>\n        传入 <code>messages</code> 即变为轮播通知栏，默认插槽不再渲染。默认单条逐条垂直切换，间隔由 <code>interval</code> 控制；<code>direction=\"horizontal\"</code> 把全部消息拼成一行跑马灯，<code>speed</code> 为每秒滚动像素；<code>rows</code> 大于 1 时多条同时可见并逐行上移。鼠标移入时暂停。\n      </template>\n      <DemoBlock layout=\"stack\">\n        <RebornAlert\n          type=\"info\"\n          banner\n          :messages=\"noticeMessages\"\n          :interval=\"2500\"\n          closable\n          @change=\"noticeIndex = $event\"\n        />\n        <span class=\"text-sm text-gray-6\">单条逐条垂直轮播：当前第 {{ noticeIndex + 1 }} / {{ noticeMessages.length }} 条</span>\n        <RebornAlert type=\"info\" banner :messages=\"noticeMessages\" direction=\"horizontal\" :speed=\"60\" closable />\n        <span class=\"text-sm text-gray-6\">水平跑马灯滚动（speed = 60 px/s）</span>\n        <RebornAlert type=\"warning\" banner :messages=\"noticeMessages\" :rows=\"2\" :interval=\"2000\" closable />\n        <span class=\"text-sm text-gray-6\">多条消息垂直滚动（rows = 2，每次上移一行）</span>\n      </DemoBlock>\n    </DemoSection>\n  </div>\n</template>\n"
+    },
+    {
+      "title": "UniApp 演示",
+      "path": "packages/uniapp-project/src/pages/reborn-alert/RebornAlertDemo.vue",
+      "source": "demo",
+      "platform": "uniapp",
+      "code": "<script setup lang=\"ts\">\nimport type { AlertType, AlertVariant } from '@/components/reborn-alert/reborn-alert.config'\nimport { shallowRef } from 'vue'\nimport { alertTypes, alertVariants } from '@/components/reborn-alert/reborn-alert.config'\nimport RebornAlert from '@/components/reborn-alert/RebornAlert.vue'\nimport ReButton from '@/components/reborn-button/RebornButton.vue'\nimport RebornCard from '@/components/reborn-card/RebornCard.vue'\nimport RebornInput from '@/components/reborn-input/RebornInput.vue'\nimport RebornPage from '@/components/reborn-page/RebornPage.vue'\nimport RebornRadio from '@/components/reborn-radio/RebornRadio.vue'\nimport RebornRadioGroup from '@/components/reborn-radio/RebornRadioGroup.vue'\nimport RebornSwitch from '@/components/reborn-switch/RebornSwitch.vue'\n\n// 演练场状态（默认值与 Web 端 Playground 一致）\nconst type = shallowRef<AlertType>('info')\nconst variant = shallowRef<AlertVariant>('soft')\nconst title = shallowRef('')\nconst content = shallowRef('这是一条警告提示的内容')\nconst showIcon = shallowRef(true)\nconst closable = shallowRef(false)\nconst banner = shallowRef(false)\nconst center = shallowRef(false)\nconst playgroundShow = shallowRef(true)\n\n// 可关闭示例的显隐状态与关闭动画回调\nconst closableShow = shallowRef(true)\nconst afterCloseLog = shallowRef('')\nfunction handleAfterClose() {\n  afterCloseLog.value = 'after-close 已触发（关闭动画结束）'\n}\n\n// 轮播通知栏消息\nconst noticeMessages = [\n  '系统将于今晚 24:00 进行升级维护',\n  '组件库已更新，可查看版本说明',\n  '文档站已支持双端演示与在线运行',\n  '组件库知识库与 AI 助手已上线，欢迎试用',\n]\nconst noticeIndex = shallowRef(0)\n</script>\n\n<template>\n  <RebornPage title=\"Alert 警告提示\" description=\"静态警告提示条，四种消息类型与六种视觉变体，类型取值与 Web 端一致。\">\n    <!-- Playground Section -->\n    <RebornCard>\n      <template #title>\n        <view\n          class=\"\n            text-sm font-medium uppercase tracking-wider text-slate-500\n            dark:text-slate-200\n          \"\n        >\n          交互演练场\n        </view>\n        <view\n          class=\"\n            text-xs leading-relaxed text-slate-400\n            dark:text-slate-300\n          \"\n        >\n          调节参数实时预览警告提示；banner 模式会去除边框和圆角作为顶部公告使用。\n        </view>\n      </template>\n\n      <RebornAlert\n        v-model:show=\"playgroundShow\" :type=\"type\" :variant=\"variant\" :title=\"title || undefined\"\n        :show-icon=\"showIcon\" :closable=\"closable\" :banner=\"banner\" :center=\"center\"\n      >\n        {{ content }}\n      </RebornAlert>\n      <ReButton v-if=\"!playgroundShow\" size=\"sm\" @click=\"playgroundShow = true\">\n        重新显示\n      </ReButton>\n\n      <view class=\"space-y-2\">\n        <text\n          class=\"text-[10px] font-bold uppercase tracking-widest text-slate-400\"\n        >\n          消息类型\n        </text>\n        <RebornRadioGroup v-model=\"type\">\n          <RebornRadio v-for=\"item in alertTypes\" :key=\"item\" :value=\"item\">\n            {{ item }}\n          </RebornRadio>\n        </RebornRadioGroup>\n      </view>\n\n      <view class=\"space-y-2\">\n        <text\n          class=\"text-[10px] font-bold uppercase tracking-widest text-slate-400\"\n        >\n          视觉变体\n        </text>\n        <RebornRadioGroup v-model=\"variant\">\n          <RebornRadio v-for=\"item in alertVariants\" :key=\"item\" :value=\"item\">\n            {{ item }}\n          </RebornRadio>\n        </RebornRadioGroup>\n      </view>\n\n      <view class=\"space-y-2\">\n        <text\n          class=\"text-[10px] font-bold uppercase tracking-widest text-slate-400\"\n        >\n          标题\n        </text>\n        <RebornInput v-model=\"title\" placeholder=\"留空则不显示标题\" />\n      </view>\n\n      <view class=\"space-y-2\">\n        <text\n          class=\"text-[10px] font-bold uppercase tracking-widest text-slate-400\"\n        >\n          提示内容\n        </text>\n        <RebornInput v-model=\"content\" placeholder=\"输入提示内容\" />\n      </view>\n\n      <view class=\"grid grid-cols-2 gap-2\">\n        <view class=\"space-y-2\">\n          <view\n            class=\"\n              text-[10px] font-bold uppercase tracking-widest text-slate-400\n            \"\n          >\n            展示图标\n          </view>\n          <RebornSwitch v-model=\"showIcon\" active-label=\"显示\" inactive-label=\"隐藏\" />\n        </view>\n        <view class=\"space-y-2\">\n          <view\n            class=\"\n              text-[10px] font-bold uppercase tracking-widest text-slate-400\n            \"\n          >\n            关闭按钮\n          </view>\n          <RebornSwitch v-model=\"closable\" active-label=\"显示\" inactive-label=\"隐藏\" />\n        </view>\n        <view class=\"space-y-2\">\n          <view\n            class=\"\n              text-[10px] font-bold uppercase tracking-widest text-slate-400\n            \"\n          >\n            顶部公告（banner）\n          </view>\n          <RebornSwitch v-model=\"banner\" active-label=\"开启\" inactive-label=\"关闭\" />\n        </view>\n        <view class=\"space-y-2\">\n          <view\n            class=\"\n              text-[10px] font-bold uppercase tracking-widest text-slate-400\n            \"\n          >\n            内容居中\n          </view>\n          <RebornSwitch v-model=\"center\" active-label=\"开启\" inactive-label=\"关闭\" />\n        </view>\n      </view>\n    </RebornCard>\n\n    <!-- 基本用法 -->\n    <RebornCard custom-class=\"flex flex-col gap-2\">\n      <template #title>\n        <view\n          class=\"\n            text-sm font-medium uppercase tracking-wider text-slate-500\n            dark:text-slate-200\n          \"\n        >\n          基本用法\n        </view>\n        <view\n          class=\"\n            text-xs leading-relaxed text-slate-400\n            dark:text-slate-300\n          \"\n        >\n          四种消息类型对应四种语义配色与默认图标；中性提示可使用 color=\"neutral\"。\n        </view>\n      </template>\n      <RebornAlert v-for=\"t in alertTypes\" :key=\"t\" :type=\"t\">\n        这是一条 {{ t }} 类型的警告提示\n      </RebornAlert>\n    </RebornCard>\n\n    <!-- 视觉变体 -->\n    <RebornCard custom-class=\"flex flex-col gap-2\">\n      <template #title>\n        <view\n          class=\"\n            text-sm font-medium uppercase tracking-wider text-slate-500\n            dark:text-slate-200\n          \"\n        >\n          视觉变体\n        </view>\n        <view\n          class=\"\n            text-xs leading-relaxed text-slate-400\n            dark:text-slate-300\n          \"\n        >\n          六种视觉变体对齐按钮组件的同名变体（不含 circle），默认为 soft 浅底。\n        </view>\n      </template>\n      <RebornAlert v-for=\"v in alertVariants\" :key=\"v\" type=\"success\" :variant=\"v\">\n        {{ v }} 变体的警告提示\n      </RebornAlert>\n    </RebornCard>\n\n    <!-- 标题与操作项 -->\n    <RebornCard custom-class=\"flex flex-col gap-2\">\n      <template #title>\n        <view\n          class=\"\n            text-sm font-medium uppercase tracking-wider text-slate-500\n            dark:text-slate-200\n          \"\n        >\n          标题与操作项\n        </view>\n        <view\n          class=\"\n            text-xs leading-relaxed text-slate-400\n            dark:text-slate-300\n          \"\n        >\n          通过 title 属性（或 title 插槽）设置标题，action 插槽放置右侧操作项。\n        </view>\n      </template>\n      <RebornAlert type=\"warning\" title=\"存储空间不足\">\n        当前可用空间不足 10%，可能影响新数据写入，请及时清理。\n        <template #action>\n          <ReButton size=\"sm\" color=\"warning\" variant=\"outlined\">\n            去清理\n          </ReButton>\n        </template>\n      </RebornAlert>\n    </RebornCard>\n\n    <!-- 可关闭 -->\n    <RebornCard custom-class=\"flex flex-col gap-2\">\n      <template #title>\n        <view\n          class=\"\n            text-sm font-medium uppercase tracking-wider text-slate-500\n            dark:text-slate-200\n          \"\n        >\n          可关闭\n        </view>\n        <view\n          class=\"\n            text-xs leading-relaxed text-slate-400\n            dark:text-slate-300\n          \"\n        >\n          closable 展示关闭按钮，点击触发 close 事件；关闭动画结束后触发 after-close，支持 v-model:show 受控。\n        </view>\n      </template>\n      <RebornAlert v-model:show=\"closableShow\" type=\"info\" closable @after-close=\"handleAfterClose\">\n        点击右侧按钮关闭这条提示\n      </RebornAlert>\n      <view class=\"flex items-center gap-3\">\n        <ReButton v-if=\"!closableShow\" size=\"sm\" @click=\"closableShow = true; afterCloseLog = ''\">\n          重新显示\n        </ReButton>\n        <text v-if=\"afterCloseLog\" class=\"text-xs text-slate-400\">{{ afterCloseLog }}</text>\n      </view>\n    </RebornCard>\n\n    <!-- 顶部公告 -->\n    <RebornCard custom-class=\"flex flex-col gap-2\">\n      <template #title>\n        <view\n          class=\"\n            text-sm font-medium uppercase tracking-wider text-slate-500\n            dark:text-slate-200\n          \"\n        >\n          顶部公告（banner）\n        </view>\n        <view\n          class=\"\n            text-xs leading-relaxed text-slate-400\n            dark:text-slate-300\n          \"\n        >\n          banner 模式去除边框和圆角，适合置于页面顶部；可配合 center 让内容居中。\n        </view>\n      </template>\n      <RebornAlert type=\"warning\" banner>\n        注意：本环境为演示环境，数据每日凌晨重置。\n      </RebornAlert>\n      <RebornAlert type=\"error\" banner center closable>\n        服务当前不可用，请稍后重试。\n      </RebornAlert>\n    </RebornCard>\n\n    <!-- 消息轮播通知栏 -->\n    <RebornCard custom-class=\"flex flex-col gap-2\">\n      <template #title>\n        <view\n          class=\"\n            text-sm font-medium uppercase tracking-wider text-slate-500\n            dark:text-slate-200\n          \"\n        >\n          消息轮播通知栏\n        </view>\n        <view\n          class=\"\n            text-xs leading-relaxed text-slate-400\n            dark:text-slate-300\n          \"\n        >\n          通过 messages 传入消息即变为轮播通知栏，三种形态：默认单条逐条垂直轮播；direction=horizontal 水平跑马灯，speed 控制速率；rows 大于 1 时多条消息同时可见并逐行向上滚动。\n        </view>\n      </template>\n      <RebornAlert\n        type=\"info\" banner :messages=\"noticeMessages\" :interval=\"2500\" closable\n        @change=\"noticeIndex = $event\"\n      />\n      <text class=\"text-xs text-slate-400\">单条逐条垂直轮播：当前第 {{ noticeIndex + 1 }} / {{ noticeMessages.length }} 条</text>\n      <RebornAlert type=\"info\" banner :messages=\"noticeMessages\" direction=\"horizontal\" :speed=\"60\" closable />\n      <text class=\"text-xs text-slate-400\">水平跑马灯滚动（speed = 60 px/s）</text>\n      <RebornAlert type=\"warning\" banner :messages=\"noticeMessages\" :rows=\"2\" :interval=\"2000\" closable />\n      <text class=\"text-xs text-slate-400\">多条消息垂直滚动（rows = 2，每次上移一行）</text>\n    </RebornCard>\n  </RebornPage>\n</template>\n"
+    }
+  ],
+  "related": [
+    "reborn-transition"
+  ],
+  "whenToUse": [
+    "页面内需要长期展示的静态提示（info / success / warning / error），可带标题、图标、操作项与关闭按钮。",
+    "顶部公告：banner 模式去除边框圆角铺满容器，配合 center 让内容居中。",
+    "消息轮播通知栏：传入 messages 即变为轮播，默认逐条垂直轮播；direction=horizontal 水平跑马灯（speed 控制速率）；rows 大于 1 时多条同时可见逐行上滚。"
+  ],
+  "whenNotToUse": [
+    "操作后的短暂全局反馈，改用 reborn-toast（Message）。",
+    "需要用户确认或承载复杂交互的通知，改用 reborn-dialog。",
+    "单条文本的横向滚动公告条（带左右图标、可点击），改用 reborn-notice-bar。",
+    "后台任务完成后弹在屏幕角落、会自动消失的异步通知，改用 reborn-notification。"
+  ],
+  "pitfalls": [
+    "图标、action 插槽、关闭按钮以文字首行为中心对齐：有标题对齐标题、无标题对齐内容；action 里超过一行高的内容（如竖排多个按钮）会与标题顶部对齐并把盒子撑高。",
+    "高度自适应无最小高度，内边距 12px 8px；标题与内容、图标 / 内容 / action / 关闭按钮之间统一 8px。",
+    "轮播容器不能带 flex-1（不定高列容器里 basis 0% 会顶掉显式高度），多行模式高度 = rows × 行高。",
+    "uniapp 端垂直轮播用内置 swiper（多行走 display-multiple-items），水平跑马灯用 createSelectorQuery 测宽，入场过渡期间测到 0 宽会自动重试并在 after-enter 再测一次。",
+    "v-model:show 受控显隐，关闭按钮会将其置为 false；after-close 在关闭动画结束后触发。",
+    "show 模型默认 undefined（两端一致）：未绑定时内部默认可见，显式 undefined/null 按隐藏渲染。"
+  ],
+  "dependencies": [
+    "@weapp-tailwindcss/merge-v3",
+    "@weapp-tailwindcss/variants-v3",
+    "clsx",
+    "tailwind-merge",
+    "tailwind-variants"
+  ],
+  "install": {
+    "cli": "npx reborn-ui@latest add reborn-alert"
+  },
+  "sourceRefs": {
+    "web": [
+      "app/components/reborn/ui/reborn-alert/RebornAlert.vue",
+      "app/components/reborn/ui/reborn-alert/reborn-alert.config.ts"
+    ],
+    "uniapp": [
+      "packages/uniapp-project/src/components/reborn-alert/RebornAlert.vue",
+      "packages/uniapp-project/src/components/reborn-alert/reborn-alert.config.ts"
+    ]
+  },
+  "docPath": "content/2.components/miscellaneous/reborn-alert.md",
+  "_meta": {
+    "contentHash": "35952de6ba8fed3a03aa03f60fc4d57000b0522a",
+    "hasOverride": true,
+    "extractors": {
+      "web": "ok",
+      "uniapp": "ok",
+      "docs": "found"
+    }
+  }
+}

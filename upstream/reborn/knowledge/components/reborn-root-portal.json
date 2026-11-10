@@ -8,6 +8,11 @@
     "portal",
     "overlay"
   ],
+  "aliases": [
+    "portal",
+    "teleport",
+    "传送"
+  ],
   "platforms": [
     "web",
     "uniapp"
@@ -65,7 +70,7 @@
   },
   "docPath": "content/2.components/miscellaneous/reborn-root-portal.md",
   "_meta": {
-    "contentHash": "06ba28afa58a9bb6c45e32020a9bd27900c2ca45",
+    "contentHash": "11946db279d4714b0e30ed0b405851494ed00e91",
     "hasOverride": true,
     "extractors": {
       "web": "ok",

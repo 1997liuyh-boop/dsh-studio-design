@@ -1,0 +1,109 @@
+{
+  "$schema": "../schema/component.schema.json",
+  "id": "timeline",
+  "title": "时间线",
+  "description": "用于纵向展示条目、带粘性标签与滚动渐变动画的时间线组件。",
+  "category": "misc",
+  "tags": [
+    "css",
+    "tailwind",
+    "aceternity-ui"
+  ],
+  "aliases": [
+    "时间线动效",
+    "滚动时间线",
+    "sticky timeline",
+    "叙事时间线"
+  ],
+  "platforms": [
+    "web"
+  ],
+  "props": [
+    {
+      "name": "containerClass",
+      "type": "HTMLAttributes[\"class\"]",
+      "required": false,
+      "description": "时间线容器的额外 CSS 类。",
+      "default": "\"\""
+    },
+    {
+      "name": "class",
+      "type": "HTMLAttributes[\"class\"]",
+      "required": false,
+      "description": "其他样式的额外 CSS 类。",
+      "default": "\"\""
+    },
+    {
+      "name": "items",
+      "type": "{\n    id: string;\n    label: string;\n  }[]",
+      "required": false,
+      "description": "时间线条目列表，每项包含 ID 与标签。",
+      "default": "() => []"
+    },
+    {
+      "name": "title",
+      "type": "string",
+      "required": false,
+      "description": "时间线部分的标题。",
+      "default": "\"\""
+    },
+    {
+      "name": "description",
+      "type": "string",
+      "required": false,
+      "description": "显示在标题下方的描述文字。",
+      "default": "\"\""
+    }
+  ],
+  "events": [],
+  "slots": [],
+  "exposes": [],
+  "examples": [
+    {
+      "title": "Web 演示",
+      "path": "app/components/reborn/examples/timeline/TimelineDemo.vue",
+      "source": "demo",
+      "platform": "web",
+      "code": "<script setup lang=\"ts\">\nconst data = [\n  {\n    id: \"version1.0\",\n    label: \"Version 1.0\",\n  },\n  {\n    id: \"version2.0\",\n    label: \"Version 2.0\",\n  },\n\n  {\n    id: \"version3.0\",\n    label: \"Version 3.0\",\n  },\n  {\n    id: \"version4.0\",\n    label: \"Version 4.0\",\n  },\n\n  {\n    id: \"version5.0\",\n    label: \"Version 5.0\",\n  },\n  {\n    id: \"version6.0\",\n    label: \"Version 6.0\",\n  },\n];\n</script>\n\n<template>\n  <div class=\"h-fit w-full\">\n    <Timeline :items=\"data\" title=\"Beam me up\" description=\"Show the timeline in style\">\n      <template v-for=\"(item, index) in data\" :key=\"`${item.id}template`\" #[item.id]>\n        <div class=\"relative w-full pr-4 pl-20 md:pl-4\">\n          <h3 class=\"mb-4 block text-left text-2xl font-bold text-neutral-500 dark:text-neutral-500\">\n            {{ `Section ${index + 1}` }}\n          </h3>\n        </div>\n        <p class=\"mb-8 text-xs font-normal text-neutral-800 md:text-sm dark:text-neutral-200\">\n          Reborn UI gives you the freedom to design awesome website, in less time.\n        </p>\n      </template>\n    </Timeline>\n  </div>\n</template>\n"
+    }
+  ],
+  "related": [],
+  "whenToUse": [
+    "版本发布历史、更新日志的分段展示。",
+    "公司里程碑、项目进程的长页叙事，需要标签随滚动粘性停留。",
+    "每个节点需要自定义富内容（图文混排）的时间线。"
+  ],
+  "whenNotToUse": [
+    "只需内容侧边的滚动光束装饰，改用 tracing-beam。",
+    "展示多步骤加载状态，改用 multi-step-loader。",
+    "展示审批记录、操作日志等数据节点的时间线（带时间戳、颜色与加载态），改用 reborn-timeline。"
+  ],
+  "pitfalls": [
+    "仅 web 端可用，依赖 motion-v。",
+    "items 元素需含 id 与 label 字段；每个条目的内容通过以 item.id 命名的动态具名插槽传入（#[item.id]）。",
+    "title 与 description 显示在时间线头部，containerClass 控制外层容器样式。"
+  ],
+  "dependencies": [
+    "@vueuse/core",
+    "motion-v"
+  ],
+  "install": {
+    "cli": "npx reborn-ui@latest add timeline"
+  },
+  "sourceRefs": {
+    "web": [
+      "app/components/reborn/ui/timeline/Timeline.vue",
+      "app/components/reborn/ui/timeline/index.ts"
+    ]
+  },
+  "docPath": "content/2.components/miscellaneous/timeline.md",
+  "_meta": {
+    "contentHash": "bee925c905b9a236184428f54db27c82034fef84",
+    "hasOverride": true,
+    "extractors": {
+      "web": "ok",
+      "uniapp": "absent",
+      "docs": "found"
+    }
+  }
+}

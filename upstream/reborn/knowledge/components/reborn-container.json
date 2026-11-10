@@ -5,6 +5,11 @@
   "description": "用于将页面内容水平居中并按屏幕断点限制最大宽度的布局容器组件，仅 web 端。",
   "category": "navigation",
   "tags": [],
+  "aliases": [
+    "container",
+    "容器",
+    "居中容器"
+  ],
   "platforms": [
     "web"
   ],
@@ -76,7 +81,7 @@
   },
   "docPath": "content/2.components/navigation/reborn-container.md",
   "_meta": {
-    "contentHash": "0ad0639571608989c2b4bb7293d47a38c9158f1d",
+    "contentHash": "36a0cd6bfac60b744b269962c65a5696f033f422",
     "hasOverride": true,
     "extractors": {
       "web": "ok",

@@ -11,6 +11,12 @@
     "range",
     "uniapp"
   ],
+  "aliases": [
+    "slider",
+    "滑块",
+    "滑动条",
+    "range"
+  ],
   "platforms": [
     "web",
     "uniapp"
@@ -133,17 +139,31 @@
     },
     {
       "name": "size",
-      "type": "typeof sliderSizes[number]",
+      "type": "'sm' | 'md' | 'lg'",
       "required": false,
       "description": "尺寸",
-      "default": "'md'"
+      "default": "'md'",
+      "options": [
+        "sm",
+        "md",
+        "lg"
+      ]
     },
     {
       "name": "color",
-      "type": "typeof sliderColors[number]",
+      "type": "'primary' | 'secondary' | 'success' | 'info' | 'warning' | 'error' | 'neutral'",
       "required": false,
       "description": "颜色",
-      "default": "'primary'"
+      "default": "'primary'",
+      "options": [
+        "primary",
+        "secondary",
+        "success",
+        "info",
+        "warning",
+        "error",
+        "neutral"
+      ]
     },
     {
       "name": "ui",
@@ -291,7 +311,7 @@
   },
   "docPath": "content/2.components/input-and-forms/reborn-slider.md",
   "_meta": {
-    "contentHash": "de3de77b68afcc3f9bf596de8b40af1a60ccf542",
+    "contentHash": "f82623c3b289df184a8cbfaa3fddaa5f9352fe83",
     "hasOverride": true,
     "extractors": {
       "web": "ok",

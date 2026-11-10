@@ -1,0 +1,429 @@
+{
+  "$schema": "../schema/component.schema.json",
+  "id": "reborn-tabs",
+  "title": "Tabs 标签页",
+  "description": "双端标签页：RebornTabs + RebornTabPane 组合，paneKey 驱动切换，7 种类型 × 4 种尺寸，支持可编辑、懒加载与滚动定位。",
+  "category": "navigation",
+  "tags": [
+    "css",
+    "tailwind",
+    "tabs",
+    "uniapp"
+  ],
+  "aliases": [
+    "tabs",
+    "标签页",
+    "选项卡",
+    "页签",
+    "tab",
+    "tab 切换",
+    "选项卡切换",
+    "标签切换",
+    "内容切换",
+    "切换栏",
+    "详情切换",
+    "tab pane"
+  ],
+  "platforms": [
+    "web",
+    "uniapp"
+  ],
+  "props": [
+    {
+      "name": "paneKey",
+      "type": "TabKey",
+      "required": false,
+      "description": "业务选中标识；Vue key 只用于列表复用"
+    },
+    {
+      "name": "order",
+      "type": "number",
+      "required": false,
+      "description": "显式序位；小程序动态列表所有项都应传入有限数值"
+    },
+    {
+      "name": "title",
+      "type": "string",
+      "required": false,
+      "description": "标题文本"
+    },
+    {
+      "name": "disabled",
+      "type": "boolean",
+      "required": false,
+      "description": "是否禁用，禁用后点击与悬停都不会切换",
+      "default": "false"
+    },
+    {
+      "name": "closable",
+      "type": "boolean",
+      "required": false,
+      "description": "是否允许关闭此选项卡，仅在可编辑模式生效",
+      "default": "true"
+    },
+    {
+      "name": "destroyOnHidden",
+      "type": "boolean",
+      "required": false,
+      "description": "是否在不显示此标签时销毁 DOM 结构，与父级同名参数取或",
+      "default": "false"
+    },
+    {
+      "name": "defaultActiveKey",
+      "type": "TabKey",
+      "required": false,
+      "description": "默认选中的标签 key，非受控状态使用；为空时选中第一个标签页"
+    },
+    {
+      "name": "position",
+      "type": "'top' | 'bottom' | 'left' | 'right'",
+      "required": false,
+      "description": "选项卡头部的位置",
+      "default": "'top'",
+      "options": [
+        "top",
+        "bottom",
+        "left",
+        "right"
+      ]
+    },
+    {
+      "name": "size",
+      "type": "'sm' | 'md' | 'lg'",
+      "required": false,
+      "description": "选项卡的大小",
+      "default": "'md'",
+      "options": [
+        "sm",
+        "md",
+        "lg"
+      ]
+    },
+    {
+      "name": "type",
+      "type": "'line' | 'card' | 'card-gutter' | 'card-fill' | 'text' | 'rounded' | 'capsule'",
+      "required": false,
+      "description": "标签形态：line 下划线指示条/card 相邻标签共用边框连排、选中底板贴内容那侧断开边框与内容连通/card-gutter 卡片间留 4px 间隙各带 6px 上圆角、选中底板同样断开贴内容那侧的边框/card-fill 无边框、未选中只是 gray-9 文字加透明底、选中底板铺 gray-2 带 6px 上圆角且标题换成主题色加粗、内容区同样铺 gray-2 与之连成一片/text 纯文字/rounded 选中项是填充语义色的实心胶囊、标题反白/capsule 灰底轨道内白色滑块。line、text 不留水平内边距，标签之间靠 32px 间距分隔；card、card-gutter、card-fill 三种卡片的水平内边距全档固定 16px / 32rpx，不随 size 变化。除 line 与 text 外，其余五种类型的选中态（底色、边框、圆角）全部由 ui.tabSlider 这块滑动底板承载，切换时从旧标签滑到新标签，标签自身底色恒定（card、card-gutter 恒为 gray-2，card-fill、rounded、capsule 恒为透明），选中标签只留文字色与字重，卡片边框统一 gray-3。rounded 与 capsule 的底板在滑动时还会做两段液体形变（先拉成两个标签的并集并在交叉轴压扁，再收拢到目标并回弹），不受 animation 控制、只由 type 决定。只有 line 渲染指示条，上述五种类型渲染滑动底板，只有 text 两者都不渲染；line、card、card-gutter 会渲染头部与内容区之间的分隔线，card-fill、text、rounded、capsule 不渲染（card-fill 靠同色底面连通）。默认 line",
+      "default": "'line'",
+      "options": [
+        "line",
+        "card",
+        "card-gutter",
+        "card-fill",
+        "text",
+        "rounded",
+        "capsule"
+      ]
+    },
+    {
+      "name": "direction",
+      "type": "'horizontal' | 'vertical'",
+      "required": false,
+      "description": "选项卡的方向，vertical 等价于把头部放到侧边",
+      "default": "'horizontal'",
+      "options": [
+        "horizontal",
+        "vertical"
+      ]
+    },
+    {
+      "name": "color",
+      "type": "'primary' | 'secondary' | 'success' | 'info' | 'warning' | 'error' | 'neutral'",
+      "required": false,
+      "description": "选项卡主题色，决定选中态文字、指示器与卡片边框的取色",
+      "default": "'primary'",
+      "options": [
+        "primary",
+        "secondary",
+        "success",
+        "info",
+        "warning",
+        "error",
+        "neutral"
+      ]
+    },
+    {
+      "name": "editable",
+      "type": "boolean",
+      "required": false,
+      "description": "是否开启可编辑模式，开启后才会渲染删除按钮与增加按钮",
+      "default": "false"
+    },
+    {
+      "name": "showAddButton",
+      "type": "boolean",
+      "required": false,
+      "description": "是否显示增加按钮，仅在可编辑模式可用",
+      "default": "false"
+    },
+    {
+      "name": "lazyLoad",
+      "type": "boolean",
+      "required": false,
+      "description": "是否在首次展示标签时才挂载内容",
+      "default": "false"
+    },
+    {
+      "name": "justify",
+      "type": "boolean",
+      "required": false,
+      "description": "高度撑满容器，只在水平模式下生效",
+      "default": "false"
+    },
+    {
+      "name": "stretch",
+      "type": "boolean",
+      "required": false,
+      "description": "标签宽度自撑开：标签用 flex-grow 均分头部宽度、标题居中，适合数量固定的少量标签占满整行（capsule 配合即通栏分段控件）。仅水平方向生效（纵向标签本就撑满列宽）；grow 不带压缩，标签总宽超出容器时保持自然宽度回到滚动浏览，不会把标题挤到截断。默认 false",
+      "default": "false"
+    },
+    {
+      "name": "animation",
+      "type": "boolean",
+      "required": false,
+      "description": "是否开启选项内容过渡动画",
+      "default": "false"
+    },
+    {
+      "name": "headerPadding",
+      "type": "boolean",
+      "required": false,
+      "description": "选项卡头部是否相对容器缩进一段边距，仅对 line、text 类型生效；默认贴边对齐",
+      "default": "false"
+    },
+    {
+      "name": "autoSwitch",
+      "type": "boolean",
+      "required": false,
+      "description": "创建标签后是否切换到新标签（最后一个）",
+      "default": "false"
+    },
+    {
+      "name": "hideContent",
+      "type": "boolean",
+      "required": false,
+      "description": "是否隐藏内容区，隐藏时标签页仍保持挂载，头部不受影响",
+      "default": "false"
+    },
+    {
+      "name": "trigger",
+      "type": "'click' | 'hover'",
+      "required": false,
+      "description": "切换标签的触发方式，hover 仅 H5 生效",
+      "default": "'click'",
+      "options": [
+        "click",
+        "hover"
+      ]
+    },
+    {
+      "name": "scrollPosition",
+      "type": "'start' | 'end' | 'center' | 'auto' | number",
+      "required": false,
+      "description": "选中标签的滚动落点：auto 仅在超出可视区域时补齐差值/start 对齐可视区起点/center 居中/end 对齐终点；传 number 则直接把滚动容器滚到该偏移量（px），不做测量。默认 auto",
+      "default": "'auto'"
+    },
+    {
+      "name": "class",
+      "type": "any",
+      "required": false,
+      "description": "追加到根节点的自定义类名。"
+    },
+    {
+      "name": "ui",
+      "type": "TabsUI",
+      "required": false,
+      "description": "细粒度样式覆盖对象，键为 root/nav/navWrapper/scrollBody/list/tab/tabTitle/tabClose/indicator/tabSlider/addButton/leftExtra/rightExtra/content/stage/pane 可用键（从源码抽取，以此为准）——UniApp：addButton、content、indicator、leftExtra、list、nav、navWrapper、pane、rightExtra、root、scrollBody、stage、tab、tabClose、tabSlider、tabTitle。",
+      "platform": "uniapp"
+    },
+    {
+      "name": "activeKey",
+      "type": "TabKey | undefined",
+      "required": false,
+      "description": "双向绑定值",
+      "vModel": true
+    },
+    {
+      "name": "draggable",
+      "type": "boolean",
+      "required": false,
+      "description": "仅 web。允许按住标签头拖动调整顺序，禁用标签不可拖动；顺序改动只发生在头部渲染层，松手后通过 sort 事件给出完整的新顺序（key 数组），组件不改使用方数据。默认 false",
+      "default": "false"
+    },
+    {
+      "name": "overflow",
+      "type": "'scroll' | 'dropdown'",
+      "required": false,
+      "description": "仅 web。标签溢出提供两种模式：scroll 显示两侧箭头，点击滚动可视区的八成，到边界时对应箭头禁用，也支持触摸、触控板或 Shift + 滚轮滑动（默认）；dropdown 在有未完整露出标签的一侧显示省略号，悬停或点击展开该侧隐藏标签列表，没有隐藏标签的一侧移除整个按钮容器及间距。点选后按最终可视区尺寸和 scrollPosition 定位，禁用项不可选，Escape 或点击头部外关闭。未溢出时不显示导航按钮。纵向布局对应上下两侧。两种模式均支持 scrollPosition 的 start、center、end、auto 或数字；Web 端只修改定位参数也会立即生效。",
+      "default": "\"scroll\"",
+      "options": [
+        "scroll",
+        "dropdown"
+      ]
+    },
+    {
+      "name": "ui",
+      "type": "TabsUI",
+      "required": false,
+      "description": "细粒度样式覆盖对象，键为 root/nav/navWrapper/scrollBody/list/tab/tabTitle/tabClose/indicator/tabSlider/addButton/navButton/dropdown/dropdownPanel/dropdownItem/leftExtra/rightExtra/content/stage/pane 可用键（从源码抽取，以此为准）——Web：addButton、content、dropdown、dropdownItem、dropdownPanel、indicator、leftExtra、list、nav、navButton、navWrapper、pane、rightExtra、root、scrollBody、stage、tab、tabClose、tabSlider、tabTitle。",
+      "platform": "web"
+    }
+  ],
+  "events": [
+    {
+      "name": "change",
+      "payload": "(e: 'change', key: TabKey): void",
+      "description": "当前标签值改变时触发"
+    },
+    {
+      "name": "tabClick",
+      "payload": "(e: 'tabClick', key: TabKey): void",
+      "description": "用户点击标签时触发，禁用标签不触发；模板上写作 @tab-click"
+    },
+    {
+      "name": "add",
+      "payload": "(e: 'add'): void",
+      "description": "用户点击增加按钮时触发"
+    },
+    {
+      "name": "delete",
+      "payload": "(e: 'delete', key: TabKey): void",
+      "description": "用户点击删除按钮时触发，组件不会自行移除标签，需由外部维护列表"
+    },
+    {
+      "name": "update:activeKey",
+      "description": "activeKey 变化时触发（v-model 同步）"
+    },
+    {
+      "name": "sort",
+      "payload": "(e: \"sort\", keys: TabKey[]): void;",
+      "description": "拖拽排序松手后触发，载荷为新顺序的完整 key 数组，需持久化顺序时由外部保存"
+    }
+  ],
+  "slots": [
+    {
+      "name": "default",
+      "description": "放置 `RebornTabPane`，标签头部由父组件按其注册信息渲染。"
+    },
+    {
+      "name": "left-extra",
+      "description": "标签行起始侧的额外内容，位于标签列之前；水平方向靠左，垂直方向靠顶。"
+    },
+    {
+      "name": "right-extra",
+      "description": "标签行末尾的额外内容，位于溢出导航按钮之后；水平方向靠右，垂直方向靠底。"
+    },
+    {
+      "name": "title",
+      "description": "自定义标题内容，填充后 `title` prop 被忽略。"
+    }
+  ],
+  "exposes": [
+    {
+      "name": "refresh",
+      "description": "`() => void` 重新测量指示器与选中底板并把选中标签滚进可视区域，外部改变标签宽度后调用"
+    }
+  ],
+  "examples": [
+    {
+      "title": "Web 演示",
+      "path": "app/components/reborn/examples/reborn-tabs/RebornTabsDemo.vue",
+      "source": "demo",
+      "platform": "web",
+      "code": "<script setup lang=\"ts\">\nimport type { TabKey } from \"~/components/reborn/ui/reborn-tabs/reborn-tabs.config\";\nimport { computed, ref, shallowRef } from \"vue\";\nimport {\n  tabsColors,\n  tabsOverflows,\n  tabsPositions,\n  tabsSizes,\n  tabsTypes,\n} from \"~/components/reborn/ui/reborn-tabs/reborn-tabs.config\";\nimport RebornTabPane from \"~/components/reborn/ui/reborn-tabs/RebornTabPane.vue\";\nimport RebornTabs from \"~/components/reborn/ui/reborn-tabs/RebornTabs.vue\";\n\nconst typeOptions = tabsTypes.map((t) => ({ label: t, value: t }));\nconst sizeOptions = tabsSizes.map((s) => ({ label: s, value: s }));\nconst positionOptions = tabsPositions.map((p) => ({ label: p, value: p }));\nconst colorOptions = tabsColors.map((c) => ({ label: c, value: c }));\n\n// ─── 交互演练场 ─────────────────────────────────────────────────\n\n/** 演练场默认状态 */\nconst defaultState: Record<string, any> = {\n  type: \"line\",\n  size: \"md\",\n  position: \"top\",\n  color: \"primary\",\n  editable: false,\n  showAddButton: false,\n  animation: false,\n  hideContent: false,\n};\n\nconst state = shallowRef<Record<string, any>>({ ...defaultState });\n\n/** 演练场选中的标签 */\nconst playKey = shallowRef<TabKey>(\"overview\");\n/** change 触发次数，让切换「有回应」 */\nconst changeCount = shallowRef(0);\nconst tabsProps = ref<{ position: (typeof tabsPositions)[number]; type: (typeof tabsTypes)[number] }>({\n  position: \"top\",\n  type: \"line\",\n});\n\nfunction resetState() {\n  state.value = { ...defaultState };\n  playKey.value = \"overview\";\n  changeCount.value = 0;\n}\n\n/** 演练场控制面板配置 */\nconst controls: any = [\n  {\n    title: \"外观\",\n    children: [\n      {\n        label: \"类型\",\n        key: \"type\",\n        component: \"select\" as const,\n        defaultValue: \"line\",\n        props: { options: typeOptions },\n      },\n      {\n        label: \"尺寸\",\n        key: \"size\",\n        component: \"select\" as const,\n        defaultValue: \"md\",\n        props: { options: sizeOptions },\n      },\n      {\n        label: \"位置\",\n        key: \"position\",\n        component: \"select\" as const,\n        defaultValue: \"top\",\n        props: { options: positionOptions },\n      },\n      {\n        label: \"主题色\",\n        key: \"color\",\n        component: \"select\" as const,\n        defaultValue: \"primary\",\n        props: { options: colorOptions },\n      },\n    ],\n  },\n  {\n    title: \"行为\",\n    children: [\n      { label: \"可编辑模式\", key: \"editable\", component: \"checkbox\" as const, defaultValue: false },\n      {\n        label: \"显示增加按钮\",\n        key: \"showAddButton\",\n        component: \"checkbox\" as const,\n        defaultValue: false,\n      },\n      {\n        label: \"内容过渡动画\",\n        key: \"animation\",\n        component: \"checkbox\" as const,\n        defaultValue: false,\n      },\n      {\n        label: \"隐藏内容区\",\n        key: \"hideContent\",\n        component: \"checkbox\" as const,\n        defaultValue: false,\n      },\n    ],\n  },\n];\n\n/** 演练场右上角展示的传参明细：完整列出当前所有参数（含默认值） */\nconst tabsCode = computed(() => {\n  const s = state.value;\n  const attrs = [\n    `v-model:active-key=\"activeKey\"`,\n    `type=\"${s.type}\"`,\n    `size=\"${s.size}\"`,\n    `position=\"${s.position}\"`,\n    `color=\"${s.color}\"`,\n    `:editable=\"${s.editable}\"`,\n    `:show-add-button=\"${s.showAddButton}\"`,\n    `:animation=\"${s.animation}\"`,\n    `:hide-content=\"${s.hideContent}\"`,\n  ];\n  return `<RebornTabs\\n  ${attrs.join(\"\\n  \")}\\n>\\n  <RebornTabPane key=\"overview\" pane-key=\"overview\" title=\"概览\">概览内容</RebornTabPane>\\n  <RebornTabPane key=\"detail\" pane-key=\"detail\" title=\"明细\">明细内容</RebornTabPane>\\n</RebornTabs>`;\n});\n\n// ─── 场景演示状态 ───────────────────────────────────────────────\n\n/** 不同类型演示：六种类型共用一个选中项，切换类型时选中位置不变才好对比 */\n/** 基础用法选中的标签 */\nconst basicKey = shallowRef<TabKey>(\"overview\");\n/** 尺寸示例三档各自的选中标签 */\nconst sizeKeys = ref<Record<string, TabKey>>({ sm: \"all\", md: \"all\", lg: \"all\" });\nconst typeKey = shallowRef<TabKey>(\"all\");\n/** 禁用演示 */\nconst disabledKey = shallowRef<TabKey>(\"normal\");\n/** 标题插槽演示 */\nconst titleSlotKey = shallowRef<TabKey>(\"inbox\");\n/** 额外内容演示 */\nconst extraKey = shallowRef<TabKey>(\"inbox\");\n/** 触发方式演示 */\nconst hoverKey = shallowRef<TabKey>(\"day\");\n/** 渲染策略演示 */\nconst lazyKey = shallowRef<TabKey>(\"first\");\nconst destroyKey = shallowRef<TabKey>(\"first\");\n/** 切换动画演示：三组面板刻意不等高，才看得出内容区的高度过渡 */\nconst liquidRoundedKey = shallowRef<TabKey>(\"brief\");\nconst liquidCapsuleKey = shallowRef<TabKey>(\"brief\");\nconst liquidPlainKey = shallowRef<TabKey>(\"brief\");\n/** 撑满高度演示 */\nconst justifyKey = shallowRef<TabKey>(\"list\");\n/** 样式定制演示 */\nconst styledKey = shallowRef<TabKey>(\"all\");\n/** 样式定制首个演示的选中项，与 ui 覆写演示分开，避免两组标签的 key 空间互相干扰 */\nconst styledColorKey = shallowRef<TabKey>(\"top\");\n\n/** 滚动定位演示：标签超出一屏时才能看出差别 */\nconst scrollModes = [\"auto\", \"start\", \"center\", \"end\"] as const;\nconst scrollMode = shallowRef<(typeof scrollModes)[number]>(\"auto\");\nconst scrollKey = shallowRef<TabKey>(\"12\");\nconst scrollPanes = Array.from({ length: 40 }, (_, index) => ({\n  key: `${index + 1}`,\n  title: `标签 ${index + 1}`,\n}));\n\n/** 溢出导航演示：两种模式配合位置、尺寸、类型与选中项滚动落点。 */\nconst overflowProps = ref({\n  overflow: \"dropdown\" as (typeof tabsOverflows)[number],\n  position: \"top\" as (typeof tabsPositions)[number],\n  size: \"md\" as (typeof tabsSizes)[number],\n  type: \"line\" as (typeof tabsTypes)[number],\n  scrollPosition: \"auto\" as (typeof scrollModes)[number],\n});\nconst overflowKey = shallowRef<TabKey>(\"1\");\nconst overflowPanes = Array.from({ length: 24 }, (_, index) => ({\n  key: `${index + 1}`,\n  title: `标签 ${index + 1}`,\n}));\n\n/** 撑开标签演示：数量少时均分头部宽度，两种形态对比 */\nconst stretchLineKey = shallowRef<TabKey>(\"all\");\nconst stretchCapsuleKey = shallowRef<TabKey>(\"day\");\n\n/** 拖拽排序演示：头部顺序由组件内部维护，sort 事件里拿到松手后的完整顺序 */\nconst dragKey = shallowRef<TabKey>(\"home\");\nconst dragPanes = [\n  { key: \"home\", title: \"首页\" },\n  { key: \"monitor\", title: \"监控\" },\n  { key: \"report\", title: \"报表\" },\n  { key: \"setting\", title: \"设置\" },\n];\n/** 最近一次 sort 事件的载荷，为空表示还没拖过 */\nconst sortedKeys = shallowRef<TabKey[]>([]);\n\n// ─── 可编辑模式 ─────────────────────────────────────────────────\n\n/** 可编辑模式的标签数据，增删都发生在这个数组上 */\nconst editablePanes = ref([\n  { key: \"order\", title: \"订单\" },\n  { key: \"refund\", title: \"退款\" },\n  { key: \"invoice\", title: \"发票\" },\n]);\nconst editableKey = shallowRef<TabKey>(\"order\");\n\n/** 新标签的编号来源，避免复用已删除的 key */\nlet seed = 0;\n\n/** 组件只抛事件不动数据，新增标签由页面自己决定插在哪 */\nfunction handleAdd() {\n  seed++;\n  editablePanes.value.push({ key: `custom-${seed}`, title: `新标签 ${seed}` });\n}\n\n/** 删除后若移除的正是当前项，则回退到相邻标签 */\nfunction handleDelete(key: TabKey) {\n  const index = editablePanes.value.findIndex((item) => item.key === key);\n  if (index === -1) return;\n  editablePanes.value.splice(index, 1);\n  if (editableKey.value !== key) return;\n  const fallback = editablePanes.value[index] ?? editablePanes.value[index - 1];\n  editableKey.value = fallback ? fallback.key : \"\";\n}\n</script>\n\n<template>\n  <div class=\"flex w-full min-w-0 flex-col\">\n    <Playground\n      v-model=\"state\" :controls=\"controls\" :code=\"tabsCode\" component-name=\"RebornTabs\" title=\"交互演练场\"\n      description=\"调节上方参数，实时查看标签页表现。左右位置会把布局转成横向。\"\n    >\n      <template #tag>\n        <RebornButton size=\"sm\" variant=\"soft\" color=\"neutral\" @click=\"resetState\">\n          <template #leading>\n            <Icon name=\"lucide:rotate-ccw\" size=\"12\" />\n          </template>\n          重置配置\n        </RebornButton>\n      </template>\n\n      <div class=\"flex w-full min-w-0 flex-col gap-4\">\n        <div\n          :class=\"{\n            'h-56': state.position === 'left' || state.position === 'right',\n            'bg-gray-2 p-2': state.type === 'card-fill',\n          }\"\n        >\n          <RebornTabs\n            v-model:active-key=\"playKey\" :type=\"state.type\" :size=\"state.size\" :position=\"state.position\"\n            :color=\"state.color\" :editable=\"state.editable\" :show-add-button=\"state.showAddButton\"\n            :animation=\"state.animation\" :hide-content=\"state.hideContent\" class=\"h-full\" @change=\"changeCount++\"\n          >\n            <RebornTabPane key=\"overview\" pane-key=\"overview\" title=\"概览\">\n              <p class=\"text-muted text-sm\">概览内容</p>\n            </RebornTabPane>\n            <RebornTabPane key=\"detail\" pane-key=\"detail\" title=\"明细\">\n              <p class=\"text-muted text-sm\">明细内容</p>\n            </RebornTabPane>\n            <RebornTabPane key=\"log\" pane-key=\"log\" title=\"日志\">\n              <p class=\"text-muted text-sm\">日志内容</p>\n            </RebornTabPane>\n          </RebornTabs>\n        </div>\n\n        <DemoNote tone=\"dimmed\" class=\"font-mono text-xs\">\n          active-key: '{{ playKey }}' · change × {{ changeCount }}\n        </DemoNote>\n      </div>\n    </Playground>\n\n    <DemoSection title=\"基础用法\">\n      <template #description>\n        <code>v-model:active-key</code> 绑定选中标签的 key，key 取自每个 <code>tab-pane</code> 的\n        <code>pane-key</code> prop，<code>title</code> 决定头部文本。\n      </template>\n      <DemoBlock layout=\"stack\">\n        <RebornTabs v-model:active-key=\"basicKey\">\n          <RebornTabPane key=\"overview\" pane-key=\"overview\" title=\"概览\">\n            <p class=\"text-muted text-sm\">概览内容</p>\n          </RebornTabPane>\n          <RebornTabPane key=\"detail\" pane-key=\"detail\" title=\"详情\">\n            <p class=\"text-muted text-sm\">详情内容</p>\n          </RebornTabPane>\n          <RebornTabPane key=\"log\" pane-key=\"log\" title=\"日志\">\n            <p class=\"text-muted text-sm\">日志内容</p>\n          </RebornTabPane>\n        </RebornTabs>\n        <DemoNote tone=\"dimmed\" class=\"font-mono text-xs\">\n          active-key: '{{ basicKey }}'\n        </DemoNote>\n      </DemoBlock>\n    </DemoSection>\n\n    <DemoSection title=\"类型与位置\">\n      <template #description>\n        <code>type</code> 切换 7 种标签形态，<code>position</code> 决定头部贴在哪一边；取\n        <code>left</code> / <code>right</code> 时自动转成纵向排布。\n      </template>\n      <DemoBlock layout=\"stack\">\n        <RebornRadioGroup v-model=\"tabsProps.position\" type=\"button\">\n          <RebornRadio v-for=\"position in tabsPositions\" :key=\"position\" :value=\"position\">\n            {{ position }}\n          </RebornRadio>\n        </RebornRadioGroup>\n        <RebornRadioGroup v-model=\"tabsProps.type\" type=\"button\" variant=\"filled\" color=\"error\">\n          <RebornRadio v-for=\"type in tabsTypes\" :key=\"type\" :value=\"type\">\n            {{ type }}\n          </RebornRadio>\n        </RebornRadioGroup>\n        <div class=\"w-full\">\n          <RebornTabs\n            v-model:active-key=\"typeKey\" :type=\"tabsProps.type\" :position=\"tabsProps.position\" :ui=\"{\n              tabSlider: tabsProps.type === 'card-fill' ? 'bg-gray-2' : '',\n              content: tabsProps.type === 'card-fill' ? 'bg-gray-2' : '',\n            }\"\n          >\n            <RebornTabPane key=\"all\" pane-key=\"all\" title=\"全部\">\n              <p class=\"text-muted text-sm\">全部内容</p>\n            </RebornTabPane>\n            <RebornTabPane key=\"doing\" pane-key=\"doing\" title=\"进行中\">\n              <p class=\"text-muted text-sm\">进行中内容</p>\n            </RebornTabPane>\n            <RebornTabPane key=\"done\" pane-key=\"done\" title=\"已完成\">\n              <p class=\"text-muted text-sm\">已完成内容</p>\n            </RebornTabPane>\n          </RebornTabs>\n        </div>\n      </DemoBlock>\n    </DemoSection>\n\n    <DemoSection title=\"尺寸\">\n      <template #description>\n        <code>size</code> 有 <code>sm</code> / <code>md</code> / <code>lg</code> 三档，改变标签高度与字号；水平内边距不随档位变化。\n      </template>\n      <DemoBlock layout=\"stack\" class=\"gap-6\">\n        <div v-for=\"size in tabsSizes\" :key=\"size\" class=\"flex w-full min-w-0 flex-col gap-2\">\n          <p class=\"text-dimmed text-xs italic\">size=\"{{ size }}\"</p>\n          <RebornTabs v-model:active-key=\"sizeKeys[size]\" :size=\"size\" type=\"card-gutter\">\n            <RebornTabPane key=\"all\" pane-key=\"all\" title=\"全部\">\n              <p class=\"text-muted text-sm\">全部内容</p>\n            </RebornTabPane>\n            <RebornTabPane key=\"doing\" pane-key=\"doing\" title=\"进行中\">\n              <p class=\"text-muted text-sm\">进行中内容</p>\n            </RebornTabPane>\n          </RebornTabs>\n        </div>\n      </DemoBlock>\n    </DemoSection>\n\n    <DemoSection title=\"禁用标签\">\n      <template #description>\n        <code>tab-pane</code> 的\n        <code>disabled</code> 让该标签既不响应点击也不响应悬停，指示器不会移过去。\n      </template>\n      <DemoBlock layout=\"stack\">\n        <RebornTabs v-model:active-key=\"disabledKey\">\n          <RebornTabPane key=\"normal\" pane-key=\"normal\" title=\"可用\">\n            <p class=\"text-muted text-sm\">可用内容</p>\n          </RebornTabPane>\n          <RebornTabPane key=\"locked\" pane-key=\"locked\" title=\"已锁定\" disabled>\n            <p class=\"text-muted text-sm\">锁定内容</p>\n          </RebornTabPane>\n          <RebornTabPane key=\"other\" pane-key=\"other\" title=\"其他\">\n            <p class=\"text-muted text-sm\">其他内容</p>\n          </RebornTabPane>\n        </RebornTabs>\n      </DemoBlock>\n    </DemoSection>\n\n    <DemoSection title=\"可编辑：增删标签\">\n      <template #description>\n        <code>editable</code> 给每个标签补上关闭按钮，<code>show-add-button</code>\n        再补一个新增按钮。组件只抛 <code>add</code> /\n        <code>delete</code> 事件，增删与删除后的选中项都由外部数据决定。固定标签可单独设\n        <code>:closable=\"false\"</code>。\n      </template>\n      <DemoBlock layout=\"stack\" class=\"gap-6\">\n        <RebornTabs\n          v-model:active-key=\"editableKey\" type=\"card-gutter\" editable show-add-button @add=\"handleAdd\"\n          @delete=\"handleDelete\"\n        >\n          <RebornTabPane v-for=\"(pane, paneIndex) in editablePanes\" :key=\"pane.key\" :order=\"paneIndex\" :pane-key=\"pane.key\" :title=\"pane.title\">\n            <p class=\"text-muted text-sm\">{{ pane.title }} 的内容</p>\n          </RebornTabPane>\n        </RebornTabs>\n        <DemoNote tone=\"dimmed\">\n          当前标签：{{ editablePanes.map((item) => item.title).join(\" / \") || \"已全部关闭\" }}\n        </DemoNote>\n      </DemoBlock>\n    </DemoSection>\n\n    <DemoSection title=\"标题插槽\">\n      <template #description>\n        <code>tab-pane</code> 的\n        <code>title</code> 插槽接管标题渲染，用于在标题里放图标或徽标；纯文本时用\n        <code>title</code> 属性即可。\n      </template>\n      <DemoBlock layout=\"stack\">\n        <div>\n          <RebornTabs v-model:active-key=\"titleSlotKey\" type=\"card-gutter\">\n            <RebornTabPane key=\"inbox\" pane-key=\"inbox\">\n              <template #title>\n                <span class=\"inline-flex items-center gap-1.5\">\n                  <Icon name=\"lucide:inbox\" size=\"14\" />\n                  收件箱\n                  <span class=\"bg-error text-inverted rounded-full px-1.5 text-[10px] leading-4\">3</span>\n                </span>\n              </template>\n              <p class=\"text-muted text-sm\">收件箱内容</p>\n            </RebornTabPane>\n            <RebornTabPane key=\"sent\" pane-key=\"sent\">\n              <template #title>\n                <span class=\"inline-flex items-center gap-1.5\">\n                  <Icon name=\"lucide:send\" size=\"14\" />\n                  已发送\n                </span>\n              </template>\n              <p class=\"text-muted text-sm\">已发送内容</p>\n            </RebornTabPane>\n          </RebornTabs>\n        </div>\n      </DemoBlock>\n    </DemoSection>\n\n    <DemoSection title=\"头部额外内容\">\n      <template #description>\n        <code>left-extra</code> 插槽挂在标签栏起始侧、<code>right-extra</code>\n        挂在末尾，分别用来放标题和与整块内容相关的操作；水平方向即左右两端，垂直方向即顶部与底部。\n      </template>\n      <DemoBlock layout=\"stack\">\n        <RebornTabs v-model:active-key=\"extraKey\">\n          <template #left-extra>\n            <span class=\"text-highlighted mr-2 text-sm font-medium\">邮箱</span>\n          </template>\n          <template #right-extra>\n            <RebornButton size=\"sm\" variant=\"text\" color=\"neutral\">\n              <template #leading>\n                <Icon name=\"lucide:refresh-cw\" size=\"12\" />\n              </template>\n              刷新\n            </RebornButton>\n          </template>\n          <RebornTabPane key=\"inbox\" pane-key=\"inbox\" title=\"收件箱\">\n            <p class=\"text-muted text-sm\">收件箱内容</p>\n          </RebornTabPane>\n          <RebornTabPane key=\"sent\" pane-key=\"sent\" title=\"已发送\">\n            <p class=\"text-muted text-sm\">已发送内容</p>\n          </RebornTabPane>\n        </RebornTabs>\n      </DemoBlock>\n    </DemoSection>\n\n    <DemoSection title=\"滚动定位\">\n      <template #description>\n        标签超出容器宽度时头部可横向滚动。<code>scroll-position</code> 默认\n        <code>auto</code>，只在选中项被挡住时补上 差值；<code>start</code> / <code>center</code> /\n        <code>end</code> 每次切换都对到固定位置；传数字则直接指定 滚动距离。\n      </template>\n      <DemoBlock layout=\"stack\" class=\"gap-4\">\n        <div class=\"flex flex-wrap items-center gap-2\">\n          <RebornButton\n            v-for=\"mode in scrollModes\" :key=\"mode\" size=\"sm\"\n            :variant=\"scrollMode === mode ? 'filled' : 'outlined'\" :color=\"scrollMode === mode ? 'primary' : 'neutral'\"\n            @click=\"scrollMode = mode\"\n          >\n            {{ mode }}\n          </RebornButton>\n        </div>\n        <RebornTabs v-model:active-key=\"scrollKey\" :scroll-position=\"scrollMode\">\n          <RebornTabPane v-for=\"(pane, paneIndex) in scrollPanes\" :key=\"pane.key\" :order=\"paneIndex\" :pane-key=\"pane.key\" :title=\"pane.title\">\n            <p class=\"text-muted text-sm\">{{ pane.title }} 的内容</p>\n          </RebornTabPane>\n        </RebornTabs>\n      </DemoBlock>\n    </DemoSection>\n\n    <DemoSection title=\"溢出导航：滑动与省略号下拉\">\n      <template #description>\n        <code>overflow=\"scroll\"</code> 点击两侧箭头滚动，也支持触摸或触控板滑动；<code>overflow=\"dropdown\"</code>\n        在有隐藏标签的一侧显示省略号，悬停后只展开该侧的标签列表，点击也能展开。\n        选择列表项后，标签按 <code>scroll-position</code> 对齐到起点、居中或终点；\n        修改「定位」配置会立即调整当前选中项。没有隐藏标签的一侧不保留省略号占位，纵向布局对应上下两侧。\n      </template>\n      <DemoBlock layout=\"stack\">\n        <div class=\"flex flex-wrap items-center gap-3\">\n          <span class=\"text-dimmed w-8 shrink-0 text-xs\">导航</span>\n          <RebornRadioGroup v-model=\"overflowProps.overflow\" type=\"button\">\n            <RebornRadio v-for=\"mode in tabsOverflows\" :key=\"mode\" :value=\"mode\">\n              {{ mode }}\n            </RebornRadio>\n          </RebornRadioGroup>\n        </div>\n        <div class=\"flex flex-wrap items-center gap-3\">\n          <span class=\"text-dimmed w-8 shrink-0 text-xs\">位置</span>\n          <RebornRadioGroup v-model=\"overflowProps.position\" type=\"button\">\n            <RebornRadio v-for=\"position in tabsPositions\" :key=\"position\" :value=\"position\">\n              {{ position }}\n            </RebornRadio>\n          </RebornRadioGroup>\n        </div>\n        <div class=\"flex flex-wrap items-center gap-3\">\n          <span class=\"text-dimmed w-8 shrink-0 text-xs\">尺寸</span>\n          <RebornRadioGroup v-model=\"overflowProps.size\" type=\"button\">\n            <RebornRadio v-for=\"size in tabsSizes\" :key=\"size\" :value=\"size\">\n              {{ size }}\n            </RebornRadio>\n          </RebornRadioGroup>\n        </div>\n        <div class=\"flex flex-wrap items-center gap-3\">\n          <span class=\"text-dimmed w-8 shrink-0 text-xs\">类型</span>\n          <RebornRadioGroup v-model=\"overflowProps.type\" type=\"button\" variant=\"filled\" color=\"error\">\n            <RebornRadio v-for=\"type in tabsTypes\" :key=\"type\" :value=\"type\">\n              {{ type }}\n            </RebornRadio>\n          </RebornRadioGroup>\n        </div>\n        <div class=\"flex flex-wrap items-center gap-3\">\n          <span class=\"text-dimmed w-8 shrink-0 text-xs\">定位</span>\n          <RebornRadioGroup v-model=\"overflowProps.scrollPosition\" type=\"button\">\n            <RebornRadio v-for=\"mode in scrollModes\" :key=\"mode\" :value=\"mode\">\n              {{ mode }}\n            </RebornRadio>\n          </RebornRadioGroup>\n        </div>\n        <!-- 左右位置滚动依赖外层定高，与「类型与位置」小节的约束一致 -->\n        <div\n          class=\"w-full\"\n          :class=\"{ 'h-56': overflowProps.position === 'left' || overflowProps.position === 'right' }\"\n        >\n          <RebornTabs\n            v-model:active-key=\"overflowKey\"\n            :overflow=\"overflowProps.overflow\"\n            :position=\"overflowProps.position\"\n            :size=\"overflowProps.size\"\n            :type=\"overflowProps.type\"\n            :scroll-position=\"overflowProps.scrollPosition\"\n            class=\"h-full\"\n            :ui=\"{\n              tabSlider: overflowProps.type === 'card-fill' ? 'bg-gray-2' : '',\n              content: overflowProps.type === 'card-fill' ? 'bg-gray-2' : '',\n            }\"\n          >\n            <RebornTabPane v-for=\"(pane, paneIndex) in overflowPanes\" :key=\"pane.key\" :order=\"paneIndex\" :pane-key=\"pane.key\" :title=\"pane.title\">\n              <p class=\"text-muted text-sm\">{{ pane.title }} 的内容</p>\n            </RebornTabPane>\n          </RebornTabs>\n        </div>\n      </DemoBlock>\n    </DemoSection>\n\n    <DemoSection title=\"撑开标签\">\n      <template #description>\n        <code>stretch</code>\n        让标签均分头部宽度、标题居中，适合数量固定的少量标签占满整行的版式；仅水平方向生效。标签总宽超出容器时不会挤压标题，仍回到滚动浏览。\n      </template>\n      <DemoBlock layout=\"stack\" class=\"gap-6\">\n        <div class=\"flex w-full min-w-0 flex-col gap-2\">\n          <p class=\"text-dimmed text-xs italic\">type=\"line\" + stretch</p>\n          <RebornTabs v-model:active-key=\"stretchLineKey\" stretch>\n            <RebornTabPane key=\"all\" pane-key=\"all\" title=\"全部\">\n              <p class=\"text-muted text-sm\">全部内容</p>\n            </RebornTabPane>\n            <RebornTabPane key=\"doing\" pane-key=\"doing\" title=\"进行中\">\n              <p class=\"text-muted text-sm\">进行中内容</p>\n            </RebornTabPane>\n            <RebornTabPane key=\"done\" pane-key=\"done\" title=\"已完成\">\n              <p class=\"text-muted text-sm\">已完成内容</p>\n            </RebornTabPane>\n          </RebornTabs>\n        </div>\n        <div class=\"flex w-full min-w-0 flex-col gap-2\">\n          <p class=\"text-dimmed text-xs italic\">type=\"capsule\" + stretch</p>\n          <RebornTabs v-model:active-key=\"stretchCapsuleKey\" type=\"capsule\" stretch>\n            <RebornTabPane key=\"day\" pane-key=\"day\" title=\"日\">\n              <p class=\"text-muted text-sm\">按日统计</p>\n            </RebornTabPane>\n            <RebornTabPane key=\"week\" pane-key=\"week\" title=\"周\">\n              <p class=\"text-muted text-sm\">按周统计</p>\n            </RebornTabPane>\n            <RebornTabPane key=\"month\" pane-key=\"month\" title=\"月\">\n              <p class=\"text-muted text-sm\">按月统计</p>\n            </RebornTabPane>\n          </RebornTabs>\n        </div>\n      </DemoBlock>\n    </DemoSection>\n\n    <DemoSection title=\"拖拽排序\">\n      <template #description>\n        <code>draggable</code> 允许按住标签头左右拖动调整顺序，禁用标签不可拖动。顺序改动只发生在头部渲染层，松手后组件通过\n        <code>sort</code> 事件给出完整的新顺序，需要持久化时由外部保存；组件不改任何数据。\n      </template>\n      <DemoBlock layout=\"stack\" class=\"gap-4\">\n        <RebornTabs v-model:active-key=\"dragKey\" type=\"card-gutter\" draggable @sort=\"sortedKeys = $event\">\n          <RebornTabPane v-for=\"(pane, paneIndex) in dragPanes\" :key=\"pane.key\" :order=\"paneIndex\" :pane-key=\"pane.key\" :title=\"pane.title\">\n            <p class=\"text-muted text-sm\">{{ pane.title }} 的内容</p>\n          </RebornTabPane>\n        </RebornTabs>\n        <DemoNote tone=\"dimmed\" class=\"font-mono text-xs\">\n          sort: {{ sortedKeys.length ? sortedKeys.join(\" → \") : \"还没拖过\" }}\n        </DemoNote>\n      </DemoBlock>\n    </DemoSection>\n\n    <DemoSection title=\"触发方式：悬停切换\">\n      <template #description>\n        <code>trigger=\"hover\"</code>\n        让鼠标移入即切换，适合内容轻、需要快速预览的场景。触控端没有悬停，该值等同\n        <code>click</code>。\n      </template>\n      <DemoBlock layout=\"stack\">\n        <RebornTabs v-model:active-key=\"hoverKey\" trigger=\"hover\" type=\"rounded\">\n          <RebornTabPane key=\"day\" pane-key=\"day\" title=\"日\">\n            <p class=\"text-muted text-sm\">按日统计</p>\n          </RebornTabPane>\n          <RebornTabPane key=\"week\" pane-key=\"week\" title=\"周\">\n            <p class=\"text-muted text-sm\">按周统计</p>\n          </RebornTabPane>\n          <RebornTabPane key=\"month\" pane-key=\"month\" title=\"月\">\n            <p class=\"text-muted text-sm\">按月统计</p>\n          </RebornTabPane>\n        </RebornTabs>\n      </DemoBlock>\n    </DemoSection>\n\n    <DemoSection title=\"渲染策略：懒加载与销毁\">\n      <template #description>\n        默认所有面板一次性挂载并保留。<code>lazy-load</code> 推迟到首次展示再挂载；<code>destroy-on-hidden</code>\n        则离开就销毁，面板里的临时状态会一并丢掉。两者可按单个 <code>tab-pane</code> 单独开启。\n      </template>\n      <DemoBlock layout=\"stack\" class=\"gap-6\">\n        <div class=\"flex min-w-0 flex-col gap-2\">\n          <p class=\"text-dimmed text-xs italic\">lazy-load</p>\n          <RebornTabs v-model:active-key=\"lazyKey\" lazy-load>\n            <RebornTabPane key=\"first\" pane-key=\"first\" title=\"首个\">\n              <input class=\"border-default w-full rounded-md border px-3 py-1.5 text-sm\" placeholder=\"输入后切走再回来，内容还在\">\n            </RebornTabPane>\n            <RebornTabPane key=\"second\" pane-key=\"second\" title=\"次个\">\n              <p class=\"text-muted text-sm\">第一次点进来才挂载</p>\n            </RebornTabPane>\n          </RebornTabs>\n        </div>\n        <div class=\"flex min-w-0 flex-col gap-2\">\n          <p class=\"text-dimmed text-xs italic\">destroy-on-hidden</p>\n          <RebornTabs v-model:active-key=\"destroyKey\" destroy-on-hidden>\n            <RebornTabPane key=\"first\" pane-key=\"first\" title=\"首个\">\n              <input class=\"border-default w-full rounded-md border px-3 py-1.5 text-sm\" placeholder=\"输入后切走再回来，内容已清空\">\n            </RebornTabPane>\n            <RebornTabPane key=\"second\" pane-key=\"second\" title=\"次个\">\n              <p class=\"text-muted text-sm\">每次进入都是新的</p>\n            </RebornTabPane>\n          </RebornTabs>\n        </div>\n      </DemoBlock>\n    </DemoSection>\n\n    <DemoSection title=\"切换动画\">\n      <template #description>\n        <code>rounded</code> / <code>capsule</code>\n        的选中底板移动时会先拉成两个标签的并集、再收拢到目标并回弹。拉伸不只是观感：这两种类型的选中标题是反色的，底板在行程中同时盖住旧标签与新标签，两边的标题才不会有一段时间悬在页面底色上。这段形变只看\n        <code>type</code>，不受 <code>animation</code> 控制。<code>animation</code>\n        管的是另外两件事，且对所有类型生效——内容切换叠上缩放、位移与模糊，内容区高度也跟着过渡。下面三组面板刻意不等高，切换时留意高度是渐变而不是跳变。\n      </template>\n      <DemoBlock layout=\"stack\" class=\"gap-6\">\n        <div class=\"flex min-w-0 flex-col gap-2\">\n          <p class=\"text-dimmed text-xs italic\">type=\"rounded\" + animation</p>\n          <RebornTabs v-model:active-key=\"liquidRoundedKey\" type=\"rounded\" animation>\n            <RebornTabPane key=\"brief\" pane-key=\"brief\" title=\"摘要\">\n              <p class=\"text-muted text-sm\">两行文字的面板。</p>\n              <p class=\"text-muted text-sm\">切到「明细」会明显变高。</p>\n            </RebornTabPane>\n            <RebornTabPane key=\"detail\" pane-key=\"detail\" title=\"明细\">\n              <p v-for=\"index in 7\" :key=\"index\" class=\"text-muted text-sm\">\n                第 {{ index }} 行明细\n              </p>\n            </RebornTabPane>\n            <RebornTabPane key=\"note\" pane-key=\"note\" title=\"备注\">\n              <p class=\"text-muted text-sm\">只有一行。</p>\n            </RebornTabPane>\n          </RebornTabs>\n        </div>\n        <div class=\"flex min-w-0 flex-col gap-2\">\n          <p class=\"text-dimmed text-xs italic\">type=\"capsule\" + animation</p>\n          <RebornTabs v-model:active-key=\"liquidCapsuleKey\" type=\"capsule\" animation>\n            <RebornTabPane key=\"brief\" pane-key=\"brief\" title=\"摘要\">\n              <p class=\"text-muted text-sm\">白色滑块在灰底轨道内移动，形变同样生效。</p>\n            </RebornTabPane>\n            <RebornTabPane key=\"detail\" pane-key=\"detail\" title=\"明细\">\n              <p v-for=\"index in 5\" :key=\"index\" class=\"text-muted text-sm\">\n                第 {{ index }} 行明细\n              </p>\n            </RebornTabPane>\n            <RebornTabPane key=\"note\" pane-key=\"note\" title=\"备注\">\n              <p class=\"text-muted text-sm\">悬停时底板不动，点击真正切换时才有拉伸回弹的形变。</p>\n            </RebornTabPane>\n          </RebornTabs>\n        </div>\n        <div class=\"flex min-w-0 flex-col gap-2\">\n          <p class=\"text-dimmed text-xs italic\">type=\"line\" + animation</p>\n          <RebornTabs v-model:active-key=\"liquidPlainKey\" animation>\n            <RebornTabPane key=\"brief\" pane-key=\"brief\" title=\"摘要\">\n              <p class=\"text-muted text-sm\">\n                下划线类型没有底板，但内容的复合过渡与高度过渡照样生效。\n              </p>\n            </RebornTabPane>\n            <RebornTabPane key=\"detail\" pane-key=\"detail\" title=\"明细\">\n              <p v-for=\"index in 6\" :key=\"index\" class=\"text-muted text-sm\">\n                第 {{ index }} 行明细\n              </p>\n            </RebornTabPane>\n            <RebornTabPane key=\"note\" pane-key=\"note\" title=\"备注\">\n              <p class=\"text-muted text-sm\">高度过渡的那段时间内容区会裁剪溢出，面板里别放需要溢出的浮层。</p>\n            </RebornTabPane>\n          </RebornTabs>\n        </div>\n      </DemoBlock>\n    </DemoSection>\n\n    <DemoSection title=\"撑满高度\">\n      <template #description>\n        <code>justify</code>\n        让内容区吃掉容器剩余高度，配合定高外层做「头部固定、内容自己滚动」的版式，只在水平\n        方向生效。\n      </template>\n      <DemoBlock layout=\"stack\">\n        <div class=\"h-56\">\n          <RebornTabs v-model:active-key=\"justifyKey\" justify>\n            <RebornTabPane key=\"list\" pane-key=\"list\" title=\"列表\">\n              <div class=\"bg-elevated flex h-full items-center justify-center rounded-md\">\n                <p class=\"text-muted text-sm\">内容区已撑满剩余高度</p>\n              </div>\n            </RebornTabPane>\n            <RebornTabPane key=\"chart\" pane-key=\"chart\" title=\"图表\">\n              <div class=\"bg-elevated flex h-full items-center justify-center rounded-md\">\n                <p class=\"text-muted text-sm\">图表占位</p>\n              </div>\n            </RebornTabPane>\n          </RebornTabs>\n        </div>\n      </DemoBlock>\n    </DemoSection>\n\n    <DemoSection title=\"主题色与样式定制\">\n      <template #description>\n        <code>color</code> 落成色板的语义类名，指示器、选中态文字与胶囊底色取同一档色值； 需要 7\n        个语义色之外的色值时不用逐个改\n        <code>ui</code> 键，在根节点改写对应的色板变量即可；更细的调整再用\n        <code>ui</code> 按槽位覆写。\n      </template>\n      <DemoBlock layout=\"stack\" class=\"gap-6\">\n        <RebornTabs\n          v-model:active-key=\"styledColorKey\" :class=\"styledColorKey === 'top' ? '[--color-primary:#FF2442]' : '[--color-primary:#3491FA]'\n          \"\n        >\n          <RebornTabPane v-for=\"(i, paneIndex) in positionOptions\" :key=\"i.value\" :order=\"paneIndex\" :pane-key=\"i.value\" :title=\"i.label\">\n            <div class=\"text-muted p-10 text-center text-sm\">{{ i.label }}内容</div>\n          </RebornTabPane>\n        </RebornTabs>\n        <RebornTabs\n          v-model:active-key=\"styledKey\" :ui=\"{\n            indicator: 'h-1 rounded-none bg-linear-to-r from-blue-500 via-purple-500 to-pink-500',\n            tab: 'tracking-wide',\n          }\"\n        >\n          <RebornTabPane key=\"all\" pane-key=\"all\" title=\"全部\">\n            <p class=\"text-muted text-sm\">全部内容</p>\n          </RebornTabPane>\n          <RebornTabPane key=\"doing\" pane-key=\"doing\" title=\"进行中\">\n            <p class=\"text-muted text-sm\">进行中内容</p>\n          </RebornTabPane>\n        </RebornTabs>\n      </DemoBlock>\n    </DemoSection>\n  </div>\n</template>\n"
+    },
+    {
+      "title": "UniApp 演示",
+      "path": "packages/uniapp-project/src/pages/reborn-tabs/RebornTabsDemo.vue",
+      "source": "demo",
+      "platform": "uniapp",
+      "code": "<script setup lang=\"ts\">\nimport type { TabKey, TabsPosition, TabsSize, TabsType } from '@/components/reborn-tabs/reborn-tabs.config'\nimport { ref, shallowRef } from 'vue'\nimport ReButton from '@/components/reborn-button/RebornButton.vue'\nimport RebornCard from '@/components/reborn-card/RebornCard.vue'\nimport RebornPage from '@/components/reborn-page/RebornPage.vue'\nimport { tabsPositions, tabsSizes, tabsTypes } from '@/components/reborn-tabs/reborn-tabs.config'\nimport RebornTabPane from '@/components/reborn-tabs/RebornTabPane.vue'\nimport RebornTabs from '@/components/reborn-tabs/RebornTabs.vue'\n\n// ─── 演练场状态 ─────────────────────────────────────────────────\n\n/** 演练场选中的标签 key */\nconst playKey = shallowRef<TabKey>('overview')\nconst currentType = shallowRef<TabsType>('line')\nconst currentSize = shallowRef<TabsSize>('md')\nconst currentPosition = shallowRef<TabsPosition>('top')\n\n/** change 触发次数，让切换「有回应」 */\nconst changeCount = shallowRef(0)\nfunction onPlayChange() {\n  changeCount.value++\n}\n\n// ─── 场景演示状态 ───────────────────────────────────────────────\n\n/** 类型演示 */\nconst typeKey = shallowRef<TabKey>('all')\n/** 尺寸演示 */\nconst sizeKey = shallowRef<TabKey>('all')\n/** 位置演示 */\nconst positionKey = shallowRef<TabKey>('all')\n/** 禁用演示 */\nconst disabledKey = shallowRef<TabKey>('normal')\n/** 触发方式演示 */\nconst hoverKey = shallowRef<TabKey>('day')\n/** 动画演示 */\nconst animationKey = shallowRef<TabKey>('one')\n/** 渲染策略演示 */\nconst lazyKey = shallowRef<TabKey>('first')\nconst destroyKey = shallowRef<TabKey>('first')\n/** 额外内容演示 */\nconst extraKey = shallowRef<TabKey>('inbox')\n/** 撑开标签演示 */\nconst stretchKey = shallowRef<TabKey>('day')\n/** 撑满高度演示 */\nconst justifyKey = shallowRef<TabKey>('list')\n/** 样式定制演示：color 与 ui 两个示例各自持有，不借用「类型」一节的 typeKey，切换时互不带动 */\nconst colorKey = shallowRef<TabKey>('all')\nconst uiKey = shallowRef<TabKey>('all')\n\n/** 滚动定位演示：标签数量超出一屏时才能看出差别 */\nconst scrollKey = shallowRef<TabKey>('12')\nconst scrollModes = ['auto', 'start', 'center', 'end'] as const\nconst currentScrollMode = shallowRef<typeof scrollModes[number]>('auto')\nconst scrollPanes = Array.from({ length: 20 }, (_, index) => ({\n  key: `${index + 1}`,\n  title: `标签 ${index + 1}`,\n}))\n\n// ─── 可编辑模式 ─────────────────────────────────────────────────\n\n/** 可编辑模式的标签数据，增删都发生在这个数组上 */\nconst editablePanes = ref([\n  { key: 'order', title: '订单' },\n  { key: 'refund', title: '退款' },\n  { key: 'invoice', title: '发票' },\n])\nconst editableKey = shallowRef<TabKey>('order')\nconst fixedEditableKey = shallowRef<TabKey>('order')\nconst fixedEditablePanes = ref([{ key: 'order', title: '订单', closable: false }, { key: 'refund', title: '退款', closable: true }])\nfunction deleteFixedPane(key: TabKey) {\n  fixedEditablePanes.value = fixedEditablePanes.value.filter(pane => pane.key !== key || !pane.closable)\n  if (!fixedEditablePanes.value.some(pane => pane.key === fixedEditableKey.value)) fixedEditableKey.value = 'order'\n}\n\n/** 新标签的编号来源，避免复用已删除的 key */\nlet seed = 0\n\n/** 组件只抛事件不动数据，新增标签由页面自己决定插在哪 */\nfunction handleAdd() {\n  seed++\n  const key = `custom-${seed}`\n  editablePanes.value.push({ key, title: `新标签 ${seed}` })\n}\n\n/** 删除后若移除的正是当前项，则回退到相邻标签 */\nfunction handleDelete(key: TabKey) {\n  const index = editablePanes.value.findIndex(item => item.key === key)\n  if (index === -1) return\n  editablePanes.value.splice(index, 1)\n  if (editableKey.value !== key) return\n  const fallback = editablePanes.value[index] ?? editablePanes.value[index - 1]\n  editableKey.value = fallback ? fallback.key : ''\n}\n</script>\n\n<template>\n  <RebornPage title=\"标签页\" description=\"在同一块区域内切换多组平级内容。\" custom-class=\"flex flex-col gap-y-4\">\n    <!-- 演练场 -->\n    <RebornCard title=\"自定义\" custom-class=\"space-y-4\">\n      <view :class=\"currentPosition === 'left' || currentPosition === 'right' ? 'h-[320rpx]' : ''\">\n        <RebornTabs\n          v-model:active-key=\"playKey\" :type=\"currentType\" :size=\"currentSize\"\n          :position=\"currentPosition\" @change=\"onPlayChange\"\n        >\n          <RebornTabPane key=\"overview\" pane-key=\"overview\" title=\"概览\">\n            <text class=\"text-26 text-gray-7\">当前选中 overview</text>\n          </RebornTabPane>\n          <RebornTabPane key=\"detail\" pane-key=\"detail\" title=\"明细\">\n            <text class=\"text-26 text-gray-7\">当前选中 detail</text>\n          </RebornTabPane>\n          <RebornTabPane key=\"log\" pane-key=\"log\" title=\"日志\">\n            <text class=\"text-26 text-gray-7\">当前选中 log</text>\n          </RebornTabPane>\n        </RebornTabs>\n      </view>\n      <view class=\"flex justify-between\">\n        <text class=\"text-24 text-gray-6\">change × {{ changeCount }}</text>\n        <text class=\"text-24 text-gray-6 font-mono\">active-key = {{ playKey }}</text>\n      </view>\n\n      <view class=\"flex flex-col gap-2\">\n        <text class=\"text-24 text-gray-6\">类型 (Type)</text>\n        <view class=\"flex flex-wrap gap-2\">\n          <view v-for=\"t in tabsTypes\" :key=\"t\">\n            <ReButton\n              size=\"xs\" :variant=\"currentType === t ? 'filled' : 'outlined'\"\n              :color=\"currentType === t ? 'primary' : 'neutral'\" @tap=\"currentType = t\"\n            >\n              {{ t }}\n            </ReButton>\n          </view>\n        </view>\n      </view>\n      <view class=\"flex flex-col gap-2\">\n        <text class=\"text-24 text-gray-6\">尺寸 (Size)</text>\n        <view class=\"flex flex-wrap gap-2\">\n          <view v-for=\"s in tabsSizes\" :key=\"s\">\n            <ReButton\n              size=\"xs\" :variant=\"currentSize === s ? 'filled' : 'outlined'\"\n              :color=\"currentSize === s ? 'primary' : 'neutral'\" @tap=\"currentSize = s\"\n            >\n              {{ s }}\n            </ReButton>\n          </view>\n        </view>\n      </view>\n      <view class=\"flex flex-col gap-2\">\n        <text class=\"text-24 text-gray-6\">位置 (Position)</text>\n        <view class=\"flex flex-wrap gap-2\">\n          <view v-for=\"p in tabsPositions\" :key=\"p\">\n            <ReButton\n              size=\"xs\" :variant=\"currentPosition === p ? 'filled' : 'outlined'\"\n              :color=\"currentPosition === p ? 'primary' : 'neutral'\" @tap=\"currentPosition = p\"\n            >\n              {{ p }}\n            </ReButton>\n          </view>\n        </view>\n      </view>\n    </RebornCard>\n\n    <!-- 类型 -->\n    <RebornCard title=\"类型\" custom-class=\"space-y-4\">\n      <text class=\"text-24 text-gray-6\">\n        line 下划线跟随标题滑动；card 无边框、相邻标签直接相接成一排；card-gutter 用边框围出一张张留缝的卡片；card-fill\n        不画边框，只给选中项铺一层与内容区同色的底，两块背景连成一片；text\n        去掉一切容器只留文字；rounded 选中态填充主题色；capsule 把整条标签栏做成分段控件\n      </text>\n      <view v-for=\"t in tabsTypes\" :key=\"t\" class=\"flex flex-col gap-2\">\n        <text class=\"text-24 text-gray-5 font-mono\">{{ t }}</text>\n        <RebornTabs v-model:active-key=\"typeKey\" :type=\"t\">\n          <RebornTabPane key=\"all\" pane-key=\"all\" title=\"全部\">\n            <text class=\"text-26 text-gray-7\">全部内容</text>\n          </RebornTabPane>\n          <RebornTabPane key=\"doing\" pane-key=\"doing\" title=\"进行中\">\n            <text class=\"text-26 text-gray-7\">进行中内容</text>\n          </RebornTabPane>\n          <RebornTabPane key=\"done\" pane-key=\"done\" title=\"已完成\">\n            <text class=\"text-26 text-gray-7\">已完成内容</text>\n          </RebornTabPane>\n        </RebornTabs>\n      </view>\n    </RebornCard>\n\n    <!-- 尺寸 -->\n    <RebornCard title=\"尺寸\" custom-class=\"space-y-4\">\n      <text class=\"text-24 text-gray-6\">\n        size 只影响标签高度与字号，水平内边距不跟着变——三种卡片类型固定 32rpx。下面 card-gutter 的高度是\n        sm 64 / md 80 / lg 80（rpx）；line 与 text 走整行行高，同一个 size 量出来更高\n      </text>\n      <view v-for=\"s in tabsSizes\" :key=\"s\" class=\"flex flex-col gap-2\">\n        <text class=\"text-24 text-gray-5 font-mono\">{{ s }}</text>\n        <RebornTabs v-model:active-key=\"sizeKey\" :size=\"s\" type=\"card-gutter\">\n          <RebornTabPane key=\"all\" pane-key=\"all\" title=\"全部\">\n            <text class=\"text-26 text-gray-7\">全部内容</text>\n          </RebornTabPane>\n          <RebornTabPane key=\"doing\" pane-key=\"doing\" title=\"进行中\">\n            <text class=\"text-26 text-gray-7\">进行中内容</text>\n          </RebornTabPane>\n        </RebornTabs>\n      </view>\n    </RebornCard>\n\n    <!-- 位置 -->\n    <RebornCard title=\"位置\" custom-class=\"space-y-4\">\n      <text class=\"text-24 text-gray-6\">\n        position 决定头部贴哪一边。left / right 会把布局转成横向，标签栏需要一个确定的高度才能滚动，\n        所以外层容器要给高\n      </text>\n      <view v-for=\"p in tabsPositions\" :key=\"p\" class=\"flex flex-col gap-2\">\n        <text class=\"text-24 text-gray-5 font-mono\">{{ p }}</text>\n        <view :class=\"p === 'left' || p === 'right' ? 'h-[280rpx]' : ''\">\n          <RebornTabs v-model:active-key=\"positionKey\" :position=\"p\">\n            <RebornTabPane key=\"all\" pane-key=\"all\" title=\"全部\">\n              <text class=\"text-26 text-gray-7\">全部内容</text>\n            </RebornTabPane>\n            <RebornTabPane key=\"doing\" pane-key=\"doing\" title=\"进行中\">\n              <text class=\"text-26 text-gray-7\">进行中内容</text>\n            </RebornTabPane>\n            <RebornTabPane key=\"done\" pane-key=\"done\" title=\"已完成\">\n              <text class=\"text-26 text-gray-7\">已完成内容</text>\n            </RebornTabPane>\n          </RebornTabs>\n        </view>\n      </view>\n    </RebornCard>\n\n    <!-- 禁用 -->\n    <RebornCard title=\"禁用\" custom-class=\"space-y-4\">\n      <text class=\"text-24 text-gray-6\">禁用的标签点击与悬停都不会切换，指示器也不会移过去</text>\n      <RebornTabs v-model:active-key=\"disabledKey\">\n        <RebornTabPane key=\"normal\" pane-key=\"normal\" title=\"可用\">\n          <text class=\"text-26 text-gray-7\">可用内容</text>\n        </RebornTabPane>\n        <RebornTabPane key=\"locked\" pane-key=\"locked\" title=\"已锁定\" disabled>\n          <text class=\"text-26 text-gray-7\">锁定内容</text>\n        </RebornTabPane>\n        <RebornTabPane key=\"other\" pane-key=\"other\" title=\"其他\">\n          <text class=\"text-26 text-gray-7\">其他内容</text>\n        </RebornTabPane>\n      </RebornTabs>\n    </RebornCard>\n\n    <!-- 可编辑 -->\n    <RebornCard title=\"可编辑\" custom-class=\"space-y-4\">\n      <text class=\"text-24 text-gray-6\">\n        editable 打开后每个标签末尾出现关闭按钮，show-add-button 再补一个新增按钮。组件只负责抛\n        add / delete 事件，增删由页面自己改数据，删除后选中哪一个也由页面决定\n      </text>\n      <RebornTabs\n        v-model:active-key=\"editableKey\" type=\"card-gutter\" editable show-add-button\n        @add=\"handleAdd\" @delete=\"handleDelete\"\n      >\n        <RebornTabPane v-for=\"(pane, paneIndex) in editablePanes\" :key=\"pane.key\" :order=\"paneIndex\" :pane-key=\"pane.key\" :title=\"pane.title\">\n          <text class=\"text-26 text-gray-7\">{{ pane.title }} 的内容</text>\n        </RebornTabPane>\n      </RebornTabs>\n      <text class=\"text-24 text-gray-5\">固定标签可以单独设 closable 为 false，只留新增不许关闭</text>\n      <RebornTabs v-model:active-key=\"fixedEditableKey\" type=\"card-gutter\" editable @delete=\"deleteFixedPane\">\n        <RebornTabPane v-for=\"(pane, paneIndex) in fixedEditablePanes\" :key=\"pane.key\" :order=\"paneIndex\" :pane-key=\"pane.key\" :title=\"pane.title\" :closable=\"pane.closable\">\n          <text class=\"text-26 text-gray-7\">{{ pane.closable ? '可以关闭' : '不允许关闭' }}</text>\n        </RebornTabPane>\n      </RebornTabs>\n    </RebornCard>\n\n    <!-- 额外内容 -->\n    <RebornCard title=\"额外内容\" custom-class=\"space-y-4\">\n      <text class=\"text-24 text-gray-6\">left-extra 挂在标签栏起始侧、right-extra 挂在末尾，常用来放标题、筛选、刷新一类和整块内容相关的操作</text>\n      <RebornTabs v-model:active-key=\"extraKey\">\n        <template #left-extra>\n          <text class=\"mr-[16rpx] text-26 font-medium text-gray-7\">邮箱</text>\n        </template>\n        <template #right-extra>\n          <ReButton size=\"xs\" variant=\"text\" color=\"neutral\">\n            刷新\n          </ReButton>\n        </template>\n        <RebornTabPane key=\"inbox\" pane-key=\"inbox\" title=\"收件箱\">\n          <text class=\"text-26 text-gray-7\">收件箱内容</text>\n        </RebornTabPane>\n        <RebornTabPane key=\"sent\" pane-key=\"sent\" title=\"已发送\">\n          <text class=\"text-26 text-gray-7\">已发送内容</text>\n        </RebornTabPane>\n      </RebornTabs>\n    </RebornCard>\n\n    <!-- 撑开标签 -->\n    <RebornCard title=\"撑开标签\" custom-class=\"space-y-4\">\n      <text class=\"text-24 text-gray-6\">\n        stretch 让标签均分头部宽度、标题居中，适合少量固定标签占满整行；仅水平方向生效，标签总宽超出容器时仍回到滚动浏览\n      </text>\n      <RebornTabs v-model:active-key=\"stretchKey\" type=\"capsule\" stretch>\n        <RebornTabPane key=\"day\" pane-key=\"day\" title=\"日\">\n          <text class=\"text-26 text-gray-7\">按日统计</text>\n        </RebornTabPane>\n        <RebornTabPane key=\"week\" pane-key=\"week\" title=\"周\">\n          <text class=\"text-26 text-gray-7\">按周统计</text>\n        </RebornTabPane>\n        <RebornTabPane key=\"month\" pane-key=\"month\" title=\"月\">\n          <text class=\"text-26 text-gray-7\">按月统计</text>\n        </RebornTabPane>\n      </RebornTabs>\n    </RebornCard>\n\n    <!-- 滚动定位 -->\n    <RebornCard title=\"滚动定位\" custom-class=\"space-y-4\">\n      <text class=\"text-24 text-gray-6\">\n        标签超出一屏时会横向滚动。scroll-position 默认 auto，只在选中项被挡住时补上差值；\n        start / center / end 每次切换都把它对到固定位置，传数字则直接指定滚动距离\n      </text>\n      <view class=\"flex flex-wrap gap-2\">\n        <view v-for=\"mode in scrollModes\" :key=\"mode\">\n          <ReButton\n            size=\"xs\" :variant=\"currentScrollMode === mode ? 'filled' : 'outlined'\"\n            :color=\"currentScrollMode === mode ? 'primary' : 'neutral'\" @tap=\"currentScrollMode = mode\"\n          >\n            {{ mode }}\n          </ReButton>\n        </view>\n      </view>\n      <RebornTabs v-model:active-key=\"scrollKey\" :scroll-position=\"currentScrollMode\">\n        <RebornTabPane v-for=\"(pane, paneIndex) in scrollPanes\" :key=\"pane.key\" :order=\"paneIndex\" :pane-key=\"pane.key\" :title=\"pane.title\">\n          <text class=\"text-26 text-gray-7\">{{ pane.title }} 的内容</text>\n        </RebornTabPane>\n      </RebornTabs>\n    </RebornCard>\n\n    <!-- 触发方式 -->\n    <RebornCard title=\"触发方式\" custom-class=\"space-y-4\">\n      <text class=\"text-24 text-gray-6\">trigger 设为 hover 时鼠标移入即切换。小程序与 App 没有悬停，该值等同 click</text>\n      <RebornTabs v-model:active-key=\"hoverKey\" trigger=\"hover\" type=\"rounded\">\n        <RebornTabPane key=\"day\" pane-key=\"day\" title=\"日\">\n          <text class=\"text-26 text-gray-7\">按日统计</text>\n        </RebornTabPane>\n        <RebornTabPane key=\"week\" pane-key=\"week\" title=\"周\">\n          <text class=\"text-26 text-gray-7\">按周统计</text>\n        </RebornTabPane>\n        <RebornTabPane key=\"month\" pane-key=\"month\" title=\"月\">\n          <text class=\"text-26 text-gray-7\">按月统计</text>\n        </RebornTabPane>\n      </RebornTabs>\n    </RebornCard>\n\n    <!-- 过渡动画 -->\n    <RebornCard title=\"过渡动画\" custom-class=\"space-y-4\">\n      <text class=\"text-24 text-gray-6\">animation 让切入的面板淡入。小程序端没有 Transition，只做入场淡入，不做退场</text>\n      <RebornTabs v-model:active-key=\"animationKey\" animation>\n        <RebornTabPane key=\"one\" pane-key=\"one\" title=\"第一屏\">\n          <view class=\"h-[160rpx] flex items-center rounded-ui-2xs bg-gray-2 px-[24rpx]\">\n            <text class=\"text-26 text-gray-7\">第一屏内容</text>\n          </view>\n        </RebornTabPane>\n        <RebornTabPane key=\"two\" pane-key=\"two\" title=\"第二屏\">\n          <view class=\"h-[160rpx] flex items-center rounded-ui-2xs bg-gray-2 px-[24rpx]\">\n            <text class=\"text-26 text-gray-7\">第二屏内容</text>\n          </view>\n        </RebornTabPane>\n      </RebornTabs>\n    </RebornCard>\n\n    <!-- 渲染策略 -->\n    <RebornCard title=\"渲染策略\" custom-class=\"space-y-4\">\n      <text class=\"text-24 text-gray-6\">\n        默认所有面板一次性挂载并保留。lazy-load 推迟到首次展示再挂载，适合内容重、首屏只看一个的场景\n      </text>\n      <RebornTabs v-model:active-key=\"lazyKey\" lazy-load>\n        <RebornTabPane key=\"first\" pane-key=\"first\" title=\"首个\">\n          <input class=\"h-[64rpx] w-full rounded-ui-2xs border border-gray-3 px-[16rpx] text-26\" placeholder=\"输入后切走再回来，内容还在\">\n        </RebornTabPane>\n        <RebornTabPane key=\"second\" pane-key=\"second\" title=\"次个\">\n          <text class=\"text-26 text-gray-7\">第一次点进来才挂载</text>\n        </RebornTabPane>\n      </RebornTabs>\n      <text class=\"text-24 text-gray-6\">destroy-on-hidden 则相反，离开就销毁，面板里的临时状态会一并丢掉</text>\n      <RebornTabs v-model:active-key=\"destroyKey\" destroy-on-hidden>\n        <RebornTabPane key=\"first\" pane-key=\"first\" title=\"首个\">\n          <input class=\"h-[64rpx] w-full rounded-ui-2xs border border-gray-3 px-[16rpx] text-26\" placeholder=\"输入后切走再回来，内容已清空\">\n        </RebornTabPane>\n        <RebornTabPane key=\"second\" pane-key=\"second\" title=\"次个\">\n          <text class=\"text-26 text-gray-7\">每次进入都是新的</text>\n        </RebornTabPane>\n      </RebornTabs>\n    </RebornCard>\n\n    <!-- 撑满高度 -->\n    <RebornCard title=\"撑满高度\" custom-class=\"space-y-4\">\n      <text class=\"text-24 text-gray-6\">justify 让内容区吃掉容器剩余高度，配合定高外层做「头部固定、内容滚动」的版式</text>\n      <view class=\"h-[320rpx]\">\n        <RebornTabs v-model:active-key=\"justifyKey\" justify>\n          <RebornTabPane key=\"list\" pane-key=\"list\" title=\"列表\">\n            <view class=\"h-full flex items-center justify-center rounded-ui-2xs bg-gray-2\">\n              <text class=\"text-26 text-gray-7\">内容区已撑满剩余高度</text>\n            </view>\n          </RebornTabPane>\n          <RebornTabPane key=\"chart\" pane-key=\"chart\" title=\"图表\">\n            <view class=\"h-full flex items-center justify-center rounded-ui-2xs bg-gray-2\">\n              <text class=\"text-26 text-gray-7\">图表占位</text>\n            </view>\n          </RebornTabPane>\n        </RebornTabs>\n      </view>\n    </RebornCard>\n\n    <!-- 样式定制 -->\n    <RebornCard title=\"样式定制\" custom-class=\"space-y-4\">\n      <text class=\"text-24 text-gray-6\">color 落成色板的语义类名，指示器与选中态取同一档色值</text>\n      <RebornTabs v-model:active-key=\"colorKey\" color=\"success\">\n        <RebornTabPane key=\"all\" pane-key=\"all\" title=\"全部\">\n          <text class=\"text-26 text-gray-7\">全部内容</text>\n        </RebornTabPane>\n        <RebornTabPane key=\"doing\" pane-key=\"doing\" title=\"进行中\">\n          <text class=\"text-26 text-gray-7\">进行中内容</text>\n        </RebornTabPane>\n      </RebornTabs>\n      <text class=\"text-24 text-gray-6\">ui 按槽位覆写，下面把指示器换成整条标题宽的粗线</text>\n      <RebornTabs\n        v-model:active-key=\"uiKey\"\n        :ui=\"{ indicator: 'h-[8rpx] rounded-none', tab: 'tracking-wide' }\"\n      >\n        <RebornTabPane key=\"all\" pane-key=\"all\" title=\"全部\">\n          <text class=\"text-26 text-gray-7\">全部内容</text>\n        </RebornTabPane>\n        <RebornTabPane key=\"doing\" pane-key=\"doing\" title=\"进行中\">\n          <text class=\"text-26 text-gray-7\">进行中内容</text>\n        </RebornTabPane>\n      </RebornTabs>\n    </RebornCard>\n  </RebornPage>\n</template>\n"
+    }
+  ],
+  "related": [],
+  "whenToUse": [
+    "页面内多个平级视图之间切换，例如概览/详情/日志。",
+    "标签数量随用户操作增减，需要新增与关闭标签（editable + showAddButton）。",
+    "标签较多需要横向滚动，且希望选中项自动进入可视区域（scrollPosition）；需要通过两侧省略号下拉选择隐藏标签时用 overflow=dropdown（仅 web）。",
+    "标签顺序应由用户自己整理，如工作台的自定义页签（draggable + sort 事件，仅 web）。",
+    "内容区较重（图表、长表单），希望首次展示时才挂载（lazyLoad）。",
+    "需要纵向排布的侧边分区导航（position=left/right）。"
+  ],
+  "whenNotToUse": [
+    "页面底部全局导航，改用 reborn-tabbar（仅 uniapp）。",
+    "侧边栏层级式导航、带子菜单，改用 reborn-menu。",
+    "内容需要同时展开对比而非互斥切换，改用 reborn-collapse。",
+    "只是二选一的状态开关，改用 reborn-switch 或 reborn-radio。",
+    "一条里互斥切换、选中块滑动的短控件（Ant 的 Segmented），改用 reborn-segmented。"
+  ],
+  "pitfalls": [
+    "RebornTabPane 是与目录不同名的子组件文件（reborn-tabs/RebornTabPane.vue）：Nuxt 自动导入在 pathPrefix: true（默认）下会给它加上目录前缀，模板里写 <RebornTabPane> 解析不到、页签头部为空；用 CLI 装进项目后要么显式 import RebornTabPane from '<componentsDir>/reborn-tabs/RebornTabPane.vue'，要么把该目录的 components 配置改成 pathPrefix: false。RebornTabs 本身与目录同名，自动导入不受影响。",
+    "选中态的文字色、字重与指示条由组件按 type 与 color 自己切换：title 直接传文案（或 web 端 #title 插槽只放结构），不要在插槽里按 activeKey 手动切颜色、字重——那会和组件自身的选中态叠加，换 color 或 type 时两套逻辑打架。页签字号改 ui.tabTitle，页签间距改 ui.list（line 类型默认间距 32px），指示条粗细与颜色改 ui.indicator。",
+    "line、card、card-gutter 三种类型自带头部与内容之间的分隔线（画在 ui.nav 上），按设计稿还原时不要再叠加一条分割线素材；内容区高度随当前面板自适应，外层不要写死高度，否则面板文字多一行就被裁掉。",
+    "选中标识为 paneKey prop，两端均不再读取 Vue key 作为业务值。v-for 生成的面板须同时传稳定 key、pane-key 与 order 下标，缺 key 时列表中间增删会把面板状态串到相邻项。静态面板不必写 Vue key：web 端按插槽原结构渲染，前面的面板被 v-if 隐藏或前面的 v-for 列表增删，后面面板的实例与状态不变；缺省 paneKey 按书写位置编号（v-if 隐藏的面板仍占一位，嵌套在 v-for / template 内的为“外层-内层”字符串），uniapp 端缺省按登记顺序编号。",
+    "组件只派发 add / delete 事件、不改数据：不会自动增删 RebornTabPane，也不会在删掉当前项后自动切换；删除当前项后需使用方自行把 activeKey 重设为相邻标签，否则头部没有选中项。",
+    "destroyOnHidden 与 lazyLoad 同时开启时前者优先，lazyLoad 的“挂载后保留”不再成立。子级 RebornTabPane 的 destroyOnHidden 与父级同名参数取或。",
+    "面板默认用 v-show 控制显隐，切换不丢失内容状态（表单填写、滚动位置都保留）；需要每次进入都是干净状态必须显式开 destroyOnHidden。",
+    "纵向（position=left/right）line 类型的标签在指示条一侧带逐档内边距（4/18/28/32rpx，web 端 2/9/14/16px），与水平模式下标签高度减行高除二的呼吸空间逐档一致；纵向标签被 items-stretch 撑满列宽，没有这段内边距时最宽的标题会直接贴上指示条。",
+    "overflow=dropdown 的省略号只在对应一侧有隐藏标签时显示：列表起点显示右侧，终点显示左侧，中间可同时显示两侧；容器足够宽时移除两侧占位，容器尺寸变化由 ResizeObserver 跟踪（仅 web）。",
+    "order 只有整组均为有限数值时生效，混传或 NaN/Infinity 整组忽略，同值保持相对次序；动态列表传唯一连续下标。Web 拖拽后暂时保留本地头部顺序，父级改写完整有效的 order 映射后重新接管；缺省时回退节点顺序，拖拽本地顺序仍保留。MP 无 VNode 可用时保留当前登记次序。",
+    "新增按钮与标签列同处 ui.scrollBody 这层滚动内容里，紧贴末尾标签（隔 8px / 16rpx）而非被推到头部最右端；代价是标签溢出时按钮跟着滚动，要滚到末尾才能看到（两端一致）。",
+    "指示条只属于 line 类型：card、card-gutter、card-fill、rounded、capsule 五种不渲染指示器而渲染 ui.tabSlider 这块滑动底板，只有 text 两个节点都不渲染。所以这五种类型上覆盖 ui.indicator 无视觉变化（要改选中态得覆盖 ui.tabSlider），text 上两者都无效，只能改 ui.tab 或换 color。",
+    "这五种类型的选中态整块搬到 ui.tabSlider 上：底色、边框、圆角都在底板上，选中标签只留文字色与字重，标签自身底色恒定（card、card-gutter 恒为 gray-2，card-fill、rounded、capsule 恒为透明）。底色若仍随选中切换，新标签会在底板滑到之前就自己亮起来、旧标签立刻变灰，结果先于动画呈现，滑动便失去意义。三处连带机制不要改：① 标签列有 isolate，底板 z-index: 0 恰好压住所有标签的背景与边框（标签本身不定位，属更下层），标题与关闭图标 z-[1] 压在底板之上，底板才能滑过沿途标签而不遮字；② 底板是标签列的末位子节点，放到首位会让首个标签命中 card 的 [&>*+*]:-ml-px 而偏移 1px（且被滚动容器裁掉），它自己命中的那一份由行内 margin: 0 抹平；③ card 的圆角按标签首尾分配，而底板永远既非首也非末、用不了 first:/last:，组件按选中项下标推导端位（首/末/唯一/中间）再取圆角，圆角同样参与过渡。web 端两轴都测量写 left/top/width/height，uniapp 端只测主轴写 transform 位移，交叉轴由 position 变体钉满。",
+    "rounded 的选中文字靠底板托底：选中标题是近白的 gray-1、自身无底色，可读性完全来自底板那块主题色实心胶囊。用 ui.tabSlider 把背景改成透明或浅色，浅色模式下就是白字打在页面底色上；要改配色必须同时改 ui.tab 的选中文字色，或换 color / 在实例上改写色板变量（如 class=\"[--color-primary:#7c3aed]\"）。这也是 rounded、capsule 的底板在行程中先拉成两个标签并集的原因——底板同时覆盖旧标签与新标签，两边的反色文字全程都有底色托着，等宽平移则会有一段时间新标签已反色而底板还没到。",
+    "rounded、capsule 的两段形变靠行内 transition-duration / transition-timing-function 驱动（行内优先级高于类名，两端都成立），行程中会覆盖你在 ui.tabSlider 里写的过渡时长；要改节奏只能改组件里的那两组常量，ui.tabSlider 留给形态。形变的起点读的是组件缓存的上一次落点而非当前视觉位置，上一段还没走完就点下一个标签会有一次轻微跳接（为避免每次切换都同步读布局，uniapp 端根本读不到）。",
+    "animation 默认 false，开启后同时生效两件事：内容切换的复合过渡（缩放 + 位移，web 端另加模糊）与内容区高度过渡。底板形变与 hover 跟随都不受 animation 控制，只由 type 决定。",
+    "高度过渡期间（切换后约 280ms）内容区外层是 overflow-hidden，面板里需要溢出容器的浮层（下拉、气泡、tooltip）会被裁掉一截，过渡结束即释放；面板一打开就有溢出浮层时应关掉 animation 或把浮层挂到 body 上。justify 开启（高度由容器给）或 hideContent 开启（内容整块不渲染）时不做高度过渡。",
+    "高度锁在 ui.content 与面板之间的 ui.stage 这层无内边距中间层上，不是锁在 ui.content 上：量到的进场面板净高就是要写进行内样式的目标高度，不必把 content 的单边内边距算进去（uniapp 端没有 getComputedStyle 可读）。animation 开启时 stage 还是离场面板 absolute inset-0 的定位基准，覆盖 ui.stage 时不要移除 relative。",
+    "鼠标移到未选中标签上时，rounded、capsule 的底板会朝该方向前倾约 15% 位移（尺寸不变），移出整条标签列才归位，点击后吸附到目标并把前倾量清零；trigger=hover 下悬停本身就会切换，此时跟随自动让位。该行为仅 web / H5 生效。",
+    "headerPadding 是 uniapp 端独有参数，默认 false（头部贴容器边缘，首个标签与内容左对齐），且仅对 line、text 生效，其余类型标签自带背景或边框，组件直接忽略该参数。",
+    "size 在盒子型标签上不等于行高：line、text 用整行行高（medium 48px / 96rpx），card、card-gutter、rounded、capsule 走另一套更矮的盒子高度（medium 40px / 80rpx），card-fill 在 medium 上再矮一档（32px / 64rpx）；同一个 size 在不同形态下量出的高度不同是预期行为。水平内边距则完全不随 size 变化，card、card-gutter、card-fill 全档固定 16px / 32rpx（rounded、capsule 的 mini 仍是 8px / 16rpx）。",
+    "card 与 card-gutter 的分隔线不是 nav 的下边框，而是用内阴影画进 nav 自身最后 1px（头部滚动容器 overflow-auto 会裁掉溢出的标签，所以选中项不能靠负外边距外移去盖线，外移还会因标签列底对齐而把选中项整体压低 1px）；选中底板只去掉贴内容那一侧的边框，它的不透明底色就盖住了这条线（后代节点总是画在祖先背景之上），card-gutter 的 4px 间隙处分隔线会透出来属预期，用 ui.nav 覆盖 box-shadow 会让分隔线整条消失。",
+    "card-fill 的底色一半画在内容区上：选中底板（ui.tabSlider）与内容区（ui.content）两块 gray-2 拼成一整面，gray-2 与 16px / 32rpx 的内边距都写在 ui.content 上，用 ui.content 覆盖背景色会只剩底板那一小块底色浮着；覆盖内边距要连四边一起给，组件是用 p-4 整体压掉 position 变量原本只给一边的 pt-4，只写 pt-* 会让左右重新贴边。圆角只开在背离内容的一侧，贴内容的两角必须保持直角才能无缝拼接。",
+    "editable 的新增按钮直接复用未选中标签的整套盒子样式：高度、底色、边框、圆角、文字色与悬浮反馈都随 type/size/position 自动跟随，ui.addButton 的内容只追加在其后，用来补图标按钮特有的部分（水平内边距归零、按标签高度补一个等宽方形）；ui.tab 的覆盖内容不会并到按钮上，两者只共用变体结果。唯一不跟随标签的是 card 类型的圆角——标签按首尾分配圆角，而按钮独立在标签列之外，照搬首尾规则只会剩一个孤角，因此它背离内容的那条边两角都倒角。",
+    "标题与关闭图标之间的 8px / 16rpx 间距来自 tab 槽的 gap，全档固定不随 size 变化；覆盖 ui.tabClose 改不动这段间距，要改得覆盖 ui.tab。",
+    "position 取 left/right 时滚动发生在标签列自身，外层必须有确定高度，否则标签列被内容撑开而不滚动（uniapp 的 scroll-view 尤其如此）。",
+    "color 直接落成色板的语义类名（bg-primary / text-primary 这类），组件不额外定义自己的 CSS 变量：指示条底色、各类型选中态文字、rounded 的选中底板填充都取同一档色值（卡片边框固定 gray-3，不随 color 变）。color='neutral' 用的是 gray-9 不是同名的 --color-neutral，后者是 gray-4 / gray-5 的浅灰、当强调色看不清。要色板之外的颜色就在实例上局部改写色板变量，如 class=\"[--color-primary:#7c3aed]\"。",
+    "两端 API 大体同构但不完全一致：web 端多 overflow、draggable 与 sort，uniapp 端多 headerPadding；自定义类名两端都是 class（非 customClass）。RebornTabPane 的 title 插槽仅 web 端支持——小程序渲染层无法把子组件插槽函数交给父组件渲染，uniapp 端标题只能用 title prop 传纯文本。头部两侧的额外内容用 left-extra / right-extra 插槽（两端一致），水平方向即左右、垂直方向即顶底。",
+    "uniapp 端无 Transition，animation 只有入场面板做过渡、离场直接隐藏，且入场过渡刻意与 web 有两处不同：① 不加模糊——小程序渲染层对 filter: blur 支持不稳；② 只缩放 X 轴——高度过渡要靠 boundingClientRect 异步量进场面板的净高，而它返回的是形变后的盒子，纵向缩放 0.98 会把高度量少约 2%、过渡末尾跳一下。高度过渡的起点来自静息时缓存的上一次测量值，首次切换没有缓存、那一次直接落位；新高度要等约 50ms 的异步查询才写入。另无 prefers-reduced-motion 判定（web 端命中时过渡类名与底板两段形变都会关掉）。MP 按显式 order 排序，所有动态面板须逐项传有限数值；静态缺省保持登记顺序，H5 缺省按实际节点顺序；指示条与选中底板经 uni.createSelectorQuery 五次查询测量（末一次量选中面板高度）、切换后约 50ms 延迟刷新且无 ResizeObserver 兜底。",
+    "trigger=hover 在 uniapp 端仅 H5 生效，小程序/APP 无鼠标悬停事件，退化为点击切换。",
+    "标签宽度异步变化（字体加载完成、标题异步替换）两端都测不到，指示条与选中底板会停在旧位置、长度也是旧的，需通过模板 ref 调 expose 的 refresh()。",
+    "change 在重复点击当前项时不触发，tab-click 会触发；禁用标签两者都不触发。"
+  ],
+  "dependencies": [
+    "@vueuse/core",
+    "@weapp-tailwindcss/merge-v3",
+    "@weapp-tailwindcss/variants-v3",
+    "clsx",
+    "motion-v",
+    "tailwind-merge",
+    "tailwind-variants"
+  ],
+  "install": {
+    "cli": "npx reborn-ui@latest add reborn-tabs"
+  },
+  "sourceRefs": {
+    "web": [
+      "app/components/reborn/ui/reborn-tabs/RebornTabPane.vue",
+      "app/components/reborn/ui/reborn-tabs/RebornTabs.vue",
+      "app/components/reborn/ui/reborn-tabs/index.ts",
+      "app/components/reborn/ui/reborn-tabs/reborn-tabs.config.ts"
+    ],
+    "uniapp": [
+      "packages/uniapp-project/src/components/reborn-tabs/RebornTabPane.vue",
+      "packages/uniapp-project/src/components/reborn-tabs/RebornTabs.vue",
+      "packages/uniapp-project/src/components/reborn-tabs/index.ts",
+      "packages/uniapp-project/src/components/reborn-tabs/reborn-tabs.config.ts"
+    ]
+  },
+  "docPath": "content/2.components/navigation/reborn-tabs.md",
+  "_meta": {
+    "contentHash": "c7a9f5b7162aa79092ee1a5d9dec294aeaf12e93",
+    "hasOverride": true,
+    "extractors": {
+      "web": "ok",
+      "uniapp": "ok",
+      "docs": "found"
+    }
+  }
+}

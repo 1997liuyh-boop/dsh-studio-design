@@ -9,6 +9,7 @@
     "tailwind",
     "x-ui"
   ],
+  "aliases": [],
   "platforms": [
     "web"
   ],
@@ -109,7 +110,7 @@
   },
   "docPath": "content/2.components/miscellaneous/book.md",
   "_meta": {
-    "contentHash": "702b3bdf248d749bc9630b2c75c60a81fbf9f930",
+    "contentHash": "f65869d1ed8bc44cd3c4b6382e12eb6b20f54863",
     "hasOverride": true,
     "extractors": {
       "web": "ok",

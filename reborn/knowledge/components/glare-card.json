@@ -1,0 +1,85 @@
+{
+  "$schema": "../schema/component.schema.json",
+  "id": "glare-card",
+  "title": "高光卡片",
+  "description": "用于悬停时表面扫过高光光泽的展示卡片组件，风格源自 Linear。",
+  "category": "data-display",
+  "tags": [
+    "css",
+    "tailwind",
+    "card",
+    "aceternity-ui"
+  ],
+  "aliases": [],
+  "platforms": [
+    "web"
+  ],
+  "props": [
+    {
+      "name": "class",
+      "type": "string",
+      "required": false,
+      "description": "应用于卡片的额外 Tailwind CSS 类名。"
+    }
+  ],
+  "events": [],
+  "slots": [
+    {
+      "name": "default",
+      "description": ""
+    }
+  ],
+  "exposes": [],
+  "examples": [
+    {
+      "title": "Web 演示 · GlareCardDemo",
+      "path": "app/components/reborn/examples/glare-card/GlareCardDemo.vue",
+      "source": "demo",
+      "platform": "web",
+      "code": "<template>\n  <div class=\"flex items-center justify-center\">\n    <GlareCard class=\"flex flex-col items-center justify-center\">\n      <img src=\"https://cdn.reborn-ui.com/logo-dark.svg\" />\n      <p class=\"mt-4 text-xl font-bold text-white\">Reborn UI</p>\n    </GlareCard>\n  </div>\n</template>\n"
+    },
+    {
+      "title": "Web 演示 · GlareMultiCardDemo",
+      "path": "app/components/reborn/examples/glare-card/GlareMultiCardDemo.vue",
+      "source": "demo",
+      "platform": "web",
+      "code": "<template>\n  <div class=\"grid grid-cols-1 gap-10 overflow-scroll md:grid-cols-3\">\n    <GlareCard class=\"flex flex-col items-center justify-center\">\n      <img src=\"/logo-dark.svg\" />\n    </GlareCard>\n    <GlareCard class=\"flex flex-col items-center justify-center\">\n      <img\n        class=\"absolute inset-0 size-full object-cover\"\n        src=\"https://images.unsplash.com/photo-1512618831669-521d4b375f5d?q=80&w=3388&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D\"\n      />\n    </GlareCard>\n    <GlareCard class=\"flex flex-col items-start justify-end px-6 py-8\">\n      <p class=\"text-lg font-bold text-white\">The greatest trick</p>\n      <p class=\"mt-4 text-base font-normal text-neutral-200\">\n        The greatest trick the devil ever pulled was to convince the world that he didn&apos;t\n        exist.\n      </p>\n    </GlareCard>\n  </div>\n</template>\n"
+    }
+  ],
+  "related": [],
+  "whenToUse": [
+    "落地页 logo 墙、引言卡等需要悬停高光质感的展示卡。",
+    "全幅图片卡片需要光泽扫过效果的场景。"
+  ],
+  "whenNotToUse": [
+    "需要鼠标跟随的 3D 透视与子元素分层，改用 card-3d。",
+    "需要按进入方向滑出覆盖层，改用 direction-aware-hover。"
+  ],
+  "pitfalls": [
+    "仅 web 端可用，依赖 @vueuse/core。",
+    "仅提供 class prop 与默认插槽，内容布局与尺寸需自行用类名控制。",
+    "示例中全幅图片需自行加 absolute inset-0 object-cover 等类铺满卡片。"
+  ],
+  "dependencies": [
+    "@vueuse/core"
+  ],
+  "install": {
+    "cli": "npx reborn-ui@latest add glare-card"
+  },
+  "sourceRefs": {
+    "web": [
+      "app/components/reborn/ui/glare-card/GlareCard.vue",
+      "app/components/reborn/ui/glare-card/index.ts"
+    ]
+  },
+  "docPath": "content/2.components/cards/glare-card.md",
+  "_meta": {
+    "contentHash": "6bb9d7ece17508d458791c65783172b1e693dc39",
+    "hasOverride": true,
+    "extractors": {
+      "web": "ok",
+      "uniapp": "absent",
+      "docs": "found"
+    }
+  }
+}

@@ -1,0 +1,196 @@
+{
+  "$schema": "../schema/component.schema.json",
+  "id": "reborn-color-picker",
+  "title": "取色器",
+  "description": "用于弹出面板选取颜色并以 v-model 绑定色值字符串的取色器组件，双端可用。",
+  "category": "form",
+  "tags": [
+    "vue",
+    "reborn-color-picker",
+    "uniapp"
+  ],
+  "aliases": [
+    "color picker",
+    "取色",
+    "颜色选择",
+    "调色板"
+  ],
+  "platforms": [
+    "web",
+    "uniapp"
+  ],
+  "props": [
+    {
+      "name": "disabled",
+      "type": "boolean",
+      "required": false,
+      "description": "是否禁用整体取色器",
+      "default": "false"
+    },
+    {
+      "name": "size",
+      "type": "'sm' | 'md' | 'lg'",
+      "required": false,
+      "description": "色块触发器尺寸",
+      "default": "'md'"
+    },
+    {
+      "name": "defaultFormat",
+      "type": "ColorFormat",
+      "required": false,
+      "description": "初始颜色输出格式；未设置时根据 `modelValue` 自动识别，用户仍可在面板中切换。仅 UniApp 端",
+      "default": "undefined"
+    },
+    {
+      "name": "format",
+      "type": "ColorFormat",
+      "required": false,
+      "description": "defaultFormat` 的别名，同样指定输出格式；两者同时传入时 `defaultFormat` 优先。仅 UniApp 端",
+      "default": "undefined"
+    },
+    {
+      "name": "placement",
+      "type": "PopoverPlacement",
+      "required": false,
+      "description": "面板弹出方向与对齐方式，与 `reborn-popover` 一致；UniApp 端未传时回落到 `content",
+      "default": "Web `'bottom'` / UniApp `'right'"
+    },
+    {
+      "name": "sideOffset",
+      "type": "number",
+      "required": false,
+      "description": "面板与色块触发器的间距（px）",
+      "default": "8"
+    },
+    {
+      "name": "content",
+      "type": "PopoverContentProps",
+      "required": false,
+      "description": "已废弃：旧的弹出配置（`side`/`align`/`sideOffset`），等价于 `placement` + `sideOffset`。仅 UniApp 端",
+      "default": "() => ({ side: 'right', align: 'center', sideOffset: 8 })"
+    },
+    {
+      "name": "arrow",
+      "type": "boolean",
+      "required": false,
+      "description": "是否显示弹层箭头。仅 UniApp 端",
+      "default": "true"
+    },
+    {
+      "name": "ui",
+      "type": "{ root?: string; base?: string; icon?: string }",
+      "required": false,
+      "description": "UI 配置覆盖对象，见下方「自定义样式（ui）」 可用键（从源码抽取，以此为准）——Web：RebornColorPicker → base*、icon*、root*；RebornColorPickerPanel → alphaCursor、alphaSlider、controls、formatToggles、hueCursor、hueSlider、input、inputs、presetGrid、presets、presetSwatch、presetTitle、preview、root、saturation、saturationCursor、sliders。UniApp：RebornColorPicker → base、icon、root；RebornColorPickerPanel → alphaCursor、alphaSlider、controls、formatToggles、hueCursor、hueSlider、input、inputs、presetGrid、presets、presetSwatch、presetTitle、preview、root、saturation、saturationCursor、sliders。 带 * 的键对应插槽兜底节点：填了同名插槽，组件自带的节点被替换，这个键随之失效。",
+      "default": "() => ({})"
+    },
+    {
+      "name": "modelValue",
+      "type": "string",
+      "required": false,
+      "description": "双向绑定值",
+      "vModel": true,
+      "default": "'#000000'"
+    },
+    {
+      "name": "class",
+      "type": "any",
+      "required": false,
+      "description": "追加到面板根节点的自定义类名"
+    }
+  ],
+  "events": [
+    {
+      "name": "change",
+      "payload": "[value: string]",
+      "description": "一次取色交互结束且颜色确实变化时触发：松开拖拽、点选预设色、输入框失焦或回车提交合法色值；外部改写 `v-model` 不触发。`RebornColorPickerPanel` 同样派发，两端一致。"
+    },
+    {
+      "name": "update:modelValue",
+      "description": "modelValue 变化时触发（v-model 同步）",
+      "payload": "(val: string)"
+    },
+    {
+      "name": "update:format",
+      "description": "format 变化时触发（v-model 同步）",
+      "payload": "(val: ColorFormat)"
+    }
+  ],
+  "slots": [
+    {
+      "name": "default",
+      "description": "自定义触发器内容，替换默认的色块按钮。仅 Web 端；UniApp 端不支持"
+    }
+  ],
+  "exposes": [],
+  "examples": [
+    {
+      "title": "Web 演示",
+      "path": "app/components/reborn/examples/reborn-color-picker/RebornColorPickerDemo.vue",
+      "source": "demo",
+      "platform": "web",
+      "code": "<script setup lang=\"ts\">\nimport { DemoBlock, DemoNote, DemoSection, Playground } from \"#components\";\nimport { computed, ref, shallowRef } from \"vue\";\nimport { colorPickerSizes } from \"~/components/reborn/ui/reborn-color-picker/reborn-color-picker.config\";\nimport RebornColorPicker from \"~/components/reborn/ui/reborn-color-picker/RebornColorPicker.vue\";\n\n/** 演练场当前色值 */\n\nconst color = shallowRef(\"#3b82f6\");\n/** change 只在一次取色结束且颜色变化时提交。 */\nconst lastChange = shallowRef(\"暂无\");\nfunction onColorChange(value: string) {\n  lastChange.value = value;\n}\n\nconst state = shallowRef<Record<string, any>>({\n  size: \"md\",\n  disabled: false,\n});\n\n/** 演练场控制面板配置 */\nconst controls = [\n  {\n    title: \"尺寸与状态\",\n    children: [\n      {\n        label: \"尺寸规格\",\n        key: \"size\",\n        component: \"select\" as const,\n        defaultValue: \"md\",\n        props: {\n          options: [\n            { label: \"SM\", value: \"sm\" },\n            { label: \"MD\", value: \"md\" },\n            { label: \"LG\", value: \"lg\" },\n          ],\n        },\n      },\n      { label: \"禁用状态\", key: \"disabled\", component: \"checkbox\" as const, defaultValue: false },\n    ],\n  },\n];\n\n/** 演练场右上角展示的等价代码 */\nconst pickerCode = computed(() => {\n  const s = state.value;\n  const props: string[] = ['v-model=\"color\"'];\n\n  if (s.size !== \"md\") props.push(`size=\"${s.size}\"`);\n  if (s.disabled) props.push(\"disabled\");\n\n  return `<RebornColorPicker\\n  ${props.join(\"\\n  \")}\\n/>`;\n});\n\n/** 尺寸对照演示 */\nconst sizeColors = ref<Record<string, string>>({\n  sm: \"#f59e0b\",\n  md: \"#22c55e\",\n  lg: \"#3b82f6\",\n});\n</script>\n\n<template>\n  <div class=\"flex w-full min-w-0 flex-col\">\n    <Playground\n      v-model=\"state\"\n      :controls=\"controls\"\n      :code=\"pickerCode\"\n      component-name=\"RebornColorPicker\"\n      title=\"交互演练场\"\n      description=\"点击色块弹出取色面板，v-model 绑定十六进制字符串；面板由 RebornPopover 承载，无需额外容器。\"\n    >\n      <div class=\"flex flex-col items-center gap-3\">\n        <RebornColorPicker v-model=\"color\" :size=\"state.size\" :disabled=\"state.disabled\" @change=\"onColorChange\" />\n        <DemoNote tone=\"dimmed\">\n          当前色值：<code>{{ color }}</code>；最近提交：<code>{{ lastChange }}</code>\n        </DemoNote>\n      </div>\n    </Playground>\n\n    <DemoSection title=\"尺寸对照\" description=\"size 支持 sm / md / lg 三档，与 RebornButton 的触发器尺寸保持一致。\">\n      <DemoBlock layout=\"row\" align=\"center\">\n        <div v-for=\"s in colorPickerSizes\" :key=\"s\" class=\"flex flex-col items-center gap-2\">\n          <RebornColorPicker v-model=\"sizeColors[s]\" :size=\"s\" />\n          <span class=\"text-dimmed text-xs font-medium\">{{ s }}</span>\n        </div>\n      </DemoBlock>\n    </DemoSection>\n  </div>\n</template>\n"
+    },
+    {
+      "title": "UniApp 演示",
+      "path": "packages/uniapp-project/src/pages/reborn-color-picker/RebornColorPickerDemo.vue",
+      "source": "demo",
+      "platform": "uniapp",
+      "code": "<script setup lang=\"ts\">\nimport { shallowRef } from 'vue'\nimport RebornPage from '@/components/reborn-page/RebornPage.vue'\nimport RebornCard from '@/components/reborn-card/RebornCard.vue'\nimport RebornColorPicker from '@/components/reborn-color-picker/RebornColorPicker.vue'\n\nconst color1 = shallowRef('#4D80F0')\nconst color2 = shallowRef('#10B981')\nconst color3 = shallowRef('#F43F5E')\nconst arrowColor = shallowRef('#4D80F0')\nconst smallColor = shallowRef('#10B981')\nconst colorHex = shallowRef('#4D80F0')\nconst colorRgb = shallowRef('rgb(16, 185, 129)')\nconst colorRgba = shallowRef('rgba(244, 63, 94, 0.50)')\n</script>\n\n<template>\n    <RebornPage title=\"Color Picker 取色器\" description=\"提供颜色选择的定制面板，支持 HSVA 空间交互、透明度调节及主题预设。\">\n        <RebornCard title=\"常规使用\" overflowVisible>\n            <view class=\"flex items-center space-x-4\">\n                <RebornColorPicker v-model=\"color1\" />\n                <text class=\"text-xs font-mono bg-gray-100 p-1 rounded\">{{ color1 }}</text>\n            </view>\n        </RebornCard>\n\n        <RebornCard title=\"输出格式\" overflowVisible>\n            <view class=\"flex flex-col space-y-4\">\n                <view class=\"flex items-center space-x-4\">\n                    <RebornColorPicker v-model=\"colorHex\" default-format=\"hex\" />\n                    <text class=\"text-xs font-mono bg-gray-100 p-1 rounded\">HEX: {{ colorHex }}</text>\n                </view>\n                <view class=\"flex items-center space-x-4\">\n                    <RebornColorPicker v-model=\"colorRgb\" default-format=\"rgb\" />\n                    <text class=\"text-xs font-mono bg-gray-100 p-1 rounded\">RGB: {{ colorRgb }}</text>\n                </view>\n                <view class=\"flex items-center space-x-4\">\n                    <RebornColorPicker v-model=\"colorRgba\" default-format=\"rgba\" />\n                    <text class=\"text-xs font-mono bg-gray-100 p-1 rounded\">RGBA: {{ colorRgba }}</text>\n                </view>\n            </view>\n        </RebornCard>\n\n        <RebornCard title=\"Popover 配置\" overflowVisible>\n            <view class=\"flex flex-col space-y-4\">\n                <view class=\"flex items-center space-x-4\">\n                    <RebornColorPicker v-model=\"color2\" placement=\"right\" :side-offset=\"12\" />\n                    <text class=\"text-sm font-medium\">右侧弹出 (Right Side)</text>\n                </view>\n                <view class=\"flex items-center space-x-4\">\n                    <RebornColorPicker v-model=\"arrowColor\" :arrow=\"false\" />\n                    <text class=\"text-sm font-medium\">隐藏箭头 (No Arrow)</text>\n                </view>\n            </view>\n        </RebornCard>\n\n        <RebornCard title=\"不同尺寸\" overflowVisible>\n            <view class=\"flex flex-col space-y-4\">\n                <view class=\"flex items-center space-x-4\">\n                    <RebornColorPicker v-model=\"smallColor\" size=\"sm\" />\n                    <text class=\"text-sm font-medium\">小尺寸 (sm)</text>\n                </view>\n                <view class=\"flex items-center space-x-4\">\n                    <RebornColorPicker v-model=\"color3\" size=\"lg\" />\n                    <text class=\"text-sm font-medium\">大尺寸 (lg)</text>\n                </view>\n            </view>\n        </RebornCard>\n\n        <RebornCard title=\"禁用状态\" overflowVisible>\n            <view class=\"flex items-center space-x-4\">\n                <RebornColorPicker modelValue=\"#9CA3AF\" disabled />\n                <text class=\"text-sm font-medium text-gray-500\">已禁用</text>\n            </view>\n        </RebornCard>\n    </RebornPage>\n</template>\n"
+    }
+  ],
+  "related": [
+    "reborn-button",
+    "reborn-input",
+    "reborn-popover"
+  ],
+  "whenToUse": [
+    "主题色、标签颜色等需要用户自选颜色的设置项。",
+    "表单中需要采集颜色值（字符串）并双向绑定的场景。",
+    "需要控制弹出方向与间距的取色入口：用 placement（如 top-start）与 sideOffset，两端写法一致。"
+  ],
+  "whenNotToUse": [
+    "仅 web 且不需要双端一致时，也可用 web 专用的 color-picker。",
+    "从固定的预设色板中单选，用一组按钮或 reborn-radio 即可。"
+  ],
+  "pitfalls": [
+    "web 与 uniapp 双端可用。",
+    "modelValue 为颜色字符串，默认 '#000000'；UniApp 端可用 format/defaultFormat 控制输出格式，Web 端固定输出十六进制（不透明 #rrggbb，带透明度 #rrggbbaa）。",
+    "两端拖拽中 update:modelValue 逐帧触发，一次交互结束且颜色变化时才派发 change 并做表单校验；外部改写 v-model 不会被面板改写回传。",
+    "弹出位置默认值两端不同：Web 端 bottom、UniApp 端 right；贴近屏幕边缘时用 placement 调整（如 placement=\"top\"）。旧的 content 对象仅 UniApp 端保留且已废弃。"
+  ],
+  "dependencies": [
+    "@uiw/color-convert",
+    "@weapp-tailwindcss/merge-v3",
+    "@weapp-tailwindcss/variants-v3",
+    "clsx",
+    "tailwind-merge",
+    "tailwind-variants"
+  ],
+  "install": {
+    "cli": "npx reborn-ui@latest add reborn-color-picker"
+  },
+  "sourceRefs": {
+    "web": [
+      "app/components/reborn/ui/reborn-color-picker/RebornColorPicker.vue",
+      "app/components/reborn/ui/reborn-color-picker/RebornColorPickerPanel.vue",
+      "app/components/reborn/ui/reborn-color-picker/reborn-color-picker-panel.config.ts",
+      "app/components/reborn/ui/reborn-color-picker/reborn-color-picker.config.ts"
+    ],
+    "uniapp": [
+      "packages/uniapp-project/src/components/reborn-color-picker/RebornColorPicker.vue",
+      "packages/uniapp-project/src/components/reborn-color-picker/RebornColorPickerPanel.vue",
+      "packages/uniapp-project/src/components/reborn-color-picker/reborn-color-picker-panel.config.ts",
+      "packages/uniapp-project/src/components/reborn-color-picker/reborn-color-picker.config.ts"
+    ]
+  },
+  "docPath": "content/2.components/input-and-forms/reborn-color-picker.md",
+  "_meta": {
+    "contentHash": "0f1f219205e506cdb5553e89a35bfbd0c097f775",
+    "hasOverride": true,
+    "extractors": {
+      "web": "ok",
+      "uniapp": "ok",
+      "docs": "found"
+    }
+  }
+}

@@ -10,6 +10,13 @@
     "form",
     "web"
   ],
+  "aliases": [
+    "upload",
+    "上传",
+    "文件上传",
+    "图片上传",
+    "附件"
+  ],
   "platforms": [
     "web"
   ],
@@ -91,10 +98,15 @@
     },
     {
       "name": "listType",
-      "type": "UploadListType",
+      "type": "'text' | 'picture' | 'picture-card'",
       "required": false,
       "description": "文件列表形态：纯文字、带缩略图的列表或照片墙卡片。",
-      "default": "'text'"
+      "default": "'text'",
+      "options": [
+        "text",
+        "picture",
+        "picture-card"
+      ]
     },
     {
       "name": "autoUpload",
@@ -338,7 +350,7 @@
   },
   "docPath": "content/2.components/input-and-forms/reborn-upload.md",
   "_meta": {
-    "contentHash": "6690a9c6c657ee9e90e54b4c0e4b6bcbc1d6d6b2",
+    "contentHash": "0acbfc9fa1e23ef05d50988652e6e3ea2fb01cd3",
     "hasOverride": true,
     "extractors": {
       "web": "ok",

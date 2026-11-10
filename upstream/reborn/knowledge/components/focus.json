@@ -9,6 +9,7 @@
     "tailwind",
     "codepen"
   ],
+  "aliases": [],
   "platforms": [
     "web"
   ],
@@ -112,7 +113,7 @@
   },
   "docPath": "content/2.components/text-animations/focus.md",
   "_meta": {
-    "contentHash": "f2d7bc3e8143cfdfd084c23691e2bccebfac966e",
+    "contentHash": "2c07450a798f8fa7b127bda63778038874dc170e",
     "hasOverride": true,
     "extractors": {
       "web": "ok",

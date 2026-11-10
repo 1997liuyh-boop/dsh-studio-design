@@ -9,6 +9,7 @@
     "tailwind",
     "gsap"
   ],
+  "aliases": [],
   "platforms": [
     "web"
   ],
@@ -97,7 +98,7 @@
   },
   "docPath": "content/2.components/text-animations/text-reveal.md",
   "_meta": {
-    "contentHash": "00d8894acc755f98ba0f86c912ff4ead3099f539",
+    "contentHash": "9cbe61c3ffe1cb7f6825a839a2b1ee313b295565",
     "hasOverride": true,
     "extractors": {
       "web": "ok",

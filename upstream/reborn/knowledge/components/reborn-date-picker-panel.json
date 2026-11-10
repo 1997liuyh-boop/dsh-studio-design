@@ -10,6 +10,7 @@
     "select",
     "panel"
   ],
+  "aliases": [],
   "platforms": [
     "web"
   ],
@@ -47,9 +48,16 @@
     },
     {
       "name": "view",
-      "type": "ViewType",
+      "type": "'year' | 'month' | 'quarter' | 'date' | 'time'",
       "required": true,
-      "description": ""
+      "description": "",
+      "options": [
+        "year",
+        "month",
+        "quarter",
+        "date",
+        "time"
+      ]
     },
     {
       "name": "kind",
@@ -65,10 +73,28 @@
     },
     {
       "name": "type",
-      "type": "DatePickerType",
+      "type": "'year' | 'years' | 'month' | 'months' | 'quarter' | 'quarters' | 'date' | 'dates' | 'datetime' | 'week' | 'weekrange' | 'datetimerange' | 'daterange' | 'monthrange' | 'quarterrange' | 'yearrange'",
       "required": false,
       "description": "选择器类型：date, datetime, year, month 等",
-      "default": "\"date\""
+      "default": "\"date\"",
+      "options": [
+        "year",
+        "years",
+        "month",
+        "months",
+        "quarter",
+        "quarters",
+        "date",
+        "dates",
+        "datetime",
+        "week",
+        "weekrange",
+        "datetimerange",
+        "daterange",
+        "monthrange",
+        "quarterrange",
+        "yearrange"
+      ]
     },
     {
       "name": "start",
@@ -92,10 +118,15 @@
     },
     {
       "name": "size",
-      "type": "(typeof datePickerPanelSizes)[number]",
+      "type": "'sm' | 'md' | 'lg'",
       "required": false,
       "description": "尺寸：sm, md, lg",
-      "default": "\"md\""
+      "default": "\"md\"",
+      "options": [
+        "sm",
+        "md",
+        "lg"
+      ]
     },
     {
       "name": "overflow",
@@ -130,17 +161,32 @@
     },
     {
       "name": "color",
-      "type": "(typeof datePickerPanelColors)[number]",
+      "type": "'primary' | 'secondary' | 'success' | 'info' | 'warning' | 'error' | 'neutral'",
       "required": false,
       "description": "颜色主题",
-      "default": "\"primary\""
+      "default": "\"primary\"",
+      "options": [
+        "primary",
+        "secondary",
+        "success",
+        "info",
+        "warning",
+        "error",
+        "neutral"
+      ]
     },
     {
       "name": "activeType",
-      "type": "DatePickerActiveType",
+      "type": "'fill' | 'fillRound' | 'outline' | 'text'",
       "required": false,
       "description": "选中态表现：fill 背景 / fillRound 背景正圆 / outline 描边加文字 / text 仅文字",
-      "default": "\"fill\""
+      "default": "\"fill\"",
+      "options": [
+        "fill",
+        "fillRound",
+        "outline",
+        "text"
+      ]
     },
     {
       "name": "width",
@@ -390,7 +436,7 @@
   },
   "docPath": "content/2.components/input-and-forms/reborn-date-picker-panel.md",
   "_meta": {
-    "contentHash": "4ecee9cee04606bb4ff5cb51cac82d0cdc38ecb7",
+    "contentHash": "100aefe514b60191707ff5c1cbb4524c68fedaa5",
     "hasOverride": true,
     "extractors": {
       "web": "ok",

@@ -10,6 +10,14 @@
     "drawer",
     "overlay"
   ],
+  "aliases": [
+    "drawer",
+    "抽屉",
+    "侧边栏",
+    "侧滑面板",
+    "侧边面板",
+    "side sheet"
+  ],
   "platforms": [
     "web"
   ],
@@ -306,7 +314,7 @@
   },
   "docPath": "content/2.components/navigation/reborn-drawer.md",
   "_meta": {
-    "contentHash": "65fa138cc6432c2131815e0994e8fd490348b879",
+    "contentHash": "722fdcb8a0e8e381496a36d172d9cf58e7749154",
     "hasOverride": true,
     "extractors": {
       "web": "ok",

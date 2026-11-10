@@ -1,0 +1,195 @@
+{
+  "$schema": "../schema/component.schema.json",
+  "id": "reborn-loading",
+  "title": "Loading 加载器",
+  "description": "用于给元素或整页添加加载遮罩的组件，提供 v-loading 指令与 showLoading 服务式调用。",
+  "category": "misc",
+  "tags": [],
+  "aliases": [
+    "loading",
+    "加载",
+    "加载中",
+    "spinner",
+    "转圈",
+    "加载遮罩"
+  ],
+  "platforms": [
+    "web",
+    "uniapp"
+  ],
+  "props": [
+    {
+      "name": "ui",
+      "type": "LoadingUI",
+      "required": false,
+      "description": "",
+      "default": "() => ({})"
+    },
+    {
+      "name": "type",
+      "type": "'outline' | 'ring' | 'spinner' | 'bars-scale' | 'blocks-shuffle' | 'blocks-wave' | 'gooey-balls'",
+      "required": false,
+      "description": "",
+      "default": "'outline'",
+      "options": [
+        "outline",
+        "ring",
+        "spinner",
+        "bars-scale",
+        "blocks-shuffle",
+        "blocks-wave",
+        "gooey-balls"
+      ]
+    },
+    {
+      "name": "color",
+      "type": "'primary' | 'secondary' | 'success' | 'info' | 'warning' | 'error' | 'neutral'",
+      "required": false,
+      "description": "",
+      "default": "'primary'",
+      "options": [
+        "primary",
+        "secondary",
+        "success",
+        "info",
+        "warning",
+        "error",
+        "neutral"
+      ]
+    },
+    {
+      "name": "size",
+      "type": "string | number",
+      "required": false,
+      "description": "",
+      "default": "'30px'"
+    },
+    {
+      "name": "customClass",
+      "type": "string",
+      "required": false,
+      "description": ""
+    },
+    {
+      "name": "visible",
+      "type": "boolean",
+      "required": false,
+      "description": "是否可见（false 时走淡出过渡，过渡结束触发 afterLeave）",
+      "default": "false"
+    },
+    {
+      "name": "fixed",
+      "type": "boolean",
+      "required": false,
+      "description": "是否 fixed 定位：全屏遮罩或 body 挂载模式为 true，局部遮罩为 false",
+      "default": "false"
+    },
+    {
+      "name": "text",
+      "type": "string",
+      "required": false,
+      "description": "加载文字（显示在图标下方）"
+    },
+    {
+      "name": "background",
+      "type": "string",
+      "required": false,
+      "description": "遮罩背景色（任意 CSS 颜色，内联覆盖默认半透明背景类）"
+    },
+    {
+      "name": "viewportStyle",
+      "type": "Record<string, string>",
+      "required": false,
+      "description": "可视区容器内联样式：局部模式下由 showLoading 注入宿主可视区宽高，供 sticky 图标区定位"
+    },
+    {
+      "name": "zIndex",
+      "type": "number",
+      "required": false,
+      "description": "遮罩层级",
+      "default": "2000"
+    }
+  ],
+  "events": [
+    {
+      "name": "afterLeave",
+      "payload": "(e: 'afterLeave'): void",
+      "description": "退场过渡结束（外部据此安全卸载实例）"
+    }
+  ],
+  "slots": [],
+  "exposes": [],
+  "examples": [
+    {
+      "title": "Web 演示 · RebornLoadingDemo",
+      "path": "app/components/reborn/examples/reborn-loading/RebornLoadingDemo.vue",
+      "source": "demo",
+      "platform": "web",
+      "code": "<script setup lang=\"ts\">\nimport { computed, shallowRef } from 'vue';\nimport {\n  LoadingColors,\n  LoadingTypes,\n} from \"~/components/reborn/ui/reborn-loading/reborn-loading.config\";\n\n// ─── 交互演练场 ─────────────────────────────────────────────────\n\nconst state = shallowRef<Record<string, any>>({\n  type: \"outline\",\n  color: \"primary\",\n  size: \"40px\",\n});\n\n/** 演练场控制面板配置 */\nconst controls = [\n  {\n    title: \"动画与配色\",\n    children: [\n      {\n        label: \"动画类型\",\n        key: \"type\",\n        component: \"select\" as const,\n        defaultValue: \"outline\",\n        props: { options: LoadingTypes.map((t) => ({ label: t, value: t })) },\n      },\n      {\n        label: \"颜色风格\",\n        key: \"color\",\n        component: \"select\" as const,\n        defaultValue: \"primary\",\n        props: { options: LoadingColors.map((c) => ({ label: c, value: c })) },\n      },\n      {\n        label: \"尺寸（支持 px / rem / em）\",\n        key: \"size\",\n        component: \"input\" as const,\n        defaultValue: \"40px\",\n      },\n    ],\n  },\n];\n\n/** 演练场右上角展示的等价代码 */\nconst loadingCode = computed(() => {\n  const s = state.value;\n  const props: string[] = [`type=\"${s.type}\"`];\n\n  if (s.color !== \"primary\") props.push(`color=\"${s.color}\"`);\n  if (s.size !== \"40px\") props.push(`size=\"${s.size}\"`);\n\n  return `<RebornLoading\\n  ${props.join(\"\\n  \")}\\n/>`;\n});\n</script>\n\n<template>\n  <div class=\"flex w-full min-w-0 flex-col\">\n    <Playground\n      v-model=\"state\"\n      :controls=\"controls\"\n      :code=\"loadingCode\"\n      component-name=\"RebornLoading\"\n      title=\"交互演练场\"\n      description=\"size 直接作为 CSS 尺寸使用，因此可传任意合法长度单位；color 除预设语义色外也接受任意色值。\"\n    >\n      <RebornLoading\n        :type=\"state.type\"\n        :color=\"state.color\"\n        :size=\"state.size\"\n      />\n    </Playground>\n\n    <DemoSection\n      title=\"全部动画类型\"\n      description=\"每种类型的绘制方式不同，密集列表建议使用体量更小的 spinner 或 dots。\"\n    >\n      <DemoBlock\n        layout=\"grid\"\n        align=\"center\"\n      >\n        <div\n          v-for=\"t in LoadingTypes\"\n          :key=\"t\"\n          class=\"flex flex-col items-center justify-center gap-3 py-4\"\n        >\n          <RebornLoading\n            :type=\"t\"\n            color=\"primary\"\n            size=\"32px\"\n          />\n          <span class=\"text-dimmed text-xs font-medium\">{{ t }}</span>\n        </div>\n      </DemoBlock>\n    </DemoSection>\n\n    <DemoSection\n      title=\"预设颜色\"\n      description=\"color 支持语义色板；传入十六进制或 rgb 字符串则直接作为动画主色。\"\n    >\n      <DemoBlock\n        layout=\"row\"\n        align=\"center\"\n      >\n        <div\n          v-for=\"c in LoadingColors\"\n          :key=\"c\"\n          class=\"flex flex-col items-center gap-2\"\n        >\n          <RebornLoading\n            type=\"spinner\"\n            :color=\"c\"\n            size=\"28px\"\n          />\n          <span class=\"text-dimmed text-xs font-medium\">{{ c }}</span>\n        </div>\n      </DemoBlock>\n    </DemoSection>\n  </div>\n</template>\n"
+    },
+    {
+      "title": "Web 演示 · RebornLoadingDirectiveDemo",
+      "path": "app/components/reborn/examples/reborn-loading/RebornLoadingDirectiveDemo.vue",
+      "source": "demo",
+      "platform": "web",
+      "code": "<script setup lang=\"ts\">\n/**\n * Loading 指令与服务演示\n * 聚焦 v-loading 指令与 showLoading 服务式调用（加载图标本身的样式请参阅 RebornLoadingDemo）\n */\nimport { computed, onBeforeUnmount, ref, shallowRef, watch } from 'vue';\nimport { createDemoTasks } from \"~/components/reborn/examples/shared/demo-tasks\";\nimport { LoadingColors, LoadingTypes } from \"~/components/reborn/ui/reborn-loading/reborn-loading.config\";\nimport { showLoading } from \"~/composables/useLoading\";\n\nconst tasks = createDemoTasks();\nconst loadingInstances = new Set<ReturnType<typeof showLoading>>();\n\n/* ==================== 交互演练场 ==================== */\n\n/** 默认状态：抽出便于一键重置 */\nconst defaultState = {\n  loading: true,\n  fullscreen: false,\n  lock: false,\n  text: \"正在同步订单数据…\",\n  type: \"outline\",\n  color: \"primary\",\n  customColor: \"#7c3aed\",\n  size: 24,\n  background: \"default\",\n};\nconst state = ref<Record<string, any>>({ ...defaultState });\n\nfunction resetState() {\n  state.value = { ...defaultState };\n}\n\n/** 图标类型选项：直接由组件 config 的枚举驱动，与真实能力永远同步 */\nconst typeOptions = LoadingTypes.map((t) => ({ label: t, value: t }));\n\n/** 颜色选项：预设色 + 自定义（联动 color-picker） */\nconst colorOptions = [\n  ...LoadingColors.map((c) => ({ label: c, value: c })),\n  { label: \"自定义颜色…\", value: \"custom\" },\n];\n\n/** 遮罩背景选项：默认跟随主题，其余为精选半透明配方 */\nconst backgroundOptions = [\n  { label: \"默认（跟随主题）\", value: \"default\" },\n  { label: \"玻璃白雾\", value: \"rgba(255,255,255,0.62)\" },\n  { label: \"深邃暗夜\", value: \"rgba(2,6,23,0.78)\" },\n  { label: \"品牌薄雾\", value: \"rgba(124,58,237,0.14)\" },\n];\n\nconst controls = [\n  {\n    title: \"遮罩状态\",\n    children: [\n      {\n        label: \"加载中 (v-loading)\",\n        key: \"loading\",\n        component: \"checkbox\" as const,\n        defaultValue: true,\n      },\n      {\n        label: \"全屏遮罩 (.fullscreen · 2 秒后自动关闭)\",\n        key: \"fullscreen\",\n        component: \"checkbox\" as const,\n        defaultValue: false,\n      },\n      {\n        label: \"锁定滚动 (.lock)\",\n        key: \"lock\",\n        component: \"checkbox\" as const,\n        defaultValue: false,\n      },\n    ],\n  },\n  {\n    title: \"视觉定制\",\n    children: [\n      {\n        label: \"加载文字\",\n        key: \"text\",\n        component: \"input\" as const,\n        defaultValue: \"正在同步订单数据…\",\n        props: { placeholder: \"留空则只显示图标\" },\n      },\n      {\n        label: \"图标类型\",\n        key: \"type\",\n        component: \"select\" as const,\n        defaultValue: \"outline\",\n        props: { options: typeOptions },\n      },\n      {\n        label: \"颜色\",\n        key: \"color\",\n        component: \"select\" as const,\n        defaultValue: \"primary\",\n        props: { options: colorOptions },\n      },\n      {\n        // 仅在选择「自定义颜色…」时展示（hide 联动）\n        label: \"自定义色值\",\n        key: \"customColor\",\n        component: \"color-picker\" as const,\n        defaultValue: \"#7c3aed\",\n        hide: (_v: any, m: Record<string, any>) => m.color !== \"custom\",\n      },\n      {\n        label: \"图标尺寸\",\n        key: \"size\",\n        component: \"slider\" as const,\n        defaultValue: 24,\n        props: { min: 16, max: 56, step: 2 },\n      },\n      {\n        label: \"遮罩背景\",\n        key: \"background\",\n        component: \"select\" as const,\n        defaultValue: \"default\",\n        props: { options: backgroundOptions },\n      },\n    ],\n  },\n];\n\n/** 最终生效的颜色：预设色名或自定义色值 */\nconst playgroundColor = computed(() =>\n  state.value.color === \"custom\" ? state.value.customColor : state.value.color,\n);\n\n/** 最终生效的遮罩背景：default 表示不覆盖（跟随主题） */\nconst playgroundBackground = computed(() =>\n  state.value.background === \"default\" ? null : state.value.background,\n);\n\n/**\n * 指令用法的代码生成：\n * Playground 自动生成固定假设 v-model，指令场景不适用，\n * 故用 computed 拼接真实的「修饰符 + reborn-loading-* 属性」写法\n */\nconst codeString = computed(() => {\n  const s = state.value;\n  const mods = `${s.fullscreen ? \".fullscreen\" : \"\"}${s.lock ? \".lock\" : \"\"}`;\n  const lines = [\"<div\", `  v-loading${mods}=\"loading\"`];\n  if (s.text) lines.push(`  reborn-loading-text=\"${s.text}\"`);\n  if (s.type !== \"outline\") lines.push(`  reborn-loading-type=\"${s.type}\"`);\n  if (playgroundColor.value !== \"primary\") lines.push(`  reborn-loading-color=\"${playgroundColor.value}\"`);\n  if (s.size !== 24) lines.push(`  reborn-loading-size=\"${s.size}px\"`);\n  if (playgroundBackground.value) lines.push(`  reborn-loading-background=\"${playgroundBackground.value}\"`);\n  lines.push(\">\", \"  <!-- 业务内容 -->\", \"</div>\");\n  return lines.join(\"\\n\");\n});\n\n/** 全屏演练保护：全屏遮罩会覆盖控制面板，开启后 2.2 秒自动结束加载，避免用户被「锁」在遮罩后面 */\nlet fullscreenTimer: ReturnType<typeof setTimeout> | null = null;\nwatch(\n  () => [state.value.fullscreen, state.value.loading],\n  ([fs, ld]) => {\n    if (fullscreenTimer) {\n      clearTimeout(fullscreenTimer);\n      fullscreenTimer = null;\n    }\n    if (fs && ld) {\n      fullscreenTimer = tasks.schedule(() => {\n        state.value.loading = false;\n      }, 2200);\n    }\n  },\n);\n\n/** 演练场的宿主数据：模拟订单表格（可滚动，便于观察 lock 锁定效果） */\nconst orders = [\n  { id: \"RB-2107\", name: \"流光无线耳机 Pro\", status: \"已发货\", tone: \"success\", amount: \"¥ 1,299\" },\n  { id: \"RB-2106\", name: \"星环智能手表 S2\", status: \"待支付\", tone: \"warning\", amount: \"¥ 2,499\" },\n  { id: \"RB-2105\", name: \"极光机械键盘 87\", status: \"配送中\", tone: \"info\", amount: \"¥ 699\" },\n  { id: \"RB-2104\", name: \"云感人体工学椅\", status: \"已完成\", tone: \"neutral\", amount: \"¥ 1,899\" },\n  { id: \"RB-2103\", name: \"澄澈显示器 4K 27\", status: \"已发货\", tone: \"success\", amount: \"¥ 3,299\" },\n  { id: \"RB-2102\", name: \"随行充电宝 20000\", status: \"退款中\", tone: \"error\", amount: \"¥ 199\" },\n  { id: \"RB-2101\", name: \"轻语降噪耳塞\", status: \"已完成\", tone: \"neutral\", amount: \"¥ 499\" },\n  { id: \"RB-2100\", name: \"晨昏氛围灯\", status: \"配送中\", tone: \"info\", amount: \"¥ 329\" },\n];\n\n/** 状态徽标配色：只用语义色，徽标属于原子标记而非嵌套盒子 */\nconst statusTone: Record<string, string> = {\n  success: \"bg-success/10 text-success\",\n  warning: \"bg-warning/10 text-warning\",\n  info: \"bg-info/10 text-info\",\n  error: \"bg-error/10 text-error\",\n  neutral: \"bg-accented text-muted\",\n};\n\n/* ==================== 区域加载（数据看板） ==================== */\n\nconst boardLoading = shallowRef(false);\n/** 看板统计卡数据 */\nconst boardStats = [\n  { label: \"今日成交\", value: \"¥ 86,420\", trend: \"+12.6%\", icon: \"lucide:trending-up\" },\n  { label: \"新增用户\", value: \"1,284\", trend: \"+4.2%\", icon: \"lucide:users\" },\n  { label: \"转化率\", value: \"38.9%\", trend: \"+1.8%\", icon: \"lucide:target\" },\n];\n\n/** 趋势条的高度百分比（纯装饰数据，用来撑出一个有内容的加载宿主） */\nconst trendBars = [42, 66, 51, 80, 62, 92, 71, 58, 84, 68, 95, 76];\n\n/** 点击刷新：1.6 秒后自动结束加载 */\nfunction refreshBoard() {\n  if (boardLoading.value) return;\n  boardLoading.value = true;\n  tasks.schedule(() => {\n    boardLoading.value = false;\n  }, 1600);\n}\n\n/* ==================== 属性定制矩阵 ==================== */\n\n/** 四种 reborn-loading-* 组合，常驻展示 */\nconst attrCases = [\n  { label: '预设色 · type=\"bars-scale\" color=\"info\"', type: \"bars-scale\", color: \"info\", text: \"信息流刷新中…\", size: null as string | null, background: null as string | null },\n  { label: '自定义色 · color=\"#d946ef\" size=\"30px\"', type: \"gooey-balls\", color: \"#d946ef\", text: \"AI 生成中…\", size: \"30px\", background: null },\n  { label: \"深色遮罩 · background 覆盖默认底\", type: \"blocks-wave\", color: \"#a78bfa\", text: \"夜间模式渲染…\", size: null, background: \"rgba(2, 6, 23, 0.85)\" },\n  { label: '无文字 · type=\"spinner\" color=\"warning\"', type: \"spinner\", color: \"warning\", text: null as string | null, size: \"32px\", background: null },\n];\n\n/* ==================== 全屏加载（指令修饰符） ==================== */\n\nconst fullscreenOn = shallowRef(false);\n/** 触发全屏加载：2 秒后自动关闭，期间 .lock 锁定页面滚动 */\nfunction triggerFullscreen() {\n  if (fullscreenOn.value) return;\n  fullscreenOn.value = true;\n  tasks.schedule(() => {\n    fullscreenOn.value = false;\n  }, 2000);\n}\n\n/* ==================== 服务式 showLoading ==================== */\n\n/** 操作日志（让每一次调用都「有回应」） */\nconst serviceLogs = ref<{ id: number; time: string; msg: string; tone: \"info\" | \"success\" }[]>([]);\n\nlet logSeed = 0;\n\nfunction pushLog(msg: string, tone: \"info\" | \"success\" = \"info\") {\n  serviceLogs.value.push({\n    id: ++logSeed,\n    time: new Date().toLocaleTimeString(\"zh-CN\", { hour12: false }),\n    msg,\n    tone,\n  });\n  // 最多保留 7 条，超出后滚动淘汰\n  if (serviceLogs.value.length > 7) serviceLogs.value.shift();\n}\n\nconst sleep = tasks.wait;\n\n/**\n * 关闭服务式实例，每个实例只关一次：\n * close() 对已在淡出的实例会跳过淡出直接销毁，所以成功路径、finally 与卸载清理共用这一个出口，\n * 用 loadingInstances 的登记状态判断是否已关闭（实例自身的 closed 在淡出期间仍为 false，不能用来判断）。\n */\nfunction closeLoading(loading: ReturnType<typeof showLoading>) {\n  if (!loadingInstances.delete(loading)) return;\n  loading.close();\n}\n\nconst publishing = shallowRef(false);\n/** 模拟分步发布流程：演示 setText 更新文案 + patch 动态换装 + close 关闭 */\nasync function runPublishFlow() {\n  if (publishing.value) return;\n  publishing.value = true;\n  const loading = showLoading({ text: \"正在连接服务器…\", size: \"30px\" });\n  loadingInstances.add(loading);\n  try {\n    pushLog(\"showLoading() 创建全屏加载实例\");\n    if (!await sleep(900)) return;\n    loading.setText(\"正在上传资源 (1/2)…\");\n    pushLog(\"setText('正在上传资源 (1/2)…')\");\n    if (!await sleep(900)) return;\n    loading.setText(\"正在上传资源 (2/2)…\");\n    pushLog(\"setText('正在上传资源 (2/2)…')\");\n    if (!await sleep(900)) return;\n    loading.patch({ type: \"bars-scale\", color: \"success\", text: \"发布成功，正在收尾…\" });\n    pushLog(\"patch({ type: 'bars-scale', color: 'success' })\");\n    if (!await sleep(1100)) return;\n    closeLoading(loading);\n    pushLog(\"close() 遮罩淡出并销毁\", \"success\");\n  } finally {\n    closeLoading(loading);\n    publishing.value = false;\n  }\n}\n\nconst targetRunning = shallowRef(false);\n/** 局部服务式加载：通过 CSS 选择器锁定目标容器（日志面板），3 秒后关闭 */\nasync function runTargetLoading() {\n  if (targetRunning.value) return;\n  targetRunning.value = true;\n  const loading = showLoading({\n    target: \"#reborn-loading-service-panel\",\n    text: \"局部遮罩 · 3 秒后 close()\",\n    type: \"blocks-shuffle\",\n    color: \"secondary\",\n    size: \"28px\",\n  });\n  loadingInstances.add(loading);\n  try {\n    pushLog(\"showLoading({ target: '#…' }) 局部遮罩\");\n    if (!await sleep(3000)) return;\n    closeLoading(loading);\n    pushLog(\"close() 关闭局部遮罩\", \"success\");\n  } finally {\n    closeLoading(loading);\n    targetRunning.value = false;\n  }\n}\n\n/** 组件卸载时清理演练场遗留定时器 */\nonBeforeUnmount(() => {\n  tasks.dispose();\n  [...loadingInstances].forEach(closeLoading);\n  if (fullscreenTimer) clearTimeout(fullscreenTimer);\n});\n</script>\n\n<template>\n  <div class=\"flex w-full min-w-0 flex-col\">\n    <!-- 交互演练场：Playground 自带标题栏 -->\n    <Playground v-model=\"state\" :controls=\"controls\" :code=\"codeString\" component-name=\"v-loading\" title=\"交互演练场\"\n      description=\"实时调节遮罩参数；开启全屏模式后遮罩将覆盖整页并在 2 秒后自动关闭\">\n      <template #tag>\n        <RebornButton size=\"sm\" variant=\"soft\" color=\"neutral\" @click=\"resetState\">\n          <template #leading>\n            <Icon name=\"lucide:rotate-ccw\" size=\"12\" />\n          </template>\n          重置配置\n        </RebornButton>\n      </template>\n\n      <!--\n        宿主容器：遮罩必须覆盖在一个真实区域上，这个区域本身就是被演示的对象，\n        属示例规范里唯一允许的那层浅填充；其内部不再出现任何填充盒。\n      -->\n      <div v-loading=\"{ loading: state.loading, fullscreen: state.fullscreen, lock: state.lock }\"\n        :reborn-loading-text=\"state.text || null\" :reborn-loading-type=\"state.type\"\n        :reborn-loading-color=\"playgroundColor\" :reborn-loading-size=\"state.size + 'px'\"\n        :reborn-loading-background=\"playgroundBackground\"\n        class=\"bg-elevated rounded-2xl h-[400px] w-full max-w-2xl overflow-y-auto\">\n        <!-- 表头需遮挡下方滚过的行，沿用与容器同色的底，视觉上仍是同一层表面 -->\n        <div class=\"bg-elevated border-default sticky top-0 z-[1] flex items-center justify-between border-b px-6 py-4\">\n          <div class=\"flex flex-col\">\n            <span class=\"text-highlighted text-sm font-bold\">订单中心</span>\n            <span class=\"text-dimmed text-[10px] tracking-[0.25em] uppercase\">Order Center</span>\n          </div>\n          <span class=\"bg-primary/10 text-primary flex items-center gap-1.5 rounded-full px-3 py-1 text-[10px] font-bold\">\n            <span class=\"bg-primary size-1.5 animate-pulse rounded-full\" />\n            实时同步\n          </span>\n        </div>\n\n        <div class=\"divide-default flex flex-col divide-y\">\n          <div v-for=\"order in orders\" :key=\"order.id\"\n            class=\"hover:bg-accented/60 flex items-center gap-4 px-6 py-4 transition-colors\">\n            <div class=\"flex min-w-0 flex-1 flex-col\">\n              <span class=\"text-default truncate text-sm font-semibold\">{{ order.name }}</span>\n              <span class=\"text-dimmed font-mono text-[10px]\">{{ order.id }}</span>\n            </div>\n            <span class=\"rounded-full px-2.5 py-1 text-[10px] font-bold\" :class=\"statusTone[order.tone]\">\n              {{ order.status }}\n            </span>\n            <span class=\"text-muted w-20 text-right font-mono text-xs font-bold\">\n              {{ order.amount }}\n            </span>\n          </div>\n        </div>\n      </div>\n    </Playground>\n\n    <DemoSection title=\"区域加载\" description=\"最常见的用法：在数据请求期间为看板 / 表格覆盖遮罩，宿主定位由指令自动修正。\">\n      <DemoBlock layout=\"stack\" class=\"gap-4\">\n        <!-- 看板同样是遮罩宿主，沿用那唯一一层浅填充 -->\n        <div v-loading=\"boardLoading\" reborn-loading-text=\"正在同步看板数据…\"\n          class=\"bg-elevated rounded-lg flex w-full flex-col gap-5 p-5\">\n          <div class=\"divide-default grid grid-cols-3 sm:divide-x\">\n            <div v-for=\"(stat, i) in boardStats\" :key=\"stat.label\" class=\"flex flex-col gap-1.5\"\n              :class=\"i === 0 ? 'sm:pr-4' : i === boardStats.length - 1 ? 'sm:pl-4' : 'sm:px-4'\">\n              <span class=\"text-dimmed flex items-center gap-1.5 text-[10px] font-bold tracking-wider uppercase\">\n                <Icon :name=\"stat.icon\" size=\"12\" class=\"text-primary\" />\n                {{ stat.label }}\n              </span>\n              <span class=\"text-highlighted text-lg font-bold tracking-tight\">{{ stat.value }}</span>\n              <span class=\"text-success text-[10px] font-bold\">{{ stat.trend }}</span>\n            </div>\n          </div>\n\n          <!-- 模拟趋势条：柱体是内容标记，不构成额外的背景层 -->\n          <div class=\"flex h-16 items-end gap-1.5\">\n            <div v-for=\"(h, i) in trendBars\" :key=\"i\"\n              class=\"bg-primary/50 hover:bg-primary flex-1 rounded-t-sm transition-all duration-500\"\n              :style=\"{ height: h + '%' }\" />\n          </div>\n        </div>\n\n        <div class=\"flex w-full items-center justify-between\">\n          <Transition name=\"fade\" mode=\"out-in\">\n            <DemoNote v-if=\"boardLoading\" key=\"loading\" tone=\"dimmed\" class=\"flex items-center gap-1.5 text-xs\">\n              <span class=\"bg-primary size-1.5 animate-pulse rounded-full\" />\n              指令已挂载遮罩…\n            </DemoNote>\n            <DemoNote v-else key=\"idle\" tone=\"dimmed\" class=\"font-mono text-[10px]\">v-loading=\"boardLoading\"</DemoNote>\n          </Transition>\n          <RebornButton label=\"刷新看板\" color=\"primary\" variant=\"soft\" size=\"sm\" :disabled=\"boardLoading\"\n            @click=\"refreshBoard\">\n            <template #leading>\n              <Icon name=\"lucide:refresh-cw\" size=\"14\" :class=\"boardLoading ? 'animate-spin' : ''\" />\n            </template>\n          </RebornButton>\n        </div>\n      </DemoBlock>\n    </DemoSection>\n\n    <DemoSection title=\"自定义文字与图标\" description=\"通过 reborn-loading-* 元素属性定制图标类型、颜色、尺寸与遮罩背景，属性变化时响应式生效。\">\n      <DemoBlock layout=\"grid\" align=\"start\" class=\"sm:grid-cols-2 lg:grid-cols-4\">\n        <div v-for=\"item in attrCases\" :key=\"item.label\" class=\"flex flex-col gap-2\">\n          <span class=\"text-dimmed text-xs font-medium\">{{ item.label }}</span>\n          <!-- 宿主只描边不填充：遮罩自带背景，这里只需要一块可辨认的落点 -->\n          <div v-loading=\"true\" :reborn-loading-type=\"item.type\" :reborn-loading-color=\"item.color\"\n            :reborn-loading-text=\"item.text\" :reborn-loading-size=\"item.size\"\n            :reborn-loading-background=\"item.background\"\n            class=\"border-default rounded-lg relative h-40 overflow-hidden border border-dashed\" />\n        </div>\n      </DemoBlock>\n    </DemoSection>\n\n    <DemoSection title=\"全屏加载\" description=\"`.fullscreen` 将遮罩挂载至 body 铺满视口，`.lock` 以全局引用计数锁定页面滚动。\">\n      <div v-loading.fullscreen.lock=\"fullscreenOn\" reborn-loading-text=\"整页处理中 · 2 秒后自动关闭\"\n        reborn-loading-type=\"gooey-balls\" reborn-loading-size=\"34px\" class=\"flex flex-col gap-4\">\n        <DemoNote class=\"max-w-2xl\">\n          适合支付、发布等不可中断流程。遮罩层级默认 <code>3000</code>，滚动锁与 Overlay 共享同一个全局计数器，互不踩踏；重复触发全屏遮罩时复用同一单例。\n        </DemoNote>\n\n        <pre\n          class=\"bg-elevated rounded-lg text-muted w-fit px-4 py-3 font-mono text-[11px] leading-relaxed\"><code>&lt;section v-loading.fullscreen.lock=\"submitting\"&gt;</code></pre>\n\n        <div class=\"flex items-center gap-4\">\n          <RebornButton label=\"触发全屏加载\" color=\"primary\" variant=\"filled\" :disabled=\"fullscreenOn\"\n            @click=\"triggerFullscreen\">\n            <template #leading>\n              <Icon name=\"lucide:expand\" size=\"14\" />\n            </template>\n          </RebornButton>\n          <DemoNote tone=\"dimmed\" class=\"font-mono text-[10px]\">z-index: 3000 · scroll locked</DemoNote>\n        </div>\n      </div>\n    </DemoSection>\n\n    <DemoSection title=\"服务式调用\" description=\"showLoading 命令式创建遮罩，返回实例句柄进行 setText / patch / close 全流程控制。\">\n      <DemoBlock layout=\"stack\" class=\"gap-4\">\n        <div class=\"flex flex-wrap gap-3\">\n          <RebornButton label=\"模拟发布流程 (全屏分步)\" color=\"primary\" variant=\"soft\" size=\"sm\" :disabled=\"publishing\"\n            @click=\"runPublishFlow\">\n            <template #leading>\n              <Icon name=\"lucide:rocket\" size=\"14\" />\n            </template>\n          </RebornButton>\n          <RebornButton label=\"局部遮罩 (target 选择器)\" color=\"secondary\" variant=\"soft\" size=\"sm\" :disabled=\"targetRunning\"\n            @click=\"runTargetLoading\">\n            <template #leading>\n              <Icon name=\"lucide:crosshair\" size=\"14\" />\n            </template>\n          </RebornButton>\n        </div>\n\n        <!-- 调用日志面板：它同时是局部遮罩的 target 容器，即被演示的宿主，故保留这层浅填充 -->\n        <div id=\"reborn-loading-service-panel\"\n          class=\"bg-elevated rounded-lg flex min-h-[220px] w-full flex-col gap-2 overflow-hidden p-5 font-mono text-[11px]\">\n          <div class=\"text-dimmed mb-1 flex items-center gap-2 text-[10px] tracking-[0.3em] uppercase\">\n            <span class=\"flex gap-1.5\">\n              <span class=\"bg-error/70 size-2 rounded-full\" />\n              <span class=\"bg-warning/70 size-2 rounded-full\" />\n              <span class=\"bg-success/70 size-2 rounded-full\" />\n            </span>\n            service console\n          </div>\n          <TransitionGroup name=\"log\">\n            <div v-for=\"item in serviceLogs\" :key=\"item.id\" class=\"flex items-start gap-2\">\n              <span class=\"text-dimmed shrink-0\">{{ item.time }}</span>\n              <span :class=\"item.tone === 'success' ? 'text-success' : 'text-primary'\">{{ item.msg }}</span>\n            </div>\n          </TransitionGroup>\n          <div v-if=\"serviceLogs.length === 0\" class=\"text-dimmed flex flex-1 items-center justify-center\">\n            点击上方按钮，观察 showLoading 实例的完整生命周期 →\n          </div>\n        </div>\n      </DemoBlock>\n    </DemoSection>\n  </div>\n</template>\n\n<style scoped>\n/* 状态提示的淡入淡出过渡 */\n.fade-enter-active,\n.fade-leave-active {\n  transition: opacity 0.3s ease;\n}\n\n.fade-enter-from,\n.fade-leave-to {\n  opacity: 0;\n}\n\n/* 服务日志的滑入过渡 */\n.log-enter-active {\n  transition: all 0.35s cubic-bezier(0.22, 1, 0.36, 1);\n}\n\n.log-enter-from {\n  opacity: 0;\n  transform: translateX(-8px);\n}\n\n.log-leave-active {\n  transition: all 0.2s ease;\n}\n\n.log-leave-from,\n.log-leave-to {\n  opacity: 0;\n}\n</style>\n"
+    },
+    {
+      "title": "UniApp 演示",
+      "path": "packages/uniapp-project/src/pages/reborn-loading/RebornLoadingDemo.vue",
+      "source": "demo",
+      "platform": "uniapp",
+      "code": "<script setup lang=\"ts\">\nimport { shallowRef } from 'vue'\nimport RebornPage from '@/components/reborn-page/RebornPage.vue'\nimport RebornCard from '@/components/reborn-card/RebornCard.vue'\nimport RebornLoading from '@/components/reborn-loading/RebornLoading.vue'\nimport RebornRadio from '@/components/reborn-radio/RebornRadio.vue'\nimport RebornRadioGroup from '@/components/reborn-radio/RebornRadioGroup.vue'\nimport RebornColorPicker from '@/components/reborn-color-picker/RebornColorPicker.vue'\nimport { LoadingTypes, LoadingColors } from '@/components/reborn-loading/reborn-loading.config'\n\nconst demoColor = shallowRef<typeof LoadingColors[number] | null>('primary')\nconst demoType = shallowRef<typeof LoadingTypes[number]>('outline')\nconst colorValue = shallowRef<string>('#000000')\n\nconst demoColorChange = (color: typeof LoadingColors[number]) => {\n  demoColor.value = color\n}\nconst onChange = () => {\n  demoColor.value = null\n}\n</script>\n<template>\n  <RebornPage title=\"Loading\" description=\"加载组件\">\n    <RebornCard title=\"配置\" custom-class=\"space-y-4\" overflowVisible>\n\n      <RebornLoading :type=\"demoType\" :color=\"demoColor ? demoColor : colorValue\" size=\"80rpx\" />\n      <view class=\"\n                text-sm font-medium text-slate-500\n                dark:text-slate-200\n              \">\n        按钮颜色\n      </view>\n      <view class=\"flex flex-wrap gap-2\">\n        <view v-for=\"c in LoadingColors\" :key=\"c\" class=\"\n                  size-6 cursor-pointer rounded-full ring-2 ring-transparent\n                  ring-offset-2 transition-all\n                \" :class=\"[\n                  `\n                    bg-${c}\n                  `,\n                  demoColor === c ? 'scale-110 ring-slate-400' : `\n                    hover:scale-110\n                  `,\n                ]\" :style=\"{ backgroundColor: `var(--color-${c}, ${c === 'neutral' ? '#737373' : ''})` }\"\n          @click=\"demoColorChange(c)\" />\n      </view>\n      <RebornColorPicker v-model=\"colorValue\" @change=\"onChange\" />\n      <RebornRadioGroup v-model=\"demoType\">\n        <RebornRadio v-for=\"t in LoadingTypes\" :key=\"t\" :value=\"t\">\n          {{ t }}\n        </RebornRadio>\n      </RebornRadioGroup>\n    </RebornCard>\n  </RebornPage>\n</template>\n"
+    }
+  ],
+  "related": [],
+  "whenToUse": [
+    "异步请求期间需要在容器或整页显示加载遮罩时。",
+    "需要多种加载图标类型（ring/spinner/bars-scale/gooey-balls 等）时。",
+    "需要通过 showLoading 在逻辑代码中动态开关加载态时。"
+  ],
+  "whenNotToUse": [
+    "uniapp 列表触底的加载状态提示改用 reborn-loadmore。",
+    "操作结果的短暂反馈改用 reborn-toast。",
+    "按步骤序列提示进度的全屏加载，改用 multi-step-loader。"
+  ],
+  "pitfalls": [
+    "web、uniapp 双端可用。",
+    "type 默认 outline，size 默认 30px，zIndex 默认 2000。",
+    "background 可传任意 CSS 颜色，覆盖默认的 bg-white/80（暗色 bg-gray-9/80）遮罩背景。",
+    "afterLeave 事件在遮罩离场动画结束后触发。"
+  ],
+  "dependencies": [
+    "@weapp-tailwindcss/merge-v3",
+    "@weapp-tailwindcss/variants-v3",
+    "clsx",
+    "tailwind-merge",
+    "tailwind-variants"
+  ],
+  "install": {
+    "cli": "npx reborn-ui@latest add reborn-loading"
+  },
+  "sourceRefs": {
+    "web": [
+      "app/components/reborn/ui/reborn-loading/RebornLoading.vue",
+      "app/components/reborn/ui/reborn-loading/RebornLoadingMask.vue",
+      "app/components/reborn/ui/reborn-loading/reborn-loading-mask.config.ts",
+      "app/components/reborn/ui/reborn-loading/reborn-loading.config.ts"
+    ],
+    "uniapp": [
+      "packages/uniapp-project/src/components/reborn-loading/RebornLoading.vue",
+      "packages/uniapp-project/src/components/reborn-loading/index.ts",
+      "packages/uniapp-project/src/components/reborn-loading/reborn-loading.config.ts"
+    ]
+  },
+  "docPath": "content/2.components/miscellaneous/reborn-loading.md",
+  "_meta": {
+    "contentHash": "61a464b454e4df300f3f55c41cb5814da58a67d5",
+    "hasOverride": true,
+    "extractors": {
+      "web": "ok",
+      "uniapp": "ok",
+      "docs": "found"
+    }
+  }
+}

@@ -1,0 +1,200 @@
+{
+  "$schema": "../schema/component.schema.json",
+  "id": "reborn-segmented",
+  "title": "Segmented 分段控制器",
+  "description": "一组互斥选项排成一条、选中块滑动切换的分段控制器，三档尺寸，可带图标、撑满宽度或竖排，参与表单校验。",
+  "category": "form",
+  "tags": [
+    "segmented",
+    "radio",
+    "tabs",
+    "form"
+  ],
+  "aliases": [
+    "segmented",
+    "分段控制器",
+    "分段选择",
+    "segment control",
+    "切换器",
+    "toggle group",
+    "按钮组切换"
+  ],
+  "platforms": [
+    "web"
+  ],
+  "props": [
+    {
+      "name": "options",
+      "type": "Array<SegmentedValue | SegmentedOption>",
+      "required": false,
+      "description": "选项数据：可以是字符串 / 数字 / 布尔的简写（自身同时作为文案与值），也可以是对象 @defaultValue []",
+      "default": "() => []"
+    },
+    {
+      "name": "fieldNames",
+      "type": "SegmentedOptionProps",
+      "required": false,
+      "description": "对象选项的字段映射 @defaultValue { value: 'value', label: 'label', disabled: 'disabled' }",
+      "default": "() => ({})"
+    },
+    {
+      "name": "size",
+      "type": "'sm' | 'md' | 'lg'",
+      "required": false,
+      "description": "尺寸；处于表单内时被表单的尺寸覆盖，都没有时为 md",
+      "options": [
+        "sm",
+        "md",
+        "lg"
+      ]
+    },
+    {
+      "name": "block",
+      "type": "boolean",
+      "required": false,
+      "description": "是否撑满父元素宽度：横排时各选项等分宽度，竖排时选项撑满容器宽度 @defaultValue false",
+      "default": "false"
+    },
+    {
+      "name": "disabled",
+      "type": "boolean",
+      "required": false,
+      "description": "是否禁用全部选项 @defaultValue false",
+      "default": "false"
+    },
+    {
+      "name": "validateEvent",
+      "type": "boolean",
+      "required": false,
+      "description": "选中值变化时是否触发所在表单项的校验 @defaultValue true",
+      "default": "true"
+    },
+    {
+      "name": "name",
+      "type": "string",
+      "required": false,
+      "description": "原生 radio 的 name；不传时自动生成，保证同一组内方向键切换"
+    },
+    {
+      "name": "id",
+      "type": "string",
+      "required": false,
+      "description": "根容器的原生 id"
+    },
+    {
+      "name": "ariaLabel",
+      "type": "string",
+      "required": false,
+      "description": "根容器的 aria-label，读屏软件据此念出这组选项的用途"
+    },
+    {
+      "name": "direction",
+      "type": "'horizontal' | 'vertical'",
+      "required": false,
+      "description": "排列方向 @defaultValue 'horizontal'",
+      "default": "\"horizontal\"",
+      "options": [
+        "horizontal",
+        "vertical"
+      ]
+    },
+    {
+      "name": "class",
+      "type": "any",
+      "required": false,
+      "description": "追加到根容器的类名"
+    },
+    {
+      "name": "ui",
+      "type": "SegmentedUI",
+      "required": false,
+      "description": "按结构键覆盖各节点样式 可用键（从源码抽取，以此为准）——Web：icon*、item、label*、root、slider。 带 * 的键对应插槽兜底节点：填了同名插槽，组件自带的节点被替换，这个键随之失效。",
+      "default": "() => ({})"
+    },
+    {
+      "name": "modelValue",
+      "type": "SegmentedValue",
+      "required": false,
+      "description": "双向绑定值",
+      "vModel": true
+    }
+  ],
+  "events": [
+    {
+      "name": "change",
+      "payload": "[value: SegmentedValue]",
+      "description": "选中值变化时触发，参数为新的选中值"
+    },
+    {
+      "name": "update:modelValue",
+      "description": "modelValue 变化时触发（v-model 同步）",
+      "payload": "(value: string | number | boolean)"
+    }
+  ],
+  "slots": [
+    {
+      "name": "default",
+      "props": "(props: { item: SegmentedValue | SegmentedOption; checked: boolean; disabled: boolean }) => any",
+      "description": "替换每一项的内容，`item` 是原始选项数据。"
+    }
+  ],
+  "exposes": [],
+  "examples": [
+    {
+      "title": "Web 演示",
+      "path": "app/components/reborn/examples/reborn-segmented/RebornSegmentedDemo.vue",
+      "source": "demo",
+      "platform": "web",
+      "code": "<script setup lang=\"ts\">\nimport type { SegmentedOption, SegmentedProps, SegmentedUI, SegmentedValue } from \"~/components/reborn/ui/reborn-segmented\";\nimport { DemoBlock, DemoNote, DemoSection, Icon, Playground } from \"#components\";\nimport { computed, ref, shallowRef } from 'vue';\nimport RebornButton from \"~/components/reborn/ui/reborn-button/RebornButton.vue\";\nimport { segmentedDirections, segmentedSizes } from \"~/components/reborn/ui/reborn-segmented/reborn-segmented.config\";\nimport RebornSegmented from \"~/components/reborn/ui/reborn-segmented/RebornSegmented.vue\";\n\n/** 各尺寸的选项高度（px），用于说明文字 */\nconst SIZE_PX: Record<string, number> = { sm: 20, md: 28, lg: 36 };\n\nconst sizeOptions = segmentedSizes.map(s => ({ label: `${s}（${SIZE_PX[s]}px）`, value: s }));\nconst directionOptions = segmentedDirections.map(d => ({ label: d === \"horizontal\" ? \"横排 horizontal\" : \"竖排 vertical\", value: d }));\n\n/** 简写选项：字符串自身同时作为文案与值 */\nconst periods = [\"日\", \"周\", \"月\", \"季度\", \"年\"];\n\n/** 带图标的对象选项 */\nconst viewOptions: SegmentedOption[] = [\n  { label: \"列表\", value: \"list\", icon: \"lucide:list\" },\n  { label: \"看板\", value: \"board\", icon: \"lucide:kanban\" },\n  { label: \"日历\", value: \"calendar\", icon: \"lucide:calendar\" },\n];\n\n// ─── 交互演练场 ─────────────────────────────────────────────────\n\n/** 演练场默认状态：除 icon 外与组件默认值一致 */\nconst defaultState: Record<string, any> = {\n  size: \"md\",\n  direction: \"horizontal\",\n  block: false,\n  disabled: false,\n  icon: false,\n};\n\nconst state = ref<Record<string, any>>({ ...defaultState });\nconst playgroundValue = shallowRef<SegmentedValue>(\"周\");\n/** 演练场最近一次 change 事件的回显 */\nconst lastChange = shallowRef(\"尚未切换\");\n\n/** 重置演练场配置 */\nfunction resetState() {\n  state.value = { ...defaultState };\n  playgroundValue.value = \"周\";\n  lastChange.value = \"尚未切换\";\n}\n\n/** 演练场控制面板配置 */\nconst controls: any = [\n  {\n    title: \"基础属性\",\n    children: [\n      { label: \"尺寸\", key: \"size\", component: \"select\" as const, defaultValue: \"md\", props: { options: sizeOptions } },\n      { label: \"排列方向\", key: \"direction\", component: \"select\" as const, defaultValue: \"horizontal\", props: { options: directionOptions } },\n      { label: \"带图标\", key: \"icon\", component: \"checkbox\" as const, defaultValue: false },\n    ],\n  },\n  {\n    title: \"状态\",\n    children: [\n      { label: \"撑满宽度\", key: \"block\", component: \"checkbox\" as const, defaultValue: false },\n      { label: \"禁用\", key: \"disabled\", component: \"checkbox\" as const, defaultValue: false },\n    ],\n  },\n];\n\n/** 演练场选项：开启图标时给每一项配一个图标 */\nconst PERIOD_ICONS = [\"lucide:sun\", \"lucide:calendar-days\", \"lucide:calendar\", \"lucide:calendar-range\", \"lucide:calendar-check\"];\nconst playgroundOptions = computed(() =>\n  state.value.icon ? periods.map((p, i) => ({ label: p, value: p, icon: PERIOD_ICONS[i] })) : periods,\n);\n\n/** 演练场右上角展示的等价代码：完整列出当前全部参数 */\nconst segmentedCode = computed(() => {\n  const s = state.value;\n  return [\n    \"<RebornSegmented\",\n    \"  v-model=\\\"value\\\"\",\n    \"  :options=\\\"options\\\"\",\n    `  size=\"${s.size}\"`,\n    `  direction=\"${s.direction}\"`,\n    `  :block=\"${s.block}\"`,\n    `  :disabled=\"${s.disabled}\"`,\n    \"  @change=\\\"onChange\\\"\",\n    \"/>\",\n  ].join(\"\\n\");\n});\n\n// ─── 场景演示状态 ─────────────────────────────────────────────────\n\nconst basicValue = shallowRef<SegmentedValue>(\"周\");\nconst sizeValue = shallowRef<SegmentedValue>(\"list\");\nconst iconValue = shallowRef<SegmentedValue>(\"board\");\nconst disabledValue = shallowRef<SegmentedValue>(\"周\");\nconst blockValue = shallowRef<SegmentedValue>(\"周\");\nconst verticalValue = shallowRef<SegmentedValue>(\"list\");\nconst slotValue = shallowRef<SegmentedValue>(\"pro\");\nconst mappedValue = shallowRef<SegmentedValue>(2);\nconst boolValue = shallowRef<SegmentedValue>(true);\nconst filledValue = shallowRef<SegmentedValue>(\"board\");\n/** 定制配色：选中块用主题色，选中项文字转白 */\nconst primaryFilledUi: SegmentedUI = { slider: 'bg-primary', item: 'data-[checked=true]:text-white' };\nconst pillValue = shallowRef<SegmentedValue>(\"周\");\n/** 胶囊描边：root / slider / item 一起改成全圆角，外框只留描边 */\nconst pillOutlineUi: SegmentedUI = { root: 'rounded-full border border-gray-3 bg-transparent', slider: 'rounded-full bg-brand-1', item: 'rounded-full data-[checked=true]:text-primary' };\n/** 每个星期对应一种语义色，完整工具类保证 Tailwind 能静态识别。 */\nconst weekdayOptions = [\n  { value: \"primary\", label: \"星期一\", backgroundClass: \"bg-primary\", foregroundClass: \"data-[checked=true]:text-white data-[checked=true]:hover:text-white\" },\n  { value: \"secondary\", label: \"星期二\", backgroundClass: \"bg-secondary\", foregroundClass: \"data-[checked=true]:text-slate-950 data-[checked=true]:hover:text-slate-950\" },\n  { value: \"success\", label: \"星期三\", backgroundClass: \"bg-success\", foregroundClass: \"data-[checked=true]:text-slate-950 data-[checked=true]:hover:text-slate-950\" },\n  { value: \"info\", label: \"星期四\", backgroundClass: \"bg-info\", foregroundClass: \"data-[checked=true]:text-slate-950 data-[checked=true]:hover:text-slate-950\" },\n  { value: \"warning\", label: \"星期五\", backgroundClass: \"bg-warning\", foregroundClass: \"data-[checked=true]:text-slate-950 data-[checked=true]:hover:text-slate-950\" },\n  { value: \"error\", label: \"星期六\", backgroundClass: \"bg-error\", foregroundClass: \"data-[checked=true]:text-slate-950 data-[checked=true]:hover:text-slate-950\" },\n  { value: \"neutral\", label: \"星期日\", backgroundClass: \"bg-neutral\", foregroundClass: \"data-[checked=true]:text-gray-10 data-[checked=true]:hover:text-gray-10\" },\n];\n/** 绑定语义色值，初始选中星期一。 */\nconst weekdayValue = shallowRef<SegmentedValue>(\"primary\");\n/** 当前星期决定滑块背景和选中文字颜色。 */\nconst selectedWeekday = computed(() => weekdayOptions.find(option => option.value === weekdayValue.value) ?? weekdayOptions[0]!);\n/** 外框保持橙色胶囊，选中项在悬停时仍保留对应的文字颜色。 */\nconst weekdayUi = computed(() => ({\n  root: \"rounded-full bg-orange-9\",\n  slider: `rounded-full ${selectedWeekday.value.backgroundClass}`,\n  item: `rounded-full text-gray-1 hover:text-gray-1 ${selectedWeekday.value.foregroundClass}`,\n}));\n\n/** 部分选项禁用 */\nconst partlyDisabled: SegmentedOption[] = [\n  { label: \"日\", value: \"日\" },\n  { label: \"周\", value: \"周\" },\n  { label: \"月\", value: \"月\", disabled: true },\n  { label: \"年\", value: \"年\" },\n];\n\n/** 自定义插槽用的套餐数据 */\nconst plans: SegmentedOption[] = [\n  { value: \"free\", label: \"免费版\", price: \"¥0\" },\n  { value: \"pro\", label: \"专业版\", price: \"¥99\" },\n  { value: \"team\", label: \"团队版\", price: \"¥299\" },\n];\n/** 插槽内是名称加价格两行，选项改为随内容撑高 */\nconst twoLineItemUi: SegmentedUI = { item: 'h-auto py-2' };\n\n/** 字段名不是 value / label 的后端数据 */\nconst levels = [\n  { id: 1, name: \"低\" },\n  { id: 2, name: \"中\" },\n  { id: 3, name: \"高\" },\n  { id: 4, name: \"紧急\", locked: true },\n];\n/** 把后端的 id / name / locked 依次当作 value / label / disabled */\nconst levelFieldNames: SegmentedProps['fieldNames'] = { value: 'id', label: 'name', disabled: 'locked' };\n\n/** 布尔取值：value 直接用 true / false */\nconst switchOptions: SegmentedOption[] = [{ label: '开启', value: true }, { label: '关闭', value: false }];\n</script>\n\n<template>\n  <div class=\"flex w-full min-w-0 flex-col\">\n    <Playground\n      v-model=\"state\" :controls=\"controls\" :code=\"segmentedCode\" component-name=\"RebornSegmented\"\n      title=\"交互演练场\" description=\"调节上方参数，点击选项或用方向键切换，查看选中块的滑动与各尺寸的比例。\"\n    >\n      <template #tag>\n        <RebornButton size=\"sm\" variant=\"soft\" color=\"neutral\" @click=\"resetState\">\n          <template #leading>\n            <Icon name=\"lucide:rotate-ccw\" size=\"12\" />\n          </template>\n          重置配置\n        </RebornButton>\n      </template>\n\n      <div class=\"flex w-full flex-col items-center gap-4\">\n        <RebornSegmented\n          v-model=\"playgroundValue\" :options=\"playgroundOptions\" :size=\"state.size\" :direction=\"state.direction\"\n          :block=\"state.block\" :disabled=\"state.disabled\" aria-label=\"统计周期\"\n          @change=\"(value) => (lastChange = `change：${value}`)\"\n        />\n        <DemoNote tone=\"dimmed\" class=\"font-mono text-xs\">\n          {{ lastChange }}；v-model：{{ playgroundValue }}\n        </DemoNote>\n      </div>\n    </Playground>\n\n    <DemoSection title=\"基础用法\">\n      <template #description>\n        <code>options</code> 传字符串数组时，每一项同时作为文案与值；<code>v-model</code> 绑定选中值，切换后派发 <code>change</code>。\n      </template>\n      <DemoBlock layout=\"stack\">\n        <RebornSegmented v-model=\"basicValue\" :options=\"periods\" aria-label=\"统计周期\" />\n        <DemoNote tone=\"dimmed\" class=\"font-mono text-xs\">\n          v-model：{{ basicValue }}\n        </DemoNote>\n      </DemoBlock>\n      <DemoNote tone=\"dimmed\">\n        选项是隐藏的原生 radio：Tab 聚焦到选中项后，方向键在同组内移动并选中，禁用项会被跳过。\n      </DemoNote>\n    </DemoSection>\n\n    <DemoSection title=\"尺寸\">\n      <template #description>\n        <code>size</code> 三档，选项高度 20 / 28 / 36px；容器内边距与圆角跟着收放，选中块的圆角始终与容器边缘同心。\n      </template>\n      <DemoBlock layout=\"stack\" class=\"gap-4\">\n        <div v-for=\"size in segmentedSizes\" :key=\"size\" class=\"flex items-center gap-4\">\n          <span class=\"w-28 shrink-0 font-mono text-xs text-gray-6\">size=\"{{ size }}\"</span>\n          <RebornSegmented v-model=\"sizeValue\" :options=\"viewOptions\" :size=\"size\" />\n        </div>\n      </DemoBlock>\n    </DemoSection>\n\n    <DemoSection title=\"图标\">\n      <template #description>\n        对象选项的 <code>icon</code> 字段接受 Iconify 图标名，显示在文字前面，间隔 4px；图标随字号缩放。\n      </template>\n      <DemoBlock layout=\"stack\">\n        <RebornSegmented v-model=\"iconValue\" :options=\"viewOptions\" size=\"lg\" aria-label=\"视图\" />\n      </DemoBlock>\n    </DemoSection>\n\n    <DemoSection title=\"禁用\">\n      <template #description>\n        <code>disabled</code> 禁用整组；单个选项用对象里的 <code>disabled</code> 字段禁用，点击无效、键盘导航跳过它。\n      </template>\n      <DemoBlock layout=\"stack\" class=\"gap-4\">\n        <RebornSegmented v-model=\"disabledValue\" :options=\"partlyDisabled\" />\n        <RebornSegmented v-model=\"disabledValue\" :options=\"partlyDisabled\" disabled />\n      </DemoBlock>\n    </DemoSection>\n\n    <DemoSection title=\"撑满宽度\">\n      <template #description>\n        <code>block</code> 让组件撑满父元素宽度，各选项等分；文案过长时截断。\n      </template>\n      <DemoBlock layout=\"stack\">\n        <RebornSegmented v-model=\"blockValue\" :options=\"periods\" block />\n      </DemoBlock>\n    </DemoSection>\n\n    <DemoSection title=\"竖向排列\">\n      <template #description>\n        <code>direction=\"vertical\"</code> 竖排，选中块沿纵向滑动；宽度取最宽的选项，配合 <code>block</code> 撑满容器宽度。\n      </template>\n      <DemoBlock layout=\"row\" align=\"start\" class=\"gap-8\">\n        <RebornSegmented v-model=\"verticalValue\" :options=\"viewOptions\" direction=\"vertical\" />\n        <div class=\"w-48\">\n          <RebornSegmented v-model=\"verticalValue\" :options=\"viewOptions\" direction=\"vertical\" block size=\"lg\" />\n        </div>\n      </DemoBlock>\n    </DemoSection>\n\n    <DemoSection title=\"自定义选项\">\n      <template #description>\n        默认插槽替换每一项的内容，作用域里有 <code>item</code>（原始选项数据）、<code>checked</code>、<code>disabled</code>；插槽内容同样垫在选中块上面。\n      </template>\n      <DemoBlock layout=\"stack\">\n        <RebornSegmented v-model=\"slotValue\" :options=\"plans\" size=\"lg\" :ui=\"twoLineItemUi\">\n          <template #default=\"{ item, checked }\">\n            <span class=\"flex flex-col items-center leading-tight\">\n              <span>{{ typeof item === 'object' ? item.label : item }}</span>\n              <span class=\"text-sm\" :class=\"checked ? 'text-primary' : 'text-gray-5'\">{{ typeof item === 'object' ? item.price : '' }}</span>\n            </span>\n          </template>\n        </RebornSegmented>\n      </DemoBlock>\n      <DemoNote tone=\"dimmed\">\n        两行内容超过了 36px，这里用 ui.item 把选项高度改成 h-auto；选中块按选项实际尺寸落位，不需要另外调整。\n      </DemoNote>\n    </DemoSection>\n\n    <DemoSection title=\"字段映射与值类型\">\n      <template #description>\n        后端字段不叫 <code>value</code> / <code>label</code> / <code>disabled</code> 时用 <code>field-names</code> 映射；值可以是字符串、数字或布尔，按全等比较。\n      </template>\n      <DemoBlock layout=\"grid\" :columns=\"2\">\n        <div class=\"flex flex-col items-start gap-2\">\n          <RebornSegmented\n            v-model=\"mappedValue\" :options=\"levels\" :field-names=\"levelFieldNames\"\n          />\n          <span class=\"font-mono text-xs text-gray-6\">v-model：{{ mappedValue }}（{{ typeof mappedValue }}）</span>\n        </div>\n        <div class=\"flex flex-col items-start gap-2\">\n          <RebornSegmented\n            v-model=\"boolValue\" :options=\"switchOptions\"\n          />\n          <span class=\"font-mono text-xs text-gray-6\">v-model：{{ boolValue }}（{{ typeof boolValue }}）</span>\n        </div>\n      </DemoBlock>\n    </DemoSection>\n\n    <DemoSection title=\"定制配色\">\n      <template #description>\n        <code>ui</code> 按结构键追加类名：<code>slider</code> 改选中块，<code>item</code> 改选项；只改选中项时用 <code>data-[checked=true]:</code> 前缀，禁用项用 <code>data-[disabled=true]:</code>。\n      </template>\n      <DemoBlock layout=\"stack\" class=\"gap-4\">\n        <div class=\"flex flex-col items-start gap-2\">\n          <RebornSegmented\n            v-model=\"filledValue\" :options=\"viewOptions\"\n            :ui=\"primaryFilledUi\"\n          />\n          <span class=\"font-mono text-xs text-gray-6\">:ui=\"{ slider: 'bg-primary', item: 'data-[checked=true]:text-white' }\"</span>\n        </div>\n        <div class=\"flex flex-col items-start gap-2\">\n          <RebornSegmented\n            v-model=\"pillValue\" :options=\"periods\"\n            :ui=\"pillOutlineUi\"\n          />\n          <span class=\"font-mono text-xs text-gray-6\">胶囊描边：root / slider / item 一起改圆角</span>\n        </div>\n        <div class=\"flex w-full min-w-0 flex-col gap-2\">\n          <div class=\"overflow-x-auto pb-1\">\n            <RebornSegmented\n              v-model=\"weekdayValue\" :options=\"weekdayOptions\" :ui=\"weekdayUi\"\n              class=\"min-w-max\" aria-label=\"星期与语义色选择\"\n            />\n          </div>\n          <DemoNote tone=\"dimmed\" class=\"font-mono text-xs\">\n            外框：rounded-full bg-orange-9；当前：{{ selectedWeekday.label }} → {{ selectedWeekday.value }}；选中背景：{{ selectedWeekday.backgroundClass }}\n          </DemoNote>\n        </div>\n      </DemoBlock>\n      <DemoNote tone=\"dimmed\">\n        选中块的位置与尺寸写在行内样式里，ui.slider 里改 left / width 不会生效；颜色、圆角、阴影都可以改。\n      </DemoNote>\n    </DemoSection>\n  </div>\n</template>\n"
+    }
+  ],
+  "related": [],
+  "whenToUse": [
+    "列表 / 看板 / 日历这类视图切换：对象选项带 icon，size=\"lg\"。",
+    "图表统计周期（日 / 周 / 月）等 2~5 个短选项的筛选：options 直接传字符串数组。",
+    "表单里少量互斥选项、希望一眼看到全部取值：放进 RebornFormItem，选中即触发 change 校验。",
+    "卡片、面板顶部撑满一行的切换：开 block，各选项等分宽度。"
+  ],
+  "whenNotToUse": [
+    "切换整块内容面板、需要标签页语义，改用 reborn-tabs。",
+    "选项多于 5~6 个或文案较长，改用 reborn-select。",
+    "需要语义色或实底选中态的分段按钮，改用 reborn-radio 的 type=\"button\"。"
+  ],
+  "pitfalls": [
+    "仅 web 端可用；UniApp 端用 reborn-radio 的 type=\"button\"。",
+    "v-model 与选项值按 === 比较，数字 1 与字符串 '1' 不互相选中；值不在选项里时没有选中项、选中块隐藏。",
+    "点击已选中项不派发 change，也不触发表单校验。",
+    "icon 字段固定读 icon，不受 fieldNames 字段映射影响；用了默认插槽后 icon 与 label 都不再渲染。",
+    "尺寸为 sm / md / lg（选项高 20 / 28 / 36px），处于 RebornForm 内时被表单尺寸覆盖。",
+    "选项不换行，横排放不下会撑出父元素；只有 block 等分宽度时文案才截断。",
+    "没有 color 属性，默认选中态白底（bg-gray-1）+ gray-10 文字；改配色用 :ui，如 { slider: 'bg-primary', item: 'data-[checked=true]:text-white' }，ui.item 作用于所有选项，只改选中项要加 data-[checked=true]: 前缀。",
+    "对象字段映射使用 fieldNames，旧 props 属性已移除。"
+  ],
+  "dependencies": [
+    "@vueuse/core",
+    "clsx",
+    "motion-v",
+    "tailwind-merge",
+    "tailwind-variants"
+  ],
+  "install": {
+    "cli": "npx reborn-ui@latest add reborn-segmented"
+  },
+  "sourceRefs": {
+    "web": [
+      "app/components/reborn/ui/reborn-segmented/RebornSegmented.vue",
+      "app/components/reborn/ui/reborn-segmented/index.ts",
+      "app/components/reborn/ui/reborn-segmented/reborn-segmented.config.ts"
+    ]
+  },
+  "docPath": "content/2.components/input-and-forms/reborn-segmented.md",
+  "_meta": {
+    "contentHash": "cbf4972493e357a859c7eb9b755f5788aee7640f",
+    "hasOverride": true,
+    "extractors": {
+      "web": "ok",
+      "uniapp": "absent",
+      "docs": "found"
+    }
+  }
+}

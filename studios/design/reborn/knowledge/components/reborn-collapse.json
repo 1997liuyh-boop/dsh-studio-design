@@ -1,0 +1,180 @@
+{
+  "$schema": "../schema/component.schema.json",
+  "id": "reborn-collapse",
+  "title": "Collapse 折叠面板",
+  "description": "用于点击触发区展开或收起内容区域的折叠组件，带高度过渡动画，双端可用。",
+  "category": "misc",
+  "tags": [
+    "css",
+    "tailwind",
+    "collapse",
+    "accordion",
+    "uniapp"
+  ],
+  "aliases": [
+    "collapse",
+    "折叠面板",
+    "手风琴",
+    "accordion",
+    "展开收起"
+  ],
+  "platforms": [
+    "web",
+    "uniapp"
+  ],
+  "props": [
+    {
+      "name": "customClass",
+      "type": "any",
+      "required": false,
+      "description": "根节点的自定义样式类，与 `ui.root` 合并。",
+      "default": "''"
+    },
+    {
+      "name": "ui",
+      "type": "{\n    root?: any\n    trigger?: any\n    content?: any\n  }",
+      "required": false,
+      "description": "细粒度样式覆盖，键位见「自定义样式（ui）」。 可用键（从源码抽取，以此为准）——两端：content、root、trigger。",
+      "default": "() => ({})"
+    },
+    {
+      "name": "modelValue",
+      "type": "boolean",
+      "required": false,
+      "description": "双向绑定值",
+      "vModel": true,
+      "default": "undefined"
+    },
+    {
+      "name": "disabled",
+      "type": "boolean",
+      "required": false,
+      "description": "禁用点击触发区切换；`v-model` 与 `show()` / `hide()` 不受影响。",
+      "default": "false"
+    },
+    {
+      "name": "position",
+      "type": "'bottom' | 'top'",
+      "required": false,
+      "description": "折叠区相对触发区的位置，`top` 时渲染在触发区上方。",
+      "default": "'bottom'"
+    },
+    {
+      "name": "absolute",
+      "type": "boolean",
+      "required": false,
+      "description": "浮层模式：折叠区绝对定位、不占文档流，动画改为 `transform` 平移。",
+      "default": "false"
+    }
+  ],
+  "events": [
+    {
+      "name": "update:modelValue",
+      "description": "modelValue 变化时触发（v-model 同步）"
+    },
+    {
+      "name": "toggle",
+      "payload": "(e: 'toggle', value: boolean): void",
+      "description": "点击触发区切换成功后触发，载荷为切换后的状态；禁用时不触发。"
+    }
+  ],
+  "slots": [
+    {
+      "name": "default",
+      "description": "触发区内容，点击切换展开状态；`open` 为当前是否展开。"
+    },
+    {
+      "name": "content",
+      "description": "折叠展示的内容区域。"
+    }
+  ],
+  "exposes": [
+    {
+      "name": "show",
+      "description": ""
+    },
+    {
+      "name": "hide",
+      "description": ""
+    },
+    {
+      "name": "toggle",
+      "description": ""
+    },
+    {
+      "name": "resize",
+      "description": ""
+    },
+    {
+      "name": "isAnimating",
+      "description": ""
+    }
+  ],
+  "examples": [
+    {
+      "title": "Web 演示",
+      "path": "app/components/reborn/examples/reborn-collapse/RebornCollapseDemo.vue",
+      "source": "demo",
+      "platform": "web",
+      "code": "<script setup lang=\"ts\">\nimport { DemoBlock, DemoNote, DemoSection, Icon } from \"#components\";\nimport { ref, shallowRef } from \"vue\";\nimport RebornCollapse from \"~/components/reborn/ui/reborn-collapse/RebornCollapse.vue\";\nimport RebornSwitch from \"~/components/reborn/ui/reborn-switch/RebornSwitch.vue\";\n\n/** 基础用法的展开状态 */\nconst visible = shallowRef(false);\n\n/** 向上展开示例的展开状态 */\nconst topVisible = shallowRef(false);\n\n/** 浮层模式：向上 / 向下两个面板各自的展开状态 */\nconst floatTop = shallowRef(false);\nconst floatBottom = shallowRef(false);\n\n/** 禁用与事件：禁用开关、展开状态与最近一次 toggle 回显 */\nconst lockDisabled = shallowRef(false);\nconst lockVisible = shallowRef(false);\nconst lastToggle = shallowRef<string>(\"尚未触发\");\n\n/** toggle 事件回调：只在点击触发区时派发，禁用时不派发 */\nfunction onToggle(value: boolean) {\n  lastToggle.value = value ? \"toggle(true)：已展开\" : \"toggle(false)：已收起\";\n}\n\n/** 多面板列表：每一项独立维护展开状态 */\nconst panels = ref([\n  {\n    title: \"组件是什么\",\n    open: true,\n    content:\n      \"RebornCollapse 只负责折叠区域的高度过渡与状态管理，触发器与内容都由插槽提供，不预设任何视觉样式，便于嵌入各类业务卡片。\",\n  },\n  {\n    title: \"如何控制展开\",\n    open: false,\n    content: \"通过 v-model 双向绑定展开状态；也可以监听 toggle 事件在展开或收起时执行额外逻辑，例如懒加载内容。\",\n  },\n  {\n    title: \"向上展开\",\n    open: false,\n    content: \"position 设为 top 时内容向上方展开，配合 absolute 可让内容脱离文档流悬浮显示，适合底部工具栏场景。\",\n  },\n]);\n</script>\n\n<template>\n  <div class=\"flex w-full min-w-0 flex-col\">\n    <DemoSection\n      title=\"基础用法\"\n      description=\"默认插槽是触发器，可通过作用域参数 open 拿到当前状态；content 插槽是折叠内容，高度过渡由组件自动计算。\"\n    >\n      <DemoBlock layout=\"stack\">\n        <RebornCollapse v-model=\"visible\" custom-class=\"w-full\">\n          <template #default=\"{ open }\">\n            <div class=\"border-default rounded-lg flex cursor-pointer items-center justify-between border px-4 py-3\">\n              <span class=\"text-default text-sm font-medium\">点击展开 / 收起</span>\n              <Icon\n                name=\"lucide:chevron-down\"\n                class=\"text-muted size-4 transition-transform duration-200\"\n                :class=\"{ 'rotate-180': open }\"\n              />\n            </div>\n          </template>\n\n          <template #content>\n            <div class=\"text-muted space-y-2 px-4 py-3 text-sm leading-relaxed\">\n              <p>张若虚（约公元 660—约公元 720），唐代诗人，扬州（今属江苏）人，曾任兖州兵曹，生卒年与字号均已不详。</p>\n              <p>\n                其诗仅存两首于《全唐诗》中，《春江花月夜》抒写离情别绪与人生感慨，意境空明、韵律悠扬，素有「孤篇盖全唐」之誉。\n              </p>\n            </div>\n          </template>\n        </RebornCollapse>\n\n        <DemoNote tone=\"dimmed\">\n          当前状态：<code>{{ visible ? \"展开\" : \"收起\" }}</code>\n        </DemoNote>\n      </DemoBlock>\n    </DemoSection>\n\n    <DemoSection\n      title=\"展开方向：向上展开\"\n      description=\"position 设为 top 时，折叠区渲染在触发区上方，内容从触发区向上推开；它仍在文档流中，展开会把触发区往下挤。\"\n    >\n      <DemoBlock layout=\"stack\">\n        <RebornCollapse v-model=\"topVisible\" position=\"top\" custom-class=\"w-full\">\n          <template #default=\"{ open }\">\n            <div class=\"border-default rounded-lg flex cursor-pointer items-center justify-between border px-4 py-3\">\n              <span class=\"text-default text-sm font-medium\">向上展开</span>\n              <Icon\n                name=\"lucide:chevron-up\"\n                class=\"text-muted size-4 transition-transform duration-200\"\n                :class=\"{ 'rotate-180': open }\"\n              />\n            </div>\n          </template>\n\n          <template #content>\n            <p class=\"text-muted px-4 py-3 text-sm leading-relaxed\">\n              折叠区位于触发区之上。收起时内容朝触发区方向裁切，因为内层加了 flex-col\n              justify-end，把底边锚定在触发区边缘。\n            </p>\n          </template>\n        </RebornCollapse>\n      </DemoBlock>\n    </DemoSection>\n\n    <DemoSection\n      title=\"浮层模式：脱离文档流\"\n      description=\"absolute 开启后折叠区绝对定位在触发区上方或下方，展开不再撑开页面；动画改为 transform 平移，面板只朝触发区一个方向收起。\"\n    >\n      <DemoBlock layout=\"grid\" class=\"gap-4 sm:grid-cols-2\">\n        <div class=\"border-default rounded-xl flex h-56 w-full flex-col justify-end border border-dashed p-3\">\n          <RebornCollapse v-model=\"floatTop\" position=\"top\" absolute custom-class=\"w-full\">\n            <template #default=\"{ open }\">\n              <div class=\"border-default rounded-lg flex cursor-pointer items-center justify-between border px-4 py-3\">\n                <span class=\"text-default text-sm font-medium\">position=\"top\"</span>\n                <Icon\n                  name=\"lucide:chevron-up\"\n                  class=\"text-muted size-4 transition-transform duration-200\"\n                  :class=\"{ 'rotate-180': open }\"\n                />\n              </div>\n            </template>\n\n            <template #content>\n              <div class=\"bg-default border-default rounded-lg mb-2 border p-3 shadow-sm\">\n                <p class=\"text-muted text-sm\">悬浮在触发区上方，适合底部工具栏</p>\n              </div>\n            </template>\n          </RebornCollapse>\n        </div>\n\n        <div class=\"border-default rounded-xl h-56 w-full border border-dashed p-3\">\n          <RebornCollapse v-model=\"floatBottom\" absolute custom-class=\"w-full\">\n            <template #default=\"{ open }\">\n              <div class=\"border-default rounded-lg flex cursor-pointer items-center justify-between border px-4 py-3\">\n                <span class=\"text-default text-sm font-medium\">position=\"bottom\"</span>\n                <Icon\n                  name=\"lucide:chevron-down\"\n                  class=\"text-muted size-4 transition-transform duration-200\"\n                  :class=\"{ 'rotate-180': open }\"\n                />\n              </div>\n            </template>\n\n            <template #content>\n              <div class=\"bg-default border-default rounded-lg mt-2 border p-3 shadow-sm\">\n                <p class=\"text-muted text-sm\">悬浮在触发区下方，覆盖后续内容而不推开它</p>\n              </div>\n            </template>\n          </RebornCollapse>\n        </div>\n      </DemoBlock>\n      <DemoNote tone=\"dimmed\">浮层会覆盖相邻内容，外层需要预留空间或确保没有被裁切的 overflow-hidden 祖先。</DemoNote>\n    </DemoSection>\n\n    <DemoSection\n      title=\"禁用与事件\"\n      description=\"disabled 让点击触发区不再切换，但 v-model 仍可在外部改写；toggle 事件只在点击触发区切换成功时派发，载荷是切换后的状态。\"\n    >\n      <DemoBlock layout=\"stack\">\n        <div class=\"flex items-center gap-2\">\n          <RebornSwitch v-model=\"lockDisabled\" size=\"sm\" />\n          <span class=\"text-muted text-sm\">disabled</span>\n        </div>\n        <RebornCollapse v-model=\"lockVisible\" :disabled=\"lockDisabled\" custom-class=\"w-full\" @toggle=\"onToggle\">\n          <template #default=\"{ open }\">\n            <div\n              class=\"border-default rounded-lg flex items-center justify-between border px-4 py-3\"\n              :class=\"lockDisabled ? 'cursor-not-allowed opacity-60' : 'cursor-pointer'\"\n            >\n              <span class=\"text-default text-sm font-medium\">{{ lockDisabled ? \"已禁用\" : \"点击切换\" }}</span>\n              <Icon\n                name=\"lucide:chevron-down\"\n                class=\"text-muted size-4 transition-transform duration-200\"\n                :class=\"{ 'rotate-180': open }\"\n              />\n            </div>\n          </template>\n\n          <template #content>\n            <p class=\"text-muted px-4 py-3 text-sm leading-relaxed\">\n              组件不给触发区加任何禁用样式，禁用外观需要在插槽里自己写。\n            </p>\n          </template>\n        </RebornCollapse>\n        <DemoNote tone=\"dimmed\" class=\"font-mono text-xs\">\n          {{ lastToggle }}\n        </DemoNote>\n      </DemoBlock>\n    </DemoSection>\n\n    <DemoSection\n      title=\"组合：多面板列表\"\n      description=\"每一项各自持有一份状态即可组合出列表，多项可以同时展开；组件没有内置互斥，需要手风琴效果时在外部改写其余项的 v-model。这里用一条分隔线代替卡片外壳，避免层层嵌套的背景块。\"\n    >\n      <DemoBlock layout=\"stack\">\n        <div class=\"divide-default border-default rounded-xl w-full divide-y border\">\n          <RebornCollapse v-for=\"panel in panels\" :key=\"panel.title\" v-model=\"panel.open\" custom-class=\"w-full\">\n            <template #default=\"{ open }\">\n              <div class=\"flex cursor-pointer items-center justify-between px-4 py-3\">\n                <span class=\"text-default text-sm font-medium\">{{ panel.title }}</span>\n                <Icon\n                  name=\"lucide:chevron-down\"\n                  class=\"text-muted size-4 transition-transform duration-200\"\n                  :class=\"{ 'rotate-180': open }\"\n                />\n              </div>\n            </template>\n\n            <template #content>\n              <p class=\"text-muted px-4 pb-3 text-sm leading-relaxed\">\n                {{ panel.content }}\n              </p>\n            </template>\n          </RebornCollapse>\n        </div>\n      </DemoBlock>\n    </DemoSection>\n  </div>\n</template>\n"
+    },
+    {
+      "title": "UniApp 演示",
+      "path": "packages/uniapp-project/src/pages/reborn-collapse/RebornCollapseDemo.vue",
+      "source": "demo",
+      "platform": "uniapp",
+      "code": "<script lang=\"ts\" setup>\nimport { ref, shallowRef } from 'vue'\n\nimport RebornButton from '@/components/reborn-button/RebornButton.vue'\nimport RebornCard from '@/components/reborn-card/RebornCard.vue'\nimport RebornCollapse from '@/components/reborn-collapse/RebornCollapse.vue'\nimport RebornPage from '@/components/reborn-page/RebornPage.vue'\n// demo组件\nimport PinyinPoem from '@/demo/PinyinPoem.vue'\nimport { collapsePoem } from '@/demo/poems'\n\nconst visible = shallowRef(false)\nconst collapseRef = ref<InstanceType<typeof RebornCollapse> | null>(null)\n\nfunction toggle() {\n  collapseRef.value?.toggle?.()\n}\n</script>\n\n<template>\n  <RebornPage title=\"Collapse\" description=\"折叠面板组件用于展示和隐藏内容区域，支持平滑的展开收起动画效果，常用于 FAQ、详情展示等场景。\">\n    <RebornCard title=\"基本用法\">\n      <RebornCollapse v-model=\"visible\">\n        <template #default=\"{ open }\">\n          <view\n            class=\"\n              flex select-none items-center justify-between rounded-lg\n              bg-slate-50 p-4 transition-colors\n              active:bg-slate-100\n              dark:bg-slate-800\n              dark:active:bg-slate-700\n            \"\n          >\n            <text\n              class=\"\n                text-sm font-semibold text-slate-700\n                dark:text-white\n              \"\n            >\n              春江花月夜\n            </text>\n            <view\n              class=\"\n                i-lucide-chevron-down size-5 text-slate-500 transition-transform\n                duration-200\n              \"\n              :class=\"{ 'rotate-180': open }\"\n            />\n          </view>\n        </template>\n        <template #content>\n          <PinyinPoem :poem=\"collapsePoem\" />\n        </template>\n      </RebornCollapse>\n    </RebornCard>\n\n    <RebornCard title=\"ref 方式调用\">\n      <RebornButton @click=\"toggle\">\n        切换状态\n      </RebornButton>\n\n      <RebornCollapse ref=\"collapseRef\" :ui=\"{ content: 'pt-4' }\">\n        <template #content>\n          <PinyinPoem :poem=\"collapsePoem\" />\n        </template>\n      </RebornCollapse>\n    </RebornCard>\n  </RebornPage>\n</template>\n"
+    }
+  ],
+  "related": [],
+  "whenToUse": [
+    "FAQ、说明文字等默认收起、点击展开的内容块。",
+    "筛选面板、更多选项等需要展开收起切换的区域。",
+    "需要程序化控制展开（暴露 show/hide/toggle/resize 方法）的折叠区域。"
+  ],
+  "whenNotToUse": [
+    "内容需要浮层覆盖页面而非推挤布局时，改用 reborn-drawer（Web）、reborn-popup（UniApp）或 reborn-dialog。",
+    "多块内容并列切换、同一时间只看一块，改用 reborn-tabs。"
+  ],
+  "pitfalls": [
+    "web 与 uniapp 双端可用。",
+    "触发区放默认插槽，被折叠的内容必须放 content 插槽，二者不可混放。",
+    "UniApp 端展开过渡结束后高度放开为 auto，内容尺寸变化会自动跟随；resize 只在 300ms 展开过渡期间用于校正终点，Web 端为空实现。",
+    "UniApp 端 ui.content 不能加 absolute / fixed：展开后外壳 height: auto 由内容节点撑开，脱离文档流会塌成 0。",
+    "position 可设 top 使内容向上展开，absolute 控制展开内容是否脱离文档流。",
+    "modelValue 模型默认 undefined（两端一致）：未绑定时内部默认收起，显式 undefined/null 也按收起渲染；点击触发区与 show/hide/toggle 都会回写 v-model。"
+  ],
+  "dependencies": [
+    "@weapp-tailwindcss/merge-v3",
+    "@weapp-tailwindcss/variants-v3",
+    "clsx",
+    "motion-v",
+    "tailwind-merge",
+    "tailwind-variants"
+  ],
+  "install": {
+    "cli": "npx reborn-ui@latest add reborn-collapse"
+  },
+  "sourceRefs": {
+    "web": [
+      "app/components/reborn/ui/reborn-collapse/RebornCollapse.vue",
+      "app/components/reborn/ui/reborn-collapse/index.ts",
+      "app/components/reborn/ui/reborn-collapse/reborn-collapse.config.ts"
+    ],
+    "uniapp": [
+      "packages/uniapp-project/src/components/reborn-collapse/RebornCollapse.vue",
+      "packages/uniapp-project/src/components/reborn-collapse/index.ts",
+      "packages/uniapp-project/src/components/reborn-collapse/reborn-collapse.config.ts"
+    ]
+  },
+  "docPath": "content/2.components/miscellaneous/reborn-collapse.md",
+  "_meta": {
+    "contentHash": "68f7fe8d4545c8de523bf3c178dd789ba1bf6813",
+    "hasOverride": true,
+    "extractors": {
+      "web": "ok",
+      "uniapp": "ok",
+      "docs": "found"
+    }
+  }
+}

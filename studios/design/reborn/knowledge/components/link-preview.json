@@ -1,0 +1,118 @@
+{
+  "$schema": "../schema/component.schema.json",
+  "id": "link-preview",
+  "title": "链接预览",
+  "description": "用于悬停链接文字时弹出目标网页预览图的行内链接组件。",
+  "category": "misc",
+  "tags": [
+    "css",
+    "tailwind",
+    "aceternity-ui"
+  ],
+  "aliases": [],
+  "platforms": [
+    "web"
+  ],
+  "props": [
+    {
+      "name": "isStatic",
+      "type": "true",
+      "required": false,
+      "description": "预览图是否为静态图；设为 `true` 使用静态模式。",
+      "default": "false"
+    },
+    {
+      "name": "imageSrc",
+      "type": "string",
+      "required": false,
+      "description": "静态模式下要显示的图片来源（`isStatic` 为 `true` 时必填）。",
+      "default": "\"\""
+    },
+    {
+      "name": "url",
+      "type": "string",
+      "required": false,
+      "description": "静态模式可省略",
+      "default": "\"\""
+    },
+    {
+      "name": "class",
+      "type": "string",
+      "required": false,
+      "description": "应用于主元素的自定义类。",
+      "default": "\"\""
+    },
+    {
+      "name": "linkClass",
+      "type": "string",
+      "required": false,
+      "description": "应用于链接元素的自定义类。",
+      "default": "\"\""
+    },
+    {
+      "name": "width",
+      "type": "number",
+      "required": false,
+      "description": "预览图的宽度。",
+      "default": "200"
+    },
+    {
+      "name": "height",
+      "type": "number",
+      "required": false,
+      "description": "预览图的高度。",
+      "default": "125"
+    }
+  ],
+  "events": [],
+  "slots": [
+    {
+      "name": "default",
+      "description": ""
+    }
+  ],
+  "exposes": [],
+  "examples": [
+    {
+      "title": "Web 演示",
+      "path": "app/components/reborn/examples/link-preview/LinkPreviewDemo.vue",
+      "source": "demo",
+      "platform": "web",
+      "code": "<template>\n  <div class=\"flex h-[40rem] flex-col items-center justify-center px-4\">\n    <p class=\"mx-auto mb-10 max-w-3xl text-xl text-neutral-500 md:text-3xl dark:text-neutral-400\">\n      <LinkPreview url=\"https://tailwindcss.com\" class=\"font-bold\">\n        Tailwind CSS\n      </LinkPreview>\n      and\n      <LinkPreview url=\"https://motion.unovue.com/\" class=\"font-bold\">\n        motion-v\n      </LinkPreview>\n      are a great way to build modern websites.\n    </p>\n    <p class=\"mx-auto max-w-3xl text-xl text-neutral-500 md:text-3xl dark:text-neutral-400\">\n      Visit\n      <LinkPreview url=\"https://reborn-ui.com\" :width=\"400\" :height=\"200\">\n        <span class=\"bg-gradient-to-br from-purple-500 to-pink-500 bg-clip-text font-bold text-transparent\">\n          Reborn UI\n        </span>\n      </LinkPreview>\n      for more cool components\n    </p>\n  </div>\n</template>\n"
+    }
+  ],
+  "related": [],
+  "whenToUse": [
+    "文章、文档正文中的外链需要悬停预览目标站点时。",
+    "落地页介绍合作方或技术栈链接并展示站点截图时。"
+  ],
+  "whenNotToUse": [
+    "只需悬停显示文字说明，改用 reborn-tooltip。",
+    "需要更复杂的悬浮内容，改用 reborn-popover。"
+  ],
+  "pitfalls": [
+    "仅 web 端可用。",
+    "示例中通过 url 指定目标地址，width/height 控制预览图尺寸；props 未被完整提取（extractors 标记为 partial），使用前建议核对源码 LinkPreview.vue。",
+    "链接文字通过默认插槽传入。"
+  ],
+  "dependencies": [],
+  "install": {
+    "cli": "npx reborn-ui@latest add link-preview"
+  },
+  "sourceRefs": {
+    "web": [
+      "app/components/reborn/ui/link-preview/LinkPreview.vue",
+      "app/components/reborn/ui/link-preview/index.ts"
+    ]
+  },
+  "docPath": "content/2.components/miscellaneous/link-preview.md",
+  "_meta": {
+    "contentHash": "c84e482190adadb0e1eab2b4b49c4dcce06ed706",
+    "hasOverride": true,
+    "extractors": {
+      "web": "ok",
+      "uniapp": "absent",
+      "docs": "found"
+    }
+  }
+}

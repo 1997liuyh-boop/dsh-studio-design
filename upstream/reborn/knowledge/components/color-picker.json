@@ -11,6 +11,7 @@
     "color-picker",
     "uplusion23"
   ],
+  "aliases": [],
   "platforms": [
     "web"
   ],
@@ -142,7 +143,7 @@
   },
   "docPath": "content/2.components/input-and-forms/color-picker.md",
   "_meta": {
-    "contentHash": "ddb969c939fb2c20d2714fb83b755eb409c2aae4",
+    "contentHash": "1669a518ba0ea326c9a10ed75bd31b787bb6d4f7",
     "hasOverride": true,
     "extractors": {
       "web": "ok",

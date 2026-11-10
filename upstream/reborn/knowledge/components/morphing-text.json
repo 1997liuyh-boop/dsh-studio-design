@@ -9,6 +9,7 @@
     "tailwind",
     "magic-ui"
   ],
+  "aliases": [],
   "platforms": [
     "web"
   ],
@@ -80,7 +81,7 @@
   },
   "docPath": "content/2.components/text-animations/morphing-text.md",
   "_meta": {
-    "contentHash": "edede8df075b57beee47273c5c3a5eedb5333bba",
+    "contentHash": "d1ea6d3fbb388d3ae73d60f36e5e21a390ea44d6",
     "hasOverride": true,
     "extractors": {
       "web": "ok",

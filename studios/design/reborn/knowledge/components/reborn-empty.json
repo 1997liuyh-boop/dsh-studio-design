@@ -1,0 +1,173 @@
+{
+  "$schema": "../schema/component.schema.json",
+  "id": "reborn-empty",
+  "title": "Empty 空状态",
+  "description": "数据为空时的占位块：图片、标题加描述、操作区三段纵向居中，段间 24px（UniApp 48rpx），标题与描述之间 4px（UniApp 8rpx）。不传 image 用内置的 48×48 灰色空箱子（base64 内联），另附 box / folder / scene 三张示例插画。",
+  "category": "misc",
+  "tags": [
+    "css",
+    "tailwind",
+    "empty",
+    "placeholder",
+    "uniapp"
+  ],
+  "aliases": [
+    "empty",
+    "空状态",
+    "暂无数据",
+    "无数据",
+    "空页面",
+    "placeholder",
+    "占位"
+  ],
+  "platforms": [
+    "web",
+    "uniapp"
+  ],
+  "props": [
+    {
+      "name": "image",
+      "type": "string | null",
+      "required": false,
+      "description": "图片地址，可以是网络地址、/static 路径或 data URI。留空用内置默认插画； 传 null 时不渲染图片区（除非提供了 image 插槽） @defaultValue ''",
+      "default": "''"
+    },
+    {
+      "name": "imageSize",
+      "type": "number | string",
+      "required": false,
+      "description": "图片宽度，高度按原图比例自适应。数字按 rpx 处理，字符串原样写进行内样式（如 '120px'）。 不传时用主题里的默认宽度 96rpx"
+    },
+    {
+      "name": "title",
+      "type": "string",
+      "required": false,
+      "description": "标题。写了 title 插槽时以插槽为准 @defaultValue ''",
+      "default": "''"
+    },
+    {
+      "name": "description",
+      "type": "string",
+      "required": false,
+      "description": "描述。写了 description 插槽时以插槽为准 @defaultValue ''",
+      "default": "''"
+    },
+    {
+      "name": "customClass",
+      "type": "string",
+      "required": false,
+      "description": "追加到根元素的类名",
+      "default": "''"
+    },
+    {
+      "name": "ui",
+      "type": "EmptyUI",
+      "required": false,
+      "description": "按结构键覆盖各节点样式 可用键（从源码抽取，以此为准）——两端：content、description、extra、image、imageGraphic*、root、title。 带 * 的键对应插槽兜底节点：填了同名插槽，组件自带的节点被替换，这个键随之失效。",
+      "default": "() => ({})"
+    },
+    {
+      "name": "class",
+      "type": "any",
+      "required": false,
+      "description": "追加到根元素的类名"
+    }
+  ],
+  "events": [],
+  "slots": [
+    {
+      "name": "image",
+      "description": "图片区内容，存在时 `image` / `image-size` 都不再生效，尺寸由插槽内容自己决定。`image` 为 `null` 时该插槽是让图片区继续渲染的唯一途径。"
+    },
+    {
+      "name": "title",
+      "description": "标题内容，存在时 `title` prop 不再渲染。外层节点的 14px 字号、500 字重与 `text-gray-10` 仍然生效。"
+    },
+    {
+      "name": "description",
+      "description": "描述内容，存在时 `description` prop 不再渲染。外层节点的 14px 字号与 `text-gray-8` 仍然生效。"
+    },
+    {
+      "name": "extra",
+      "description": "第三段的内容，通常放按钮。不提供该插槽时第三段连同 24px 段间距一起不渲染。"
+    }
+  ],
+  "exposes": [],
+  "examples": [
+    {
+      "title": "Web 演示",
+      "path": "app/components/reborn/examples/reborn-empty/RebornEmptyDemo.vue",
+      "source": "demo",
+      "platform": "web",
+      "code": "<script setup lang=\"ts\">\nimport { computed, shallowRef } from 'vue';\nimport RebornButton from \"~/components/reborn/ui/reborn-button/RebornButton.vue\"\nimport RebornEmpty from \"~/components/reborn/ui/reborn-empty/RebornEmpty.vue\"\n\n/**\n * 三张示例插画都放在 public/images/empty 下，尺寸各不相同：\n * 箱子是 48×48 的单色图标，文件堆是 120×88 的小插画，大场景是 320×253 的整幅插画。\n */\nconst ARTWORK = {\n  box: \"/images/empty/empty-box.svg\",\n  folder: \"/images/empty/empty-folder.svg\",\n  scene: \"/images/empty/empty-scene.svg\",\n};\n\n/** 演练场的图片下拉项，空串代表走内置默认插画 */\nconst imageOptions = [\n  { label: \"内置默认插画（48×48）\", value: \"\" },\n  { label: \"empty-box.svg（48×48）\", value: ARTWORK.box },\n  { label: \"empty-folder.svg（120×88）\", value: ARTWORK.folder },\n  { label: \"empty-scene.svg（320×253）\", value: ARTWORK.scene },\n];\n\n// ─── 交互演练场 ─────────────────────────────────────────────────\n\n/** 演练场默认状态 */\nconst defaultState: Record<string, any> = {\n  image: ARTWORK.folder,\n  imageSize: 120,\n  title: \"暂无数据\",\n  description: \"调整筛选条件后重新查询，或者先创建一条记录。\",\n  showImage: true,\n  showExtra: true,\n};\n\nconst state = shallowRef<Record<string, any>>({ ...defaultState });\n\n/** 操作区点击回显，让预览区的交互「有回应」 */\nconst lastAction = shallowRef(\"\");\nfunction onAction(name: string) {\n  lastAction.value = name;\n}\n\n/** 重置演练场配置 */\nfunction resetState() {\n  state.value = { ...defaultState };\n  lastAction.value = \"\";\n}\n\n/** 演练场控制面板配置 */\nconst controls: any = [\n  {\n    title: \"基础属性\",\n    children: [\n      {\n        label: \"图片地址\",\n        key: \"image\",\n        component: \"select\" as const,\n        defaultValue: ARTWORK.folder,\n        props: { options: imageOptions },\n      },\n      {\n        label: \"图片宽度 image-size（px）\",\n        key: \"imageSize\",\n        component: \"slider\" as const,\n        defaultValue: 120,\n        props: { min: 32, max: 320, step: 8 },\n      },\n      { label: \"标题\", key: \"title\", component: \"input\" as const, defaultValue: \"暂无数据\" },\n      {\n        label: \"描述\",\n        key: \"description\",\n        component: \"input\" as const,\n        defaultValue: \"调整筛选条件后重新查询，或者先创建一条记录。\",\n      },\n    ],\n  },\n  {\n    title: \"结构\",\n    children: [\n      {\n        label: \"渲染图片区（关闭等于 :image=\\\"null\\\"）\",\n        key: \"showImage\",\n        component: \"checkbox\" as const,\n        defaultValue: true,\n        codeIgnore: true,\n      },\n      {\n        label: \"渲染操作区（extra 插槽）\",\n        key: \"showExtra\",\n        component: \"checkbox\" as const,\n        defaultValue: true,\n        codeIgnore: true,\n      },\n    ],\n  },\n];\n\n/** 演练场右上角展示的传参明细：完整列出当前所有参数，插槽用 template 占位 */\nconst emptyCode = computed(() => {\n  const s = state.value;\n  const attrs = [\n    s.showImage ? (s.image ? `image=\"${s.image}\"` : \"\") : \":image=\\\"null\\\"\",\n    s.showImage ? `:image-size=\"${s.imageSize}\"` : \"\",\n    `title=\"${s.title}\"`,\n    `description=\"${s.description}\"`,\n  ].filter(Boolean).join(\"\\n  \");\n  if (!s.showExtra) return `<RebornEmpty\\n  ${attrs}\\n/>`;\n  return [\n    `<RebornEmpty`,\n    `  ${attrs}`,\n    `>`,\n    `  <template #extra>`,\n    `    <RebornButton color=\"neutral\" variant=\"outlined\" size=\"md\">重置筛选</RebornButton>`,\n    `    <RebornButton color=\"primary\" variant=\"filled\" size=\"md\">新建记录</RebornButton>`,\n    `  </template>`,\n    `</RebornEmpty>`,\n  ].join(\"\\n\");\n});\n</script>\n\n<template>\n  <div class=\"flex w-full flex-col\">\n    <Playground\n      v-model=\"state\" :controls=\"controls\" :code=\"emptyCode\" component-name=\"RebornEmpty\"\n      title=\"交互演练场\" description=\"调节上方参数，观察图片、标题描述、操作区三段在不同插画与缺省组合下的排布。\"\n    >\n      <template #tag>\n        <RebornButton size=\"sm\" variant=\"soft\" color=\"neutral\" @click=\"resetState\">\n          <template #leading>\n            <Icon name=\"lucide:rotate-ccw\" size=\"12\" />\n          </template>\n          重置配置\n        </RebornButton>\n      </template>\n\n      <div class=\"flex w-full flex-col items-center gap-8\">\n        <RebornEmpty\n          :image=\"state.showImage ? state.image : null\" :image-size=\"state.imageSize\"\n          :title=\"state.title\" :description=\"state.description\"\n        >\n          <template v-if=\"state.showExtra\" #extra>\n            <RebornButton color=\"neutral\" variant=\"outlined\" size=\"md\" @click=\"onAction('重置筛选')\">重置筛选</RebornButton>\n            <RebornButton color=\"primary\" variant=\"filled\" size=\"md\" @click=\"onAction('新建记录')\">新建记录</RebornButton>\n          </template>\n        </RebornEmpty>\n\n        <DemoNote tone=\"dimmed\" class=\"font-mono text-xs\">\n          最近点击：{{ lastAction || \"（无）\" }}；组件本身不派发事件，回显来自 extra 插槽里按钮自己的 click。\n        </DemoNote>\n      </div>\n    </Playground>\n\n    <DemoSection title=\"内置插画与图片尺寸\">\n      <template #description>\n        不传 <code>image</code> 时用内置的 48×48 灰色空箱子，它以 base64 内联在配置文件里，复制组件到别的工程不用带资源。\n        <code>image-size</code> 只设宽度，高度按原图比例自适应；数字按 px 处理，也可以直接写 <code>'6rem'</code> 之类的 CSS 长度。\n      </template>\n      <DemoBlock layout=\"grid\" class=\"sm:grid-cols-3\">\n        <div class=\"flex flex-col items-center gap-3\">\n          <DemoNote tone=\"dimmed\" class=\"font-mono text-xs\">默认（48px）</DemoNote>\n          <RebornEmpty title=\"暂无数据\" />\n        </div>\n\n        <div class=\"flex flex-col items-center gap-3\">\n          <DemoNote tone=\"dimmed\" class=\"font-mono text-xs\">:image-size=\"80\"</DemoNote>\n          <RebornEmpty :image-size=\"80\" title=\"暂无数据\" />\n        </div>\n\n        <div class=\"flex flex-col items-center gap-3\">\n          <DemoNote tone=\"dimmed\" class=\"font-mono text-xs\">image-size=\"8rem\"</DemoNote>\n          <RebornEmpty image-size=\"8rem\" title=\"暂无数据\" />\n        </div>\n      </DemoBlock>\n    </DemoSection>\n\n    <DemoSection title=\"换一张插画\">\n      <template #description>\n        <code>image</code> 收任意图片地址：站内路径、CDN 链接或 data URI 都行。\n        下面三张是随组件附带的示例插画，放在 <code>public/images/empty/</code>，UniApp 端同名放在 <code>static/empty/</code>。\n        画幅越大越要显式给 <code>image-size</code>，否则宽度会停在默认的 48px。\n      </template>\n      <DemoBlock layout=\"grid\" class=\"sm:grid-cols-3\">\n        <div class=\"flex flex-col items-center gap-3\">\n          <DemoNote tone=\"dimmed\" class=\"font-mono text-xs\">empty-box.svg</DemoNote>\n          <RebornEmpty :image=\"ARTWORK.box\" :image-size=\"48\" title=\"暂无数据\" description=\"列表里还没有任何记录。\" />\n        </div>\n\n        <div class=\"flex flex-col items-center gap-3\">\n          <DemoNote tone=\"dimmed\" class=\"font-mono text-xs\">empty-folder.svg</DemoNote>\n          <RebornEmpty :image=\"ARTWORK.folder\" :image-size=\"120\" title=\"暂无文件\" description=\"把文件拖进来，或者点下方按钮上传。\" />\n        </div>\n\n        <div class=\"flex flex-col items-center gap-3\">\n          <DemoNote tone=\"dimmed\" class=\"font-mono text-xs\">empty-scene.svg</DemoNote>\n          <RebornEmpty :image=\"ARTWORK.scene\" :image-size=\"240\" title=\"这里空空如也\" description=\"整幅插画适合放在占满一屏的空页面里。\" />\n        </div>\n      </DemoBlock>\n    </DemoSection>\n\n    <DemoSection title=\"自定义图片与隐藏图片区\">\n      <template #description>\n        <code>image</code> 插槽接管整个图片区，里面可以放图标、动效或任意节点，此时 <code>image</code> / <code>image-size</code> 都不再生效。\n        <code>:image=\"null\"</code> 则把整段去掉，连同它下面的 24px 间距一起消失。\n      </template>\n      <DemoBlock layout=\"grid\" class=\"sm:grid-cols-3\">\n        <div class=\"flex flex-col items-center gap-3\">\n          <DemoNote tone=\"dimmed\" class=\"font-mono text-xs\">#image</DemoNote>\n          <RebornEmpty title=\"搜索无结果\" description=\"换个关键词再试一次。\">\n            <template #image>\n              <div class=\"flex size-18 items-center justify-center rounded-full bg-gray-2\">\n                <Icon name=\"lucide:search-x\" class=\"size-8 shrink-0 text-gray-5\" />\n              </div>\n            </template>\n          </RebornEmpty>\n        </div>\n\n        <div class=\"flex flex-col items-center gap-3\">\n          <DemoNote tone=\"dimmed\" class=\"font-mono text-xs\">#image（动效）</DemoNote>\n          <RebornEmpty title=\"正在加载\" description=\"数据还没回来，请稍候。\">\n            <template #image>\n              <Icon name=\"lucide:loader-circle\" class=\"text-primary size-12 animate-spin\" />\n            </template>\n          </RebornEmpty>\n        </div>\n\n        <div class=\"flex flex-col items-center gap-3\">\n          <DemoNote tone=\"dimmed\" class=\"font-mono text-xs\">:image=\"null\"</DemoNote>\n          <RebornEmpty :image=\"null\" title=\"暂无评论\" description=\"成为第一个留言的人。\" />\n        </div>\n      </DemoBlock>\n    </DemoSection>\n\n    <DemoSection title=\"标题与描述\">\n      <template #description>\n        <code>title</code> 固定 14px / 500 字重，<code>description</code> 固定 14px / 常规字重，两者相差的是字重与颜色而非字号，之间留 4px。\n        两个 prop 都只收纯文本；要放链接、行内代码或多行排版，改用同名的 <code>title</code> / <code>description</code> 插槽，插槽存在时对应的 prop 不再渲染。\n      </template>\n      <DemoBlock layout=\"grid\" class=\"sm:grid-cols-2\">\n        <RebornEmpty :image-size=\"80\" title=\"没有匹配的订单\">\n          <template #description>\n            <span>当前筛选：<code class=\"text-default rounded-sm bg-gray-2 px-1 py-0.5 font-mono text-xs\">状态=已退款</code></span>\n            <br>\n            <a href=\"#\" class=\"text-primary underline underline-offset-2\">清空全部筛选条件</a>\n          </template>\n        </RebornEmpty>\n\n        <RebornEmpty :image-size=\"80\" description=\"配额用完后新任务会排队等待下个周期。\">\n          <template #title>\n            <span>本月配额已用尽</span>\n            <span class=\"text-warning ml-2 align-middle font-normal\">0 / 500</span>\n          </template>\n        </RebornEmpty>\n      </DemoBlock>\n    </DemoSection>\n\n    <DemoSection title=\"操作区\">\n      <template #description>\n        <code>extra</code> 插槽是第三段，横向排列、超宽自动换行、按钮间距 12px。\n        组件不派发任何事件，所有交互由放进插槽的元素自己承担。\n        两个按钮时按「次要动作在左、主要动作在右」排：左侧 <code>neutral</code> + <code>outlined</code>，右侧 <code>primary</code> + <code>filled</code>，都用 <code>size=\"md\"</code>。\n      </template>\n      <DemoBlock layout=\"stack\" class=\"gap-10\">\n        <RebornEmpty :image=\"ARTWORK.folder\" :image-size=\"120\" title=\"还没有上传文件\" description=\"支持 PDF、PNG、JPG，单个文件不超过 20 MB。\">\n          <template #extra>\n            <RebornButton color=\"primary\" variant=\"filled\" size=\"md\" @click=\"onAction('上传文件')\">上传文件</RebornButton>\n          </template>\n        </RebornEmpty>\n\n        <RebornEmpty :image-size=\"80\" title=\"没有符合条件的结果\" description=\"三个筛选条件同时生效，可能过滤得太紧了。\">\n          <template #extra>\n            <RebornButton color=\"neutral\" variant=\"text\" size=\"md\" @click=\"onAction('查看全部')\">查看全部</RebornButton>\n            <RebornButton color=\"neutral\" variant=\"outlined\" size=\"md\" @click=\"onAction('重置筛选')\">重置筛选</RebornButton>\n            <RebornButton color=\"primary\" variant=\"filled\" size=\"md\" @click=\"onAction('新建记录')\">新建记录</RebornButton>\n          </template>\n        </RebornEmpty>\n      </DemoBlock>\n    </DemoSection>\n\n    <DemoSection title=\"缺省段与间距\">\n      <template #description>\n        三段（图片 / 标题加描述 / 操作区）都按需渲染：某一段没内容就不进 DOM，\n        所以段间的 24px 间距不会因为空段变成 48px。标题与描述同属第二段，它俩之间固定 4px。\n      </template>\n      <DemoBlock layout=\"grid\" class=\"sm:grid-cols-3\">\n        <div class=\"flex flex-col items-center gap-3\">\n          <DemoNote tone=\"dimmed\" class=\"font-mono text-xs\">仅图片</DemoNote>\n          <RebornEmpty :image-size=\"80\" />\n        </div>\n\n        <div class=\"flex flex-col items-center gap-3\">\n          <DemoNote tone=\"dimmed\" class=\"font-mono text-xs\">仅标题</DemoNote>\n          <RebornEmpty :image=\"null\" title=\"没有更多内容了\" />\n        </div>\n\n        <div class=\"flex flex-col items-center gap-3\">\n          <DemoNote tone=\"dimmed\" class=\"font-mono text-xs\">三段齐全</DemoNote>\n          <RebornEmpty :image-size=\"80\" title=\"暂无数据\" description=\"换个条件再查。\">\n            <template #extra>\n              <RebornButton color=\"neutral\" variant=\"outlined\" size=\"md\" @click=\"onAction('刷新')\">刷新</RebornButton>\n            </template>\n          </RebornEmpty>\n        </div>\n      </DemoBlock>\n    </DemoSection>\n  </div>\n</template>\n"
+    },
+    {
+      "title": "UniApp 演示",
+      "path": "packages/uniapp-project/src/pages/reborn-empty/RebornEmptyDemo.vue",
+      "source": "demo",
+      "platform": "uniapp",
+      "code": "<script setup lang=\"ts\">\nimport { shallowRef } from 'vue'\nimport ReButton from '@/components/reborn-button/RebornButton.vue'\nimport RebornCard from '@/components/reborn-card/RebornCard.vue'\nimport RebornEmpty from '@/components/reborn-empty/RebornEmpty.vue'\nimport RebornInput from '@/components/reborn-input/RebornInput.vue'\nimport RebornPage from '@/components/reborn-page/RebornPage.vue'\nimport RebornSwitch from '@/components/reborn-switch/RebornSwitch.vue'\n\n/**\n * 三张示例插画都放在 src/static/empty 下，尺寸各不相同：\n * 箱子是 48×48 的单色图标，文件堆是 120×88 的小插画，大场景是 320×253 的整幅插画。\n */\nconst ARTWORK = {\n  box: '/static/empty/empty-box.svg',\n  folder: '/static/empty/empty-folder.svg',\n  scene: '/static/empty/empty-scene.svg',\n}\n\n/** 演练场的图片可选项，空串代表走内置默认插画 */\nconst IMAGE_OPTIONS = [\n  { label: '内置', value: '' },\n  { label: 'box', value: ARTWORK.box },\n  { label: 'folder', value: ARTWORK.folder },\n  { label: 'scene', value: ARTWORK.scene },\n]\nconst imageSizes = [96, 160, 240, 400] as const\nconst sampleSizes = [96, 160, 240] as const\n\n// ─── 演练场状态（默认值与 Web 端 Playground 一致） ───────────────\n\nconst currentImage = shallowRef<string>(ARTWORK.folder)\nconst imageSize = shallowRef(240)\nconst title = shallowRef('暂无数据')\nconst description = shallowRef('调整筛选条件后重新查询，或者先创建一条记录。')\nconst showImage = shallowRef(true)\nconst showExtra = shallowRef(true)\n\n/** 操作区点击回显，让预览「有回应」 */\nconst lastAction = shallowRef('')\nfunction onAction(name: string) {\n  lastAction.value = name\n}\n</script>\n\n<template>\n  <RebornPage\n    title=\"空状态\"\n    description=\"列表、搜索、筛选没有结果时的占位块：图片、标题与描述、操作区三段纵向居中排布。\"\n    custom-class=\"flex flex-col gap-y-4\"\n  >\n    <!-- 演练场 -->\n    <RebornCard title=\"自定义\" custom-class=\"space-y-4\">\n      <RebornEmpty\n        v-if=\"showExtra\"\n        :image=\"showImage ? currentImage : null\" :image-size=\"imageSize\"\n        :title=\"title\" :description=\"description\"\n      >\n        <template #extra>\n          <ReButton color=\"neutral\" variant=\"outlined\" size=\"md\" @tap=\"onAction('重置筛选')\">\n            重置筛选\n          </ReButton>\n          <ReButton color=\"primary\" variant=\"filled\" size=\"md\" @tap=\"onAction('新建记录')\">\n            新建记录\n          </ReButton>\n        </template>\n      </RebornEmpty>\n      <RebornEmpty\n        v-else\n        :image=\"showImage ? currentImage : null\" :image-size=\"imageSize\"\n        :title=\"title\" :description=\"description\"\n      />\n\n      <text class=\"text-24 text-gray-6\">最近点击：{{ lastAction || '（无）' }}；组件不派发事件，回显来自插槽里按钮自己的 tap。</text>\n\n      <view class=\"flex flex-col gap-2\">\n        <text class=\"text-24 text-gray-6\">图片地址 (image)</text>\n        <view class=\"flex flex-wrap gap-2\">\n          <view v-for=\"opt in IMAGE_OPTIONS\" :key=\"opt.label\">\n            <ReButton\n              size=\"xs\" :variant=\"currentImage === opt.value ? 'filled' : 'outlined'\"\n              :color=\"currentImage === opt.value ? 'primary' : 'neutral'\" @tap=\"currentImage = opt.value\"\n            >\n              {{ opt.label }}\n            </ReButton>\n          </view>\n        </view>\n      </view>\n\n      <view class=\"flex flex-col gap-2\">\n        <text class=\"text-24 text-gray-6\">图片宽度 (image-size)，单位 rpx</text>\n        <view class=\"flex flex-wrap gap-2\">\n          <view v-for=\"s in imageSizes\" :key=\"s\">\n            <ReButton\n              size=\"xs\" :variant=\"imageSize === s ? 'filled' : 'outlined'\"\n              :color=\"imageSize === s ? 'primary' : 'neutral'\" @tap=\"imageSize = s\"\n            >\n              {{ s }}\n            </ReButton>\n          </view>\n        </view>\n      </view>\n\n      <view class=\"flex flex-col gap-2\">\n        <text class=\"text-24 text-gray-6\">标题 (title)</text>\n        <RebornInput v-model=\"title\" placeholder=\"留空则不渲染标题\" />\n      </view>\n\n      <view class=\"flex flex-col gap-2\">\n        <text class=\"text-24 text-gray-6\">描述 (description)</text>\n        <RebornInput v-model=\"description\" placeholder=\"留空则不渲染描述\" />\n      </view>\n\n      <view class=\"grid grid-cols-2 gap-2\">\n        <view class=\"flex flex-col gap-2\">\n          <text class=\"text-24 text-gray-6\">图片区（关闭即 :image=\"null\"）</text>\n          <RebornSwitch v-model=\"showImage\" active-label=\"渲染\" inactive-label=\"不渲染\" />\n        </view>\n        <view class=\"flex flex-col gap-2\">\n          <text class=\"text-24 text-gray-6\">操作区（extra 插槽）</text>\n          <RebornSwitch v-model=\"showExtra\" active-label=\"渲染\" inactive-label=\"不渲染\" />\n        </view>\n      </view>\n    </RebornCard>\n\n    <!-- 内置插画与图片尺寸 -->\n    <RebornCard title=\"内置插画与图片尺寸\" custom-class=\"space-y-6\">\n      <text class=\"text-24 text-gray-6\">\n        不传 image 时用内置的 48×48 灰色空箱子，它以 base64 内联在配置文件里，复制组件到别的工程不用带资源。\n        image-size 只设宽度，高度按原图比例自适应；数字按 rpx 处理，也可以直接写 '80px' 之类的 CSS 长度。\n      </text>\n\n      <view v-for=\"s in sampleSizes\" :key=\"s\" class=\"flex flex-col gap-2\">\n        <text class=\"text-24 text-gray-6 font-mono\">:image-size=\"{{ s }}\"</text>\n        <RebornEmpty :image-size=\"s\" title=\"暂无数据\" />\n      </view>\n    </RebornCard>\n\n    <!-- 换一张插画 -->\n    <RebornCard title=\"换一张插画\" custom-class=\"space-y-6\">\n      <text class=\"text-24 text-gray-6\">\n        image 收任意图片地址：/static 路径、网络链接或 data URI 都行。下面三张是随组件附带的示例插画，放在 src/static/empty/。\n        画幅越大越要显式给 image-size，否则宽度会停在默认的 96rpx。\n      </text>\n\n      <view class=\"flex flex-col gap-2\">\n        <text class=\"text-24 text-gray-6 font-mono\">empty-box.svg</text>\n        <RebornEmpty :image=\"ARTWORK.box\" :image-size=\"96\" title=\"暂无数据\" description=\"列表里还没有任何记录。\" />\n      </view>\n\n      <view class=\"flex flex-col gap-2\">\n        <text class=\"text-24 text-gray-6 font-mono\">empty-folder.svg</text>\n        <RebornEmpty :image=\"ARTWORK.folder\" :image-size=\"240\" title=\"暂无文件\" description=\"把文件传上来，或者点下方按钮上传。\" />\n      </view>\n\n      <view class=\"flex flex-col gap-2\">\n        <text class=\"text-24 text-gray-6 font-mono\">empty-scene.svg</text>\n        <RebornEmpty :image=\"ARTWORK.scene\" :image-size=\"480\" title=\"这里空空如也\" description=\"整幅插画适合放在占满一屏的空页面里。\" />\n      </view>\n    </RebornCard>\n\n    <!-- 自定义图片与隐藏图片区 -->\n    <RebornCard title=\"自定义图片与隐藏图片区\" custom-class=\"space-y-6\">\n      <text class=\"text-24 text-gray-6\">\n        image 插槽接管整个图片区，里面可以放图标、动效或任意节点，此时 image / image-size 都不再生效。\n        :image=\"null\" 则把整段去掉，连同它下面的 48rpx 间距一起消失。\n      </text>\n\n      <view class=\"flex flex-col gap-2\">\n        <text class=\"text-24 text-gray-6 font-mono\">#image</text>\n        <RebornEmpty title=\"搜索无结果\" description=\"换个关键词再试一次。\">\n          <template #image>\n            <view class=\"flex size-[144rpx] items-center justify-center rounded-full bg-gray-2\">\n              <view class=\"i-lucide-search-x size-[64rpx] shrink-0 text-gray-5\" />\n            </view>\n          </template>\n        </RebornEmpty>\n      </view>\n\n      <view class=\"flex flex-col gap-2\">\n        <text class=\"text-24 text-gray-6 font-mono\">#image（动效）</text>\n        <RebornEmpty title=\"正在加载\" description=\"数据还没回来，请稍候。\">\n          <template #image>\n            <view class=\"i-svg-spinners-180-ring-with-bg size-[96rpx] text-primary\" />\n          </template>\n        </RebornEmpty>\n      </view>\n\n      <view class=\"flex flex-col gap-2\">\n        <text class=\"text-24 text-gray-6 font-mono\">:image=\"null\"</text>\n        <RebornEmpty :image=\"null\" title=\"暂无评论\" description=\"成为第一个留言的人。\" />\n      </view>\n    </RebornCard>\n\n    <!-- 标题与描述 -->\n    <RebornCard title=\"标题与描述\" custom-class=\"space-y-6\">\n      <text class=\"text-24 text-gray-6\">\n        title 固定 28rpx / 500 字重，description 固定 28rpx / 常规字重，两者相差的是字重与颜色而非字号，之间留 8rpx。\n        两个 prop 都只收纯文本；要分行或混排别的节点，改用同名的 title / description 插槽，插槽存在时对应的 prop 不再渲染。\n      </text>\n\n      <RebornEmpty :image-size=\"160\" title=\"没有匹配的订单\">\n        <template #description>\n          <view class=\"flex flex-col gap-[8rpx]\">\n            <text class=\"text-28 text-gray-7 dark:text-gray-4\">当前筛选：状态 = 已退款</text>\n            <text class=\"text-28 text-primary\">清空全部筛选条件</text>\n          </view>\n        </template>\n      </RebornEmpty>\n\n      <RebornEmpty :image-size=\"160\" description=\"配额用完后新任务会排队等待下个周期。\">\n        <template #title>\n          <view class=\"flex items-center justify-center gap-[16rpx]\">\n            <text class=\"text-28 font-medium leading-[1.5] text-gray-8 dark:text-gray-1\">本月配额已用尽</text>\n            <text class=\"text-28 text-warning\">0 / 500</text>\n          </view>\n        </template>\n      </RebornEmpty>\n    </RebornCard>\n\n    <!-- 操作区 -->\n    <RebornCard title=\"操作区\" custom-class=\"space-y-6\">\n      <text class=\"text-24 text-gray-6\">\n        extra 插槽是第三段，横向排列、超宽自动换行、按钮间距 24rpx。组件不派发任何事件，交互由放进插槽的元素自己承担。\n        两个按钮时按「次要动作在左、主要动作在右」排：左侧 neutral + outlined，右侧 primary + filled，都用 size=\"md\"。\n      </text>\n\n      <RebornEmpty :image=\"ARTWORK.folder\" :image-size=\"240\" title=\"还没有上传文件\" description=\"支持 PDF、PNG、JPG，单个文件不超过 20 MB。\">\n        <template #extra>\n          <ReButton color=\"primary\" variant=\"filled\" size=\"md\" @tap=\"onAction('上传文件')\">\n            上传文件\n          </ReButton>\n        </template>\n      </RebornEmpty>\n\n      <RebornEmpty :image-size=\"160\" title=\"没有符合条件的结果\" description=\"三个筛选条件同时生效，可能过滤得太紧了。\">\n        <template #extra>\n          <ReButton color=\"neutral\" variant=\"text\" size=\"md\" @tap=\"onAction('查看全部')\">\n            查看全部\n          </ReButton>\n          <ReButton color=\"neutral\" variant=\"outlined\" size=\"md\" @tap=\"onAction('重置筛选')\">\n            重置筛选\n          </ReButton>\n          <ReButton color=\"primary\" variant=\"filled\" size=\"md\" @tap=\"onAction('新建记录')\">\n            新建记录\n          </ReButton>\n        </template>\n      </RebornEmpty>\n    </RebornCard>\n\n    <!-- 缺省段与间距 -->\n    <RebornCard title=\"缺省段与间距\" custom-class=\"space-y-6\">\n      <text class=\"text-24 text-gray-6\">\n        三段（图片 / 标题加描述 / 操作区）都按需渲染：某一段没内容就不进节点树，所以段间的 48rpx 间距不会因为空段变成 96rpx。\n        标题与描述同属第二段，它俩之间固定 8rpx。\n      </text>\n\n      <view class=\"flex flex-col gap-2\">\n        <text class=\"text-24 text-gray-6 font-mono\">仅图片</text>\n        <RebornEmpty :image-size=\"160\" />\n      </view>\n\n      <view class=\"flex flex-col gap-2\">\n        <text class=\"text-24 text-gray-6 font-mono\">仅标题</text>\n        <RebornEmpty :image=\"null\" title=\"没有更多内容了\" />\n      </view>\n\n      <view class=\"flex flex-col gap-2\">\n        <text class=\"text-24 text-gray-6 font-mono\">三段齐全</text>\n        <RebornEmpty :image-size=\"160\" title=\"暂无数据\" description=\"换个条件再查。\">\n          <template #extra>\n            <ReButton color=\"neutral\" variant=\"outlined\" size=\"md\" @tap=\"onAction('刷新')\">\n              刷新\n            </ReButton>\n          </template>\n        </RebornEmpty>\n      </view>\n    </RebornCard>\n  </RebornPage>\n</template>\n"
+    }
+  ],
+  "related": [],
+  "whenToUse": [
+    "列表 / 表格 / 卡片流请求成功但返回 0 条：title 说明空的原因，extra 插槽放「新建」。",
+    "搜索或筛选没有命中：description 写清当前条件，extra 放「重置筛选」，让用户能退回去。",
+    "尚未初始化的功能区（还没有收藏、还没有上传文件）：配大一点的插画加一个主操作，充当引导位。",
+    "需要整幅插画而非小图标：image 指向自带的 empty-scene.svg，或用 image 插槽塞任意节点。",
+    "只要一行说明、不要图：:image='null' 去掉整个图片区，连同它那份段间距一起消失。"
+  ],
+  "whenNotToUse": [
+    "请求失败、无权限、服务异常：改用 reborn-result，它有 error / 403 / 500 等状态与配套配色；Empty 只表达「查到了，但是没有」。",
+    "数据还在路上：改用 reborn-loading 或骨架屏，先放 Empty 再切成有数据会闪一下。",
+    "页面内常驻的一行说明：改用 reborn-alert，它是横向提示条，不占整块区域。",
+    "操作后的瞬时反馈（已删除、已清空）：改用 reborn-toast。"
+  ],
+  "pitfalls": [
+    "标题和描述字号一样大：两者都是 14px（UniApp 28rpx），只靠 500 字重与 text-gray-10 / text-gray-8 的深浅拉开层次。这与 Result 不同，Result 的标题是 24px；Empty 常嵌在卡片、表格、抽屉里，标题再大就压过周围内容。",
+    "描述用的是 text-base 不是 text-sm：本仓库在 app/assets/theme/typography.css 把 --text-sm 改写成 12px、--text-base 改写成 14px，按 Tailwind 默认刻度的直觉写 text-sm 会小一号。",
+    "image-size 只管宽度：高度由 Web 的 h-auto 与 UniApp 的 mode='widthFix' 按原图比例推出来，所以别在 ui.imageGraphic 里加 h-*；要裁剪或固定比例请改用 image 插槽自己放节点。",
+    "换大插画一定要同时给 image-size：默认宽度是按内置的 48×48 定的，直接把 320×253 的 empty-scene.svg 填进 image 而不给尺寸，会得到一张缩到 48px 宽的小图。",
+    "数字单位两端不同：image-size 传数字时 Web 按 px、UniApp 按 rpx 处理，同一个 120 在两端不是同一个物理宽度；要两端一致请传带单位的字符串。",
+    "内置插画与三张示例插画都是固定灰阶，不随暗色模式变色：暗色下需要更柔和的观感，请换图或改用 image 插槽放图标字形（字形跟随 currentColor）。",
+    "image 传 null 与不传是两回事：withDefaults 只在 prop 为 undefined 时填默认值，显式 :image='null' 会原样传入并整段去掉图片区；漏写 image 得到的是默认空串，也就是内置插画。",
+    "空段不进 DOM，间距不会翻倍：三段各自带 v-if，某段无内容时连同它那份段间距一起消失；反过来也意味着不能靠 title='' 占位来撑高度。",
+    "组件不派发任何事件，也不暴露实例方法：extra 插槽里的交互由放进去的元素自己承担，别在 Empty 上找 @click / @refresh。",
+    "title / description 只收纯文本：它们被插值进文本节点，写 HTML 不会被解析；要富文本改用同名插槽，插槽存在时对应 prop 不渲染。",
+    "描述属性叫 description 不是 sub-title：与同仓库 Result 的命名不同，这里跟随 Empty 组件在各家库里的通用叫法；两个组件之间迁移时注意改名。操作区仍沿用 Result 的 extra 具名插槽，没有默认插槽。",
+    "两端文本色写法不同但呈现一致：Web 的 gray 色阶随暗色模式反转，直接写 text-gray-10 / text-gray-8；UniApp 的 gray 是静态色阶且止于 gray-8，必须写成 text-gray-8 dark:text-gray-1 / text-gray-7 dark:text-gray-4。",
+    "根元素类名入口两端不同：Web 用 class（any），UniApp 用 custom-class（string，默认 ''），后者是为了避开小程序原生 class 属性。",
+    "小程序端渲染不了内联 svg：图片区走的是 <image src>（Web 是 <img src>），所以 image 只收地址（URL、静态路径或 data URI），不能直接塞一段 SVG 源码；要内联矢量请用 image 插槽。"
+  ],
+  "dependencies": [
+    "@weapp-tailwindcss/merge-v3",
+    "@weapp-tailwindcss/variants-v3",
+    "clsx",
+    "tailwind-merge",
+    "tailwind-variants"
+  ],
+  "install": {
+    "cli": "npx reborn-ui@latest add reborn-empty"
+  },
+  "sourceRefs": {
+    "web": [
+      "app/components/reborn/ui/reborn-empty/RebornEmpty.vue",
+      "app/components/reborn/ui/reborn-empty/index.ts",
+      "app/components/reborn/ui/reborn-empty/reborn-empty.config.ts"
+    ],
+    "uniapp": [
+      "packages/uniapp-project/src/components/reborn-empty/RebornEmpty.vue",
+      "packages/uniapp-project/src/components/reborn-empty/reborn-empty.config.ts"
+    ]
+  },
+  "docPath": "content/2.components/miscellaneous/reborn-empty.md",
+  "_meta": {
+    "contentHash": "e1499f892ad4a476553421e9a1c6503673b1133e",
+    "hasOverride": true,
+    "extractors": {
+      "web": "ok",
+      "uniapp": "ok",
+      "docs": "found"
+    }
+  }
+}

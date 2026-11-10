@@ -1,0 +1,86 @@
+{
+  "$schema": "../schema/component.schema.json",
+  "id": "photo-gallery",
+  "title": "照片画廊",
+  "description": "用于以动画展开一组照片的画廊展示组件，图片经 items 传入。",
+  "category": "misc",
+  "tags": [
+    "css",
+    "tailwind",
+    "gallery"
+  ],
+  "aliases": [],
+  "platforms": [
+    "web"
+  ],
+  "props": [
+    {
+      "name": "containerClass",
+      "type": "string",
+      "required": false,
+      "description": "容器的额外 Tailwind CSS 类。",
+      "default": "\"\""
+    },
+    {
+      "name": "class",
+      "type": "string",
+      "required": false,
+      "description": "自定义样式的额外 Tailwind CSS 类。",
+      "default": "\"\""
+    },
+    {
+      "name": "items",
+      "type": "{\n    src: string;\n  }[]",
+      "required": true,
+      "description": "传入要动画的图片项/图片源。",
+      "default": "[]"
+    }
+  ],
+  "events": [],
+  "slots": [],
+  "exposes": [],
+  "examples": [
+    {
+      "title": "Web 演示",
+      "path": "app/components/reborn/examples/photo-gallery/PhotoGalleryDemo.vue",
+      "source": "demo",
+      "platform": "web",
+      "code": "<script lang=\"ts\" setup>\nconst items = [\n  {\n    src: \"https://images.pexels.com/photos/16834200/pexels-photo-16834200/free-photo-of-young-brunette-in-a-white-dress-sitting-on-a-bench-and-holding-flowers.jpeg?auto=compress&cs=tinysrgb&w=600&lazy=load\",\n  },\n  {\n    src: \"https://images.pexels.com/photos/16834202/pexels-photo-16834202/free-photo-of-young-woman-in-a-white-dress-posing-outdoors.jpeg?auto=compress&cs=tinysrgb&w=600&lazy=load\",\n  },\n  {\n    src: \"https://images.pexels.com/photos/16834194/pexels-photo-16834194/free-photo-of-woman-in-white-dress-posing-with-red-flowers-on-lap.jpeg?auto=compress&cs=tinysrgb&w=600&lazy=load\",\n  },\n  {\n    src: \"https://images.pexels.com/photos/17362900/pexels-photo-17362900/free-photo-of-pretty-young-model-in-chinese-retro-dress.jpeg?auto=compress&cs=tinysrgb&w=600&lazy=load\",\n  },\n  {\n    src: \"https://images.pexels.com/photos/19447919/pexels-photo-19447919/free-photo-of-model-in-a-pink-ao-dai-dress-with-a-bouquet-of-tulips-by-the-river.jpeg?auto=compress&cs=tinysrgb&w=600&lazy=load\",\n  },\n  {\n    src: \"https://images.pexels.com/photos/20332975/pexels-photo-20332975/free-photo-of-young-woman-posing-in-a-silk-slip-dress.jpeg?auto=compress&cs=tinysrgb&w=600&lazy=load\",\n  },\n  {\n    src: \"https://images.pexels.com/photos/19732643/pexels-photo-19732643/free-photo-of-woman-in-white-dress-sitting-and-reading-book.jpeg?auto=compress&cs=tinysrgb&w=600&lazy=load\",\n  },\n  {\n    src: \"https://images.pexels.com/photos/17347482/pexels-photo-17347482/free-photo-of-woman-in-dress-posing-with-bag.jpeg?auto=compress&cs=tinysrgb&w=600&lazy=load\",\n  },\n];\n</script>\n\n<template>\n  <div class=\"flex items-center justify-center\">\n    <PhotoGallery :items=\"items\" />\n  </div>\n</template>\n"
+    }
+  ],
+  "related": [],
+  "whenToUse": [
+    "团队成员、活动照片等一组图片的集中展示。",
+    "落地页需要照片堆叠/展开的视觉区块时。"
+  ],
+  "whenNotToUse": [
+    "瀑布流布局的大量图片，改用 reborn-waterfall。",
+    "需要点击展开查看的画廊，改用 expandable-gallery。",
+    "全屏轮播图片，改用 images-slider。"
+  ],
+  "pitfalls": [
+    "仅 web 端可用。",
+    "items 为必填数组，元素结构为 { src: string }，不支持插槽自定义每张图片。",
+    "class 作用于图片项，containerClass 作用于外层容器。"
+  ],
+  "dependencies": [],
+  "install": {
+    "cli": "npx reborn-ui@latest add photo-gallery"
+  },
+  "sourceRefs": {
+    "web": [
+      "app/components/reborn/ui/photo-gallery/PhotoGallery.vue",
+      "app/components/reborn/ui/photo-gallery/index.ts"
+    ]
+  },
+  "docPath": "content/2.components/miscellaneous/photo-gallery.md",
+  "_meta": {
+    "contentHash": "251e884a0b7802b1ec389d8d9b6f34fc6de4d23f",
+    "hasOverride": true,
+    "extractors": {
+      "web": "ok",
+      "uniapp": "absent",
+      "docs": "found"
+    }
+  }
+}

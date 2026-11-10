@@ -8,6 +8,11 @@
     "vue",
     "reborn-context-menu"
   ],
+  "aliases": [
+    "context menu",
+    "右键菜单",
+    "上下文菜单"
+  ],
   "platforms": [
     "web"
   ],
@@ -211,7 +216,7 @@
   },
   "docPath": "content/2.components/navigation/reborn-context-menu.md",
   "_meta": {
-    "contentHash": "967594c07d72df40783ca357d4d1ff50443e792d",
+    "contentHash": "058619c2494b49f7cd5ef0a32bb38b5f005e2e90",
     "hasOverride": true,
     "extractors": {
       "web": "ok",

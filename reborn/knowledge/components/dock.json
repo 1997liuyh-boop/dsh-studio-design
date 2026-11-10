@@ -1,0 +1,112 @@
+{
+  "$schema": "../schema/component.schema.json",
+  "id": "dock",
+  "title": "Dock",
+  "description": "用于悬停时邻近图标放大的 macOS 风格 Dock 图标栏组件。",
+  "category": "misc",
+  "tags": [
+    "css",
+    "tailwind"
+  ],
+  "aliases": [
+    "mac dock",
+    "程序坞",
+    "图标栏",
+    "放大图标栏"
+  ],
+  "platforms": [
+    "web"
+  ],
+  "props": [
+    {
+      "name": "class",
+      "type": "HTMLAttributes[\"class\"]",
+      "required": false,
+      "description": "Dock 容器的额外类名。"
+    },
+    {
+      "name": "magnification",
+      "type": "number",
+      "required": false,
+      "description": "悬停时图标的放大倍数（默认 60）。",
+      "default": "60"
+    },
+    {
+      "name": "distance",
+      "type": "number",
+      "required": false,
+      "description": "放大作用的图标中心距离。",
+      "default": "140"
+    },
+    {
+      "name": "direction",
+      "type": "Direction",
+      "required": false,
+      "description": "图标对齐方式（`top`、`middle`、`bottom`，默认 middle）。",
+      "default": "\"middle\""
+    },
+    {
+      "name": "orientation",
+      "type": "DataOrientation",
+      "required": false,
+      "description": "Dock 的方向（`vertical` 或 `horizontal`，默认 horizontal）。",
+      "default": "\"horizontal\""
+    }
+  ],
+  "events": [],
+  "slots": [
+    {
+      "name": "default",
+      "description": "Dock 图标或其他子组件。"
+    }
+  ],
+  "exposes": [],
+  "examples": [
+    {
+      "title": "Web 演示",
+      "path": "app/components/reborn/examples/dock/DockDemo.vue",
+      "source": "demo",
+      "platform": "web",
+      "code": "<template>\n  <Dock class=\"mb-6\">\n    <DockIcon>\n      <Icon\n        name=\"mdi:github\"\n        class=\"size-full\"\n      />\n    </DockIcon>\n    <DockSeparator />\n    <DockIcon>\n      <Icon\n        name=\"logos:google-drive\"\n        class=\"size-full\"\n      />\n    </DockIcon>\n    <DockIcon>\n      <Icon\n        name=\"logos:notion-icon\"\n        class=\"size-full\"\n      />\n    </DockIcon>\n    <DockIcon>\n      <Icon\n        name=\"logos:whatsapp-icon\"\n        class=\"size-full\"\n      />\n    </DockIcon>\n  </Dock>\n</template>\n"
+    }
+  ],
+  "related": [],
+  "whenToUse": [
+    "个人主页 / 落地页底部的社交或应用快捷入口栏。",
+    "需要 vertical 纵向排列的侧边图标栏。"
+  ],
+  "whenNotToUse": [
+    "移动端底部导航（uniapp），改用 reborn-tabbar。",
+    "内容分区切换，改用 reborn-tabs 或 morphing-tabs。"
+  ],
+  "pitfalls": [
+    "仅 web 端可用。",
+    "图标必须包在 DockIcon 子组件中，可用 DockSeparator 分隔分组。",
+    "magnification（默认 60）控制悬停放大尺寸，distance（默认 140）控制放大效果的作用距离。",
+    "orientation 支持 horizontal / vertical（默认 horizontal），direction 控制图标对齐（top / middle / bottom）。"
+  ],
+  "dependencies": [],
+  "install": {
+    "cli": "npx reborn-ui@latest add dock"
+  },
+  "sourceRefs": {
+    "web": [
+      "app/components/reborn/ui/dock/Dock.vue",
+      "app/components/reborn/ui/dock/DockIcon.vue",
+      "app/components/reborn/ui/dock/DockSeparator.vue",
+      "app/components/reborn/ui/dock/index.ts",
+      "app/components/reborn/ui/dock/injectionKeys.ts",
+      "app/components/reborn/ui/dock/types.ts"
+    ]
+  },
+  "docPath": "content/2.components/miscellaneous/dock.md",
+  "_meta": {
+    "contentHash": "eec61c6b94b276b0a6056fb6b7dbeb4104c86e85",
+    "hasOverride": true,
+    "extractors": {
+      "web": "ok",
+      "uniapp": "absent",
+      "docs": "found"
+    }
+  }
+}

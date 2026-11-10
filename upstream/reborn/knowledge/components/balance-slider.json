@@ -9,6 +9,7 @@
     "tailwind",
     "input"
   ],
+  "aliases": [],
   "platforms": [
     "web"
   ],
@@ -129,7 +130,7 @@
   },
   "docPath": "content/2.components/input-and-forms/balance-slider.md",
   "_meta": {
-    "contentHash": "6c5166c8c52b69b1c8a20a57b8a31bddc4eaf0fb",
+    "contentHash": "a47396de6b8f88126868e674ec720e290ea623e8",
     "hasOverride": true,
     "extractors": {
       "web": "ok",

@@ -1,0 +1,81 @@
+{
+  "$schema": "../schema/component.schema.json",
+  "id": "reborn-root-portal",
+  "title": "RootPortal 根门户",
+  "description": "用于把子节点渲染到页面根节点、脱离当前层级关系的双端传送组件。",
+  "category": "misc",
+  "tags": [
+    "portal",
+    "overlay"
+  ],
+  "aliases": [
+    "portal",
+    "teleport",
+    "传送"
+  ],
+  "platforms": [
+    "web",
+    "uniapp"
+  ],
+  "props": [],
+  "events": [],
+  "slots": [
+    {
+      "name": "default",
+      "description": "需要传送到根部的内容。"
+    }
+  ],
+  "exposes": [],
+  "examples": [
+    {
+      "title": "Web 演示",
+      "path": "app/components/reborn/examples/reborn-root-portal/RebornRootPortalDemo.vue",
+      "source": "demo",
+      "platform": "web",
+      "code": "<script setup lang=\"ts\">\nimport { DemoBlock, DemoSection } from '#components';\n// Web 端 Demo：前端加紧开发中\n</script>\n\n<template>\n  <div class=\"flex w-full min-w-0 flex-col\">\n    <DemoSection\n      title=\"基础用法\"\n      description=\"RebornRootPortal 用于把内容传送到页面根节点之外渲染，Web 端示例正在开发中。\"\n    >\n      <DemoBlock layout=\"stack\">\n        <div\n          class=\"border-default rounded-xl text-dimmed flex min-h-[240px] w-full items-center justify-center border border-dashed text-sm\"\n        >\n          前端加紧开发中...\n        </div>\n      </DemoBlock>\n    </DemoSection>\n  </div>\n</template>\n"
+    },
+    {
+      "title": "UniApp 演示",
+      "path": "packages/uniapp-project/src/pages/reborn-root-portal/RebornRootPortalDemo.vue",
+      "source": "demo",
+      "platform": "uniapp",
+      "code": "<script setup lang=\"ts\">\nimport { shallowRef } from 'vue'\nimport RebornRootPortal from '@/components/reborn-root-portal/RebornRootPortal.vue'\nimport RebornButton from '@/components/reborn-button/RebornButton.vue'\n\nconst showPortal = shallowRef(false)\n\nconst togglePortal = () => {\n    showPortal.value = !showPortal.value\n}\n</script>\n\n<template>\n    <view class=\"p-4\">\n        <view class=\"mb-8 p-4 bg-gray-100 rounded-lg\">\n            <view class=\"text-32 font-bold mb-2\">RootPortal 根节点渲染</view>\n            <view class=\"text-28 text-gray-600\">\n                RootPortal 组件可以将子节点渲染到页面的根节点，从而脱离当前的层级关系。\n                常用于弹窗、等需要覆盖全屏的场景。\n            </view>\n        </view>\n\n        <view class=\"flex flex-col gap-4\">\n            <view class=\"text-28 font-semibold mb-2\">基础用法</view>\n            <RebornButton @click=\"togglePortal\">\n                {{ showPortal ? '关闭 Portal' : '打开 Portal' }}\n            </RebornButton>\n\n            <view class=\"mt-4 p-4 border border-dashed border-gray-300 rounded\">\n                这里是普通文档流中的内容。\n            </view>\n\n            <RebornRootPortal v-if=\"showPortal\">\n                <view class=\"fixed inset-0 flex items-center justify-center pointer-events-none\">\n                    <view\n                        class=\"bg-white p-6 rounded-2xl shadow-2xl pointer-events-auto border border-gray-100 animate-in fade-in zoom-in duration-300\">\n                        <view class=\"text-32 font-bold mb-4 text-primary\">Portal 内容</view>\n                        <view class=\"text-28 mb-6 text-gray-600\">\n                            这段内容被渲染到了页面的根节点。\n                            它脱离了原有的 DOM 结构。\n                        </view>\n                        <RebornButton @click=\"showPortal = false\" size=\"sm\" variant=\"soft\">\n                            确定并关闭\n                        </RebornButton>\n                    </view>\n                </view>\n            </RebornRootPortal>\n        </view>\n    </view>\n</template>\n\n<style scoped>\n.animate-in {\n    animation-fill-mode: both;\n}\n\n@keyframes fade-in {\n    from {\n        opacity: 0;\n    }\n\n    to {\n        opacity: 1;\n    }\n}\n\n@keyframes zoom-in {\n    from {\n        transform: scale(0.95);\n    }\n\n    to {\n        transform: scale(1);\n    }\n}\n\n.fade-in {\n    animation-name: fade-in;\n}\n\n.zoom-in {\n    animation-name: zoom-in;\n}\n</style>\n"
+    }
+  ],
+  "related": [],
+  "whenToUse": [
+    "自定义浮层被父容器 overflow/transform 裁剪，需要提升到页面根节点时。",
+    "uniapp 端需要脱离当前页面层级的全局浮层内容时。"
+  ],
+  "whenNotToUse": [
+    "组件自带传送能力时无需再包裹，如 reborn-popover 的 portal、Web reborn-drawer 的 appendTo、UniApp reborn-popup 的 rootPortal。"
+  ],
+  "pitfalls": [
+    "web、uniapp 双端可用。",
+    "无任何 props 与事件，仅一个默认插槽。",
+    "内容渲染到根节点后脱离原 DOM 层级，依赖父级定位的样式不再生效。"
+  ],
+  "dependencies": [],
+  "install": {
+    "cli": "npx reborn-ui@latest add reborn-root-portal"
+  },
+  "sourceRefs": {
+    "web": [
+      "app/components/reborn/ui/reborn-root-portal/RebornRootPortal.vue",
+      "app/components/reborn/ui/reborn-root-portal/index.ts"
+    ],
+    "uniapp": [
+      "packages/uniapp-project/src/components/reborn-root-portal/RebornRootPortal.vue"
+    ]
+  },
+  "docPath": "content/2.components/miscellaneous/reborn-root-portal.md",
+  "_meta": {
+    "contentHash": "11946db279d4714b0e30ed0b405851494ed00e91",
+    "hasOverride": true,
+    "extractors": {
+      "web": "ok",
+      "uniapp": "ok",
+      "docs": "found"
+    }
+  }
+}

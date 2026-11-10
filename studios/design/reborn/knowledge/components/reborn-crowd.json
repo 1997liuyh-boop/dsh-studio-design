@@ -1,0 +1,133 @@
+{
+  "$schema": "../schema/component.schema.json",
+  "id": "reborn-crowd",
+  "title": "人群漫步",
+  "description": "把人物精灵图切格后在 2D 画布上左右随机走过，边走边颠、前后分层，可控人数与速度，用作页脚装饰。",
+  "category": "effect",
+  "tags": [
+    "canvas",
+    "gsap",
+    "animation",
+    "decoration"
+  ],
+  "aliases": [],
+  "platforms": [
+    "web"
+  ],
+  "props": [
+    {
+      "name": "src",
+      "type": "string",
+      "required": true,
+      "description": "精灵图地址：透明背景，按 cols × rows 等分，每格一个人物，底边贴着格子底边；有朝向时统一面朝右，向左走的人会被水平翻转"
+    },
+    {
+      "name": "cols",
+      "type": "number",
+      "required": false,
+      "description": "精灵图的列数 @defaultValue 15",
+      "default": "15"
+    },
+    {
+      "name": "rows",
+      "type": "number",
+      "required": false,
+      "description": "精灵图的行数 @defaultValue 7",
+      "default": "7"
+    },
+    {
+      "name": "count",
+      "type": "number",
+      "required": false,
+      "description": "同时在场的人数上限，超过格子总数时按格子总数算；不传时全部人物同时上场"
+    },
+    {
+      "name": "duration",
+      "type": "number",
+      "required": false,
+      "description": "走完一趟（从一侧走到另一侧）的基础时长，单位秒；每人再随机放慢到约 1.05~2.6 倍，快慢错开 @defaultValue 14",
+      "default": "14"
+    },
+    {
+      "name": "class",
+      "type": "any",
+      "required": false,
+      "description": "追加到根元素的类名，尺寸一般写在这里"
+    },
+    {
+      "name": "ui",
+      "type": "CrowdUI",
+      "required": false,
+      "description": "按结构键覆盖各节点样式 可用键（从源码抽取，以此为准）——Web：canvas、root。",
+      "default": "() => ({})"
+    }
+  ],
+  "events": [
+    {
+      "name": "ready",
+      "payload": "[]",
+      "description": "精灵图加载完成、人群就位时触发"
+    },
+    {
+      "name": "error",
+      "payload": "[event: Event]",
+      "description": "精灵图加载失败时触发"
+    }
+  ],
+  "slots": [],
+  "exposes": [],
+  "examples": [
+    {
+      "title": "Web 演示",
+      "path": "app/components/reborn/examples/reborn-crowd/RebornCrowdDemo.vue",
+      "source": "demo",
+      "platform": "web",
+      "code": "<script setup lang=\"ts\">\n\nimport { DemoBlock, DemoNote, DemoSection, Icon, Playground } from \"#components\";\nimport { computed, shallowRef } from \"vue\";\nimport RebornButton from \"~/components/reborn/ui/reborn-button/RebornButton.vue\";\nimport RebornCrowd from \"~/components/reborn/ui/reborn-crowd/RebornCrowd.vue\";\n\n/** 演示素材：Open Peeps 拼成的精灵图（CC0），15 列 × 7 行，说明见 public/images/peeps/README.md */\nconst SHEET_SRC = \"/images/peeps/open-peeps-sheet.png\";\n\n// ─── 交互演练场 ─────────────────────────────────────────────────\n\n/** 演练场默认状态：count 取格子总数 105，与不传 count 时的效果一致 */\nconst defaultState: Record<string, any> = {\n  count: 105,\n  duration: 14,\n  height: 240,\n};\n\nconst state = shallowRef<Record<string, any>>({ ...defaultState });\n\n/** 演练场实例的事件回显 */\nconst playgroundStatus = shallowRef(\"等待进入视口\");\n\n/** 重置演练场配置 */\nfunction resetState() {\n  state.value = { ...defaultState };\n}\n\n/** 演练场控制面板配置 */\nconst controls: any = [\n  {\n    title: \"人群\",\n    children: [\n      {\n        label: \"同时在场人数\",\n        key: \"count\",\n        component: \"slider\" as const,\n        defaultValue: 105,\n        props: { min: 1, max: 105, step: 1 },\n      },\n      {\n        label: \"走完一趟（秒）\",\n        key: \"duration\",\n        component: \"slider\" as const,\n        defaultValue: 14,\n        props: { min: 4, max: 30, step: 1 },\n      },\n    ],\n  },\n  {\n    title: \"画布\",\n    children: [\n      {\n        label: \"画布高度（px）\",\n        key: \"height\",\n        component: \"slider\" as const,\n        defaultValue: 240,\n        props: { min: 120, max: 360, step: 10 },\n      },\n    ],\n  },\n];\n\n/** 演练场右上角展示的等价代码：完整列出当前全部参数 */\nconst crowdCode = computed(() => {\n  const s = state.value;\n  return [\n    \"<RebornCrowd\",\n    `  src=\"${SHEET_SRC}\"`,\n    '  :cols=\"15\"',\n    '  :rows=\"7\"',\n    `  :count=\"${s.count}\"`,\n    `  :duration=\"${s.duration}\"`,\n    `  class=\"h-[${s.height}px] w-full\"`,\n    \"/>\",\n  ].join(\"\\n\");\n});\n\n// ─── 场景演示状态 ─────────────────────────────────────────────────\n\n/** 「加载与事件」两个实例各自的事件回显 */\nconst okStatus = shallowRef(\"等待进入视口\");\nconst brokenStatus = shallowRef(\"等待进入视口\");\n</script>\n\n<template>\n  <div class=\"flex w-full min-w-0 flex-col\">\n    <Playground\n      v-model=\"state\"\n      :controls=\"controls\"\n      :code=\"crowdCode\"\n      component-name=\"RebornCrowd\"\n      title=\"交互演练场\"\n      description=\"调节上方参数，查看人群密度、行走速度与画布高度对人物大小的影响。\"\n    >\n      <template #tag>\n        <RebornButton size=\"sm\" variant=\"soft\" color=\"neutral\" @click=\"resetState\">\n          <template #leading>\n            <Icon name=\"lucide:rotate-ccw\" size=\"12\" />\n          </template>\n          重置配置\n        </RebornButton>\n      </template>\n\n      <div class=\"flex w-full flex-col gap-4\">\n        <RebornCrowd\n          :src=\"SHEET_SRC\"\n          :count=\"state.count\"\n          :duration=\"state.duration\"\n          class=\"border-default w-full border-b\"\n          :style=\"{ height: `${state.height}px` }\"\n          @ready=\"playgroundStatus = 'ready：精灵图已加载，人群就位'\"\n          @error=\"playgroundStatus = 'error：精灵图加载失败'\"\n        />\n        <DemoNote tone=\"dimmed\" class=\"font-mono text-xs\">\n          {{ playgroundStatus }}\n        </DemoNote>\n      </div>\n    </Playground>\n\n    <DemoSection title=\"基础用法\">\n      <template #description>\n        传入精灵图\n        <code>src</code>，尺寸写在\n        <code>class</code>\n        上；默认按 15 列 × 7 行切格，全部人物同时上场。\n      </template>\n      <DemoBlock layout=\"stack\">\n        <RebornCrowd :src=\"SHEET_SRC\" class=\"border-default h-56 w-full border-b\" />\n      </DemoBlock>\n      <DemoNote tone=\"dimmed\">\n        底部的线代表页脚上沿：精灵是半身像，最前排的人底边贴住画布底边，腰部的切口正好藏在画布外。\n      </DemoNote>\n    </DemoSection>\n\n    <DemoSection title=\"精灵图的要求\">\n      <template #description>\n        下面就是演示用的\n        <code>src</code>，叠了一层切格线：按\n        <code>cols</code>\n        ×\n        <code>rows</code>\n        等分，每格一个人物，格子不能留空。\n      </template>\n      <DemoBlock layout=\"stack\">\n        <figure class=\"flex w-full flex-col items-center gap-2\">\n          <div class=\"relative w-full max-w-xl\">\n            <img :src=\"SHEET_SRC\" alt=\"Open Peeps 人物精灵图\" class=\"block w-full\">\n            <div class=\"crowd-sheet-grid pointer-events-none absolute inset-0\" />\n          </div>\n          <figcaption class=\"text-muted text-xs\">src：3600×2268，透明背景，15 列 × 7 行，单格 240×324</figcaption>\n        </figure>\n      </DemoBlock>\n      <DemoNote tone=\"dimmed\">\n        人物底边要贴着格子底边，组件把它当作站位基线；有朝向的人物统一面朝右，向左走的人会被水平翻转。空格子会变成一个看不见的「人」，占掉一个上场名额。\n      </DemoNote>\n    </DemoSection>\n\n    <DemoSection title=\"人数与速度\">\n      <template #description>\n        <code>count</code>\n        限制同时在场的人数，走完的人回到候场、再随机换一个人上场；<code>duration</code>\n        是走完一趟的基础秒数，每人再随机放慢到约 1.05~2.6 倍。\n      </template>\n      <DemoBlock layout=\"grid\" :columns=\"2\">\n        <div class=\"flex flex-col gap-2\">\n          <RebornCrowd :src=\"SHEET_SRC\" :count=\"8\" :duration=\"24\" class=\"border-default h-44 w-full border-b\" />\n          <span class=\"text-muted font-mono text-xs\">:count=\"8\" :duration=\"24\"</span>\n        </div>\n        <div class=\"flex flex-col gap-2\">\n          <RebornCrowd :src=\"SHEET_SRC\" :count=\"40\" :duration=\"8\" class=\"border-default h-44 w-full border-b\" />\n          <span class=\"text-muted font-mono text-xs\">:count=\"40\" :duration=\"8\"</span>\n        </div>\n      </DemoBlock>\n    </DemoSection>\n\n    <DemoSection title=\"渐隐与摆放\">\n      <template #description>\n        组件不带遮罩，上沿渐隐写在\n        <code>class</code>\n        上：<code>mask-image</code>\n        让后排的人从内容区里慢慢浮现，而不是被一条硬边截断。\n      </template>\n      <DemoBlock layout=\"stack\">\n        <div class=\"flex w-full flex-col\">\n          <p class=\"text-highlighted text-sm font-medium\">页面正文的最后一段</p>\n          <RebornCrowd\n            :src=\"SHEET_SRC\"\n            :count=\"60\"\n            class=\"h-56 w-full [mask-image:linear-gradient(to_bottom,transparent_0%,#000_24%)]\"\n          />\n          <div class=\"border-default text-muted border-t pt-3 text-xs\">页脚：人群底边贴住它的上沿</div>\n        </div>\n      </DemoBlock>\n    </DemoSection>\n\n    <DemoSection title=\"加载与事件\">\n      <template #description>\n        进入视口附近才加载精灵图，加载完成派发\n        <code>ready</code>，失败派发\n        <code>error</code>。右侧故意写错了\n        <code>src</code>。\n      </template>\n      <DemoBlock layout=\"grid\" :columns=\"2\">\n        <div class=\"flex flex-col gap-2\">\n          <RebornCrowd\n            :src=\"SHEET_SRC\"\n            :count=\"20\"\n            class=\"border-default h-40 w-full border-b\"\n            @ready=\"okStatus = 'ready：精灵图已加载，人群就位'\"\n            @error=\"okStatus = 'error：精灵图加载失败'\"\n          />\n          <DemoNote tone=\"dimmed\" class=\"font-mono text-xs\">\n            {{ okStatus }}\n          </DemoNote>\n        </div>\n        <div class=\"flex flex-col gap-2\">\n          <RebornCrowd\n            src=\"/images/peeps/not-exist.png\"\n            :count=\"20\"\n            class=\"border-default h-40 w-full border-b\"\n            @ready=\"brokenStatus = 'ready：精灵图已加载，人群就位'\"\n            @error=\"brokenStatus = 'error：精灵图加载失败'\"\n          />\n          <DemoNote tone=\"dimmed\" class=\"font-mono text-xs\">\n            {{ brokenStatus }}\n          </DemoNote>\n        </div>\n      </DemoBlock>\n    </DemoSection>\n  </div>\n</template>\n\n<style scoped>\n/* 精灵图切格线：15 列 × 7 行，与组件默认的 cols / rows 一致 */\n.crowd-sheet-grid {\n  background-image:\n    linear-gradient(to right, var(--color-primary) 1px, transparent 1px),\n    linear-gradient(to bottom, var(--color-primary) 1px, transparent 1px);\n  background-size: calc(100% / 15) calc(100% / 7);\n  /* 渐变只画每格的左边与上边，最右与最下两条边用内阴影补齐 */\n  box-shadow: inset -1px -1px 0 var(--color-primary);\n  opacity: 0.5;\n}\n</style>\n"
+    }
+  ],
+  "related": [],
+  "whenToUse": [
+    "文档站、官网页脚上方的装饰留白，高度给 13rem~22rem，用 class 写上沿渐隐的 mask-image。",
+    "空状态、404 页的底部装饰，count 降到 10~20 人，画面不抢正文。",
+    "活动页表现热闹氛围，默认全部人物上场，duration 调小让人群走得更快。"
+  ],
+  "whenNotToUse": [
+    "需要传达信息或可交互的插画，改用 reborn-image 放静态图。",
+    "满屏粒子、流星类背景动效，改用 sparkles 或 meteors。",
+    "单个角色跟随指针的立体感，改用 reborn-depth-image。"
+  ],
+  "pitfalls": [
+    "仅 web 端可用；src 必填，精灵图不随 reborn-ui add 分发，需自行放进项目 public/（演示图为 CC0 的 Open Peeps，15 列 × 7 行）。",
+    "精灵图须按 cols × rows 等分、每格一个人物、底边贴格子底边；空格子也会占一个上场名额。",
+    "画布尺寸、count、duration 变化都会清场重排，窗口缩放时人群整体换一批位置是预期行为。",
+    "组件不带遮罩，上沿渐隐写在 class 的 mask-image 上；铺满屏宽不要用 w-screen，100vw 含滚动条会撑出横向滚动条。",
+    "纯装饰：根节点 aria-hidden、pointer-events-none，滚出视口（上下 200px 外）自动暂停，开启减少动态效果时停在一帧静止画面。"
+  ],
+  "dependencies": [
+    "@vueuse/core",
+    "clsx",
+    "gsap",
+    "tailwind-merge",
+    "tailwind-variants"
+  ],
+  "install": {
+    "cli": "npx reborn-ui@latest add reborn-crowd"
+  },
+  "sourceRefs": {
+    "web": [
+      "app/components/reborn/ui/reborn-crowd/RebornCrowd.vue",
+      "app/components/reborn/ui/reborn-crowd/index.ts",
+      "app/components/reborn/ui/reborn-crowd/reborn-crowd.config.ts"
+    ]
+  },
+  "docPath": "content/2.components/special-effects/reborn-crowd.md",
+  "_meta": {
+    "contentHash": "1a213b1d461f1c9d6bf74878c4f643ff6c1e7484",
+    "hasOverride": true,
+    "extractors": {
+      "web": "ok",
+      "uniapp": "absent",
+      "docs": "found"
+    }
+  }
+}

@@ -1,0 +1,229 @@
+{
+  "$schema": "../schema/component.schema.json",
+  "id": "compare",
+  "title": "对比",
+  "description": "用于以滑动分割线对比两张图片或两块自定义内容的对比组件。",
+  "category": "misc",
+  "tags": [
+    "css",
+    "tailwind",
+    "aceternity-ui"
+  ],
+  "aliases": [
+    "对比",
+    "before after",
+    "图片对比"
+  ],
+  "platforms": [
+    "web"
+  ],
+  "props": [
+    {
+      "name": "firstImage",
+      "type": "string",
+      "required": false,
+      "description": "第一张图片的 URL。",
+      "default": "\"\""
+    },
+    {
+      "name": "secondImage",
+      "type": "string",
+      "required": false,
+      "description": "第二张图片的 URL。",
+      "default": "\"\""
+    },
+    {
+      "name": "firstImageAlt",
+      "type": "string",
+      "required": false,
+      "description": "第一张图片的替代文本。",
+      "default": "\"First image\""
+    },
+    {
+      "name": "secondImageAlt",
+      "type": "string",
+      "required": false,
+      "description": "第二张图片的替代文本。",
+      "default": "\"Second image\""
+    },
+    {
+      "name": "class",
+      "type": "string",
+      "required": false,
+      "description": "组件的额外类名。",
+      "default": "\"\""
+    },
+    {
+      "name": "firstContentClass",
+      "type": "string",
+      "required": false,
+      "description": "应用于第一侧内容包装器的类。",
+      "default": "\"\""
+    },
+    {
+      "name": "secondContentClass",
+      "type": "string",
+      "required": false,
+      "description": "应用于第二侧内容包装器的类。",
+      "default": "\"\""
+    },
+    {
+      "name": "initialSliderPercentage",
+      "type": "number",
+      "required": false,
+      "description": "未绑定 `percentage` 时的初始位置（0-100）；`hover` 模式下指针离开后也回到该位置，修改它会立即复位。",
+      "default": "50"
+    },
+    {
+      "name": "slideMode",
+      "type": "\"hover\" | \"drag\"",
+      "required": false,
+      "description": "滑块的交互模式。",
+      "default": "\"hover\""
+    },
+    {
+      "name": "showHandlebar",
+      "type": "boolean",
+      "required": false,
+      "description": "是否显示手柄。",
+      "default": "true"
+    },
+    {
+      "name": "autoplay",
+      "type": "boolean",
+      "required": false,
+      "description": "是否启用自动播放。",
+      "default": "false"
+    },
+    {
+      "name": "autoplayDuration",
+      "type": "number",
+      "required": false,
+      "description": "自动播放周期（毫秒）。",
+      "default": "5000"
+    },
+    {
+      "name": "percentage",
+      "type": "number | null",
+      "required": false,
+      "description": "双向绑定值",
+      "vModel": true
+    },
+    {
+      "name": "starsCount",
+      "type": "number",
+      "required": false,
+      "description": "",
+      "default": "130"
+    }
+  ],
+  "events": [
+    {
+      "name": "drag:start",
+      "payload": "(e: \"drag:start\"): void;",
+      "description": "开始拖动时触发。"
+    },
+    {
+      "name": "drag:end",
+      "payload": "(e: \"drag:end\"): void;",
+      "description": "结束拖动时触发。"
+    },
+    {
+      "name": "hover:enter",
+      "payload": "(e: \"hover:enter\"): void;",
+      "description": "鼠标进入组件时触发。"
+    },
+    {
+      "name": "hover:leave",
+      "payload": "(e: \"hover:leave\"): void;",
+      "description": "鼠标离开组件时触发。"
+    },
+    {
+      "name": "update:percentage",
+      "description": "percentage 变化时触发（v-model 同步）"
+    }
+  ],
+  "slots": [
+    {
+      "name": "handle",
+      "description": "自定义滑块手柄，需自行使用绝对定位放在分割线处。"
+    },
+    {
+      "name": "first-content",
+      "description": "左/第一侧展示的内容，拥有容器的全部宽高。"
+    },
+    {
+      "name": "second-content",
+      "description": "右/第二侧展示的内容，拥有容器的全部宽高。"
+    }
+  ],
+  "exposes": [],
+  "examples": [
+    {
+      "title": "Web 演示 · CompareAutoplayDemo",
+      "path": "app/components/reborn/examples/compare/CompareAutoplayDemo.vue",
+      "source": "demo",
+      "platform": "web",
+      "code": "<template>\n  <div class=\"flex h-[60vh] w-full items-center justify-center px-1 [perspective:800px] [transform-style:preserve-3d] md:px-8\">\n    <!-- 外层是承载对比控件的机身外框，属于被演示对象的一部分 -->\n    <div\n      class=\"border-default bg-elevated rounded-3xl mx-auto h-1/2 w-3/4 border p-1 md:h-3/4 md:p-4\"\n      :style=\"{ transform: 'rotateX(15deg) translateZ(80px)' }\"\n    >\n      <Compare\n        first-image=\"https://cdn.reborn-ui.com/images/reborn-light.png\"\n        second-image=\"https://cdn.reborn-ui.com/images/reborn-dark.png\"\n        first-content-class=\"object-cover object-left-center w-full h-96\"\n        second-content-class=\"object-cover object-left-center w-full h-96\"\n        class=\"rounded-xl size-full\"\n        slide-mode=\"hover\"\n        :autoplay=\"true\"\n      />\n    </div>\n  </div>\n</template>\n"
+    },
+    {
+      "title": "Web 演示 · CompareCustomContentDemo",
+      "path": "app/components/reborn/examples/compare/CompareCustomContentDemo.vue",
+      "source": "demo",
+      "platform": "web",
+      "code": "<template>\n  <div class=\"flex w-full justify-center\">\n    <Compare\n      class=\"rounded-xl overflow-hidden\"\n      :autoplay=\"true\"\n      :autoplay-duration=\"3000\"\n      slide-mode=\"hover\"\n    >\n      <template #first-content>\n        <div class=\"flex size-full items-center justify-center bg-blue-500\">\n          <div class=\"text-4xl font-bold text-white\">☀️ 白天</div>\n        </div>\n      </template>\n      <template #second-content>\n        <!-- 夜间侧必须在两种模式下都保持深色 -->\n        <div class=\"flex size-full items-center justify-center bg-gray-10 dark:bg-gray-1\">\n          <div class=\"text-4xl font-bold text-white\">🌙 夜晚</div>\n        </div>\n      </template>\n    </Compare>\n  </div>\n</template>\n"
+    },
+    {
+      "title": "Web 演示 · CompareDemo",
+      "path": "app/components/reborn/examples/compare/CompareDemo.vue",
+      "source": "demo",
+      "platform": "web",
+      "code": "<template>\n  <DemoSection\n    title=\"基础用法\"\n    description=\"悬停即可推动分割线，对比两张图片；外框是对比控件的机身，属于被演示对象的一部分。\"\n  >\n    <DemoBlock\n      layout=\"stack\"\n      align=\"center\"\n    >\n      <div class=\"border-default bg-elevated rounded-3xl border p-4\">\n        <Compare\n          first-image=\"https://images.vscodethemes.com/antfu.theme-vitesse/vitesse-light-soft-js-preview-4JM.svg\"\n          second-image=\"https://images.vscodethemes.com/antfu.theme-vitesse/vitesse-dark-soft-js-preview-4JM.svg\"\n          first-content-class=\"object-cover object-left-top rounded-xl overflow-hidden\"\n          second-content-class=\"object-cover object-left-top rounded-xl overflow-hidden\"\n          class=\"h-[250px] w-[200px] md:h-96 md:w-[500px]\"\n          slide-mode=\"hover\"\n        />\n      </div>\n    </DemoBlock>\n  </DemoSection>\n</template>\n"
+    },
+    {
+      "title": "Web 演示 · CompareDragDemo",
+      "path": "app/components/reborn/examples/compare/CompareDragDemo.vue",
+      "source": "demo",
+      "platform": "web",
+      "code": "<script setup lang=\"ts\">\nimport { firstCode, secondCode } from \"./code/index\";\n</script>\n\n<template>\n  <div class=\"flex w-full justify-center\">\n    <!-- 代码对比两侧都需要永久深色底，才能衬出红/绿语法色 -->\n    <Compare\n      slide-mode=\"drag\"\n      class=\"rounded-xl overflow-hidden bg-gray-10 dark:bg-gray-1\"\n    >\n      <template #first-content>\n        <div class=\"size-full overflow-auto bg-gray-10 p-8 dark:bg-gray-1\">\n          <pre\n            class=\"font-mono text-red-400\"\n            v-text=\"firstCode\"\n          />\n        </div>\n      </template>\n      <template #second-content>\n        <div class=\"size-full overflow-auto bg-gray-10 p-8 dark:bg-gray-1\">\n          <pre\n            class=\"font-mono text-green-400\"\n            v-text=\"secondCode\"\n          />\n        </div>\n      </template>\n    </Compare>\n  </div>\n</template>\n"
+    }
+  ],
+  "related": [],
+  "whenToUse": [
+    "明暗主题、改版前后等两张截图的滑动对比。",
+    "通过 first-content / second-content 插槽对比两段代码或任意自定义内容。",
+    "需要 autoplay 自动往返演示对比效果的营销区块。"
+  ],
+  "whenNotToUse": [
+    "多张图片轮播展示，改用 images-slider 或 reborn-carousel。"
+  ],
+  "pitfalls": [
+    "仅 web 端可用。",
+    "slideMode 默认 \"hover\"（悬停即滑动），需要拖动手柄交互时设为 \"drag\"。",
+    "不传 firstImage / secondImage 时必须用 first-content / second-content 插槽提供内容，插槽内容占满容器宽高。",
+    "自定义 handle 插槽需自行用绝对定位放在分割线处。",
+    "滑块位置可用 v-model:percentage（0-100）双向绑定；未绑定时以 initialSliderPercentage 为初值，也可只监听 update:percentage。",
+    "Web 显式绑定 percentage 为 undefined/null 时显示比例复位到 initialSliderPercentage，不回显旧交互副本，也不主动回写父模型。"
+  ],
+  "dependencies": [],
+  "install": {
+    "cli": "npx reborn-ui@latest add compare"
+  },
+  "sourceRefs": {
+    "web": [
+      "app/components/reborn/ui/compare/Compare.vue",
+      "app/components/reborn/ui/compare/StarField.vue",
+      "app/components/reborn/ui/compare/index.ts"
+    ]
+  },
+  "docPath": "content/2.components/miscellaneous/compare.md",
+  "_meta": {
+    "contentHash": "77f577d114fd131b912049362688f3989cb21b36",
+    "hasOverride": true,
+    "extractors": {
+      "web": "ok",
+      "uniapp": "absent",
+      "docs": "found"
+    }
+  }
+}

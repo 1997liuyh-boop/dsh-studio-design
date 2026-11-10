@@ -9,6 +9,7 @@
     "tailwind",
     "aceternity-ui"
   ],
+  "aliases": [],
   "platforms": [
     "web"
   ],
@@ -83,7 +84,7 @@
   },
   "docPath": "content/2.components/text-animations/colorful-text.md",
   "_meta": {
-    "contentHash": "99db5a38cbe67ce6bce8b0d29128e284c68ab27b",
+    "contentHash": "ef6f80bdaa61515c74d92a2f43cb87152aef4945",
     "hasOverride": true,
     "extractors": {
       "web": "ok",

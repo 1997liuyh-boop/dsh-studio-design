@@ -9,6 +9,7 @@
     "tailwind",
     "aceternity-ui"
   ],
+  "aliases": [],
   "platforms": [
     "web"
   ],
@@ -83,7 +84,7 @@
   },
   "docPath": "content/2.components/miscellaneous/svg-mask.md",
   "_meta": {
-    "contentHash": "02ea053ede0b95a54c07934f487ff8cfd14a92d7",
+    "contentHash": "23d8e36fd7df2bbc597dd348541dd5f5be4b19c7",
     "hasOverride": true,
     "extractors": {
       "web": "ok",

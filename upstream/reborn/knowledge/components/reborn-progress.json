@@ -10,6 +10,13 @@
     "status",
     "steps"
   ],
+  "aliases": [
+    "progress",
+    "进度条",
+    "进度",
+    "环形进度",
+    "仪表盘"
+  ],
   "platforms": [
     "web"
   ],
@@ -23,24 +30,39 @@
     },
     {
       "name": "type",
-      "type": "ProgressType",
+      "type": "'line' | 'circle' | 'dashboard'",
       "required": false,
       "description": "直线、圆环或底部开口的仪表盘。",
-      "default": "'line'"
+      "default": "'line'",
+      "options": [
+        "line",
+        "circle",
+        "dashboard"
+      ]
     },
     {
       "name": "size",
-      "type": "ProgressSize",
+      "type": "'sm' | 'md' | 'lg'",
       "required": false,
       "description": "三档尺寸，不受内嵌文字影响。",
-      "default": "'md'"
+      "default": "'md'",
+      "options": [
+        "sm",
+        "md",
+        "lg"
+      ]
     },
     {
       "name": "status",
-      "type": "ProgressStatus",
+      "type": "'default' | 'success' | 'error'",
       "required": false,
       "description": "显式状态，不随百分比自动切换。",
-      "default": "'default'"
+      "default": "'default'",
+      "options": [
+        "default",
+        "success",
+        "error"
+      ]
     },
     {
       "name": "steps",
@@ -93,10 +115,14 @@
     },
     {
       "name": "flowDirection",
-      "type": "ProgressFlowDirection",
+      "type": "'normal' | 'reverse'",
       "required": false,
       "description": "进度条流动方向：reverse 时直线从右往左填充、圆环逆时针，分段圆角与条纹流向随之翻转。",
-      "default": "'normal'"
+      "default": "'normal'",
+      "options": [
+        "normal",
+        "reverse"
+      ]
     },
     {
       "name": "format",
@@ -191,7 +217,7 @@
   },
   "docPath": "content/2.components/miscellaneous/reborn-progress.md",
   "_meta": {
-    "contentHash": "c9cf16a28f46584b2e2651dc132f3c5d8b55c214",
+    "contentHash": "a692d3b877f1e6ba277718728f8ca3f73c4765a7",
     "hasOverride": true,
     "extractors": {
       "web": "ok",

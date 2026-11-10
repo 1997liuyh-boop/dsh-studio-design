@@ -10,9 +10,13 @@
 
 多个工作区分别使用各自会话的目录。页面跟随当前主会话；已提交任务始终留在原会话，不会因切换页面而改用另一个目录。没有明确工作区时提示先打开项目，不借用旧配置或后台会话。相同项目下的多个会话也各自拥有 MasterGo 连接，项目组件映射和预览按真实目录保存。
 
-工作室首页只显示当前工作区、组件资料与三个常用入口：实现设计稿、查看当前选区、生成设计规则。按钮将明确任务发送到当前 dsh 会话，不创建另一份聊天；自定义需求直接在聊天中输入。预览和设置默认折叠。
+工作室首页只显示当前工作区、组件资料与实现设计稿、查看节点、优化对应节点、生成设计规则四个入口。按钮将明确任务发送到当前 dsh 会话，不创建另一份聊天；自定义需求直接在聊天中输入。预览和设置默认折叠。
 
 生成设计规则无需 MasterGo。模型检查项目已有配置、主题、组件和代表页面，定向更新 `docs/design-rules.md`，在 `AGENTS.md` 添加一次引用，保留人工约束并标注文件依据，不修改业务代码。规则仍需在会话中审阅。
+
+## 聊天快捷任务
+
+在聊天里写 `@工作室:design 实现设计稿`（也可以写 `@设计工作室 实现设计稿`），标题可换成「查看当前选区 / 生成设计规则 / 优化对应节点」，后面可直接接 MasterGo 节点链接或补充说明，例如 `@工作室:design 优化对应节点 https://mastergo.com/file/...?layer_id=...`。消息进入模型前，宿主把标题替换成完整任务文本（与首页按钮发送的内容相同），链接或补充另起一行保留；没有链接即按当前选区处理。任务文案与首页按钮共用 `src/prompt.ts` 的 `designTaskRequest`，`npm run build` 会把 `designTasks()` 写入 `studio.json` 的 `tasks`，由工作库目录透出给宿主；修改文案只改 `prompt.ts`，不要手改 `studio.json`。
 
 ## 设置
 
@@ -56,3 +60,29 @@ npm run pack
 - MasterGo 接入依据 [官方 Vibe MCP 文档](https://mastergo.com/help/ai-features/vibe-mcp.html)，官方适配器按配置运行，不复制其源码。
 
 本仓库是新增集成插件，非 MasterGo 的 fork。原创代码采用 MIT 许可，上游快照保留原许可。
+
+## 几何与像素审计
+
+预读把每个区块导出 HTML 的节点规格（文字、宽高、位置、字号、行高、字重、字体、颜色、背景、圆角、描边）写进 `docs/design/mastergo-manifest.json` 的 `blocks[].spec`。实现模板给区块根与规格表节点加 `data-design="<节点ID>"`，并把预览地址写进 `docs/design/implementation-checklist.md`；`design_review(stage=compare)` 用 Playwright 在设计稿基准宽度实测这些节点的位置、尺寸与计算样式，与规格表及导出 HTML 的渲染结果比对（位置尺寸容差 2px，其余精确，字体族只提示），再把区块截图与预览图做像素比对，输出按差异排序的清单和相似度，报告在 `docs/design/compare-report.json`，差异图在 `docs/design/compare/`。差异超阈值修复后重查，最多三轮，剩余差异写进清单。Playwright 由环境变量 `DSH_PLAYWRIGHT_MODULE`、目标项目或宿主仓库解析，不随插件打包。
+
+流程门禁：compare 需本会话 check 通过，最多三轮；有规格表的页面在 verify 前必须跑过 compare，未通过的区块要在清单「四、剩余差异」写明。预览不可达时工作室用项目脚本在宿主侧启动预览。
+
+## 交互断言执行
+
+compare 之后调用 `design_review(stage=interact)`（需本会话 check 通过）：工作室读取 `docs/design/interactions.yaml` 已填写的条目，用 Playwright 在基准视口打开预览，每条从初始页面开始，按 `data-design="<node>"`（其次 `<id>`）定位，把 trigger 翻译成 点击 / 悬停 / 输入「文字」/ 按键 / 滚动 执行（节点 ID 或 `data-design` 值可指定内部目标，「或」只执行第一种，trigger 写「无」的条目跳过），再按 response 里可判定的部分断言：节点出现 / 消失、文字「…」、`aria-expanded` 等属性（给值则等于，否则要求变化）、跳转到 `/路径` 或 不跳转、无变化；输入动作自动核对文字写进了输入框。每条前后截图写到 `docs/design/screenshots/<id>-before.png` / `-after.png`，另截一张 390 宽窄屏整页图，报告写 `docs/design/interaction-report.json`。verify 直接采用本会话 interact 的结果与截图（含 compare 的区块实测图作基准视口证据），模型不必再传 interactions 结果与 visuals，也不要自己起浏览器；磁盘上的旧报告不采用。切图方面，导出像素不足稿面九成的位图标 `partial` 并按节点补导出全图（`fullImage`），check 与 compare 都禁止把小图拉伸；预读上限 120 块。组件方面，映射命中的实例不接受 custom（除非需求里写「允许自定义 <节点>」），缺失的组件由工作室从本地 registry（`REBORN_REGISTRY_DIR` / 设置 `rebornRegistry` / Reborn 资料目录）或 Reborn CLI 在实现前装进项目。
+
+## 多状态与交互规范
+
+需求里可以按顺序给出同一文件的多条画板链接：第一条是默认态，按原流程预读并导出区块；其余是状态帧（如「首页/搜索展开」「首页/登录态」），工作室逐帧只读一次结构，写到 `.mastergo/export/frames/<序号-状态-节点ID>/root.html`，manifest 增加 `frames[]`（帧节点、画板名、状态标签、区块列表；状态标签取画板名最后一个 `/`、`-`、`_` 之后的非数字片段）与 `stateDeltas[]`（同名节点跨帧的 added / removed / moved / resized / text / variant / style 差异，节点先按 ID 再按名称与出现次序配对）。状态帧新增的最外层节点在默认态区块导出后单独导出（每帧最多 8 个）。提示词要求按状态实现：每个状态一个响应式变量，差异用 `v-if` / `v-show` 或组件 props 表达。
+
+预读完成后工作室同步 `docs/design/interactions.yaml`：按区块与实例名识别可交互类型生成骨架条目 `{ id, node, name, type, trigger, response, states, notes?, data?, file? }`，带状态属性的实例与每个状态帧生成 `state` 条目。`trigger` / `response` 为空即「待补交互」，plan 阶段列出；可直接编辑 yaml（人工内容再次同步时保留），或在需求里写 `交互 <节点或id>：<触发> → <响应>（状态：a、b）` 由工作室写回。实现时每条规范用 Reborn 组件自带的 props / events 或 `v-if` / `v-show` 实现，在对应节点根元素加 `data-design="<id>"`，数据交互保留 mock 并标 `// TODO`。plan 要求已填写规范登记为 interactions 断言（node 填 id）；check 核对 `data-design` 元素上有事件处理或状态绑定，缺失算问题；交互的执行与截图由 `design_review(stage=interact)` 在宿主侧完成（见「交互断言执行」），模型不写也不运行 Playwright 脚本。
+
+变体属性直接来自 Vibe 导出的 `ui-component` 的 `props` / `text` 属性（已写入 `blocks[].components[].props` 并参与跨帧比较），不再对实例节点补 Magic 读取：官方 Magic MCP 只提供 `mcp_getDsl` / `mcp_getD2c`，且与 Vibe 是互斥的单槽连接配置，补读需要另一条带令牌的连接并承受 429 与大节点超时。
+
+## 提示词与节点优化
+
+页面右上角「内置提示词」显示实际生成器使用的调用指引、实现、节点优化、只读、规则和预读模板，可复制查看；项目、模型能力与节点数据在任务执行时填入。节点链接可填写完整 file 链接及 layer_id，留空使用当前选区；「优化对应节点」强制重新通过 MCP 读取该节点，再对照已有实现和真实组件 API，保留业务逻辑。
+
+设计中的原始 SVG、图片和形状必须导出落盘并逐项登记使用路径，普通图标也不能遗漏。组件映射记录节点语义及 project/reborn/custom 来源；搜索、标签页、表格、轮播等不能统一映射为 Button 加 CSS。项目组件填写源码依据，自定义组件说明兼容原因。
+
+还原按 plan、check、compare、interact、verify 执行。plan 同时登记真实交互期望，check 校验组件和原图，compare 实测几何与像素，interact 在宿主侧执行交互并截图，verify 登记证据（有 interact 报告时直接采用）。evidence-recorded 只表示证据文件已登记，不能证明像素一致或替代视觉对照；未完成项必须明确保留。

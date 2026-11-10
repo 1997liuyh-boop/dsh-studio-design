@@ -10,6 +10,7 @@
     "parallax",
     "image"
   ],
+  "aliases": [],
   "platforms": [
     "web"
   ],
@@ -155,7 +156,7 @@
   },
   "docPath": "content/2.components/special-effects/reborn-depth-image.md",
   "_meta": {
-    "contentHash": "0d4c6753402a6f9f285e5c3fae0314fe8ddceb50",
+    "contentHash": "84ba0af17eb5b95e6813e434c1e48013af3dbe4b",
     "hasOverride": true,
     "extractors": {
       "web": "ok",

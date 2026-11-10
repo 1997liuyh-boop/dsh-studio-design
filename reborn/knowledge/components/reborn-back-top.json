@@ -1,0 +1,248 @@
+{
+  "$schema": "../schema/component.schema.json",
+  "id": "reborn-back-top",
+  "title": "BackTop 返回顶部",
+  "description": "双端返回顶部按钮：滚动超过阈值后淡入；Web 端另有去底部、方形与顺/逆时针滚动进度环。",
+  "category": "navigation",
+  "tags": [
+    "css",
+    "tailwind",
+    "back-top",
+    "scroll",
+    "uniapp"
+  ],
+  "aliases": [
+    "back top",
+    "返回顶部",
+    "回到顶部"
+  ],
+  "platforms": [
+    "web",
+    "uniapp"
+  ],
+  "props": [
+    {
+      "name": "scrollTop",
+      "type": "number",
+      "required": false,
+      "description": "当前页面的滚动距离",
+      "default": "0"
+    },
+    {
+      "name": "threshold",
+      "type": "number",
+      "required": false,
+      "description": "滚动多少距离后显示",
+      "default": "300"
+    },
+    {
+      "name": "bottom",
+      "type": "number",
+      "required": false,
+      "description": "底部距离 (px)",
+      "default": "20"
+    },
+    {
+      "name": "duration",
+      "type": "number",
+      "required": false,
+      "description": "滚动动画时长 (ms)",
+      "default": "300"
+    },
+    {
+      "name": "isTab",
+      "type": "boolean",
+      "required": false,
+      "description": "是否是 TabBar 页面 (如果是，会自动抬高 50px)",
+      "default": "false"
+    },
+    {
+      "name": "safeArea",
+      "type": "boolean",
+      "required": false,
+      "description": "是否适配安全区域",
+      "default": "true"
+    },
+    {
+      "name": "color",
+      "type": "'primary' | 'secondary' | 'success' | 'info' | 'warning' | 'error' | 'neutral'",
+      "required": false,
+      "description": "按钮背景的语义色。",
+      "default": "'primary'",
+      "options": [
+        "primary",
+        "secondary",
+        "success",
+        "info",
+        "warning",
+        "error",
+        "neutral"
+      ]
+    },
+    {
+      "name": "size",
+      "type": "'sm' | 'md' | 'lg'",
+      "required": false,
+      "description": "按钮尺寸，对应 `size-8` / `size-10` / `size-12`。 本条为 UniApp 端取值，另一端另有同名条目。",
+      "default": "'md'",
+      "options": [
+        "sm",
+        "md",
+        "lg"
+      ],
+      "platform": "uniapp"
+    },
+    {
+      "name": "ui",
+      "type": "{\n    wrapper?: ClassValue\n    base?: ClassValue\n    icon?: ClassValue\n  }",
+      "required": false,
+      "description": "细粒度样式覆盖，键位见「自定义样式（ui）」。 可用键（从源码抽取，以此为准）——UniApp：base*、icon*、wrapper。 带 * 的键对应插槽兜底节点：填了同名插槽，组件自带的节点被替换，这个键随之失效。",
+      "platform": "uniapp"
+    },
+    {
+      "name": "direction",
+      "type": "'top' | 'bottom'",
+      "required": false,
+      "description": "滚动方向：top 回到顶部 / bottom 去底部。需要两个按钮时放两个实例，用 bottom 错开位置",
+      "default": "'top'",
+      "options": [
+        "top",
+        "bottom"
+      ]
+    },
+    {
+      "name": "shape",
+      "type": "'circle' | 'square'",
+      "required": false,
+      "description": "按钮形状：circle 圆形 / square 圆角方形；进度环随形状变成圆环或圆角方框",
+      "default": "'circle'",
+      "options": [
+        "circle",
+        "square"
+      ]
+    },
+    {
+      "name": "icon",
+      "type": "string",
+      "required": false,
+      "description": "图标名（Iconify 格式，如 lucide:arrow-big-up）；不传时显示文字箭头，方向随 direction"
+    },
+    {
+      "name": "showProgress",
+      "type": "boolean",
+      "required": false,
+      "description": "是否在按钮边缘展示滚动进度环；回到顶部顺时针画、去底部逆时针画。传了自定义默认插槽时不生效（按钮结构已由插槽接管）",
+      "default": "false"
+    },
+    {
+      "name": "scrollRange",
+      "type": "number",
+      "required": false,
+      "description": "可滚动总距离 (px)。外部接管 scrollTop 时用于换算百分比与去底部按钮的显隐；不传则按 document 实测"
+    },
+    {
+      "name": "size",
+      "type": "'xs' | 'sm' | 'md' | 'lg'",
+      "required": false,
+      "description": "边长 24 / 32 / 40 / 48px，进度线宽随之换算。 本条为 Web 端取值，另一端另有同名条目。",
+      "default": "'md'",
+      "options": [
+        "xs",
+        "sm",
+        "md",
+        "lg"
+      ],
+      "platform": "web"
+    },
+    {
+      "name": "ui",
+      "type": "{\n        wrapper?: ClassValue,\n        base?: ClassValue,\n        icon?: ClassValue,\n        progress?: ClassValue,\n        progressTrack?: ClassValue,\n        progressBar?: ClassValue\n    }",
+      "required": false,
+      "description": "细粒度样式覆盖，键位见「自定义样式（ui）」。 可用键（从源码抽取，以此为准）——Web：base*、icon*、progress*、progressBar*、progressTrack*、wrapper。 带 * 的键对应插槽兜底节点：填了同名插槽，组件自带的节点被替换，这个键随之失效。",
+      "platform": "web"
+    }
+  ],
+  "events": [
+    {
+      "name": "click",
+      "payload": "[]",
+      "description": "点击按钮时触发；组件已先发起滚动（回到顶部或去底部），无需在回调中重复处理。"
+    }
+  ],
+  "slots": [
+    {
+      "name": "default",
+      "description": "整体替换按钮主体；替换后 `color` / `size` 以及 Web 端的 `shape` / `icon` / 进度环都不再生效。"
+    }
+  ],
+  "exposes": [],
+  "examples": [
+    {
+      "title": "Web 演示",
+      "path": "app/components/reborn/examples/reborn-back-top/RebornBackTopDemo.vue",
+      "source": "demo",
+      "platform": "web",
+      "code": "<script setup lang=\"ts\">\nimport { DemoBlock, DemoNote, DemoSection, Icon, Playground } from \"#components\";\nimport { computed, ref, shallowRef } from \"vue\";\nimport { backTopColors, backTopSizes } from \"~/components/reborn/ui/reborn-back-top/reborn-back-top.config\";\nimport RebornBackTop from \"~/components/reborn/ui/reborn-back-top/RebornBackTop.vue\";\nimport RebornButton from \"~/components/reborn/ui/reborn-button/RebornButton.vue\";\n\nconst directionOptions = [\n  { label: \"回到顶部 top\", value: \"top\" },\n  { label: \"去底部 bottom\", value: \"bottom\" },\n];\nconst shapeOptions = [\n  { label: \"圆形 circle\", value: \"circle\" },\n  { label: \"圆角方形 square\", value: \"square\" },\n];\n/** 图标选项：none 表示不传 icon，显示默认的文字箭头 */\nconst iconOptions = [\n  { label: \"默认文字箭头\", value: \"none\" },\n  { label: \"lucide:arrow-big-up\", value: \"lucide:arrow-big-up\" },\n  { label: \"lucide:arrow-big-down\", value: \"lucide:arrow-big-down\" },\n  { label: \"lucide:chevrons-up\", value: \"lucide:chevrons-up\" },\n  { label: \"lucide:chevrons-down\", value: \"lucide:chevrons-down\" },\n];\n\n/** 各尺寸的边长（px），用于说明文字 */\nconst SIZE_PX: Record<string, number> = { xs: 24, sm: 32, md: 40, lg: 48 };\n\n/**\n * 页内静态展示用的 ui：按钮默认固定在视口右下角，这里改成 static 排进示例块。\n * 显示时按钮主体自带 -translate-x-3（离视口右缘 12px），外层补 translate-x-3 抵消，按钮才居中。\n */\nconst inlineUi = { wrapper: \"static translate-x-3\" };\n\n// ─── 交互演练场 ─────────────────────────────────────────────────\n\n/** 演练场默认状态：除 showProgress 外与组件默认值一致 */\nconst defaultState: Record<string, any> = {\n  direction: \"top\",\n  shape: \"circle\",\n  color: \"primary\",\n  size: \"md\",\n  icon: \"none\",\n  showProgress: true,\n  threshold: 300,\n  bottom: 20,\n};\n\nconst state = ref<Record<string, any>>({ ...defaultState });\n\n/** 演练场实例的点击计数 */\nconst clickCount = shallowRef(0);\n\n/** 重置演练场配置 */\nfunction resetState() {\n  state.value = { ...defaultState };\n  clickCount.value = 0;\n}\n\n/** 演练场控制面板配置 */\nconst controls: any = [\n  {\n    title: \"方向与外观\",\n    children: [\n      { label: \"方向\", key: \"direction\", component: \"select\" as const, defaultValue: \"top\", props: { options: directionOptions } },\n      { label: \"形状\", key: \"shape\", component: \"select\" as const, defaultValue: \"circle\", props: { options: shapeOptions } },\n      { label: \"颜色\", key: \"color\", component: \"select\" as const, defaultValue: \"primary\", props: { options: backTopColors.map(c => ({ label: c, value: c })) } },\n      { label: \"尺寸\", key: \"size\", component: \"select\" as const, defaultValue: \"md\", props: { options: backTopSizes.map(s => ({ label: `${s}（${SIZE_PX[s]}px）`, value: s })) } },\n      { label: \"图标\", key: \"icon\", component: \"select\" as const, defaultValue: \"none\", props: { options: iconOptions } },\n      { label: \"展示滚动进度环\", key: \"showProgress\", component: \"checkbox\" as const, defaultValue: true },\n    ],\n  },\n  {\n    title: \"位置与时机\",\n    children: [\n      { label: \"显示阈值 (px)\", key: \"threshold\", component: \"slider\" as const, defaultValue: 300, props: { min: 0, max: 1000, step: 50 } },\n      { label: \"距底部 (px)\", key: \"bottom\", component: \"slider\" as const, defaultValue: 20, props: { min: 20, max: 200, step: 10 } },\n    ],\n  },\n];\n\n/** 演练场右上角展示的等价代码：完整列出当前全部参数 */\nconst backTopCode = computed(() => {\n  const s = state.value;\n  return [\n    \"<RebornBackTop\",\n    `  direction=\"${s.direction}\"`,\n    `  shape=\"${s.shape}\"`,\n    `  color=\"${s.color}\"`,\n    `  size=\"${s.size}\"`,\n    ...(s.icon === \"none\" ? [] : [`  icon=\"${s.icon}\"`]),\n    `  :show-progress=\"${s.showProgress}\"`,\n    `  :threshold=\"${s.threshold}\"`,\n    `  :bottom=\"${s.bottom}\"`,\n    \"/>\",\n  ].join(\"\\n\");\n});\n\n/** 用于把页面撑高的占位行，便于触发滚动 */\nconst rows = Array.from({ length: 12 }, (_, i) => `占位内容 ${i + 1}`);\n</script>\n\n<template>\n  <div class=\"flex w-full min-w-0 flex-col\">\n    <Playground\n      v-model=\"state\" :controls=\"controls\" :code=\"backTopCode\" component-name=\"RebornBackTop\"\n      title=\"交互演练场\" description=\"调节上方参数后向下滚动本页，查看按钮在视口右下角的显隐、形状与进度环走向。\"\n    >\n      <template #tag>\n        <RebornButton size=\"sm\" variant=\"soft\" color=\"neutral\" @click=\"resetState\">\n          <template #leading>\n            <Icon name=\"lucide:rotate-ccw\" size=\"12\" />\n          </template>\n          重置配置\n        </RebornButton>\n      </template>\n\n      <div class=\"flex w-full flex-col gap-4\">\n        <!-- 组件本身是固定定位的浮层，这里只用描边标出占位区域，避免再叠一层背景 -->\n        <div class=\"border-default w-full rounded-xl border\">\n          <div class=\"divide-default divide-y\">\n            <p v-for=\"row in rows\" :key=\"row\" class=\"text-muted px-4 py-3 text-sm\">\n              {{ row }}\n            </p>\n          </div>\n        </div>\n        <DemoNote tone=\"dimmed\" class=\"font-mono text-xs\">\n          已点击 {{ clickCount }} 次；去底部在页首就会出现，回到顶部要滚过 {{ state.threshold }}px 才出现。\n        </DemoNote>\n      </div>\n\n      <RebornBackTop\n        :direction=\"state.direction\" :shape=\"state.shape\" :color=\"state.color\" :size=\"state.size\"\n        :icon=\"state.icon === 'none' ? undefined : state.icon\" :show-progress=\"state.showProgress\"\n        :threshold=\"state.threshold\" :bottom=\"state.bottom\" @click=\"clickCount++\"\n      />\n    </Playground>\n\n    <DemoSection title=\"基础用法\">\n      <template #description>\n        滚动超过 <code>threshold</code> 后按钮出现，点击平滑回到顶部；Web 端不传 <code>scrollTop</code> 时自动监听 <code>window</code>。\n      </template>\n      <DemoBlock layout=\"row\">\n        <RebornBackTop :threshold=\"-1\" :scroll-top=\"1\" :ui=\"inlineUi\" />\n      </DemoBlock>\n      <DemoNote tone=\"dimmed\">\n        本节及以下的静态示例都把定位改成了 static 排进页面；点击它们会真实滚动本页。\n      </DemoNote>\n    </DemoSection>\n\n    <DemoSection title=\"回到顶部与去底部\">\n      <template #description>\n        <code>direction=\"bottom\"</code> 点击后滚到页尾，离页尾的剩余距离超过 <code>threshold</code> 时显示。成对使用时放两个实例，用 <code>bottom</code> 上下错开。\n      </template>\n      <DemoBlock layout=\"stack\">\n        <DemoNote>\n          视口右下角、演练场按钮上方的两个小方块就是这一对：去底部 <code>bottom=100</code>，回到顶部 <code>bottom=132</code>（100 + 边长 24 + 间距 8）。滚到页首只剩去底部，滚到页尾只剩回到顶部，另一个不挪位。\n        </DemoNote>\n      </DemoBlock>\n\n      <RebornBackTop\n        :bottom=\"132\" size=\"xs\" shape=\"square\" color=\"info\" icon=\"lucide:arrow-big-up\" show-progress\n        :ui=\"{ wrapper: 'z-50' }\"\n      />\n      <RebornBackTop\n        direction=\"bottom\" :bottom=\"100\" size=\"xs\" shape=\"square\" color=\"info\" icon=\"lucide:arrow-big-down\"\n        show-progress :ui=\"{ wrapper: 'z-50' }\"\n      />\n    </DemoSection>\n\n    <DemoSection title=\"形状与尺寸\">\n      <template #description>\n        <code>shape</code> 决定外形，进度环跟着变成圆环或贴边的圆角方框；<code>size</code> 四档边长 24 / 32 / 40 / 48px，越小的按钮进度线在 viewBox 里画得越粗。\n      </template>\n      <DemoBlock layout=\"grid\" :columns=\"4\">\n        <div v-for=\"size in backTopSizes\" :key=\"size\" class=\"flex flex-col items-center gap-3 py-2\">\n          <div class=\"flex items-center gap-4\">\n            <RebornBackTop :size=\"size\" show-progress :threshold=\"-1\" :scroll-top=\"40\" :scroll-range=\"100\" :ui=\"inlineUi\" />\n            <RebornBackTop\n              :size=\"size\" shape=\"square\" show-progress :threshold=\"-1\" :scroll-top=\"40\" :scroll-range=\"100\"\n              :ui=\"inlineUi\"\n            />\n          </div>\n          <span class=\"text-muted font-mono text-xs\">size=\"{{ size }}\"（{{ SIZE_PX[size] }}px）</span>\n        </div>\n      </DemoBlock>\n    </DemoSection>\n\n    <DemoSection title=\"滚动进度环\">\n      <template #description>\n        <code>show-progress</code> 从 12 点方向出发画进度：回到顶部顺时针、去底部逆时针，两者表达同一个进度，上下并排时左右对称。下面用 <code>scroll-top</code> + <code>scroll-range</code> 固定进度展示。\n      </template>\n      <DemoBlock layout=\"grid\" :columns=\"3\">\n        <div v-for=\"percent in [25, 50, 75]\" :key=\"percent\" class=\"flex flex-col items-center gap-3 py-2\">\n          <RebornBackTop\n            size=\"lg\" shape=\"square\" color=\"info\" show-progress :threshold=\"-1\" :scroll-top=\"percent\"\n            :scroll-range=\"100\" :ui=\"inlineUi\"\n          />\n          <RebornBackTop\n            direction=\"bottom\" size=\"lg\" shape=\"square\" color=\"info\" show-progress :threshold=\"-1\"\n            :scroll-top=\"percent\" :scroll-range=\"100\" :ui=\"inlineUi\"\n          />\n          <span class=\"text-muted font-mono text-xs\">进度 {{ percent }}%</span>\n        </div>\n      </DemoBlock>\n      <DemoNote tone=\"dimmed\">\n        进度 = 已滚动距离 / 可滚动总距离；不传 scroll-range 时按文档高度实测，用 scroll-top 接管滚动时要一并传入，否则百分比和去底部的显隐都会算错。\n      </DemoNote>\n    </DemoSection>\n\n    <DemoSection title=\"图标与自定义内容\">\n      <template #description>\n        <code>icon</code> 接受 Iconify 图标名，替换默认的文字箭头，形状与进度环都保留；默认插槽则整体替换按钮主体，<code>color</code> / <code>size</code> / <code>shape</code> / <code>icon</code> / 进度环都不再生效。\n      </template>\n      <DemoBlock layout=\"row\" class=\"gap-8\">\n        <div class=\"flex flex-col items-center gap-3\">\n          <div class=\"flex items-center gap-3\">\n            <RebornBackTop\n              size=\"sm\" shape=\"square\" icon=\"lucide:arrow-big-up\" show-progress :threshold=\"-1\" :scroll-top=\"60\"\n              :scroll-range=\"100\" :ui=\"inlineUi\"\n            />\n            <RebornBackTop\n              direction=\"bottom\" size=\"sm\" shape=\"square\" icon=\"lucide:arrow-big-down\" show-progress\n              :threshold=\"-1\" :scroll-top=\"60\" :scroll-range=\"100\" :ui=\"inlineUi\"\n            />\n          </div>\n          <span class=\"text-muted font-mono text-xs\">icon</span>\n        </div>\n        <div class=\"flex flex-col items-center gap-3\">\n          <RebornBackTop :threshold=\"-1\" :scroll-top=\"1\" :ui=\"{ wrapper: 'static' }\">\n            <div class=\"bg-success flex size-12 cursor-pointer items-center justify-center rounded-lg text-xs font-bold text-white\">\n              TOP\n            </div>\n          </RebornBackTop>\n          <span class=\"text-muted font-mono text-xs\">默认插槽</span>\n        </div>\n      </DemoBlock>\n    </DemoSection>\n\n    <DemoSection title=\"TabBar 页面与安全区\">\n      <template #description>\n        <code>is-tab</code> 让按钮额外抬高 50px 避开 TabBar；最终距底部 = <code>bottom</code> + 安全区 + TabBar。下面两个框模拟视口，右框底部是 50px 高的 TabBar。\n      </template>\n      <DemoBlock layout=\"grid\" :columns=\"2\">\n        <div v-for=\"tab in [false, true]\" :key=\"String(tab)\" class=\"flex flex-col gap-2\">\n          <div class=\"border-default relative h-48 w-full overflow-hidden rounded-xl border\">\n            <div\n              v-if=\"tab\"\n              class=\"border-default text-muted absolute inset-x-0 bottom-0 flex h-[50px] items-center justify-around border-t text-xs\"\n            >\n              <span>首页</span><span>分类</span><span>我的</span>\n            </div>\n            <RebornBackTop :is-tab=\"tab\" :threshold=\"-1\" :scroll-top=\"1\" :ui=\"{ wrapper: 'absolute z-1' }\" />\n          </div>\n          <span class=\"text-muted font-mono text-xs\">{{ tab ? ':is-tab=\"true\"，距底部 70px' : '默认，距底部 20px' }}</span>\n        </div>\n      </DemoBlock>\n      <DemoNote tone=\"dimmed\">\n        UniApp 端的安全区取自 uni.getWindowInfo().safeAreaInsets.bottom，Web 端视为 0；TabBar 页的完整效果见右侧手机预览。\n      </DemoNote>\n    </DemoSection>\n  </div>\n</template>\n"
+    },
+    {
+      "title": "UniApp 演示",
+      "path": "packages/uniapp-project/src/pages/reborn-back-top/RebornBackTopDemo.vue",
+      "source": "demo",
+      "platform": "uniapp",
+      "code": "<script setup lang=\"ts\">\nimport { onPageScroll } from '@dcloudio/uni-app'\nimport { computed, ref, shallowRef } from 'vue'\nimport { backTopColors, backTopSizes } from '@/components/reborn-back-top/reborn-back-top.config'\nimport RebornBackTop from '@/components/reborn-back-top/RebornBackTop.vue'\nimport RebornCard from '@/components/reborn-card/RebornCard.vue'\nimport RebornPage from '@/components/reborn-page/RebornPage.vue'\nimport RebornSticky from '@/components/reborn-sticky/RebornSticky.vue'\n\nconst items = Array.from({ length: 20 }, (_, i) => `Item ${i + 1}`)\nconst scrollTop = shallowRef(0)\n\nconst color = shallowRef<typeof backTopColors[number]>('primary')\nconst size = shallowRef<typeof backTopSizes[number]>('md')\n\n/** 吸顶区块上方标题与占位高度（与 RebornSticky sticky-trigger-lead 对齐） */\nconst stickySectionLead = 32\n\nconst colorStickyRef = ref<InstanceType<typeof RebornSticky> | null>(null)\nconst isColorSticky = computed(() => colorStickyRef.value?.isSticky ?? false)\n\nconst sizeStickyRef = ref<InstanceType<typeof RebornSticky> | null>(null)\nconst isSizeSticky = computed(() => sizeStickyRef.value?.isSticky ?? false)\n\nonPageScroll((e) => {\n  scrollTop.value = e.scrollTop\n})\n</script>\n\n<template>\n  <RebornPage title=\"Backtop 回到顶部\" description=\"返回页面顶部的操作按钮\">\n    <view class=\"flex flex-col\" :class=\"isColorSticky ? '' : 'gap-3'\">\n      <view\n        v-if=\"!isColorSticky\"\n        class=\"\n          relative z-0 text-sm font-medium uppercase tracking-wider\n          text-slate-500 dark:text-slate-200\n        \"\n      >\n        颜色\n      </view>\n      <view\n        v-else\n        class=\"pointer-events-none w-full shrink-0\"\n        :style=\"{ height: `${stickySectionLead}px` }\"\n        aria-hidden=\"true\"\n      />\n      <RebornSticky\n        ref=\"colorStickyRef\"\n        :scroll-top=\"scrollTop\"\n        :z-index=\"102\"\n        :sticky-trigger-lead=\"stickySectionLead\"\n      >\n        <template #default>\n          <RebornCard>\n            <view class=\"flex flex-wrap gap-2\">\n              <view v-for=\"c in backTopColors\" :key=\"c\" class=\"\n                  size-6 cursor-pointer rounded-full ring-2 ring-transparent\n                  ring-offset-2 transition-all\n                \" :class=\"[`bg-${c}`, color === c ? 'scale-110 ring-slate-400' : `hover:scale-110`]\"\n                :style=\"{ backgroundColor: `var(--color-${c}, ${c === 'neutral' ? '#737373' : ''})` }\"\n                @click=\"color = c\" />\n            </view>\n          </RebornCard>\n        </template>\n      </RebornSticky>\n    </view>\n\n    <view class=\"flex flex-col\" :class=\"isSizeSticky ? '' : 'gap-3'\">\n      <view\n        v-if=\"!isSizeSticky\"\n        class=\"\n          relative z-0 text-sm font-medium uppercase tracking-wider\n          text-slate-500 dark:text-slate-200\n        \"\n      >\n        大小\n      </view>\n      <view\n        v-else\n        class=\"pointer-events-none w-full shrink-0\"\n        :style=\"{ height: `${stickySectionLead}px` }\"\n        aria-hidden=\"true\"\n      />\n      <RebornSticky\n        ref=\"sizeStickyRef\"\n        :scroll-top=\"scrollTop\"\n        :offset-top=\"66\"\n        :z-index=\"103\"\n        :sticky-trigger-lead=\"stickySectionLead\"\n      >\n        <template #default>\n          <RebornCard>\n            <view class=\"flex flex-wrap gap-2\">\n              <view\n                v-for=\"s in backTopSizes\"\n                :key=\"s\"\n                class=\"\n                  cursor-pointer rounded-full border px-3 py-1.5 text-xs\n                  transition-colors\n                \"\n                :class=\"size === s ? `\n                  border-slate-900 bg-slate-900 text-white\n                  dark:bg-white dark:text-slate-900\n                ` : `\n                  border-slate-300 bg-transparent text-slate-600\n                  hover:border-slate-400\n                `\"\n                @click=\"size = s\"\n              >\n                {{ s }}\n              </view>\n            </view>\n          </RebornCard>\n        </template>\n      </RebornSticky>\n    </view>\n\n    <RebornCard title=\"基础用法\">\n      <view>请向下滑动页面查看右下角返回顶部按钮。</view>\n      <view class=\"mt-2 text-sm text-gray-500\">\n        默认阈值为 300px。\n      </view>\n    </RebornCard>\n\n    <RebornCard title=\"自定义内容\">\n      <view>左下角有一个自定义样式的返回顶部按钮。</view>\n    </RebornCard>\n\n    <view class=\"space-y-4 p-4\">\n      <view v-for=\"item in items\" :key=\"item\" class=\"\n          rounded bg-white p-4 shadow\n          dark:bg-gray-800\n        \">\n        {{ item }}\n      </view>\n    </view>\n\n    <!-- 基础用法 -->\n    <RebornBackTop :color=\"color\" :size=\"size\" :scroll-top=\"scrollTop\" />\n\n    <!-- 自定义内容 & 样式 -->\n    <RebornBackTop :scroll-top=\"scrollTop\" :bottom=\"100\" :ui=\"{ wrapper: 'fixed left-5 z-50' }\" color=\"success\">\n      <view class=\"\n          flex size-12 items-center justify-center rounded-lg bg-success\n          text-white shadow-lg\n        \">\n        <text class=\"text-sm font-bold\">TOP</text>\n      </view>\n    </RebornBackTop>\n  </RebornPage>\n</template>\n"
+    }
+  ],
+  "related": [],
+  "whenToUse": [
+    "长文档、长列表需要一键回到顶部时，默认 direction=\"top\"，threshold 按首屏高度调整。",
+    "长页面同时需要直达页尾时，再放一个 direction=\"bottom\" 的实例，bottom 比回到顶部小一个按钮边长加间距（仅 web 端）。",
+    "需要在按钮上顺带展示阅读进度时开启 showProgress：回到顶部顺时针、去底部逆时针（仅 web 端）。",
+    "uniapp TabBar 页面需要按钮自动抬高避开 TabBar 时用 isTab。"
+  ],
+  "whenNotToUse": [
+    "需要可拖拽的悬浮入口，改用 reborn-affix。",
+    "常驻的悬浮操作按钮，改用 reborn-fab。",
+    "跳到页面内的某一节而不是页首页尾，改用 reborn-anchor。"
+  ],
+  "pitfalls": [
+    "uniapp 端必须通过 onPageScroll 把 scrollTop 传入组件，否则按钮不会随滚动显示。",
+    "一个实例只负责一个方向；回到顶部 + 去底部要放两个实例，用 bottom 错开至少一个按钮边长加间距，否则会叠在一起。",
+    "direction、shape、icon、size=\"xs\"、showProgress、scrollRange 仅 web 端可用；uniapp 端缺少页面总高来源，去底部与进度环暂未实现。",
+    "去底部按钮要挂载后测出文档高度才知道离页尾多远，服务端渲染时隐藏，水合后才出现；内容不足一屏时始终隐藏。",
+    "用 scrollTop 接管滚动数值时必须一并传 scrollRange，否则进度百分比与去底部的显隐都按错误的总距离计算；点击滚动的仍是 window。",
+    "默认插槽整体替换按钮主体，传了插槽后 color / size / shape / icon / 进度环都不再生效。",
+    "duration 只在 uniapp 端生效；web 端用浏览器的 smooth 平滑滚动，时长由浏览器决定。"
+  ],
+  "dependencies": [
+    "@vueuse/core",
+    "@weapp-tailwindcss/merge-v3",
+    "@weapp-tailwindcss/variants-v3",
+    "clsx",
+    "tailwind-merge",
+    "tailwind-variants"
+  ],
+  "install": {
+    "cli": "npx reborn-ui@latest add reborn-back-top"
+  },
+  "sourceRefs": {
+    "web": [
+      "app/components/reborn/ui/reborn-back-top/RebornBackTop.vue",
+      "app/components/reborn/ui/reborn-back-top/reborn-back-top.config.ts"
+    ],
+    "uniapp": [
+      "packages/uniapp-project/src/components/reborn-back-top/RebornBackTop.vue",
+      "packages/uniapp-project/src/components/reborn-back-top/index.ts",
+      "packages/uniapp-project/src/components/reborn-back-top/reborn-back-top.config.ts"
+    ]
+  },
+  "docPath": "content/2.components/navigation/reborn-back-top.md",
+  "_meta": {
+    "contentHash": "db13e521ae37b80bb6e8585ae2e082dafc2df4d9",
+    "hasOverride": true,
+    "extractors": {
+      "web": "ok",
+      "uniapp": "ok",
+      "docs": "found"
+    }
+  }
+}

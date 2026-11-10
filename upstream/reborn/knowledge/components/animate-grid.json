@@ -9,6 +9,7 @@
     "tailwind",
     "input"
   ],
+  "aliases": [],
   "platforms": [
     "web"
   ],
@@ -108,7 +109,7 @@
   },
   "docPath": "content/2.components/miscellaneous/animate-grid.md",
   "_meta": {
-    "contentHash": "f3e274f3a4387d2642c9ef5b1bb478d529d4f9c7",
+    "contentHash": "b0ed665014d37946762b6eed15e0936929055d06",
     "hasOverride": true,
     "extractors": {
       "web": "ok",

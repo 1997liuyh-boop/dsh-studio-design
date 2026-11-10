@@ -9,6 +9,7 @@
     "tailwind",
     "background"
   ],
+  "aliases": [],
   "platforms": [
     "web"
   ],
@@ -108,7 +109,7 @@
   },
   "docPath": "content/2.components/special-effects/pattern-background.md",
   "_meta": {
-    "contentHash": "2788f522d4811f73d315916de347453d615d25b1",
+    "contentHash": "34176274b1d8ed3f8aa0571d30dcd07ba828c986",
     "hasOverride": true,
     "extractors": {
       "web": "ok",

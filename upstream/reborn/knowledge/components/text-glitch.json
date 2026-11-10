@@ -8,6 +8,7 @@
     "css",
     "tailwind"
   ],
+  "aliases": [],
   "platforms": [
     "web"
   ],
@@ -87,7 +88,7 @@
   },
   "docPath": "content/2.components/text-animations/text-glitch.md",
   "_meta": {
-    "contentHash": "7da66b738577e954e8ef70e0f51e86f25dd157d5",
+    "contentHash": "61102f02ab185760757df0246a75fd90c8155860",
     "hasOverride": true,
     "extractors": {
       "web": "ok",

@@ -1,0 +1,452 @@
+{
+  "$schema": "../schema/component.schema.json",
+  "id": "reborn-signature",
+  "title": "Signature 签名",
+  "description": "用于手写签名并导出图片的画布组件，支持笔锋模拟、撤销恢复与透明背景导出。",
+  "category": "form",
+  "tags": [
+    "uniapp",
+    "signature",
+    "canvas",
+    "form"
+  ],
+  "aliases": [
+    "signature",
+    "签名",
+    "手写签名",
+    "签字"
+  ],
+  "platforms": [
+    "uniapp"
+  ],
+  "props": [
+    {
+      "name": "customClass",
+      "type": "any",
+      "required": false,
+      "description": "自定义 class",
+      "default": "''"
+    },
+    {
+      "name": "customStyle",
+      "type": "any",
+      "required": false,
+      "description": "自定义 style",
+      "default": "''"
+    },
+    {
+      "name": "ui",
+      "type": "SignatureUI",
+      "required": false,
+      "description": "样式覆盖 可用键（从源码抽取，以此为准）——UniApp：action*、actionIcon*、actionText*、board、canvas、colorBar*、colorSwatch*、colorSwatchInner*、placeholder*、root、toolbar*。 带 * 的键对应插槽兜底节点：填了同名插槽，组件自带的节点被替换，这个键随之失效。",
+      "default": "() => ({})"
+    },
+    {
+      "name": "size",
+      "type": "'sm' | 'md' | 'lg'",
+      "required": false,
+      "description": "尺寸",
+      "default": "'md'",
+      "options": [
+        "sm",
+        "md",
+        "lg"
+      ]
+    },
+    {
+      "name": "color",
+      "type": "'primary' | 'secondary' | 'success' | 'info' | 'warning' | 'error' | 'neutral'",
+      "required": false,
+      "description": "主题色",
+      "default": "'primary'",
+      "options": [
+        "primary",
+        "secondary",
+        "success",
+        "info",
+        "warning",
+        "error",
+        "neutral"
+      ]
+    },
+    {
+      "name": "height",
+      "type": "number | string",
+      "required": false,
+      "description": "画布高度，数字使用 rpx",
+      "default": "360"
+    },
+    {
+      "name": "penColors",
+      "type": "string[]",
+      "required": false,
+      "description": "可选画笔颜色列表",
+      "default": "() => ['#111827', '#ef4444', '#f59e0b', '#22c55e', '#3b82f6', '#8b5cf6']"
+    },
+    {
+      "name": "showPenColors",
+      "type": "boolean",
+      "required": false,
+      "description": "是否显示默认画笔色板",
+      "default": "true"
+    },
+    {
+      "name": "lineWidth",
+      "type": "number",
+      "required": false,
+      "description": "画笔宽度，单位 px",
+      "default": "4"
+    },
+    {
+      "name": "penPressure",
+      "type": "boolean",
+      "required": false,
+      "description": "是否启用笔锋效果",
+      "default": "false"
+    },
+    {
+      "name": "minLineWidth",
+      "type": "number",
+      "required": false,
+      "description": "笔锋最小宽度，单位 px",
+      "default": "undefined"
+    },
+    {
+      "name": "maxLineWidth",
+      "type": "number",
+      "required": false,
+      "description": "笔锋最大宽度，单位 px",
+      "default": "undefined"
+    },
+    {
+      "name": "backgroundColor",
+      "type": "string",
+      "required": false,
+      "description": "背景色，设为空字符串可导出透明背景",
+      "default": "'#FFFFFF'"
+    },
+    {
+      "name": "placeholder",
+      "type": "string",
+      "required": false,
+      "description": "占位文本",
+      "default": "'请在此处签名'"
+    },
+    {
+      "name": "showToolbar",
+      "type": "boolean",
+      "required": false,
+      "description": "是否显示默认操作栏",
+      "default": "true"
+    },
+    {
+      "name": "showClose",
+      "type": "boolean",
+      "required": false,
+      "description": "是否显示退出按钮",
+      "default": "false"
+    },
+    {
+      "name": "toolbarPosition",
+      "type": "'left' | 'right' | 'bottom'",
+      "required": false,
+      "description": "横屏签名时操作按钮位置",
+      "default": "'bottom'",
+      "options": [
+        "left",
+        "right",
+        "bottom"
+      ]
+    },
+    {
+      "name": "showUndo",
+      "type": "boolean",
+      "required": false,
+      "description": "是否显示撤销按钮",
+      "default": "true"
+    },
+    {
+      "name": "showRedo",
+      "type": "boolean",
+      "required": false,
+      "description": "是否显示恢复按钮",
+      "default": "true"
+    },
+    {
+      "name": "disabled",
+      "type": "boolean",
+      "required": false,
+      "description": "是否禁用",
+      "default": "false"
+    },
+    {
+      "name": "readonly",
+      "type": "boolean",
+      "required": false,
+      "description": "是否只读",
+      "default": "false"
+    },
+    {
+      "name": "allowEmpty",
+      "type": "boolean",
+      "required": false,
+      "description": "空白签名是否允许导出",
+      "default": "false"
+    },
+    {
+      "name": "fileType",
+      "type": "'png' | 'jpg'",
+      "required": false,
+      "description": "导出图片类型",
+      "default": "'png'"
+    },
+    {
+      "name": "quality",
+      "type": "number",
+      "required": false,
+      "description": "jpg 导出质量",
+      "default": "1"
+    },
+    {
+      "name": "destScale",
+      "type": "number",
+      "required": false,
+      "description": "导出图片相对展示尺寸的倍数",
+      "default": "3"
+    },
+    {
+      "name": "minDistance",
+      "type": "number",
+      "required": false,
+      "description": "记录触点的最小移动距离",
+      "default": "2"
+    },
+    {
+      "name": "rotate",
+      "type": "0 | 90 | 180 | 270",
+      "required": false,
+      "description": "外部通过 CSS transform rotate 旋转组件时传入的角度（顺时针）。 用于修正触点坐标与画布坐标系的偏差，微信小程序横屏签名场景下需传入 90。",
+      "default": "0"
+    },
+    {
+      "name": "closeOnSave",
+      "type": "boolean",
+      "required": false,
+      "description": "保存后是否触发 close 事件（用于自动关闭弹窗等场景）",
+      "default": "false"
+    },
+    {
+      "name": "modelValue",
+      "type": "string",
+      "required": false,
+      "description": "双向绑定值",
+      "vModel": true
+    },
+    {
+      "name": "penColor",
+      "type": "string",
+      "required": false,
+      "description": "双向绑定值",
+      "vModel": true
+    },
+    {
+      "name": "show",
+      "type": "boolean",
+      "required": false,
+      "description": "双向绑定值",
+      "vModel": true
+    }
+  ],
+  "events": [
+    {
+      "name": "start",
+      "payload": "(e: 'start', point: SignaturePoint): void",
+      "description": "笔触开始"
+    },
+    {
+      "name": "draw",
+      "payload": "(e: 'draw', point: SignaturePoint): void",
+      "description": "笔触移动采样"
+    },
+    {
+      "name": "end",
+      "payload": "(e: 'end', stroke: SignatureStroke): void",
+      "description": "一笔结束"
+    },
+    {
+      "name": "change",
+      "payload": "(e: 'change', payload: SignatureChangePayload): void",
+      "description": "笔迹或状态变更"
+    },
+    {
+      "name": "clear",
+      "payload": "(e: 'clear'): void",
+      "description": "清空画布"
+    },
+    {
+      "name": "undo",
+      "payload": "(e: 'undo', stroke: SignatureStroke | undefined): void",
+      "description": "撤销一笔时触发，参数为被撤销的笔迹"
+    },
+    {
+      "name": "redo",
+      "payload": "(e: 'redo', stroke: SignatureStroke | undefined): void",
+      "description": "恢复一笔时触发，参数为被恢复的笔迹"
+    },
+    {
+      "name": "save",
+      "payload": "(e: 'save', payload: SignatureSavePayload): void",
+      "description": "点击完成并成功导出"
+    },
+    {
+      "name": "close",
+      "payload": "(e: 'close'): void",
+      "description": "需手动触发或由 `closeOnSave` 在保存后触发"
+    },
+    {
+      "name": "error",
+      "payload": "(e: 'error', error: Error): void",
+      "description": "导出等失败"
+    },
+    {
+      "name": "update:modelValue",
+      "description": "modelValue 变化时触发（v-model 同步）"
+    },
+    {
+      "name": "update:penColor",
+      "description": "penColor 变化时触发（v-model 同步）"
+    },
+    {
+      "name": "update:show",
+      "description": "show 变化时触发（v-model 同步）"
+    }
+  ],
+  "slots": [
+    {
+      "name": "placeholder",
+      "props": "(props: { isEmpty: boolean }) => any",
+      "description": "无笔迹时展示；默认显示 `placeholder` 文案。作用域：`{ isEmpty }"
+    },
+    {
+      "name": "toolbar",
+      "props": "(props: {\n    isEmpty: boolean\n    disabled: boolean\n    readonly: boolean\n    clear: () => void\n    undo: () => void\n    redo: () => void\n    save: () => Promise<string>\n    penColor: string\n    penColors: string[]\n    selectPenColor: (color: string) => void\n    toolbarPosition: SignatureToolbarPosition\n    canUndo: boolean\n    canRedo: boolean\n  }) => any",
+      "description": "自定义整条工具栏（色板、撤销/恢复、清空、完成）。作用域：`isEmpty`、`disabled`、`readonly`、`clear`、`undo`、`redo`、`save`、`penColor`、`penColors`、`selectPenColor`、`toolbarPosition`、`canUndo`、`canRedo"
+    }
+  ],
+  "exposes": [
+    {
+      "name": "clear",
+      "description": "清空全部笔迹与恢复栈并重绘画布，同时把 v-model 重置为空字符串，触发 clear 与 change 事件"
+    },
+    {
+      "name": "undo",
+      "description": "撤销最近一笔（移入恢复栈）并重绘，重置 v-model 为空字符串，触发 undo 与 change 事件；无笔迹时不做任何事"
+    },
+    {
+      "name": "redo",
+      "description": "恢复最近撤销的一笔并重绘，重置 v-model 为空字符串，触发 redo 与 change 事件；恢复栈为空时不做任何事"
+    },
+    {
+      "name": "save",
+      "description": "导出画布为临时图片并写入 v-model，触发 save 事件（payload 含 tempFilePath/strokes/isEmpty）；closeOnSave 开启时随后触发 close。返回 Promise<string>（临时文件路径；空白且不允许导出时返回 ''，导出失败时 reject 并触发 error 事件）"
+    },
+    {
+      "name": "toPng",
+      "description": "仅导出画布为临时图片路径，不写入 v-model、不触发 save 事件。返回 Promise<string>（fileType 决定 png/jpg 格式的临时文件路径）；可传 { allowEmpty } 覆盖组件的 allowEmpty，空白且不允许导出时返回 ''"
+    },
+    {
+      "name": "getStrokes",
+      "description": "返回当前全部笔迹的深拷贝数组（SignatureStroke[]，含每笔颜色、宽度与触点序列），可用于持久化或回放"
+    },
+    {
+      "name": "selectPenColor",
+      "description": "切换当前画笔颜色，参数为色值字符串；禁用/只读状态或与当前颜色相同时忽略"
+    },
+    {
+      "name": "penColor",
+      "description": "当前画笔颜色（响应式 ref，与 v-model:pen-color 双向同步）"
+    },
+    {
+      "name": "isEmpty",
+      "description": "是否尚无任何笔迹（响应式 computed 布尔值）"
+    },
+    {
+      "name": "canUndo",
+      "description": "是否有笔迹可撤销（响应式 computed 布尔值）"
+    },
+    {
+      "name": "canRedo",
+      "description": "是否有已撤销笔迹可恢复（响应式 computed 布尔值）"
+    },
+    {
+      "name": "strokeCount",
+      "description": "当前笔画数量（响应式 computed 数值）"
+    },
+    {
+      "name": "pointCount",
+      "description": "已记录的触点采样总数（响应式 ref 数值，随绘制/撤销/清空实时增减）"
+    }
+  ],
+  "examples": [
+    {
+      "title": "Web 演示",
+      "path": "app/components/reborn/examples/reborn-signature/RebornSignatureDemo.vue",
+      "source": "demo",
+      "platform": "web",
+      "code": "<template>\n  <div class=\"border-default rounded-lg border border-dashed p-6 text-center\">\n    <DemoNote>Web 端暂未提供此组件，请在 UniApp 端查看。</DemoNote>\n  </div>\n</template>\n"
+    },
+    {
+      "title": "UniApp 演示",
+      "path": "packages/uniapp-project/src/pages/reborn-signature/RebornSignatureDemo.vue",
+      "source": "demo",
+      "platform": "uniapp",
+      "code": "<script setup lang=\"ts\">\nimport { shallowRef } from 'vue'\nimport RebornButton from '@/components/reborn-button/RebornButton.vue'\nimport RebornCard from '@/components/reborn-card/RebornCard.vue'\nimport RebornPage from '@/components/reborn-page/RebornPage.vue'\nimport RebornPopup from '@/components/reborn-popup/RebornPopup.vue'\nimport RebornSwitch from '@/components/reborn-switch/RebornSwitch.vue'\nimport RebornSignature, { type SignatureSavePayload } from '@/components/reborn-signature/RebornSignature.vue'\nimport RebornSignatureLandscape from '@/components/reborn-signature/RebornSignatureLandscape.vue'\n\nconst signaturePath = shallowRef('')\nconst savedAt = shallowRef('')\nconst signatureImageJson = shallowRef('')\nconst signatureTraceJson = shallowRef('')\nconst savedStrokeCount = shallowRef(0)\nconst savedPointCount = shallowRef(0)\nconst selectedPenColor = shallowRef('#111827')\nconst penColors = ['#111827', '#ef4444', '#f59e0b', '#22c55e', '#3b82f6', '#8b5cf6']\nconst enablePenPressure = shallowRef(true)\nconst showUndoButton = shallowRef(true)\nconst showRedoButton = shallowRef(true)\nconst showSignaturePopup = shallowRef(false)\nconst popupSignaturePath = shallowRef('')\nconst showLandscapePopup = shallowRef(false)\nconst landscapeToolbarPosition = shallowRef<'left' | 'right' | 'bottom'>('right')\nconst landscapeToolbarPositions = ['left', 'right', 'bottom'] as const\n\nconst penColorButtonClass = 'size-[52rpx] rounded-full ring-2 ring-transparent ring-offset-[4rpx] ring-offset-white transition-all duration-200'\nconst activePenColorButtonClass = 'scale-110 ring-gray-4'\nconst inactivePenColorButtonClass = 'opacity-90'\n\nfunction updateSignatureRecord(payload: SignatureSavePayload) {\n    savedStrokeCount.value = payload.strokes.length\n    savedPointCount.value = payload.strokes.reduce((sum, stroke) => sum + stroke.points.length, 0)\n    signaturePath.value = payload.tempFilePath\n    savedAt.value = new Date().toLocaleTimeString()\n    signatureImageJson.value = JSON.stringify({\n        tempFilePath: payload.tempFilePath,\n    }, null, 2)\n    signatureTraceJson.value = JSON.stringify({\n        strokes: payload.strokes,\n        isEmpty: payload.isEmpty,\n    }, null, 2)\n}\n\nfunction onClear() {\n    savedStrokeCount.value = 0\n    savedPointCount.value = 0\n    signaturePath.value = ''\n    savedAt.value = ''\n    signatureImageJson.value = ''\n    signatureTraceJson.value = ''\n}\n\nfunction openSignaturePopup() {\n    popupSignaturePath.value = signaturePath.value\n    showSignaturePopup.value = true\n}\n\nfunction closeSignaturePopup() {\n    showSignaturePopup.value = false\n}\n\nfunction updatePopupSignatureRecord(payload: SignatureSavePayload) {\n    popupSignaturePath.value = payload.tempFilePath\n    updateSignatureRecord(payload)\n}\n</script>\n\n<template>\n    <RebornPage title=\"签名\" description=\"用于采集、记录和导出用户手写签名。\">\n        <RebornCard title=\"调试配置\" custom-class=\"gap-[24rpx]\">\n            <view class=\"flex flex-row items-center justify-between gap-[24rpx]\">\n                <text class=\"text-[28rpx] text-gray-6\">画笔颜色</text>\n                <view class=\"flex flex-row flex-wrap justify-end gap-[12rpx]\">\n                    <view v-for=\"item in penColors\" :key=\"item\" :class=\"[\n                        penColorButtonClass,\n                        selectedPenColor === item ? activePenColorButtonClass : inactivePenColorButtonClass,\n                    ]\" :style=\"{ backgroundColor: item }\" @tap=\"selectedPenColor = item\" />\n                </view>\n            </view>\n\n            <view class=\"flex flex-row items-center justify-between gap-[24rpx]\">\n                <text class=\"text-[28rpx] text-gray-6\">笔锋</text>\n                <RebornSwitch v-model=\"enablePenPressure\" size=\"sm\" />\n            </view>\n\n            <view class=\"flex flex-row items-center justify-between gap-[24rpx]\">\n                <text class=\"text-[28rpx] text-gray-6\">撤销按钮</text>\n                <RebornSwitch v-model=\"showUndoButton\" size=\"sm\" />\n            </view>\n\n            <view class=\"flex flex-row items-center justify-between gap-[24rpx]\">\n                <text class=\"text-[28rpx] text-gray-6\">恢复按钮</text>\n                <RebornSwitch v-model=\"showRedoButton\" size=\"sm\" />\n            </view>\n\n            <view class=\"flex flex-row items-center justify-between gap-[24rpx]\">\n                <text class=\"text-[28rpx] text-gray-6\">横屏按钮位置</text>\n                <view class=\"flex flex-row flex-wrap justify-end gap-[12rpx]\">\n                    <RebornButton v-for=\"item in landscapeToolbarPositions\" :key=\"item\" size=\"sm\"\n                        :variant=\"landscapeToolbarPosition === item ? 'filled' : 'outlined'\"\n                        :color=\"landscapeToolbarPosition === item ? 'primary' : 'neutral'\"\n                        @tap=\"landscapeToolbarPosition = item\">\n                        {{ item }}\n                    </RebornButton>\n                </view>\n            </view>\n        </RebornCard>\n\n        <RebornCard title=\"基础用法\" custom-class=\"gap-[24rpx]\">\n            <RebornSignature v-model=\"signaturePath\" v-model:pen-color=\"selectedPenColor\"\n                :pen-colors=\"penColors\" :pen-pressure=\"enablePenPressure\" :line-width=\"5\" :min-line-width=\"1.2\"\n                :max-line-width=\"7\" :show-undo=\"showUndoButton\" :show-redo=\"showRedoButton\" @clear=\"onClear\"\n                @save=\"updateSignatureRecord\" />\n        </RebornCard>\n\n        <RebornCard title=\"签名记录\" custom-class=\"gap-[20rpx]\">\n            <view class=\"flex flex-row items-center justify-between\">\n                <text class=\"text-[28rpx] text-gray-5\">状态</text>\n                <text class=\"text-[28rpx] font-medium text-gray-8\">{{ signaturePath ? '已保存' : '未保存' }}</text>\n            </view>\n            <view class=\"flex flex-row items-center justify-between\">\n                <text class=\"text-[28rpx] text-gray-5\">已保存笔画</text>\n                <text class=\"text-[28rpx] font-medium text-gray-8\">{{ savedStrokeCount }}</text>\n            </view>\n            <view class=\"flex flex-row items-center justify-between\">\n                <text class=\"text-[28rpx] text-gray-5\">已保存采样点</text>\n                <text class=\"text-[28rpx] font-medium text-gray-8\">{{ savedPointCount }}</text>\n            </view>\n            <view v-if=\"savedAt\" class=\"flex flex-row items-center justify-between\">\n                <text class=\"text-[28rpx] text-gray-5\">保存时间</text>\n                <text class=\"text-[28rpx] font-medium text-gray-8\">{{ savedAt }}</text>\n            </view>\n            <image v-if=\"signaturePath\" :src=\"signaturePath\" mode=\"aspectFit\"\n                class=\"h-[240rpx] w-full rounded-lg bg-white ring-1 ring-gray-3\" />\n            <view v-if=\"signatureImageJson\" class=\"flex flex-col gap-[12rpx]\">\n                <text class=\"text-[28rpx] font-medium text-gray-8\">save() 导出图片</text>\n                <scroll-view scroll-y class=\"h-[320rpx] w-full rounded-lg border border-solid border-gray-3 bg-gray-2\">\n                    <view class=\"box-border w-full p-[20rpx]\">\n                        <text\n                            class=\"block w-full max-w-full whitespace-pre-wrap break-all text-[22rpx] leading-[32rpx] text-gray-7\"\n                            style=\"word-break: break-all; overflow-wrap: anywhere;\">{{ signatureImageJson }}</text>\n                    </view>\n                </scroll-view>\n            </view>\n            <view v-if=\"signatureTraceJson\" class=\"flex flex-col gap-[12rpx]\">\n                <text class=\"text-[28rpx] font-medium text-gray-8\">getStrokes() 轨迹数据</text>\n                <scroll-view scroll-y class=\"h-[320rpx] w-full rounded-lg border border-solid border-gray-3 bg-gray-2\">\n                    <view class=\"box-border w-full p-[20rpx]\">\n                        <text\n                            class=\"block w-full max-w-full whitespace-pre-wrap break-all text-[22rpx] leading-[32rpx] text-gray-7\"\n                            style=\"word-break: break-all; overflow-wrap: anywhere;\">{{ signatureTraceJson }}</text>\n                    </view>\n                </scroll-view>\n            </view>\n        </RebornCard>\n\n        <RebornCard title=\"弹窗签名\" custom-class=\"gap-[20rpx]\">\n            <RebornButton color=\"primary\" @tap=\"openSignaturePopup\">\n                打开签名板\n            </RebornButton>\n        </RebornCard>\n\n        <RebornCard title=\"横屏签名\" custom-class=\"gap-[20rpx]\">\n            <RebornButton color=\"primary\" @tap=\"showLandscapePopup = true\">\n                使用横屏签名\n            </RebornButton>\n        </RebornCard>\n\n        <RebornPopup v-model=\"showSignaturePopup\" position=\"bottom\" title=\"签名板\" size=\"78%\" color=\"primary\"\n            :mask-closable=\"false\" :swipe-close=\"false\">\n            <view class=\"flex h-full flex-col gap-[24rpx] bg-white px-[28rpx] pb-[32rpx] pt-[12rpx]\">\n                <RebornSignature v-model=\"popupSignaturePath\" v-model:pen-color=\"selectedPenColor\" :show-pen-colors=\"false\"\n                    :pen-pressure=\"enablePenPressure\" :line-width=\"5\" :min-line-width=\"1.2\" :max-line-width=\"7\"\n                    :show-undo=\"showUndoButton\" :show-redo=\"showRedoButton\" height=\"420rpx\" :close-on-save=\"true\"\n                    @save=\"updatePopupSignatureRecord\" @close=\"closeSignaturePopup\" />\n            </view>\n        </RebornPopup>\n\n        <RebornSignatureLandscape v-model=\"signaturePath\" v-model:show=\"showLandscapePopup\"\n            :pen-color=\"selectedPenColor\" :pen-pressure=\"enablePenPressure\" :show-undo=\"showUndoButton\"\n            :show-redo=\"showRedoButton\" :toolbar-position=\"landscapeToolbarPosition\" @save=\"updateSignatureRecord\" />\n    </RebornPage>\n</template>\n"
+    }
+  ],
+  "related": [],
+  "whenToUse": [
+    "电子协议、单据确认等需要采集手写签名并导出临时图片路径的场景。",
+    "需要撤销 / 恢复笔迹与切换画笔颜色（penColors 色板、undo / redo）。",
+    "需要 png / jpg 导出并控制导出倍数（fileType、quality、destScale），或导出透明背景（backgroundColor 传空字符串）。"
+  ],
+  "whenNotToUse": [
+    "web 端项目：platforms 仅 uniapp，web 端无对应实现。",
+    "普通文字输入改用 reborn-textarea 或 reborn-input。"
+  ],
+  "pitfalls": [
+    "platforms 仅 uniapp 端提供。",
+    "allowEmpty 默认 false，空白画布不允许导出；保存成功触发 save，closeOnSave=true 时额外触发 close。",
+    "backgroundColor 默认 '#FFFFFF'，传空字符串才能导出透明背景。",
+    "showClose 打开的退出按钮点击后会清空画布并触发 close 事件。",
+    "disabled 会与表单注入的禁用状态叠加生效。",
+    "RebornSignatureLandscape 的 show 默认 undefined；未传时本地初始关闭，显式 false/null/undefined 均关闭。close() 发出 update:show 请求，父级拒收时仍显示；移除绑定恢复本地值，初始化不发 update:show/close。主签名组件 modelValue 仍是图片路径字符串。"
+  ],
+  "dependencies": [
+    "@weapp-tailwindcss/merge-v3",
+    "@weapp-tailwindcss/variants-v3",
+    "clsx",
+    "tailwind-merge",
+    "tailwind-variants"
+  ],
+  "install": {
+    "cli": "npx reborn-ui@latest add reborn-signature"
+  },
+  "sourceRefs": {
+    "uniapp": [
+      "packages/uniapp-project/src/components/reborn-signature/RebornSignature.vue",
+      "packages/uniapp-project/src/components/reborn-signature/RebornSignatureLandscape.vue",
+      "packages/uniapp-project/src/components/reborn-signature/index.ts",
+      "packages/uniapp-project/src/components/reborn-signature/reborn-signature.config.ts"
+    ]
+  },
+  "docPath": "content/2.components/input-and-forms/reborn-signature.md",
+  "_meta": {
+    "contentHash": "4996d0791825025dd6d9bab63204eb57fbc67451",
+    "hasOverride": true,
+    "extractors": {
+      "web": "absent",
+      "uniapp": "ok",
+      "docs": "found"
+    }
+  }
+}

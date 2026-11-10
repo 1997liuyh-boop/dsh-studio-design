@@ -9,6 +9,7 @@
     "particles",
     "aceternity-ui"
   ],
+  "aliases": [],
   "platforms": [
     "web"
   ],
@@ -105,7 +106,7 @@
   },
   "docPath": "content/2.components/special-effects/sparkles.md",
   "_meta": {
-    "contentHash": "f4406025b7562401119f39c1a7f417126f11ff14",
+    "contentHash": "69833b76c67162683e6e9bb33eb0fb36f0903d2c",
     "hasOverride": true,
     "extractors": {
       "web": "ok",

@@ -9,6 +9,11 @@
     "tailwind",
     "canvas"
   ],
+  "aliases": [
+    "fireworks",
+    "礼花",
+    "烟花"
+  ],
   "platforms": [
     "web"
   ],
@@ -119,7 +124,7 @@
   },
   "docPath": "content/2.components/miscellaneous/reborn-fireworks.md",
   "_meta": {
-    "contentHash": "b2450c5aa942b605ad311c8243a8550aa9c6b837",
+    "contentHash": "8e13b9ed5196ba274ce729c54d43efaf5dd28038",
     "hasOverride": true,
     "extractors": {
       "web": "ok",

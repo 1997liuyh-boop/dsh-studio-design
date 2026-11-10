@@ -11,6 +11,12 @@
     "event",
     "lunar"
   ],
+  "aliases": [
+    "calendar",
+    "日历",
+    "月历",
+    "日程"
+  ],
   "platforms": [
     "web"
   ],
@@ -30,10 +36,14 @@
     },
     {
       "name": "controllerType",
-      "type": "CalendarControllerType",
+      "type": "'select' | 'button'",
       "required": false,
       "description": "工具栏左侧的切换控件：select 年份 / 月份下拉，button 前后翻页按钮 + 年月标题 @defaultValue 'select'",
-      "default": "\"select\""
+      "default": "\"select\"",
+      "options": [
+        "select",
+        "button"
+      ]
     },
     {
       "name": "formatter",
@@ -50,17 +60,30 @@
     },
     {
       "name": "color",
-      "type": "CalendarColor",
+      "type": "'primary' | 'secondary' | 'success' | 'info' | 'warning' | 'error'",
       "required": false,
       "description": "语义色：有事项及选中日期的浅底与顶边、日期标记、可选的本日 / 本月文字高亮、事项圆点的默认色； 同时传给工具栏的年月下拉与月 / 年切换 @defaultValue 'primary'",
-      "default": "\"primary\""
+      "default": "\"primary\"",
+      "options": [
+        "primary",
+        "secondary",
+        "success",
+        "info",
+        "warning",
+        "error"
+      ]
     },
     {
       "name": "titleAlign",
-      "type": "CalendarTitleAlign",
+      "type": "'left' | 'center' | 'right'",
       "required": false,
       "description": "表头星期与日期标题的水平对齐 @defaultValue 'right'",
-      "default": "\"right\""
+      "default": "\"right\"",
+      "options": [
+        "left",
+        "center",
+        "right"
+      ]
     },
     {
       "name": "border",
@@ -117,10 +140,14 @@
     },
     {
       "name": "mode",
-      "type": "CalendarMode",
+      "type": "'month' | 'year'",
       "required": false,
       "description": "双向绑定值",
       "vModel": true,
+      "options": [
+        "month",
+        "year"
+      ],
       "default": "'month'"
     }
   ],
@@ -243,7 +270,7 @@
   },
   "docPath": "content/2.components/data/reborn-calendar.md",
   "_meta": {
-    "contentHash": "01e78855e045ad530712637f7b0e95b9de749509",
+    "contentHash": "910d9ea34ac044df99268920c3a1f1dbfe08f0a4",
     "hasOverride": true,
     "extractors": {
       "web": "ok",

@@ -8,6 +8,10 @@
     "css",
     "tailwind"
   ],
+  "aliases": [
+    "变形标签页",
+    "粘连标签"
+  ],
   "platforms": [
     "web"
   ],
@@ -92,7 +96,7 @@
   },
   "docPath": "content/2.components/miscellaneous/morphing-tabs.md",
   "_meta": {
-    "contentHash": "6098aa7e95ad6be96f635e2004514251b65fc598",
+    "contentHash": "48a946a1f5dd6ca14be2a8ea2cc425f62d9f2fda",
     "hasOverride": true,
     "extractors": {
       "web": "ok",

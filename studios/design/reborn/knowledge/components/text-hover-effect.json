@@ -1,0 +1,93 @@
+{
+  "$schema": "../schema/component.schema.json",
+  "id": "text-hover-effect",
+  "title": "文字悬停效果",
+  "description": "用于悬停时跟随鼠标以渐变描边揭示文字的悬停效果组件。",
+  "category": "effect",
+  "tags": [
+    "css",
+    "tailwind"
+  ],
+  "aliases": [],
+  "platforms": [
+    "web"
+  ],
+  "props": [
+    {
+      "name": "strokeWidth",
+      "type": "number",
+      "required": false,
+      "description": "文字描边宽度。",
+      "default": "0.75"
+    },
+    {
+      "name": "text",
+      "type": "string",
+      "required": true,
+      "description": "应用悬停效果的文字。",
+      "default": "Required"
+    },
+    {
+      "name": "duration",
+      "type": "number",
+      "required": false,
+      "description": "蒙版过渡动画的持续时间（秒）。",
+      "default": "0.2"
+    },
+    {
+      "name": "opacity",
+      "type": "number",
+      "required": false,
+      "description": "文字的不透明度。",
+      "default": "0.75"
+    }
+  ],
+  "events": [],
+  "slots": [],
+  "exposes": [],
+  "examples": [
+    {
+      "title": "Web 演示",
+      "path": "app/components/reborn/examples/text-hover-effect/TextHoverEffectDemo.vue",
+      "source": "demo",
+      "platform": "web",
+      "code": "<template>\n  <ClientOnly>\n    <div class=\"flex h-auto flex-col items-center justify-center gap-4 max-lg:w-full md:flex-1\">\n      <span class=\"text-xl font-medium\">Hover below to reveal</span>\n      <TextHoverEffect class=\"w-[90%] lg:min-h-64\" text=\"reborn\" />\n    </div>\n  </ClientOnly>\n</template>\n"
+    }
+  ],
+  "related": [],
+  "whenToUse": [
+    "品牌名、大字标语的悬停互动展示（类 x.ai 效果）。",
+    "Hero 区或页脚需要描边风格装饰文字并带鼠标交互时。"
+  ],
+  "whenNotToUse": [
+    "无需悬停的常驻多彩文字，改用 colourful-text 或 radiant-text。",
+    "悬停故障风格，改用 text-glitch。",
+    "大面积双层内容的鼠标揭示，改用 svg-mask。"
+  ],
+  "pitfalls": [
+    "仅 web 端可用，示例包裹在 ClientOnly 中使用。",
+    "文字通过 text prop 传入（必填），不支持插槽。",
+    "strokeWidth 默认 0.75，opacity 默认 0.75。",
+    "duration 单位为秒（默认 0.2），组件内部会转换为毫秒。"
+  ],
+  "dependencies": [],
+  "install": {
+    "cli": "npx reborn-ui@latest add text-hover-effect"
+  },
+  "sourceRefs": {
+    "web": [
+      "app/components/reborn/ui/text-hover-effect/TextHoverEffect.vue",
+      "app/components/reborn/ui/text-hover-effect/index.ts"
+    ]
+  },
+  "docPath": "content/2.components/text-animations/text-hover-effect.md",
+  "_meta": {
+    "contentHash": "ed3a3c139baddef73a135d1e53f9cd335497ea7e",
+    "hasOverride": true,
+    "extractors": {
+      "web": "ok",
+      "uniapp": "absent",
+      "docs": "found"
+    }
+  }
+}

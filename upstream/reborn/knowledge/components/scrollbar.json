@@ -10,6 +10,10 @@
     "scrollbar",
     "layout"
   ],
+  "aliases": [
+    "滚动条",
+    "自定义滚动条"
+  ],
   "platforms": [
     "web"
   ],
@@ -218,7 +222,7 @@
   },
   "docPath": "content/2.components/layout/scrollbar.md",
   "_meta": {
-    "contentHash": "8ae57c7e81af7ef5867bf6406a8eb1ce6dbb7866",
+    "contentHash": "04423efb458000732edde23c29dfd52a517403a3",
     "hasOverride": true,
     "extractors": {
       "web": "ok",

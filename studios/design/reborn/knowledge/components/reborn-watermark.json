@@ -1,0 +1,169 @@
+{
+  "$schema": "../schema/component.schema.json",
+  "id": "reborn-watermark",
+  "title": "水印 Watermark",
+  "description": "用于在内容容器上平铺文本或图片水印的组件。",
+  "category": "data-display",
+  "tags": [
+    "data",
+    "watermark",
+    "uniapp"
+  ],
+  "aliases": [
+    "watermark",
+    "水印"
+  ],
+  "platforms": [
+    "web",
+    "uniapp"
+  ],
+  "props": [
+    {
+      "name": "width",
+      "type": "number",
+      "required": false,
+      "description": "水印的宽度",
+      "default": "120"
+    },
+    {
+      "name": "height",
+      "type": "number",
+      "required": false,
+      "description": "水印的高度",
+      "default": "64"
+    },
+    {
+      "name": "rotate",
+      "type": "number",
+      "required": false,
+      "description": "水印的旋转角度, 单位 °",
+      "default": "-22"
+    },
+    {
+      "name": "zIndex",
+      "type": "number",
+      "required": false,
+      "description": "水印元素的 z-index 值",
+      "default": "9"
+    },
+    {
+      "name": "image",
+      "type": "string",
+      "required": false,
+      "description": "水印图片，建议使用 2x 或 3x 图像；与 `content` 同时传入时优先绘制图片，Web 端图片加载失败时回退为 `content` 文字水印",
+      "default": "—"
+    },
+    {
+      "name": "content",
+      "type": "string | string[]",
+      "required": false,
+      "description": "水印文本内容",
+      "default": "'Reborn UI'"
+    },
+    {
+      "name": "font",
+      "type": "RebornWatermarkFont",
+      "required": false,
+      "description": "文字样式",
+      "default": "—"
+    },
+    {
+      "name": "gap",
+      "type": "[number, number]",
+      "required": false,
+      "description": "水印之间的间距 [x, y]",
+      "default": "() => [100, 100]"
+    },
+    {
+      "name": "offset",
+      "type": "[number, number]",
+      "required": false,
+      "description": "水印从容器左上角的偏移，默认值为 `gap/2",
+      "default": "[gap[0]/2, gap[1]/2]"
+    },
+    {
+      "name": "customClass",
+      "type": "any",
+      "required": false,
+      "description": "追加到根元素的类名，与 `ui.root` 合并；Web 支持字符串、数组与条件对象",
+      "default": "—"
+    },
+    {
+      "name": "ui",
+      "type": "any",
+      "required": false,
+      "description": "按内部节点覆盖类名，仅接受 `root` / `watermark`；Web 每个键支持 `ClassValue 可用键（从源码抽取，以此为准）——两端：root、watermark。",
+      "default": "() => ({})"
+    }
+  ],
+  "events": [],
+  "slots": [
+    {
+      "name": "default",
+      "description": "需要添加水印的内容容器"
+    }
+  ],
+  "exposes": [],
+  "examples": [
+    {
+      "title": "Web 演示",
+      "path": "app/components/reborn/examples/reborn-watermark/RebornWatermarkDemo.vue",
+      "source": "demo",
+      "platform": "web",
+      "code": "<script setup lang=\"ts\">\nimport { computed, shallowRef } from \"vue\";\nimport RebornWatermark from \"~/components/reborn/ui/reborn-watermark/RebornWatermark.vue\";\n\n// ─── 交互演练场 ─────────────────────────────────────────────────\n\nconst state = shallowRef<Record<string, any>>({\n  content: \"Reborn UI Premium\",\n  customClass: \"\",\n  rotate: -22,\n  gapX: 100,\n  gapY: 100,\n  fontSize: 16,\n  color: \"rgba(0, 0, 0, 0.15)\",\n});\n\n/** 演练场控制面板配置 */\nconst controls = [\n  {\n    title: \"内容\",\n    children: [\n      { label: \"根节点类名\", key: \"customClass\", component: \"input\" as const, defaultValue: \"\", props: { placeholder: \"例如 rounded-xl\" } },\n      {\n        label: \"水印文本\",\n        key: \"content\",\n        component: \"input\" as const,\n        defaultValue: \"Reborn UI Premium\",\n        props: { placeholder: \"输入水印文字\" },\n      },\n      {\n        label: \"文本颜色\",\n        key: \"color\",\n        component: \"input\" as const,\n        defaultValue: \"rgba(0, 0, 0, 0.15)\",\n        props: { placeholder: \"rgba(0,0,0,0.15)\" },\n      },\n    ],\n  },\n  {\n    title: \"排布\",\n    children: [\n      {\n        label: \"旋转角度 (°)\",\n        key: \"rotate\",\n        component: \"slider\" as const,\n        defaultValue: -22,\n        props: { min: -180, max: 180, step: 1 },\n      },\n      {\n        label: \"横向间距 (px)\",\n        key: \"gapX\",\n        component: \"slider\" as const,\n        defaultValue: 100,\n        props: { min: 0, max: 300, step: 5 },\n      },\n      {\n        label: \"纵向间距 (px)\",\n        key: \"gapY\",\n        component: \"slider\" as const,\n        defaultValue: 100,\n        props: { min: 0, max: 300, step: 5 },\n      },\n      {\n        label: \"字体大小 (px)\",\n        key: \"fontSize\",\n        component: \"slider\" as const,\n        defaultValue: 16,\n        props: { min: 10, max: 48, step: 1 },\n      },\n    ],\n  },\n];\n\n/** 水印字体配置，由演练场状态派生 */\nconst font = computed(() => ({\n  color: state.value.color,\n  fontSize: state.value.fontSize,\n  fontWeight: \"600\",\n}));\n\n/** 水印间距，组件要求 [横向, 纵向] 元组 */\nconst gap = computed(() => [state.value.gapX, state.value.gapY] as [number, number]);\n\n/** 演练场右上角展示的等价代码 */\nconst watermarkCode = computed(() => {\n  const s = state.value;\n  return `<RebornWatermark\n  content=\"${s.content}\"\n  custom-class=\"${s.customClass}\"\n  :rotate=\"${s.rotate}\"\n  :gap=\"[${s.gapX}, ${s.gapY}]\"\n  :font=\"{ color: '${s.color}', fontSize: ${s.fontSize}, fontWeight: '600' }\"\n>\n  <!-- 被保护的内容 -->\n</RebornWatermark>`;\n});\n\n// ─── 场景演示数据 ───────────────────────────────────────────────\n\n/** 薪资单明细行 */\nconst payrollRows = [\n  { label: \"基本工资\", amount: \"¥ 22,000.00\", accent: false },\n  { label: \"绩效奖金\", amount: \"¥ 6,000.00\", accent: false },\n  { label: \"全勤补助\", amount: \"+ ¥ 450.00\", accent: true },\n];\n</script>\n\n<template>\n  <div class=\"flex w-full min-w-0 flex-col\">\n    <Playground\n      v-model=\"state\"\n      :controls=\"controls\"\n      :code=\"watermarkCode\"\n      component-name=\"RebornWatermark\"\n      title=\"交互演练场\"\n      description=\"调节文本、角度与间距，实时观察水印在文档上的铺陈效果。\"\n    >\n      <RebornWatermark\n        class=\"w-full\"\n        :content=\"state.content\"\n        :custom-class=\"state.customClass\"\n        :rotate=\"state.rotate\"\n        :gap=\"gap\"\n        :font=\"font\"\n        :z-index=\"9\"\n      >\n        <!-- 被水印覆盖的文档本体：只描边不填充，画布已是唯一表面 -->\n        <div class=\"border-default rounded-xl mx-auto flex w-full max-w-2xl flex-col gap-10 border p-6 md:p-10\">\n          <div class=\"flex items-start justify-between gap-6\">\n            <div class=\"flex flex-col gap-2\">\n              <Icon\n                name=\"lucide:file-text\"\n                class=\"text-primary size-7\"\n              />\n              <h4 class=\"text-highlighted mt-2 text-2xl font-bold\">薪资确认单</h4>\n              <p class=\"text-dimmed text-sm\">编号: INV-2024-00129</p>\n            </div>\n            <div class=\"text-right\">\n              <p class=\"text-primary text-3xl font-black\">¥ 28,450.00</p>\n              <p class=\"text-dimmed mt-1 text-sm italic\">已通过系统审核</p>\n            </div>\n          </div>\n\n          <div class=\"border-default grid grid-cols-1 gap-8 border-y py-8 sm:grid-cols-2\">\n            <div class=\"flex flex-col gap-2\">\n              <span class=\"text-dimmed text-[10px] font-bold tracking-widest uppercase\">接收人</span>\n              <p class=\"text-highlighted font-semibold\">张三 (Zhang San)</p>\n              <p class=\"text-muted text-sm\">产品设计部 / 资深 UI 设计师</p>\n            </div>\n            <div class=\"flex flex-col gap-2\">\n              <span class=\"text-dimmed text-[10px] font-bold tracking-widest uppercase\">发放日期</span>\n              <p class=\"text-highlighted font-semibold\">2024 年 4 月 25 日</p>\n              <p class=\"text-muted text-sm\">结算周期: 2024/03/01 - 2024/03/31</p>\n            </div>\n          </div>\n\n          <div class=\"flex flex-col gap-4\">\n            <div\n              v-for=\"row in payrollRows\"\n              :key=\"row.label\"\n              class=\"flex justify-between text-sm\"\n            >\n              <span class=\"text-muted\">{{ row.label }}</span>\n              <span :class=\"['font-mono', row.accent ? 'text-success' : 'text-default']\">{{ row.amount }}</span>\n            </div>\n            <div class=\"border-default flex justify-between border-t pt-4 text-sm font-bold\">\n              <span class=\"text-highlighted\">实发金额 (NET)</span>\n              <span class=\"text-primary text-lg\">¥ 28,450.00</span>\n            </div>\n          </div>\n\n          <DemoNote tone=\"dimmed\">\n            声明: 本文件包含敏感财务信息，仅供个人查阅。任何未经授权的泄露、分发或复制行为均可能触犯公司信息安全政策。\n          </DemoNote>\n        </div>\n      </RebornWatermark>\n    </Playground>\n\n    <DemoSection\n      title=\"图片水印\"\n      description=\"传入 image 并指定 width / height，即可用品牌 Logo 替代文字水印，适合作品集与素材站。\"\n    >\n      <RebornWatermark\n        :width=\"130\"\n        :height=\"30\"\n        image=\"https://element-plus.org/images/element-plus-logo.svg\"\n        :gap=\"[100, 100]\"\n      >\n        <!-- 水印宿主：只描边不填充 -->\n        <div class=\"border-default rounded-xl flex h-[300px] items-center justify-center border\">\n          <Icon\n            name=\"lucide:image\"\n            class=\"text-dimmed size-12\"\n          />\n        </div>\n      </RebornWatermark>\n    </DemoSection>\n\n    <DemoSection\n      title=\"多行安全标识\"\n      description=\"content 传入数组即可逐行渲染，常用于叠加账号、IP、时间戳等可追溯信息。\"\n    >\n      <RebornWatermark\n        :content=\"['内部机密 (SECRET)', 'ID: 8829-1102', 'IP: 192.168.1.102']\"\n        :font=\"{ fontSize: 12, color: 'rgba(239, 68, 68, 0.12)' }\"\n        :gap=\"[120, 120]\"\n      >\n        <div class=\"border-default rounded-xl text-dimmed flex h-[300px] items-center justify-center border italic\">\n          敏感资产保护区域\n        </div>\n      </RebornWatermark>\n    </DemoSection>\n  </div>\n</template>\n"
+    },
+    {
+      "title": "UniApp 演示",
+      "path": "packages/uniapp-project/src/pages/reborn-watermark/RebornWatermarkDemo.vue",
+      "source": "demo",
+      "platform": "uniapp",
+      "code": "<script setup lang=\"ts\">\nimport { reactive } from 'vue'\nimport RebornWatermark from \"../../components/reborn-watermark/RebornWatermark.vue\"\n\nconst font = reactive({\n  color: 'rgba(0, 0, 0, .15)',\n  fontSize: 14,\n  fontWeight: '600'\n})\n\nconst multiContent = ['Reborn UI', 'ID: 9527', 'CONFIDENTIAL']\n</script>\n\n<template>\n  <view class=\"container\">\n    <!-- Header -->\n    <view class=\"header p-6\">\n      <text class=\"title\">Watermark 水印</text>\n      <text class=\"subtitle\">为页面或元素添加多行文本/图片水印。</text>\n    </view>\n\n    <!-- Basic -->\n    <view class=\"section px-4 pb-8\">\n      <view class=\"section-title px-2 mb-4\">基础文本水印</view>\n      <view class=\"demo-card shadow-lg rounded-32 overflow-hidden border border-gray-100\">\n        <RebornWatermark :font=\"font\" content=\"Reborn UI Premium\">\n          <view class=\"content-box bg-white p-6\">\n            <view class=\"flex flex-col gap-4\">\n              <view class=\"h-200 bg-gray-50 rounded-16 flex items-center justify-center\">\n                <text class=\"text-gray-300\">内容占位区</text>\n              </view>\n              <text class=\"text-28 font-bold\">用户信息保护</text>\n              <text class=\"text-24 text-gray-500 italic\">此区域已被水印系统覆盖，防止未经授权的截图传播。</text>\n            </view>\n          </view>\n        </RebornWatermark>\n      </view>\n    </view>\n\n    <!-- Multi-line -->\n    <view class=\"section px-4 pb-8\">\n      <view class=\"section-title px-2 mb-4\">多行与旋转自定义</view>\n      <view class=\"demo-card shadow-lg rounded-32 overflow-hidden border border-gray-100\">\n        <RebornWatermark \n          :font=\"{ color: 'rgba(239, 68, 68, 0.1)', fontSize: 12 }\" \n          :content=\"multiContent\" \n          :rotate=\"-45\"\n          :gap=\"[80, 80]\"\n        >\n          <view class=\"content-box bg-white p-8\">\n             <view class=\"border-2 border-dashed border-gray-100 rounded-24 p-10 flex flex-col items-center\">\n                <text class=\"text-36 font-black text-gray-100 uppercase tracking-widest mb-4\">Secret Area</text>\n                <text class=\"text-24 text-gray-300\">仅限内部受权人员访问</text>\n             </view>\n          </view>\n        </RebornWatermark>\n      </view>\n    </view>\n\n    <!-- Image -->\n    <view class=\"section px-4 pb-8\">\n      <view class=\"section-title px-2 mb-4\">图片品牌水印</view>\n      <view class=\"demo-card shadow-lg rounded-32 overflow-hidden border border-gray-100\">\n        <RebornWatermark \n          :width=\"100\" \n          :height=\"24\" \n          image=\"https://element-plus.org/images/element-plus-logo.svg\"\n          :gap=\"[80, 80]\"\n        >\n          <view class=\"content-box bg-white h-400 flex items-center justify-center\">\n             <text class=\"text-gray-200\">Logo 模式演示</text>\n          </view>\n        </RebornWatermark>\n      </view>\n    </view>\n  </view>\n</template>\n\n<style scoped>\n.container {\n  min-height: 100vh;\n  background-color: #fbfbfb;\n}\n.header {\n  background-color: #fff;\n  margin-bottom: 20rpx;\n}\n.title {\n  font-size: 48rpx;\n  font-weight: 800;\n  color: #111;\n  display: block;\n}\n.subtitle {\n  font-size: 26rpx;\n  color: #666;\n  margin-top: 10rpx;\n  display: block;\n}\n.section-title {\n  font-size: 28rpx;\n  font-weight: 700;\n  color: #444;\n  text-transform: uppercase;\n  letter-spacing: 1px;\n}\n.demo-card {\n  background-color: #fff;\n}\n.content-box {\n  min-height: 300rpx;\n}\n.h-200 {\n  height: 200rpx;\n}\n.h-400 {\n  height: 400rpx;\n}\n.rounded-32 {\n  border-radius: 32rpx;\n}\n.rounded-24 {\n  border-radius: 24rpx;\n}\n.rounded-16 {\n  border-radius: 16rpx;\n}\n.flex { display: flex; }\n.flex-col { flex-direction: column; }\n.items-center { align-items: center; }\n.justify-center { justify-content: center; }\n.gap-4 { gap: 16rpx; }\n.p-6 { padding: 32rpx; }\n.p-8 { padding: 48rpx; }\n.mb-4 { margin-bottom: 24rpx; }\n</style>\n"
+    }
+  ],
+  "related": [],
+  "whenToUse": [
+    "敏感数据页面添加用户标识水印防泄露。",
+    "文档、图片预览区域叠加版权水印。",
+    "需要多行文本水印（content 传字符串数组）或图片水印（image）。"
+  ],
+  "whenNotToUse": [
+    "元素角标、数量标记改用 reborn-badge。",
+    "全屏遮罩层改用 reborn-overlay。"
+  ],
+  "pitfalls": [
+    "web 与 uniapp 双端均可用。",
+    "被加水印的内容须放在 default 插槽内，水印覆盖该容器。",
+    "image 建议使用 2x 或 3x 图像；与 content 同时传入时优先绘制图片，Web 端图片加载失败时回退为 content 文字水印。",
+    "offset 默认为 gap 的一半，rotate 默认 -22 度。"
+  ],
+  "dependencies": [
+    "@weapp-tailwindcss/merge-v3",
+    "@weapp-tailwindcss/variants-v3",
+    "clsx",
+    "tailwind-merge",
+    "tailwind-variants"
+  ],
+  "install": {
+    "cli": "npx reborn-ui@latest add reborn-watermark"
+  },
+  "sourceRefs": {
+    "web": [
+      "app/components/reborn/ui/reborn-watermark/RebornWatermark.vue",
+      "app/components/reborn/ui/reborn-watermark/reborn-watermark.config.ts"
+    ],
+    "uniapp": [
+      "packages/uniapp-project/src/components/reborn-watermark/RebornWatermark.vue",
+      "packages/uniapp-project/src/components/reborn-watermark/reborn-watermark.config.ts"
+    ]
+  },
+  "docPath": "content/2.components/data/reborn-watermark.md",
+  "_meta": {
+    "contentHash": "6ba74220ee53696d5f7c16aad1858eb8769d10cc",
+    "hasOverride": true,
+    "extractors": {
+      "web": "ok",
+      "uniapp": "ok",
+      "docs": "found"
+    }
+  }
+}

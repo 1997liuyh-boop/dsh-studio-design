@@ -9,6 +9,7 @@
     "tailwind",
     "aceternity-ui"
   ],
+  "aliases": [],
   "platforms": [
     "web"
   ],
@@ -85,7 +86,7 @@
   },
   "docPath": "content/2.components/text-animations/text-highlight.md",
   "_meta": {
-    "contentHash": "6f0ce63d65e93fa6a52173f1dd6a1dfe398ea4b5",
+    "contentHash": "1bada4706afccd1c832c774ea8a11d3a3fad685e",
     "hasOverride": true,
     "extractors": {
       "web": "ok",

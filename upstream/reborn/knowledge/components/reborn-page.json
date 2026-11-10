@@ -9,6 +9,10 @@
     "layout",
     "page"
   ],
+  "aliases": [
+    "page",
+    "页面容器"
+  ],
   "platforms": [
     "uniapp"
   ],
@@ -105,7 +109,7 @@
   },
   "docPath": "content/2.components/layout/reborn-page.md",
   "_meta": {
-    "contentHash": "da5bfde7338c46c9d22b0a96c26d5b7d3dceacd9",
+    "contentHash": "3dc1c963a68f67de07a29e04f29bcbac2fbd2075",
     "hasOverride": true,
     "extractors": {
       "web": "absent",

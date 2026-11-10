@@ -10,6 +10,12 @@
     "canvas",
     "form"
   ],
+  "aliases": [
+    "signature",
+    "签名",
+    "手写签名",
+    "签字"
+  ],
   "platforms": [
     "uniapp"
   ],
@@ -37,17 +43,31 @@
     },
     {
       "name": "size",
-      "type": "SignatureSize",
+      "type": "'sm' | 'md' | 'lg'",
       "required": false,
       "description": "尺寸",
-      "default": "'md'"
+      "default": "'md'",
+      "options": [
+        "sm",
+        "md",
+        "lg"
+      ]
     },
     {
       "name": "color",
-      "type": "SignatureColor",
+      "type": "'primary' | 'secondary' | 'success' | 'info' | 'warning' | 'error' | 'neutral'",
       "required": false,
       "description": "主题色",
-      "default": "'primary'"
+      "default": "'primary'",
+      "options": [
+        "primary",
+        "secondary",
+        "success",
+        "info",
+        "warning",
+        "error",
+        "neutral"
+      ]
     },
     {
       "name": "height",
@@ -128,10 +148,15 @@
     },
     {
       "name": "toolbarPosition",
-      "type": "SignatureToolbarPosition",
+      "type": "'left' | 'right' | 'bottom'",
       "required": false,
       "description": "横屏签名时操作按钮位置",
-      "default": "'bottom'"
+      "default": "'bottom'",
+      "options": [
+        "left",
+        "right",
+        "bottom"
+      ]
     },
     {
       "name": "showUndo",
@@ -416,7 +441,7 @@
   },
   "docPath": "content/2.components/input-and-forms/reborn-signature.md",
   "_meta": {
-    "contentHash": "ae6aded84439fadb0eedec8ff1b3753a0676cf03",
+    "contentHash": "4996d0791825025dd6d9bab63204eb57fbc67451",
     "hasOverride": true,
     "extractors": {
       "web": "absent",

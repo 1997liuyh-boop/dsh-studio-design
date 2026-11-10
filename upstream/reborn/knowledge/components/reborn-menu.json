@@ -5,16 +5,28 @@
   "description": "用于站点侧边或顶部导航的菜单组件，支持垂直/水平模式、折叠、多级子菜单与配置式数据驱动。",
   "category": "misc",
   "tags": [],
+  "aliases": [
+    "menu",
+    "导航菜单",
+    "侧边菜单",
+    "侧栏",
+    "sidebar",
+    "nav"
+  ],
   "platforms": [
     "web"
   ],
   "props": [
     {
       "name": "mode",
-      "type": "MenuMode",
+      "type": "'horizontal' | 'vertical'",
       "required": false,
       "description": "菜单模式",
-      "default": "\"vertical\""
+      "default": "\"vertical\"",
+      "options": [
+        "horizontal",
+        "vertical"
+      ]
     },
     {
       "name": "items",
@@ -53,10 +65,14 @@
     },
     {
       "name": "menuTrigger",
-      "type": "MenuTrigger",
+      "type": "'hover' | 'click'",
       "required": false,
       "description": "子菜单打开的触发方式 (仅水平模式或折叠时生效)",
-      "default": "\"hover\""
+      "default": "\"hover\"",
+      "options": [
+        "hover",
+        "click"
+      ]
     },
     {
       "name": "checkStrictly",
@@ -151,10 +167,14 @@
     },
     {
       "name": "expandType",
-      "type": "ExpandType",
+      "type": "'normal' | 'popup'",
       "required": false,
       "description": "二级菜单展开方式：平铺展开(normal) / 浮层展开(popup)",
-      "default": "\"popup\""
+      "default": "\"popup\"",
+      "options": [
+        "normal",
+        "popup"
+      ]
     },
     {
       "name": "expandMutex",
@@ -172,10 +192,19 @@
     },
     {
       "name": "color",
-      "type": "MenuColor",
+      "type": "'primary' | 'secondary' | 'success' | 'info' | 'warning' | 'error' | 'neutral'",
       "required": false,
       "description": "主题颜色",
-      "default": "\"primary\""
+      "default": "\"primary\"",
+      "options": [
+        "primary",
+        "secondary",
+        "success",
+        "info",
+        "warning",
+        "error",
+        "neutral"
+      ]
     },
     {
       "name": "showActiveBackground",
@@ -476,7 +505,7 @@
   },
   "docPath": "content/2.components/miscellaneous/reborn-menu.md",
   "_meta": {
-    "contentHash": "8ef1e849aaeef0def358c51cd454ebb2b3af3c51",
+    "contentHash": "760e3d677296bc798ad462f65a9fa23f7a263f7f",
     "hasOverride": true,
     "extractors": {
       "web": "ok",

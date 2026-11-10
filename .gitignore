@@ -1,13 +1,7 @@
 node_modules/
-**/lib/
-**/static/
+.env
+.env.*
+*.log
+*.tgz
 artifacts/
-.test-build/
-.local/
-.env*
-!.env.example
-**/*.log
-**/*.tsbuildinfo
-studio-data/
-.DS_Store
-studios/design/reborn/
+# lib/static 是 Git 安装所需的已构建文件，需要提交。

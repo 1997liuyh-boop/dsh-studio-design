@@ -1,0 +1,120 @@
+{
+  "$schema": "../schema/component.schema.json",
+  "id": "multi-step-loader",
+  "title": "多步加载器",
+  "description": "用于按步骤序列展示加载进度、支持异步等待步骤的全屏加载组件。",
+  "category": "misc",
+  "tags": [
+    "css",
+    "tailwind",
+    "aceternity-ui"
+  ],
+  "aliases": [
+    "多步加载",
+    "步骤加载",
+    "step loader",
+    "分步加载"
+  ],
+  "platforms": [
+    "web"
+  ],
+  "props": [
+    {
+      "name": "steps",
+      "type": "Step[]",
+      "required": true,
+      "description": "定义加载序列的步骤数组。",
+      "default": "-（必填）"
+    },
+    {
+      "name": "loading",
+      "type": "boolean",
+      "required": false,
+      "description": "控制加载器可见性，为 `true` 时显示。",
+      "default": "false"
+    },
+    {
+      "name": "defaultDuration",
+      "type": "number",
+      "required": false,
+      "description": "每个步骤的持续时间（毫秒）。",
+      "default": "1500"
+    },
+    {
+      "name": "preventClose",
+      "type": "boolean",
+      "required": false,
+      "description": "若为 `true`，不显示关闭按钮。",
+      "default": "false"
+    }
+  ],
+  "events": [
+    {
+      "name": "state-change",
+      "payload": "[number]",
+      "description": "当前步骤变化时触发，返回新步骤索引。"
+    },
+    {
+      "name": "complete",
+      "payload": "[]",
+      "description": "所有步骤完成时触发。"
+    },
+    {
+      "name": "close",
+      "payload": "[]",
+      "description": "点击按钮关闭加载器时触发。"
+    }
+  ],
+  "slots": [],
+  "exposes": [],
+  "examples": [
+    {
+      "title": "Web 演示",
+      "path": "app/components/reborn/examples/multi-step-loader/MultiStepLoaderDemo.vue",
+      "source": "demo",
+      "platform": "web",
+      "code": "<script setup lang=\"ts\">\nimport { computed, onBeforeUnmount, reactive, shallowRef } from \"vue\";\n\n/** 单个步骤的描述 */\ninterface Step {\n  /** 步骤进行中显示的文案 */\n  text: string;\n  /** 步骤完成后替换显示的文案 */\n  afterText?: string;\n  /** 为 true 时停在该步等待外部把它置为 false 才继续 */\n  async?: boolean;\n  /** 该步停留时长（毫秒），默认取组件的 defaultDuration */\n  duration?: number;\n  /** 该步激活时执行的回调 */\n  action?: () => void;\n}\n\n/** 定时模式的开关 */\nconst timedLoading = shallowRef(false);\n/** 异步模式的开关 */\nconst asyncLoading = shallowRef(false);\n\n/** 异步模式下三个业务步骤各自的进行中状态 */\nconst pending = reactive({\n  payment: false,\n  order: false,\n  mail: false,\n});\n\n/** 最近一次的流程事件，替代 alert 与 console 输出 */\nconst lastEvent = shallowRef(\"暂无\");\n\n/** 定时模式：每一步固定停留一段时间后自动推进 */\nconst timedSteps: Step[] = [\n  { text: \"校验支付信息\", duration: 2000 },\n  { text: \"保存订单\", duration: 1500 },\n  { text: \"发送确认邮件\", duration: 2500 },\n  { text: \"处理业务请求\", duration: 1800 },\n  { text: \"收尾清理\", duration: 1000 },\n  {\n    text: \"即将跳转\",\n    duration: 1000,\n    action: () => {\n      lastEvent.value = \"定时流程已走完，触发跳转回调\";\n      timedLoading.value = false;\n    },\n  },\n];\n\n/** 异步模式：async 为 true 时该步会一直等待，直到外部把它改为 false */\nconst asyncSteps = computed<Step[]>(() => [\n  { text: \"校验支付信息\", async: pending.payment, afterText: \"支付已验证\" },\n  { text: \"保存订单\", async: pending.order, afterText: \"订单已保存\" },\n  { text: \"发送确认邮件\", async: pending.mail, afterText: \"邮件已发送\" },\n  {\n    text: \"即将跳转\",\n    duration: 1000,\n    action: () => {\n      lastEvent.value = \"异步流程已走完，触发跳转回调\";\n      asyncLoading.value = false;\n    },\n  },\n]);\n\nfunction handleStateChange(index: number) {\n  lastEvent.value = `state-change · 进入第 ${index + 1} 步`;\n}\n\nfunction handleComplete() {\n  lastEvent.value = \"complete · 全部步骤已完成\";\n}\n\n/** 切换定时模式 */\nfunction toggleTimed() {\n  timedLoading.value = !timedLoading.value;\n}\n\n/** 当前计时任务的取消入口；取消时也结束等待中的 Promise */\nconst cancellations = new Set<() => void>();\nlet runId = 0;\n\n/** 每轮独立计时，过期任务不再改写当前步骤 */\nfunction settle(key: keyof typeof pending, delay: number, id: number) {\n  if (id !== runId) return Promise.resolve(false);\n  return new Promise<boolean>((resolve) => {\n    let timer: ReturnType<typeof setTimeout>;\n    const cancel = () => {\n      clearTimeout(timer);\n      cancellations.delete(cancel);\n      resolve(false);\n    };\n    timer = setTimeout(() => {\n      cancellations.delete(cancel);\n      if (id !== runId) {\n        resolve(false);\n        return;\n      }\n      pending[key] = false;\n      resolve(true);\n    }, delay);\n    cancellations.add(cancel);\n  });\n}\n\n/** 关闭、重开或卸载时作废旧流程并清空等待 */\nfunction stopAsync() {\n  runId++;\n  cancellations.forEach(cancel => cancel());\n  cancellations.clear();\n  asyncLoading.value = false;\n}\n\nasync function startAsync() {\n  stopAsync();\n  const id = runId;\n  asyncLoading.value = true;\n  pending.payment = true;\n  pending.order = true;\n  pending.mail = true;\n\n  if (!await settle(\"payment\", 2000, id)) return;\n  if (!await settle(\"order\", 3000, id)) return;\n  await settle(\"mail\", 2500, id);\n}\n\nonBeforeUnmount(stopAsync);\n</script>\n\n<template>\n  <div class=\"flex w-full min-w-0 flex-col\">\n    <DemoSection\n      title=\"定时推进\"\n      description=\"每一步通过 duration 指定停留时长，到点自动进入下一步；prevent-close 开启后遮罩期间不可手动关闭，只能等流程走完。\"\n    >\n      <DemoBlock layout=\"stack\">\n        <RebornButton\n          color=\"primary\"\n          variant=\"filled\"\n          :label=\"timedLoading ? '停止流程' : '开始定时流程'\"\n          @click=\"toggleTimed\"\n        />\n\n        <MultiStepLoader\n          :steps=\"timedSteps\"\n          :loading=\"timedLoading\"\n          :prevent-close=\"true\"\n          @state-change=\"handleStateChange\"\n          @complete=\"handleComplete\"\n        />\n      </DemoBlock>\n    </DemoSection>\n\n    <DemoSection\n      title=\"等待异步任务\"\n      description=\"把某一步的 async 设为 true，流程会停在该步直到外部改回 false；配合 afterText 可在完成后替换文案，适合真实接口调用。\"\n    >\n      <DemoBlock layout=\"stack\">\n        <RebornButton\n          color=\"primary\"\n          variant=\"outlined\"\n          label=\"开始异步流程\"\n          :disabled=\"asyncLoading\"\n          @click=\"startAsync\"\n        />\n\n        <MultiStepLoader\n          :steps=\"asyncSteps\"\n          :loading=\"asyncLoading\"\n          @state-change=\"handleStateChange\"\n          @complete=\"handleComplete\"\n          @close=\"stopAsync\"\n        />\n\n        <DemoNote tone=\"dimmed\">\n          最近事件：<code>{{ lastEvent }}</code>\n        </DemoNote>\n      </DemoBlock>\n    </DemoSection>\n  </div>\n</template>\n"
+    }
+  ],
+  "related": [],
+  "whenToUse": [
+    "下单、支付等多阶段流程需要逐步反馈进度时。",
+    "步骤完成依赖真实异步结果（Step.async 等待外部状态变 false）时。",
+    "步骤完成后需要展示完成态文案（afterText）或执行回调（action）时。"
+  ],
+  "whenNotToUse": [
+    "简单的转圈加载，改用 reborn-loading。",
+    "展示静态流程节点而非加载过程，改用 timeline。"
+  ],
+  "pitfalls": [
+    "仅 web 端可用。",
+    "可见性由 loading prop 控制，所有步骤完成后不会自动关闭，需在 complete 事件或步骤 action 中把 loading 置回 false。",
+    "Step.async 为 true 时该步骤会一直等待，直到对应状态变为 false 才前进；非异步步骤按 duration（缺省用 defaultDuration，默认 1500ms）自动前进。",
+    "步骤计时与 action 只在客户端挂载后开始：SSR 首屏渲染第一步但不执行 action，水合后才从第一步开始。",
+    "action 的类型是 () => void | Promise<void>，直接返回 fetch(...) 会因返回 Promise<Response> 报类型错误，应写成 async () => { await fetch(...) }。",
+    "preventClose 为 true 时不显示关闭按钮，用户无法手动中断。",
+    "全屏层使用 Teleport to=\"#teleports\"；宿主须在应用根外提供专用目标容器，SSR 时注入该目标的 Teleport 输出。"
+  ],
+  "dependencies": [
+    "@vueuse/core"
+  ],
+  "install": {
+    "cli": "npx reborn-ui@latest add multi-step-loader"
+  },
+  "sourceRefs": {
+    "web": [
+      "app/components/reborn/ui/multi-step-loader/MultiStepLoader.vue",
+      "app/components/reborn/ui/multi-step-loader/index.ts"
+    ]
+  },
+  "docPath": "content/2.components/miscellaneous/multi-step-loader.md",
+  "_meta": {
+    "contentHash": "4cc7a08bc5e196591048e622e8268203bc7f1d17",
+    "hasOverride": true,
+    "extractors": {
+      "web": "ok",
+      "uniapp": "absent",
+      "docs": "found"
+    }
+  }
+}

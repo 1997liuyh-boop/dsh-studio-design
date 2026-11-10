@@ -1,0 +1,188 @@
+{
+  "$schema": "../schema/component.schema.json",
+  "id": "reborn-avatar-group",
+  "title": "AvatarGroup 头像组",
+  "description": "重叠展示成员头像，支持尺寸形状继承、数量折叠、隐藏头像浮层与结构化样式覆盖。",
+  "category": "data-display",
+  "tags": [
+    "css",
+    "tailwind",
+    "avatar",
+    "avatar-group",
+    "tooltip"
+  ],
+  "aliases": [
+    "头像组",
+    "avatar group",
+    "头像叠放"
+  ],
+  "platforms": [
+    "web"
+  ],
+  "props": [
+    {
+      "name": "size",
+      "type": "AvatarSize",
+      "required": false,
+      "description": "子头像默认尺寸，单个头像显式传值可覆盖"
+    },
+    {
+      "name": "shape",
+      "type": "AvatarShape",
+      "required": false,
+      "description": "子头像默认形状，单个头像显式传值可覆盖"
+    },
+    {
+      "name": "gap",
+      "type": "number",
+      "required": false,
+      "description": "相邻头像的重叠距离，单位 px；0 表示不重叠，负数按 0 处理",
+      "default": "8"
+    },
+    {
+      "name": "collapseAvatars",
+      "type": "boolean",
+      "required": false,
+      "description": "超出上限时显示折叠计数",
+      "default": "false"
+    },
+    {
+      "name": "collapseAvatarsTooltip",
+      "type": "boolean",
+      "required": false,
+      "description": "开启折叠后，悬停或聚焦计数头像展示隐藏头像",
+      "default": "false"
+    },
+    {
+      "name": "maxCollapseAvatars",
+      "type": "number",
+      "required": false,
+      "description": "折叠时最多显示的普通头像数，至少一个",
+      "default": "1"
+    },
+    {
+      "name": "effect",
+      "type": "AvatarGroupEffect",
+      "required": false,
+      "description": "浮层主题；自定义名称可通过 data-effect 选择器配合样式",
+      "default": "'light'"
+    },
+    {
+      "name": "placement",
+      "type": "Placement",
+      "required": false,
+      "description": "浮层位置",
+      "default": "'top'"
+    },
+    {
+      "name": "popperClass",
+      "type": "string",
+      "required": false,
+      "description": "浮层追加类名",
+      "default": "''"
+    },
+    {
+      "name": "popperStyle",
+      "type": "string | CSSProperties",
+      "required": false,
+      "description": "浮层行内样式"
+    },
+    {
+      "name": "collapseClass",
+      "type": "string",
+      "required": false,
+      "description": "折叠计数头像追加类名",
+      "default": "''"
+    },
+    {
+      "name": "collapseStyle",
+      "type": "string | CSSProperties",
+      "required": false,
+      "description": "折叠计数头像行内样式"
+    },
+    {
+      "name": "class",
+      "type": "ClassValue",
+      "required": false,
+      "description": "根容器追加类名"
+    },
+    {
+      "name": "ui",
+      "type": "AvatarGroupUI",
+      "required": false,
+      "description": "按结构覆盖样式 可用键（从源码抽取，以此为准）——Web：collapse、item、root、tooltip。",
+      "default": "() => ({})"
+    }
+  ],
+  "events": [],
+  "slots": [
+    {
+      "name": "default",
+      "props": "() => VNode[]",
+      "description": "放入 RebornAvatar，支持 v-for 与条件片段"
+    }
+  ],
+  "exposes": [],
+  "examples": [
+    {
+      "title": "Web 演示",
+      "path": "app/components/reborn/examples/reborn-avatar-group/RebornAvatarGroupDemo.vue",
+      "source": "demo",
+      "platform": "web",
+      "code": "<script setup lang=\"ts\">\nimport type { PlaygroundControlGroup } from '~/components/common/play-ground/Playground.vue';\nimport type { AvatarShape, AvatarSize } from '~/components/reborn/ui/reborn-avatar/reborn-avatar.config';\nimport type { Placement } from '~/lib/placement';\nimport { DemoBlock, DemoNote, DemoSection, Icon, Playground } from '#components';\nimport { computed, ref } from 'vue';\nimport { avatarPeople } from '~/components/reborn/examples/reborn-avatar/avatar-demo.data';\nimport { avatarGroupEffects } from '~/components/reborn/ui/reborn-avatar-group/reborn-avatar-group.config';\nimport RebornAvatarGroup from '~/components/reborn/ui/reborn-avatar-group/RebornAvatarGroup.vue';\nimport { avatarShapes, avatarSizes } from '~/components/reborn/ui/reborn-avatar/reborn-avatar.config';\nimport RebornAvatar from '~/components/reborn/ui/reborn-avatar/RebornAvatar.vue';\nimport RebornButton from '~/components/reborn/ui/reborn-button/RebornButton.vue';\nimport { placements } from '~/lib/placement';\n\n// ─── 交互演练场 ─────────────────────────────────────────────────\n\n/** 折叠默认关闭，开启后保留前两个成员并提供悬停查看。 */\nconst defaultState = {\n  size: 'md' as AvatarSize,\n  shape: 'circle' as AvatarShape,\n  gap: 8,\n  collapseAvatars: false,\n  collapseAvatarsTooltip: true,\n  maxCollapseAvatars: 2,\n  effect: 'light',\n  placement: 'top' as Placement,\n  popperClass: '',\n  collapseClass: '',\n  customStyles: false,\n};\nconst state = ref({ ...defaultState });\nconst inputProps = { ui: { input: 'w-0' } };\n/** 恢复组参数。 */\nfunction resetState() { state.value = { ...defaultState }; }\n/** 数量与浮层各自独立控制，便于核对联动前提。 */\nconst controls: PlaygroundControlGroup[] = [\n  { title: '基础属性', children: [\n    { label: '组尺寸', key: 'size', component: 'select', defaultValue: 'md', props: { options: [...avatarSizes.map(value => ({ label: value, value })), { label: '自定义 · 48px', value: 48 }] } },\n    { label: '组形状', key: 'shape', component: 'select', defaultValue: 'circle', props: { options: avatarShapes.map(value => ({ label: value === 'circle' ? '圆形' : '方形', value })) } },\n    { label: '重叠距离（px）', key: 'gap', component: 'input-number', defaultValue: 8, props: { ...inputProps, min: 0, step: 1 } },\n    { label: '折叠超出头像', key: 'collapseAvatars', component: 'checkbox', defaultValue: false },\n    { label: '折叠头像浮层', key: 'collapseAvatarsTooltip', component: 'checkbox', defaultValue: true },\n    { label: '保留头像数', key: 'maxCollapseAvatars', component: 'input-number', defaultValue: 2, props: { ...inputProps, min: 1, max: 5, step: 1 } },\n  ] },\n  { title: '浮层与样式', children: [\n    { label: '浮层主题', key: 'effect', component: 'select', defaultValue: 'light', props: { options: avatarGroupEffects.map(value => ({ label: value === 'light' ? '浅色' : '深色', value })) } },\n    { label: '浮层方位', key: 'placement', component: 'select', defaultValue: 'top', props: { options: placements.map(value => ({ label: value, value })) } },\n    { label: '浮层类名', key: 'popperClass', component: 'input', defaultValue: '', props: inputProps },\n    { label: '计数头像类名', key: 'collapseClass', component: 'input', defaultValue: '', props: inputProps },\n    { label: '覆盖行内样式', key: 'customStyles', component: 'checkbox', defaultValue: false, codeIgnore: true },\n  ] },\n];\n/** 完整显示当前组参数，辅助开关转换为实际样式。 */\nconst groupCode = computed(() => {\n  const s = state.value;\n  return `<RebornAvatarGroup\\n  ${typeof s.size === 'number' ? ':size' : 'size'}=\"${s.size}\"\\n  shape=\"${s.shape}\"\\n  :gap=\"${s.gap}\"\\n  :collapse-avatars=\"${s.collapseAvatars}\"\\n  :collapse-avatars-tooltip=\"${s.collapseAvatarsTooltip}\"\\n  :max-collapse-avatars=\"${s.maxCollapseAvatars}\"\\n  effect=\"${s.effect}\"\\n  placement=\"${s.placement}\"\\n  popper-class=\"${s.popperClass}\"\\n  collapse-class=\"${s.collapseClass}\"\\n  :popper-style=\"${s.customStyles ? \"{ backgroundColor: 'color-mix(in srgb, var(--color-primary) 10%, transparent)' }\" : '{}'}\"\\n  :collapse-style=\"${s.customStyles ? \"{ color: 'var(--color-primary)' }\" : '{}'}\"\\n>\\n  <RebornAvatar v-for=\"person in people\" :key=\"person.name\" :src=\"person.src\" :alt=\"person.name\" />\\n</RebornAvatarGroup>`;\n});\n</script>\n\n<template>\n  <div class=\"flex w-full flex-col\">\n    <Playground v-model=\"state\" :controls=\"controls\" :code=\"groupCode\" component-name=\"RebornAvatarGroup\" title=\"交互演练场\" description=\"调节组尺寸、折叠数量和浮层主题，查看头像的继承与重叠。\">\n      <template #tag><RebornButton size=\"sm\" variant=\"soft\" color=\"neutral\" @click=\"resetState\"><Icon name=\"lucide:rotate-ccw\" />重置配置</RebornButton></template>\n      <div class=\"flex flex-col items-center gap-6 py-8\">\n        <RebornAvatarGroup\n          :size=\"state.size\" :shape=\"state.shape\" :gap=\"state.gap\" :collapse-avatars=\"state.collapseAvatars\" :collapse-avatars-tooltip=\"state.collapseAvatarsTooltip\" :max-collapse-avatars=\"state.maxCollapseAvatars\"\n          :effect=\"state.effect\" :placement=\"state.placement\" :popper-class=\"state.popperClass\" :collapse-class=\"state.collapseClass\"\n          :popper-style=\"state.customStyles ? { backgroundColor: 'color-mix(in srgb, var(--color-primary) 10%, transparent)' } : undefined\" :collapse-style=\"state.customStyles ? { color: 'var(--color-primary)' } : undefined\" aria-label=\"项目成员\"\n        >\n          <RebornAvatar v-for=\"person in avatarPeople\" :key=\"person.name\" :src=\"person.src\" :alt=\"person.name\" />\n        </RebornAvatarGroup>\n        <DemoNote tone=\"dimmed\">共 {{ avatarPeople.length }} 位成员；开启折叠后，计数头像表示未直接展示的人数。</DemoNote>\n      </div>\n    </Playground>\n    <DemoSection title=\"基础头像组\">\n      <template #description>默认插槽放置 <code>RebornAvatar</code>，相邻头像重叠排列并使用描边区分边界。</template>\n      <DemoBlock layout=\"row\"><RebornAvatarGroup aria-label=\"团队成员\"><RebornAvatar v-for=\"person in avatarPeople\" :key=\"person.name\" :src=\"person.src\" :alt=\"person.name\" /></RebornAvatarGroup></DemoBlock>\n    </DemoSection>\n    <DemoSection title=\"尺寸与形状\">\n      <template #description>子头像继承组的 <code>size</code> 和 <code>shape</code>；子项显式传参时使用自己的值。</template>\n      <DemoBlock layout=\"stack\" class=\"gap-6\">\n        <div class=\"flex flex-wrap items-center gap-6\">\n          <RebornAvatarGroup v-for=\"size in avatarSizes\" :key=\"size\" :size=\"size\"><RebornAvatar v-for=\"person in avatarPeople.slice(0, 3)\" :key=\"person.name\" :src=\"person.src\" :alt=\"person.name\" /></RebornAvatarGroup>\n        </div>\n        <RebornAvatarGroup shape=\"square\" :size=\"48\">\n          <RebornAvatar v-for=\"person in avatarPeople.slice(0, 3)\" :key=\"person.name\" :src=\"person.src\" :alt=\"person.name\" />\n          <RebornAvatar size=\"lg\" shape=\"circle\" :ui=\"{ root: 'bg-brand-1 text-primary' }\" alt=\"单独覆盖形状\">RE</RebornAvatar>\n        </RebornAvatarGroup>\n      </DemoBlock>\n    </DemoSection>\n    <DemoSection title=\"重叠距离\">\n      <template #description><code>gap</code> 默认 8px，数值越大重叠越多；传入 <code>0</code> 时相邻头像不重叠。</template>\n      <DemoBlock layout=\"stack\" class=\"gap-6\">\n        <div v-for=\"gap in [0, 8, 12, 16]\" :key=\"gap\" class=\"flex items-center gap-6\">\n          <span class=\"w-12 shrink-0 text-sm text-gray-7\">{{ gap }}px</span>\n          <RebornAvatarGroup :gap=\"gap\" size=\"lg\" collapse-avatars :max-collapse-avatars=\"3\">\n            <RebornAvatar v-for=\"person in avatarPeople\" :key=\"person.name\" :src=\"person.src\" :alt=\"person.name\" />\n          </RebornAvatarGroup>\n        </div>\n      </DemoBlock>\n    </DemoSection>\n    <DemoSection title=\"折叠头像\">\n      <template #description>开启 <code>collapseAvatars</code> 后，<code>maxCollapseAvatars</code> 控制直接展示的头像数，计数头像不占名额。</template>\n      <DemoBlock layout=\"row\" class=\"gap-8\">\n        <RebornAvatarGroup v-for=\"limit in [1, 2, 4]\" :key=\"limit\" collapse-avatars :max-collapse-avatars=\"limit\" size=\"lg\"><RebornAvatar v-for=\"person in avatarPeople\" :key=\"person.name\" :src=\"person.src\" :alt=\"person.name\" /></RebornAvatarGroup>\n      </DemoBlock>\n    </DemoSection>\n    <DemoSection title=\"悬停查看\">\n      <template #description>同时开启 <code>collapseAvatarsTooltip</code> 与 <code>collapseAvatars</code>，悬停或键盘聚焦计数头像即可查看隐藏头像。</template>\n      <DemoBlock layout=\"row\" class=\"gap-10 py-6\">\n        <div v-for=\"effect in avatarGroupEffects\" :key=\"effect\" class=\"flex flex-col gap-3\">\n          <span class=\"text-sm text-gray-7\">{{ effect === 'light' ? '浅色浮层' : '深色浮层' }}</span>\n          <RebornAvatarGroup :effect=\"effect\" collapse-avatars collapse-avatars-tooltip :max-collapse-avatars=\"2\" size=\"lg\" placement=\"top\"><RebornAvatar v-for=\"person in avatarPeople\" :key=\"person.name\" :src=\"person.src\" :alt=\"person.name\" /></RebornAvatarGroup>\n        </div>\n      </DemoBlock>\n    </DemoSection>\n    <DemoSection title=\"自定义样式\">\n      <template #description><code>ui</code> 覆盖组结构；<code>collapseClass</code>、<code>collapseStyle</code> 作用于计数头像，<code>popperClass</code>、<code>popperStyle</code> 作用于浮层面板。</template>\n      <DemoBlock layout=\"row\" class=\"py-6\">\n        <RebornAvatarGroup\n          size=\"lg\" :gap=\"12\" collapse-avatars collapse-avatars-tooltip :max-collapse-avatars=\"3\"\n          :ui=\"{ root: 'p-3 rounded-xl bg-primary/5', tooltip: 'border-primary/30' }\"\n          collapse-class=\"bg-brand-1 text-primary\" :collapse-style=\"{ fontWeight: 700 }\" popper-class=\"shadow-xl\" popper-style=\"padding: 16px\" placement=\"bottom\"\n        >\n          <RebornAvatar v-for=\"person in avatarPeople\" :key=\"person.name\" :src=\"person.src\" :alt=\"person.name\" />\n        </RebornAvatarGroup>\n      </DemoBlock>\n    </DemoSection>\n  </div>\n</template>\n"
+    }
+  ],
+  "related": [
+    "reborn-avatar",
+    "reborn-tooltip"
+  ],
+  "whenToUse": [
+    "项目卡片展示团队成员：将 RebornAvatar 放入默认插槽。",
+    "人数较多时用 collapseAvatars 和 maxCollapseAvatars 控制直接展示数量。",
+    "用 collapseAvatarsTooltip 查看隐藏头像，支持悬停和键盘聚焦。",
+    "用 size、shape 提供组默认值，并允许单个头像显式覆盖。",
+    "用 gap 自定义重叠距离，默认 8px，0 表示不重叠。"
+  ],
+  "whenNotToUse": [
+    "单个用户头像改用 reborn-avatar。",
+    "包含姓名、权限和操作的完整成员列表改用 reborn-table。",
+    "搜索和选择成员改用 reborn-select。"
+  ],
+  "pitfalls": [
+    "collapseAvatarsTooltip 仅在 collapseAvatars 开启且有隐藏头像时生效。",
+    "maxCollapseAvatars 表示普通头像数量，不包含计数头像；至少保留一个，小数向下取整，无效值回退到一个。",
+    "gap 以 px 为单位且表示重叠量，普通头像与计数头像共用；负数按 0，非有限值回退到 8，浮层内部间距不受影响。",
+    "默认插槽应直接放 RebornAvatar；展开片段并忽略注释、文本，额外 DOM 包装视为一个项。",
+    "隐藏头像仅在浮层展开时挂载，关闭浮层后销毁。",
+    "popperStyle 只覆盖面板内容，浮层定位坐标由 Tooltip 管理。",
+    "effect 内置 light 和 dark，其他字符串写入 data-effect，配合 ui.tooltip 或 popperClass 提供样式。",
+    "仅 Web 实现，没有 UniApp 同名组件。"
+  ],
+  "dependencies": [
+    "clsx",
+    "motion-v",
+    "tailwind-merge",
+    "tailwind-variants"
+  ],
+  "install": {
+    "cli": "npx reborn-ui@latest add reborn-avatar-group"
+  },
+  "sourceRefs": {
+    "web": [
+      "app/components/reborn/ui/reborn-avatar-group/RebornAvatarGroup.vue",
+      "app/components/reborn/ui/reborn-avatar-group/index.ts",
+      "app/components/reborn/ui/reborn-avatar-group/reborn-avatar-group.config.ts",
+      "app/components/reborn/ui/reborn-avatar-group/reborn-avatar-group.utils.ts"
+    ]
+  },
+  "docPath": "content/2.components/data/reborn-avatar-group.md",
+  "_meta": {
+    "contentHash": "e135330976645b97e028e0f95132142d9d1b61c4",
+    "hasOverride": true,
+    "extractors": {
+      "web": "ok",
+      "uniapp": "absent",
+      "docs": "found"
+    }
+  }
+}

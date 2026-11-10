@@ -9,6 +9,7 @@
     "tailwind",
     "magic-ui"
   ],
+  "aliases": [],
   "platforms": [
     "web"
   ],
@@ -140,7 +141,7 @@
   },
   "docPath": "content/2.components/special-effects/ripple.md",
   "_meta": {
-    "contentHash": "bb96a1687a9eae410cbe57f1c98c1b5ec7234bd9",
+    "contentHash": "91bf1995a95ae22c5185b47d606ba0a3c152b6fe",
     "hasOverride": true,
     "extractors": {
       "web": "partial",

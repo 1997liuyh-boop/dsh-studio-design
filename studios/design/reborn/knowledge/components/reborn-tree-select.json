@@ -1,0 +1,363 @@
+{
+  "$schema": "../schema/component.schema.json",
+  "id": "reborn-tree-select",
+  "title": "Tree Select 树选择器",
+  "description": "Web 层级选值：沿用 select 的三档尺寸与四种形态，下拉复用 tree，支持单选、父子联动或独立勾选的多选，以及清空。",
+  "category": "form",
+  "tags": [
+    "tree-select",
+    "tree",
+    "select",
+    "form",
+    "web"
+  ],
+  "aliases": [
+    "tree select",
+    "树选择",
+    "树形下拉"
+  ],
+  "platforms": [
+    "web"
+  ],
+  "props": [
+    {
+      "name": "treeData",
+      "type": "TreeDataNode[]",
+      "required": false,
+      "description": "层级数据，节点 key 必须在整棵树内唯一",
+      "default": "() => []"
+    },
+    {
+      "name": "fieldNames",
+      "type": "RebornTreeProps[\"fieldNames\"]",
+      "required": false,
+      "description": "自定义标题、唯一标识与子节点字段；绑定值按 fieldNames.key 指定的字段识别节点，未设置时读取 key"
+    },
+    {
+      "name": "multiple",
+      "type": "boolean",
+      "required": false,
+      "description": "多选时展示复选框，默认父子联动勾选",
+      "default": "false"
+    },
+    {
+      "name": "checkStrictly",
+      "type": "boolean",
+      "required": false,
+      "description": "多选时父子勾选互不关联，各节点独立勾选",
+      "default": "false"
+    },
+    {
+      "name": "collapseTags",
+      "type": "boolean",
+      "required": false,
+      "description": "多选时将超出保留数量的标签折叠为 +N",
+      "default": "false"
+    },
+    {
+      "name": "collapseTagsTooltip",
+      "type": "boolean",
+      "required": false,
+      "description": "悬浮展示被折叠的标签，需开启 collapseTags",
+      "default": "false"
+    },
+    {
+      "name": "maxCollapseTags",
+      "type": "number",
+      "required": false,
+      "description": "折叠前保留的标签数量，最少为 0",
+      "default": "1"
+    },
+    {
+      "name": "allowSearch",
+      "type": "boolean",
+      "required": false,
+      "description": "在触发器内搜索节点 key 与标题，按 fieldNames 映射字段，默认关闭",
+      "default": "false"
+    },
+    {
+      "name": "searchData",
+      "type": "(value: string, context: TreeSelectSearchContext) => Promise<unknown>",
+      "required": false,
+      "description": "异步搜索，调用方更新 treeData；与 loadData 一样等待 Promise，结果不再做本地筛选"
+    },
+    {
+      "name": "placeholder",
+      "type": "string",
+      "required": false,
+      "description": "空值时的提示文字",
+      "default": "\"请选择\""
+    },
+    {
+      "name": "disabled",
+      "type": "boolean",
+      "required": false,
+      "description": "禁用选择与清空，并继承表单禁用状态",
+      "default": "false"
+    },
+    {
+      "name": "clearable",
+      "type": "boolean",
+      "required": false,
+      "description": "显示清空按钮",
+      "default": "false"
+    },
+    {
+      "name": "size",
+      "type": "(typeof treeSelectSizes)[number]",
+      "required": false,
+      "description": "三档尺寸，继承表单尺寸",
+      "default": "\"md\""
+    },
+    {
+      "name": "color",
+      "type": "(typeof treeSelectColors)[number]",
+      "required": false,
+      "description": "选择框与树共用的语义色",
+      "default": "\"primary\""
+    },
+    {
+      "name": "variant",
+      "type": "(typeof treeSelectVariants)[number]",
+      "required": false,
+      "description": "选择框形态，与 reborn-select 一致",
+      "default": "\"outlined\""
+    },
+    {
+      "name": "defaultExpandAll",
+      "type": "boolean",
+      "required": false,
+      "description": "默认展开所有节点",
+      "default": "false"
+    },
+    {
+      "name": "defaultExpandedKeys",
+      "type": "TreeKey[]",
+      "required": false,
+      "description": "默认展开的节点",
+      "default": "() => []"
+    },
+    {
+      "name": "showLine",
+      "type": "RebornTreeProps[\"showLine\"]",
+      "required": false,
+      "description": "展示树节点连接线",
+      "default": "false"
+    },
+    {
+      "name": "showIcon",
+      "type": "boolean",
+      "required": false,
+      "description": "展示节点 icon 字段指定的图标",
+      "default": "false"
+    },
+    {
+      "name": "loadData",
+      "type": "RebornTreeProps[\"loadData\"]",
+      "required": false,
+      "description": "异步加载子节点，调用方更新 treeData；已加载的节点记录在 loadedKeys 中"
+    },
+    {
+      "name": "height",
+      "type": "number",
+      "required": false,
+      "description": "下拉树的最大高度，单位 px：节点少时面板按内容撑开，超出后在区内滚动",
+      "default": "240"
+    },
+    {
+      "name": "virtual",
+      "type": "boolean",
+      "required": false,
+      "description": "开启树的定高虚拟滚动",
+      "default": "true"
+    },
+    {
+      "name": "emptyText",
+      "type": "string",
+      "required": false,
+      "description": "空数据提示",
+      "default": "\"暂无数据\""
+    },
+    {
+      "name": "portal",
+      "type": "boolean",
+      "required": false,
+      "description": "浮层传送到 body",
+      "default": "true"
+    },
+    {
+      "name": "closeOn",
+      "type": "SelectTriggerProps[\"closeOn\"]",
+      "required": false,
+      "description": "外部按下（默认）或点击时收起，与 RebornSelectTrigger 的默认值保持一致",
+      "default": "\"mousedown\""
+    },
+    {
+      "name": "autoAdjustOverflow",
+      "type": "boolean",
+      "required": false,
+      "description": "空间不足时自动向上展开",
+      "default": "true"
+    },
+    {
+      "name": "class",
+      "type": "ClassValue",
+      "required": false,
+      "description": "根容器样式"
+    },
+    {
+      "name": "triggerUi",
+      "type": "SelectTriggerProps[\"ui\"] & SelectFieldUI",
+      "required": false,
+      "description": "选择框与浮层样式，与 reborn-select 的同名入口一致"
+    },
+    {
+      "name": "ui",
+      "type": "TreeSelectUI",
+      "required": false,
+      "description": "下拉内容、空态与标签样式 可用键（从源码抽取，以此为准）——Web：collapseTag、dropdown、empty、tag、tagList。"
+    },
+    {
+      "name": "treeUi",
+      "type": "RebornTreeProps[\"ui\"]",
+      "required": false,
+      "description": "透传给 reborn-tree 的局部样式"
+    },
+    {
+      "name": "modelValue",
+      "type": "TreeSelectValue",
+      "required": false,
+      "description": "双向绑定值",
+      "vModel": true,
+      "default": "null"
+    },
+    {
+      "name": "expandedKeys",
+      "type": "TreeKey[]",
+      "required": false,
+      "description": "双向绑定值",
+      "vModel": true
+    },
+    {
+      "name": "loadedKeys",
+      "type": "TreeKey[]",
+      "required": false,
+      "description": "双向绑定值",
+      "vModel": true
+    }
+  ],
+  "events": [
+    {
+      "name": "change",
+      "payload": "[value: TreeSelectValue]",
+      "description": "用户修改选择时触发"
+    },
+    {
+      "name": "search",
+      "payload": "[value: string]",
+      "description": "用户输入搜索关键词时触发，关闭清理不重复触发"
+    },
+    {
+      "name": "clear",
+      "payload": "[]",
+      "description": "点击清空按钮时触发"
+    },
+    {
+      "name": "visibleChange",
+      "payload": "[open: boolean]",
+      "description": "浮层展开状态变化"
+    },
+    {
+      "name": "update:modelValue",
+      "description": "modelValue 变化时触发（v-model 同步）",
+      "payload": "value: TreeSelectValue"
+    },
+    {
+      "name": "update:expandedKeys",
+      "description": "expandedKeys 变化时触发（v-model 同步）",
+      "payload": "keys: TreeKey[]"
+    },
+    {
+      "name": "update:loadedKeys",
+      "description": "loadedKeys 变化时触发（v-model 同步）",
+      "payload": "keys: TreeKey[]"
+    }
+  ],
+  "slots": [
+    {
+      "name": "item",
+      "description": "〔树〕自定义节点内容，替换树的节点标题区；多选的 selected 不代表勾选"
+    },
+    {
+      "name": "empty",
+      "description": "〔选择框〕自定义空数据文案"
+    }
+  ],
+  "exposes": [],
+  "examples": [
+    {
+      "title": "Web 演示",
+      "path": "app/components/reborn/examples/reborn-tree-select/RebornTreeSelectDemo.vue",
+      "source": "demo",
+      "platform": "web",
+      "code": "<script setup lang=\"ts\">\nimport type { TreeSelectValue } from \"~/components/reborn/ui/reborn-tree-select/reborn-tree-select.config\";\nimport type { TreeSelectProps, TreeSelectSearchContext } from \"~/components/reborn/ui/reborn-tree-select/RebornTreeSelect.vue\";\nimport type { TreeDataNode } from \"~/components/reborn/ui/reborn-tree/reborn-tree.config\";\nimport { DemoBlock, DemoItem, DemoNote, DemoSection, Icon, Playground } from \"#components\";\nimport { computed, shallowRef } from \"vue\";\nimport RebornButton from \"~/components/reborn/ui/reborn-button/RebornButton.vue\";\nimport RebornSelect from \"~/components/reborn/ui/reborn-select/RebornSelect.vue\";\nimport { treeSelectColors, treeSelectSizes, treeSelectVariants } from \"~/components/reborn/ui/reborn-tree-select/reborn-tree-select.config\";\nimport RebornTreeSelect from \"~/components/reborn/ui/reborn-tree-select/RebornTreeSelect.vue\";\n\n/** 各示例共用只读树数据，包含可选父级与禁用节点。 */\nconst treeData = [\n  {\n    key: \"product\", title: \"产品研发\", icon: \"lucide:folder\", children: [\n      { key: \"design\", title: \"设计系统\", icon: \"lucide:palette\" },\n      { key: \"web\", title: \"前端开发\", icon: \"lucide:code\" },\n      { key: \"legacy\", title: \"历史项目（禁用）\", icon: \"lucide:archive\", disabled: true },\n    ]\n  },\n  {\n    key: \"operation\", title: \"业务运营\", icon: \"lucide:folder\", children: [\n      { key: \"content\", title: \"内容运营\", icon: \"lucide:newspaper\" }, { key: \"support\", title: \"客户支持\", icon: \"lucide:users-round\" },\n    ]\n  },\n];\n\n// ─── 交互演练场 ───\n/** 演练场默认参数。 */\nconst defaultState = {\n  color: \"primary\", multiple: false, disabled: false,\n  variant: \"outlined\", size: \"md\", allowSearch: false, clearable: true,\n  collapseTags: false, collapseTagsTooltip: false, maxCollapseTags: 1, closeOn: \"mousedown\", portal: true,\n  checkStrictly: false, showLine: false, showIcon: false, height: 240, virtual: true, defaultExpandAll: true\n} satisfies TreeSelectProps;\nconst state = shallowRef<Pick<TreeSelectProps, keyof typeof defaultState>>({ ...defaultState });\nconst value = shallowRef<TreeSelectValue>(null);\n/**\n * 控制面板按参数的作用对象分组：TreeSelect 由选择框（触发器与浮层）和内部 RebornTree 组成，\n * 分开摆放才能看出某个参数改的是哪一部分。\n */\nconst controls = [\n  {\n    title: \"共用参数（两者同时生效）\", children: [\n      { label: \"语义色\", key: \"color\", component: \"select\" as const, props: { options: treeSelectColors.map(value => ({ label: value, value })) } },\n      { label: \"多选\", key: \"multiple\", component: \"checkbox\" as const },\n      { label: \"禁用\", key: \"disabled\", component: \"checkbox\" as const },\n    ]\n  },\n  {\n    title: \"选择框参数\", children: [\n      { label: \"形态\", key: \"variant\", component: \"select\" as const, props: { options: treeSelectVariants.map(value => ({ label: value, value })) } },\n      { label: \"尺寸\", key: \"size\", component: \"select\" as const, props: { options: treeSelectSizes.map(value => ({ label: value, value })) } },\n      { label: \"允许搜索\", key: \"allowSearch\", component: \"checkbox\" as const, defaultValue: false },\n      { label: \"可清空\", key: \"clearable\", component: \"checkbox\" as const },\n      { label: \"折叠标签\", key: \"collapseTags\", component: \"checkbox\" as const, defaultValue: false },\n      { label: \"折叠标签悬浮提示\", key: \"collapseTagsTooltip\", component: \"checkbox\" as const, defaultValue: false },\n      { label: \"折叠前保留数量\", key: \"maxCollapseTags\", component: \"input-number\" as const, defaultValue: 1, props: { min: 0, step: 1 } },\n      { label: \"关闭时机\", key: \"closeOn\", component: \"select\" as const, defaultValue: \"mousedown\", props: { options: [{ label: \"外部点击后\", value: \"click\" }, { label: \"外部按下时\", value: \"mousedown\" }] } },\n      { label: \"浮层传送到 body\", key: \"portal\", component: \"checkbox\" as const, defaultValue: true },\n    ]\n  },\n  {\n    title: \"树参数（作用于内部 reborn-tree）\", children: [\n      { label: \"父子勾选不关联\", key: \"checkStrictly\", component: \"checkbox\" as const, defaultValue: false },\n      { label: \"连接线\", key: \"showLine\", component: \"checkbox\" as const },\n      { label: \"节点图标\", key: \"showIcon\", component: \"checkbox\" as const },\n      { label: \"滚动区最大高度（px）\", key: \"height\", component: \"input-number\" as const, defaultValue: 240, props: { min: 80, step: 40 } },\n      { label: \"虚拟滚动\", key: \"virtual\", component: \"checkbox\" as const, defaultValue: true },\n    ]\n  },\n];\n/** 代码包含演示数据，可直接复制。 */\nconst code = computed(() => `<script setup>\\nimport { shallowRef } from 'vue'\\nconst value = shallowRef(${JSON.stringify(value.value)})\\nconst treeData = ${JSON.stringify(treeData, null, 2)}\\n<\\/script>\\n<template>\\n  <RebornTreeSelect v-model=\"value\" :tree-data=\"treeData\"\\n    color=\"${state.value.color}\" :multiple=\"${state.value.multiple}\" :disabled=\"${state.value.disabled}\"\\n    variant=\"${state.value.variant}\" size=\"${state.value.size}\" :allow-search=\"${state.value.allowSearch}\" :clearable=\"${state.value.clearable}\"\\n    :collapse-tags=\"${state.value.collapseTags}\" :collapse-tags-tooltip=\"${state.value.collapseTagsTooltip}\" :max-collapse-tags=\"${state.value.maxCollapseTags}\"\\n    close-on=\"${state.value.closeOn}\" :portal=\"${state.value.portal}\"\\n    :check-strictly=\"${state.value.checkStrictly}\" :show-line=\"${state.value.showLine}\" :show-icon=\"${state.value.showIcon}\"\\n    :height=\"${state.value.height}\" :virtual=\"${state.value.virtual}\" default-expand-all />\\n</template>`);\n/** 同时重置演练参数与选中值。 */\nfunction resetState() { state.value = { ...defaultState }; value.value = null; }\n\n// ─── 场景演示状态 ───\n/** 单选与多选分开维护，方便比较返回值。 */\nconst single = shallowRef<TreeSelectValue>(\"web\");\n/** 联动初值各勾一个子级，两个父级都呈半选。 */\nconst multiple = shallowRef<TreeSelectValue>([\"design\", \"content\"]);\n/** 严格模式初值只勾父级，对照子级不受牵连。 */\nconst strictMultiple = shallowRef<TreeSelectValue>([\"product\"]);\n/** 自定义节点示例独立维护选中值，展示插槽的 selected 状态。 */\nconst customItem = shallowRef<TreeSelectValue>(\"design\");\nconst selectValue = shallowRef(\"web\");\nconst selectOptions = [{ label: \"前端开发\", value: \"web\" }];\nconst variants = { outlined: \"描边\", filled: \"填充\", borderless: \"无边框\", underlined: \"下划线\" };\n/** 异步搜索单独维护数据，与 loadData 一样由回调写回 treeData。 */\nconst remoteTreeData = shallowRef<TreeDataNode[]>(treeData);\nconst remoteValue = shallowRef<TreeSelectValue>(null);\n/** 模拟服务端沿祖先路径返回结果，空关键词恢复全部团队。 */\nfunction searchTeamNodes(nodes: TreeDataNode[], keyword: string): TreeDataNode[] {\n  if (!keyword) return nodes;\n  return nodes.flatMap((node) => {\n    const children = searchTeamNodes(node.children ?? [], keyword);\n    const matches = [node.key, node.title].some(value => String(value ?? \"\").toLowerCase().includes(keyword));\n    return matches || children.length ? [{ ...node, children }] : [];\n  });\n}\n/** 模拟网络延迟；写回前检查取消信号，旧请求不能覆盖新结果。 */\nasync function searchTeams(keyword: string, { signal }: TreeSelectSearchContext) {\n  await new Promise(resolve => setTimeout(resolve, 350));\n  if (!signal.aborted) remoteTreeData.value = searchTeamNodes(treeData, keyword.toLowerCase());\n}\n</script>\n\n<template>\n  <div class=\"flex w-full flex-col\">\n    <Playground\n      v-model=\"state\" :controls=\"controls\" :code=\"code\" component-name=\"RebornTreeSelect\" title=\"交互演练场\"\n      description=\"上方参数按作用对象分组：共用参数同时作用于选择框与树，选择框参数只改触发器与浮层，树参数作用于浮层内的 RebornTree。\"\n    >\n      <template #tag>\n        <RebornButton size=\"sm\" variant=\"soft\" color=\"neutral\" @click=\"resetState\">\n          <template #leading><Icon name=\"lucide:rotate-ccw\" class=\"size-3\" /></template>\n          重置配置\n        </RebornButton>\n      </template>\n      <div class=\"flex w-full max-w-md flex-col gap-4 pb-40\">\n        <RebornTreeSelect v-model=\"value\" v-bind=\"state\" :tree-data=\"treeData\" placeholder=\"请选择所属团队\" />\n        <DemoNote tone=\"dimmed\">当前值：{{ JSON.stringify(value) }}</DemoNote>\n      </div>\n    </Playground>\n    <DemoSection title=\"基础用法\" class=\"relative z-30\">\n      <template #description>使用 <code>treeData</code> 传入层级数据，单选节点后自动收起。</template>\n      <DemoBlock layout=\"stack\">\n        <RebornTreeSelect v-model=\"single\" :tree-data=\"treeData\" default-expand-all clearable class=\"w-full max-w-sm\" />\n        <DemoNote tone=\"dimmed\">当前值：{{ JSON.stringify(single) }}</DemoNote>\n      </DemoBlock>\n    </DemoSection>\n    <DemoSection title=\"颜色与变体\" class=\"relative z-20\">\n      <template #description><code>color</code> 与 <code>variant</code> 复用选择器主题；每组左侧为普通选择器，右侧为树选择器。</template>\n      <DemoBlock layout=\"stack\">\n        <div\n          v-for=\"variant in treeSelectVariants\" :key=\"variant\"\n          class=\"grid w-full gap-3 sm:grid-cols-[5rem_1fr_1fr] sm:items-center\"\n        >\n          <span class=\"text-sm text-gray-6\">{{ variants[variant] }}</span>\n          <RebornSelect v-model=\"selectValue\" :variant=\"variant\" :options=\"selectOptions\" />\n          <RebornTreeSelect model-value=\"web\" :variant=\"variant\" :tree-data=\"treeData\" default-expand-all />\n        </div>\n        <div class=\"grid w-full gap-3 sm:grid-cols-2\">\n          <RebornTreeSelect\n            v-for=\"color in treeSelectColors\" :key=\"color\" :color=\"color\" :placeholder=\"color\"\n            :tree-data=\"treeData\"\n          />\n        </div>\n      </DemoBlock>\n    </DemoSection>\n    <DemoSection title=\"尺寸\" class=\"relative z-10\">\n      <template #description><code>size</code> 调整选择框高度与标签尺寸，树节点维持统一行高。</template>\n      <DemoBlock layout=\"stack\">\n        <RebornTreeSelect\n          v-for=\"size in treeSelectSizes\" :key=\"size\" :size=\"size\" :placeholder=\"size\"\n          :tree-data=\"treeData\" class=\"w-full max-w-sm\"\n        />\n      </DemoBlock>\n    </DemoSection>\n    <DemoSection title=\"多选与父子联动\" class=\"relative z-1\">\n      <template #description>\n        <code>multiple</code> 启用复选，默认父子联动：子级全选则父级勾选、部分选中则父级半选；\n        <code>checkStrictly</code> 切断联动、逐节点独立勾选；<code>clearable</code> 一次清空所有选中项。\n      </template>\n      <DemoBlock layout=\"stack\">\n        <DemoItem label=\"父子联动（默认）\" class=\"w-full max-w-md\">\n          <RebornTreeSelect v-model=\"multiple\" :tree-data=\"treeData\" multiple clearable default-expand-all class=\"w-full\" />\n          <template #note>当前值：{{ JSON.stringify(multiple) }}</template>\n        </DemoItem>\n        <DemoItem label=\"checkStrictly\" mono class=\"w-full max-w-md\">\n          <RebornTreeSelect\n            v-model=\"strictMultiple\" :tree-data=\"treeData\" multiple check-strictly clearable default-expand-all\n            class=\"w-full\"\n          />\n          <template #note>当前值：{{ JSON.stringify(strictMultiple) }}</template>\n        </DemoItem>\n        <DemoItem label=\"disabled\" mono class=\"w-full max-w-md\">\n          <RebornTreeSelect :model-value=\"['design']\" :tree-data=\"treeData\" multiple disabled class=\"w-full\" />\n        </DemoItem>\n      </DemoBlock>\n      <DemoNote tone=\"dimmed\" class=\"mt-4\">\n        「历史项目」已禁用，不参与联动：勾选「产品研发」时它保持原状，父级也不会因为它未勾选而停在半选。\n        联动模式的绑定值包含全部勾选节点，父级全选时父级 key 与子级 key 同时出现。\n      </DemoNote>\n    </DemoSection>\n    <DemoSection title=\"标签折叠\">\n      <template #description><code>collapseTags</code> 将超出 <code>maxCollapseTags</code> 的标签合并为数量，<code>collapseTagsTooltip</code> 悬浮展示隐藏项。</template>\n      <DemoBlock layout=\"stack\">\n        <RebornTreeSelect\n          :model-value=\"['design', 'web', 'content']\" :tree-data=\"treeData\" multiple collapse-tags\n          collapse-tags-tooltip :max-collapse-tags=\"1\" default-expand-all class=\"w-full max-w-md\"\n        />\n      </DemoBlock>\n    </DemoSection>\n    <DemoSection title=\"搜索节点\">\n      <template #description><code>allowSearch</code> 默认关闭，开启后同时匹配 key 与标题；使用 <code>fieldNames</code> 时按映射字段搜索，并保留祖先路径。</template>\n      <DemoBlock layout=\"stack\">\n        <RebornTreeSelect :tree-data=\"treeData\" allow-search placeholder=\"输入“设计”或 design 搜索团队\" class=\"w-full max-w-md\" />\n        <RebornTreeSelect\n          :tree-data=\"treeData\" multiple allow-search collapse-tags collapse-tags-tooltip clearable\n          placeholder=\"搜索并选择多个团队\" class=\"w-full max-w-md\"\n        />\n      </DemoBlock>\n    </DemoSection>\n    <DemoSection title=\"异步搜索\">\n      <template #description>开启 <code>allowSearch</code> 并传入 <code>searchData</code>；与 <code>loadData</code> 一样返回 Promise 并写回 <code>treeData</code>，组件负责加载状态。</template>\n      <DemoBlock layout=\"stack\">\n        <RebornTreeSelect\n          v-model=\"remoteValue\" :tree-data=\"remoteTreeData\" :search-data=\"searchTeams\" allow-search clearable\n          placeholder=\"输入名称或 key，模拟异步搜索\" class=\"w-full max-w-md\"\n        />\n        <DemoNote tone=\"dimmed\">此例模拟 350ms 网络延迟；回调通过 signal 检查请求是否已取消，清空输入恢复全部团队。</DemoNote>\n      </DemoBlock>\n    </DemoSection>\n    <DemoSection title=\"浮层行为\">\n      <template #description><code>closeOn</code> 默认 <code>mousedown</code>，外部一按下就关闭；此例改成 <code>click</code>，等外部点击完成才关闭。<code>portal</code> 决定浮层是否传送到 body。</template>\n      <DemoBlock layout=\"stack\">\n        <RebornTreeSelect :tree-data=\"treeData\" close-on=\"click\" :portal=\"false\" default-expand-all class=\"w-full max-w-md\" />\n        <DemoNote tone=\"dimmed\">此例关闭传送，浮层留在容器内；祖先设置 overflow 时会被裁剪。</DemoNote>\n      </DemoBlock>\n    </DemoSection>\n    <DemoSection title=\"节点与空态插槽\">\n      <template #description><code>item</code> 插槽根据 <code>node</code>、<code>selected</code> 与 <code>expanded</code> 自定义节点内容，<code>empty</code> 替换空数据提示。</template>\n      <DemoBlock layout=\"stack\">\n        <DemoItem label=\"自定义节点（item）\" class=\"w-full max-w-sm\">\n          <RebornTreeSelect v-model=\"customItem\" :tree-data=\"treeData\" default-expand-all clearable class=\"w-full\">\n            <template #item=\"{ node, selected, expanded }\">\n              <span class=\"flex min-w-0 items-center gap-2\">\n                <Icon :name=\"node.children ? (expanded ? 'lucide:folder-open' : 'lucide:folder') : node.icon || 'lucide:file'\" class=\"size-4 shrink-0\" />\n                <span class=\"truncate\">{{ node.title }}</span>\n                <span v-if=\"node.children\" class=\"text-sm text-gray-5\">{{ node.children.length }} 个小组</span>\n                <Icon v-if=\"selected\" name=\"lucide:check\" class=\"ml-auto size-4 shrink-0\" />\n              </span>\n            </template>\n          </RebornTreeSelect>\n          <template #note>当前值：{{ JSON.stringify(customItem) }}；收起“产品研发”可查看文件夹图标变化。</template>\n        </DemoItem>\n        <DemoItem label=\"自定义空态（empty）\" class=\"w-full max-w-sm\">\n          <RebornTreeSelect class=\"w-full\"><template #empty>暂无可选团队，请先创建团队</template></RebornTreeSelect>\n        </DemoItem>\n      </DemoBlock>\n    </DemoSection>\n  </div>\n</template>\n"
+    }
+  ],
+  "related": [
+    "reborn-badge",
+    "reborn-select",
+    "reborn-select-trigger",
+    "reborn-tooltip",
+    "reborn-tree"
+  ],
+  "whenToUse": [
+    "表单选择团队、目录或分类节点：treeData 保留父子结构。",
+    "选中父级即代表选中整组子级：multiple 开启联动复选（默认），子级全选则父级勾选、部分选中则父级半选。",
+    "父子节点含义各自独立、需要分别选取：multiple 之外再开 checkStrictly，各节点独立勾选。",
+    "与普通下拉框并排展示：size / color / variant 直接复用 reborn-select 主题，外观一致。",
+    "子级数据按需获取：loadData 异步补充，调用方写回 treeData。",
+    "按节点标识或显示名称查找：allowSearch 开启 key 与标题搜索，fieldNames 映射后端字段，searchData 支持异步搜索。"
+  ],
+  "whenNotToUse": [
+    "选项没有层级关系，改用 reborn-select。",
+    "需要逐级选完整路径，改用 reborn-cascader。",
+    "常驻展示目录或拖拽调整层级，改用 reborn-tree。"
+  ],
+  "pitfalls": [
+    "联动模式（multiple 且未开 checkStrictly）的绑定值包含全部勾选节点：父级全选时父级 key 与子级 key 同时回写；搜索时勾选父级，被隐藏的后代也一并勾选；disabled / disableCheckbox 节点不参与联动。程序赋值只归一显示、不回写 v-model，用户下次操作时才写回完整集合。",
+    "搜索默认关闭，需显式设置 allowSearch；本地搜索同时匹配 fieldNames.key 与 fieldNames.title 映射后的标识和标题，忽略大小写，支持数字 key。关闭时清理关键词并恢复原展开状态。",
+    "searchData 与 loadData 一样返回 Promise 并由调用方写回 treeData；searchData 接收去除首尾空白的关键词和 { signal }，服务端结果不再本地筛选。手动清空输入会传入空字符串；关闭或多选勾选后清理输入不额外请求、不还原调用方数据。旧请求的 signal 会取消，写回前必须检查 signal.aborted。替换结果集时需自行保留已选节点数据，否则标签按未知 key 回显。失败显示提示，再次输入可重试。",
+    "节点 key 必须全树唯一且类型稳定：数字 0 与字符串 '0' 是不同值；异步数据未到达时暂用 key 回显，数据更新后自动显示标题。",
+    "禁用节点（disabled / disableCheckbox）不能通过标签单独移除；组件未禁用时清空按钮仍可重置整个字段。",
+    "虚拟滚动依赖树的固定行高：item 插槽避免多行内容，否则滚动切片错位；需要可变高度时关闭 virtual。",
+    "loadData 不代改数据：由调用方把子节点写入响应式 treeData，叶子节点标记 isLeaf 终止加载链。已加载记录保存在选择器上（v-model:loaded-keys 可接管），收起再展开不重复请求；替换整棵 treeData 重新拉取时需同时清空 loadedKeys。",
+    "v-model 默认按节点 key 字段匹配；数据以 code、id 等字段作唯一标识时必须传 fieldNames.key（如 { key: 'code' }），否则绑定值找不到节点、只能按原值回显。",
+    "选择框样式直接复用 select：仅改树内容样式用 treeUi，不要覆盖触发器；collapseTagsTooltip 仅在多选 + collapseTags 且确有隐藏标签时生效。",
+    "仅 Web 端组件，UniApp 层级选值请使用 reborn-cascader。"
+  ],
+  "dependencies": [
+    "clsx",
+    "tailwind-merge",
+    "tailwind-variants"
+  ],
+  "install": {
+    "cli": "npx reborn-ui@latest add reborn-tree-select"
+  },
+  "sourceRefs": {
+    "web": [
+      "app/components/reborn/ui/reborn-tree-select/RebornTreeSelect.vue",
+      "app/components/reborn/ui/reborn-tree-select/index.ts",
+      "app/components/reborn/ui/reborn-tree-select/reborn-tree-select.config.ts"
+    ]
+  },
+  "docPath": "content/2.components/input-and-forms/reborn-tree-select.md",
+  "_meta": {
+    "contentHash": "5739de472e059db0ea8101c4e7fab90a709965bb",
+    "hasOverride": true,
+    "extractors": {
+      "web": "ok",
+      "uniapp": "absent",
+      "docs": "found"
+    }
+  }
+}

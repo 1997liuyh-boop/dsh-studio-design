@@ -22,7 +22,7 @@ export function settings(input: unknown): Settings {
   const source = value.rebornSource ?? (rebornRoot ? 'local' : 'builtin')
   if (source !== 'builtin' && source !== 'local' && source !== 'github') throw new Error('未知 Reborn 资料来源')
   if (value.rebornKnowledge !== undefined && typeof value.rebornKnowledge !== 'boolean') throw new Error('Reborn 资料状态无效')
-  return { schemaVersion: 1, projectRoot: text(value.projectRoot), rebornRoot, rebornSource: source, rebornRepository: text(value.rebornRepository ?? defaults().rebornRepository), rebornRef: text(value.rebornRef ?? 'main', 256), rebornCommit: text(value.rebornCommit ?? '', 64), rebornContentCommit: text(value.rebornContentCommit ?? '', 64), rebornCachedRepository: text(value.rebornCachedRepository ?? ''), rebornKnowledge: value.rebornKnowledge !== false, mastergo: connection(value.mastergo), reborn: connection(value.reborn) }
+  return { schemaVersion: 1, projectRoot: text(value.projectRoot), rebornRoot, rebornSource: source, rebornRepository: text(value.rebornRepository ?? defaults().rebornRepository), rebornRef: text(value.rebornRef ?? 'main', 256), rebornCommit: text(value.rebornCommit ?? '', 64), rebornContentCommit: text(value.rebornContentCommit ?? '', 64), rebornCachedRepository: text(value.rebornCachedRepository ?? ''), rebornKnowledge: value.rebornKnowledge !== false, rebornRegistry: text(value.rebornRegistry ?? '', 2048), mastergo: connection(value.mastergo), mastergoToken: text(value.mastergoToken ?? '', 8192), reborn: connection(value.reborn) }
 }
 /** 预览只接受本机服务，隔离 iframe 不获得宿主同源权限。 */
 export function previewUrl(input: unknown): string {

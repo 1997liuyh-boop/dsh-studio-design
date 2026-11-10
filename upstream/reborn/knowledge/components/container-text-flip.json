@@ -9,6 +9,7 @@
     "tailwind",
     "aceternity-ui"
   ],
+  "aliases": [],
   "platforms": [
     "web"
   ],
@@ -102,7 +103,7 @@
   },
   "docPath": "content/2.components/text-animations/container-text-flip.md",
   "_meta": {
-    "contentHash": "649e6dfad561254edfd78e0da04ace36f7e799eb",
+    "contentHash": "4de19c97ff7b51197c7e153faa5aa569c70b8e4d",
     "hasOverride": true,
     "extractors": {
       "web": "ok",

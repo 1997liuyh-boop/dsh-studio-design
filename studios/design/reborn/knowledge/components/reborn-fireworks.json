@@ -1,0 +1,135 @@
+{
+  "$schema": "../schema/component.schema.json",
+  "id": "reborn-fireworks",
+  "title": "礼花",
+  "description": "用于给容器内元素附加点击礼花/烟花粒子特效的组件，仅 web 端。",
+  "category": "misc",
+  "tags": [
+    "css",
+    "tailwind",
+    "canvas"
+  ],
+  "aliases": [
+    "fireworks",
+    "礼花",
+    "烟花"
+  ],
+  "platforms": [
+    "web"
+  ],
+  "props": [
+    {
+      "name": "burstCount",
+      "type": "number",
+      "required": false,
+      "description": "单次发射的粒子数量 @defaultValue 160",
+      "default": "160"
+    },
+    {
+      "name": "teleport",
+      "type": "boolean",
+      "required": false,
+      "description": "是否将 canvas 传送到 body 下（解决在特定容器中 z-index 被遮挡的问题） @defaultValue false",
+      "default": "false"
+    },
+    {
+      "name": "angleCenter",
+      "type": "number",
+      "required": false,
+      "description": "发射的中心角度，270 度默认向上发射 @defaultValue 270",
+      "default": "270"
+    },
+    {
+      "name": "angleSpread",
+      "type": "number",
+      "required": false,
+      "description": "发射角度的散射范围，130 度表示一个扇形区域 @defaultValue 130",
+      "default": "130"
+    },
+    {
+      "name": "speedMin",
+      "type": "number",
+      "required": false,
+      "description": "粒子的最小初速度 @defaultValue 8",
+      "default": "8"
+    },
+    {
+      "name": "speedMax",
+      "type": "number",
+      "required": false,
+      "description": "粒子的最大初速度 @defaultValue 25",
+      "default": "25"
+    },
+    {
+      "name": "particleScale",
+      "type": "number",
+      "required": false,
+      "description": "粒子尺寸的整体缩放比例（1 为默认大小，>1 变大，<1 变小） @defaultValue 1",
+      "default": "1"
+    }
+  ],
+  "events": [],
+  "slots": [
+    {
+      "name": "default",
+      "props": "(props: FireworksSlotProps) => any",
+      "description": "基础内容"
+    },
+    {
+      "name": "overlay",
+      "props": "(props: FireworksSlotProps) => any",
+      "description": "悬浮在内容上方的覆盖层，用于放置固定的交互按钮等"
+    }
+  ],
+  "exposes": [
+    {
+      "name": "launch",
+      "description": ""
+    }
+  ],
+  "examples": [
+    {
+      "title": "Web 演示",
+      "path": "app/components/reborn/examples/reborn-fireworks/RebornFireworksDemo.vue",
+      "source": "demo",
+      "platform": "web",
+      "code": "<script lang=\"ts\" setup>\nimport { computed, shallowRef } from 'vue';\n\n/** 默认粒子参数：抽出便于一键重置 */\nconst defaultState = {\n  burstCount: 160,\n  angleCenter: 270,\n  angleSpread: 130,\n  speedMin: 8,\n  speedMax: 24,\n  particleScale: 1,\n};\n\nconst state = shallowRef<Record<string, any>>({ ...defaultState });\n\nfunction resetState() {\n  state.value = { ...defaultState };\n}\n\n/** 组件与代码面板共用规范化粒子大小，源滑块状态保持不变。 */\nconst particleScale = computed(() => Math.round(state.value.particleScale * 10) / 10);\n\n/** 演练场控制面板配置 */\nconst controls = [\n  {\n    title: \"粒子属性\",\n    children: [\n      { label: \"粒子数量\", key: \"burstCount\", component: \"slider\" as const, defaultValue: 160, props: { min: 20, max: 400, step: 10 } },\n      { label: \"最小速度\", key: \"speedMin\", component: \"slider\" as const, defaultValue: 8, props: { min: 1, max: 30 } },\n      { label: \"最大速度\", key: \"speedMax\", component: \"slider\" as const, defaultValue: 24, props: { min: 1, max: 60 } },\n      { label: \"粒子大小\", key: \"particleScale\", component: \"slider\" as const, defaultValue: 1, props: { min: 0.2, max: 3, step: 0.1 } },\n    ],\n  },\n  {\n    title: \"发射方向\",\n    children: [\n      { label: \"中心角度\", key: \"angleCenter\", component: \"slider\" as const, defaultValue: 270, props: { min: 0, max: 360 } },\n      { label: \"扩散范围\", key: \"angleSpread\", component: \"slider\" as const, defaultValue: 130, props: { min: 10, max: 360 } },\n    ],\n  },\n];\n\n/** 演练场右上角展示的等价代码 */\nconst fireworksCode = computed(() => {\n  const s = state.value;\n  const props: string[] = [];\n\n  if (s.burstCount !== 160) props.push(`:burst-count=\"${s.burstCount}\"`);\n  if (s.angleCenter !== 270) props.push(`:angle-center=\"${s.angleCenter}\"`);\n  if (s.angleSpread !== 130) props.push(`:angle-spread=\"${s.angleSpread}\"`);\n  if (s.speedMin !== 8) props.push(`:speed-min=\"${s.speedMin}\"`);\n  if (s.speedMax !== 24) props.push(`:speed-max=\"${s.speedMax}\"`);\n  if (particleScale.value !== 1) props.push(`:particle-scale=\"${particleScale.value}\"`);\n\n  const attrs = props.length ? `\\n  ${props.join(\"\\n  \")}\\n` : \"\";\n\n  return `<RebornFireworks${attrs}>\\n  <template #default=\"{ launch }\">\\n    <!-- 业务内容，调用 launch(el) 发射 -->\\n  </template>\\n</RebornFireworks>`;\n});\n\n/** 演练场海报的说明文字：实时反映当前粒子参数 */\nconst playgroundCaption = computed(\n  () => `粒子数: ${state.value.burstCount} · 角度: ${state.value.angleCenter}° ± ${Math.round(state.value.angleSpread / 2)}°`,\n);\n</script>\n\n<template>\n  <div class=\"flex w-full min-w-0 flex-col\">\n    <Playground\n      v-model=\"state\"\n      :controls=\"controls\"\n      :code=\"fireworksCode\"\n      component-name=\"RebornFireworks\"\n      title=\"交互演练场\"\n      description=\"实时调节粒子参数，点击海报中的标题或底部按钮触发礼花；作用域插槽提供 launch 方法与 launchCount 计数。\"\n    >\n      <template #tag>\n        <RebornButton\n          size=\"sm\"\n          variant=\"soft\"\n          color=\"neutral\"\n          label=\"重置配置\"\n          @click=\"resetState\"\n        >\n          <template #leading>\n            <Icon\n              name=\"lucide:rotate-ccw\"\n              size=\"12\"\n            />\n          </template>\n        </RebornButton>\n      </template>\n\n      <FireworksPoster\n        title=\"Fireworks\"\n        subtitle=\"Container\"\n        :caption=\"playgroundCaption\"\n        :burst-count=\"state.burstCount\"\n        :angle-center=\"state.angleCenter\"\n        :angle-spread=\"state.angleSpread\"\n        :speed-min=\"state.speedMin\"\n        :speed-max=\"state.speedMax\"\n        :particle-scale=\"particleScale\"\n      />\n    </Playground>\n\n    <DemoSection\n      title=\"容器内绽放\"\n      description=\"默认模式：画布挂在组件自身容器内，粒子被容器的 overflow 裁切，不会溢出到页面其他区域。\"\n    >\n      <DemoBlock\n        layout=\"row\"\n        align=\"start\"\n      >\n        <FireworksPoster\n          title=\"Fireworks\"\n          subtitle=\"Container\"\n          caption=\"粒子在卡片内部绽放，适合局部庆祝反馈。\"\n        />\n      </DemoBlock>\n    </DemoSection>\n\n    <DemoSection\n      title=\"全屏弹出\"\n      description=\"开启 teleport 后画布传送至 body，礼花覆盖整个浏览器窗口，可突破容器的 overflow 与 z-index 限制。\"\n    >\n      <DemoBlock\n        layout=\"row\"\n        align=\"start\"\n      >\n        <FireworksPoster\n          title=\"Fireworks\"\n          subtitle=\"Browser Popup\"\n          caption=\"粒子铺满整个视口，适合支付成功、任务达成等全局庆祝。\"\n          teleport\n        />\n      </DemoBlock>\n    </DemoSection>\n  </div>\n</template>\n"
+    }
+  ],
+  "related": [],
+  "whenToUse": [
+    "签到成功、支付完成等庆祝反馈的点击礼花效果。",
+    "营销活动页按钮点击时的纸片喷射特效。",
+    "需要通过暴露的 launch 方法编程触发礼花的场景。"
+  ],
+  "whenNotToUse": [
+    "uniapp 端不可用（仅 web）。",
+    "非点击触发的持续性背景粒子装饰，改用 sparkles 或 meteors。"
+  ],
+  "pitfalls": [
+    "仅 web 端可用。",
+    "需要定位布局的元素必须放在 overlay 插槽中，普通内容放默认插槽。",
+    "teleport 设为 true 时画布覆盖整个浏览器窗口，默认仅限容器内。",
+    "angleSpread 设为 360 即全向烟花扩散；默认 angleCenter 270（向上）、扩散 130 度。"
+  ],
+  "dependencies": [],
+  "install": {
+    "cli": "npx reborn-ui@latest add reborn-fireworks"
+  },
+  "sourceRefs": {
+    "web": [
+      "app/components/reborn/ui/reborn-fireworks/RebornFireworks.vue",
+      "app/components/reborn/ui/reborn-fireworks/index.ts"
+    ]
+  },
+  "docPath": "content/2.components/miscellaneous/reborn-fireworks.md",
+  "_meta": {
+    "contentHash": "8e13b9ed5196ba274ce729c54d43efaf5dd28038",
+    "hasOverride": true,
+    "extractors": {
+      "web": "ok",
+      "uniapp": "absent",
+      "docs": "found"
+    }
+  }
+}

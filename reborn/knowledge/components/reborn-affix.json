@@ -1,0 +1,159 @@
+{
+  "$schema": "../schema/component.schema.json",
+  "id": "reborn-affix",
+  "title": "Affix 悬浮",
+  "description": "用于固定悬浮元素并支持拖拽、自动吸附屏幕边缘的跨端悬浮组件。",
+  "category": "navigation",
+  "tags": [],
+  "aliases": [
+    "affix",
+    "悬浮",
+    "固钉",
+    "悬浮元素"
+  ],
+  "platforms": [
+    "web",
+    "uniapp"
+  ],
+  "props": [
+    {
+      "name": "zIndex",
+      "type": "number",
+      "required": false,
+      "description": "浮动元素的层级。",
+      "default": "500"
+    },
+    {
+      "name": "size",
+      "type": "number",
+      "required": false,
+      "description": "浮动元素的尺寸（宽/高，单位 px），参与拖拽边界与吸附位置计算。",
+      "default": "40"
+    },
+    {
+      "name": "left",
+      "type": "number",
+      "required": false,
+      "description": "初始左边距 (px)。未指定 `right` 时作为水平位置依据。",
+      "default": "10"
+    },
+    {
+      "name": "right",
+      "type": "number",
+      "required": false,
+      "description": "初始右边距 (px)。指定后优先级高于 `left`。",
+      "default": "undefined"
+    },
+    {
+      "name": "top",
+      "type": "number",
+      "required": false,
+      "description": "初始上边距 (px)。指定后垂直位置按「屏幕高度 − size − top」计算。",
+      "default": "undefined"
+    },
+    {
+      "name": "bottom",
+      "type": "number",
+      "required": false,
+      "description": "初始下边距 (px)。未指定 `top` 时作为垂直位置依据。",
+      "default": "10"
+    },
+    {
+      "name": "gap",
+      "type": "number",
+      "required": false,
+      "description": "吸附到屏幕边缘后的留边距离 (px)。",
+      "default": "10"
+    },
+    {
+      "name": "disabled",
+      "type": "boolean",
+      "required": false,
+      "description": "是否禁用拖拽交互；元素仍会显示。",
+      "default": "false"
+    },
+    {
+      "name": "noSnapping",
+      "type": "boolean",
+      "required": false,
+      "description": "是否禁用松手后的自动边缘吸附。",
+      "default": "false"
+    },
+    {
+      "name": "safeArea",
+      "type": "boolean",
+      "required": false,
+      "description": "新增：是否考虑安全区域（默认为 true）",
+      "default": "true"
+    }
+  ],
+  "events": [],
+  "slots": [
+    {
+      "name": "default",
+      "description": "自定义悬浮内容。"
+    }
+  ],
+  "exposes": [],
+  "examples": [
+    {
+      "title": "Web 演示",
+      "path": "app/components/reborn/examples/reborn-affix/RebornAffixDemo.vue",
+      "source": "demo",
+      "platform": "web",
+      "code": "<script setup lang=\"ts\">\n/**\n * 可拖拽浮动按钮演示\n *\n * RebornAffix 自身是 fixed 定位的浮层，脱离文档流悬浮在视口上，\n * 因此这里不给它套任何容器，只用描边标出「原本会占位的区域」。\n */\n\n/** 原生指针事件只回显抬起，不冒充组件拖拽完成事件 */\nconst lastAction = shallowRef(\"暂无\");\n\nfunction handlePointerUp(snapping: boolean) {\n  lastAction.value = snapping ? \"默认吸附示例：指针抬起\" : \"关闭吸附示例：指针抬起\";\n}\n</script>\n\n<template>\n  <div class=\"flex w-full min-w-0 flex-col\">\n    <DemoSection\n      title=\"基础用法\"\n      description=\"按住浮动按钮拖动即可移动（同时支持鼠标与触摸）；松手后默认吸附到距离最近的左右边缘，可通过 no-snapping 关闭吸附。\"\n    >\n      <DemoBlock layout=\"stack\">\n        <div class=\"border-default rounded-xl text-dimmed flex h-40 w-full items-center justify-center border border-dashed text-sm\">\n          浮动按钮悬浮于视口之上，不占据此处的文档流空间\n        </div>\n\n        <DemoNote tone=\"dimmed\">\n          最近操作：<code>{{ lastAction }}</code>\n        </DemoNote>\n      </DemoBlock>\n    </DemoSection>\n\n    <!-- 默认吸附与关闭吸附分别演示；pointerup 只描述原生指针操作 -->\n    <RebornAffix :left=\"20\" :bottom=\"180\" :size=\"48\" @pointerup=\"handlePointerUp(true)\">\n      <div class=\"bg-primary flex size-12 cursor-move items-center justify-center rounded-full text-white transition-transform active:scale-95\">\n        <Icon name=\"lucide:magnet\" class=\"size-5\" />\n      </div>\n    </RebornAffix>\n\n    <!-- 可拖拽：关闭吸附后可停在任意位置 -->\n    <RebornAffix\n      :left=\"100\"\n      :bottom=\"100\"\n      :size=\"48\"\n      :no-snapping=\"true\"\n      @pointerup=\"handlePointerUp(false)\"\n    >\n      <div class=\"bg-primary flex size-12 cursor-move items-center justify-center rounded-full text-white transition-transform active:scale-95\">\n        <Icon\n          name=\"lucide:move\"\n          class=\"size-5\"\n        />\n      </div>\n    </RebornAffix>\n\n    <!-- 禁用态：仅展示，不响应拖拽 -->\n    <RebornAffix\n      :right=\"20\"\n      :bottom=\"400\"\n      disabled\n    >\n      <div class=\"bg-elevated text-dimmed flex size-10 cursor-not-allowed items-center justify-center rounded-full\">\n        <Icon\n          name=\"lucide:lock\"\n          class=\"size-5\"\n        />\n      </div>\n    </RebornAffix>\n  </div>\n</template>\n"
+    },
+    {
+      "title": "UniApp 演示",
+      "path": "packages/uniapp-project/src/pages/reborn-affix/RebornAffixDemo.vue",
+      "source": "demo",
+      "platform": "uniapp",
+      "code": "<script setup lang=\"ts\">\nimport RebornAffix from '@/components/reborn-affix/RebornAffix.vue'\n\nimport RebornCard from '@/components/reborn-card/RebornCard.vue'\nimport RebornPage from '@/components/reborn-page/RebornPage.vue'\nimport { useDarkMode } from '@/composables/useDarkMode'\n\nconst { isDark, toggleDarkMode } = useDarkMode()\n\nconst list = ['i-meteocons-clear-day-fill', 'i-meteocons-solar-eclipse-fill']\n</script>\n\n<template>\n  <!-- 与首页一致按 useDarkMode 的约定声明 page-meta 的 root-class：小程序端没有共享的 html 根节点，暗色类要由每个页面自己挂 -->\n  <page-meta :root-class=\"isDark ? 'dark' : ''\" />\n  <RebornPage>\n    <RebornCard>\n      <view class=\"dark:text-white\">\n        禁用状态，无法拖拽\n      </view>\n    </RebornCard>\n\n    <RebornCard>\n      <view class=\"dark:text-white\">\n        不吸附边缘，任意位置可拖拽\n      </view>\n    </RebornCard>\n    <RebornAffix disabled :right=\"20\" :bottom=\"150\" :gap=\"10\">\n      <view class=\"i-meteocons-hurricane-fill size-10\" />\n    </RebornAffix>\n    <RebornAffix :left=\"20\" :bottom=\"150\" :no-snapping=\"true\">\n      <view\n        class=\"\n          bg-primary-500 flex size-10 flex-col items-center justify-center\n          overflow-hidden rounded-full\n        \"\n        @tap=\"toggleDarkMode\"\n      >\n        <view\n          class=\"flex flex-col transition-transform duration-300\"\n          :class=\"isDark ? '-translate-y-[20px]' : `translate-y-[20px]`\"\n        >\n          <view\n            v-for=\"item in list\" :key=\"item\" :class=\"item\" class=\"\n              size-10 text-white\n            \"\n          />\n        </view>\n      </view>\n    </RebornAffix>\n  </RebornPage>\n</template>\n"
+    }
+  ],
+  "related": [],
+  "whenToUse": [
+    "悬浮球、快捷操作入口需要用户可拖拽调整位置时。",
+    "悬浮按钮需要拖到边缘后自动吸附（可用 noSnapping 关闭）时。",
+    "刘海屏/底部黑条设备上需要安全区避让（safeArea 默认开启）时。"
+  ],
+  "whenNotToUse": [
+    "固定位置的悬浮操作按钮无需拖拽，改用 reborn-fab。",
+    "滚动到阈值后出现的返回顶部按钮，改用 reborn-back-top。",
+    "元素滚动吸顶，改用 reborn-sticky。"
+  ],
+  "pitfalls": [
+    "web 与 uniapp 双端可用，依赖 @vueuse/core。",
+    "水平定位 right 优先级高于 left；垂直方向未指定 top 时以 bottom（默认 10）为准。",
+    "disabled 仅禁用拖拽交互，元素仍会显示。",
+    "gap 控制吸附到边缘后的留边距离（默认 10px），size 为浮动元素宽高（默认 40px）。",
+    "窗口尺寸变化：未拖动过按 left/right/top/bottom 重新定位（right/top 锚点随窗口移动）；拖动过后保留位置、只夹回新边界，开启吸附时贴回原侧边缘。修改定位 props 会重新定位并丢弃拖拽位置。"
+  ],
+  "dependencies": [
+    "@vueuse/core",
+    "tailwind-variants"
+  ],
+  "install": {
+    "cli": "npx reborn-ui@latest add reborn-affix"
+  },
+  "sourceRefs": {
+    "web": [
+      "app/components/reborn/ui/reborn-affix/RebornAffix.vue",
+      "app/components/reborn/ui/reborn-affix/reborn-affix.config.ts"
+    ],
+    "uniapp": [
+      "packages/uniapp-project/src/components/reborn-affix/RebornAffix.vue",
+      "packages/uniapp-project/src/components/reborn-affix/index.ts"
+    ]
+  },
+  "docPath": "content/2.components/navigation/reborn-affix.md",
+  "_meta": {
+    "contentHash": "b4582de67b4189243c5d0ebed15066de07392654",
+    "hasOverride": true,
+    "extractors": {
+      "web": "ok",
+      "uniapp": "ok",
+      "docs": "found"
+    }
+  }
+}

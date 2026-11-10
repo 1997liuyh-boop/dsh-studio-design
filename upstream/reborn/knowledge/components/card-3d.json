@@ -10,6 +10,7 @@
     "card",
     "aceternity-ui"
   ],
+  "aliases": [],
   "platforms": [
     "web"
   ],
@@ -127,7 +128,7 @@
   },
   "docPath": "content/2.components/cards/3d-card.md",
   "_meta": {
-    "contentHash": "692859093aaf49e461fe58c01800642421b554b8",
+    "contentHash": "2c7af5c92894db7d42a6b4cda3e152d56c1ac9e1",
     "hasOverride": true,
     "extractors": {
       "web": "ok",

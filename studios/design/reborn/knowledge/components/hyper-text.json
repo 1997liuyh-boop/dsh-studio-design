@@ -1,0 +1,96 @@
+{
+  "$schema": "../schema/component.schema.json",
+  "id": "hyper-text",
+  "title": "超能文字",
+  "description": "用于文字以字符快速乱序滚动后定格显现的动画组件，悬停可重播。",
+  "category": "effect",
+  "tags": [
+    "css",
+    "tailwind",
+    "magic-ui"
+  ],
+  "aliases": [],
+  "platforms": [
+    "web"
+  ],
+  "props": [
+    {
+      "name": "class",
+      "type": "HTMLAttributes[\"class\"]",
+      "required": false,
+      "description": "应用于组件的额外 CSS 类。",
+      "default": "\"\""
+    },
+    {
+      "name": "text",
+      "type": "string",
+      "required": true,
+      "description": "要做动画的文字。",
+      "default": "Required"
+    },
+    {
+      "name": "duration",
+      "type": "number",
+      "required": false,
+      "description": "整个动画的持续时间（毫秒）。",
+      "default": "800"
+    },
+    {
+      "name": "animateOnLoad",
+      "type": "boolean",
+      "required": true,
+      "description": "为 `true` 时挂载后自动播放一次；为 `false` 时只在悬停时播放。",
+      "default": "Required"
+    }
+  ],
+  "events": [],
+  "slots": [],
+  "exposes": [],
+  "examples": [
+    {
+      "title": "Web 演示",
+      "path": "app/components/reborn/examples/hyper-text/HyperTextDemo.vue",
+      "source": "demo",
+      "platform": "web",
+      "code": "<template>\n  <div class=\"flex flex-col items-center justify-center space-y-4\">\n    <HyperText\n      text=\"Hyper Text\"\n      class=\"text-4xl font-bold\"\n      :duration=\"800\"\n      :animate-on-load=\"true\"\n    />\n  </div>\n</template>\n"
+    }
+  ],
+  "related": [],
+  "whenToUse": [
+    "标题 / 标语需要科技感的字符乱序入场动画。",
+    "需要悬停重新触发文字动画的交互点缀。"
+  ],
+  "whenNotToUse": [
+    "需要故障抖动风格，改用 text-glitch。",
+    "整词循环切换，改用 flip-words。",
+    "逐字打出效果，改用 reborn-typewriter。"
+  ],
+  "pitfalls": [
+    "仅 web 端可用，依赖 @vueuse/core 与 motion-v。",
+    "text 与 animateOnLoad 标注为必填；animateOnLoad 为 true 时挂载后自动播放一次，为 false 时只在悬停时播放（未传按 false 处理）。",
+    "duration 单位为毫秒（默认 800），控制整段乱序动画的总时长。"
+  ],
+  "dependencies": [
+    "@vueuse/core",
+    "motion-v"
+  ],
+  "install": {
+    "cli": "npx reborn-ui@latest add hyper-text"
+  },
+  "sourceRefs": {
+    "web": [
+      "app/components/reborn/ui/hyper-text/HyperText.vue",
+      "app/components/reborn/ui/hyper-text/index.ts"
+    ]
+  },
+  "docPath": "content/2.components/text-animations/hyper-text.md",
+  "_meta": {
+    "contentHash": "7d674e53dda2aeeb4d5411f2e2e7ad42e4235aac",
+    "hasOverride": true,
+    "extractors": {
+      "web": "ok",
+      "uniapp": "absent",
+      "docs": "found"
+    }
+  }
+}

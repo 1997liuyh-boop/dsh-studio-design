@@ -1,0 +1,167 @@
+{
+  "$schema": "../schema/component.schema.json",
+  "id": "reborn-depth-image",
+  "title": "深度视差图",
+  "description": "按深度图对透明背景图片做跟随指针的 2.5D 视差与补光，WebGL 渲染，失败时退回静态图。",
+  "category": "effect",
+  "tags": [
+    "webgl",
+    "canvas",
+    "parallax",
+    "image"
+  ],
+  "aliases": [],
+  "platforms": [
+    "web"
+  ],
+  "props": [
+    {
+      "name": "src",
+      "type": "string",
+      "required": true,
+      "description": "彩色图地址。建议带透明通道（PNG / WebP），透明区域不参与视差与补光"
+    },
+    {
+      "name": "depthSrc",
+      "type": "string",
+      "required": true,
+      "description": "深度图地址：灰度图，白色最近、黑色最远，宽高比须与 src 一致；分辨率可以低很多（原图的 1/3 即可）"
+    },
+    {
+      "name": "alt",
+      "type": "string",
+      "required": false,
+      "description": "替代文本，挂在静态图上；画布接管显示后静态图只是变透明，仍留在无障碍树里 @defaultValue ''",
+      "default": "\"\""
+    },
+    {
+      "name": "parallax",
+      "type": "number",
+      "required": false,
+      "description": "指针移到触发区边缘时，最近处（深度为 1）的最大位移，单位 px。0 关闭视差、只保留补光 @defaultValue 12",
+      "default": "12"
+    },
+    {
+      "name": "focus",
+      "type": "number",
+      "required": false,
+      "description": "不随指针移动的深度层（0~1）：比它近的朝指针方向移，比它远的反向移 @defaultValue 0.5",
+      "default": "0.5"
+    },
+    {
+      "name": "light",
+      "type": "boolean",
+      "required": false,
+      "description": "是否在指针附近按表面朝向补光 @defaultValue true",
+      "default": "true"
+    },
+    {
+      "name": "lightColor",
+      "type": "string",
+      "required": false,
+      "description": "补光颜色，可写任意 CSS 颜色，包括 var(--xxx)；每次指针进入时重新读取，跟随主题切换 @defaultValue '#ffffff'",
+      "default": "\"#ffffff\""
+    },
+    {
+      "name": "lightIntensity",
+      "type": "number",
+      "required": false,
+      "description": "补光强度（0~1） @defaultValue 0.5",
+      "default": "0.5"
+    },
+    {
+      "name": "position",
+      "type": "DepthImagePosition",
+      "required": false,
+      "description": "图片在容器内的对齐方式，等同 object-position；图片始终按 contain 完整显示 @defaultValue 'center'",
+      "default": "\"center\""
+    },
+    {
+      "name": "trigger",
+      "type": "DepthImageTrigger | HTMLElement | null",
+      "required": false,
+      "description": "监听指针的范围：组件自身、父元素、整个窗口，也可以直接传一个元素（如外层头图） @defaultValue 'self'",
+      "default": "\"self\""
+    },
+    {
+      "name": "class",
+      "type": "any",
+      "required": false,
+      "description": "追加到根元素的类名，尺寸一般写在这里"
+    },
+    {
+      "name": "ui",
+      "type": "DepthImageUI",
+      "required": false,
+      "description": "按结构键覆盖各节点样式 可用键（从源码抽取，以此为准）——Web：canvas、image、root。",
+      "default": "() => ({})"
+    }
+  ],
+  "events": [
+    {
+      "name": "ready",
+      "payload": "[]",
+      "description": "画布就绪、开始接管显示时触发"
+    },
+    {
+      "name": "fallback",
+      "payload": "[reason: DepthImageFallbackReason]",
+      "description": "无法启用效果、退回静态图时触发"
+    }
+  ],
+  "slots": [],
+  "exposes": [],
+  "examples": [
+    {
+      "title": "Web 演示",
+      "path": "app/components/reborn/examples/reborn-depth-image/RebornDepthImageDemo.vue",
+      "source": "demo",
+      "platform": "web",
+      "code": "<script setup lang=\"ts\">\nimport type { DepthImageFallbackReason, DepthImagePosition, DepthImageTrigger } from \"~/components/reborn/ui/reborn-depth-image\";\nimport { DemoBlock, DemoNote, DemoSection, Icon, Playground } from \"#components\";\nimport { computed, shallowRef, useTemplateRef } from \"vue\";\nimport RebornButton from \"~/components/reborn/ui/reborn-button/RebornButton.vue\";\nimport RebornDepthImage from \"~/components/reborn/ui/reborn-depth-image/RebornDepthImage.vue\";\n\n/** 演示素材：由 scripts/depth-image/render-model.mjs 从站内角色模型渲染，说明见 public/images/depth-image/README.md */\nconst COLOR_SRC = \"/images/depth-image/soldier.webp\";\nconst DEPTH_SRC = \"/images/depth-image/soldier-depth.webp\";\n\nconst positionOptions: { label: string; value: DepthImagePosition }[] = [\n  { label: \"居中 center\", value: \"center\" },\n  { label: \"顶部 top\", value: \"top\" },\n  { label: \"底部 bottom\", value: \"bottom\" },\n  { label: \"左下 bottom-left\", value: \"bottom-left\" },\n  { label: \"右下 bottom-right\", value: \"bottom-right\" },\n];\nconst triggerOptions: { label: string; value: DepthImageTrigger }[] = [\n  { label: \"组件自身 self\", value: \"self\" },\n  { label: \"父元素 parent\", value: \"parent\" },\n  { label: \"整个窗口 window\", value: \"window\" },\n];\n\n/** 回退原因 → 中文说明，事件回显用 */\nconst FALLBACK_TEXT: Record<DepthImageFallbackReason, string> = {\n  unsupported: \"浏览器不支持 WebGL\",\n  \"load-error\": \"素材加载失败\",\n  \"context-lost\": \"WebGL 上下文丢失\",\n  \"reduced-motion\": \"系统开启了减少动态效果\",\n};\n\n// ─── 交互演练场 ─────────────────────────────────────────────────\n\n/** 演练场默认状态：除 trigger 外与组件默认值一致；trigger 取 parent，指针在整个预览舞台上都有反应，不必对准人物 */\nconst defaultState: Record<string, any> = {\n  parallax: 12,\n  focus: 0.5,\n  light: true,\n  lightColor: \"#ffffff\",\n  lightIntensity: 0.5,\n  position: \"center\",\n  trigger: \"parent\",\n};\n\nconst state = shallowRef<Record<string, any>>({ ...defaultState });\n\n/** 演练场实例的事件回显 */\nconst playgroundStatus = shallowRef(\"等待进入视口\");\n\n/** 重置演练场配置 */\nfunction resetState() {\n  state.value = { ...defaultState };\n}\n\n/** 演练场控制面板配置 */\nconst controls: any = [\n  {\n    title: \"视差\",\n    children: [\n      {\n        label: \"最大位移（px）\",\n        key: \"parallax\",\n        component: \"slider\" as const,\n        defaultValue: 12,\n        props: { min: 0, max: 40, step: 1 },\n      },\n      {\n        label: \"焦平面（focus）\",\n        key: \"focus\",\n        component: \"slider\" as const,\n        defaultValue: 0.5,\n        props: { min: 0, max: 1, step: 0.05 },\n      },\n    ],\n  },\n  {\n    title: \"补光\",\n    children: [\n      { label: \"启用补光\", key: \"light\", component: \"checkbox\" as const, defaultValue: true },\n      { label: \"补光颜色\", key: \"lightColor\", component: \"color-picker\" as const, defaultValue: \"#ffffff\" },\n      {\n        label: \"补光强度\",\n        key: \"lightIntensity\",\n        component: \"slider\" as const,\n        defaultValue: 0.5,\n        props: { min: 0, max: 1, step: 0.05 },\n      },\n    ],\n  },\n  {\n    title: \"布局\",\n    children: [\n      {\n        label: \"对齐方式\",\n        key: \"position\",\n        component: \"select\" as const,\n        defaultValue: \"center\",\n        props: { options: positionOptions },\n      },\n      {\n        label: \"触发范围\",\n        key: \"trigger\",\n        component: \"select\" as const,\n        defaultValue: \"parent\",\n        props: { options: triggerOptions },\n      },\n    ],\n  },\n];\n\n/** 滑块步进可能带来浮点误差，0~1 区间的参数统一保留两位小数 */\nconst round2 = (value: number) => Math.round(value * 100) / 100;\n\n/** 演练场右上角展示的等价代码：完整列出当前全部参数 */\nconst depthImageCode = computed(() => {\n  const s = state.value;\n  return [\n    \"<RebornDepthImage\",\n    `  src=\"${COLOR_SRC}\"`,\n    `  depth-src=\"${DEPTH_SRC}\"`,\n    `  :parallax=\"${s.parallax}\"`,\n    `  :focus=\"${round2(s.focus)}\"`,\n    `  :light=\"${s.light}\"`,\n    `  light-color=\"${s.lightColor}\"`,\n    `  :light-intensity=\"${round2(s.lightIntensity)}\"`,\n    `  position=\"${s.position}\"`,\n    `  trigger=\"${s.trigger}\"`,\n    '  class=\"h-80 w-72\"',\n    \"/>\",\n  ].join(\"\\n\");\n});\n\n// ─── 场景演示状态 ─────────────────────────────────────────────────\n\n/** 「触发范围与对齐」里的外层卡片：作为 trigger 传给组件 */\nconst heroCardRef = useTemplateRef<HTMLElement>(\"heroCardRef\");\n\n/** 「回退与事件」两个实例各自的事件回显 */\nconst okStatus = shallowRef(\"等待进入视口\");\nconst brokenStatus = shallowRef(\"等待进入视口\");\n\nconst fallbackLabel = (reason: DepthImageFallbackReason) => `fallback('${reason}')：${FALLBACK_TEXT[reason]}`;\n/** 三个固定焦平面，避免每次渲染重新创建列表。 */\nconst focusPlanes = [0.2, 0.5, 0.8];\n</script>\n\n<template>\n  <div class=\"flex w-full min-w-0 flex-col\">\n    <Playground\n      v-model=\"state\"\n      :controls=\"controls\"\n      :code=\"depthImageCode\"\n      component-name=\"RebornDepthImage\"\n      title=\"交互演练场\"\n      description=\"调节上方参数，把指针移进预览区，查看位移幅度、焦平面与补光的变化。\"\n    >\n      <template #tag>\n        <RebornButton size=\"sm\" variant=\"soft\" color=\"neutral\" @click=\"resetState\">\n          <template #leading>\n            <Icon name=\"lucide:rotate-ccw\" size=\"12\" />\n          </template>\n          重置配置\n        </RebornButton>\n      </template>\n\n      <div class=\"flex w-full flex-col items-center gap-4\">\n        <!-- 预览舞台：trigger 取 parent 时，指针在整块舞台上都有反应 -->\n        <div class=\"flex h-[360px] w-full items-center justify-center rounded-xl\">\n          <RebornDepthImage\n            :src=\"COLOR_SRC\"\n            :depth-src=\"DEPTH_SRC\"\n            alt=\"行走中的装甲士兵\"\n            :parallax=\"state.parallax\"\n            :focus=\"state.focus\"\n            :light=\"state.light\"\n            :light-color=\"state.lightColor\"\n            :light-intensity=\"state.lightIntensity\"\n            :position=\"state.position\"\n            :trigger=\"state.trigger\"\n            class=\"h-80 w-72\"\n            @ready=\"playgroundStatus = 'ready：画布已接管显示'\"\n            @fallback=\"(reason) => (playgroundStatus = fallbackLabel(reason))\"\n          />\n        </div>\n        <DemoNote tone=\"dimmed\" class=\"font-mono text-xs\">\n          {{ playgroundStatus }}\n        </DemoNote>\n      </div>\n    </Playground>\n\n    <DemoSection title=\"基础用法\">\n      <template #description>\n        传入彩色图\n        <code>src</code>\n        与深度图\n        <code>depthSrc</code>，尺寸写在\n        <code>class</code>\n        上；进入视口附近才加载素材，之前显示静态图。\n      </template>\n      <DemoBlock layout=\"row\">\n        <RebornDepthImage :src=\"COLOR_SRC\" :depth-src=\"DEPTH_SRC\" alt=\"行走中的装甲士兵\" class=\"h-[280px] w-60\" />\n      </DemoBlock>\n    </DemoSection>\n\n    <DemoSection title=\"深度图的要求\">\n      <template #description>\n        右图就是左图的\n        <code>depthSrc</code>：白近黑远、宽高比相同，主体外的背景取中灰（等于默认\n        <code>focus</code>），轮廓向外延展并模糊过。\n      </template>\n      <DemoBlock layout=\"row\" align=\"start\">\n        <figure class=\"flex flex-col items-center gap-2\">\n          <img :src=\"COLOR_SRC\" alt=\"彩色图\" class=\"h-[224px] w-48 object-contain\">\n          <figcaption class=\"text-muted text-xs\">src：720×840，透明背景</figcaption>\n        </figure>\n        <figure class=\"flex flex-col items-center gap-2\">\n          <img :src=\"DEPTH_SRC\" alt=\"深度图\" class=\"h-[224px] w-48 object-contain\">\n          <figcaption class=\"text-muted text-xs\">depthSrc：240×280，原图的 1/3</figcaption>\n        </figure>\n      </DemoBlock>\n      <DemoNote tone=\"dimmed\">\n        背景若取纯黑（最远），视差时背景会反向位移、采到人物本身，轮廓旁出现残影；轮廓不向外延展，人物朝外移动的部分会被裁掉。\n      </DemoNote>\n    </DemoSection>\n\n    <DemoSection title=\"视差与焦平面\">\n      <template #description>\n        三张图的\n        <code>parallax</code>\n        都是 20px，只改\n        <code>focus</code>：它决定哪一层原地不动，比它近的朝指针移，比它远的反向移。\n      </template>\n      <DemoBlock layout=\"grid\" :columns=\"3\">\n        <div v-for=\"focus in focusPlanes\" :key=\"focus\" class=\"flex flex-col items-center gap-2 py-2\">\n          <RebornDepthImage\n            :src=\"COLOR_SRC\"\n            :depth-src=\"DEPTH_SRC\"\n            :parallax=\"20\"\n            :focus=\"focus\"\n            trigger=\"parent\"\n            class=\"h-[224px] w-48\"\n          />\n          <span class=\"text-muted font-mono text-xs\">:focus=\"{{ focus }}\"</span>\n        </div>\n      </DemoBlock>\n    </DemoSection>\n\n    <DemoSection title=\"指针补光\">\n      <template #description>\n        <code>lightColor</code>\n        接受任意 CSS 颜色，包括 CSS 变量；右图用\n        <code>var(--color-primary)</code>，切换主题色后指针下一次移入即变色。\n      </template>\n      <DemoBlock layout=\"grid\" :columns=\"2\">\n        <div class=\"flex flex-col items-center gap-2 py-2\">\n          <RebornDepthImage\n            :src=\"COLOR_SRC\"\n            :depth-src=\"DEPTH_SRC\"\n            :light=\"false\"\n            trigger=\"parent\"\n            class=\"h-[224px] w-48\"\n          />\n          <span class=\"text-muted font-mono text-xs\">:light=\"false\"</span>\n        </div>\n        <div class=\"flex flex-col items-center gap-2 py-2\">\n          <RebornDepthImage\n            :src=\"COLOR_SRC\"\n            :depth-src=\"DEPTH_SRC\"\n            light-color=\"var(--color-primary)\"\n            :light-intensity=\"0.7\"\n            trigger=\"parent\"\n            class=\"h-[224px] w-48\"\n          />\n          <span class=\"text-muted font-mono text-xs\">light-color=\"var(--color-primary)\"</span>\n        </div>\n      </DemoBlock>\n    </DemoSection>\n\n    <DemoSection title=\"触发范围与对齐\">\n      <template #description>\n        把外层卡片的模板 ref 传给\n        <code>trigger</code>，指针在整张卡片上移动都驱动视差；<code>position=\"bottom-right\"</code>\n        让人物贴着右下角站立。\n      </template>\n      <DemoBlock layout=\"stack\">\n        <section\n          ref=\"heroCardRef\"\n          class=\"border-default bg-elevated/40 relative flex h-64 w-full items-center overflow-hidden rounded-2xl border px-8\"\n        >\n          <div class=\"relative z-10 max-w-[50%]\">\n            <p class=\"text-highlighted text-xl font-semibold\">整张卡片都是触发区</p>\n            <p class=\"text-muted mt-2 text-sm\">指针在文字上方移动，右侧人物同样会跟随。</p>\n          </div>\n          <RebornDepthImage\n            :src=\"COLOR_SRC\"\n            :depth-src=\"DEPTH_SRC\"\n            position=\"bottom-right\"\n            :trigger=\"heroCardRef\"\n            class=\"pointer-events-none absolute inset-y-0 right-6 w-[45%]\"\n          />\n        </section>\n      </DemoBlock>\n    </DemoSection>\n\n    <DemoSection title=\"回退与事件\">\n      <template #description>\n        画布接管时派发\n        <code>ready</code>；无法启用时派发\n        <code>fallback</code>\n        并保留静态图。右图故意写错了\n        <code>depthSrc</code>。\n      </template>\n      <DemoBlock layout=\"grid\" :columns=\"2\">\n        <div class=\"flex flex-col items-center gap-2 py-2\">\n          <RebornDepthImage\n            :src=\"COLOR_SRC\"\n            :depth-src=\"DEPTH_SRC\"\n            trigger=\"parent\"\n            class=\"h-[224px] w-48\"\n            @ready=\"okStatus = 'ready：画布已接管显示'\"\n            @fallback=\"(reason) => (okStatus = fallbackLabel(reason))\"\n          />\n          <DemoNote tone=\"dimmed\" class=\"font-mono text-xs\">\n            {{ okStatus }}\n          </DemoNote>\n        </div>\n        <div class=\"flex flex-col items-center gap-2 py-2\">\n          <RebornDepthImage\n            :src=\"COLOR_SRC\"\n            depth-src=\"/images/depth-image/not-exist.webp\"\n            trigger=\"parent\"\n            class=\"h-[224px] w-48\"\n            @ready=\"brokenStatus = 'ready：画布已接管显示'\"\n            @fallback=\"(reason) => (brokenStatus = fallbackLabel(reason))\"\n          />\n          <DemoNote tone=\"dimmed\" class=\"font-mono text-xs\">\n            {{ brokenStatus }}\n          </DemoNote>\n        </div>\n      </DemoBlock>\n    </DemoSection>\n  </div>\n</template>\n"
+    }
+  ],
+  "related": [],
+  "whenToUse": [
+    "头图、落地页首屏里的人物或物件主视觉，用 trigger 指向整个头图，指针在头图任意位置都能驱动视差。",
+    "产品渲染图、3D 角色的静态展示需要空间感，默认 parallax 12px、focus 0.5 即可。",
+    "主视觉要跟随站点主题色，用 lightColor=\"var(--color-primary)\"，切换主题后下一次指针进入即生效。"
+  ],
+  "whenNotToUse": [
+    "普通内容图片、需要懒加载与占位的图片列表，改用 reborn-image。",
+    "整张卡片随指针倾斜而不是画面内部分层，改用 card-3d。",
+    "手里只有彩色图、没有深度图：本组件不做深度估算，需先产出深度图。"
+  ],
+  "pitfalls": [
+    "仅 web 端可用；src 与 depthSrc 均必填，宽高比须一致，组件尺寸写在 class 上。",
+    "深度图白近黑远，主体外的背景须取 focus 对应的灰度（默认中灰），否则视差时轮廓旁出现残影。",
+    "触屏不触发视差，只响应鼠标与触控笔；开启「减少动态效果」时直接显示静态图并派发 fallback('reduced-motion')。",
+    "跨域图片需要对方返回 CORS 头，否则派发 fallback('load-error') 并保留静态图。",
+    "每个实例占一个 WebGL 上下文，浏览器同时存在的上下文有数量上限，不要在长列表里批量使用。"
+  ],
+  "dependencies": [
+    "clsx",
+    "tailwind-merge",
+    "tailwind-variants"
+  ],
+  "install": {
+    "cli": "npx reborn-ui@latest add reborn-depth-image"
+  },
+  "sourceRefs": {
+    "web": [
+      "app/components/reborn/ui/reborn-depth-image/RebornDepthImage.vue",
+      "app/components/reborn/ui/reborn-depth-image/index.ts",
+      "app/components/reborn/ui/reborn-depth-image/reborn-depth-image.config.ts",
+      "app/components/reborn/ui/reborn-depth-image/reborn-depth-image.utils.ts"
+    ]
+  },
+  "docPath": "content/2.components/special-effects/reborn-depth-image.md",
+  "_meta": {
+    "contentHash": "84ba0af17eb5b95e6813e434c1e48013af3dbe4b",
+    "hasOverride": true,
+    "extractors": {
+      "web": "ok",
+      "uniapp": "absent",
+      "docs": "found"
+    }
+  }
+}

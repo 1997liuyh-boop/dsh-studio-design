@@ -10,6 +10,11 @@
     "images",
     "aceternity-ui"
   ],
+  "aliases": [
+    "全屏轮播",
+    "背景轮播",
+    "图片轮播"
+  ],
   "platforms": [
     "web"
   ],
@@ -146,7 +151,7 @@
   },
   "docPath": "content/2.components/miscellaneous/images-slider.md",
   "_meta": {
-    "contentHash": "7dbaac345520122e5d98dc181ac3a20939c5f746",
+    "contentHash": "109a4b421db2c7550e26231bb8e60c6fb576c3f4",
     "hasOverride": true,
     "extractors": {
       "web": "ok",

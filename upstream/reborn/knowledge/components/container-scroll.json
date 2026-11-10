@@ -9,6 +9,7 @@
     "tailwind",
     "aceternity-ui"
   ],
+  "aliases": [],
   "platforms": [
     "web"
   ],
@@ -90,7 +91,7 @@
   },
   "docPath": "content/2.components/miscellaneous/container-scroll.md",
   "_meta": {
-    "contentHash": "4addae4a876db4f0e28666bcc67fa3e2f5dc35c0",
+    "contentHash": "7d449e6cba40064b9c78cbd7a34fac1cff857c68",
     "hasOverride": true,
     "extractors": {
       "web": "ok",

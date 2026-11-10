@@ -1,0 +1,385 @@
+{
+  "$schema": "../schema/component.schema.json",
+  "id": "reborn-textarea",
+  "title": "多行输入框",
+  "description": "用于多行文本输入的输入框组件，支持自动增高、字数统计与键盘行为配置。",
+  "category": "form",
+  "tags": [
+    "css",
+    "tailwind",
+    "textarea",
+    "uniapp"
+  ],
+  "aliases": [
+    "textarea",
+    "多行输入",
+    "文本域",
+    "多行文本"
+  ],
+  "platforms": [
+    "web",
+    "uniapp"
+  ],
+  "props": [
+    {
+      "name": "color",
+      "type": "'primary' | 'secondary' | 'success' | 'info' | 'warning' | 'error' | 'neutral'",
+      "required": false,
+      "description": "颜色",
+      "default": "'primary'",
+      "options": [
+        "primary",
+        "secondary",
+        "success",
+        "info",
+        "warning",
+        "error",
+        "neutral"
+      ]
+    },
+    {
+      "name": "customClass",
+      "type": "string",
+      "required": false,
+      "description": "自定义样式类",
+      "default": "''"
+    },
+    {
+      "name": "ui",
+      "type": "Record<string, any>",
+      "required": false,
+      "description": "UI 覆盖 可用键（从源码抽取，以此为准）——两端：inner、root、text*。 带 * 的键对应插槽兜底节点：填了同名插槽，组件自带的节点被替换，这个键随之失效。",
+      "default": "() => ({})"
+    },
+    {
+      "name": "size",
+      "type": "'sm' | 'md' | 'lg'",
+      "required": false,
+      "description": "尺寸",
+      "default": "'md'",
+      "options": [
+        "sm",
+        "md",
+        "lg"
+      ]
+    },
+    {
+      "name": "border",
+      "type": "boolean",
+      "required": false,
+      "description": "是否显示边框",
+      "default": "true"
+    },
+    {
+      "name": "disabled",
+      "type": "boolean",
+      "required": false,
+      "description": "是否禁用",
+      "default": "false"
+    },
+    {
+      "name": "readonly",
+      "type": "boolean",
+      "required": false,
+      "description": "是否只读",
+      "default": "false"
+    },
+    {
+      "name": "showWordLimit",
+      "type": "boolean",
+      "required": false,
+      "description": "是否显示字数统计",
+      "default": "true"
+    },
+    {
+      "name": "name",
+      "type": "string",
+      "required": false,
+      "description": "名称",
+      "default": "''"
+    },
+    {
+      "name": "placeholder",
+      "type": "string",
+      "required": false,
+      "description": "占位符",
+      "default": "() => '请输入'"
+    },
+    {
+      "name": "placeholderClass",
+      "type": "string",
+      "required": false,
+      "description": "占位符样式类",
+      "default": "''"
+    },
+    {
+      "name": "placeholderStyle",
+      "type": "string",
+      "required": false,
+      "description": "占位符样式",
+      "default": "''"
+    },
+    {
+      "name": "maxlength",
+      "type": "number",
+      "required": false,
+      "description": "最大输入长度",
+      "default": "100"
+    },
+    {
+      "name": "autofocus",
+      "type": "boolean",
+      "required": false,
+      "description": "是否自动聚焦",
+      "default": "false"
+    },
+    {
+      "name": "confirmType",
+      "type": "string",
+      "required": false,
+      "description": "设置键盘右下角按钮的文字",
+      "default": "'done'"
+    },
+    {
+      "name": "cursor",
+      "type": "number",
+      "required": false,
+      "description": "指定focus时的光标位置",
+      "default": "0"
+    },
+    {
+      "name": "confirmHold",
+      "type": "boolean",
+      "required": false,
+      "description": "点击键盘确认按钮时是否保持键盘不收起",
+      "default": "false"
+    },
+    {
+      "name": "height",
+      "type": "number | string",
+      "required": false,
+      "description": "高度",
+      "default": "140"
+    },
+    {
+      "name": "autoHeight",
+      "type": "boolean",
+      "required": false,
+      "description": "是否自动增高",
+      "default": "false"
+    },
+    {
+      "name": "fixed",
+      "type": "boolean",
+      "required": false,
+      "description": "如果 textarea 是在一个 position:fixed 的区域，需要显示指定属性 fixed 为 true",
+      "default": "false"
+    },
+    {
+      "name": "cursorSpacing",
+      "type": "number",
+      "required": false,
+      "description": "光标与键盘的距离",
+      "default": "5"
+    },
+    {
+      "name": "cursorColor",
+      "type": "string",
+      "required": false,
+      "description": "指定光标颜色",
+      "default": "''"
+    },
+    {
+      "name": "showConfirmBar",
+      "type": "boolean",
+      "required": false,
+      "description": "是否显示键盘上方带有”完成“按钮那一栏",
+      "default": "true"
+    },
+    {
+      "name": "selectionStart",
+      "type": "number",
+      "required": false,
+      "description": "光标起始位置",
+      "default": "-1"
+    },
+    {
+      "name": "selectionEnd",
+      "type": "number",
+      "required": false,
+      "description": "光标结束位置",
+      "default": "-1"
+    },
+    {
+      "name": "adjustPosition",
+      "type": "boolean",
+      "required": false,
+      "description": "盘弹起时，是否自动上推页面",
+      "default": "true"
+    },
+    {
+      "name": "inputmode",
+      "type": "'none' | 'text' | 'decimal' | 'numeric' | 'tel' | 'search' | 'email' | 'url'",
+      "required": false,
+      "description": "它提供了用户在编辑元素或其内容时可能输入的数据类型的提示。",
+      "default": "'text'"
+    },
+    {
+      "name": "holdKeyboard",
+      "type": "boolean",
+      "required": false,
+      "description": "focus时，点击页面的时候不收起键盘",
+      "default": "false"
+    },
+    {
+      "name": "disableDefaultPadding",
+      "type": "boolean",
+      "required": false,
+      "description": "是否禁用默认内边距",
+      "default": "true"
+    },
+    {
+      "name": "adjustKeyboardTo",
+      "type": "string",
+      "required": false,
+      "description": "键盘对齐位置",
+      "default": "'cursor'"
+    },
+    {
+      "name": "modelValue",
+      "type": "string | null",
+      "required": false,
+      "description": "双向绑定值",
+      "vModel": true,
+      "default": "\"\""
+    },
+    {
+      "name": "rows",
+      "type": "number",
+      "required": false,
+      "description": "默认行数，决定初始高度（仅 Web）。",
+      "default": "4"
+    }
+  ],
+  "events": [
+    {
+      "name": "input",
+      "payload": "[event: TextareaEvent<{ value: string; cursor?: number }>]",
+      "description": "每次输入时触发，参数为原生事件对象（仅 UniApp）。"
+    },
+    {
+      "name": "change",
+      "payload": "[value: string]",
+      "description": "输入内容变化时触发，参数为最新文本；UniApp 端仅在与上一次不同时触发。"
+    },
+    {
+      "name": "focus",
+      "payload": "[event: TextareaEvent<{ value: string; height?: number }>]",
+      "description": "输入框获得焦点（键盘弹起）时触发。"
+    },
+    {
+      "name": "blur",
+      "payload": "[event: TextareaEvent<{ value: string; cursor?: number }>]",
+      "description": "输入框失去焦点（键盘收起）时触发，并执行表单 blur 校验。"
+    },
+    {
+      "name": "confirm",
+      "payload": "[event: TextareaEvent<{ value: string }>]",
+      "description": "点击键盘右下角确认按钮时触发（仅 UniApp）。"
+    },
+    {
+      "name": "linechange",
+      "payload": "[event: TextareaEvent<{ height: number; heightRpx?: number; lineCount: number }>]",
+      "description": "输入行数变化时触发，`e.detail` 含 `height`、`lineCount` 等信息（仅 UniApp）。"
+    },
+    {
+      "name": "keyboardheightchange",
+      "payload": "[event: TextareaEvent<{ height: number; duration: number }>]",
+      "description": "键盘高度变化时触发，`e.detail` 含 `height` 与 `duration`（仅 UniApp）。"
+    },
+    {
+      "name": "update:modelValue",
+      "description": "modelValue 变化时触发（v-model 同步）"
+    }
+  ],
+  "slots": [
+    {
+      "name": "limit",
+      "description": "自定义字数统计区域，`length` 为当前长度、`max` 为 `maxlength`；仅在 `showWordLimit` 开启时渲染。"
+    }
+  ],
+  "exposes": [
+    {
+      "name": "isFocus",
+      "description": "当前样式聚焦态，只允许读取。"
+    },
+    {
+      "name": "focus",
+      "description": "让输入框重新聚焦并唤起键盘"
+    }
+  ],
+  "examples": [
+    {
+      "title": "Web 演示",
+      "path": "app/components/reborn/examples/reborn-textarea/RebornTextareaDemo.vue",
+      "source": "demo",
+      "platform": "web",
+      "code": "<script setup lang=\"ts\">\nimport { computed, shallowRef } from \"vue\";\nimport {\n  textareaColors,\n  textareaSizes,\n} from \"~/components/reborn/ui/reborn-textarea/reborn-textarea.config\";\n\n/** 演练场绑定值 */\nconst state = shallowRef<Record<string, any>>({\n  size: \"md\",\n  color: \"primary\",\n  border: true,\n  showWordLimit: true,\n  maxlength: 200,\n  customLimit: false,\n  disabled: false,\n  autoHeight: false,\n});\n\n/** 演练场中输入框的内容 */\nconst value = shallowRef(\"\");\n\n/** 自定义 ui 示例的初始内容 */\nconst poem = shallowRef(\n  \"轻轻的我走了，正如我轻轻的来；我轻轻的招手，作别西天的云彩。那河畔的金柳，是夕阳中的新娘；波光里的艳影，在我的心头荡漾。\",\n);\n\n/** 演练场控制面板配置 */\nconst controls = [\n  {\n    title: \"外观\",\n    children: [\n      {\n        label: \"字号\",\n        key: \"size\",\n        component: \"select\" as const,\n        defaultValue: \"md\",\n        props: { options: textareaSizes.map((s) => ({ label: s, value: s })) },\n      },\n      {\n        label: \"聚焦边框颜色\",\n        key: \"color\",\n        component: \"select\" as const,\n        defaultValue: \"primary\",\n        props: { options: textareaColors.map((c) => ({ label: c, value: c })) },\n      },\n      { label: \"边框\", key: \"border\", component: \"checkbox\" as const, defaultValue: true },\n    ],\n  },\n  {\n    title: \"行为\",\n    children: [\n      { label: \"字数上限\", key: \"maxlength\", component: \"input-number\" as const, defaultValue: 200, props: { min: 1, step: 10 } },\n      { label: \"字数统计\", key: \"showWordLimit\", component: \"checkbox\" as const, defaultValue: true },\n      { label: \"自定义统计插槽\", key: \"customLimit\", component: \"checkbox\" as const, defaultValue: false },\n      { label: \"高度自适应\", key: \"autoHeight\", component: \"checkbox\" as const, defaultValue: false },\n      { label: \"禁用\", key: \"disabled\", component: \"checkbox\" as const, defaultValue: false },\n    ],\n  },\n];\n\n/** 演练场右上角展示的等价代码 */\nconst textareaCode = computed(\n  () =>\n    `<RebornTextarea\\n  v-model=\"value\"\\n  size=\"${state.value.size}\"\\n  color=\"${state.value.color}\"\\n  :border=\"${state.value.border}\"\\n  :show-word-limit=\"${state.value.showWordLimit}\"\\n  :maxlength=\"${state.value.maxlength}\"\\n  :auto-height=\"${state.value.autoHeight}\"\\n  :disabled=\"${state.value.disabled}\"\\n  placeholder=\"请输入内容...\"\\n/>`,\n);\n</script>\n\n<template>\n  <div class=\"flex w-full min-w-0 flex-col\">\n    <Playground\n      v-model=\"state\"\n      :controls=\"controls\"\n      :code=\"textareaCode\"\n      component-name=\"RebornTextarea\"\n      title=\"交互演练场\"\n      description=\"color 只在聚焦态生效，需要同时开启 border 才能看到；开启高度自适应后 rows 失效，输入框会随内容增长。\"\n    >\n      <RebornTextarea\n        v-model=\"value\"\n        :size=\"state.size\"\n        :color=\"state.color\"\n        :border=\"state.border\"\n        :show-word-limit=\"state.showWordLimit\"\n        :maxlength=\"state.maxlength\"\n        :auto-height=\"state.autoHeight\"\n        :disabled=\"state.disabled\"\n        placeholder=\"请输入内容...\"\n      >\n        <template\n          v-if=\"state.customLimit\"\n          #limit=\"{ length, max }\"\n        >\n          <span class=\"text-dimmed absolute right-3 bottom-2 text-xs\">\n            已输入 {{ length }} / {{ max }}\n          </span>\n        </template>\n      </RebornTextarea>\n    </Playground>\n\n    <DemoSection\n      title=\"自定义样式\"\n      description=\"通过 ui 覆盖 root / inner / text 三个插槽的类名，可在不改组件源码的前提下换一套配色。\"\n    >\n      <DemoBlock layout=\"stack\">\n        <RebornTextarea\n          v-model=\"poem\"\n          show-word-limit\n          :maxlength=\"1000\"\n          :rows=\"6\"\n          placeholder=\"自定义样式\"\n          :ui=\"{\n            root: 'bg-elevated ring-primary/40 focus-within:ring-primary',\n            inner: 'text-primary placeholder:text-primary/50',\n            text: 'text-primary/70',\n          }\"\n        />\n      </DemoBlock>\n    </DemoSection>\n  </div>\n</template>\n"
+    },
+    {
+      "title": "UniApp 演示",
+      "path": "packages/uniapp-project/src/pages/reborn-textarea/RebornTextareaDemo.vue",
+      "source": "demo",
+      "platform": "uniapp",
+      "code": "<script setup lang=\"ts\">\nimport { shallowRef } from 'vue'\nimport RebornCard from '@/components/reborn-card/RebornCard.vue'\nimport RebornPage from '@/components/reborn-page/RebornPage.vue'\nimport RebornSwitch from '@/components/reborn-switch/RebornSwitch.vue'\n\nimport { textareaColors, textareaSizes } from '@/components/reborn-textarea/reborn-textarea.config'\nimport RebornTextarea from '@/components/reborn-textarea/RebornTextarea.vue'\n\n// 演练场与样式示例分别持有输入内容。\nconst value = shallowRef('')\nconst value1 = shallowRef('轻轻的我走了，正如我轻轻的来；我轻轻的招手，作别西天的云彩。那河畔的金柳，是夕阳中的新娘；波光里的艳影，在我的心头荡漾。软泥上的青荇，油油的在水底招摇；在康河的柔波里，我甘心做一条水草！那榆荫下的一潭，不是清泉，是天上虹；揉碎在浮藻间，沉淀着彩虹似的梦。寻梦？撑一支长篙，向青草更青处漫溯；满载一船星辉，在星辉斑斓里放歌。但我不能放歌，悄悄是别离的笙箫；夏虫也为我沉默，沉默是今晚的康桥！悄悄的我走了，正如我悄悄的来；我挥一挥衣袖，不带走一片云彩。')\nconst demoColor = shallowRef<typeof textareaColors[number]>('primary')\nconst demoSize = shallowRef<typeof textareaSizes[number]>('md')\nconst isBorder = shallowRef(true)\nconst isShowCount = shallowRef(true)\nconst isDisabled = shallowRef(false)\nconst isAutoHeight = shallowRef(false)\nconst isShowlimitSlot = shallowRef(false)\n\n</script>\n\n<template>\n  <RebornPage title=\"文本域\" description=\"多行文本输入控件。\">\n    <!-- Basic -->\n    <RebornCard title=\"自定义\" custom-class=\"flex flex-col gap-2\">\n      <RebornTextarea\n        v-if=\"isShowlimitSlot\" v-model=\"value\" :border=\"isBorder\" :disabled=\"isDisabled\"\n        :show-word-limit=\"isShowCount\" :auto-height=\"isAutoHeight\" placeholder=\"请输入内容...\" :color=\"demoColor\"\n      >\n        <template #limit=\"{ length, max }\">\n          <view class=\"\n              absolute bottom-2 right-2 rounded bg-gray-200 px-2 py-0.5 text-xs\n              text-gray-500\n              dark:bg-gray-800\n            \">\n            已输入: {{ length }}/{{ max }}\n          </view>\n        </template>\n      </RebornTextarea>\n      <RebornTextarea\n        v-else v-model=\"value\" :border=\"isBorder\" :disabled=\"isDisabled\" :show-word-limit=\"isShowCount\"\n        :auto-height=\"isAutoHeight\" placeholder=\"请输入内容...\" :color=\"demoColor\"\n      />\n    </RebornCard>\n    <!-- Custom Styles -->\n    <RebornCard title=\"自定义样式 (UI Prop)\" custom-class=\"flex flex-col gap-2\">\n      <RebornTextarea v-model=\"value1\" :size=\"demoSize\" :maxlength=\"1000\" placeholder=\"自定义样式\" :height=\"500\" :ui=\"{\n        root: 'bg-blue-50 dark:bg-blue-950/30 ring-red-3 dark:border-blue-800 focus-within:ring-orange-7',\n        inner: 'text-blue-700 dark:text-blue-300 placeholder:text-blue-400 ',\n        text: 'text-blue-400',\n      }\" />\n    </RebornCard>\n    <!-- Size Control -->\n    <RebornCard title=\"控制\" custom-class=\"flex flex-col gap-4\">\n      <view class=\"space-y-3\">\n        <view class=\"\n            text-28 font-medium text-slate-500\n            dark:text-slate-200\n          \">\n          边框active颜色\n        </view>\n        <view class=\"flex flex-wrap gap-2\">\n          <view v-for=\"c in textareaColors\" :key=\"c\" class=\"\n              size-6 cursor-pointer rounded-full ring-2 ring-transparent\n              ring-offset-2 transition-all\n            \" :class=\"[\n              `\n                bg-${c}\n              `,\n              demoColor === c ? 'scale-110 ring-slate-400' : `hover:scale-110`,\n            ]\" :style=\"{ backgroundColor: `var(--color-${c}, ${c === 'neutral' ? '#737373' : ''})` }\"\n            @click=\"demoColor = c\" />\n        </view>\n      </view>\n      <view class=\"space-y-3\">\n        <view class=\"\n            text-sm font-medium text-slate-500\n            dark:text-slate-200\n          \">\n          输入字体颜色\n        </view>\n        <view class=\"flex flex-wrap gap-2\">\n          <view v-for=\"s in textareaSizes\" :key=\"s\" class=\"\n              cursor-pointer rounded-full border px-3 py-1.5 text-xs\n              transition-colors\n            \" :class=\"demoSize === s ? `\n              border-slate-900 bg-slate-900 text-white\n              dark:bg-white dark:text-slate-900\n            ` : `\n              border-slate-300 bg-transparent text-slate-600\n              hover:border-slate-400\n            `\" @click=\"demoSize = s\">\n            {{ s }}\n          </view>\n        </view>\n      </view>\n      <RebornSwitch v-model=\"isBorder\" active-label=\"边框\" />\n      <RebornSwitch v-model=\"isShowCount\" active-label=\"字数统计\" />\n      <RebornSwitch v-model=\"isShowlimitSlot\" active-label=\"自定义字数统计\" />\n      <RebornSwitch v-model=\"isDisabled\" active-label=\"禁用\" />\n      <RebornSwitch v-model=\"isAutoHeight\" active-label=\"自动增高\" />\n    </RebornCard>\n  </RebornPage>\n</template>\n"
+    }
+  ],
+  "related": [],
+  "whenToUse": [
+    "备注、评论、描述等多行文本录入。",
+    "需要字数统计与上限（maxlength + showWordLimit，limit 插槽可自定义统计区）。",
+    "内容随输入自动增高（autoHeight）。"
+  ],
+  "whenNotToUse": [
+    "单行输入改用 reborn-input。",
+    "短信验证码等分格输入改用 reborn-input-otp。"
+  ],
+  "pitfalls": [
+    "web 与 uniapp 双端均可用。",
+    "maxlength 默认 100，长内容需显式调大；showWordLimit 默认 true 但需设置 maxlength 才有意义。",
+    "confirmType、cursorSpacing、adjustPosition、holdKeyboard、showConfirmBar 等属性对应 uniapp 原生 textarea 能力，主要在小程序 / App 端生效。",
+    "高度由 height（默认 140）与 rows（默认 4）共同影响，开启 autoHeight 后自动增高。",
+    "父级将modelValue置为null或undefined会清空文本和字数；UniApp expose的isFocus为只读状态。"
+  ],
+  "dependencies": [
+    "@weapp-tailwindcss/merge-v3",
+    "@weapp-tailwindcss/variants-v3",
+    "clsx",
+    "tailwind-merge",
+    "tailwind-variants"
+  ],
+  "install": {
+    "cli": "npx reborn-ui@latest add reborn-textarea"
+  },
+  "sourceRefs": {
+    "web": [
+      "app/components/reborn/ui/reborn-textarea/RebornTextarea.vue",
+      "app/components/reborn/ui/reborn-textarea/reborn-textarea.config.ts"
+    ],
+    "uniapp": [
+      "packages/uniapp-project/src/components/reborn-textarea/RebornTextarea.vue",
+      "packages/uniapp-project/src/components/reborn-textarea/index.ts",
+      "packages/uniapp-project/src/components/reborn-textarea/reborn-textarea.config.ts"
+    ]
+  },
+  "docPath": "content/2.components/input-and-forms/reborn-textarea.md",
+  "_meta": {
+    "contentHash": "b1e0851c2116984301ffd0767bf8045018990d62",
+    "hasOverride": true,
+    "extractors": {
+      "web": "ok",
+      "uniapp": "ok",
+      "docs": "found"
+    }
+  }
+}

@@ -8,6 +8,11 @@
     "vue",
     "reborn-transfer"
   ],
+  "aliases": [
+    "transfer",
+    "穿梭框",
+    "双列选择"
+  ],
   "platforms": [
     "web"
   ],
@@ -89,24 +94,42 @@
     },
     {
       "name": "checkShape",
-      "type": "TransferCheckShape",
+      "type": "'square' | 'rounded' | 'circle'",
       "required": false,
       "description": "选中框外观 - square：方形（直角） - rounded：圆角（默认） - circle：圆形",
-      "default": "\"rounded\""
+      "default": "\"rounded\"",
+      "options": [
+        "square",
+        "rounded",
+        "circle"
+      ]
     },
     {
       "name": "variant",
-      "type": "TransferVariant",
+      "type": "'outlined' | 'borderless'",
       "required": false,
       "description": "形态变体 - outlined：8px 圆角描边面板，带头部（默认） - borderless：去掉面板边框与内部分隔线，且不渲染头部（全选、下拉菜单、标题、计数一并隐藏）",
-      "default": "\"outlined\""
+      "default": "\"outlined\"",
+      "options": [
+        "outlined",
+        "borderless"
+      ]
     },
     {
       "name": "color",
-      "type": "TransferColor",
+      "type": "'primary' | 'secondary' | 'success' | 'info' | 'warning' | 'error' | 'neutral'",
       "required": false,
       "description": "语义色，决定复选框的勾选色、选中条目的底色、头部下拉的选中项颜色与操作按钮颜色",
-      "default": "\"primary\""
+      "default": "\"primary\"",
+      "options": [
+        "primary",
+        "secondary",
+        "success",
+        "info",
+        "warning",
+        "error",
+        "neutral"
+      ]
     },
     {
       "name": "oneWay",
@@ -310,7 +333,7 @@
   },
   "docPath": "content/2.components/miscellaneous/reborn-transfer.md",
   "_meta": {
-    "contentHash": "78b6c25c233e70756436c213b8082d07b5a54d57",
+    "contentHash": "727f8f26294cb44ad434d965923c1c8d458c981b",
     "hasOverride": true,
     "extractors": {
       "web": "ok",

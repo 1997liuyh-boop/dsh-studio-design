@@ -9,6 +9,11 @@
     "tailwind",
     "animation"
   ],
+  "aliases": [
+    "typewriter",
+    "打字机",
+    "打字效果"
+  ],
   "platforms": [
     "web"
   ],
@@ -165,7 +170,7 @@
   },
   "docPath": "content/2.components/text-animations/reborn-typewriter.md",
   "_meta": {
-    "contentHash": "740ebc4099448a9301c8d699c9234f47b541a4ef",
+    "contentHash": "1a114f39ecb68b6364754e78fe12315ecc720c68",
     "hasOverride": true,
     "extractors": {
       "web": "ok",

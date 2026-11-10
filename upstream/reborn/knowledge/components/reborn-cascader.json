@@ -11,6 +11,13 @@
     "form",
     "uniapp"
   ],
+  "aliases": [
+    "cascader",
+    "级联",
+    "级联选择",
+    "多级选择",
+    "省市区"
+  ],
   "platforms": [
     "web",
     "uniapp"
@@ -73,17 +80,31 @@
     },
     {
       "name": "size",
-      "type": "CascaderSize",
+      "type": "'sm' | 'md' | 'lg'",
       "required": false,
       "description": "尺寸",
-      "default": "'md'"
+      "default": "'md'",
+      "options": [
+        "sm",
+        "md",
+        "lg"
+      ]
     },
     {
       "name": "color",
-      "type": "CascaderColor",
+      "type": "'primary' | 'secondary' | 'success' | 'info' | 'warning' | 'error' | 'neutral'",
       "required": false,
       "description": "颜色",
-      "default": "'primary'"
+      "default": "'primary'",
+      "options": [
+        "primary",
+        "secondary",
+        "success",
+        "info",
+        "warning",
+        "error",
+        "neutral"
+      ]
     },
     {
       "name": "customClass",
@@ -563,7 +584,7 @@
   },
   "docPath": "content/2.components/input-and-forms/reborn-cascader.md",
   "_meta": {
-    "contentHash": "fadc14557d7d195dd6cb50212b843f18f7071ef6",
+    "contentHash": "325abb58adae38abde06513b0a5b44e497145125",
     "hasOverride": true,
     "extractors": {
       "web": "ok",

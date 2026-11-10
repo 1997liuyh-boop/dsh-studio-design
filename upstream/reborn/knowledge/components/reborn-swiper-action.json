@@ -10,6 +10,12 @@
     "uniapp",
     "swiper"
   ],
+  "aliases": [
+    "swipe action",
+    "左滑",
+    "滑动删除",
+    "侧滑操作"
+  ],
   "platforms": [
     "uniapp"
   ],
@@ -309,7 +315,7 @@
   },
   "docPath": "content/2.components/miscellaneous/reborn-swiper-action.md",
   "_meta": {
-    "contentHash": "a2d0db58091213115271c10aceeeaf255cee2987",
+    "contentHash": "73e927276ab9643f6a33200b269c73f3fb28b680",
     "hasOverride": true,
     "extractors": {
       "web": "absent",

@@ -8,6 +8,11 @@
     "css",
     "tailwind"
   ],
+  "aliases": [
+    "评价轮播",
+    "用户评价",
+    "testimonial"
+  ],
   "platforms": [
     "web"
   ],
@@ -73,7 +78,7 @@
   },
   "docPath": "content/2.components/miscellaneous/testimonial-slider.md",
   "_meta": {
-    "contentHash": "bd6e7bcd7f2ef2db80a9fb96fd38683659005bcb",
+    "contentHash": "12512cf0b371a8488b3023b76902e15b3f750a50",
     "hasOverride": true,
     "extractors": {
       "web": "ok",

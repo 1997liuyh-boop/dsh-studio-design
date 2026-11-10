@@ -8,6 +8,7 @@
     "css",
     "tailwind"
   ],
+  "aliases": [],
   "platforms": [
     "web"
   ],
@@ -81,7 +82,7 @@
   },
   "docPath": "content/2.components/text-animations/text-hover-effect.md",
   "_meta": {
-    "contentHash": "833a68cc835f93d65695df27f68229a6513f39d1",
+    "contentHash": "ed3a3c139baddef73a135d1e53f9cd335497ea7e",
     "hasOverride": true,
     "extractors": {
       "web": "ok",

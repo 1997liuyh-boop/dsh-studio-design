@@ -9,6 +9,7 @@
     "tailwind",
     "card"
   ],
+  "aliases": [],
   "platforms": [
     "web"
   ],
@@ -81,7 +82,7 @@
   },
   "docPath": "content/2.components/cards/flip-card.md",
   "_meta": {
-    "contentHash": "dbb38b0f4732cdb86d97b5cc8d93d84ce079054e",
+    "contentHash": "bb1a87ee869e8f3c6bf24e1a7eb676e28f2f0e49",
     "hasOverride": true,
     "extractors": {
       "web": "ok",

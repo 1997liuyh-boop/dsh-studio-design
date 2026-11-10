@@ -1,0 +1,134 @@
+{
+  "$schema": "../schema/component.schema.json",
+  "id": "bento-grid",
+  "title": "Bento 网格",
+  "description": "用于以不等宽卡片拼贴展示功能特性的 Bento 风格网格布局组件。",
+  "category": "misc",
+  "tags": [
+    "css",
+    "tailwind",
+    "bento",
+    "aceternity-ui"
+  ],
+  "aliases": [
+    "bento",
+    "便当网格",
+    "功能网格"
+  ],
+  "platforms": [
+    "web"
+  ],
+  "props": [
+    {
+      "name": "class",
+      "type": "HTMLAttributes[\"class\"]",
+      "required": false,
+      "description": ""
+    },
+    {
+      "name": "name",
+      "type": "string",
+      "required": true,
+      "description": "卡片上显示的名称。"
+    },
+    {
+      "name": "icon",
+      "type": "string",
+      "required": false,
+      "description": "卡片上显示的图标。"
+    },
+    {
+      "name": "description",
+      "type": "string",
+      "required": true,
+      "description": "卡片的描述内容。"
+    },
+    {
+      "name": "href",
+      "type": "string",
+      "required": true,
+      "description": "CTA 对应的链接。"
+    },
+    {
+      "name": "cta",
+      "type": "string",
+      "required": true,
+      "description": "CTA 上显示的文字。"
+    }
+  ],
+  "events": [],
+  "slots": [
+    {
+      "name": "default",
+      "description": ""
+    },
+    {
+      "name": "background",
+      "description": "显示在背景的组件。"
+    },
+    {
+      "name": "header",
+      "description": "作为页眉显示的组件。"
+    },
+    {
+      "name": "icon",
+      "description": "作为图标显示的组件。"
+    },
+    {
+      "name": "title",
+      "description": "作为标题显示的组件。"
+    },
+    {
+      "name": "description",
+      "description": "作为描述显示的组件。"
+    }
+  ],
+  "exposes": [],
+  "examples": [
+    {
+      "title": "Web 演示",
+      "path": "app/components/reborn/examples/bento-grid/BentoGridDemo.vue",
+      "source": "demo",
+      "platform": "web",
+      "code": "<script lang=\"ts\" setup>\nconst items = [\n  {\n    title: \"创新的黎明\",\n    description: \"探索那些改变世界的想法与发明从何而来。\",\n  },\n  {\n    title: \"数字革命\",\n    description: \"走进技术如何重塑我们的生活。\",\n  },\n  {\n    title: \"设计的艺术\",\n    description: \"发现深思熟虑的体验设计之美。\",\n  },\n  {\n    title: \"沟通的力量\",\n    description: \"理解有效沟通如何影响日常。\",\n  },\n  {\n    title: \"求知\",\n    description: \"加入这场通往理解与启发的旅途。\",\n  },\n  {\n    title: \"创造的乐趣\",\n    description: \"体验把想法变成现实的那一下。\",\n  },\n  {\n    title: \"冒险精神\",\n    description: \"出发，去遇见新的风景。\",\n  },\n];\n</script>\n\n<template>\n  <DemoSection\n    title=\"基础用法\"\n    description=\"格子头部的脉冲块是条目自己的骨架占位，用 elevated 而不是 zinc。\"\n  >\n    <BentoGrid class=\"mx-auto max-w-4xl\">\n      <BentoGridItem\n        v-for=\"(item, index) in items\"\n        :key=\"index\"\n        :class=\"index === 3 || index === 6 ? 'md:col-span-2' : ''\"\n      >\n        <template #header>\n          <div class=\"flex size-full animate-pulse space-x-4\">\n            <div class=\"bg-elevated flex size-full flex-1 rounded-lg\" />\n          </div>\n        </template>\n\n        <template #title>\n          <strong>{{ item.title }}</strong>\n        </template>\n\n        <template #icon />\n\n        <template #description>\n          <p>{{ item.description }}</p>\n        </template>\n      </BentoGridItem>\n    </BentoGrid>\n  </DemoSection>\n</template>\n"
+    }
+  ],
+  "related": [],
+  "whenToUse": [
+    "落地页的产品特性介绍区块，需要大小不一的卡片拼贴。",
+    "每张卡片带名称、描述与 CTA 链接的功能导航墙。",
+    "需要通过 background / header / icon 插槽自定义卡片视觉的场景。"
+  ],
+  "whenNotToUse": [
+    "等宽卡片的入场动画网格，改用 animate-grid。",
+    "纯图片展示，改用 photo-gallery 或 expandable-gallery。"
+  ],
+  "pitfalls": [
+    "仅 web 端可用。",
+    "需配合子组件使用：BentoGrid 为容器，卡片用 BentoGridItem（纯插槽）或 BentoGridCard。",
+    "BentoGridCard 的 name / description / href / cta 均为必填 props。",
+    "跨列布局需自行在子项上加类名（如示例中的 md:col-span-2）。"
+  ],
+  "dependencies": [],
+  "install": {
+    "cli": "npx reborn-ui@latest add bento-grid"
+  },
+  "sourceRefs": {
+    "web": [
+      "app/components/reborn/ui/bento-grid/BentoGrid.vue",
+      "app/components/reborn/ui/bento-grid/BentoGridCard.vue",
+      "app/components/reborn/ui/bento-grid/BentoGridItem.vue",
+      "app/components/reborn/ui/bento-grid/index.ts"
+    ]
+  },
+  "docPath": "content/2.components/miscellaneous/bento-grid.md",
+  "_meta": {
+    "contentHash": "87051c281085f851a50169ca87ab8cee60c99605",
+    "hasOverride": true,
+    "extractors": {
+      "web": "ok",
+      "uniapp": "absent",
+      "docs": "found"
+    }
+  }
+}

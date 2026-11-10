@@ -1,0 +1,191 @@
+{
+  "$schema": "../schema/component.schema.json",
+  "id": "reborn-statistic",
+  "title": "Statistic 统计",
+  "description": "数字指标展示：支持连续计数动画、精度、分隔符、自定义格式化，以及标题和前后缀插槽。",
+  "category": "data-display",
+  "tags": [
+    "css",
+    "tailwind",
+    "statistic",
+    "number",
+    "animation"
+  ],
+  "aliases": [
+    "statistic",
+    "统计",
+    "统计数值",
+    "指标",
+    "数据指标",
+    "数字卡片",
+    "kpi"
+  ],
+  "platforms": [
+    "web"
+  ],
+  "props": [
+    {
+      "name": "value",
+      "type": "number",
+      "required": false,
+      "description": "数字内容，非有限数值按 0 显示",
+      "default": "0"
+    },
+    {
+      "name": "decimalSeparator",
+      "type": "string",
+      "required": false,
+      "description": "小数点符号",
+      "default": "'.'"
+    },
+    {
+      "name": "formatter",
+      "type": "(value: number) => string | number",
+      "required": false,
+      "description": "自定义格式化；传入后优先于精度和分隔符"
+    },
+    {
+      "name": "groupSeparator",
+      "type": "string",
+      "required": false,
+      "description": "千分位标识符，传空字符串关闭分组",
+      "default": "','"
+    },
+    {
+      "name": "precision",
+      "type": "number",
+      "required": false,
+      "description": "小数位数，取 0–20 之间的整数，超出时收敛到边界",
+      "default": "0"
+    },
+    {
+      "name": "animated",
+      "type": "boolean",
+      "required": false,
+      "description": "默认从零连续计数；自定义格式化与系统减少动态效果时直接显示",
+      "default": "true"
+    },
+    {
+      "name": "duration",
+      "type": "number",
+      "required": false,
+      "description": "单次数值过渡时长，单位毫秒；小于等于 0 或非有限值时立即显示",
+      "default": "1500"
+    },
+    {
+      "name": "prefix",
+      "type": "string",
+      "required": false,
+      "description": "数字区前缀，同名插槽优先"
+    },
+    {
+      "name": "suffix",
+      "type": "string",
+      "required": false,
+      "description": "数字区后缀，同名插槽优先"
+    },
+    {
+      "name": "title",
+      "type": "string",
+      "required": false,
+      "description": "数字标题，同名插槽优先"
+    },
+    {
+      "name": "valueStyle",
+      "type": "string | CSSProperties",
+      "required": false,
+      "description": "数字区行内样式，包含前后缀"
+    },
+    {
+      "name": "class",
+      "type": "ClassValue",
+      "required": false,
+      "description": "根容器追加类名"
+    },
+    {
+      "name": "ui",
+      "type": "StatisticUI",
+      "required": false,
+      "description": "按结构键覆盖内部节点类名 可用键（从源码抽取，以此为准）——Web：content、prefix、root、suffix、title、value。",
+      "default": "() => ({})"
+    }
+  ],
+  "events": [],
+  "slots": [
+    {
+      "name": "title",
+      "description": "数字标题，覆盖 `title` 文字。"
+    },
+    {
+      "name": "prefix",
+      "description": "数字区之前的内容，覆盖 `prefix` 文字。"
+    },
+    {
+      "name": "suffix",
+      "description": "数字区之后的内容，覆盖 `suffix` 文字。"
+    }
+  ],
+  "exposes": [
+    {
+      "name": "displayValue",
+      "description": ""
+    }
+  ],
+  "examples": [
+    {
+      "title": "Web 演示",
+      "path": "app/components/reborn/examples/reborn-statistic/RebornStatisticDemo.vue",
+      "source": "demo",
+      "platform": "web",
+      "code": "<script setup lang=\"ts\">\nimport type { PlaygroundControlGroup } from '~/components/common/play-ground/Playground.vue';\nimport type { StatisticProps } from '~/components/reborn/ui/reborn-statistic/RebornStatistic.vue';\nimport { DemoBlock, DemoNote, DemoSection, Icon, Playground } from '#components';\nimport dayjs from 'dayjs';\nimport { computed, onMounted, ref, shallowRef, useTemplateRef } from 'vue';\nimport RebornButton from '~/components/reborn/ui/reborn-button/RebornButton.vue';\nimport RebornCountdown from '~/components/reborn/ui/reborn-countdown/RebornCountdown.vue';\nimport RebornStatistic from '~/components/reborn/ui/reborn-statistic/RebornStatistic.vue';\n\n// ─── 交互演练场 ─────────────────────────────────────────────────\n\n/** 演练场涵盖数字格式和文本修饰；辅助开关只控制示例中的格式化函数与样式。 */\nconst defaultState = {\n  value: 1234567.89,\n  title: '累计收入',\n  precision: 2,\n  animated: true,\n  duration: 1500,\n  decimalSeparator: '.',\n  groupSeparator: ',',\n  prefix: '¥',\n  suffix: '元',\n  customFormatter: false,\n  emphasized: false,\n};\nconst state = ref({ ...defaultState });\n/** 「强调数值」开关只影响数字区颜色，关闭时不传 valueStyle */\nconst playgroundValueStyle = computed<StatisticProps['valueStyle']>(() => (state.value.emphasized ? { color: 'var(--color-primary-6)' } : undefined));\n/** 读取公开的格式化显示值。 */\nconst statisticRef = useTemplateRef<InstanceType<typeof RebornStatistic>>(\"statisticRef\");\n/** 原生输入框默认有字符宽度，收为零后由 flex 分配空间，避免撑开演练场窄栏。 */\nconst inputControlProps = { ui: { input: 'w-0' } };\n/** 自定义格式化示例：将数值换算成万，不再应用默认分隔符与精度。 */\nfunction formatTenThousand(value: number) {\n  return `${(value / 10000).toFixed(2)} 万`;\n}\n/** 重置全部演练参数。 */\nfunction resetState() {\n  state.value = { ...defaultState };\n}\n/** 演练场参数分组。 */\nconst controls: PlaygroundControlGroup[] = [\n  { title: '基础属性', children: [\n    { label: '数字内容', key: 'value', component: 'input-number', defaultValue: defaultState.value, props: inputControlProps },\n    { label: '数字标题', key: 'title', component: 'input', defaultValue: defaultState.title, props: inputControlProps },\n    { label: '小数位数', key: 'precision', component: 'input-number', defaultValue: 2, props: { ...inputControlProps, min: 0, max: 20, step: 1 } },\n    { label: '小数点符号', key: 'decimalSeparator', component: 'input', defaultValue: '.', props: inputControlProps },\n    { label: '千分位符号（可留空）', key: 'groupSeparator', component: 'input', defaultValue: ',', props: inputControlProps },\n  ] },\n  { title: '文本与样式', children: [\n    { label: '前缀', key: 'prefix', component: 'input', defaultValue: '¥', props: inputControlProps },\n    { label: '后缀', key: 'suffix', component: 'input', defaultValue: '元', props: inputControlProps },\n    { label: '按万自定义格式化', key: 'customFormatter', component: 'checkbox', defaultValue: false, codeIgnore: true },\n    { label: '数字区使用主题色', key: 'emphasized', component: 'checkbox', defaultValue: false, codeIgnore: true },\n  ] },\n  { title: '数字动画', children: [\n    { label: '连续计数', key: 'animated', component: 'checkbox', defaultValue: true },\n    { label: '计数时长（毫秒）', key: 'duration', component: 'input-number', defaultValue: 1500, props: { ...inputControlProps, min: 0, max: 5000, step: 100 } },\n  ] },\n];\n/** 当前配置对应的可复制代码，保留默认值以便核对。 */\nconst statisticCode = computed(() => {\n  const s = state.value;\n  const formatter = s.customFormatter ? '\\n  :formatter=\"value => (value / 10000).toFixed(2) + \\' 万\\'\"' : '';\n  return `<RebornStatistic\\n  :value=\"${s.value}\"\\n  title=\"${s.title}\"\\n  :precision=\"${s.precision}\"\\n  :animated=\"${s.animated}\"\\n  :duration=\"${s.duration}\"\\n  decimal-separator=\"${s.decimalSeparator}\"\\n  group-separator=\"${s.groupSeparator}\"\\n  prefix=\"${s.prefix}\"\\n  suffix=\"${s.suffix}\"${formatter}\\n  :value-style=\"${s.emphasized ? \"{ color: 'var(--color-primary-6)' }\" : '{}'}\"\\n/>`;\n});\n\n// ─── 场景演示状态 ───────────────────────────────────────────────\n\n/** 采用参考示例的交易量，挂载后从零连续增长，重播仅重建该实例。 */\nconst transactionValue = shallowRef(172000);\nconst transactionKey = shallowRef(0);\n/** 目标在客户端初始化，避免服务端与浏览器使用不同时钟。 */\nconst activityTarget = shallowRef<number>();\nconst vipTarget = shallowRef<number>();\nconst nextMonthTarget = shallowRef<dayjs.Dayjs>();\nconst shortTarget = shallowRef<number>();\nconst shortRemaining = shallowRef(0);\nconst shortFinished = shallowRef(false);\n/** 会员倒计时单独重置为两天，不影响其余示例。 */\nfunction resetVip() {\n  vipTarget.value = Date.now() + 2 * 86400000;\n}\n/** 短倒计时可重复开始，便于看到结束事件后的状态。 */\nfunction restartShortCountdown() {\n  shortFinished.value = false;\n  shortTarget.value = Date.now() + 5000;\n}\nonMounted(() => {\n  activityTarget.value = Date.now() + 7 * 3600000;\n  nextMonthTarget.value = dayjs().add(1, 'month').startOf('month');\n  resetVip();\n  restartShortCountdown();\n});\n/** 比率格式化函数保持引用稳定。 */\nfunction formatPercent(value: number) { return `${(value * 100).toFixed(2)}%`; }\n/** 样式与组合布局：valueStyle 把整个数字区染成成功色 */\nconst incomeValueStyle: StatisticProps['valueStyle'] = { color: 'var(--color-success-6)' };\n/** 样式与组合布局：ui 只放大数字、弱化后缀 */\nconst largeContentUi: StatisticProps['ui'] = { content: 'text-3xl', suffix: 'text-base text-gray-8' };\n</script>\n\n<template>\n  <div class=\"flex w-full min-w-0 flex-col\">\n    <Playground\n      v-model=\"state\" :controls=\"controls\" :code=\"statisticCode\" component-name=\"RebornStatistic\"\n      title=\"交互演练场\" description=\"调节数值、精度和分隔符，查看默认格式与自定义格式化的优先关系。\"\n    >\n      <template #tag>\n        <RebornButton size=\"sm\" variant=\"soft\" color=\"neutral\" @click=\"resetState\">\n          <template #leading><Icon name=\"lucide:rotate-ccw\" size=\"12\" /></template>\n          重置配置\n        </RebornButton>\n      </template>\n      <div class=\"flex w-full min-w-0 flex-col items-start gap-6\">\n        <RebornStatistic\n          ref=\"statisticRef\" :value=\"state.value\" :title=\"state.title\" :precision=\"state.precision\"\n          :animated=\"state.animated\" :duration=\"state.duration\"\n          :decimal-separator=\"state.decimalSeparator\" :group-separator=\"state.groupSeparator\" :prefix=\"state.prefix\"\n          :suffix=\"state.suffix\" :formatter=\"state.customFormatter ? formatTenThousand : undefined\"\n          :value-style=\"playgroundValueStyle\"\n        />\n        <div class=\"flex flex-wrap gap-2\">\n          <RebornButton size=\"sm\" variant=\"soft\" @click=\"state.value += 100\">增加 100</RebornButton>\n          <RebornButton size=\"sm\" variant=\"soft\" color=\"neutral\" @click=\"state.value -= 100\">减少 100</RebornButton>\n        </div>\n        <DemoNote tone=\"dimmed\" class=\"font-mono text-xs\">\n          displayValue：{{ statisticRef?.displayValue }}\n        </DemoNote>\n      </div>\n    </Playground>\n\n    <DemoSection title=\"基础统计\">\n      <template #description><code>value</code> 默认是 0，<code>title</code> 描述指标；不传标题时不保留空白行。</template>\n      <DemoBlock layout=\"grid\" :columns=\"3\">\n        <RebornStatistic title=\"活跃用户\" :value=\"268500\" suffix=\"人\" />\n        <RebornStatistic title=\"今日订单\" :value=\"1386\" suffix=\"笔\" />\n        <RebornStatistic title=\"待处理任务\" />\n      </DemoBlock>\n    </DemoSection>\n\n    <DemoSection title=\"数字动画\">\n      <template #description><code>animated</code> 默认开启，首次从 0 连续计数到目标；<code>duration</code> 默认 1500 毫秒，更新目标时从当前数值衔接。</template>\n      <DemoBlock layout=\"grid\" :columns=\"2\">\n        <RebornStatistic :key=\"transactionKey\" title=\"累计交易量\" :value=\"transactionValue\" suffix=\"笔\" />\n        <RebornStatistic title=\"关闭动画\" :value=\"transactionValue\" suffix=\"笔\" :animated=\"false\" />\n      </DemoBlock>\n      <div class=\"mt-4 flex flex-wrap gap-2\">\n        <RebornButton size=\"sm\" variant=\"soft\" @click=\"transactionValue += 10000\">增加 10,000</RebornButton>\n        <RebornButton size=\"sm\" variant=\"soft\" color=\"neutral\" @click=\"transactionValue -= 10000\">减少 10,000</RebornButton>\n        <RebornButton size=\"sm\" variant=\"soft\" color=\"neutral\" @click=\"transactionKey++\">重播计数</RebornButton>\n      </div>\n      <DemoNote tone=\"dimmed\" class=\"mt-3\">与参考页累计交易量相同，默认从 0 计数到 172,000；系统开启“减少动态效果”、时长为 0 或传入自定义格式化函数时直接显示结果。</DemoNote>\n    </DemoSection>\n\n    <DemoSection title=\"精度与分隔符\">\n      <template #description><code>precision</code> 控制四舍五入的小数位数，<code>groupSeparator</code> 为空时关闭千分位分组。</template>\n      <DemoBlock layout=\"grid\" :columns=\"3\">\n        <RebornStatistic title=\"默认分组\" :value=\"1234567.895\" :precision=\"2\" />\n        <RebornStatistic title=\"交换分隔符\" :value=\"1234567.895\" :precision=\"2\" decimal-separator=\",\" group-separator=\".\" />\n        <RebornStatistic title=\"不使用分组\" :value=\"1234567.895\" :precision=\"3\" group-separator=\"\" />\n      </DemoBlock>\n    </DemoSection>\n\n    <DemoSection title=\"自定义格式化\">\n      <template #description><code>formatter</code> 接收原始数值，返回结果直接显示，精度和分隔符不会再次加工。</template>\n      <DemoBlock layout=\"grid\" :columns=\"2\">\n        <RebornStatistic title=\"以万为单位\" :value=\"1234567.89\" :formatter=\"formatTenThousand\" />\n        <RebornStatistic title=\"转化率\" :value=\"0.8675\" :formatter=\"formatPercent\" />\n      </DemoBlock>\n    </DemoSection>\n\n    <DemoSection title=\"标题与前后缀\">\n      <template #description><code>title</code>、<code>prefix</code> 和 <code>suffix</code> 都支持同名插槽，图标与单位可单独排版。</template>\n      <DemoBlock layout=\"grid\" :columns=\"2\">\n        <RebornStatistic title=\"销售额\" :value=\"9860.5\" :precision=\"2\" prefix=\"¥\" suffix=\"元\" />\n        <RebornStatistic :value=\"7.8\" :precision=\"1\">\n          <template #title><span class=\"inline-flex items-center gap-1\">较昨日增长 <Icon name=\"lucide:info\" class=\"size-3.5\" /></span></template>\n          <template #prefix><Icon name=\"lucide:trending-up\" class=\"size-5 text-success-6\" /></template>\n          <template #suffix><span class=\"text-base text-gray-8\">%</span></template>\n        </RebornStatistic>\n      </DemoBlock>\n    </DemoSection>\n\n    <DemoSection title=\"样式与组合布局\">\n      <template #description><code>valueStyle</code> 覆盖整个数字区，<code>ui</code> 按内部节点覆盖 Tailwind 类名，指标之间的布局由父容器控制。</template>\n      <DemoBlock layout=\"grid\" :columns=\"2\">\n        <RebornStatistic title=\"本月收入\" :value=\"68235.5\" :precision=\"2\" prefix=\"¥\" :value-style=\"incomeValueStyle\" />\n        <RebornStatistic title=\"目标完成率\" :value=\"92\" suffix=\"%\" :ui=\"largeContentUi\" />\n      </DemoBlock>\n    </DemoSection>\n\n    <DemoSection title=\"倒计时\">\n      <template #description>使用 <code>RebornCountdown</code>，<code>value</code> 是目标时间；<code>format</code> 控制时间单位，更新目标即可重新开始。</template>\n      <DemoBlock layout=\"grid\" :columns=\"2\">\n        <RebornCountdown title=\"距离活动开始\" :value=\"activityTarget\" />\n        <div class=\"flex flex-col items-start gap-3\">\n          <RebornCountdown title=\"会员剩余时长\" :value=\"vipTarget\" />\n          <RebornButton size=\"sm\" variant=\"soft\" @click=\"resetVip\">重置为 2 天</RebornButton>\n        </div>\n        <div class=\"flex flex-col items-start gap-3\">\n          <RebornCountdown :value=\"nextMonthTarget\" format=\"DD [天] HH:mm:ss\">\n            <template #title><span class=\"inline-flex items-center gap-1\"><Icon name=\"lucide:calendar\" class=\"size-4\" /> 距离下月开始</span></template>\n          </RebornCountdown>\n          <DemoNote tone=\"dimmed\">目标日期：{{ nextMonthTarget?.format('YYYY-MM-DD') }}</DemoNote>\n        </div>\n        <div class=\"flex flex-col items-start gap-3\">\n          <RebornCountdown title=\"5 秒倒计时\" :value=\"shortTarget\" @change=\"shortRemaining = $event\" @finish=\"shortFinished = true\" />\n          <RebornButton size=\"sm\" variant=\"soft\" @click=\"restartShortCountdown\">重新开始 5 秒</RebornButton>\n          <DemoNote tone=\"dimmed\">{{ shortFinished ? '倒计时已结束' : `剩余 ${shortRemaining} 毫秒` }}</DemoNote>\n        </div>\n      </DemoBlock>\n      <DemoNote tone=\"dimmed\" class=\"mt-3\">默认格式累计小时，两天显示为 48 小时；加入 DD 则拆分为天与小时。倒计时按实际时间更新，不使用统计数值的插值动画。</DemoNote>\n    </DemoSection>\n  </div>\n</template>\n"
+    }
+  ],
+  "related": [],
+  "whenToUse": [
+    "仪表盘展示金额、人数或订单量：用 value 和 title 提供数值与指标名称。",
+    "固定小数位或地区分组：用 precision、decimalSeparator、groupSeparator。",
+    "换算万、百分比或业务文本：用 formatter 返回最终显示内容。",
+    "从零连续计数到目标或衔接数值变化：animated 默认开启，duration 默认 1500 毫秒。"
+  ],
+  "whenNotToUse": [
+    "需要持续倒计时，改用 reborn-countdown。",
+    "需要编辑数值，改用 reborn-input-number。",
+    "需要图形化进度，改用 reborn-progress。",
+    "只要数字从起点滚动到目标值的动效、不需要标题前后缀，改用 number-ticker。"
+  ],
+  "pitfalls": [
+    "formatter 优先于精度和分隔符，返回内容按文本渲染，并关闭计数动画。",
+    "系统开启减少动态效果或 duration 小于等于 0 时立即显示目标；displayValue 在动画期间为当前中间值。",
+    "服务端和水合首帧直接展示目标；客户端挂载后从零计数，重新播放可更新组件 key。",
+    "precision 仅影响展示，限制在 0–20；不会改动 value。",
+    "valueStyle 作用于包含前后缀的整个数字区；独立样式用 ui 或具名插槽。",
+    "仅 Web 实现，没有 UniApp 同名组件。"
+  ],
+  "dependencies": [
+    "clsx",
+    "motion-v",
+    "tailwind-merge",
+    "tailwind-variants"
+  ],
+  "install": {
+    "cli": "npx reborn-ui@latest add reborn-statistic"
+  },
+  "sourceRefs": {
+    "web": [
+      "app/components/reborn/ui/reborn-statistic/RebornStatistic.vue",
+      "app/components/reborn/ui/reborn-statistic/index.ts",
+      "app/components/reborn/ui/reborn-statistic/reborn-statistic.config.ts",
+      "app/components/reborn/ui/reborn-statistic/reborn-statistic.utils.ts"
+    ]
+  },
+  "docPath": "content/2.components/data/reborn-statistic.md",
+  "_meta": {
+    "contentHash": "27c34a5dd2c4d3db4eba309f9501e6497c1ecdd5",
+    "hasOverride": true,
+    "extractors": {
+      "web": "ok",
+      "uniapp": "absent",
+      "docs": "found"
+    }
+  }
+}

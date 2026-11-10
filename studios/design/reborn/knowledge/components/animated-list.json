@@ -1,0 +1,131 @@
+{
+  "$schema": "../schema/component.schema.json",
+  "id": "animated-list",
+  "title": "动画列表",
+  "description": "用于让列表项按固定延迟逐条进场的通知流列表组件。",
+  "category": "misc",
+  "tags": [
+    "css",
+    "tailwind",
+    "magic-ui"
+  ],
+  "aliases": [],
+  "platforms": [
+    "web"
+  ],
+  "props": [
+    {
+      "name": "class",
+      "type": "string",
+      "required": false,
+      "description": "根节点追加的类名"
+    },
+    {
+      "name": "items",
+      "type": "T[]",
+      "required": false,
+      "description": "逐条进场的数据源，每一项交给 item 插槽渲染",
+      "default": "() => []"
+    },
+    {
+      "name": "delay",
+      "type": "number",
+      "required": false,
+      "description": "相邻两条进场的间隔，单位毫秒",
+      "default": "1000"
+    },
+    {
+      "name": "name",
+      "type": "string",
+      "required": false,
+      "description": "",
+      "default": "\"\""
+    },
+    {
+      "name": "description",
+      "type": "string",
+      "required": false,
+      "description": "",
+      "default": "\"\""
+    },
+    {
+      "name": "time",
+      "type": "string",
+      "required": false,
+      "description": "",
+      "default": "\"\""
+    },
+    {
+      "name": "icon",
+      "type": "string",
+      "required": false,
+      "description": "",
+      "default": "\"\""
+    },
+    {
+      "name": "color",
+      "type": "string",
+      "required": false,
+      "description": "",
+      "default": "\"\""
+    }
+  ],
+  "events": [],
+  "slots": [
+    {
+      "name": "item",
+      "props": "(scope: { item: T; index: number }) => unknown",
+      "description": "单条列表项：item 为该项数据，index 为它在 items 中的下标"
+    }
+  ],
+  "exposes": [],
+  "examples": [
+    {
+      "title": "Web 演示",
+      "path": "app/components/reborn/examples/animated-list/AnimatedListDemo.vue",
+      "source": "demo",
+      "platform": "web",
+      "code": "<script setup lang=\"ts\">\nconst notifications = [\n  {\n    name: \"Payment received\",\n    description: \"Reborn UI\",\n    time: \"15m ago\",\n    icon: \"💸\",\n    color: \"#00C9A7\",\n  },\n  {\n    name: \"User signed up\",\n    description: \"Reborn UI\",\n    time: \"10m ago\",\n    icon: \"👤\",\n    color: \"#FFB800\",\n  },\n  {\n    name: \"New message\",\n    description: \"Reborn UI\",\n    time: \"5m ago\",\n    icon: \"💬\",\n    color: \"#FF3D71\",\n  },\n  {\n    name: \"New event\",\n    description: \"Reborn UI\",\n    time: \"2m ago\",\n    icon: \"🗞️\",\n    color: \"#1E86FF\",\n  },\n  {\n    name: \"Task completed\",\n    description: \"Reborn UI\",\n    time: \"1m ago\",\n    icon: \"✅\",\n    color: \"#45B26B\",\n  },\n];\n</script>\n\n<template>\n  <ClientOnly>\n    <div class=\"relative flex h-[500px] w-full flex-col overflow-hidden p-6\">\n      <AnimatedList :items=\"notifications\">\n        <template #item=\"{ item }\">\n          <Notification :name=\"item.name\"\n            :description=\"item.description\" :icon=\"item.icon\" :color=\"item.color\" :time=\"item.time\" />\n        </template>\n      </AnimatedList>\n    </div>\n  </ClientOnly>\n</template>\n"
+    }
+  ],
+  "related": [],
+  "whenToUse": [
+    "落地页模拟实时通知、消息推送效果。",
+    "展示支付、注册等事件流的动态演示。",
+    "需要列表项逐个进入视图的营销区块。"
+  ],
+  "whenNotToUse": [
+    "轮播展示用户评价，改用 animated-testimonials。",
+    "静态数据列表，直接用普通列表渲染即可。"
+  ],
+  "pitfalls": [
+    "仅 web 端可用。",
+    "delay 单位为毫秒（默认 1000），控制每项进场间隔。",
+    "列表数据通过 items 传入，单项在 item 作用域插槽中渲染（作用域参数 item、index，可配合 Notification 子组件）；组件不读取默认插槽。",
+    "轮播在挂载后启动，服务端渲染时为空容器；定时器随组件卸载自动停止。"
+  ],
+  "dependencies": [
+    "@vueuse/core",
+    "motion-v"
+  ],
+  "install": {
+    "cli": "npx reborn-ui@latest add animated-list"
+  },
+  "sourceRefs": {
+    "web": [
+      "app/components/reborn/ui/animated-list/AnimatedList.vue",
+      "app/components/reborn/ui/animated-list/Notification.vue",
+      "app/components/reborn/ui/animated-list/index.ts"
+    ]
+  },
+  "docPath": "content/2.components/miscellaneous/animated-list.md",
+  "_meta": {
+    "contentHash": "5848e00fe7f533ba0b67628ab57594ff3ab52371",
+    "hasOverride": true,
+    "extractors": {
+      "web": "ok",
+      "uniapp": "absent",
+      "docs": "found"
+    }
+  }
+}

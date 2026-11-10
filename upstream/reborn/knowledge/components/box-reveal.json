@@ -9,6 +9,7 @@
     "tailwind",
     "magic-ui"
   ],
+  "aliases": [],
   "platforms": [
     "web"
   ],
@@ -87,7 +88,7 @@
   },
   "docPath": "content/2.components/text-animations/box-reveal.md",
   "_meta": {
-    "contentHash": "1d5ffde193efc384fced5321b8000c9679eafbe3",
+    "contentHash": "05718fdbfecbb3e6a71e07be448924667bf3cdfc",
     "hasOverride": true,
     "extractors": {
       "web": "ok",

@@ -9,6 +9,7 @@
     "tailwind",
     "magic-ui"
   ],
+  "aliases": [],
   "platforms": [
     "web"
   ],
@@ -81,7 +82,7 @@
   },
   "docPath": "content/2.components/text-animations/sparkles-text.md",
   "_meta": {
-    "contentHash": "ca265f2000a789fd2b6017ce14483a3e28d083b5",
+    "contentHash": "4eddacf0fd84015f0fe47b8ca1c5bf7a814beabe",
     "hasOverride": true,
     "extractors": {
       "web": "ok",

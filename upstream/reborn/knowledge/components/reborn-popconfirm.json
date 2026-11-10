@@ -10,6 +10,13 @@
     "feedback",
     "popover"
   ],
+  "aliases": [
+    "popconfirm",
+    "气泡确认",
+    "二次确认",
+    "确认气泡",
+    "删除确认"
+  ],
   "platforms": [
     "web"
   ],
@@ -234,7 +241,7 @@
   },
   "docPath": "content/2.components/miscellaneous/reborn-popconfirm.md",
   "_meta": {
-    "contentHash": "eaaf312db31597b271750807b183128e2a92bfda",
+    "contentHash": "26327b3625ed75770ed0e4ed6ab3d2221db75e49",
     "hasOverride": true,
     "extractors": {
       "web": "ok",

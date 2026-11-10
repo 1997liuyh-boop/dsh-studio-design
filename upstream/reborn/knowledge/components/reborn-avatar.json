@@ -10,6 +10,10 @@
     "avatar",
     "image"
   ],
+  "aliases": [
+    "avatar",
+    "头像"
+  ],
   "platforms": [
     "web"
   ],
@@ -29,9 +33,13 @@
     },
     {
       "name": "shape",
-      "type": "AvatarShape",
+      "type": "'circle' | 'square'",
       "required": false,
       "description": "头像形状；未传时继承组设置，最终默认 circle",
+      "options": [
+        "circle",
+        "square"
+      ],
       "default": "继承组，最终 `circle"
     },
     {
@@ -54,10 +62,17 @@
     },
     {
       "name": "fit",
-      "type": "AvatarFit",
+      "type": "'fill' | 'contain' | 'cover' | 'none' | 'scale-down'",
       "required": false,
       "description": "图片在头像外框中的适应方式",
-      "default": "'cover'"
+      "default": "'cover'",
+      "options": [
+        "fill",
+        "contain",
+        "cover",
+        "none",
+        "scale-down"
+      ]
     },
     {
       "name": "class",
@@ -138,7 +153,7 @@
   },
   "docPath": "content/2.components/data/reborn-avatar.md",
   "_meta": {
-    "contentHash": "a7647d2a6e567bc833792d0da06d81465a6b6c2e",
+    "contentHash": "52a12c0959f2a6c29a9d10f1af65b3f4ba3aa307",
     "hasOverride": true,
     "extractors": {
       "web": "ok",

@@ -10,6 +10,7 @@
     "button",
     "magic-ui"
   ],
+  "aliases": [],
   "platforms": [
     "web"
   ],
@@ -80,7 +81,7 @@
   },
   "docPath": "content/2.components/button/rainbow-button.md",
   "_meta": {
-    "contentHash": "e0139f243ff78c255cd0e7b03537475cbbc8524b",
+    "contentHash": "a566b4eb7cbfb084a65703a05d6403bfd4cc3812",
     "hasOverride": true,
     "extractors": {
       "web": "ok",

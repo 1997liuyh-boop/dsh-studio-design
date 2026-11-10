@@ -10,6 +10,7 @@
     "button",
     "magic-ui"
   ],
+  "aliases": [],
   "platforms": [
     "web"
   ],
@@ -68,7 +69,7 @@
   },
   "docPath": "content/2.components/button/interactive-hover-button.md",
   "_meta": {
-    "contentHash": "622603c85818e213e434f434bb5233a9ea9be875",
+    "contentHash": "ba0cc57abfb2840672662ce2ee845c7999fa55b1",
     "hasOverride": true,
     "extractors": {
       "web": "ok",

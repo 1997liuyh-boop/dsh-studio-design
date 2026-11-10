@@ -9,6 +9,13 @@
     "reborn-fab",
     "uniapp"
   ],
+  "aliases": [
+    "fab",
+    "悬浮按钮",
+    "浮动按钮",
+    "floating action button",
+    "快捷入口"
+  ],
   "platforms": [
     "web",
     "uniapp"
@@ -333,7 +340,7 @@
   },
   "docPath": "content/2.components/navigation/reborn-fab.md",
   "_meta": {
-    "contentHash": "2c337f0089cfe4dbe2d2c0798bd99029286d734a",
+    "contentHash": "1d6b6a2182856a8b3f32ea818a567ac7e57d41c5",
     "hasOverride": true,
     "extractors": {
       "web": "ok",

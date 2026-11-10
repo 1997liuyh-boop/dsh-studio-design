@@ -5,6 +5,11 @@
   "description": "用于列表底部展示加载中、加载失败与没有更多状态的 uniapp 组件。",
   "category": "misc",
   "tags": [],
+  "aliases": [
+    "load more",
+    "加载更多",
+    "上拉加载"
+  ],
   "platforms": [
     "uniapp"
   ],
@@ -146,7 +151,7 @@
   },
   "docPath": "content/2.components/miscellaneous/reborn-loadmore.md",
   "_meta": {
-    "contentHash": "2432aebc7ec2cdd0d3abe6c82fceb4fc1b967cf1",
+    "contentHash": "e3aebeab8dbbfda58bd67bbb3b3468c8b7135212",
     "hasOverride": true,
     "extractors": {
       "web": "absent",

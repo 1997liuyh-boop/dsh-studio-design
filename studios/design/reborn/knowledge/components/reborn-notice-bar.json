@@ -1,0 +1,253 @@
+{
+  "$schema": "../schema/component.schema.json",
+  "id": "reborn-notice-bar",
+  "title": "NoticeBar 通知栏",
+  "description": "用于循环播放一组消息通知的通告栏组件，支持水平滚动与垂直轮播。",
+  "category": "navigation",
+  "tags": [],
+  "aliases": [
+    "notice bar",
+    "通知栏",
+    "通告栏",
+    "公告栏",
+    "滚动公告"
+  ],
+  "platforms": [
+    "web",
+    "uniapp"
+  ],
+  "props": [
+    {
+      "name": "text",
+      "type": "string | string[]",
+      "required": false,
+      "description": "通知文本内容，支持单条或多条",
+      "default": "''"
+    },
+    {
+      "name": "speed",
+      "type": "number",
+      "required": false,
+      "description": "滚动速率，单位 px/s（水平滚动时生效）",
+      "default": "60"
+    },
+    {
+      "name": "scrollable",
+      "type": "boolean",
+      "required": false,
+      "description": "是否开启滚动播放，内容溢出时生效",
+      "default": "true"
+    },
+    {
+      "name": "wrapable",
+      "type": "boolean",
+      "required": false,
+      "description": "是否开启多行展示",
+      "default": "false"
+    },
+    {
+      "name": "disabled",
+      "type": "boolean",
+      "required": false,
+      "description": "是否禁用",
+      "default": "false"
+    },
+    {
+      "name": "color",
+      "type": "string",
+      "required": false,
+      "description": "文本颜色",
+      "default": "'#888A8C'"
+    },
+    {
+      "name": "background",
+      "type": "string",
+      "required": false,
+      "description": "背景色",
+      "default": "'#F7F7F9'"
+    },
+    {
+      "name": "leftIcon",
+      "type": "string",
+      "required": false,
+      "description": "左侧图标类名 (e.g. i-lucide-volume-2)"
+    },
+    {
+      "name": "rightIcon",
+      "type": "string",
+      "required": false,
+      "description": "右侧图标类名 (e.g. i-lucide-chevron-right)"
+    },
+    {
+      "name": "direction",
+      "type": "NoticeBarDirection",
+      "required": false,
+      "description": "滚动方向：horizontal 水平滚动，vertical 垂直滚动",
+      "default": "'horizontal'"
+    },
+    {
+      "name": "interval",
+      "type": "number",
+      "required": false,
+      "description": "垂直滚动时的轮播间隔时间，单位 ms",
+      "default": "3000"
+    },
+    {
+      "name": "customClass",
+      "type": "string",
+      "required": false,
+      "description": "自定义类名",
+      "default": "''"
+    },
+    {
+      "name": "customStyle",
+      "type": "string",
+      "required": false,
+      "description": "自定义样式",
+      "default": "''"
+    },
+    {
+      "name": "ui",
+      "type": "NoticeBarUI",
+      "required": false,
+      "description": "UI 覆盖 可用键（从源码抽取，以此为准）——UniApp：content、icon、root、text、textWrapper、verticalItem、verticalWrapper。",
+      "default": "() => ({})",
+      "platform": "uniapp"
+    },
+    {
+      "name": "ui",
+      "type": "NoticeBarUI",
+      "required": false,
+      "description": "UI 覆盖 可用键（从源码抽取，以此为准）——Web：icon、root、text、textWrapper、verticalItem、verticalWrapper。",
+      "default": "() => ({})",
+      "platform": "web"
+    }
+  ],
+  "events": [
+    {
+      "name": "click",
+      "payload": "(e: 'click'): void;",
+      "description": "点击通知栏时触发；禁用时不触发，点击 `right-icon` 属性渲染的图标也不触发"
+    },
+    {
+      "name": "close",
+      "payload": "(e: 'close'): void;",
+      "description": "点击 `right-icon` 属性渲染的右侧图标时触发；用 `right-icon` 插槽替换图标后不再触发，禁用时也不触发"
+    },
+    {
+      "name": "replay",
+      "payload": "(e: 'replay'): void;",
+      "description": "重新播放动画时触发"
+    },
+    {
+      "name": "change",
+      "payload": "(e: 'change', index: number): void;",
+      "description": "垂直滚动切换时触发"
+    }
+  ],
+  "slots": [
+    {
+      "name": "default",
+      "props": "",
+      "description": "通知主体内容。垂直模式下提供 `{ item: string, index: number }"
+    },
+    {
+      "name": "left-icon",
+      "props": "",
+      "description": "左侧图标区域"
+    },
+    {
+      "name": "right-icon",
+      "props": "",
+      "description": "右侧图标区域"
+    }
+  ],
+  "exposes": [
+    {
+      "name": "pause",
+      "description": "暂停播放：水平滚动动画停在原地，垂直轮播停止自动切换"
+    },
+    {
+      "name": "resume",
+      "description": "恢复被 pause 暂停的滚动/轮播"
+    },
+    {
+      "name": "replay",
+      "description": "从头重播：垂直模式回到第 0 条并重启轮播计时（触发 change），水平模式重新测量并重启滚动动画；完成后触发 replay 事件"
+    },
+    {
+      "name": "checkOverflow",
+      "description": "重新检测文本是否溢出并更新水平滚动状态；内容或容器尺寸变化后可手动调用（垂直模式下无效）"
+    },
+    {
+      "name": "goTo",
+      "description": "goTo(index)：垂直轮播模式下带过渡动画切换到指定索引并触发 change；水平模式或索引越界时无操作"
+    }
+  ],
+  "examples": [
+    {
+      "title": "Web 演示",
+      "path": "app/components/reborn/examples/reborn-notice-bar/RebornNoticeBarDemo.vue",
+      "source": "demo",
+      "platform": "web",
+      "code": "<script setup lang=\"ts\">\nimport { computed, shallowRef, useTemplateRef } from 'vue';\nimport RebornNoticeBar from \"~/components/reborn/ui/reborn-notice-bar/RebornNoticeBar.vue\";\n\n// ─── 交互演练场 ─────────────────────────────────────────────────\n\nconst state = shallowRef<Record<string, any>>({\n  text: \"在代码的宇宙里，每一行都是一颗星星，照亮前行的路。愿你的代码如诗般优雅，如画般美丽，Bug 永远追不上你的脚步。\",\n  speed: 60,\n  scrollable: true,\n  wrapable: false,\n  color: \"#ffffff\",\n  background: \"#35B6F2\",\n  leftIcon: \"lucide:volume-2\",\n  rightIcon: \"lucide:chevron-right\",\n});\n\n/** 演练场控制面板配置 */\nconst controls = [\n  {\n    title: \"内容配置\",\n    children: [\n      { label: \"通知文本\", key: \"text\", component: \"input\" as const, defaultValue: \"\" },\n      { label: \"左侧图标\", key: \"leftIcon\", component: \"input\" as const },\n      { label: \"右侧图标\", key: \"rightIcon\", component: \"input\" as const },\n    ],\n  },\n  {\n    title: \"滚动控制\",\n    children: [\n      { label: \"自动滚动\", key: \"scrollable\", component: \"checkbox\" as const, defaultValue: true },\n      { label: \"多行展示\", key: \"wrapable\", component: \"checkbox\" as const, defaultValue: false },\n      {\n        label: \"滚动速率\",\n        key: \"speed\",\n        component: \"slider\" as const,\n        defaultValue: 60,\n        props: { min: 10, max: 200, step: 10 },\n      },\n    ],\n  },\n  {\n    title: \"样式自定义\",\n    children: [\n      { label: \"文本颜色\", key: \"color\", component: \"color-picker\" as const, defaultValue: \"#ffffff\" },\n      { label: \"背景颜色\", key: \"background\", component: \"color-picker\" as const, defaultValue: \"#35B6F2\" },\n    ],\n  },\n];\n\n/** 演练场右上角展示的等价代码 */\nconst noticeBarCode = computed(() => {\n  const s = state.value;\n  const props: string[] = [`text=\"${s.text}\"`];\n\n  if (!s.scrollable) props.push(':scrollable=\"false\"');\n  if (s.wrapable) props.push(\"wrapable\");\n  if (s.speed !== 60) props.push(`:speed=\"${s.speed}\"`);\n  if (s.leftIcon) props.push(`left-icon=\"${s.leftIcon}\"`);\n  if (s.rightIcon) props.push(`right-icon=\"${s.rightIcon}\"`);\n  props.push(`color=\"${s.color}\"`, `background=\"${s.background}\"`);\n\n  return `<RebornNoticeBar\\n  ${props.join(\"\\n  \")}\\n/>`;\n});\n\n// ─── 场景演示状态 ───────────────────────────────────────────────\n\n/** 可关闭示例的显隐状态 */\nconst visible = shallowRef(true);\nconst noticeBarRef = useTemplateRef<InstanceType<typeof RebornNoticeBar>>(\"noticeBarRef\");\n\n/** 组件完成重播后派发 replay 事件，计数用来确认 replay() 已生效 */\nconst replayCount = shallowRef(0);\n\n/** 通过模板 ref 调用暴露的 replay()，让滚动从头开始 */\nfunction handleReplay() {\n  noticeBarRef.value?.replay();\n}\n\nfunction onReplay() {\n  replayCount.value++;\n}\n\nfunction handleClose() {\n  visible.value = false;\n}\n</script>\n\n<template>\n  <div class=\"flex w-full min-w-0 flex-col\">\n    <Playground\n      v-model=\"state\"\n      :controls=\"controls\"\n      :code=\"noticeBarCode\"\n      component-name=\"RebornNoticeBar\"\n      title=\"交互演练场\"\n      description=\"调节滚动速率、图标与配色，实时预览通知栏的循环播放效果。\"\n    >\n      <RebornNoticeBar\n        v-bind=\"state\"\n        class=\"w-full max-w-xl\"\n      />\n    </Playground>\n\n    <DemoSection\n      title=\"多消息轮播\"\n      description=\"text 传入数组即可轮播多条消息，direction 决定横向滚动还是纵向切换。\"\n    >\n      <DemoBlock layout=\"stack\">\n        <div class=\"flex flex-col gap-2\">\n          <span class=\"text-dimmed text-xs font-medium\">水平滚动 · 默认 <code>direction=\"horizontal\"</code></span>\n          <RebornNoticeBar\n            :text=\"['🔥 消息1：系统升级公告', '📢 消息2：新功能上线区', '🎯 消息3：限时优惠开启']\"\n            scrollable\n          />\n        </div>\n\n        <div class=\"flex flex-col gap-2\">\n          <span class=\"text-dimmed text-xs font-medium\">垂直轮播 · <code>direction=\"vertical\"</code></span>\n          <RebornNoticeBar\n            :text=\"['第一条：在代码的宇宙里，每一行都是一颗星星。', '第二条：愿你的代码如诗般优雅，如画般美丽。', '第三条：Bug 永远追不上你的脚步。']\"\n            direction=\"vertical\"\n            :interval=\"1500\"\n            left-icon=\"lucide:megaphone\"\n          />\n        </div>\n\n        <div class=\"flex flex-col gap-2\">\n          <span class=\"text-dimmed text-xs font-medium\">垂直轮播 + 默认插槽 · <code>{ item, index }</code></span>\n          <RebornNoticeBar\n            :text=\"['账户安全提示', '系统维护公告', '会员福利发放']\"\n            direction=\"vertical\"\n            :interval=\"2500\"\n            background=\"#f0f9ff\"\n            color=\"#0369a1\"\n            left-icon=\"lucide:shield-check\"\n          >\n            <template #default=\"{ item, index }\">\n              <div class=\"flex items-center gap-2\">\n                <span class=\"bg-primary/20 text-primary rounded-sm px-1.5 py-0.5 text-sm font-bold\">\n                  {{ index === 0 ? \"安全\" : index === 1 ? \"公告\" : \"福利\" }}\n                </span>\n                <span class=\"cursor-pointer font-medium underline\">{{ item }}</span>\n              </div>\n            </template>\n          </RebornNoticeBar>\n        </div>\n      </DemoBlock>\n    </DemoSection>\n\n    <DemoSection\n      title=\"语义化风格\"\n      description=\"通过 color 与 background 组合出提示、警告、成功、错误四类语义样式。\"\n    >\n      <DemoBlock layout=\"stack\">\n        <RebornNoticeBar\n          text=\"这是一条普通通知，使用了默认样式。\"\n          left-icon=\"lucide:info\"\n        />\n        <RebornNoticeBar\n          text=\"这是一条告警通知，自定义了明亮的警告色。\"\n          color=\"#ed6a0c\"\n          background=\"#fffbe8\"\n          left-icon=\"lucide:alert-triangle\"\n        />\n        <RebornNoticeBar\n          text=\"操作成功！系统已完成所有挂起任务。\"\n          color=\"#07c160\"\n          background=\"#e8f7e8\"\n          left-icon=\"lucide:check-circle\"\n        />\n        <RebornNoticeBar\n          text=\"发现严重错误，请立即检查服务器状态。\"\n          color=\"#ee0a24\"\n          background=\"#fff0f0\"\n          left-icon=\"lucide:x-circle\"\n        />\n      </DemoBlock>\n    </DemoSection>\n\n    <DemoSection\n      title=\"插槽灵活性\"\n      description=\"left-icon / right-icon / 默认插槽均可替换，用于承载富文本与自定义图形。\"\n    >\n      <DemoBlock layout=\"stack\">\n        <RebornNoticeBar>\n          <template #left-icon>\n            <div class=\"bg-primary/20 flex size-6 items-center justify-center rounded-full\">\n              <span class=\"text-xs\">🔥</span>\n            </div>\n          </template>\n          <span class=\"font-medium\">限时抢购：</span>\n          <span class=\"text-primary font-bold\">5折</span>\n          <span>优惠最后两小时，不要错过！</span>\n        </RebornNoticeBar>\n\n        <RebornNoticeBar>\n          <span class=\"hover:text-primary cursor-pointer underline decoration-dashed transition-colors\">\n            点击查看协议详情\n          </span>\n          <template #right-icon>\n            <Icon\n              name=\"lucide:external-link\"\n              class=\"size-4 opacity-50\"\n            />\n          </template>\n        </RebornNoticeBar>\n      </DemoBlock>\n    </DemoSection>\n\n    <DemoSection\n      title=\"事件与方法\"\n      description=\"通过模板 ref 调用 replay() 让滚动从头开始，重播完成后派发 replay 事件；点击右侧图标派发 close 事件，由业务决定是否隐藏。\"\n    >\n      <DemoBlock layout=\"stack\">\n        <RebornNoticeBar\n          ref=\"noticeBarRef\"\n          text=\"系统将于今晚 23:00 至次日 01:00 进行例行维护，期间订单导出、报表下载与发票申请暂不可用；维护结束后服务自动恢复，已提交的任务不受影响，请提前安排相关操作。\"\n          @replay=\"onReplay\"\n        />\n        <div class=\"flex items-center gap-3\">\n          <RebornButton\n            variant=\"soft\"\n            size=\"sm\"\n            label=\"重新播放\"\n            @click=\"handleReplay\"\n          />\n          <DemoNote tone=\"dimmed\">\n            已重播 {{ replayCount }} 次\n          </DemoNote>\n        </div>\n        <RebornNoticeBar\n          v-if=\"visible\"\n          text=\"点击右侧图标即可关闭此通知栏。\"\n          right-icon=\"lucide:x\"\n          @close=\"handleClose\"\n        />\n        <RebornButton\n          v-else\n          variant=\"soft\"\n          size=\"sm\"\n          label=\"重置可见性\"\n          @click=\"visible = true\"\n        />\n      </DemoBlock>\n    </DemoSection>\n\n    <DemoSection\n      title=\"状态控制\"\n      description=\"disabled 会停止全部动画并降低不透明度；内容未溢出时组件也会自动停止滚动。\"\n    >\n      <DemoBlock layout=\"stack\">\n        <RebornNoticeBar\n          text=\"这条通知栏将停止所有动画并降低不透明度。\"\n          disabled\n        />\n        <RebornNoticeBar\n          :text=\"state.text\"\n          :scrollable=\"false\"\n        />\n      </DemoBlock>\n      <DemoNote tone=\"dimmed\">提示：当内容宽度未超出容器时，滚动动画不会启动。</DemoNote>\n    </DemoSection>\n  </div>\n</template>\n"
+    },
+    {
+      "title": "UniApp 演示",
+      "path": "packages/uniapp-project/src/pages/reborn-notice-bar/RebornNoticeBarDemo.vue",
+      "source": "demo",
+      "platform": "uniapp",
+      "code": "<script setup lang=\"ts\">\nimport { ref, shallowRef } from 'vue';\nimport RebornPage from '@/components/reborn-page/RebornPage.vue';\nimport RebornCard from '@/components/reborn-card/RebornCard.vue';\nimport RebornNoticeBar from '@/components/reborn-notice-bar/RebornNoticeBar.vue';\nimport RebornButton from '@/components/reborn-button/RebornButton.vue';\n\nconst showNotice = shallowRef(true);\nconst noticeBarRef = ref<InstanceType<typeof RebornNoticeBar> | null>(null);\n\nfunction handleReplay() {\n    noticeBarRef.value?.replay();\n    uni.showToast({ title: '重播动画', icon: 'none' });\n}\n\nfunction handleClose() {\n    showNotice.value = false;\n    uni.showToast({ title: '已关闭通知', icon: 'none' });\n}\n\nfunction handleClick() {\n    uni.showToast({ title: '点击了通知栏', icon: 'none' });\n}\n\nfunction handleChange(index: number) {\n    uni.showToast({ title: `当前消息：${index + 1}`, icon: 'none' });\n}\n</script>\n\n<template>\n    <RebornPage title=\"NoticeBar 通知栏\" description=\"用于循环播放展示一组消息通知。\">\n\n        <RebornCard title=\"基础用法\">\n            <view class=\"flex flex-col gap-[24rpx]\">\n                <RebornNoticeBar text=\"这是一条普通通知，用于展示最重要的系统消息。\" :scrollable=\"true\" left-icon=\"i-lucide-info\" />\n\n                <RebornNoticeBar text=\"这是一条警告通知，自定义了背景颜色和文本颜色。\" background=\"#fffbe8\" color=\"#ed6a0c\"\n                    left-icon=\"i-lucide-alert-triangle\" />\n\n                <RebornNoticeBar text=\"这是一条警告通知，自定义了背景颜色和文本颜色。\" wrapable :scrollable=\"false\" background=\"#fffbe8\"\n                    color=\"#ed6a0c\" left-icon=\"i-lucide-alert-triangle\" />\n\n                <RebornNoticeBar text=\"这是一条警告通知，自定义了背景颜色和文本颜色。\" :scrollable=\"false\" background=\"#fffbe8\" color=\"#ed6a0c\"\n                    left-icon=\"i-lucide-alert-triangle\" />\n            </view>\n        </RebornCard>\n\n        <RebornCard title=\"多消息轮播 (水平)\">\n            <RebornNoticeBar :text=\"['🔥 限时秒杀开始啦！', '📢 系统升级维护公告', '🎯 新功能上线体验']\" left-icon=\"i-lucide-megaphone\"\n                @click=\"handleClick\" />\n        </RebornCard>\n\n        <RebornCard title=\"多消息轮播 (垂直)\">\n            <RebornNoticeBar :text=\"['第一条：星辰灿烂，愿你的代码如诗般优雅。', '第二条：愿你的 Bug 永远追不上你的脚步。', '第三条：每一行代码都是一颗星星。']\"\n                direction=\"vertical\" :interval=\"3000\" left-icon=\"i-lucide-volume-2\" @change=\"handleChange\" />\n        </RebornCard>\n\n        <RebornCard title=\"插槽自定义\">\n            <view class=\"flex flex-col gap-[24rpx]\">\n                <!-- 左侧插槽 -->\n                <RebornNoticeBar text=\"自定义左侧插槽组件内容\">\n                    <template #left-icon>\n                        <view class=\"rounded-full bg-primary/20 p-[4rpx] mr-[8rpx]\">🔥</view>\n                    </template>\n                </RebornNoticeBar>\n\n                <!-- 垂直模式作用域插槽 -->\n                <RebornNoticeBar :text=\"['账户安全提示', '系统维护公告', '会员福利发放']\" direction=\"vertical\" background=\"#f0f9ff\"\n                    color=\"#0369a1\" left-icon=\"i-lucide-shield-check\">\n                    <template #default=\"{ item, index }\">\n                        <view class=\"flex items-center gap-[8rpx]\">\n                            <view class=\"bg-primary px-[12rpx] py-[2rpx] rounded text-white text-[20rpx]\">\n                                {{ index === 0 ? '安全' : '提示' }}\n                            </view>\n                            <text>{{ item }}</text>\n                        </view>\n                    </template>\n                </RebornNoticeBar>\n            </view>\n        </RebornCard>\n\n        <RebornCard title=\"事件与方法\">\n            <view class=\"flex flex-col gap-[24rpx]\">\n                <RebornNoticeBar ref=\"noticeBarRef\" text=\"点击通知栏重播动画\" @click=\"handleReplay\" />\n\n                <view v-if=\"showNotice\">\n                    <RebornNoticeBar text=\"点击右侧图标关闭此通知\" right-icon=\"i-lucide-x\" @close=\"handleClose\" />\n                </view>\n\n                <RebornButton v-if=\"!showNotice\" size=\"sm\" @click=\"showNotice = true\">\n                    显示通知\n                </RebornButton>\n            </view>\n        </RebornCard>\n\n        <RebornCard title=\"禁用状态\">\n            <RebornNoticeBar text=\"这条通知栏禁用了滚动。\" disabled />\n        </RebornCard>\n\n    </RebornPage>\n</template>\n"
+    }
+  ],
+  "related": [],
+  "whenToUse": [
+    "页面顶部公告、促销信息循环播报。",
+    "多条消息垂直轮播切换（direction=\"vertical\" + interval）。",
+    "单条长文本需要匀速水平滚动展示（speed 控制 px/s）。"
+  ],
+  "whenNotToUse": [
+    "图文卡片类内容的循环滚动（web 营销区块）改用 reborn-marquee。",
+    "操作结果的短暂反馈改用 reborn-toast。"
+  ],
+  "pitfalls": [
+    "web、uniapp 双端可用。",
+    "scrollable 仅在内容溢出且非垂直模式时生效；wrapable 多行仅水平模式生效。",
+    "speed 单位为 px/s（默认 60）；interval 为垂直轮播间隔毫秒（默认 3000）。",
+    "垂直模式下默认插槽提供 { item, index } 作用域参数；组件暴露 pause/resume/replay/goTo 方法。",
+    "点击 right-icon 属性渲染的图标派发 close 并阻止冒泡（不再触发 click），组件不会自行隐藏，需在回调里用 v-if 移除；right-icon 插槽内容不参与关闭。",
+    "UniApp H5 垂直切换使用 Vue 进入与离开过渡；App / 小程序使用 CSS 入场动画，离场直接移除，需开发者工具与真机确认。"
+  ],
+  "dependencies": [
+    "@vueuse/core",
+    "@weapp-tailwindcss/merge-v3",
+    "@weapp-tailwindcss/variants-v3",
+    "clsx",
+    "tailwind-merge",
+    "tailwind-variants"
+  ],
+  "install": {
+    "cli": "npx reborn-ui@latest add reborn-notice-bar"
+  },
+  "sourceRefs": {
+    "web": [
+      "app/components/reborn/ui/reborn-notice-bar/RebornNoticeBar.vue",
+      "app/components/reborn/ui/reborn-notice-bar/reborn-notice-bar.config.ts"
+    ],
+    "uniapp": [
+      "packages/uniapp-project/src/components/reborn-notice-bar/RebornNoticeBar.vue",
+      "packages/uniapp-project/src/components/reborn-notice-bar/index.ts",
+      "packages/uniapp-project/src/components/reborn-notice-bar/reborn-notice-bar.config.ts"
+    ]
+  },
+  "docPath": "content/2.components/navigation/reborn-notice-bar.md",
+  "_meta": {
+    "contentHash": "5a7930dbe93b94772e372887a41e4bbde73d3ea6",
+    "hasOverride": true,
+    "extractors": {
+      "web": "ok",
+      "uniapp": "ok",
+      "docs": "found"
+    }
+  }
+}

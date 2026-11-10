@@ -1,0 +1,152 @@
+{
+  "$schema": "../schema/component.schema.json",
+  "id": "ripple",
+  "title": "水波纹",
+  "description": "用于渲染多圈同心圆扩散水波背景的装饰效果组件。",
+  "category": "effect",
+  "tags": [
+    "css",
+    "tailwind",
+    "magic-ui"
+  ],
+  "aliases": [],
+  "platforms": [
+    "web"
+  ],
+  "props": [
+    {
+      "name": "baseCircleSize",
+      "type": "number",
+      "required": false,
+      "description": "最内圈圆的直径（px）。",
+      "default": "210"
+    },
+    {
+      "name": "baseCircleOpacity",
+      "type": "number",
+      "required": false,
+      "description": "最内圈圆的初始透明度。",
+      "default": "0.24"
+    },
+    {
+      "name": "spaceBetweenCircle",
+      "type": "number",
+      "required": false,
+      "description": "相邻两圈之间的直径增量（px）。",
+      "default": "70"
+    },
+    {
+      "name": "circleOpacityDowngradeRatio",
+      "type": "number",
+      "required": false,
+      "description": "每向外一圈透明度递减的比例。",
+      "default": "0.03"
+    },
+    {
+      "name": "circleClass",
+      "type": "string",
+      "required": false,
+      "description": "应用于每个波纹圆圈的额外 CSS 类（边框、填充色等）。"
+    },
+    {
+      "name": "waveSpeed",
+      "type": "number",
+      "required": false,
+      "description": "相邻圆圈的动画延迟步长（毫秒），决定扩散节奏。",
+      "default": "80"
+    },
+    {
+      "name": "numberOfCircles",
+      "type": "number",
+      "required": false,
+      "description": "波纹圆圈的数量。",
+      "default": "7"
+    },
+    {
+      "name": "size",
+      "type": "number",
+      "required": false,
+      "description": "圆圈直径（px）。",
+      "default": "210"
+    },
+    {
+      "name": "class",
+      "type": "string",
+      "required": false,
+      "description": "应用于波纹容器的额外 CSS 类。"
+    },
+    {
+      "name": "opacity",
+      "type": "number",
+      "required": false,
+      "description": "圆圈透明度。",
+      "default": "0.24"
+    },
+    {
+      "name": "animationDelay",
+      "type": "number",
+      "required": false,
+      "description": "呼吸动画的延迟（毫秒）。"
+    },
+    {
+      "name": "borderStyle",
+      "type": "string",
+      "required": false,
+      "description": "边框样式（`solid` / `dashed`）。"
+    }
+  ],
+  "events": [],
+  "slots": [
+    {
+      "name": "default",
+      "description": "由辅助组件 `RippleContainer` 提供，放置波纹上层居中的内容。"
+    }
+  ],
+  "exposes": [],
+  "examples": [
+    {
+      "title": "Web 演示",
+      "path": "app/components/reborn/examples/ripple/RippleDemo.vue",
+      "source": "demo",
+      "platform": "web",
+      "code": "<template>\n  <DemoSection\n    title=\"基础用法\"\n    description=\"Ripple 会在容器中心生成一组同心圆并依次扩散，父容器需要 relative 与 overflow-hidden；通过 circle-class 可自定义每一圈的描边与填充。\"\n  >\n    <DemoBlock\n      layout=\"stack\"\n      align=\"center\"\n    >\n      <div\n        class=\"rounded-xl relative flex h-[450px] w-full flex-col items-center justify-center overflow-hidden\"\n      >\n        <p class=\"text-highlighted z-10 text-center text-5xl font-medium tracking-tighter\">Ripple</p>\n        <Ripple\n          class=\"[mask-image:linear-gradient(to_bottom,white,transparent)]\"\n          circle-class=\"border-primary/30 bg-primary/10 rounded-full\"\n        />\n      </div>\n    </DemoBlock>\n  </DemoSection>\n</template>\n"
+    }
+  ],
+  "related": [],
+  "whenToUse": [
+    "落地页 hero 区域的水波纹背景装饰。",
+    "围绕默认插槽中的中心元素（如图标、按钮）制造扩散波纹氛围。"
+  ],
+  "whenNotToUse": [
+    "按钮点击波纹反馈改用 ripple-button。",
+    "点击烟花特效改用 reborn-fireworks。",
+    "uniapp 端项目：platforms 仅 web，无 uniapp 实现。"
+  ],
+  "pitfalls": [
+    "platforms 仅 web 端提供。",
+    "波纹圈数由 numberOfCircles 控制（默认 7），外圈透明度按 circleOpacityDowngradeRatio 逐圈递减。",
+    "无文档页与演示示例，props 描述缺失（baseCircleSize、waveSpeed 等含义需查源码 Ripple.vue）。"
+  ],
+  "dependencies": [],
+  "install": {
+    "cli": "npx reborn-ui@latest add ripple"
+  },
+  "sourceRefs": {
+    "web": [
+      "app/components/reborn/ui/ripple/Ripple.vue",
+      "app/components/reborn/ui/ripple/RippleCircle.vue",
+      "app/components/reborn/ui/ripple/RippleContainer.vue",
+      "app/components/reborn/ui/ripple/index.ts"
+    ]
+  },
+  "docPath": "content/2.components/special-effects/ripple.md",
+  "_meta": {
+    "contentHash": "91bf1995a95ae22c5185b47d606ba0a3c152b6fe",
+    "hasOverride": true,
+    "extractors": {
+      "web": "partial",
+      "uniapp": "absent",
+      "docs": "found"
+    }
+  }
+}

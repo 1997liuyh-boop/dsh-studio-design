@@ -9,6 +9,7 @@
     "tailwind",
     "magic-ui"
   ],
+  "aliases": [],
   "platforms": [
     "web"
   ],
@@ -102,7 +103,7 @@
   },
   "docPath": "content/2.components/special-effects/scratch-to-reveal.md",
   "_meta": {
-    "contentHash": "46fa7af8054cb3bb9a3819ed2546d02c354846ce",
+    "contentHash": "d071b350c4aedfbacb95201f3fa29c668d0a9be0",
     "hasOverride": true,
     "extractors": {
       "web": "ok",

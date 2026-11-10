@@ -8,6 +8,13 @@
     "vue",
     "reborn-header"
   ],
+  "aliases": [
+    "header",
+    "顶部导航",
+    "导航栏",
+    "navbar",
+    "页面顶栏"
+  ],
   "platforms": [
     "web"
   ],
@@ -207,7 +214,7 @@
   },
   "docPath": "content/2.components/navigation/reborn-header.md",
   "_meta": {
-    "contentHash": "cae47d96d1fa95b665a905da49679341812f6e21",
+    "contentHash": "44114c79ad87e572dc59496266abb69171259dc6",
     "hasOverride": true,
     "extractors": {
       "web": "ok",

@@ -9,6 +9,7 @@
     "tailwind",
     "aceternity-ui"
   ],
+  "aliases": [],
   "platforms": [
     "web"
   ],
@@ -89,7 +90,7 @@
   },
   "docPath": "content/2.components/text-animations/text-generate-effect.md",
   "_meta": {
-    "contentHash": "75fbcb11822d1c1b9b0a4d8ccb2067e26d1f3823",
+    "contentHash": "a1e98c9fbcb7c36cc337bdec9d47dae8749ad22e",
     "hasOverride": true,
     "extractors": {
       "web": "ok",

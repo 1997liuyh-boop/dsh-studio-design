@@ -10,6 +10,11 @@
     "form",
     "select"
   ],
+  "aliases": [
+    "sku",
+    "规格选择",
+    "商品规格"
+  ],
   "platforms": [
     "web"
   ],
@@ -106,7 +111,7 @@
   },
   "docPath": "content/2.components/input-and-forms/reborn-sku.md",
   "_meta": {
-    "contentHash": "f08b6762cbd046b100338fc6914d5f71abe3d3e9",
+    "contentHash": "a3255243dfc8bcf0aa7e7011edb1f708f54e98e2",
     "hasOverride": true,
     "extractors": {
       "web": "ok",

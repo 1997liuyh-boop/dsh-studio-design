@@ -9,6 +9,12 @@
     "reborn-pagination",
     "uniapp"
   ],
+  "aliases": [
+    "pagination",
+    "分页",
+    "页码",
+    "翻页"
+  ],
   "platforms": [
     "web",
     "uniapp"
@@ -44,10 +50,15 @@
     },
     {
       "name": "size",
-      "type": "(typeof paginationSizes)[number]",
+      "type": "'sm' | 'md' | 'lg'",
       "required": false,
       "description": "尺寸：sm / md / lg",
-      "default": "'md'"
+      "default": "'md'",
+      "options": [
+        "sm",
+        "md",
+        "lg"
+      ]
     },
     {
       "name": "background",
@@ -123,10 +134,19 @@
     },
     {
       "name": "color",
-      "type": "PaginationColor",
+      "type": "'primary' | 'secondary' | 'success' | 'info' | 'warning' | 'error' | 'neutral'",
       "required": false,
       "description": "激活页码的语义色",
-      "default": "\"primary\""
+      "default": "\"primary\"",
+      "options": [
+        "primary",
+        "secondary",
+        "success",
+        "info",
+        "warning",
+        "error",
+        "neutral"
+      ]
     },
     {
       "name": "class",
@@ -258,7 +278,7 @@
   },
   "docPath": "content/2.components/navigation/reborn-pagination.md",
   "_meta": {
-    "contentHash": "30a1848af10c46d06f6090313678eadde38bf0cd",
+    "contentHash": "529898e799f1f4d2928671a67884e9cf5dbd0b7a",
     "hasOverride": true,
     "extractors": {
       "web": "ok",

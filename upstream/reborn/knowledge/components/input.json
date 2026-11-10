@@ -10,6 +10,7 @@
     "input",
     "aceternity-ui"
   ],
+  "aliases": [],
   "platforms": [
     "web"
   ],
@@ -86,7 +87,7 @@
   },
   "docPath": "content/2.components/input-and-forms/input.md",
   "_meta": {
-    "contentHash": "63651f8aaf20087dfa720cedb7d79ef8ed9da760",
+    "contentHash": "018f2da25e2ef63df7934365974fb513bb0ec07f",
     "hasOverride": true,
     "extractors": {
       "web": "ok",

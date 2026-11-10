@@ -1,0 +1,124 @@
+{
+  "$schema": "../schema/component.schema.json",
+  "id": "focus",
+  "title": "聚焦",
+  "description": "用于句子逐词聚焦、其余单词模糊并带边框动画的文字强调组件。",
+  "category": "effect",
+  "tags": [
+    "css",
+    "tailwind",
+    "codepen"
+  ],
+  "aliases": [],
+  "platforms": [
+    "web"
+  ],
+  "props": [
+    {
+      "name": "sentence",
+      "type": "string",
+      "required": false,
+      "description": "要逐词展示和动画的句子。",
+      "default": "\"reborn Focus\""
+    },
+    {
+      "name": "manualMode",
+      "type": "boolean",
+      "required": false,
+      "description": "若为 `true`，悬停时才高亮；否则自动循环。",
+      "default": "false"
+    },
+    {
+      "name": "blurAmount",
+      "type": "number",
+      "required": false,
+      "description": "非聚焦单词的模糊半径（像素）。",
+      "default": "5"
+    },
+    {
+      "name": "borderColor",
+      "type": "string",
+      "required": false,
+      "description": "动画聚焦边框的颜色。",
+      "default": "\"green\""
+    },
+    {
+      "name": "animationDuration",
+      "type": "number",
+      "required": false,
+      "description": "聚焦框动画过渡的持续时间（秒）。",
+      "default": "0.5"
+    },
+    {
+      "name": "pauseBetweenAnimations",
+      "type": "number",
+      "required": false,
+      "description": "自动聚焦之间的暂停时长（秒）。",
+      "default": "1"
+    }
+  ],
+  "events": [],
+  "slots": [],
+  "exposes": [],
+  "examples": [
+    {
+      "title": "Web 演示 · FocusAutoDemo",
+      "path": "app/components/reborn/examples/focus/FocusAutoDemo.vue",
+      "source": "demo",
+      "platform": "web",
+      "code": "<template>\n  <Focus\n    sentence=\"Focus is the key\"\n    :manual-mode=\"false\"\n    :blur-amount=\"5\"\n    border-color=\"red\"\n    :animation-duration=\"1\"\n    :pause-between-animations=\"0.5\"\n  />\n</template>\n"
+    },
+    {
+      "title": "Web 演示 · FocusDemo",
+      "path": "app/components/reborn/examples/focus/FocusDemo.vue",
+      "source": "demo",
+      "platform": "web",
+      "code": "<template>\n  <div class=\"relative flex h-96 w-full flex-col items-center justify-center gap-24 overflow-clip\">\n    <FocusAutoDemo />\n    <FocusManualDemo />\n  </div>\n</template>\n"
+    },
+    {
+      "title": "Web 演示 · FocusManualDemo",
+      "path": "app/components/reborn/examples/focus/FocusManualDemo.vue",
+      "source": "demo",
+      "platform": "web",
+      "code": "<template>\n  <Focus\n    sentence=\"Focus Manually\"\n    manual-mode\n    :blur-amount=\"5\"\n    border-color=\"blue\"\n    :animation-duration=\"2\"\n    :pause-between-animations=\"1\"\n  />\n</template>\n"
+    }
+  ],
+  "related": [],
+  "whenToUse": [
+    "标语中需要逐词轮流强调的自动循环动画。",
+    "manualMode 下由用户悬停选择聚焦单词的交互式文字展示。"
+  ],
+  "whenNotToUse": [
+    "固定文字的静态高亮标注，改用 text-highlight。",
+    "逐字打出文字，改用 reborn-typewriter。"
+  ],
+  "pitfalls": [
+    "仅 web 端可用。",
+    "manualMode 为 true 时仅悬停才聚焦，为 false（默认）时自动循环。",
+    "animationDuration 与 pauseBetweenAnimations 单位为秒；blurAmount 单位为像素（默认 5）。",
+    "句子通过 sentence prop 传入字符串，按空格拆分为单词，无插槽。"
+  ],
+  "dependencies": [
+    "@vueuse/core",
+    "motion-v"
+  ],
+  "install": {
+    "cli": "npx reborn-ui@latest add focus"
+  },
+  "sourceRefs": {
+    "web": [
+      "app/components/reborn/ui/focus/Focus.vue",
+      "app/components/reborn/ui/focus/index.ts"
+    ]
+  },
+  "docPath": "content/2.components/text-animations/focus.md",
+  "_meta": {
+    "contentHash": "2c07450a798f8fa7b127bda63778038874dc170e",
+    "hasOverride": true,
+    "extractors": {
+      "web": "ok",
+      "uniapp": "absent",
+      "docs": "found"
+    }
+  }
+}

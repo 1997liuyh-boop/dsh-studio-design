@@ -10,6 +10,16 @@
     "timeline",
     "data"
   ],
+  "aliases": [
+    "timeline",
+    "时间线",
+    "时间轴",
+    "事件流",
+    "活动记录",
+    "操作记录",
+    "审批记录",
+    "日志"
+  ],
   "platforms": [
     "web"
   ],
@@ -29,17 +39,26 @@
     },
     {
       "name": "size",
-      "type": "TimelineSize",
+      "type": "'sm' | 'md' | 'lg'",
       "required": false,
       "description": "节点尺寸：sm 8px、md 12px、lg 16px，单个节点可覆盖",
-      "default": "'md'"
+      "default": "'md'",
+      "options": [
+        "sm",
+        "md",
+        "lg"
+      ]
     },
     {
       "name": "variant",
-      "type": "TimelineVariant",
+      "type": "'solid' | 'outlined'",
       "required": false,
       "description": "节点样式：实心或空心，单个节点可覆盖",
-      "default": "'solid'"
+      "default": "'solid'",
+      "options": [
+        "solid",
+        "outlined"
+      ]
     },
     {
       "name": "reverse",
@@ -139,9 +158,23 @@
     }
   ],
   "related": [],
-  "whenToUse": [],
-  "whenNotToUse": [],
-  "pitfalls": [],
+  "whenToUse": [
+    "审批流、工单处理记录这类「谁在什么时候做了什么」的追溯信息：时间戳默认在内容下方。",
+    "发布、部署这类有先后且仍在推进的流程：用 color 区分已完成 / 失败 / 未开始，用 loading 标出进行中的节点。",
+    "需要左右交替、把时间与事件分列轴线两侧的展示页：逐个节点设置 labelPosition 与 placement。",
+    "阶段数量少（通常不超过 6 个）、横向空间充足的进度概览：用 direction=\"horizontal\"。"
+  ],
+  "whenNotToUse": [
+    "有明确当前步骤、需要用户逐步推进并可点击切换的流程，改用 reborn-steps。",
+    "随页面滚动逐段展开、带粘性标题与渐变动画的长篇叙事，改用 timeline（动效展示区块，不是数据列表）。",
+    "等待异步任务时按步骤提示加载进度，改用 multi-step-loader。",
+    "只需表达单个任务的完成百分比，改用 reborn-progress。"
+  ],
+  "pitfalls": [
+    "仅 Web 端，UniApp 无对应实现。",
+    "横向模式没有折行，节点超过 6 个会挤在一行，需要控制节点数或改回竖向。",
+    "同名动效组件 timeline（无 reborn- 前缀）是社区移植的滚动叙事区块，与本组件不是同一个东西。"
+  ],
   "dependencies": [
     "clsx",
     "tailwind-merge",
@@ -160,8 +193,8 @@
   },
   "docPath": "content/2.components/data/reborn-timeline.md",
   "_meta": {
-    "contentHash": "722ec45882e50f761335607b8833ed0387849db7",
-    "hasOverride": false,
+    "contentHash": "0c523bb8d28c5cf0be6845fa3efe047a2dff196f",
+    "hasOverride": true,
     "extractors": {
       "web": "ok",
       "uniapp": "absent",

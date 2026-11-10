@@ -9,6 +9,7 @@
     "tailwind",
     "magic-ui"
   ],
+  "aliases": [],
   "platforms": [
     "web"
   ],
@@ -84,7 +85,7 @@
   },
   "docPath": "content/2.components/text-animations/hyper-text.md",
   "_meta": {
-    "contentHash": "8ea430ab5c1cdffeecf5a8e818073b4a02e2485e",
+    "contentHash": "7d674e53dda2aeeb4d5411f2e2e7ad42e4235aac",
     "hasOverride": true,
     "extractors": {
       "web": "ok",

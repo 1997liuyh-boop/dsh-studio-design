@@ -9,6 +9,7 @@
     "tailwind",
     "magic-ui"
   ],
+  "aliases": [],
   "platforms": [
     "web"
   ],
@@ -77,7 +78,7 @@
   },
   "docPath": "content/2.components/text-animations/radiant-text.md",
   "_meta": {
-    "contentHash": "d633b7679a16e374268402f107b573e446a1e0d5",
+    "contentHash": "8b32967f6fa400a401db6dbf9107998cb4e9de2c",
     "hasOverride": true,
     "extractors": {
       "web": "ok",

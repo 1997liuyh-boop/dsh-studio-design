@@ -9,6 +9,13 @@
     "floating",
     "hint"
   ],
+  "aliases": [
+    "tooltip",
+    "文字提示",
+    "提示气泡",
+    "悬停提示",
+    "hover 提示"
+  ],
   "platforms": [
     "web"
   ],
@@ -258,7 +265,7 @@
   },
   "docPath": "content/2.components/navigation/reborn-tooltip.md",
   "_meta": {
-    "contentHash": "2b63542ce124ddf37ac6570d790b5f0e77c91cf9",
+    "contentHash": "64e6061e7c64476670812766c00a5fe7c973e4b7",
     "hasOverride": true,
     "extractors": {
       "web": "ok",

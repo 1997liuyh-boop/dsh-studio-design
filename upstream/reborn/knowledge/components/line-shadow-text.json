@@ -9,6 +9,7 @@
     "tailwind",
     "magic-ui"
   ],
+  "aliases": [],
   "platforms": [
     "web"
   ],
@@ -85,7 +86,7 @@
   },
   "docPath": "content/2.components/text-animations/line-shadow-text.md",
   "_meta": {
-    "contentHash": "96ac6cd0cc60e5bbc7f67d8fd7308e8182174ef9",
+    "contentHash": "710b0d0bc0a43f170b766142b67f8cc038ce2e68",
     "hasOverride": true,
     "extractors": {
       "web": "ok",

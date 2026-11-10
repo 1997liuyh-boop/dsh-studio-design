@@ -9,6 +9,14 @@
     "tailwind",
     "popup"
   ],
+  "aliases": [
+    "popup",
+    "弹出层",
+    "底部弹层",
+    "action sheet",
+    "bottom sheet",
+    "半屏弹窗"
+  ],
   "platforms": [
     "uniapp"
   ],
@@ -29,10 +37,17 @@
     },
     {
       "name": "position",
-      "type": "PopupPosition",
+      "type": "'center' | 'top' | 'right' | 'bottom' | 'left'",
       "required": false,
       "description": "弹出位置：top, bottom, left, right, center",
-      "default": "'bottom'"
+      "default": "'bottom'",
+      "options": [
+        "center",
+        "top",
+        "right",
+        "bottom",
+        "left"
+      ]
     },
     {
       "name": "transition",
@@ -188,10 +203,19 @@
     },
     {
       "name": "color",
-      "type": "PopupColor",
+      "type": "'primary' | 'secondary' | 'success' | 'info' | 'warning' | 'error' | 'neutral'",
       "required": false,
       "description": "主题色 (影响手势滑块等)",
-      "default": "'neutral'"
+      "default": "'neutral'",
+      "options": [
+        "primary",
+        "secondary",
+        "success",
+        "info",
+        "warning",
+        "error",
+        "neutral"
+      ]
     },
     {
       "name": "round",
@@ -423,7 +447,7 @@
   },
   "docPath": "content/2.components/navigation/reborn-popup.md",
   "_meta": {
-    "contentHash": "b6fca36108da1abd83b20a853964f7589b0553d9",
+    "contentHash": "ed629aba1561c2910f8253ab4b9cbb88c83ad843",
     "hasOverride": true,
     "extractors": {
       "web": "absent",

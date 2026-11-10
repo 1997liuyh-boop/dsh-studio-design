@@ -9,6 +9,12 @@
     "tailwind",
     "aceternity-ui"
   ],
+  "aliases": [
+    "多步加载",
+    "步骤加载",
+    "step loader",
+    "分步加载"
+  ],
   "platforms": [
     "web"
   ],
@@ -103,7 +109,7 @@
   },
   "docPath": "content/2.components/miscellaneous/multi-step-loader.md",
   "_meta": {
-    "contentHash": "f425db10293674773d120a827412d2831d5fb29f",
+    "contentHash": "4cc7a08bc5e196591048e622e8268203bc7f1d17",
     "hasOverride": true,
     "extractors": {
       "web": "ok",

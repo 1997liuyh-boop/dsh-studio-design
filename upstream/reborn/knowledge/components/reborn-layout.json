@@ -11,15 +11,25 @@
     "container",
     "flex"
   ],
+  "aliases": [
+    "layout",
+    "布局",
+    "后台布局",
+    "admin layout"
+  ],
   "platforms": [
     "web"
   ],
   "props": [
     {
       "name": "direction",
-      "type": "LayoutDirection",
+      "type": "'horizontal' | 'vertical'",
       "required": false,
-      "description": "排列方向。 不传时自动判定：子元素中出现 Header 或 Footer 则纵向，否则横向。"
+      "description": "排列方向。 不传时自动判定：子元素中出现 Header 或 Footer 则纵向，否则横向。",
+      "options": [
+        "horizontal",
+        "vertical"
+      ]
     },
     {
       "name": "hasSider",
@@ -200,7 +210,7 @@
   },
   "docPath": "content/2.components/layout/reborn-layout.md",
   "_meta": {
-    "contentHash": "ab375568f3f22a0984d2d825ff6d3eaef925e2dd",
+    "contentHash": "3b9d8911fc175ab6b209d35ad0641afeda15d12e",
     "hasOverride": true,
     "extractors": {
       "web": "ok",

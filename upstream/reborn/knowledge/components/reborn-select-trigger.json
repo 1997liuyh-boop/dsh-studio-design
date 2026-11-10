@@ -5,6 +5,7 @@
   "description": "用于各类下拉类组件复用的浮层容器内部基础组件，只负责定位、展开收起与外部点击判定。",
   "category": "misc",
   "tags": [],
+  "aliases": [],
   "platforms": [
     "web",
     "uniapp"
@@ -40,17 +41,31 @@
     },
     {
       "name": "size",
-      "type": "(typeof selectTriggerSizes)[number]",
+      "type": "'sm' | 'md' | 'lg'",
       "required": false,
       "description": "尺寸",
-      "default": "'md'"
+      "default": "'md'",
+      "options": [
+        "sm",
+        "md",
+        "lg"
+      ]
     },
     {
       "name": "color",
-      "type": "(typeof selectTriggerColors)[number]",
+      "type": "'primary' | 'secondary' | 'success' | 'info' | 'warning' | 'error' | 'neutral'",
       "required": false,
       "description": "颜色",
-      "default": "'primary'"
+      "default": "'primary'",
+      "options": [
+        "primary",
+        "secondary",
+        "success",
+        "info",
+        "warning",
+        "error",
+        "neutral"
+      ]
     },
     {
       "name": "clearable",
@@ -121,17 +136,29 @@
     },
     {
       "name": "side",
-      "type": "SelectTriggerSide",
+      "type": "'auto' | 'top' | 'bottom' | 'left' | 'right'",
       "required": false,
       "description": "浮层展开方向： - 'auto'（默认）：向下展开，下方空间不足且上方更宽裕时自动向上 - 显式 top / bottom / left / right：按指定方向展开，该侧空间不足且对侧更宽裕时翻转",
-      "default": "\"auto\""
+      "default": "\"auto\"",
+      "options": [
+        "auto",
+        "top",
+        "bottom",
+        "left",
+        "right"
+      ]
     },
     {
       "name": "align",
-      "type": "SelectTriggerAlign",
+      "type": "'start' | 'center' | 'end'",
       "required": false,
       "description": "浮层在交叉轴上的对齐：start 与触发器起点对齐（默认）、center 居中、end 与终点对齐；仅传送模式生效",
-      "default": "\"start\""
+      "default": "\"start\"",
+      "options": [
+        "start",
+        "center",
+        "end"
+      ]
     },
     {
       "name": "offset",
@@ -268,7 +295,7 @@
   },
   "docPath": null,
   "_meta": {
-    "contentHash": "9f244df09cde8bd8e1f0f8ed91a904f7f39bed59",
+    "contentHash": "e0870da2999f8687e681278185655b3855e5655e",
     "hasOverride": true,
     "extractors": {
       "web": "ok",

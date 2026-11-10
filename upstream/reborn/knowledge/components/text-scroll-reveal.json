@@ -9,6 +9,7 @@
     "tailwind",
     "magic-ui"
   ],
+  "aliases": [],
   "platforms": [
     "web"
   ],
@@ -87,7 +88,7 @@
   },
   "docPath": "content/2.components/text-animations/text-scroll-reveal.md",
   "_meta": {
-    "contentHash": "b40676c15e812803a5fdc5b126d34d3b6732b3fd",
+    "contentHash": "bc10dcfdf2d4e598b89d63d3f39b048f9ca92cd2",
     "hasOverride": true,
     "extractors": {
       "web": "ok",

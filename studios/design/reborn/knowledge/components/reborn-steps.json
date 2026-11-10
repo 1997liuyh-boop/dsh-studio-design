@@ -1,0 +1,318 @@
+{
+  "$schema": "../schema/component.schema.json",
+  "id": "reborn-steps",
+  "title": "Steps 步骤条",
+  "description": "Web 流程步骤条：横纵排列、四向内容位置与三档尺寸，支持进度圆环、单步状态和内容插槽。",
+  "category": "navigation",
+  "tags": [
+    "vue",
+    "tailwind",
+    "steps",
+    "workflow",
+    "navigation"
+  ],
+  "aliases": [
+    "steps",
+    "步骤条",
+    "步骤",
+    "stepper",
+    "流程步骤",
+    "进度步骤"
+  ],
+  "platforms": [
+    "web"
+  ],
+  "props": [
+    {
+      "name": "title",
+      "type": "string",
+      "required": false,
+      "description": "步骤标题，title 插槽优先",
+      "default": "''"
+    },
+    {
+      "name": "description",
+      "type": "string",
+      "required": false,
+      "description": "步骤描述，description 插槽优先",
+      "default": "''"
+    },
+    {
+      "name": "placement",
+      "type": "'top' | 'bottom' | 'left' | 'right'",
+      "required": false,
+      "description": "标题与描述相对节点的位置；优先于父级 placement 与默认位置",
+      "options": [
+        "top",
+        "bottom",
+        "left",
+        "right"
+      ]
+    },
+    {
+      "name": "icon",
+      "type": "string | Component",
+      "required": false,
+      "description": "自定义图标名称或组件，icon 插槽优先；点状和文本类型不显示图标"
+    },
+    {
+      "name": "status",
+      "type": "StepsStatus | ''",
+      "required": false,
+      "description": "空值时由父级 active、processStatus、finishStatus 推导",
+      "default": "''"
+    },
+    {
+      "name": "progress",
+      "type": "number",
+      "required": false,
+      "description": "本步骤百分比进度；显式值优先于整体折算，仅当前且状态为 process 时显示圆环"
+    },
+    {
+      "name": "color",
+      "type": "'primary' | 'secondary' | 'success' | 'info' | 'warning' | 'error' | 'neutral'",
+      "required": false,
+      "description": "步骤主题色；未指定时继承父级，最终默认 primary；错误和成功使用对应状态色",
+      "options": [
+        "primary",
+        "secondary",
+        "success",
+        "info",
+        "warning",
+        "error",
+        "neutral"
+      ],
+      "default": "'primary'"
+    },
+    {
+      "name": "ui",
+      "type": "StepsUI",
+      "required": false,
+      "description": "本节点的样式覆盖，优先于父级同名配置 可用键（从源码抽取，以此为准）——Web：RebornStep → arrow、connector、content、description、icon、item、line、lineFill、marker、progressIndicator、progressRing、progressTrack、root、title；RebornSteps → root。",
+      "default": "() => ({})"
+    },
+    {
+      "name": "width",
+      "type": "number | string",
+      "required": false,
+      "description": "整体宽度；数字为 px，字符串支持百分比等 CSS 长度，默认撑满容器",
+      "default": "'100%'"
+    },
+    {
+      "name": "space",
+      "type": "number | string",
+      "required": false,
+      "description": "相邻步骤的布局长度；数字为 px，字符串支持百分比等 CSS 长度，空值自适应",
+      "default": "''"
+    },
+    {
+      "name": "direction",
+      "type": "'horizontal' | 'vertical'",
+      "required": false,
+      "description": "步骤排列方向",
+      "default": "'horizontal'",
+      "options": [
+        "horizontal",
+        "vertical"
+      ]
+    },
+    {
+      "name": "overallProgress",
+      "type": "number",
+      "required": false,
+      "description": "整体百分比进度；按步骤数等分折算，优先于 active，仅派生展示"
+    },
+    {
+      "name": "processStatus",
+      "type": "'wait' | 'process' | 'finish' | 'error' | 'success'",
+      "required": false,
+      "description": "当前步骤状态",
+      "default": "'process'",
+      "options": [
+        "wait",
+        "process",
+        "finish",
+        "error",
+        "success"
+      ]
+    },
+    {
+      "name": "finishStatus",
+      "type": "'wait' | 'process' | 'finish' | 'error' | 'success'",
+      "required": false,
+      "description": "当前步骤之前的状态",
+      "default": "'finish'",
+      "options": [
+        "wait",
+        "process",
+        "finish",
+        "error",
+        "success"
+      ]
+    },
+    {
+      "name": "alignCenter",
+      "type": "boolean",
+      "required": false,
+      "description": "横向上下内容在步内居中；未指定 placement 时放在节点下方",
+      "default": "false"
+    },
+    {
+      "name": "simple",
+      "type": "boolean",
+      "required": false,
+      "description": "简洁模式，隐藏描述",
+      "default": "false"
+    },
+    {
+      "name": "size",
+      "type": "'sm' | 'md' | 'lg'",
+      "required": false,
+      "description": "标记与文字尺寸",
+      "default": "'md'",
+      "options": [
+        "sm",
+        "md",
+        "lg"
+      ]
+    },
+    {
+      "name": "type",
+      "type": "'default' | 'dot' | 'text'",
+      "required": false,
+      "description": "外观类型：圆形数字、点状标记或无标记的文本步骤",
+      "default": "'default'",
+      "options": [
+        "default",
+        "dot",
+        "text"
+      ]
+    },
+    {
+      "name": "lineType",
+      "type": "'solid' | 'dashed' | 'arrow'",
+      "required": false,
+      "description": "连接方式：实线、原生虚线或箭头",
+      "default": "'solid'",
+      "options": [
+        "solid",
+        "dashed",
+        "arrow"
+      ]
+    },
+    {
+      "name": "active",
+      "type": "number",
+      "required": false,
+      "description": "双向绑定值",
+      "vModel": true,
+      "default": "0"
+    }
+  ],
+  "events": [
+    {
+      "name": "change",
+      "payload": "(event: 'change', next: number, previous: number): void;",
+      "description": "active 发生变化时触发，初始化时不触发"
+    },
+    {
+      "name": "update:active",
+      "description": "active 变化时触发（v-model 同步）",
+      "payload": "(value: number)"
+    }
+  ],
+  "slots": [
+    {
+      "name": "icon",
+      "props": "(props: RebornStepSlotProps) => unknown",
+      "description": "RebornStep` 的节点内容，优先于 `icon`；`type=\"dot\"` 或 `type=\"text\"` 时不渲染，可通过 `ui.marker` 改节点外形。"
+    },
+    {
+      "name": "title",
+      "props": "(props: RebornStepSlotProps) => unknown",
+      "description": "RebornStep` 的标题，优先于标题文字。"
+    },
+    {
+      "name": "description",
+      "props": "(props: RebornStepSlotProps) => unknown",
+      "description": "RebornStep` 的描述，优先于描述文字；`simple` 时不渲染。"
+    },
+    {
+      "name": "connector",
+      "props": "(props: RebornStepConnectorSlotProps) => unknown",
+      "description": "替换当前步骤到下一步的连接器内容，保留外层位置与尺寸；末步不渲染。"
+    },
+    {
+      "name": "default",
+      "description": "RebornSteps` 的步骤内容，约定传入 `RebornStep` 或其异步包装；支持 Fragment 与 `v-for`。"
+    }
+  ],
+  "exposes": [],
+  "examples": [
+    {
+      "title": "Web 演示",
+      "path": "app/components/reborn/examples/reborn-steps/RebornStepsDemo.vue",
+      "source": "demo",
+      "platform": "web",
+      "code": "<script setup lang=\"ts\">\nimport type { PlaygroundControlGroup } from '~/components/common/play-ground/Playground.vue';\nimport type { StepsUI } from '~/components/reborn/ui/reborn-steps/reborn-steps.config';\nimport { DemoBlock, DemoNote, DemoSection, Icon, Playground } from '#components';\nimport { computed, defineComponent, h, ref, shallowRef } from 'vue';\nimport RebornButton from '~/components/reborn/ui/reborn-button/RebornButton.vue';\nimport RebornInputNumber from '~/components/reborn/ui/reborn-input-number/RebornInputNumber.vue';\nimport { stepsColors, stepsDirections, stepsLineTypes, stepsPlacements, stepsSizes, stepsStatuses, stepsTypes } from '~/components/reborn/ui/reborn-steps/reborn-steps.config';\nimport RebornStep from '~/components/reborn/ui/reborn-steps/RebornStep.vue';\nimport RebornSteps from '~/components/reborn/ui/reborn-steps/RebornSteps.vue';\nimport RebornText from '~/components/reborn/ui/reborn-text/RebornText.vue';\n\n/** 通用选项保留源码枚举，避免演示出现组件不支持的取值。 */\nconst options = (values: readonly string[]) => values.map(value => ({ label: value, value }));\n/** 演示步骤共用的文案。 */\nconst items = [\n  { title: '填写资料', description: '填写联系人与基本信息' },\n  { title: '身份验证', description: '核对身份与联系方式' },\n  { title: '确认信息', description: '检查本次提交的内容' },\n  { title: '提交完成', description: '等待处理结果通知' },\n];\n\n// ─── 交互演练场 ─────────────────────────────────────────────────\n\n/** 演练场默认配置。 */\nconst defaultState: Record<string, any> = {\n  active: 1,\n  direction: 'horizontal',\n  placement: '',\n  width: '100%',\n  space: '',\n  processStatus: 'process',\n  finishStatus: 'finish',\n  progressEnabled: false,\n  overallMode: false,\n  progress: 45,\n  overallProgress: 50,\n  alignCenter: false,\n  simple: false,\n  size: 'md',\n  type: 'default',\n  lineType: 'solid',\n  color: 'primary',\n};\nconst state = ref<Record<string, any>>({ ...defaultState });\n/** 两种演示模式互斥，避免整体折算与单步配置互相覆盖。 */\nconst playgroundState = computed({\n  get: () => state.value,\n  set: (next: Record<string, any>) => {\n    if (next.progressEnabled && !state.value.progressEnabled) next = { ...next, overallMode: false };\n    else if (next.overallMode && !state.value.overallMode) next = { ...next, progressEnabled: false };\n    state.value = next;\n  },\n});\nconst lastChange = shallowRef('尚未切换步骤');\n/** 纯数字转为数值传递，其余输入保留为 CSS 长度。 */\nfunction parseLength(input: unknown) {\n  const value = String(input ?? '').trim();\n  return value && /^\\d+(?:\\.\\d+)?$/.test(value) ? Number(value) : value;\n}\nconst playgroundWidth = computed(() => parseLength(state.value.width));\nconst playgroundSpace = computed(() => parseLength(state.value.space));\n/** 留空时横向居中布局回退到下方，明确选择位置时保留该位置。 */\nconst playgroundPlacement = computed(() => state.value.placement || undefined);\n/** 整体进度负责折算展示下标，关闭时不传入该参数。 */\nconst playgroundOverallProgress = computed(() => state.value.overallMode ? Number(state.value.overallProgress) : undefined);\n/** 单步进度始终传给当前步骤，切换步骤后继续显示所设百分比。 */\nfunction getPlaygroundProgress(index: number) {\n  return state.value.progressEnabled && index === Number(state.value.active) ? Number(state.value.progress) : undefined;\n}\n/** 回显当前进度，并说明无圆环的状态组合，避免配置结果不明确。 */\nconst playgroundProgressNote = computed(() => {\n  const value = state.value;\n  if (!value.progressEnabled && !value.overallMode) return '开启一种进度模式后，可调节对应百分比。';\n  if (value.overallMode ? Number(value.overallProgress) >= 100 : Number(value.active) >= items.length) return '全部步骤已完成，没有进行中的步骤可显示进度圆环。';\n  if (value.type === 'text') return '文本步骤不显示节点圆环；选择 default 或 dot 可查看进度圆环。';\n  if (value.processStatus !== 'process') return `当前步骤状态为 ${value.processStatus}；进度圆环仅在 process 状态下显示。`;\n  return value.overallMode\n    ? `整体进度 ${value.overallProgress}%，自动折算当前步骤及其进度，不修改 active。`\n    : `当前第 ${Number(value.active) + 1} 步，单步进度 ${value.progress}%；切换步骤后进度跟随当前步骤。`;\n});\n/** 演练场真实配置项。 */\nconst controls: PlaygroundControlGroup[] = [\n  {\n    title: '基础属性',\n    children: [\n      { label: '尺寸', key: 'size', component: 'select', defaultValue: 'md', props: { options: options(stepsSizes) } },\n      { label: '外观类型', key: 'type', component: 'select', defaultValue: 'default', props: { options: options(stepsTypes) } },\n      { label: '排列方向', key: 'direction', component: 'select', defaultValue: 'horizontal', props: { options: options(stepsDirections) } },\n      { label: '主题色', key: 'color', component: 'select', defaultValue: 'primary', props: { options: options(stepsColors) } },\n      { label: '连接线', key: 'lineType', component: 'select', defaultValue: 'solid', props: { options: options(stepsLineTypes) } },\n    ],\n  },\n  {\n    title: '状态',\n    children: [\n      { label: '当前下标（4 表示全部完成）', key: 'active', component: 'input-number', defaultValue: 1, props: { min: 0, max: items.length }, hide: (value, model) => model.overallMode },\n      { label: '当前步骤状态', key: 'processStatus', component: 'select', defaultValue: 'process', props: { options: options(stepsStatuses) } },\n      { label: '前序步骤状态', key: 'finishStatus', component: 'select', defaultValue: 'finish', props: { options: options(stepsStatuses) } },\n    ],\n  },\n  {\n    title: '进度',\n    children: [\n      { label: '设置单步进度', key: 'progressEnabled', component: 'checkbox', defaultValue: false },\n      { label: '使用整体进度（自动折算步骤）', key: 'overallMode', component: 'checkbox', defaultValue: false },\n      { label: '当前步骤进度（%）', key: 'progress', component: 'input-number', defaultValue: 45, props: { min: 0, max: 100, step: 5 }, hide: (value, model) => !model.progressEnabled },\n      { label: '整体进度（%）', key: 'overallProgress', component: 'input-number', defaultValue: 50, props: { min: 0, max: 100, step: 5 }, hide: (value, model) => !model.overallMode },\n    ],\n  },\n  {\n    title: '布局',\n    children: [\n      { label: '整体宽度（默认 100%，数字为 px）', key: 'width', component: 'input', defaultValue: '100%' },\n      { label: '间距（留空自动，数字为 px，支持 25%）', key: 'space', component: 'input', defaultValue: '' },\n      { label: '标题与描述位置', key: 'placement', component: 'select', defaultValue: '', props: { options: [{ label: '自动（横向居中时在下方）', value: '' }, ...options(stepsPlacements)] } },\n      { label: '上下内容居中（横向）', key: 'alignCenter', component: 'checkbox', defaultValue: false },\n      { label: '简洁模式（隐藏描述）', key: 'simple', component: 'checkbox', defaultValue: false },\n    ],\n  },\n];\n\n/** 记录实际的步骤变化事件。 */\nfunction onPlaygroundChange(next: number, previous: number) {\n  lastChange.value = `change：active ${previous} → ${next}`;\n}\n/** 通过外部按钮推进或回退演练场。 */\nfunction movePlayground(offset: number) {\n  state.value.active = Math.max(0, Math.min(items.length, Number(state.value.active) + offset));\n}\n/** 重置演练场配置与事件回显。 */\nfunction resetState() {\n  state.value = { ...defaultState };\n  lastChange.value = '已重置配置';\n}\n/** 可复制代码完整列出当前演练轴。 */\nconst stepsCode = computed(() => {\n  const value = state.value;\n  const width = typeof playgroundWidth.value === 'number' ? `:width=\"${playgroundWidth.value}\"` : `width=\"${playgroundWidth.value}\"`;\n  const space = typeof playgroundSpace.value === 'number' ? `:space=\"${playgroundSpace.value}\"` : `space=\"${playgroundSpace.value}\"`;\n  const progress = playgroundOverallProgress.value !== undefined\n    ? `\\n    :overall-progress=\"${playgroundOverallProgress.value}\"`\n    : '';\n  const placement = playgroundPlacement.value ? `\\n    placement=\"${playgroundPlacement.value}\"` : '';\n  const steps = items.map((item, index) => {\n    const stepProgress = getPlaygroundProgress(index);\n    const parameter = stepProgress === undefined ? '' : ` :progress=\"${stepProgress}\"`;\n    return `    <RebornStep title=\"${item.title}\" description=\"${item.description}\"${parameter} />`;\n  }).join('\\n');\n  return `<script setup lang=\"ts\">\\nimport { shallowRef } from 'vue';\\nconst active = shallowRef(${value.active});\\n<\\/script>\\n\\n<template>\\n  <RebornSteps\\n    v-model:active=\"active\"\\n    direction=\"${value.direction}\"${placement}\\n    ${width}\\n    ${space}\\n    size=\"${value.size}\"\\n    type=\"${value.type}\"\\n    line-type=\"${value.lineType}\"\\n    color=\"${value.color}\"\\n    process-status=\"${value.processStatus}\"\\n    finish-status=\"${value.finishStatus}\"${progress}\\n    :align-center=\"${value.alignCenter}\"\\n    :simple=\"${value.simple}\"\\n  >\\n${steps}\\n  </RebornSteps>\\n</template>`;\n});\n\n// ─── 场景演示状态 ───────────────────────────────────────────────\n\n/** 基础流程的受控下标。 */\nconst basicActive = shallowRef(0);\n/** 基础流程最近一次真实切换。 */\nconst basicChange = shallowRef('active = 0，从第一步开始');\n/** 三种连接方式共用下标，便于观察前进与回退的动画。 */\nconst connectorActive = shallowRef(1);\n/** 当前步骤和整体进度分开控制，展示两种计算方式。 */\nconst progressItems = items.slice(0, 3);\nconst currentActive = shallowRef(1);\nconst currentProgress = shallowRef<number | null>(45);\nconst overallProgress = shallowRef<number | null>(50);\n/** 单步进度随当前下标传入，前序步骤完成、后续步骤等待。 */\nfunction getCurrentProgress(index: number) {\n  return index < currentActive.value ? 100 : index === currentActive.value ? currentProgress.value ?? 0 : 0;\n}\n/** 恢复单步进度示例最初的第二步和 45% 进度。 */\nfunction resetCurrentProgress() {\n  currentActive.value = 1;\n  currentProgress.value = 45;\n}\n/** 每次移动一个步骤所占的整体份额，保留阶段内进度并限制边界。 */\nfunction moveOverallProgress(offset: number) {\n  overallProgress.value = Math.max(0, Math.min(100, (overallProgress.value ?? 0) + offset * 100 / progressItems.length));\n}\n/** 插槽示例独立控制步骤，观察四个插槽的作用域变化。 */\nconst slotActive = shallowRef(1);\n/** 插槽定制：节点去掉底色只留图标，指示线压低并下移，给自绘连接线留位置 */\nconst iconOnlyMarkerUi: StepsUI = { marker: 'bg-transparent text-brand-6', connector: 'h-4 mt-2' };\nconst slotItems = [\n  { title: '创建订单', icon: 'lucide:clipboard-list', detail: '订单 RB-2026 已创建' },\n  { title: '核验付款', icon: 'lucide:credit-card', detail: '核对付款金额与收款信息' },\n  { title: '安排配送', icon: 'lucide:truck', detail: '付款确认后生成配送任务' },\n];\n/** 循环推进示例，最后一次点击重置流程。 */\nfunction advanceBasic() {\n  basicActive.value = basicActive.value === items.length ? 0 : basicActive.value + 1;\n}\n/** 组件图标与字符串图标并列演示。 */\nconst DeliveryIcon = defineComponent({\n  name: 'StepsDeliveryIcon',\n  setup: () => () => h(Icon, { name: 'lucide:truck' }),\n});\n\n/** 两步场景共用固定切片，避免在模板中重复派生。 */\nconst firstTwoItems = items.slice(0, 2);\n</script>\n\n<template>\n  <div class=\"flex w-full flex-col\">\n    <Playground\n      v-model=\"playgroundState\" :controls=\"controls\" :code=\"stepsCode\" component-name=\"RebornSteps\" title=\"交互演练场\"\n      description=\"调节尺寸、状态、进度和布局，查看节点圆环与步骤之间的连接关系。\"\n    >\n      <template #tag>\n        <RebornButton size=\"sm\" variant=\"soft\" color=\"neutral\" @click=\"resetState\">\n          <template #leading>\n            <Icon name=\"lucide:rotate-ccw\" />\n          </template>\n          重置配置\n        </RebornButton>\n      </template>\n      <div class=\"flex w-full flex-col gap-6\">\n        <div class=\"w-full overflow-x-auto\">\n          <RebornSteps\n            v-model:active=\"state.active\" :direction=\"state.direction\" :width=\"playgroundWidth\"\n            :space=\"playgroundSpace\" :size=\"state.size\" :type=\"state.type\" :line-type=\"state.lineType\"\n            :color=\"state.color\" :process-status=\"state.processStatus\" :finish-status=\"state.finishStatus\"\n            :placement=\"playgroundPlacement\" :align-center=\"state.alignCenter\" :simple=\"state.simple\"\n            :overall-progress=\"playgroundOverallProgress\" @change=\"onPlaygroundChange\"\n          >\n            <RebornStep\n              v-for=\"(item, index) in items\" :key=\"item.title\" :title=\"item.title\"\n              :description=\"item.description\" :progress=\"getPlaygroundProgress(index)\"\n            />\n          </RebornSteps>\n        </div>\n        <div class=\"flex flex-wrap items-center gap-2\">\n          <RebornButton\n            size=\"sm\" color=\"neutral\" variant=\"outlined\"\n            :disabled=\"state.active <= 0 || state.overallMode\" @click=\"movePlayground(-1)\"\n          >\n            上一步\n          </RebornButton>\n          <RebornButton\n            size=\"sm\"\n            :disabled=\"state.active >= items.length || state.overallMode\"\n            @click=\"movePlayground(1)\"\n          >\n            下一步\n          </RebornButton>\n        </div>\n        <DemoNote tone=\"dimmed\">\n          {{ playgroundProgressNote }}\n          {{ lastChange }}；仅修改进度不会触发 <code>change</code>。\n        </DemoNote>\n      </div>\n    </Playground>\n\n    <DemoSection title=\"基础与状态流转\">\n      <template #description>通过 <code>v-model:active</code> 控制当前下标，前序、当前与后续步骤分别推导状态。</template>\n      <DemoBlock layout=\"stack\" class=\"gap-5\">\n        <RebornSteps\n          v-model:active=\"basicActive\"\n          @change=\"(next, previous) => basicChange = `change：${previous} → ${next}`\"\n        >\n          <RebornStep v-for=\"item in items\" :key=\"item.title\" :title=\"item.title\" :description=\"item.description\" />\n        </RebornSteps>\n        <div>\n          <RebornButton size=\"sm\" @click=\"advanceBasic\">\n            {{ basicActive === items.length ? '重新开始' : '下一步' }}\n          </RebornButton>\n        </div>\n        <DemoNote tone=\"dimmed\">{{ basicChange }}；<code>active</code> 等于步骤数量时，所有步骤使用完成状态。</DemoNote>\n      </DemoBlock>\n    </DemoSection>\n\n    <DemoSection title=\"步骤进度\">\n      <template #description>\n        单步 <code>RebornStep.progress</code> 表示该阶段的完成百分比；父级 <code>overall-progress</code>\n        将整体百分比等分折算为完成步骤和当前步骤进度。\n      </template>\n      <DemoBlock layout=\"stack\" class=\"gap-6\">\n        <div class=\"flex w-full flex-col gap-4\">\n          <label class=\"flex flex-wrap items-center gap-3 text-base text-gray-10\">\n            当前步骤进度（%）\n            <RebornInputNumber\n              v-model=\"currentProgress\" :min=\"0\" :max=\"100\" :step=\"5\" size=\"sm\" class=\"w-32\"\n              :disabled=\"currentActive >= progressItems.length\"\n              aria-label=\"当前步骤进度百分比\"\n            />\n          </label>\n          <RebornSteps v-model:active=\"currentActive\">\n            <RebornStep\n              v-for=\"(item, index) in progressItems\" :key=\"item.title\" :title=\"item.title\"\n              :progress=\"getCurrentProgress(index)\" :description=\"item.description\"\n            />\n          </RebornSteps>\n          <div class=\"flex flex-wrap items-center gap-2\">\n            <RebornButton size=\"sm\" color=\"neutral\" variant=\"outlined\" :disabled=\"currentActive <= 0\" @click=\"currentActive--\">上一步</RebornButton>\n            <RebornButton size=\"sm\" :disabled=\"currentActive >= progressItems.length\" @click=\"currentActive++\">下一步</RebornButton>\n            <RebornButton size=\"sm\" color=\"neutral\" variant=\"soft\" @click=\"resetCurrentProgress\">重置</RebornButton>\n          </div>\n          <DemoNote tone=\"dimmed\">当前下标 {{ currentActive }}；每个步骤分别接收 <code>progress</code>，仅当前处理中步骤显示圆环；达到 100% 后仍由业务更新 <code>active</code>。</DemoNote>\n        </div>\n        <div class=\"flex w-full flex-col gap-4\">\n          <label class=\"flex flex-wrap items-center gap-3 text-base text-gray-10\">\n            整体进度（%）\n            <RebornInputNumber\n              v-model=\"overallProgress\" :min=\"0\" :max=\"100\" :step=\"5\" :precision=\"2\" size=\"sm\" class=\"w-32\"\n              aria-label=\"整体进度百分比\"\n            />\n          </label>\n          <RebornSteps :overall-progress=\"overallProgress ?? 0\">\n            <RebornStep title=\"填写资料\" description=\"每个步骤占整体进度的三分之一\" />\n            <RebornStep title=\"核验资料\" description=\"整体 50% 时，本步骤进度为 50%\" />\n            <RebornStep title=\"确认提交\" description=\"整体 100% 时，三个步骤全部完成\" />\n          </RebornSteps>\n          <div class=\"flex flex-wrap items-center gap-2\">\n            <RebornButton size=\"sm\" color=\"neutral\" variant=\"outlined\" :disabled=\"(overallProgress ?? 0) <= 0\" @click=\"moveOverallProgress(-1)\">上一步</RebornButton>\n            <RebornButton size=\"sm\" :disabled=\"(overallProgress ?? 0) >= 100\" @click=\"moveOverallProgress(1)\">下一步</RebornButton>\n            <RebornButton size=\"sm\" color=\"neutral\" variant=\"soft\" @click=\"overallProgress = 50\">重置</RebornButton>\n          </div>\n          <DemoNote tone=\"dimmed\">上一步与下一步按整体的三分之一推进，重置回到 50%；默认根字号下，圆环与节点边缘相隔 3px，进度颜色跟随当前步骤主题色。</DemoNote>\n        </div>\n      </DemoBlock>\n    </DemoSection>\n\n    <DemoSection title=\"尺寸\">\n      <template #description><code>size</code> 统一控制节点、标题和描述的尺寸，默认 <code>md</code>。</template>\n      <DemoBlock layout=\"stack\" class=\"gap-6\">\n        <div v-for=\"size in stepsSizes\" :key=\"size\" class=\"flex flex-col gap-3 w-full\">\n          <p class=\"text-sm text-gray-7\">{{ size.toUpperCase() }}</p>\n          <RebornSteps :active=\"1\" :size=\"size\">\n            <RebornStep\n              v-for=\"item in progressItems\" :key=\"item.title\" :title=\"item.title\"\n              :description=\"item.description\"\n            />\n          </RebornSteps>\n        </div>\n      </DemoBlock>\n    </DemoSection>\n\n    <DemoSection title=\"方向与间距\">\n      <template #description>\n        <code>direction</code> 控制排列方向，<code>width</code> 控制整体宽度且默认\n        <code>100%</code>，<code>space</code> 控制单步布局长度。\n      </template>\n      <DemoBlock layout=\"stack\" class=\"gap-6\">\n        <div class=\"overflow-x-auto w-full\">\n          <RebornSteps :active=\"1\" :width=\"640\">\n            <RebornStep\n              v-for=\"item in firstTwoItems\" :key=\"item.title\" :title=\"item.title\"\n              :description=\"item.description\"\n            />\n            <RebornStep title=\"提交申请\" description=\"末项与前面的步骤共同分配可用宽度，较长的描述也能获得足够空间，按可用宽度换行。\" />\n          </RebornSteps>\n        </div>\n        <DemoNote tone=\"dimmed\">\n          上例将整体 <code>width</code> 设为 640px，各步骤共同分配可用宽度，末项不按标题宽度收缩；下例单独设置 <code>space</code>。\n        </DemoNote>\n        <div class=\"overflow-x-auto w-full\">\n          <RebornSteps :active=\"1\" :space=\"180\">\n            <RebornStep\n              v-for=\"item in progressItems\" :key=\"item.title\" :title=\"item.title\"\n              :description=\"item.description\"\n            />\n          </RebornSteps>\n        </div>\n        <RebornSteps :active=\"1\" direction=\"vertical\" :space=\"96\">\n          <RebornStep\n            v-for=\"item in progressItems\" :key=\"item.title\" :title=\"item.title\"\n            :description=\"item.description\"\n          />\n        </RebornSteps>\n      </DemoBlock>\n    </DemoSection>\n\n    <DemoSection title=\"标题与描述位置\">\n      <template #description>\n        <code>placement</code> 控制标题与描述相对节点的位置，支持上、下、左、右；单步设置优先于父级，排列方向仍由 <code>direction</code> 控制。\n      </template>\n      <DemoBlock layout=\"stack\" class=\"gap-6\">\n        <div v-for=\"placement in stepsPlacements\" :key=\"placement\" class=\"flex w-full flex-col gap-3 overflow-x-auto\">\n          <p class=\"text-sm text-gray-7\">{{ placement }}</p>\n          <RebornSteps :active=\"1\" :placement=\"placement\" :width=\"640\">\n            <RebornStep title=\"填写资料\" description=\"补充基本信息\" />\n            <RebornStep title=\"身份验证\" description=\"核对联系方式\" />\n            <RebornStep title=\"提交完成\" description=\"接收处理通知\" />\n          </RebornSteps>\n        </div>\n        <div class=\"flex w-full flex-col gap-3 overflow-x-auto\">\n          <p class=\"text-sm text-gray-7\">单步覆盖父级位置</p>\n          <RebornSteps :active=\"1\" placement=\"top\" :width=\"640\">\n            <RebornStep title=\"继承上方\" description=\"使用父级 top\" />\n            <RebornStep title=\"单步下方\" description=\"当前步骤覆盖为 bottom\" placement=\"bottom\" />\n            <RebornStep title=\"继承上方\" description=\"其余步骤仍为 top\" />\n          </RebornSteps>\n        </div>\n        <DemoNote tone=\"dimmed\">默认位于节点右侧；横向 <code>top</code> / <code>bottom</code> 默认左对齐，开启 <code>align-center</code> 后居中，仍保留显式选择的位置。纵向排列不受居中开关影响。</DemoNote>\n      </DemoBlock>\n    </DemoSection>\n\n    <DemoSection title=\"居中对齐\">\n      <template #description><code>align-center</code> 让横向 <code>top</code> / <code>bottom</code> 的节点与文字居中；未指定 <code>placement</code> 时，内容位于节点下方。</template>\n      <DemoBlock layout=\"stack\">\n        <RebornSteps :active=\"1\" align-center>\n          <RebornStep v-for=\"item in items\" :key=\"item.title\" :title=\"item.title\" :description=\"item.description\" />\n        </RebornSteps>\n      </DemoBlock>\n    </DemoSection>\n\n    <DemoSection title=\"连接线样式\">\n      <template #description><code>line-type</code> 统一控制实线、原生虚线或箭头连接，切换步骤时连接器呈现过渡动画。</template>\n      <DemoBlock layout=\"stack\" class=\"gap-6\">\n        <div v-for=\"lineType in stepsLineTypes\" :key=\"lineType\" class=\"flex flex-col gap-3 w-full\">\n          <p class=\"text-sm text-gray-7\">{{ lineType }}</p>\n          <RebornSteps :active=\"connectorActive\" :line-type=\"lineType\">\n            <RebornStep v-for=\"item in progressItems\" :key=\"item.title\" :title=\"item.title\" />\n          </RebornSteps>\n        </div>\n        <div class=\"flex items-center gap-2\">\n          <RebornButton size=\"sm\" color=\"neutral\" variant=\"outlined\" :disabled=\"connectorActive <= 0\" @click=\"connectorActive--\">上一步</RebornButton>\n          <RebornButton size=\"sm\" :disabled=\"connectorActive >= 3\" @click=\"connectorActive++\">下一步</RebornButton>\n        </div>\n        <DemoNote tone=\"dimmed\">实线与虚线的主题色从前一步向后一步延展，回退时收回；箭头平滑变色。系统启用减少动态效果时关闭过渡。</DemoNote>\n      </DemoBlock>\n    </DemoSection>\n\n    <DemoSection title=\"点状步骤\">\n      <template #description><code>type=\"dot\"</code> 将序号节点替换为圆点，<code>size</code> 同时调整圆点与文字尺寸。</template>\n      <DemoBlock layout=\"stack\" class=\"gap-6\">\n        <RebornSteps v-for=\"size in stepsSizes\" :key=\"size\" :active=\"1\" type=\"dot\" :size=\"size\">\n          <RebornStep\n            v-for=\"item in progressItems\" :key=\"item.title\" :title=\"item.title\"\n            :description=\"item.description\"\n          />\n        </RebornSteps>\n      </DemoBlock>\n    </DemoSection>\n\n    <DemoSection title=\"简洁模式\">\n      <template #description><code>simple</code> 隐藏描述，适合只需展示阶段名称的流程摘要。</template>\n      <DemoBlock layout=\"stack\">\n        <RebornSteps :active=\"1\" simple>\n          <RebornStep v-for=\"item in items\" :key=\"item.title\" :title=\"item.title\" :description=\"item.description\" />\n        </RebornSteps>\n        <DemoNote tone=\"dimmed\">此处传入了 <code>description</code>，简洁模式会隐藏它，关闭后恢复显示。</DemoNote>\n      </DemoBlock>\n    </DemoSection>\n\n    <DemoSection title=\"单步状态与颜色\">\n      <template #description>单步 <code>status</code> 覆盖父级推导状态，<code>color</code> 覆盖继承色；错误与成功状态优先使用语义色。</template>\n      <DemoBlock layout=\"stack\" class=\"gap-6\">\n        <RebornSteps :active=\"1\" color=\"secondary\">\n          <RebornStep title=\"资料已收集\" status=\"success\" description=\"显式成功状态\" />\n          <RebornStep title=\"需要核对\" status=\"error\" color=\"warning\" description=\"错误状态优先于单步配色\" />\n          <RebornStep title=\"人工复核\" status=\"process\" color=\"warning\" description=\"单步主题色覆盖父级\" />\n          <RebornStep title=\"等待通知\" />\n        </RebornSteps>\n      </DemoBlock>\n    </DemoSection>\n\n    <DemoSection title=\"自定义图标与内容\">\n      <template #description><code>icon</code> 接受图标名称或组件；同名插槽可替换节点图标、标题和描述。</template>\n      <DemoBlock layout=\"stack\">\n        <RebornSteps :active=\"1\">\n          <RebornStep title=\"填写订单\" icon=\"lucide:clipboard-list\" description=\"字符串图标\" />\n          <RebornStep title=\"配送安排\" :icon=\"DeliveryIcon\" description=\"组件图标\" />\n          <RebornStep>\n            <template #icon>\n              <Icon name=\"lucide:package-check\" />\n            </template>\n            <template #title><RebornText color=\"neutral\">核对收货</RebornText></template>\n            <template #description><span>订单 <strong class=\"font-medium\">RB-2026</strong> 的收货信息</span></template>\n          </RebornStep>\n        </RebornSteps>\n      </DemoBlock>\n    </DemoSection>\n\n    <DemoSection title=\"插槽定制\">\n      <template #description>\n        <code>icon</code>、<code>title</code>、<code>description</code> 与 <code>connector</code>\n        分别覆盖节点、标题、描述与指示线，使用作用域参数响应步骤变化。\n      </template>\n      <DemoBlock layout=\"stack\" class=\"gap-5\">\n        <RebornSteps v-model:active=\"slotActive\" :ui=\"iconOnlyMarkerUi\">\n          <RebornStep v-for=\"item in slotItems\" :key=\"item.title\">\n            <template #icon=\"{ status }\">\n              <Icon :name=\"status === 'finish' ? 'lucide:check' : item.icon\" class=\"size-5\" :class=\"status === 'wait' ? 'text-gray-7' : 'text-brand-6'\" />\n            </template>\n            <template #title=\"{ current }\">\n              <RebornText color=\"neutral\" class=\"inline-flex flex-wrap items-center gap-2\">\n                {{ item.title }}\n                <span v-if=\"current\" class=\"text-sm\">当前</span>\n              </RebornText>\n            </template>\n            <template #description=\"{ index, status }\">\n              <span class=\"flex flex-col gap-2\">\n                <span>{{ item.detail }}</span>\n                <span class=\"text-sm\">第 {{ index + 1 }} 阶段，状态：{{ status }}</span>\n              </span>\n            </template>\n            <template #connector=\"{ completed, direction }\">\n              <span\n                class=\"flex w-full items-center gap-1 transition-colors duration-200 motion-reduce:transition-none\"\n                :class=\"completed ? 'text-brand-6' : 'text-gray-4'\"\n              >\n                <span class=\"h-0.5 flex-1 rounded-full bg-current\" />\n                <Icon :name=\"direction === 'vertical' ? 'lucide:chevron-down' : 'lucide:chevrons-right'\" class=\"size-3 shrink-0\" />\n              </span>\n            </template>\n          </RebornStep>\n        </RebornSteps>\n        <div class=\"flex flex-wrap items-center gap-2\">\n          <RebornButton size=\"sm\" color=\"neutral\" variant=\"outlined\" :disabled=\"slotActive <= 0\" @click=\"slotActive--\">上一步</RebornButton>\n          <RebornButton size=\"sm\" :disabled=\"slotActive >= slotItems.length\" @click=\"slotActive++\">下一步</RebornButton>\n          <RebornButton size=\"sm\" color=\"neutral\" variant=\"soft\" @click=\"slotActive = 1\">重置</RebornButton>\n        </div>\n        <DemoNote tone=\"dimmed\">\n          当前下标 {{ slotActive }}；节点只显示图标，标题使用中性色 <code>RebornText</code>；描述读取步骤状态，指示线按 <code>completed</code> 变色。末步不渲染指示线。\n        </DemoNote>\n      </DemoBlock>\n    </DemoSection>\n  </div>\n</template>\n"
+    }
+  ],
+  "related": [],
+  "whenToUse": [
+    "注册、下单、审批等有序流程：通过 v-model:active 标出当前阶段，并用外部按钮推进。",
+    "流程需要展示已完成、处理中或失败阶段：设置 processStatus / finishStatus，必要时用单步 status 覆盖。",
+    "页面空间与信息量不同：用 width 控制整体宽度，direction 与 space 调整排列，placement 选择标题和描述相对节点的上、下、左、右位置，simple 控制描述显示。",
+    "需要区分阶段类型：使用 type=default/dot/text 选择数字、点状或无标记文本，lineType=solid/dashed/arrow 定制连接，单步 icon 与 color 表达业务含义。",
+    "耗时任务需要阶段内进度：为 RebornStep 单独设置 progress，或用父级 overallProgress 将整体百分比等分折算为完成步骤和当前步骤圆环。"
+  ],
+  "whenNotToUse": [
+    "按时间先后回顾日志、消息或操作记录，改用 reborn-timeline。",
+    "需要点击标题切换内容面板，改用 reborn-tabs。",
+    "需要遮罩聚焦页面元素并逐步讲解，改用 reborn-guide。"
+  ],
+  "pitfalls": [
+    "仅 Web 端实现；RebornStep 必须放在 RebornSteps 的默认插槽中使用。",
+    "active 是从 0 开始的当前下标；等于步骤数量时，全部步骤使用 finishStatus。",
+    "RebornStep.progress 和 RebornSteps.overallProgress 的范围为 0～100，超范围限制到边界，非有限值按 0 处理；不传时不显示进度圆环。",
+    "overallProgress 优先于 active 决定展示下标；当前 RebornStep 显式设置 progress 时优先使用单步圆环百分比。整体进度不回写 active，也不额外触发 change，100% 时全部步骤完成。",
+    "圆环只显示在当前且状态为 process 的节点周围；progress 达到 100% 不会推进步骤，仍需业务更新 active。",
+    "步骤本身没有点击切换能力，使用外部按钮或业务状态更新 active。",
+    "单步 status 优先于父级按 active 推导的状态；错误和成功状态的语义色优先于 color。",
+    "箭头使用 lineType=arrow；type 选择 default、dot 或 text。text 不渲染标记、图标插槽和进度圆环，当前标题与描述使用步骤主题色，错误和成功沿用语义色。dashed 使用原生 CSS 虚线，短段分布由浏览器决定。",
+    "实线和虚线的完成覆盖层沿流程方向延展、回退时收回；箭头使用颜色过渡，约 200ms，系统减少动态效果时关闭过渡。",
+    "simple 会隐藏 description，包括描述插槽；不适合必须展示辅助说明的流程。",
+    "placement 只控制标题与描述相对节点的位置，不改变 direction 的横纵排列；单步 placement 优先于父级 placement，均未指定时，横向 alignCenter=true 回退为 bottom，其余默认为 right。横向 top/bottom 默认沿每步起点左对齐，alignCenter=true 时节点与文字居中；纵向不受 alignCenter 影响，top/bottom 的连接线避开文案并连接内容组边缘。",
+    "四向布局使用条件选择器共享节点轴；覆盖其网格位置、外边距或连接器定位时使用 Tailwind 重要修饰符，例如 ui.content='mt-6!'。",
+    "width 控制整体宽度，默认 100%；space 控制单步布局长度，默认横向由所有步骤共同分配可用宽度，末项不按标题宽度收缩。两者的数字值按 px 解释，字符串可传百分比等 CSS 长度。",
+    "change 仅在 active 真正变化时派发，不会在初始化时触发。",
+    "icon 插槽优先于 icon 参数，title / description 插槽分别替换对应的字符串内容；四个插槽均提供 index、status、current 和 progress。仅图标节点可使用 ui.marker 的 bg-transparent 配合可见的图标颜色，标题可使用 RebornText color=neutral。",
+    "connector 插槽替换连接器内部内容，并提供 completed、direction、lineType；默认外层与 ui.connector 保留，线条和过渡需自行绘制，末步不调用该插槽。"
+  ],
+  "dependencies": [
+    "clsx",
+    "tailwind-merge",
+    "tailwind-variants"
+  ],
+  "install": {
+    "cli": "npx reborn-ui@latest add reborn-steps"
+  },
+  "sourceRefs": {
+    "web": [
+      "app/components/reborn/ui/reborn-steps/RebornStep.vue",
+      "app/components/reborn/ui/reborn-steps/RebornSteps.vue",
+      "app/components/reborn/ui/reborn-steps/index.ts",
+      "app/components/reborn/ui/reborn-steps/reborn-steps.config.ts",
+      "app/components/reborn/ui/reborn-steps/reborn-steps.context.ts"
+    ]
+  },
+  "docPath": "content/2.components/navigation/reborn-steps.md",
+  "_meta": {
+    "contentHash": "acb22b86b80ab1ca8e38b0574f4b33b1cb1d0c7d",
+    "hasOverride": true,
+    "extractors": {
+      "web": "ok",
+      "uniapp": "absent",
+      "docs": "found"
+    }
+  }
+}

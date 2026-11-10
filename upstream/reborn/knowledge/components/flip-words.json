@@ -9,6 +9,7 @@
     "tailwind",
     "aceternity-ui"
   ],
+  "aliases": [],
   "platforms": [
     "web"
   ],
@@ -83,7 +84,7 @@
   },
   "docPath": "content/2.components/text-animations/flip-words.md",
   "_meta": {
-    "contentHash": "5cbd21c6b570079f4456e8cfdd70ca0c30552f6f",
+    "contentHash": "f3cd57fbed858ad8df99417f1e11f004e8388b37",
     "hasOverride": true,
     "extractors": {
       "web": "ok",

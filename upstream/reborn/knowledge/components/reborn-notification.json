@@ -5,6 +5,15 @@
   "description": "屏幕四角弹出的全局通知：标题 + 正文 + 底部操作区三段结构，支持倒计时进度条、悬停暂停、同 key 更新，属性基本对齐 Element Plus Notification，仅 web 端。",
   "category": "misc",
   "tags": [],
+  "aliases": [
+    "notification",
+    "通知",
+    "系统通知",
+    "消息通知",
+    "右上角通知",
+    "notice",
+    "notify"
+  ],
   "platforms": [
     "web"
   ],
@@ -22,9 +31,22 @@
     }
   ],
   "related": [],
-  "whenToUse": [],
-  "whenNotToUse": [],
-  "pitfalls": [],
+  "whenToUse": [
+    "后台任务（部署、导出、同步）完成后播报结果：用户可能已离开触发位置，通知落在屏幕角落不打断当前操作。",
+    "系统公告或版本更新提示：需要标题加一两句说明，Toast 的单行放不下。",
+    "带「查看详情 / 稍后处理」等后续动作的异步消息：footer 可放按钮，duration 设为 0 让它停留到用户处理为止。"
+  ],
+  "whenNotToUse": [
+    "单句操作反馈（保存成功、复制成功），改用 reborn-toast：结构更轻，不占屏幕一角。",
+    "需要用户当场确认或选择，改用 reborn-dialog：通知不阻塞操作，用户可以完全忽略。",
+    "页面内常驻的状态说明，改用 reborn-alert：通知会自动消失，也不跟随页面内容滚动。"
+  ],
+  "pitfalls": [
+    "仅 Web 端，UniApp 无对应实现。",
+    "duration 为 0 时不自动关闭，需用户点关闭或代码关闭。",
+    "同 key 再次调用会更新已有的那条通知，不会新开一条。",
+    "鼠标悬停在通知上时倒计时暂停，移开后继续。"
+  ],
   "dependencies": [
     "clsx",
     "motion-v",
@@ -43,8 +65,8 @@
   },
   "docPath": "content/2.components/miscellaneous/reborn-notification.md",
   "_meta": {
-    "contentHash": "d27c524deec53fc61fa3501b4ad2b6c85633452d",
-    "hasOverride": false,
+    "contentHash": "1b06e2b49d1070b81aaf83c02a1a111e3c5cd91e",
+    "hasOverride": true,
     "extractors": {
       "web": "ok",
       "uniapp": "absent",

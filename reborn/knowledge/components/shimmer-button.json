@@ -1,0 +1,115 @@
+{
+  "$schema": "../schema/component.schema.json",
+  "id": "shimmer-button",
+  "title": "闪光按钮",
+  "description": "用于呈现环绕闪光流动动画的按钮组件，闪光颜色、速度与背景可配置。",
+  "category": "basic",
+  "tags": [
+    "css",
+    "tailwind",
+    "button",
+    "magic-ui"
+  ],
+  "aliases": [],
+  "platforms": [
+    "web"
+  ],
+  "props": [
+    {
+      "name": "shimmerColor",
+      "type": "string",
+      "required": false,
+      "description": "闪光光斑的颜色。",
+      "default": "\"#ffffff\""
+    },
+    {
+      "name": "shimmerSize",
+      "type": "string",
+      "required": false,
+      "description": "流光描边的宽度，CSS 长度字符串。",
+      "default": "\"0.05em\""
+    },
+    {
+      "name": "borderRadius",
+      "type": "string",
+      "required": false,
+      "description": "按钮的圆角半径，CSS 长度字符串。",
+      "default": "\"100px\""
+    },
+    {
+      "name": "shimmerDuration",
+      "type": "string",
+      "required": false,
+      "description": "一轮流光动画的周期，CSS 时间字符串。",
+      "default": "\"3s\""
+    },
+    {
+      "name": "background",
+      "type": "string",
+      "required": false,
+      "description": "按钮的背景色，可使用 rgb 或十六进制。",
+      "default": "\"rgba(0, 0, 0, 1)\""
+    },
+    {
+      "name": "class",
+      "type": "string",
+      "required": false,
+      "description": "应用于按钮的额外 CSS 类。",
+      "default": "\"\""
+    }
+  ],
+  "events": [],
+  "slots": [
+    {
+      "name": "default",
+      "description": "按钮显示内容，渲染在流光层之上。"
+    }
+  ],
+  "exposes": [],
+  "examples": [
+    {
+      "title": "Web 演示",
+      "path": "app/components/reborn/examples/shimmer-button/ShimmerButtonDemo.vue",
+      "source": "demo",
+      "platform": "web",
+      "code": "<template>\n  <DemoSection\n    title=\"基础用法\"\n    description=\"ShimmerButton 通过 shimmer-size 控制光带宽度，光带沿按钮边框循环流动，适合首屏 CTA 与订阅入口。\"\n  >\n    <DemoBlock align=\"center\">\n      <ShimmerButton shimmer-size=\"2px\">\n        <span\n          class=\"text-center text-sm leading-none font-medium tracking-tight whitespace-pre-wrap text-white lg:text-lg\"\n        >\n          微光按钮\n        </span>\n      </ShimmerButton>\n    </DemoBlock>\n  </DemoSection>\n</template>\n"
+    }
+  ],
+  "related": [],
+  "whenToUse": [
+    "落地页主 CTA 需要持续闪光动画吸引注意时。",
+    "深色主题下需要高对比发光效果的按钮。",
+    "需要自定义闪光颜色（shimmerColor）与动画周期（shimmerDuration）的营销按钮。"
+  ],
+  "whenNotToUse": [
+    "常规业务表单按钮，改用 reborn-button（同时支持 web 与 uniapp）。",
+    "需要点击波纹反馈，改用 ripple-button。",
+    "需要彩虹渐变效果，改用 rainbow-button。"
+  ],
+  "pitfalls": [
+    "仅 web 端可用。",
+    "shimmerDuration（默认 \"3s\"）与 shimmerSize（默认 \"0.05em\"）均为 CSS 字符串，不是数字。",
+    "背景默认为纯黑 rgba(0, 0, 0, 1)，浅色主题需自行传 background。",
+    "按钮内容通过默认插槽传入，知识条目未声明 click 等事件。"
+  ],
+  "dependencies": [],
+  "install": {
+    "cli": "npx reborn-ui@latest add shimmer-button"
+  },
+  "sourceRefs": {
+    "web": [
+      "app/components/reborn/ui/shimmer-button/ShimmerButton.vue",
+      "app/components/reborn/ui/shimmer-button/index.ts"
+    ]
+  },
+  "docPath": "content/2.components/button/shimmer-button.md",
+  "_meta": {
+    "contentHash": "d9d516391f4649d10818a38c2abc884ec4ad3035",
+    "hasOverride": true,
+    "extractors": {
+      "web": "ok",
+      "uniapp": "absent",
+      "docs": "found"
+    }
+  }
+}

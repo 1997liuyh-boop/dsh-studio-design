@@ -1,0 +1,120 @@
+{
+  "$schema": "../schema/component.schema.json",
+  "id": "reborn-footer",
+  "title": "Footer 底部栏",
+  "description": "用于固定在页面底部放置操作按钮的容器组件，自动占位并适配安全区，目前仅 uniapp 端实现。",
+  "category": "navigation",
+  "tags": [],
+  "aliases": [
+    "footer",
+    "底部栏",
+    "底部操作栏",
+    "底部按钮栏"
+  ],
+  "platforms": [
+    "web",
+    "uniapp"
+  ],
+  "props": [
+    {
+      "name": "minHeight",
+      "type": "number",
+      "required": false,
+      "description": "最小高度，小于该高度时，不显示",
+      "default": "30"
+    },
+    {
+      "name": "vt",
+      "type": "number",
+      "required": false,
+      "description": "监听值，触发更新",
+      "default": "0"
+    },
+    {
+      "name": "height",
+      "type": "number | null",
+      "required": false,
+      "description": "内容高度",
+      "default": "null"
+    },
+    {
+      "name": "ui",
+      "type": "{\n    placeholder?: ClassValue\n    wrapper?: ClassValue\n    base?: ClassValue\n    content?: ClassValue\n  }",
+      "required": false,
+      "description": "按键覆盖各节点类名，见下方「自定义样式（ui）」。 可用键（从源码抽取，以此为准）——UniApp：base、content、placeholder、wrapper。",
+      "default": "{}"
+    }
+  ],
+  "events": [],
+  "slots": [
+    {
+      "name": "default",
+      "description": "footer 内容区插槽，通常放置提交/取消等底部操作按钮。"
+    }
+  ],
+  "exposes": [],
+  "examples": [
+    {
+      "title": "Web 演示",
+      "path": "app/components/reborn/examples/reborn-footer/RebornFooterDemo.vue",
+      "source": "demo",
+      "platform": "web",
+      "code": "<template>\n  <div class=\"border-default rounded-lg border border-dashed p-6 text-center\">\n    <DemoNote>Web 端暂未提供此组件，请在 UniApp 端查看。</DemoNote>\n  </div>\n</template>\n"
+    },
+    {
+      "title": "UniApp 演示",
+      "path": "packages/uniapp-project/src/pages/reborn-footer/RebornFooterDemo.vue",
+      "source": "demo",
+      "platform": "uniapp",
+      "code": "<script setup lang=\"ts\">\nimport { shallowRef } from 'vue'\nimport RebornButton from '@/components/reborn-button/RebornButton.vue'\nimport RebornCard from '@/components/reborn-card/RebornCard.vue'\nimport RebornFooter from '@/components/reborn-footer/RebornFooter.vue'\nimport RebornPage from '@/components/reborn-page/RebornPage.vue'\n\nconst counter = shallowRef(0)\nconst fixedHeight = shallowRef<number | null>(null)\nconst customBg = shallowRef<boolean>(false)\n</script>\n\n<template>\n  <RebornPage title=\"Footer 底部栏\" description=\"固定在页面底部，并自动生成占位高度，避免遮挡内容。\">\n    <view>\n      <RebornCard title=\"控制项\">\n        <view class=\"flex flex-wrap items-center gap-2\">\n          <RebornButton :fluid=\"true\" @click=\"counter++\">\n            触发重算高度(vt)\n          </RebornButton>\n          <RebornButton :fluid=\"true\" @click=\"fixedHeight = fixedHeight ? null : 56\">\n            {{ fixedHeight ? '取消固定高度' : '固定高度 56px' }}\n          </RebornButton>\n          <RebornButton :fluid=\"true\" @click=\"customBg = !customBg\">\n            {{ customBg ? '恢复默认背景' : '设置浅绿色背景' }} ({{ customBg }})\n          </RebornButton>\n        </view>\n      </RebornCard>\n\n      <RebornCard title=\"内容区\">\n        <view class=\"space-y-2 text-sm text-gray-6\">\n          <view v-for=\"i in 20\" :key=\"i\" class=\"\n            rounded bg-gray-1 p-3\n            dark:bg-gray-8\n          \">\n            列表内容 {{ i }}\n          </view>\n        </view>\n      </RebornCard>\n\n      <RebornFooter :vt=\"counter\" :height=\"fixedHeight\"\n        :ui=\"{ content: 'flex items-center justify-between px-4 py-3', base: `${customBg ? 'bg-green-4' : 'bg-white dark:bg-gray-8'}` }\">\n        <text class=\"text-sm font-medium\">当前重算次数：{{ counter }}</text>\n        <button class=\"rounded bg-primary px-3 py-1 text-xs text-white\" @click=\"counter++\">\n          操作\n        </button>\n      </RebornFooter>\n    </view>\n  </RebornPage>\n</template>\n"
+    }
+  ],
+  "related": [],
+  "whenToUse": [
+    "表单页/详情页底部固定的提交、取消等操作栏。",
+    "需要自动生成占位元素防止内容被固定底栏遮挡的页面。",
+    "需要适配 iPhone 等设备底部安全区的固定底栏。"
+  ],
+  "whenNotToUse": [
+    "web 端暂未实现（源码为占位组件），web 页面底部操作条可用 reborn-sticky 的吸底模式。",
+    "底部多页签导航切换，uniapp 端改用 reborn-tabbar。"
+  ],
+  "pitfalls": [
+    "web 端源码为「暂未开发」的占位组件，实际功能仅 uniapp 端可用。",
+    "minHeight 是显示阈值：footer 实际高度（叠加底部安全区）小于该值时整个 footer 不显示，默认 30。",
+    "内容动态变化导致高度改变时，需变更 vt 值强制重新测量 footer 高度。",
+    "footer 隐藏时占位元素同样移除，并把对外共享的底部偏移值（rebornFooterOffset）归零。"
+  ],
+  "dependencies": [
+    "@weapp-tailwindcss/merge-v3",
+    "@weapp-tailwindcss/variants-v3",
+    "clsx",
+    "tailwind-merge",
+    "tailwind-variants"
+  ],
+  "install": {
+    "cli": "npx reborn-ui@latest add reborn-footer"
+  },
+  "sourceRefs": {
+    "web": [
+      "app/components/reborn/ui/reborn-footer/RebornFooter.vue",
+      "app/components/reborn/ui/reborn-footer/index.ts"
+    ],
+    "uniapp": [
+      "packages/uniapp-project/src/components/reborn-footer/RebornFooter.vue",
+      "packages/uniapp-project/src/components/reborn-footer/index.ts",
+      "packages/uniapp-project/src/components/reborn-footer/offset.ts",
+      "packages/uniapp-project/src/components/reborn-footer/reborn-footer.config.ts"
+    ]
+  },
+  "docPath": "content/2.components/navigation/reborn-footer.md",
+  "_meta": {
+    "contentHash": "aacd0ee04cb47aa4eff6d84034f4dabac96b9849",
+    "hasOverride": true,
+    "extractors": {
+      "web": "partial",
+      "uniapp": "ok",
+      "docs": "found"
+    }
+  }
+}

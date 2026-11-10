@@ -1,0 +1,92 @@
+{
+  "$schema": "../schema/component.schema.json",
+  "id": "reborn-container",
+  "title": "容器",
+  "description": "用于将页面内容水平居中并按屏幕断点限制最大宽度的布局容器组件，仅 web 端。",
+  "category": "navigation",
+  "tags": [],
+  "aliases": [
+    "container",
+    "容器",
+    "居中容器"
+  ],
+  "platforms": [
+    "web"
+  ],
+  "props": [
+    {
+      "name": "as",
+      "type": "any",
+      "required": false,
+      "description": "容器渲染的 HTML 元素或组件 @defaultValue 'div'",
+      "default": "'div'"
+    },
+    {
+      "name": "class",
+      "type": "any",
+      "required": false,
+      "description": "容器自定义类名"
+    },
+    {
+      "name": "ui",
+      "type": "Partial<{\n        root: ClassValue\n    }>",
+      "required": false,
+      "description": "组件 UI 微调配置 可用键（从源码抽取，以此为准）——Web：root。"
+    }
+  ],
+  "events": [],
+  "slots": [
+    {
+      "name": "default",
+      "props": "",
+      "description": "容器默认插槽内容"
+    }
+  ],
+  "exposes": [],
+  "examples": [
+    {
+      "title": "Web 演示",
+      "path": "app/components/reborn/examples/reborn-container/RebornContainerDemo.vue",
+      "source": "demo",
+      "platform": "web",
+      "code": "<script setup lang=\"ts\">\nimport { DemoBlock, DemoNote, DemoSection, Icon, Playground } from \"#components\";\nimport { computed, shallowRef } from \"vue\";\nimport RebornButton from \"~/components/reborn/ui/reborn-button/RebornButton.vue\";\nimport RebornContainer from \"~/components/reborn/ui/reborn-container/RebornContainer.vue\";\n\n/**\n * 容器边界的描边样式：只描边不填充。\n * Container 自身不带任何视觉样式，用虚线勾出它的实际宽度，\n * 内部内容块再垫一层浅色，两者之间的空隙就是响应式水平内边距。\n */\nconst boundaryClass = \"border-x border-dashed border-primary/60\";\n\n/** 演练场可选的渲染标签 */\nconst tagOptions = [\"div\", \"section\", \"article\", \"main\"].map((t) => ({ label: `<${t}>`, value: t }));\n\n/** 演练场可选的最大宽度：空字符串表示不覆盖，沿用 --ui-container */\nconst maxWidthOptions = [\n  { label: \"默认（--ui-container）\", value: \"\" },\n  { label: \"max-w-3xl（768px）\", value: \"max-w-3xl\" },\n  { label: \"max-w-xl（576px）\", value: \"max-w-xl\" },\n  { label: \"max-w-sm（384px）\", value: \"max-w-sm\" },\n];\n\n// ─── 交互演练场 ─────────────────────────────────────────────────\n\n/** 演练场默认状态 */\nconst defaultState: Record<string, any> = {\n  as: \"div\",\n  maxWidth: \"max-w-xl\",\n};\n\nconst state = shallowRef<Record<string, any>>({ ...defaultState });\n\n/** 重置演练场配置 */\nfunction resetState() {\n  state.value = { ...defaultState };\n}\n\n/** 演练场控制面板配置 */\nconst controls: any = [\n  {\n    title: \"基础属性\",\n    children: [\n      {\n        label: \"渲染标签（as）\",\n        key: \"as\",\n        component: \"select\" as const,\n        defaultValue: \"div\",\n        props: { options: tagOptions },\n      },\n      {\n        label: \"最大宽度（经 ui.root 覆盖）\",\n        key: \"maxWidth\",\n        component: \"select\" as const,\n        defaultValue: \"max-w-xl\",\n        props: { options: maxWidthOptions },\n      },\n    ],\n  },\n];\n\n/** 预览区传给 ui 的覆盖配置：不覆盖时不传，保持默认最大宽度 */\nconst playgroundUi = computed(() => (state.value.maxWidth ? { root: state.value.maxWidth } : undefined));\n\n/** 传参明细：maxWidth 不是组件 prop，需手动拼成 :ui 写法 */\nconst containerCode = computed(() => {\n  const attrs: string[] = [];\n  if (state.value.as !== \"div\") attrs.push(`as=\"${state.value.as}\"`);\n  if (state.value.maxWidth) attrs.push(`:ui=\"{ root: '${state.value.maxWidth}' }\"`);\n  const open = attrs.length ? `<RebornContainer\\n  ${attrs.join(\"\\n  \")}\\n>` : \"<RebornContainer>\";\n  return `${open}\\n  <!-- 页面内容 -->\\n</RebornContainer>`;\n});\n</script>\n\n<template>\n  <div class=\"flex w-full min-w-0 flex-col\">\n    <Playground\n      v-model=\"state\"\n      :controls=\"controls\"\n      :code=\"containerCode\"\n      component-name=\"RebornContainer\"\n      title=\"交互演练场\"\n      description=\"调节上方参数，实时查看容器的渲染标签与最大宽度；虚线是容器边界，浅色块与虚线之间的空隙是水平内边距。\"\n    >\n      <template #tag>\n        <RebornButton size=\"sm\" variant=\"soft\" color=\"neutral\" @click=\"resetState\">\n          <template #leading>\n            <Icon name=\"lucide:rotate-ccw\" size=\"12\" />\n          </template>\n          重置配置\n        </RebornButton>\n      </template>\n\n      <div class=\"flex w-full flex-col gap-3\">\n        <RebornContainer :as=\"state.as\" :ui=\"playgroundUi\" :class=\"boundaryClass\">\n          <div class=\"bg-primary/10 text-default flex flex-col gap-2 rounded-lg p-4\">\n            <h4 class=\"text-sm font-semibold\">页面标题</h4>\n            <p class=\"text-muted text-sm leading-relaxed\">\n              正文保持在最大宽度内水平居中，宽屏下两侧留白自动增大。\n            </p>\n          </div>\n        </RebornContainer>\n        <DemoNote tone=\"dimmed\" class=\"font-mono text-xs\">\n          渲染为 &lt;{{ state.as }}&gt; · 最大宽度：{{ state.maxWidth || \"var(--ui-container)\" }}\n        </DemoNote>\n      </div>\n    </Playground>\n\n    <DemoSection title=\"基础用法\">\n      <template #description>\n        直接包裹内容即可获得居中、限宽与响应式留边：最大宽度取 CSS 变量\n        <code>--ui-container</code>，水平内边距随断点为\n        <code>px-4 / sm:px-6 / lg:px-8</code>。\n      </template>\n      <DemoBlock layout=\"stack\">\n        <RebornContainer :class=\"boundaryClass\">\n          <div class=\"bg-primary/10 text-default flex flex-col gap-2 rounded-lg p-4\">\n            <h4 class=\"text-base font-semibold\">页面标题</h4>\n            <p class=\"text-muted text-sm\">正文内容会保持在最大宽度内水平居中。</p>\n          </div>\n        </RebornContainer>\n        <DemoNote tone=\"dimmed\">\n          演示区比 <code>--ui-container</code> 窄，因此这里看到的是撑满整行；缩放浏览器窗口跨过 sm / lg 断点时，虚线与浅色块之间的留白会依次变为 16 / 24 / 32px。\n        </DemoNote>\n      </DemoBlock>\n    </DemoSection>\n\n    <DemoSection title=\"更换渲染标签\">\n      <template #description>\n        <code>as</code>\n        指定根节点渲染的 HTML 元素或组件，默认\n        <code>div</code>；样式不变，只换语义，便于输出\n        <code>section</code>、<code>article</code> 等结构。\n      </template>\n      <DemoBlock layout=\"stack\" class=\"gap-4\">\n        <RebornContainer as=\"section\" :class=\"boundaryClass\">\n          <div class=\"bg-primary/10 text-default rounded-lg p-4 text-sm\">\n            <span class=\"font-mono text-xs\">&lt;section&gt;</span> 特性介绍\n          </div>\n        </RebornContainer>\n        <RebornContainer as=\"article\" :class=\"boundaryClass\">\n          <div class=\"bg-primary/10 text-default rounded-lg p-4 text-sm\">\n            <span class=\"font-mono text-xs\">&lt;article&gt;</span> 正文排版\n          </div>\n        </RebornContainer>\n      </DemoBlock>\n    </DemoSection>\n\n    <DemoSection title=\"自定义样式\">\n      <template #description>\n        <code>class</code>\n        追加到根节点，<code>ui.root</code>\n        覆盖根节点类名；两者冲突时\n        <code>class</code>\n        生效，因为它在合并顺序的最后。\n      </template>\n      <DemoBlock layout=\"stack\" class=\"gap-4\">\n        <div class=\"flex w-full flex-col gap-1\">\n          <span class=\"text-dimmed font-mono text-xs\">:ui=\"{ root: 'max-w-xl' }\"</span>\n          <RebornContainer :ui=\"{ root: 'max-w-xl' }\" :class=\"boundaryClass\">\n            <div class=\"bg-primary/10 text-default rounded-lg p-4 text-sm\">窄版正文，最大宽度 576px</div>\n          </RebornContainer>\n        </div>\n        <div class=\"flex w-full flex-col gap-1\">\n          <span class=\"text-dimmed font-mono text-xs\">:ui=\"{ root: 'max-w-xl' }\" class=\"max-w-sm\"</span>\n          <RebornContainer :ui=\"{ root: 'max-w-xl' }\" class=\"max-w-sm\" :class=\"boundaryClass\">\n            <div class=\"bg-primary/10 text-default rounded-lg p-4 text-sm\">class 胜出，最大宽度 384px</div>\n          </RebornContainer>\n        </div>\n      </DemoBlock>\n    </DemoSection>\n  </div>\n</template>\n"
+    }
+  ],
+  "related": [],
+  "whenToUse": [
+    "落地页、文档页等需要内容居中且限制最大宽度的整页布局。",
+    "需要通过 as 属性渲染为 section、main 等语义化标签的外层容器。"
+  ],
+  "whenNotToUse": [
+    "uniapp 端不可用（仅 web），小程序页面容器改用 reborn-page。",
+    "需要标题栏加内容体的卡片式分组，uniapp 端用 reborn-card。"
+  ],
+  "pitfalls": [
+    "仅 web 端可用。",
+    "纯布局组件：只有 as/class/ui 三个 props 与默认插槽，无事件与交互逻辑。"
+  ],
+  "dependencies": [
+    "clsx",
+    "tailwind-merge",
+    "tailwind-variants"
+  ],
+  "install": {
+    "cli": "npx reborn-ui@latest add reborn-container"
+  },
+  "sourceRefs": {
+    "web": [
+      "app/components/reborn/ui/reborn-container/RebornContainer.vue",
+      "app/components/reborn/ui/reborn-container/reborn-container.config.ts"
+    ]
+  },
+  "docPath": "content/2.components/navigation/reborn-container.md",
+  "_meta": {
+    "contentHash": "36a0cd6bfac60b744b269962c65a5696f033f422",
+    "hasOverride": true,
+    "extractors": {
+      "web": "ok",
+      "uniapp": "absent",
+      "docs": "found"
+    }
+  }
+}

@@ -9,6 +9,7 @@
     "tailwind",
     "aceternity-ui"
   ],
+  "aliases": [],
   "platforms": [
     "web"
   ],
@@ -88,7 +89,7 @@
   },
   "docPath": "content/2.components/text-animations/text-reveal-card.md",
   "_meta": {
-    "contentHash": "f67d760ed418925357fbff60d4df7b87f66226f2",
+    "contentHash": "4e73991253884848c1d5f2117cf496053908748d",
     "hasOverride": true,
     "extractors": {
       "web": "ok",

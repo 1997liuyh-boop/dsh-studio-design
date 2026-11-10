@@ -1,0 +1,93 @@
+{
+  "$schema": "../schema/component.schema.json",
+  "id": "animated-testimonials",
+  "title": "动态评价",
+  "description": "用于轮播展示用户评价（头像、姓名、职称、引言）并支持自动播放的组件。",
+  "category": "misc",
+  "tags": [
+    "css",
+    "tailwind",
+    "aceternity-ui"
+  ],
+  "aliases": [
+    "评价轮播",
+    "用户评价",
+    "testimonial"
+  ],
+  "platforms": [
+    "web"
+  ],
+  "props": [
+    {
+      "name": "testimonials",
+      "type": "Testimonial[]",
+      "required": false,
+      "description": "评价对象数组，包含引用、姓名、头像与职称。",
+      "default": "() => []"
+    },
+    {
+      "name": "autoplay",
+      "type": "boolean",
+      "required": false,
+      "description": "是否自动轮播评价。",
+      "default": "false"
+    },
+    {
+      "name": "duration",
+      "type": "number",
+      "required": false,
+      "description": "自动切换到下一条评价前等待的时间（毫秒）。",
+      "default": "5000"
+    }
+  ],
+  "events": [],
+  "slots": [],
+  "exposes": [],
+  "examples": [
+    {
+      "title": "Web 演示",
+      "path": "app/components/reborn/examples/animated-testimonials/AnimatedTestimonialsDemo.vue",
+      "source": "demo",
+      "platform": "web",
+      "code": "<script lang=\"ts\" setup>\nconst testimonials = [\n  {\n    quote:\n      \"The attention to detail and innovative features have completely transformed our workflow. This is exactly what we've been looking for.\",\n    name: \"Sarah Chen\",\n    designation: \"Product Manager at TechFlow\",\n    image:\n      \"https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?q=80&w=3560&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D\",\n  },\n  {\n    quote:\n      \"Implementation was seamless and the results exceeded our expectations. The platform's flexibility is remarkable.\",\n    name: \"Michael Rodriguez\",\n    designation: \"CTO at InnovateSphere\",\n    image:\n      \"https://images.unsplash.com/photo-1438761681033-6461ffad8d80?q=80&w=3540&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D\",\n  },\n  {\n    quote:\n      \"This solution has significantly improved our team's productivity. The intuitive interface makes complex tasks simple.\",\n    name: \"Emily Watson\",\n    designation: \"Operations Director at CloudScale\",\n    image:\n      \"https://images.unsplash.com/photo-1623582854588-d60de57fa33f?q=80&w=3540&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D\",\n  },\n  {\n    quote:\n      \"Outstanding support and robust features. It's rare to find a product that delivers on all its promises.\",\n    name: \"James Kim\",\n    designation: \"Engineering Lead at DataPro\",\n    image:\n      \"https://images.unsplash.com/photo-1636041293178-808a6762ab39?q=80&w=3464&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D\",\n  },\n  {\n    quote:\n      \"The scalability and performance have been game-changing for our organization. Highly recommend to any growing business.\",\n    name: \"Lisa Thompson\",\n    designation: \"VP of Technology at FutureNet\",\n    image:\n      \"https://images.unsplash.com/photo-1624561172888-ac93c696e10c?q=80&w=2592&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D\",\n  },\n];\n</script>\n\n<template>\n  <ClientOnly>\n    <AnimatedTestimonials :testimonials=\"testimonials\" />\n  </ClientOnly>\n</template>\n"
+    }
+  ],
+  "related": [],
+  "whenToUse": [
+    "官网或落地页的客户评价区块。",
+    "需要自动轮播的推荐语、案例引言展示。",
+    "展示带头像与职位信息的团队成员语录。"
+  ],
+  "whenNotToUse": [
+    "只需悬停头像显示姓名职位时，改用 animated-tooltip。",
+    "通用图文卡片轮播，改用 apple-card-carousel。"
+  ],
+  "pitfalls": [
+    "仅 web 端可用。",
+    "duration 为自动切换等待时间（毫秒，默认 5000），需开启 autoplay 才会自动轮播。",
+    "testimonials 每项需包含 quote、name、designation、image 字段，示例中外层包裹了 ClientOnly。"
+  ],
+  "dependencies": [
+    "@vueuse/core",
+    "motion-v"
+  ],
+  "install": {
+    "cli": "npx reborn-ui@latest add animated-testimonials"
+  },
+  "sourceRefs": {
+    "web": [
+      "app/components/reborn/ui/animated-testimonials/AnimatedTestimonials.vue",
+      "app/components/reborn/ui/animated-testimonials/index.ts"
+    ]
+  },
+  "docPath": "content/2.components/miscellaneous/animated-testimonials.md",
+  "_meta": {
+    "contentHash": "ecdfd9f46d32301be0f92e09ccd991b6decd68be",
+    "hasOverride": true,
+    "extractors": {
+      "web": "ok",
+      "uniapp": "absent",
+      "docs": "found"
+    }
+  }
+}

@@ -1,0 +1,92 @@
+{
+  "$schema": "../schema/component.schema.json",
+  "id": "morphing-text",
+  "title": "文字变形",
+  "description": "用于在一组文本间以模糊渐变变形循环切换的文字动画组件。",
+  "category": "effect",
+  "tags": [
+    "css",
+    "tailwind",
+    "magic-ui"
+  ],
+  "aliases": [],
+  "platforms": [
+    "web"
+  ],
+  "props": [
+    {
+      "name": "class",
+      "type": "string",
+      "required": false,
+      "description": "容器的额外类名。",
+      "default": "\"\""
+    },
+    {
+      "name": "texts",
+      "type": "string[]",
+      "required": true,
+      "description": "需要变换的文本数组。",
+      "default": "[]"
+    },
+    {
+      "name": "morphTime",
+      "type": "number",
+      "required": false,
+      "description": "动画执行时间。",
+      "default": "1.5"
+    },
+    {
+      "name": "coolDownTime",
+      "type": "number",
+      "required": false,
+      "description": "动画停留时间。",
+      "default": "0.5"
+    }
+  ],
+  "events": [],
+  "slots": [],
+  "exposes": [],
+  "examples": [
+    {
+      "title": "Web 演示",
+      "path": "app/components/reborn/examples/morphing-text/MorphingTextDemo.vue",
+      "source": "demo",
+      "platform": "web",
+      "code": "<script lang=\"ts\" setup>\nconst texts = [\n  \"Hello\",\n  \"Morphing\",\n  \"Text\",\n  \"Animation\",\n  \"Vue\",\n  \"Component\",\n  \"Smooth\",\n  \"Transition\",\n  \"Engaging\",\n];\n</script>\n\n<template>\n  <ClientOnly>\n    <MorphingText :texts=\"texts\" />\n  </ClientOnly>\n</template>\n\n<style></style>\n"
+    }
+  ],
+  "related": [],
+  "whenToUse": [
+    "Hero 区标题需要在多个关键词间循环变形切换时。",
+    "展示产品的多个卖点词并强调过渡的液态变形感时。"
+  ],
+  "whenNotToUse": [
+    "需要翻转式的词语切换，改用 flip-words 或 container-text-flip。",
+    "只有一段文字的进场动画，改用 letter-pullup 或 text-generate-effect。"
+  ],
+  "pitfalls": [
+    "仅 web 端可用，示例中外层包裹了 ClientOnly。",
+    "texts 为必填字符串数组；morphTime 是变形动画时长、coolDownTime 是每个词的停留时间，单位均为秒。",
+    "不支持插槽内容，仅渲染纯文本。"
+  ],
+  "dependencies": [],
+  "install": {
+    "cli": "npx reborn-ui@latest add morphing-text"
+  },
+  "sourceRefs": {
+    "web": [
+      "app/components/reborn/ui/morphing-text/MorphingText.vue",
+      "app/components/reborn/ui/morphing-text/index.ts"
+    ]
+  },
+  "docPath": "content/2.components/text-animations/morphing-text.md",
+  "_meta": {
+    "contentHash": "d1ea6d3fbb388d3ae73d60f36e5e21a390ea44d6",
+    "hasOverride": true,
+    "extractors": {
+      "web": "ok",
+      "uniapp": "absent",
+      "docs": "found"
+    }
+  }
+}

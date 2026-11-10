@@ -12,6 +12,13 @@
     "star",
     "uniapp"
   ],
+  "aliases": [
+    "rate",
+    "评分",
+    "星级",
+    "star rating",
+    "打分"
+  ],
   "platforms": [
     "web",
     "uniapp"
@@ -74,17 +81,31 @@
     },
     {
       "name": "size",
-      "type": "(typeof rateSizes)[number]",
+      "type": "'sm' | 'md' | 'lg'",
       "required": false,
       "description": "尺寸",
-      "default": "'md'"
+      "default": "'md'",
+      "options": [
+        "sm",
+        "md",
+        "lg"
+      ]
     },
     {
       "name": "color",
-      "type": "(typeof rateColors)[number]",
+      "type": "'primary' | 'secondary' | 'success' | 'info' | 'warning' | 'error' | 'neutral'",
       "required": false,
       "description": "颜色",
-      "default": "'warning'"
+      "default": "'warning'",
+      "options": [
+        "primary",
+        "secondary",
+        "success",
+        "info",
+        "warning",
+        "error",
+        "neutral"
+      ]
     },
     {
       "name": "ui",
@@ -154,10 +175,14 @@
     },
     {
       "name": "trigger",
-      "type": "RateTrigger",
+      "type": "'click' | 'hover'",
       "required": false,
       "description": "切换分数的触发方式： click（默认）悬停只做预览、点击才提交，开启 clearable 后再点同一分值清零； hover 指针滑到哪颗就把分数改到哪颗，无需点击。触控端没有悬停事件，等同 click",
-      "default": "\"click\""
+      "default": "\"click\"",
+      "options": [
+        "click",
+        "hover"
+      ]
     },
     {
       "name": "class",
@@ -253,7 +278,7 @@
   },
   "docPath": "content/2.components/input-and-forms/reborn-rate.md",
   "_meta": {
-    "contentHash": "b1c860b36de8a55aad84d50335f9fd12b6390f55",
+    "contentHash": "6af4d22fcf301f38939253651af50538ccd2b8b7",
     "hasOverride": true,
     "extractors": {
       "web": "ok",

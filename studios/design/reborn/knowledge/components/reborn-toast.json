@@ -1,0 +1,98 @@
+{
+  "$schema": "../schema/component.schema.json",
+  "id": "reborn-toast",
+  "title": "Toast 消息提示",
+  "description": "全局命令式消息提示（Message）：五种类型静态方法、Promise 接口、同 key 更新与全局配置；web 端由 Toast 升级而来。",
+  "category": "misc",
+  "tags": [],
+  "aliases": [
+    "toast",
+    "message",
+    "消息",
+    "消息提示",
+    "轻提示",
+    "全局提示",
+    "snackbar",
+    "操作反馈"
+  ],
+  "platforms": [
+    "web",
+    "uniapp"
+  ],
+  "props": [],
+  "events": [],
+  "slots": [],
+  "exposes": [],
+  "examples": [
+    {
+      "title": "Web 演示",
+      "path": "app/components/reborn/examples/reborn-toast/RebornToastDemo.vue",
+      "source": "demo",
+      "platform": "web",
+      "code": "<script setup lang=\"ts\">\nimport { computed, onBeforeUnmount, shallowRef } from \"vue\";\nimport RebornButton from \"~/components/reborn/ui/reborn-button/RebornButton.vue\";\nimport { message } from \"~/components/reborn/ui/reborn-toast/index\";\nimport {\n  messageTypes,\n  messageVariants,\n} from \"~/components/reborn/ui/reborn-toast/reborn-toast.config\";\n\nconst typeOptions = messageTypes.map((t) => ({ label: t, value: t }));\nconst variantOptions = messageVariants.map((v) => ({ label: v, value: v }));\n\n// ─── 交互演练场 ─────────────────────────────────────────────────\n\nconst state = shallowRef<Record<string, any>>({\n  content: \"这是一条消息提示\",\n  type: \"success\",\n  variant: \"base\",\n  duration: 3,\n  pauseOnHover: true,\n});\n\n/** 演练场控制面板配置 */\nconst controls = [\n  {\n    title: \"内容与外观\",\n    children: [\n      { label: \"提示内容\", key: \"content\", component: \"input\" as const, defaultValue: \"这是一条消息提示\" },\n      {\n        label: \"消息类型\",\n        key: \"type\",\n        component: \"select\" as const,\n        defaultValue: \"success\",\n        props: { options: typeOptions },\n      },\n      {\n        label: \"视觉变体\",\n        key: \"variant\",\n        component: \"select\" as const,\n        defaultValue: \"base\",\n        props: { options: variantOptions },\n      },\n    ],\n  },\n  {\n    title: \"行为\",\n    children: [\n      {\n        label: \"自动关闭延时（秒，0 不自动关闭）\",\n        key: \"duration\",\n        component: \"slider\" as const,\n        defaultValue: 3,\n        props: { min: 0, max: 10, step: 1 },\n      },\n      { label: \"悬停暂停计时\", key: \"pauseOnHover\", component: \"checkbox\" as const, defaultValue: true },\n    ],\n  },\n];\n\n/** 演练场右上角展示的等价代码 */\nconst messageCode = computed(() => {\n  const s = state.value;\n  const config: string[] = [`content: \"${s.content}\"`];\n  if (s.variant !== \"base\") config.push(`variant: \"${s.variant}\"`);\n  if (s.duration !== 3) config.push(`duration: ${s.duration}`);\n  if (!s.pauseOnHover) config.push(\"pauseOnHover: false\");\n\n  return config.length === 1 && s.duration === 3\n    ? `message.${s.type}(\"${s.content}\")`\n    : `message.${s.type}({\\n  ${config.join(\",\\n  \")},\\n})`;\n});\n\nfunction fireFromPlayground() {\n  const s = state.value;\n  message[s.type as (typeof messageTypes)[number]]({\n    content: s.content,\n    variant: s.variant,\n    duration: s.duration,\n    pauseOnHover: s.pauseOnHover,\n  });\n}\n\n// ─── 场景演示 ───────────────────────────────────────────────────\n\n/** 延迟回调由本演示持有，离开页面即取消。 */\nlet disposed = false;\nlet keyTimer: ReturnType<typeof setTimeout> | undefined;\nlet configTimer: ReturnType<typeof setTimeout> | undefined;\nonBeforeUnmount(() => {\n  disposed = true;\n  clearTimeout(keyTimer);\n  clearTimeout(configTimer);\n  if (configTimer !== undefined) message.config({ maxCount: 0 });\n  if (keyTimer !== undefined) message.destroy(\"updatable\");\n});\n\n/** Promise 接口：loading 关闭后接续提示 */\nfunction firePromiseDemo() {\n  message.loading(\"正在提交…\", 1.5).then(() => {\n    if (disposed) return;\n    message.success(\"提交成功，感谢反馈！\");\n  });\n}\n\n/** 同 key 更新：先 loading 再原位变成功 */\nfunction fireKeyDemo() {\n  message.loading({ content: \"加载中…\", key: \"updatable\", duration: 0 });\n  clearTimeout(keyTimer);\n  keyTimer = setTimeout(() => {\n    message.success({ content: \"加载完成！\", key: \"updatable\", duration: 2 });\n  }, 1200);\n}\n\n/** maxCount 演示：限 3 条后连发 6 条 */\nfunction fireMaxCountDemo() {\n  message.config({ maxCount: 3 });\n  for (let i = 1; i <= 6; i++) {\n    message.info(`第 ${i} 条消息（最多同时 3 条）`, 2 + i * 0.4);\n  }\n  // 演示完还原，避免影响其他示例\n  clearTimeout(configTimer);\n  configTimer = setTimeout(() => {\n    configTimer = undefined;\n    message.config({ maxCount: 0 });\n  }, 100);\n}\n</script>\n\n<template>\n  <div class=\"flex w-full min-w-0 flex-col\">\n    <Playground\n      v-model=\"state\"\n      :controls=\"controls\"\n      :code=\"messageCode\"\n      component-name=\"message\"\n      title=\"交互演练场\"\n      description=\"message 为命令式 API，调节参数后点击按钮触发；悬停在消息上可暂停自动关闭计时。\"\n    >\n      <RebornButton @click=\"fireFromPlayground\">弹出消息</RebornButton>\n    </Playground>\n\n    <DemoSection\n      title=\"基础用法\"\n      description=\"五个静态方法对应五种消息类型；基础变体为白底浮层 + 语义色圆形图标，3 秒后自动关闭。\"\n    >\n      <DemoBlock layout=\"row\" align=\"center\">\n        <RebornButton @click=\"message.success('操作成功！')\">Success</RebornButton>\n        <RebornButton color=\"error\" @click=\"message.error('出错了，请稍后重试。')\">Error</RebornButton>\n        <RebornButton color=\"warning\" @click=\"message.warning('这是一条警告提示。')\">Warning</RebornButton>\n        <RebornButton color=\"info\" @click=\"message.info('这是一条普通信息。')\">Info</RebornButton>\n        <RebornButton color=\"neutral\" @click=\"message.loading('加载中…', 2)\">Loading</RebornButton>\n      </DemoBlock>\n    </DemoSection>\n\n    <DemoSection\n      title=\"视觉变体\"\n      description=\"base 之外提供 filled / outlined / soft / subtle 四种变体，配色与按钮组件的同名变体一致。\"\n    >\n      <DemoBlock layout=\"row\" align=\"center\">\n        <RebornButton\n          v-for=\"v in messageVariants\" :key=\"v\"\n          @click=\"message.success({ content: `${v} 变体的消息提示`, variant: v })\"\n        >\n          {{ v }}\n        </RebornButton>\n      </DemoBlock>\n    </DemoSection>\n\n    <DemoSection\n      title=\"关闭回调：Promise 串联\"\n      description=\"静态方法返回 Promise，在消息关闭后兑现，可用 then 串联后续动作。\"\n    >\n      <DemoBlock layout=\"row\" align=\"center\">\n        <RebornButton @click=\"firePromiseDemo\">loading → then → success</RebornButton>\n      </DemoBlock>\n    </DemoSection>\n\n    <DemoSection\n      title=\"同 key 更新与全局配置\"\n      description=\"传相同 key 可原位更新消息并重置计时；message.config 设置 maxCount 等全局项，message.destroy 立即关闭。\"\n    >\n      <DemoBlock layout=\"row\" align=\"center\">\n        <RebornButton @click=\"fireKeyDemo\">同 key 原位更新</RebornButton>\n        <RebornButton @click=\"fireMaxCountDemo\">maxCount 限 3 连发 6 条</RebornButton>\n        <RebornButton color=\"error\" variant=\"outlined\" @click=\"message.destroy()\">destroy 全部关闭</RebornButton>\n      </DemoBlock>\n    </DemoSection>\n  </div>\n</template>\n"
+    },
+    {
+      "title": "UniApp 演示",
+      "path": "packages/uniapp-project/src/pages/reborn-toast/RebornToastDemo.vue",
+      "source": "demo",
+      "platform": "uniapp",
+      "code": "<script setup lang=\"ts\">\nimport type { MessageType, MessageVariant } from '@/components/reborn-toast/index'\nimport { onUnload } from '@dcloudio/uni-app'\nimport { shallowRef } from 'vue'\nimport ReButton from '@/components/reborn-button/RebornButton.vue'\nimport RebornCard from '@/components/reborn-card/RebornCard.vue'\nimport RebornInput from '@/components/reborn-input/RebornInput.vue'\nimport RebornPage from '@/components/reborn-page/RebornPage.vue'\nimport RebornRadio from '@/components/reborn-radio/RebornRadio.vue'\nimport RebornRadioGroup from '@/components/reborn-radio/RebornRadioGroup.vue'\nimport RebornSlider from '@/components/reborn-slider/RebornSlider.vue'\nimport RebornSwitch from '@/components/reborn-switch/RebornSwitch.vue'\nimport { message, messageTypes, messageVariants } from '@/components/reborn-toast/index'\n\n// 演练场状态（默认值与 Web 端 Playground 一致）\nconst content = shallowRef('这是一条消息提示')\nconst type = shallowRef<MessageType>('success')\nconst variant = shallowRef<MessageVariant>('base')\nconst duration = shallowRef(3)\nconst pauseOnHover = shallowRef(true)\nlet keyTimer: ReturnType<typeof setTimeout> | undefined\nlet configTimer: ReturnType<typeof setTimeout> | undefined\nlet disposed = false\nlet configChanged = false\nlet promiseVersion = 0\nconst ownedKeys = new Set<string>()\n\nfunction restoreConfig() {\n  if (configChanged) message.config({ maxCount: 0 })\n  configChanged = false\n}\n\nonUnload(() => {\n  disposed = true\n  promiseVersion++\n  clearTimeout(keyTimer)\n  clearTimeout(configTimer)\n  restoreConfig()\n  ownedKeys.forEach(key => message.destroy(key))\n  ownedKeys.clear()\n})\n\n/** 按演练场当前参数弹出消息 */\nfunction fireFromPlayground() {\n  message[type.value]({\n    content: content.value,\n    variant: variant.value,\n    duration: duration.value,\n    pauseOnHover: pauseOnHover.value,\n  })\n}\n\n/** Promise 接口：loading 关闭后接续提示 */\nfunction firePromiseDemo() {\n  const version = ++promiseVersion\n  ownedKeys.add('demo-promise')\n  message.loading({ content: '正在提交…', key: 'demo-promise', duration: 1.5 }).then(() => {\n    if (!disposed && version === promiseVersion) message.success('提交成功，感谢反馈！')\n  })\n}\n\n/** 同 key 更新：先 loading 再原位变成功 */\nfunction fireKeyDemo() {\n  clearTimeout(keyTimer)\n  ownedKeys.add('updatable')\n  message.loading({ content: '加载中…', key: 'updatable', duration: 0 })\n  keyTimer = setTimeout(() => {\n    message.success({ content: '加载完成！', key: 'updatable', duration: 2 })\n  }, 1200)\n}\n\n/** maxCount 演示：限 3 条后连发 6 条 */\nfunction fireMaxCountDemo() {\n  clearTimeout(configTimer)\n  configChanged = true\n  message.config({ maxCount: 3 })\n  for (let i = 1; i <= 6; i++) {\n    const key = `demo-maxcount-${i}`\n    ownedKeys.add(key)\n    message.info({ content: `第 ${i} 条消息（最多同时 3 条）`, key, duration: 2 + i * 0.4 })\n  }\n  // 演示完还原，避免影响其他示例\n  configTimer = setTimeout(restoreConfig, 100)\n}\n\n/** 视觉变体演示 */\nfunction fireVariant(v: MessageVariant) {\n  message.success({ content: `${v} 变体的消息提示`, variant: v })\n}\n</script>\n\n<template>\n  <RebornPage title=\"Toast 轻提示\" description=\"命令式消息提示，顶部堆叠展示，message API 与 Web 端对齐。\">\n    <!-- Playground Section -->\n    <RebornCard>\n      <template #title>\n        <view\n          class=\"\n            text-sm font-medium uppercase tracking-wider text-slate-500\n            dark:text-slate-200\n          \"\n        >\n          交互演练场\n        </view>\n        <view\n          class=\"\n            text-xs leading-relaxed text-slate-400\n            dark:text-slate-300\n          \"\n        >\n          message 为命令式 API，调节参数后点击按钮触发；按住消息可暂停自动关闭计时。\n        </view>\n      </template>\n      <view class=\"space-y-2\">\n        <text\n          class=\"text-[10px] font-bold uppercase tracking-widest text-slate-400\"\n        >\n          提示内容\n        </text>\n        <RebornInput v-model=\"content\" placeholder=\"输入提示内容\" />\n      </view>\n\n      <view class=\"space-y-2\">\n        <text\n          class=\"text-[10px] font-bold uppercase tracking-widest text-slate-400\"\n        >\n          消息类型\n        </text>\n        <RebornRadioGroup v-model=\"type\">\n          <RebornRadio v-for=\"item in messageTypes\" :key=\"item\" :value=\"item\">\n            {{ item }}\n          </RebornRadio>\n        </RebornRadioGroup>\n      </view>\n\n      <view class=\"space-y-2\">\n        <text\n          class=\"text-[10px] font-bold uppercase tracking-widest text-slate-400\"\n        >\n          视觉变体\n        </text>\n        <RebornRadioGroup v-model=\"variant\">\n          <RebornRadio v-for=\"item in messageVariants\" :key=\"item\" :value=\"item\">\n            {{ item }}\n          </RebornRadio>\n        </RebornRadioGroup>\n      </view>\n\n      <view class=\"space-y-2\">\n        <text\n          class=\"text-[10px] font-bold uppercase tracking-widest text-slate-400\"\n        >\n          自动关闭延时（秒，0 不自动关闭）\n        </text>\n        <RebornSlider v-model=\"duration\" :min=\"0\" :max=\"10\" :step=\"1\" show-value />\n      </view>\n\n      <view class=\"space-y-2\">\n        <view\n          class=\"text-[10px] font-bold uppercase tracking-widest text-slate-400\"\n        >\n          按住暂停计时\n        </view>\n        <RebornSwitch v-model=\"pauseOnHover\" active-label=\"开启\" inactive-label=\"关闭\" />\n      </view>\n\n      <ReButton block @click=\"fireFromPlayground\">\n        弹出消息\n      </ReButton>\n    </RebornCard>\n\n    <!-- 基本用法 -->\n    <RebornCard custom-class=\"grid grid-cols-3 gap-2\">\n      <template #title>\n        <view\n          class=\"\n            text-sm font-medium uppercase tracking-wider text-slate-500\n            dark:text-slate-200\n          \"\n        >\n          基本用法\n        </view>\n        <view\n          class=\"\n            text-xs leading-relaxed text-slate-400\n            dark:text-slate-300\n          \"\n        >\n          五个静态方法对应五种消息类型；基础变体为白底浮层 + 语义色圆形图标，3 秒后自动关闭。\n        </view>\n      </template>\n      <ReButton block color=\"success\" @click=\"message.success('操作成功！')\">\n        成功\n      </ReButton>\n      <ReButton block color=\"error\" @click=\"message.error('出错了，请稍后重试。')\">\n        错误\n      </ReButton>\n      <ReButton block color=\"warning\" @click=\"message.warning('这是一条警告提示。')\">\n        警告\n      </ReButton>\n      <ReButton block color=\"info\" @click=\"message.info('这是一条普通信息。')\">\n        信息\n      </ReButton>\n      <ReButton block color=\"neutral\" @click=\"message.loading('加载中…', 2)\">\n        加载\n      </ReButton>\n    </RebornCard>\n\n    <!-- 视觉变体 -->\n    <RebornCard custom-class=\"grid grid-cols-3 gap-2\">\n      <template #title>\n        <view\n          class=\"\n            text-sm font-medium uppercase tracking-wider text-slate-500\n            dark:text-slate-200\n          \"\n        >\n          视觉变体\n        </view>\n        <view\n          class=\"\n            text-xs leading-relaxed text-slate-400\n            dark:text-slate-300\n          \"\n        >\n          base 之外提供 filled / outlined / soft / subtle 四种变体，配色与按钮组件的同名变体一致。\n        </view>\n      </template>\n      <ReButton v-for=\"v in messageVariants\" :key=\"v\" block @click=\"fireVariant(v)\">\n        {{ v }}\n      </ReButton>\n    </RebornCard>\n\n    <!-- Promise 接口 -->\n    <RebornCard custom-class=\"grid grid-cols-2 gap-2\">\n      <template #title>\n        <view\n          class=\"\n            text-sm font-medium uppercase tracking-wider text-slate-500\n            dark:text-slate-200\n          \"\n        >\n          Promise 接口\n        </view>\n        <view\n          class=\"\n            text-xs leading-relaxed text-slate-400\n            dark:text-slate-300\n          \"\n        >\n          静态方法返回 Promise，在消息关闭后兑现，可用 then 串联后续动作。\n        </view>\n      </template>\n      <ReButton block color=\"info\" @click=\"firePromiseDemo\">\n        loading 后接续 success\n      </ReButton>\n    </RebornCard>\n\n    <!-- 更新内容与全局方法 -->\n    <RebornCard custom-class=\"grid grid-cols-3 gap-2\">\n      <template #title>\n        <view\n          class=\"\n            text-sm font-medium uppercase tracking-wider text-slate-500\n            dark:text-slate-200\n          \"\n        >\n          更新内容与全局方法\n        </view>\n        <view\n          class=\"\n            text-xs leading-relaxed text-slate-400\n            dark:text-slate-300\n          \"\n        >\n          传相同 key 可原位更新消息并重置计时；message.config 设置 maxCount 等全局项，message.destroy 立即关闭。\n        </view>\n      </template>\n      <ReButton block color=\"success\" @click=\"fireKeyDemo\">\n        同 key 原位更新\n      </ReButton>\n      <ReButton block color=\"info\" @click=\"fireMaxCountDemo\">\n        maxCount 限流\n      </ReButton>\n      <ReButton block color=\"error\" variant=\"outlined\" @click=\"message.destroy()\">\n        destroy 全部关闭\n      </ReButton>\n    </RebornCard>\n  </RebornPage>\n</template>\n"
+    }
+  ],
+  "related": [
+    "reborn-loading"
+  ],
+  "whenToUse": [
+    "操作反馈的轻量全局提示（success / error / info / warning / loading 五种类型）。",
+    "需要 Promise 串联后续动作（message.loading(...).then(...)）或同 key 原位更新（loading → success）。",
+    "需要全局配置 top / duration / maxCount / rtl / getContainer，或用 message.destroy 主动关闭。"
+  ],
+  "whenNotToUse": [
+    "需要用户确认或承载操作按钮的通知，改用 reborn-dialog 或通知类组件。",
+    "需要在消息里渲染自定义 VNode 且目标是 uniapp 端：uniapp 端 MessageNode 仅支持字符串。",
+    "带标题与正文、要停留到用户处理的屏幕角落通知，改用 reborn-notification。"
+  ],
+  "pitfalls": [
+    "duration 单位是秒且默认 3（旧 Toast API 是毫秒）；设 0 不自动关闭。",
+    "loading 同样默认 3 秒关闭，常驻需 duration: 0 并配合 key + destroy(key) 或同 key 更新。",
+    "双端 message API 同名同形（open/info/success/warning/error/loading/config/destroy）；差异只有三处：uniapp 的 MessageNode 仅 string、getContainer 仅 H5 生效、小程序端页面须渲染 <RebornToast />（RebornPage 已内置）。",
+    "消息容器首次调用时自动挂载（默认 body），无需在模板放组件；getContainer 变更会移动容器节点。",
+    "悬停消息默认暂停自动关闭计时（pauseOnHover: true）。",
+    "soft / subtle 变体底色用同色相 1 阶实色令牌替代按钮的半透明底，outlined 垫 gray-1，避免悬浮层透出页面内容。",
+    "堆叠折叠（stack）未实现，用 maxCount 控制同屏数量。",
+    "placement 仅 web 端，取值 top / top-start / top-end / bottom / bottom-start / bottom-end，与浮层组件 placement 同一套连字符写法（旧的 top-left / top-right 等已移除）；start / end 是逻辑方向，message.config({ rtl: true }) 后左右互换。"
+  ],
+  "dependencies": [
+    "@dcloudio/uni-app",
+    "@weapp-tailwindcss/variants-v3",
+    "clsx",
+    "motion-v",
+    "tailwind-merge",
+    "tailwind-variants"
+  ],
+  "install": {
+    "cli": "npx reborn-ui@latest add reborn-toast"
+  },
+  "sourceRefs": {
+    "web": [
+      "app/components/reborn/ui/reborn-toast/RebornToast.vue",
+      "app/components/reborn/ui/reborn-toast/index.ts",
+      "app/components/reborn/ui/reborn-toast/reborn-toast.config.ts"
+    ],
+    "uniapp": [
+      "packages/uniapp-project/src/components/reborn-toast/RebornToast.vue",
+      "packages/uniapp-project/src/components/reborn-toast/index.ts",
+      "packages/uniapp-project/src/components/reborn-toast/reborn-toast.config.ts"
+    ]
+  },
+  "docPath": "content/2.components/miscellaneous/reborn-toast.md",
+  "_meta": {
+    "contentHash": "472b9c6136d3e153910279315624a811dd553cd2",
+    "hasOverride": true,
+    "extractors": {
+      "web": "ok",
+      "uniapp": "ok",
+      "docs": "found"
+    }
+  }
+}

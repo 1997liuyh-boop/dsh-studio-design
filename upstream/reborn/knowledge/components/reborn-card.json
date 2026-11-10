@@ -9,6 +9,11 @@
     "card",
     "container"
   ],
+  "aliases": [
+    "card",
+    "卡片",
+    "容器卡片"
+  ],
   "platforms": [
     "uniapp"
   ],
@@ -96,7 +101,7 @@
   },
   "docPath": "content/2.components/cards/reborn-card.md",
   "_meta": {
-    "contentHash": "621477158d7eef45c1b2a7ef2f08ab58f381773f",
+    "contentHash": "d83615d94fabfa88ea023964fcd87f2be890cf77",
     "hasOverride": true,
     "extractors": {
       "web": "absent",

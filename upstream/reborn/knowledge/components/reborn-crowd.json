@@ -10,6 +10,7 @@
     "animation",
     "decoration"
   ],
+  "aliases": [],
   "platforms": [
     "web"
   ],
@@ -121,7 +122,7 @@
   },
   "docPath": "content/2.components/special-effects/reborn-crowd.md",
   "_meta": {
-    "contentHash": "1169994a8214e92c7058e32fed4c1304b0b2c6f9",
+    "contentHash": "1a213b1d461f1c9d6bf74878c4f643ff6c1e7484",
     "hasOverride": true,
     "extractors": {
       "web": "ok",

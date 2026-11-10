@@ -9,6 +9,7 @@
     "tailwind",
     "aceternity-ui"
   ],
+  "aliases": [],
   "platforms": [
     "web"
   ],
@@ -68,7 +69,7 @@
   },
   "docPath": "content/2.components/miscellaneous/tracing-beam.md",
   "_meta": {
-    "contentHash": "454069ee1087d973c71238d6c15292537a60dcb3",
+    "contentHash": "337391ce6c3860fe239b7fbafb7b4d12517739f3",
     "hasOverride": true,
     "extractors": {
       "web": "ok",

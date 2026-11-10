@@ -5,6 +5,15 @@
   "description": "用于模态确认与内容展示的对话框组件，属性对齐 Element Plus Dialog，附 Modal 命令式确认框（info/success/warning/error/confirm + destroyAll），仅 web 端。",
   "category": "misc",
   "tags": [],
+  "aliases": [
+    "dialog",
+    "modal",
+    "对话框",
+    "弹窗",
+    "模态框",
+    "确认框",
+    "弹框"
+  ],
   "platforms": [
     "web"
   ],
@@ -345,7 +354,8 @@
   ],
   "whenNotToUse": [
     "uniapp 端不可用（仅 web），UniApp 弹层改用 reborn-popup。",
-    "轻量操作结果提示，改用 reborn-toast。"
+    "轻量操作结果提示，改用 reborn-toast。",
+    "从页面边缘滑入、承载表单或详情的侧边面板，改用 reborn-drawer。"
   ],
   "pitfalls": [
     "仅 web 端可用。",
@@ -379,7 +389,7 @@
   },
   "docPath": "content/2.components/miscellaneous/reborn-dialog.md",
   "_meta": {
-    "contentHash": "d5082fa43fdac260c3917d8477943a6e9b19007c",
+    "contentHash": "807ae4cbf00128dc2300f13293b665db417bc42e",
     "hasOverride": true,
     "extractors": {
       "web": "ok",

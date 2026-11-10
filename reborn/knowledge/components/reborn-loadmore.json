@@ -1,0 +1,162 @@
+{
+  "$schema": "../schema/component.schema.json",
+  "id": "reborn-loadmore",
+  "title": "加载更多",
+  "description": "用于列表底部展示加载中、加载失败与没有更多状态的 uniapp 组件。",
+  "category": "misc",
+  "tags": [],
+  "aliases": [
+    "load more",
+    "加载更多",
+    "上拉加载"
+  ],
+  "platforms": [
+    "uniapp"
+  ],
+  "props": [
+    {
+      "name": "customClass",
+      "type": "string",
+      "required": false,
+      "description": "",
+      "default": "''"
+    },
+    {
+      "name": "customStyle",
+      "type": "string",
+      "required": false,
+      "description": "",
+      "default": "''"
+    },
+    {
+      "name": "state",
+      "type": "'loading' | 'error' | 'finished'",
+      "required": true,
+      "description": "",
+      "default": "'loading'",
+      "options": [
+        "loading",
+        "error",
+        "finished"
+      ]
+    },
+    {
+      "name": "loadingText",
+      "type": "string",
+      "required": false,
+      "description": ""
+    },
+    {
+      "name": "finishedText",
+      "type": "string",
+      "required": false,
+      "description": ""
+    },
+    {
+      "name": "errorText",
+      "type": "string",
+      "required": false,
+      "description": ""
+    },
+    {
+      "name": "color",
+      "type": "'primary' | 'secondary' | 'success' | 'info' | 'warning' | 'error' | 'neutral'",
+      "required": false,
+      "description": "",
+      "default": "'neutral'",
+      "options": [
+        "primary",
+        "secondary",
+        "success",
+        "info",
+        "warning",
+        "error",
+        "neutral"
+      ]
+    },
+    {
+      "name": "ui",
+      "type": "LoadMoreUI",
+      "required": false,
+      "description": "可用键（从源码抽取，以此为准）——UniApp：divider、errorText、line、refresh、root、text。",
+      "default": "() => ({})"
+    },
+    {
+      "name": "loadingProps",
+      "type": "RebornLoadingProps",
+      "required": false,
+      "description": "",
+      "default": "() => ({\n        size: '40rpx'\n    })"
+    }
+  ],
+  "events": [
+    {
+      "name": "reload",
+      "payload": "[]",
+      "description": ""
+    }
+  ],
+  "slots": [],
+  "exposes": [],
+  "examples": [
+    {
+      "title": "Web 演示",
+      "path": "app/components/reborn/examples/reborn-loadmore/RebornLoadmoreDemo.vue",
+      "source": "demo",
+      "platform": "web",
+      "code": "<template>\n  <div class=\"border-default rounded-lg border border-dashed p-6 text-center\">\n    <DemoNote>Web 端暂未提供此组件，请在 UniApp 端查看。</DemoNote>\n  </div>\n</template>\n"
+    },
+    {
+      "title": "UniApp 演示",
+      "path": "packages/uniapp-project/src/pages/reborn-loadmore/RebornLoadmoreDemo.vue",
+      "source": "demo",
+      "platform": "uniapp",
+      "code": "<script lang=\"ts\" setup>\nimport { ref, shallowRef } from 'vue'\nimport { onLoad, onReachBottom, onUnload } from '@dcloudio/uni-app'\n\nimport RebornPage from '@/components/reborn-page/RebornPage.vue'\nimport RebornCard from '@/components/reborn-card/RebornCard.vue'\nimport RebornText from '@/components/reborn-text/RebornText.vue'\nimport RebornImage from '@/components/reborn-image/RebornImage.vue'\nimport RebornLoadmore from '@/components/reborn-loadmore/RebornLoadmore.vue'\nimport { loadMoreColors, LoadMoreState } from '@/components/reborn-loadmore/reborn-loadmore.config'\n\ninterface ListItem { id: number, title: string, body: string, image: string }\nconst list = ref<ListItem[]>([])\n\n// 默认参数设置\nconst page = shallowRef(1)\nconst pageSize = 10\n\nconst state = shallowRef<'loading' | 'error' | 'finished'>('loading')\nconst isError = shallowRef(false)\nconst loading = shallowRef(false)\nconst demoColor = shallowRef<typeof loadMoreColors[number]>('neutral')\nconst demoState = shallowRef<typeof LoadMoreState[number]>('loading')\nlet requestTimer: ReturnType<typeof setTimeout> | undefined\nonUnload(() => clearTimeout(requestTimer))\n\nconst fixedImages = [\n    { url: 'http://image.mall.leyifan.cn/mp/static/assets/cn1.jpg', ratio: 0.75 },\n    { url: 'http://image.mall.leyifan.cn/mp/static/assets/cn2.jpg', ratio: 1.25 },\n    { url: 'http://image.mall.leyifan.cn/mp/static/assets/cn3.jpg', ratio: 0.6 },\n    { url: 'http://image.mall.leyifan.cn/mp/static/assets/cn4.jpg', ratio: 1.5 },\n    { url: 'http://image.mall.leyifan.cn/mp/static/assets/cn5.jpg', ratio: 0.8 },\n    { url: 'http://image.mall.leyifan.cn/mp/static/assets/cn7.jpg', ratio: 1.1 },\n    { url: 'http://image.mall.leyifan.cn/mp/static/assets/cn8.jpg', ratio: 0.9 },\n    { url: 'http://image.mall.leyifan.cn/mp/static/assets/cn9.jpg', ratio: 1.33 }\n];\n\nconst getList = () => {\n    // 1. 拦截重复请求或已加载完成的状态\n    if (loading.value || state.value === 'finished' || state.value === 'error') return\n\n    loading.value = true\n    state.value = 'loading'\n\n    // 模拟网络请求延迟\n    requestTimer = setTimeout(() => {\n        // 失败发生在数据写入前，重试仍请求同一页且只追加一次。\n        if (page.value === 2 && !isError.value) {\n            isError.value = true\n            state.value = 'error'\n            loading.value = false\n            return\n        }\n        const start = (page.value - 1) * pageSize\n\n        // 模拟数据生成\n        const mappedData = Array.from({ length: pageSize }).map((_, index) => {\n            const globalIndex = start + index;\n            const imgData = fixedImages[globalIndex % fixedImages.length]!;\n            return {\n                id: globalIndex + 1,\n                title: `分页加载示例标题 ${globalIndex + 1}`,\n                body: '这是一段模拟的分页加载描述文本，用于展示在列表项中。我们可以通过滚动到底部来触发更多的加载流程。',\n                image: imgData.url\n            }\n        })\n\n        list.value.push(...mappedData)\n\n        // 演示加载到 50 条停止\n        if (list.value.length >= 50) {\n            state.value = 'finished'\n        } else {\n            state.value = 'loading'\n            page.value++\n        }\n        loading.value = false\n    }, 800)\n}\n\n// 失败点击重试\nfunction reload() {\n    if (state.value !== 'error' || loading.value) return\n    state.value = 'loading'\n    getList()\n}\n\nonReachBottom(() => {\n    getList()\n})\n\nonLoad(() => {\n    getList()\n})\n</script>\n\n<template>\n    <RebornPage title=\"loadmore 分页加载\" description=\"用于在列表底部展示加载状态。\" :ui=\"{ body: 'px-0' }\">\n        <RebornCard title=\"基础用法\">\n            <view class=\"text-sm font-medium text-gray-5 mb-2\">\n                按钮颜色\n            </view>\n            <view class=\"flex flex-wrap gap-2 mb-3\">\n                <view v-for=\"c in loadMoreColors\" :key=\"c\" class=\"\n                  size-6 cursor-pointer rounded-full ring-2 ring-transparent\n                  ring-offset-2 transition-all\n                \" :class=\"[\n                    `\n                    bg-${c}\n                  `,\n                    demoColor === c ? 'scale-110 ring-slate-400' : `\n                    hover:scale-110\n                  `,\n                ]\" :style=\"{ backgroundColor: `var(--color-${c}, ${c === 'neutral' ? '#737373' : ''})` }\"\n                    @click=\"demoColor = c\" />\n            </view>\n            <view class=\"text-sm font-medium text-gray-5 mb-2\">\n                状态\n            </view>\n            <view class=\"flex flex-wrap gap-2 mb-3\">\n                <view v-for=\"c in LoadMoreState\" :key=\"c\" class=\"text-gray-6\"\n                    :class=\"[demoState === c ? 'scale-110 text-primary' : `hover:scale-110`]\" @click=\"demoState = c\">\n                    {{ c }}\n                </view>\n            </view>\n            <RebornLoadmore :state=\"demoState\" :color=\"demoColor\" @reload=\"reload\" />\n        </RebornCard>\n        <view v-for=\"item in list\" :key=\"item.id\" class=\"flex gap-3 p-3 bg-white border-b border-gray-100 mt-3\">\n            <view class=\"w-[160rpx] h-[120rpx] overflow-hidden rounded-lg bg-gray-100\">\n                <RebornImage :src=\"item.image\" width=\"100%\" height=\"100%\" mode=\"aspectFill\" preview />\n            </view>\n\n            <view class=\"flex-1 flex flex-col justify-between\">\n                <RebornText :value=\"item.title\" :ellipsis=\"true\" :lines=\"1\" :size=\"28\" />\n\n                <RebornText :value=\"item.body\" :ellipsis=\"true\" :lines=\"2\" :size=\"24\" color=\"neutral\" />\n            </view>\n        </view>\n\n        <RebornLoadmore :state=\"state\" color=\"primary\" :ui=\"{ line: 'bg-primary/20' }\" @reload=\"reload\" />\n    </RebornPage>\n</template>\n"
+    }
+  ],
+  "related": [
+    "reborn-loading"
+  ],
+  "whenToUse": [
+    "分页列表触底加载时展示加载状态。",
+    "加载失败后展示错误文案并通过 reload 事件重试。",
+    "数据加载完毕时展示\"没有更多\"提示（state=finished）。"
+  ],
+  "whenNotToUse": [
+    "web 端页面（本组件仅 uniapp）；容器/整页加载遮罩改用 reborn-loading。",
+    "按页码切换数据改用 reborn-pagination。"
+  ],
+  "pitfalls": [
+    "仅 uniapp 端可用。",
+    "state 仅有 loading/error/finished 三种取值，默认 loading。",
+    "提供 reload 事件用于失败重试。",
+    "内部加载图标通过 loadingProps 透传给 RebornLoading，默认 size 为 40rpx。"
+  ],
+  "dependencies": [
+    "@weapp-tailwindcss/merge-v3",
+    "@weapp-tailwindcss/variants-v3",
+    "clsx",
+    "tailwind-merge",
+    "tailwind-variants"
+  ],
+  "install": {
+    "cli": "npx reborn-ui@latest add reborn-loadmore"
+  },
+  "sourceRefs": {
+    "uniapp": [
+      "packages/uniapp-project/src/components/reborn-loadmore/RebornLoadmore.vue",
+      "packages/uniapp-project/src/components/reborn-loadmore/index.ts",
+      "packages/uniapp-project/src/components/reborn-loadmore/reborn-loadmore.config.ts"
+    ]
+  },
+  "docPath": "content/2.components/miscellaneous/reborn-loadmore.md",
+  "_meta": {
+    "contentHash": "e3aebeab8dbbfda58bd67bbb3b3468c8b7135212",
+    "hasOverride": true,
+    "extractors": {
+      "web": "absent",
+      "uniapp": "ok",
+      "docs": "found"
+    }
+  }
+}

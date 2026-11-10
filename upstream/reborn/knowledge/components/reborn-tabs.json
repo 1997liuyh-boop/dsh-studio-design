@@ -10,6 +10,20 @@
     "tabs",
     "uniapp"
   ],
+  "aliases": [
+    "tabs",
+    "标签页",
+    "选项卡",
+    "页签",
+    "tab",
+    "tab 切换",
+    "选项卡切换",
+    "标签切换",
+    "内容切换",
+    "切换栏",
+    "详情切换",
+    "tab pane"
+  ],
   "platforms": [
     "web",
     "uniapp"
@@ -62,38 +76,71 @@
     },
     {
       "name": "position",
-      "type": "TabsPosition",
+      "type": "'top' | 'bottom' | 'left' | 'right'",
       "required": false,
       "description": "选项卡头部的位置",
-      "default": "'top'"
+      "default": "'top'",
+      "options": [
+        "top",
+        "bottom",
+        "left",
+        "right"
+      ]
     },
     {
       "name": "size",
-      "type": "TabsSize",
+      "type": "'sm' | 'md' | 'lg'",
       "required": false,
       "description": "选项卡的大小",
-      "default": "'md'"
+      "default": "'md'",
+      "options": [
+        "sm",
+        "md",
+        "lg"
+      ]
     },
     {
       "name": "type",
-      "type": "TabsType",
+      "type": "'line' | 'card' | 'card-gutter' | 'card-fill' | 'text' | 'rounded' | 'capsule'",
       "required": false,
       "description": "标签形态：line 下划线指示条/card 相邻标签共用边框连排、选中底板贴内容那侧断开边框与内容连通/card-gutter 卡片间留 4px 间隙各带 6px 上圆角、选中底板同样断开贴内容那侧的边框/card-fill 无边框、未选中只是 gray-9 文字加透明底、选中底板铺 gray-2 带 6px 上圆角且标题换成主题色加粗、内容区同样铺 gray-2 与之连成一片/text 纯文字/rounded 选中项是填充语义色的实心胶囊、标题反白/capsule 灰底轨道内白色滑块。line、text 不留水平内边距，标签之间靠 32px 间距分隔；card、card-gutter、card-fill 三种卡片的水平内边距全档固定 16px / 32rpx，不随 size 变化。除 line 与 text 外，其余五种类型的选中态（底色、边框、圆角）全部由 ui.tabSlider 这块滑动底板承载，切换时从旧标签滑到新标签，标签自身底色恒定（card、card-gutter 恒为 gray-2，card-fill、rounded、capsule 恒为透明），选中标签只留文字色与字重，卡片边框统一 gray-3。rounded 与 capsule 的底板在滑动时还会做两段液体形变（先拉成两个标签的并集并在交叉轴压扁，再收拢到目标并回弹），不受 animation 控制、只由 type 决定。只有 line 渲染指示条，上述五种类型渲染滑动底板，只有 text 两者都不渲染；line、card、card-gutter 会渲染头部与内容区之间的分隔线，card-fill、text、rounded、capsule 不渲染（card-fill 靠同色底面连通）。默认 line",
-      "default": "'line'"
+      "default": "'line'",
+      "options": [
+        "line",
+        "card",
+        "card-gutter",
+        "card-fill",
+        "text",
+        "rounded",
+        "capsule"
+      ]
     },
     {
       "name": "direction",
-      "type": "TabsDirection",
+      "type": "'horizontal' | 'vertical'",
       "required": false,
       "description": "选项卡的方向，vertical 等价于把头部放到侧边",
-      "default": "'horizontal'"
+      "default": "'horizontal'",
+      "options": [
+        "horizontal",
+        "vertical"
+      ]
     },
     {
       "name": "color",
-      "type": "TabsColor",
+      "type": "'primary' | 'secondary' | 'success' | 'info' | 'warning' | 'error' | 'neutral'",
       "required": false,
       "description": "选项卡主题色，决定选中态文字、指示器与卡片边框的取色",
-      "default": "'primary'"
+      "default": "'primary'",
+      "options": [
+        "primary",
+        "secondary",
+        "success",
+        "info",
+        "warning",
+        "error",
+        "neutral"
+      ]
     },
     {
       "name": "editable",
@@ -160,10 +207,14 @@
     },
     {
       "name": "trigger",
-      "type": "TabsTrigger",
+      "type": "'click' | 'hover'",
       "required": false,
       "description": "切换标签的触发方式，hover 仅 H5 生效",
-      "default": "'click'"
+      "default": "'click'",
+      "options": [
+        "click",
+        "hover"
+      ]
     },
     {
       "name": "scrollPosition",
@@ -201,10 +252,14 @@
     },
     {
       "name": "overflow",
-      "type": "TabsOverflow",
+      "type": "'scroll' | 'dropdown'",
       "required": false,
       "description": "仅 web。标签溢出提供两种模式：scroll 显示两侧箭头，点击滚动可视区的八成，到边界时对应箭头禁用，也支持触摸、触控板或 Shift + 滚轮滑动（默认）；dropdown 在有未完整露出标签的一侧显示省略号，悬停或点击展开该侧隐藏标签列表，没有隐藏标签的一侧移除整个按钮容器及间距。点选后按最终可视区尺寸和 scrollPosition 定位，禁用项不可选，Escape 或点击头部外关闭。未溢出时不显示导航按钮。纵向布局对应上下两侧。两种模式均支持 scrollPosition 的 start、center、end、auto 或数字；Web 端只修改定位参数也会立即生效。",
-      "default": "\"scroll\""
+      "default": "\"scroll\"",
+      "options": [
+        "scroll",
+        "dropdown"
+      ]
     },
     {
       "name": "ui",
@@ -298,9 +353,13 @@
     "页面底部全局导航，改用 reborn-tabbar（仅 uniapp）。",
     "侧边栏层级式导航、带子菜单，改用 reborn-menu。",
     "内容需要同时展开对比而非互斥切换，改用 reborn-collapse。",
-    "只是二选一的状态开关，改用 reborn-switch 或 reborn-radio。"
+    "只是二选一的状态开关，改用 reborn-switch 或 reborn-radio。",
+    "一条里互斥切换、选中块滑动的短控件（Ant 的 Segmented），改用 reborn-segmented。"
   ],
   "pitfalls": [
+    "RebornTabPane 是与目录不同名的子组件文件（reborn-tabs/RebornTabPane.vue）：Nuxt 自动导入在 pathPrefix: true（默认）下会给它加上目录前缀，模板里写 <RebornTabPane> 解析不到、页签头部为空；用 CLI 装进项目后要么显式 import RebornTabPane from '<componentsDir>/reborn-tabs/RebornTabPane.vue'，要么把该目录的 components 配置改成 pathPrefix: false。RebornTabs 本身与目录同名，自动导入不受影响。",
+    "选中态的文字色、字重与指示条由组件按 type 与 color 自己切换：title 直接传文案（或 web 端 #title 插槽只放结构），不要在插槽里按 activeKey 手动切颜色、字重——那会和组件自身的选中态叠加，换 color 或 type 时两套逻辑打架。页签字号改 ui.tabTitle，页签间距改 ui.list（line 类型默认间距 32px），指示条粗细与颜色改 ui.indicator。",
+    "line、card、card-gutter 三种类型自带头部与内容之间的分隔线（画在 ui.nav 上），按设计稿还原时不要再叠加一条分割线素材；内容区高度随当前面板自适应，外层不要写死高度，否则面板文字多一行就被裁掉。",
     "选中标识为 paneKey prop，两端均不再读取 Vue key 作为业务值。v-for 生成的面板须同时传稳定 key、pane-key 与 order 下标，缺 key 时列表中间增删会把面板状态串到相邻项。静态面板不必写 Vue key：web 端按插槽原结构渲染，前面的面板被 v-if 隐藏或前面的 v-for 列表增删，后面面板的实例与状态不变；缺省 paneKey 按书写位置编号（v-if 隐藏的面板仍占一位，嵌套在 v-for / template 内的为“外层-内层”字符串），uniapp 端缺省按登记顺序编号。",
     "组件只派发 add / delete 事件、不改数据：不会自动增删 RebornTabPane，也不会在删掉当前项后自动切换；删除当前项后需使用方自行把 activeKey 重设为相邻标签，否则头部没有选中项。",
     "destroyOnHidden 与 lazyLoad 同时开启时前者优先，lazyLoad 的“挂载后保留”不再成立。子级 RebornTabPane 的 destroyOnHidden 与父级同名参数取或。",
@@ -359,7 +418,7 @@
   },
   "docPath": "content/2.components/navigation/reborn-tabs.md",
   "_meta": {
-    "contentHash": "6e81113ae2a62773c5304e240a6cb58df12aba82",
+    "contentHash": "c7a9f5b7162aa79092ee1a5d9dec294aeaf12e93",
     "hasOverride": true,
     "extractors": {
       "web": "ok",

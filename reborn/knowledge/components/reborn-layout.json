@@ -1,0 +1,221 @@
+{
+  "$schema": "../schema/component.schema.json",
+  "id": "reborn-layout",
+  "title": "Layout 布局",
+  "description": "由顶栏、侧边栏、主区域、底栏拼装后台页面骨架的 flex 布局容器，排列方向可自动推断。",
+  "category": "layout",
+  "tags": [
+    "css",
+    "tailwind",
+    "layout",
+    "container",
+    "flex"
+  ],
+  "aliases": [
+    "layout",
+    "布局",
+    "后台布局",
+    "admin layout"
+  ],
+  "platforms": [
+    "web"
+  ],
+  "props": [
+    {
+      "name": "direction",
+      "type": "'horizontal' | 'vertical'",
+      "required": false,
+      "description": "排列方向。 不传时自动判定：子元素中出现 Header 或 Footer 则纵向，否则横向。",
+      "options": [
+        "horizontal",
+        "vertical"
+      ]
+    },
+    {
+      "name": "hasSider",
+      "type": "boolean",
+      "required": false,
+      "description": "表示子元素里有 Aside（Sider），强制横向排列，一般不用指定。 可用于服务端渲染时避免自动判定造成的样式闪动。 @defaultValue false",
+      "default": "false"
+    },
+    {
+      "name": "as",
+      "type": "any",
+      "required": false,
+      "description": "容器渲染的 HTML 元素或组件 @defaultValue 'section'",
+      "default": "\"section\""
+    },
+    {
+      "name": "class",
+      "type": "any",
+      "required": false,
+      "description": "自定义类名"
+    },
+    {
+      "name": "ui",
+      "type": "Partial<{\n    root: ClassValue;\n  }>",
+      "required": false,
+      "description": "组件 UI 微调配置 可用键（从源码抽取，以此为准）——Web：RebornLayout → root；RebornLayoutAside → aside、asideContent、trigger、zeroTrigger；RebornLayoutFooter → footer；RebornLayoutHeader → header；RebornLayoutMain → main。"
+    },
+    {
+      "name": "width",
+      "type": "number | string",
+      "required": false,
+      "description": "展开宽度，数字视为 px，也接受任意合法 CSS 长度 @defaultValue 200",
+      "default": "200"
+    },
+    {
+      "name": "collapsible",
+      "type": "boolean",
+      "required": false,
+      "description": "是否可收起：开启后底部显示折叠触发器 @defaultValue false",
+      "default": "false"
+    },
+    {
+      "name": "collapsedWidth",
+      "type": "number",
+      "required": false,
+      "description": "收起宽度（px），设置为 0 时底部触发器替换为贴在侧边栏外缘的特殊触发器 @defaultValue 80",
+      "default": "80"
+    },
+    {
+      "name": "defaultCollapsed",
+      "type": "boolean",
+      "required": false,
+      "description": "非受控模式下是否默认收起 @defaultValue false",
+      "default": "false"
+    },
+    {
+      "name": "reverseArrow",
+      "type": "boolean",
+      "required": false,
+      "description": "翻转折叠箭头方向与零宽触发器贴边，侧边栏放在右侧时使用 @defaultValue false",
+      "default": "false"
+    },
+    {
+      "name": "trigger",
+      "type": "string | null",
+      "required": false,
+      "description": "自定义触发器文字内容；设置为 null 时隐藏所有触发器（含零宽触发器），trigger 插槽优先于本属性",
+      "default": "undefined"
+    },
+    {
+      "name": "zeroWidthTriggerStyle",
+      "type": "CSSProperties",
+      "required": false,
+      "description": "collapsedWidth 为 0 时特殊触发器的行内样式"
+    },
+    {
+      "name": "breakpoint",
+      "type": "LayoutSiderBreakpoint",
+      "required": false,
+      "description": "响应式断点：视口宽度低于断点时自动收起并触发 breakpoint 事件"
+    },
+    {
+      "name": "collapsed",
+      "type": "boolean",
+      "required": false,
+      "description": "双向绑定值",
+      "vModel": true
+    },
+    {
+      "name": "height",
+      "type": "string",
+      "required": false,
+      "description": "底栏高度，接受任意合法 CSS 长度 @defaultValue '60px'",
+      "default": "\"60px\""
+    }
+  ],
+  "events": [
+    {
+      "name": "collapse",
+      "payload": "(e: \"collapse\", collapsed: boolean, type: LayoutSiderCollapseType): void;",
+      "description": "展开-收起时触发；type 区分点击触发器与响应式断点两种来源"
+    },
+    {
+      "name": "breakpoint",
+      "payload": "(e: \"breakpoint\", broken: boolean): void;",
+      "description": "视口跨过响应式断点时触发，broken 表示是否已低于断点"
+    },
+    {
+      "name": "update:collapsed",
+      "description": "collapsed 变化时触发（v-model 同步）"
+    }
+  ],
+  "slots": [
+    {
+      "name": "default",
+      "props": "",
+      "description": "布局内容，直接子元素应为 Header / Aside / Main / Footer 中的一个或多个"
+    },
+    {
+      "name": "trigger",
+      "props": "(props: { collapsed: boolean }) => VNode[]",
+      "description": "自定义底部折叠触发器内容，替换默认箭头"
+    }
+  ],
+  "exposes": [
+    {
+      "name": "toggle",
+      "description": "切换收起状态（等价于点击触发器）"
+    }
+  ],
+  "examples": [
+    {
+      "title": "Web 演示",
+      "path": "app/components/reborn/examples/reborn-layout/RebornLayoutDemo.vue",
+      "source": "demo",
+      "platform": "web",
+      "code": "<script setup lang=\"ts\">\nimport type { LayoutDirection } from \"~/components/reborn/ui/reborn-layout/reborn-layout.config\";\nimport { computed, shallowRef } from 'vue';\n\n/** 演练场绑定值 */\nconst state = shallowRef<Record<string, any>>({\n  direction: \"auto\",\n  headerHeight: 60,\n  asideWidth: 200,\n  showHeader: true,\n  showAside: true,\n  showFooter: true,\n});\n\n/** 演练场控制面板配置 */\nconst controls = [\n  {\n    title: \"排列\",\n    children: [\n      {\n        label: \"方向（auto 由子元素推断）\",\n        key: \"direction\",\n        component: \"select\" as const,\n        defaultValue: \"auto\",\n        props: {\n          options: [\n            { label: \"auto\", value: \"auto\" },\n            { label: \"horizontal\", value: \"horizontal\" },\n            { label: \"vertical\", value: \"vertical\" },\n          ],\n        },\n      },\n    ],\n  },\n  {\n    title: \"区块\",\n    children: [\n      { label: \"显示顶栏\", key: \"showHeader\", component: \"checkbox\" as const, defaultValue: true },\n      { label: \"显示侧边栏\", key: \"showAside\", component: \"checkbox\" as const, defaultValue: true },\n      { label: \"显示底栏\", key: \"showFooter\", component: \"checkbox\" as const, defaultValue: true },\n    ],\n  },\n  {\n    title: \"尺寸\",\n    children: [\n      {\n        label: \"顶栏 / 底栏高度 (px)\",\n        key: \"headerHeight\",\n        component: \"slider\" as const,\n        defaultValue: 60,\n        props: { min: 40, max: 120, step: 4 },\n      },\n      {\n        label: \"侧边栏宽度 (px)\",\n        key: \"asideWidth\",\n        component: \"slider\" as const,\n        defaultValue: 200,\n        props: { min: 100, max: 320, step: 10 },\n      },\n    ],\n  },\n];\n\n/** auto 时不传 direction，交给组件扫描子节点推断 */\nconst playgroundDirection = computed<LayoutDirection | undefined>(() =>\n  state.value.direction === \"auto\" ? undefined : (state.value.direction as LayoutDirection),\n);\n\n/**\n * 出现顶栏或底栏时外层转为纵向，侧边栏若与它们并列只会占一行内容高度；\n * 这时把 Aside + Main 包进内层 Layout（横向），侧边栏才能纵向铺满中间区域。\n */\nconst nestAside = computed(() => state.value.showAside && (state.value.showHeader || state.value.showFooter));\n\n/** 演练场右上角展示的等价代码 */\nconst layoutCode = computed(() => {\n  const dir = state.value.direction === \"auto\" ? \"\" : ` direction=\"${state.value.direction}\"`;\n  const lines = [`<RebornLayout${dir}>`];\n  if (state.value.showHeader) lines.push(`  <RebornLayoutHeader height=\"${state.value.headerHeight}px\">顶栏</RebornLayoutHeader>`);\n  if (nestAside.value) {\n    lines.push(\"  <RebornLayout>\");\n    lines.push(`    <RebornLayoutAside width=\"${state.value.asideWidth}px\">侧边栏</RebornLayoutAside>`);\n    lines.push(\"    <RebornLayoutMain>主区域</RebornLayoutMain>\");\n    lines.push(\"  </RebornLayout>\");\n  }\n  else {\n    if (state.value.showAside) lines.push(`  <RebornLayoutAside width=\"${state.value.asideWidth}px\">侧边栏</RebornLayoutAside>`);\n    lines.push(\"  <RebornLayoutMain>主区域</RebornLayoutMain>\");\n  }\n  if (state.value.showFooter) lines.push(`  <RebornLayoutFooter height=\"${state.value.headerHeight}px\">底栏</RebornLayoutFooter>`);\n  lines.push(\"</RebornLayout>\");\n  return lines.join(\"\\n\");\n});\n\n/** 各区块的示意配色，仅用于演示，实际业务请自行传 class */\nconst tone = {\n  header: \"bg-primary/10 text-primary flex items-center justify-center text-xs font-semibold\",\n  aside: \"bg-elevated text-muted flex items-center justify-center text-xs font-semibold\",\n  main: \"bg-muted/40 text-muted flex items-center justify-center text-xs font-semibold\",\n  footer: \"bg-primary/10 text-primary flex items-center justify-center text-xs font-semibold\",\n};\n\n/** 示例容器统一高度，避免 Main 撑不开看不出效果 */\nconst boxClass = \"border-default h-60 w-full overflow-hidden border\";\n\n// ─── 组合布局与可收起侧边栏（Sider） ─────────────────────────────\n\n/** 组合示例统一用更高的容器，给菜单展开留出空间 */\nconst tallBoxClass = \"border-default h-96 w-full overflow-hidden border\";\n\nconst sideNavs = [\n  { key: \"sub1\", icon: \"lucide:user\" },\n  { key: \"sub2\", icon: \"lucide:laptop\" },\n  { key: \"sub3\", icon: \"lucide:bell\" },\n  { key: \"sub4\", icon: \"lucide:user\" },\n  { key: \"sub5\", icon: \"lucide:alarm-clock\" },\n  { key: \"sub6\", icon: \"lucide:alarm-smoke\" },\n  { key: \"sub7\", icon: \"lucide:anchor\" },\n  { key: \"sub8\", icon: \"lucide:antenna\" },\n  { key: \"sub9\", icon: \"lucide:apple\" },\n  { key: \"sub10\", icon: \"lucide:armchair\" },\n];\n\n/** 顶部-侧边布局-通栏的菜单激活态 */\nconst bannerTopActive = shallowRef([\"1\"]);\nconst bannerSideActive = shallowRef([\"1\"]);\n/** 侧边布局的激活态与收起状态 */\nconst darkSideActive = shallowRef([\"1\"]);\nconst darkCollapsed = shallowRef(false);\n/** 自定义触发器的两种形态（激活态各自独立） */\nconst customCollapsed = shallowRef(false);\nconst customSideActive = shallowRef([\"1\"]);\nconst noTriggerCollapsed = shallowRef(false);\nconst noTriggerSideActive = shallowRef([\"1\"]);\n/** 折叠覆盖布局（零宽收起）的收起状态与激活态 */\nconst zeroCollapsed = shallowRef(true);\nconst zeroSideActive = shallowRef([\"1\"]);\nconst rightZeroCollapsed = shallowRef(true);\nconst rightZeroSideActive = shallowRef([\"1\"]);\n/** 事件回显 */\nconst lastSiderEvent = shallowRef(\"等待操作\");\n\nfunction onSiderCollapse(collapsed: boolean, type: \"clickTrigger\" | \"responsive\") {\n  lastSiderEvent.value = `collapse：collapsed=${collapsed}，type=${type}`;\n}\n\n/** 与 antd 顶部导航一致的深色底 */\nconst darkTone = \"bg-[#001529]\";\n/** 深色侧边栏的折叠触发器配色，自定义触发器 / 折叠覆盖布局共用同一套视觉 */\nconst darkAsideUi = { trigger: \"border-white/10 text-white/65 hover:text-white\" };\n/** 深色区域上的菜单：去掉菜单自带的卡片视觉，交给布局区块着色 */\nconst flatMenuUi = { root: \"rounded-none p-0 shadow-none bg-transparent dark:bg-transparent\" };\n/**\n * 侧边布局的菜单：未选中项沿用一级标题的 text-gray-10，选中项改为 bg-primary 实底 + text-gray-1。\n * 选中项带 aria-current=\"page\"，属性变体的优先级高于组件内置的 bg-brand-2 / text-brand-6，\n * 两种色值都会随明暗模式反转，侧栏因此改用随主题反转的 bg-gray-1 底色，而不是写死的深色。\n */\nconst sideMenuUi = {\n  ...flatMenuUi,\n  menuItem: \"aria-[current=page]:bg-primary aria-[current=page]:text-gray-1\",\n};\n</script>\n\n<template>\n  <div class=\"flex w-full min-w-0 flex-col\">\n    <Playground\n      v-model=\"state\" :controls=\"controls\" :code=\"layoutCode\" component-name=\"RebornLayout\" title=\"交互演练场\"\n      description=\"勾选区块观察方向自动推断：只有侧边栏与主区域时横向排列，一旦出现顶栏或底栏就转为纵向堆叠，此时侧边栏与主区域嵌进内层 Layout 横向排列、纵向铺满；也可显式指定 direction 覆盖外层推断结果。\"\n    >\n      <div :class=\"boxClass\">\n        <RebornLayout :direction=\"playgroundDirection\" class=\"h-full\">\n          <RebornLayoutHeader v-if=\"state.showHeader\" :height=\"`${state.headerHeight}px`\" :class=\"tone.header\">\n            Header\n          </RebornLayoutHeader>\n\n          <!-- 有顶栏 / 底栏时嵌一层横向 Layout，侧边栏纵向铺满中间区域 -->\n          <RebornLayout v-if=\"nestAside\">\n            <RebornLayoutAside :width=\"`${state.asideWidth}px`\" :class=\"tone.aside\">\n              Aside\n            </RebornLayoutAside>\n            <RebornLayoutMain :class=\"tone.main\">\n              Main\n            </RebornLayoutMain>\n          </RebornLayout>\n\n          <template v-else>\n            <RebornLayoutAside v-if=\"state.showAside\" :width=\"`${state.asideWidth}px`\" :class=\"tone.aside\">\n              Aside\n            </RebornLayoutAside>\n            <RebornLayoutMain :class=\"tone.main\">\n              Main\n            </RebornLayoutMain>\n          </template>\n\n          <RebornLayoutFooter v-if=\"state.showFooter\" :height=\"`${state.headerHeight}px`\" :class=\"tone.footer\">\n            Footer\n          </RebornLayoutFooter>\n        </RebornLayout>\n      </div>\n    </Playground>\n\n    <DemoSection\n      title=\"基础用法\"\n      description=\"Layout 的直接子元素为 Header / Aside / Main / Footer 中的一个或多个；出现 Header 或 Footer 时自动纵向排列，否则横向。\"\n    >\n      <DemoBlock layout=\"stack\">\n        <div class=\"flex flex-col gap-3\">\n          <span class=\"text-dimmed text-xs font-medium\">上中下</span>\n          <div :class=\"boxClass\">\n            <RebornLayout class=\"h-full\">\n              <RebornLayoutHeader :class=\"tone.header\">\n                Header\n              </RebornLayoutHeader>\n              <RebornLayoutMain :class=\"tone.main\">\n                Main\n              </RebornLayoutMain>\n              <RebornLayoutFooter :class=\"tone.footer\">\n                Footer\n              </RebornLayoutFooter>\n            </RebornLayout>\n          </div>\n        </div>\n\n        <div class=\"flex flex-col gap-3\">\n          <span class=\"text-dimmed text-xs font-medium\">左右</span>\n          <div :class=\"boxClass\">\n            <RebornLayout class=\"h-full\">\n              <RebornLayoutAside width=\"160px\" :class=\"tone.aside\">\n                Aside\n              </RebornLayoutAside>\n              <RebornLayoutMain :class=\"tone.main\">\n                Main\n              </RebornLayoutMain>\n            </RebornLayout>\n          </div>\n        </div>\n\n        <div class=\"flex flex-col gap-3\">\n          <span class=\"text-dimmed text-xs font-medium\">上 + 左右</span>\n          <div :class=\"boxClass\">\n            <RebornLayout class=\"h-full\">\n              <RebornLayoutHeader :class=\"tone.header\">\n                Header\n              </RebornLayoutHeader>\n              <RebornLayout>\n                <RebornLayoutAside width=\"160px\" :class=\"tone.aside\">\n                  Aside\n                </RebornLayoutAside>\n                <RebornLayoutMain :class=\"tone.main\">\n                  Main\n                </RebornLayoutMain>\n              </RebornLayout>\n            </RebornLayout>\n          </div>\n        </div>\n\n        <div class=\"flex flex-col gap-3\">\n          <span class=\"text-dimmed text-xs font-medium\">左 + 上下</span>\n          <div :class=\"boxClass\">\n            <RebornLayout class=\"h-full\">\n              <RebornLayoutAside width=\"160px\" :class=\"tone.aside\">\n                Aside\n              </RebornLayoutAside>\n              <RebornLayout>\n                <RebornLayoutHeader :class=\"tone.header\">\n                  Header\n                </RebornLayoutHeader>\n                <RebornLayoutMain :class=\"tone.main\">\n                  Main\n                </RebornLayoutMain>\n              </RebornLayout>\n            </RebornLayout>\n          </div>\n        </div>\n      </DemoBlock>\n\n      <DemoNote tone=\"dimmed\">\n        「上 + 左右」与「左 + 上下」都是把一个 <code>RebornLayout</code> 嵌套进外层 Layout。嵌套的 Layout 自带\n        <code>flex-auto</code>，会自动占满父级剩余空间。\n      </DemoNote>\n    </DemoSection>\n\n    <DemoSection title=\"顶部通栏 + 侧边子导航\" description=\"顶部是通栏的深色导航（水平菜单），下方左侧为子导航菜单、右侧为内容区。适合顶级导航 + 二级导航的经典后台骨架。\">\n      <DemoBlock layout=\"stack\">\n        <div :class=\"tallBoxClass\">\n          <RebornLayout class=\"h-full\">\n            <RebornLayoutHeader height=\"56px\" class=\"flex items-center gap-6\" :class=\"[darkTone]\">\n              <div class=\"h-6 w-24 shrink-0 rounded bg-white/20\" aria-hidden=\"true\" />\n              <RebornMenu\n                v-model:selected-keys=\"bannerTopActive\" mode=\"horizontal\" text-color=\"rgba(255,255,255,0.65)\"\n                active-text-color=\"#ffffff\" :ui=\"flatMenuUi\" menu-trigger=\"hover\" :collapse=\"false\"\n                :unique-opened=\"false\" expand-type=\"normal\" :expand-mutex=\"false\" background-color=\"#1f2937\"\n              >\n                <RebornSubMenu\n                  v-for=\"(nav, index) in sideNavs\" :key=\"nav.key\" :index=\"nav.key\"\n                >\n                  <template #icon>\n                    <Icon :name=\"nav.icon\" class=\"size-4\" />\n                  </template>\n                  <template #title>subnav {{ index + 1 }}</template>\n                  <RebornMenuItem v-for=\"j in 4\" :key=\"j\" :index=\"String(index * 4 + j)\">\n                    option{{ index * 4 + j }}\n                  </RebornMenuItem>\n                </RebornSubMenu>\n              </RebornMenu>\n            </RebornLayoutHeader>\n\n            <RebornLayout has-sider>\n              <RebornLayoutAside :width=\"220\" class=\"border-gray-2 border-r\">\n                <RebornMenu\n                  v-model:selected-keys=\"bannerSideActive\" mode=\"vertical\" :default-openeds=\"['sub1']\"\n                  :ui=\"flatMenuUi\" menu-trigger=\"click\" :collapse=\"false\" :unique-opened=\"false\" expand-type=\"normal\"\n                  :expand-mutex=\"false\"\n                >\n                  <RebornSubMenu v-for=\"(nav, index) in sideNavs\" :key=\"nav.key\" :index=\"nav.key\">\n                    <template #icon>\n                      <Icon :name=\"nav.icon\" class=\"size-4\" />\n                    </template>\n                    <template #title>subnav {{ index + 1 }}</template>\n                    <RebornMenuItem v-for=\"j in 4\" :key=\"j\" :index=\"String(index * 4 + j)\">\n                      option{{ index * 4 + j }}\n                    </RebornMenuItem>\n                  </RebornSubMenu>\n                </RebornMenu>\n              </RebornLayoutAside>\n              <RebornLayoutMain :class=\"tone.main\">\n                Content\n              </RebornLayoutMain>\n            </RebornLayout>\n          </RebornLayout>\n        </div>\n      </DemoBlock>\n    </DemoSection>\n\n    <DemoSection title=\"侧边布局：可收起侧栏\" description=\"侧边栏通高、可收起（collapsible），右侧为顶栏 + 内容 + 底栏。收起后菜单进入折叠态，只显示图标。\">\n      <DemoBlock layout=\"stack\">\n        <div :class=\"tallBoxClass\">\n          <RebornLayout has-sider class=\"h-full\">\n            <RebornLayoutAside v-model:collapsed=\"darkCollapsed\" collapsible class=\"border-gray-2 bg-gray-1 border-r\">\n              <div class=\"bg-gray-2 m-4 h-8 rounded\" aria-hidden=\"true\" />\n              <RebornMenu\n                v-model:selected-keys=\"darkSideActive\" mode=\"vertical\" :collapse=\"darkCollapsed\"\n                background-color=\"transparent\" :ui=\"sideMenuUi\"\n              >\n                <RebornMenuItem v-for=\"(nav, index) in sideNavs\" :key=\"nav.key\" :index=\"String(index + 1)\">\n                  <template #icon>\n                    <Icon :name=\"nav.icon\" class=\"size-4\" />\n                  </template>\n                  nav {{ index + 1 }}\n                </RebornMenuItem>\n              </RebornMenu>\n            </RebornLayoutAside>\n\n            <RebornLayout>\n              <RebornLayoutHeader :class=\"tone.header\">\n                Header\n              </RebornLayoutHeader>\n              <RebornLayoutMain :class=\"tone.main\">\n                Content\n              </RebornLayoutMain>\n              <RebornLayoutFooter height=\"40px\" :class=\"tone.footer\">\n                Reborn UI ©2026\n              </RebornLayoutFooter>\n            </RebornLayout>\n          </RebornLayout>\n        </div>\n      </DemoBlock>\n    </DemoSection>\n\n    <DemoSection\n      title=\"折叠触发器：插槽与外部控制\"\n      description=\"trigger 插槽（参数 collapsed）替换默认箭头；prop trigger 设为 null 隐藏触发器，改由外部按钮通过 v-model:collapsed 控制。collapse 事件区分 clickTrigger 与 responsive 两种来源。\"\n    >\n      <DemoBlock layout=\"grid\" align=\"start\">\n        <div class=\"flex flex-col gap-3\">\n          <span class=\"text-dimmed text-xs font-medium\"><code>#trigger</code> 插槽自定义内容</span>\n          <div :class=\"boxClass\">\n            <RebornLayout has-sider class=\"h-full\">\n              <RebornLayoutAside\n                v-model:collapsed=\"customCollapsed\" collapsible :class=\"darkTone\" :ui=\"darkAsideUi\"\n                @collapse=\"onSiderCollapse\"\n              >\n                <div class=\"m-4 h-8 rounded bg-white/20\" aria-hidden=\"true\" />\n                <RebornMenu\n                  v-model:selected-keys=\"customSideActive\" mode=\"vertical\" :collapse=\"customCollapsed\"\n                  background-color=\"transparent\" text-color=\"rgba(255,255,255,0.65)\" active-text-color=\"#ffffff\"\n                  :ui=\"flatMenuUi\"\n                >\n                  <RebornMenuItem\n                    v-for=\"(nav, index) in sideNavs.slice(0, 3)\" :key=\"nav.key\"\n                    :index=\"String(index + 1)\"\n                  >\n                    <template #icon>\n                      <Icon :name=\"nav.icon\" class=\"size-4\" />\n                    </template>\n                    nav {{ index + 1 }}\n                  </RebornMenuItem>\n                </RebornMenu>\n                <template #trigger=\"{ collapsed }\">\n                  <span class=\"flex items-center gap-2 text-xs\">\n                    <Icon :name=\"collapsed ? 'lucide:panel-left-open' : 'lucide:panel-left-close'\" class=\"size-4\" />\n                    <template v-if=\"!collapsed\">收起菜单</template>\n                  </span>\n                </template>\n              </RebornLayoutAside>\n              <RebornLayoutMain :class=\"tone.main\">\n                Content\n              </RebornLayoutMain>\n            </RebornLayout>\n          </div>\n        </div>\n\n        <div class=\"flex flex-col gap-3\">\n          <span class=\"text-dimmed text-xs font-medium\"><code>:trigger=\"null\"</code> + 外部控制</span>\n          <div :class=\"boxClass\">\n            <RebornLayout direction=\"vertical\" class=\"h-full\">\n              <RebornLayoutHeader height=\"48px\" class=\"justify-start!\" :class=\"[tone.header]\">\n                <RebornButton\n                  size=\"sm\" variant=\"text\" color=\"neutral\"\n                  @click=\"noTriggerCollapsed = !noTriggerCollapsed\"\n                >\n                  <Icon :name=\"noTriggerCollapsed ? 'lucide:menu' : 'lucide:x'\" class=\"size-4\" />\n                </RebornButton>\n              </RebornLayoutHeader>\n              <RebornLayout has-sider>\n                <RebornLayoutAside v-model:collapsed=\"noTriggerCollapsed\" collapsible :trigger=\"null\" :class=\"darkTone\">\n                  <div class=\"m-4 h-8 rounded bg-white/20\" aria-hidden=\"true\" />\n                  <RebornMenu\n                    v-model:selected-keys=\"noTriggerSideActive\" mode=\"vertical\" :collapse=\"noTriggerCollapsed\"\n                    background-color=\"transparent\" text-color=\"rgba(255,255,255,0.65)\" active-text-color=\"#ffffff\"\n                    :ui=\"flatMenuUi\"\n                  >\n                    <RebornMenuItem\n                      v-for=\"(nav, index) in sideNavs.slice(0, 3)\" :key=\"nav.key\"\n                      :index=\"String(index + 1)\"\n                    >\n                      <template #icon>\n                        <Icon :name=\"nav.icon\" class=\"size-4\" />\n                      </template>\n                      nav {{ index + 1 }}\n                    </RebornMenuItem>\n                  </RebornMenu>\n                </RebornLayoutAside>\n                <RebornLayoutMain :class=\"tone.main\">\n                  Content\n                </RebornLayoutMain>\n              </RebornLayout>\n            </RebornLayout>\n          </div>\n        </div>\n      </DemoBlock>\n\n      <DemoNote tone=\"dimmed\" class=\"font-mono text-xs\">\n        {{ lastSiderEvent }}\n      </DemoNote>\n    </DemoSection>\n\n    <DemoSection\n      title=\"零宽收起与右侧侧栏\"\n      description=\"collapsedWidth 为 0 时侧边栏完全收起，特殊触发器悬浮覆盖在内容区上（样式可用 zero-width-trigger-style 定制）；侧边栏在右侧时用 reverse-arrow 让触发器贴左外缘。\"\n    >\n      <DemoBlock layout=\"grid\" align=\"start\">\n        <div class=\"flex flex-col gap-3\">\n          <span class=\"text-dimmed text-xs font-medium\"><code>collapsed-width=\"0\"</code>（触发器覆盖在内容上）</span>\n          <div :class=\"boxClass\">\n            <RebornLayout has-sider class=\"h-full\">\n              <RebornLayoutAside v-model:collapsed=\"zeroCollapsed\" collapsible :collapsed-width=\"0\" :class=\"darkTone\">\n                <div class=\"m-4 h-8 rounded bg-white/20\" aria-hidden=\"true\" />\n                <RebornMenu\n                  v-model:selected-keys=\"zeroSideActive\" mode=\"vertical\" background-color=\"transparent\"\n                  text-color=\"rgba(255,255,255,0.65)\" active-text-color=\"#ffffff\" :ui=\"flatMenuUi\"\n                >\n                  <RebornMenuItem\n                    v-for=\"(nav, index) in sideNavs.slice(0, 3)\" :key=\"nav.key\"\n                    :index=\"String(index + 1)\"\n                  >\n                    <template #icon>\n                      <Icon :name=\"nav.icon\" class=\"size-4\" />\n                    </template>\n                    nav {{ index + 1 }}\n                  </RebornMenuItem>\n                </RebornMenu>\n              </RebornLayoutAside>\n              <RebornLayoutMain :class=\"tone.main\">\n                Content\n              </RebornLayoutMain>\n            </RebornLayout>\n          </div>\n        </div>\n\n        <div class=\"flex flex-col gap-3\">\n          <span class=\"text-dimmed text-xs font-medium\"><code>reverse-arrow</code>（侧边栏在右，触发器贴左）</span>\n          <div :class=\"boxClass\">\n            <RebornLayout has-sider class=\"h-full\">\n              <RebornLayoutMain :class=\"tone.main\">\n                Content\n              </RebornLayoutMain>\n              <RebornLayoutAside\n                v-model:collapsed=\"rightZeroCollapsed\" collapsible reverse-arrow :collapsed-width=\"0\"\n                :class=\"darkTone\"\n              >\n                <div class=\"m-4 h-8 rounded bg-white/20\" aria-hidden=\"true\" />\n                <RebornMenu\n                  v-model:selected-keys=\"rightZeroSideActive\" mode=\"vertical\" background-color=\"transparent\"\n                  text-color=\"rgba(255,255,255,0.65)\" active-text-color=\"#ffffff\" :ui=\"flatMenuUi\"\n                >\n                  <RebornMenuItem\n                    v-for=\"(nav, index) in sideNavs.slice(0, 3)\" :key=\"nav.key\"\n                    :index=\"String(index + 1)\"\n                  >\n                    <template #icon>\n                      <Icon :name=\"nav.icon\" class=\"size-4\" />\n                    </template>\n                    nav {{ index + 1 }}\n                  </RebornMenuItem>\n                </RebornMenu>\n              </RebornLayoutAside>\n            </RebornLayout>\n          </div>\n        </div>\n      </DemoBlock>\n\n      <DemoNote tone=\"dimmed\">\n        配置 <code>breakpoint</code>（xs–xxl）后，视口跨过断点会自动收起/展开并触发 <code>breakpoint</code> 事件——它监听的是浏览器视口宽度，请缩放窗口体验。\n      </DemoNote>\n    </DemoSection>\n\n    <DemoSection title=\"固定头部与侧栏：主区独立滚动\" description=\"Main 自带独立滚动（overflow-auto），因此顶栏与侧边栏天然固定：长内容只在内容区内滚动，头部与菜单保持原位。\">\n      <DemoBlock layout=\"stack\">\n        <div :class=\"tallBoxClass\">\n          <RebornLayout class=\"h-full\">\n            <RebornLayoutHeader height=\"56px\" class=\"flex items-center gap-6\" :class=\"[darkTone]\">\n              <div class=\"h-6 w-24 shrink-0 rounded bg-white/20\" aria-hidden=\"true\" />\n              <span class=\"text-sm text-white/90\">固定头部</span>\n            </RebornLayoutHeader>\n            <RebornLayout has-sider>\n              <RebornLayoutAside :width=\"180\" class=\"border-gray-2 border-r\">\n                <div class=\"flex flex-col gap-1 p-3 text-xs\">\n                  <div\n                    v-for=\"k in 12\" :key=\"k\" class=\"text-muted rounded px-3 py-2\"\n                    :class=\"k === 1 ? 'bg-primary/10 text-primary' : ''\"\n                  >\n                    菜单项 {{ k }}\n                  </div>\n                </div>\n              </RebornLayoutAside>\n              <RebornLayoutMain>\n                <div class=\"flex flex-col gap-4\">\n                  <p v-for=\"k in 20\" :key=\"k\" class=\"text-muted bg-muted/40 rounded p-4 text-xs\">\n                    长内容 {{ k }}：只有这块内容区在滚动，头部与侧边栏保持固定。\n                  </p>\n                </div>\n              </RebornLayoutMain>\n            </RebornLayout>\n          </RebornLayout>\n        </div>\n      </DemoBlock>\n    </DemoSection>\n\n    <DemoSection title=\"排列方向：显式覆盖推断\" description=\"direction 会覆盖自动推断。下面两组子元素完全相同，只是方向不同。\">\n      <DemoBlock layout=\"grid\" align=\"start\">\n        <div class=\"flex flex-col gap-3\">\n          <span class=\"text-dimmed text-xs font-medium\"><code>direction=\"vertical\"</code>（含 Header，与自动推断一致）</span>\n          <div :class=\"boxClass\">\n            <RebornLayout direction=\"vertical\" class=\"h-full\">\n              <RebornLayoutHeader :class=\"tone.header\">\n                Header\n              </RebornLayoutHeader>\n              <RebornLayoutMain :class=\"tone.main\">\n                Main\n              </RebornLayoutMain>\n            </RebornLayout>\n          </div>\n        </div>\n\n        <div class=\"flex flex-col gap-3\">\n          <span class=\"text-dimmed text-xs font-medium\"><code>direction=\"horizontal\"</code>（含 Header，强制横向）</span>\n          <div :class=\"boxClass\">\n            <RebornLayout direction=\"horizontal\" class=\"h-full\">\n              <RebornLayoutHeader height=\"auto\" class=\"w-32\" :class=\"[tone.header]\">\n                Header\n              </RebornLayoutHeader>\n              <RebornLayoutMain :class=\"tone.main\">\n                Main\n              </RebornLayoutMain>\n            </RebornLayout>\n          </div>\n        </div>\n      </DemoBlock>\n    </DemoSection>\n\n    <DemoSection title=\"尺寸：顶栏高度与侧栏宽度\" description=\"Header / Footer 用 height，Aside 用 width，接受任意合法 CSS 长度（px、rem、百分比、auto）。\">\n      <DemoBlock layout=\"stack\">\n        <div :class=\"boxClass\">\n          <RebornLayout class=\"h-full\">\n            <RebornLayoutHeader height=\"80px\" :class=\"tone.header\">\n              Header · 80px\n            </RebornLayoutHeader>\n            <RebornLayout>\n              <RebornLayoutAside width=\"25%\" :class=\"tone.aside\">\n                Aside · 25%\n              </RebornLayoutAside>\n              <RebornLayoutMain :class=\"tone.main\">\n                Main\n              </RebornLayoutMain>\n            </RebornLayout>\n            <RebornLayoutFooter height=\"40px\" :class=\"tone.footer\">\n              Footer · 40px\n            </RebornLayoutFooter>\n          </RebornLayout>\n        </div>\n      </DemoBlock>\n    </DemoSection>\n\n    <DemoSection\n      title=\"自定义样式：class 与 ui\"\n      description=\"每个组件都支持 class 与 ui；ui 的键名与内部 slot 同名，各组件只认自己的键（Layout 为 root，Header 为 header，Main 为 main，Footer 为 footer，Aside 另有 asideContent / trigger / zeroTrigger）。\"\n    >\n      <DemoBlock layout=\"stack\">\n        <div :class=\"boxClass\">\n          <RebornLayout class=\"h-full\" :ui=\"{ root: 'gap-2 p-2' }\">\n            <RebornLayoutHeader\n              :ui=\"{ header: 'rounded-lg bg-primary text-inverted flex items-center justify-center text-xs font-semibold' }\"\n            >\n              自定义顶栏\n            </RebornLayoutHeader>\n            <RebornLayout>\n              <RebornLayoutAside\n                width=\"140px\"\n                :ui=\"{ aside: 'rounded-lg bg-elevated text-muted flex items-center justify-center text-xs' }\"\n              >\n                自定义侧边栏\n              </RebornLayoutAside>\n              <RebornLayoutMain\n                :ui=\"{ main: 'rounded-lg bg-muted/40 text-muted flex items-center justify-center text-xs' }\"\n              >\n                自定义主区域\n              </RebornLayoutMain>\n            </RebornLayout>\n          </RebornLayout>\n        </div>\n      </DemoBlock>\n\n      <DemoNote tone=\"dimmed\">\n        <code>RebornLayout</code> 与站内已有的 <code>RebornContainer</code>（限宽居中容器）、\n        <code>RebornHeader</code>（站点导航头）语义不同，请勿混用。\n      </DemoNote>\n    </DemoSection>\n  </div>\n</template>\n"
+    }
+  ],
+  "related": [],
+  "whenToUse": [
+    "搭建后台管理页面骨架：Header + Aside + Main + Footer 的各种拼版组合。",
+    "需要主区域独立滚动、顶栏/侧边栏固定不动的经典管理端布局。",
+    "需要按任意 CSS 长度（px / rem / 百分比 / auto）指定顶栏高度或侧边栏宽度。"
+  ],
+  "whenNotToUse": [
+    "只是要一个限宽居中的正文容器，用 reborn-container。",
+    "需要带交互的站点导航头（移动端抽屉、吸顶模式），用 reborn-header。",
+    "需要用户拖拽调整面板比例，用 reborn-splitter。",
+    "uniapp 端项目：platforms 仅 web，无 uniapp 实现。"
+  ],
+  "pitfalls": [
+    "platforms 仅 web 端提供。",
+    "命名上与已有的 reborn-container / reborn-header / reborn-main / reborn-footer 完全独立、语义不同，切勿混用：后者分别是限宽居中容器、站点导航头、语义化 main 包装、uniapp 吸底操作条。",
+    "RebornLayout 的直接子元素必须是 Header / Aside / Main / Footer 或嵌套的 RebornLayout；后四者脱离 RebornLayout 单独使用时 flex 尺寸不生效。",
+    "未传 direction 时方向靠扫描默认插槽的 vnode 推断：命中 Header 或 Footer 即纵向，否则横向；显式传 direction 会覆盖推断结果。",
+    "height / width 走内联 CSS 变量下发（--reborn-layout-header-height 等），不是 Tailwind 类，因此无法用 ui 里的类名覆盖，请直接改 prop。",
+    "Header 与 Footer 只有 padding 和高度，不带 flex 居中；需要内容垂直居中请自行传 class（如 flex items-center）。"
+  ],
+  "dependencies": [
+    "clsx",
+    "tailwind-merge",
+    "tailwind-variants"
+  ],
+  "install": {
+    "cli": "npx reborn-ui@latest add reborn-layout"
+  },
+  "sourceRefs": {
+    "web": [
+      "app/components/reborn/ui/reborn-layout/RebornLayout.vue",
+      "app/components/reborn/ui/reborn-layout/RebornLayoutAside.vue",
+      "app/components/reborn/ui/reborn-layout/RebornLayoutFooter.vue",
+      "app/components/reborn/ui/reborn-layout/RebornLayoutHeader.vue",
+      "app/components/reborn/ui/reborn-layout/RebornLayoutMain.vue",
+      "app/components/reborn/ui/reborn-layout/index.ts",
+      "app/components/reborn/ui/reborn-layout/reborn-layout.config.ts"
+    ]
+  },
+  "docPath": "content/2.components/layout/reborn-layout.md",
+  "_meta": {
+    "contentHash": "3b9d8911fc175ab6b209d35ad0641afeda15d12e",
+    "hasOverride": true,
+    "extractors": {
+      "web": "ok",
+      "uniapp": "absent",
+      "docs": "found"
+    }
+  }
+}

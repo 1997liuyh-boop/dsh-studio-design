@@ -1,0 +1,142 @@
+{
+  "$schema": "../schema/component.schema.json",
+  "id": "reborn-waterfall",
+  "title": "Waterfall 瀑布流",
+  "description": "用于 uniapp 中按列分流渲染瀑布流布局的容器组件，数据经实例方法维护、每项由 item 插槽渲染。",
+  "category": "layout",
+  "tags": [
+    "uniapp",
+    "waterfall",
+    "layout",
+    "list"
+  ],
+  "aliases": [
+    "waterfall",
+    "瀑布流",
+    "masonry"
+  ],
+  "platforms": [
+    "uniapp"
+  ],
+  "props": [
+    {
+      "name": "ui",
+      "type": "any",
+      "required": false,
+      "description": "按内部结构键覆盖类名，见下方「自定义样式（ui）」。 可用键（从源码抽取，以此为准）——UniApp：column、inner、item、root、virtual。",
+      "default": "() => ({})"
+    },
+    {
+      "name": "customClass",
+      "type": "string",
+      "required": false,
+      "description": "追加到根容器的自定义类名。"
+    },
+    {
+      "name": "column",
+      "type": "number",
+      "required": false,
+      "description": "瀑布流列数。",
+      "default": "2"
+    },
+    {
+      "name": "gutter",
+      "type": "number",
+      "required": false,
+      "description": "列间距，单位 px，保留现有公开尺寸契约。",
+      "default": "16"
+    },
+    {
+      "name": "nodeKey",
+      "type": "string",
+      "required": false,
+      "description": "数据项的唯一标识字段，默认 id。",
+      "default": "'id'"
+    }
+  ],
+  "events": [],
+  "slots": [
+    {
+      "name": "item",
+      "props": "(props: { item: any, index: number }) => any",
+      "description": "渲染单个瀑布流条目，`item` 为数据对象，`index` 为其在所在列中的索引。"
+    }
+  ],
+  "exposes": [
+    {
+      "name": "append",
+      "description": ""
+    },
+    {
+      "name": "remove",
+      "description": ""
+    },
+    {
+      "name": "update",
+      "description": ""
+    },
+    {
+      "name": "clear",
+      "description": ""
+    }
+  ],
+  "examples": [
+    {
+      "title": "Web 演示",
+      "path": "app/components/reborn/examples/reborn-waterfall/RebornWaterfallDemo.vue",
+      "source": "demo",
+      "platform": "web",
+      "code": "<template>\n  <div class=\"border-default rounded-lg border border-dashed p-6 text-center\">\n    <DemoNote>Web 端暂未提供此组件，请在 UniApp 端查看。</DemoNote>\n  </div>\n</template>\n"
+    },
+    {
+      "title": "UniApp 演示",
+      "path": "packages/uniapp-project/src/pages/reborn-waterfall/RebornWaterfallDemo.vue",
+      "source": "demo",
+      "platform": "uniapp",
+      "code": "<script lang=\"ts\" setup>\nimport { onMounted, ref, shallowRef } from \"vue\";\nimport { onReachBottom, onPageScroll, onUnload } from \"@dcloudio/uni-app\";\nimport RebornPage from '@/components/reborn-page/RebornPage.vue'\nimport RebornBadge from \"@/components/reborn-badge/RebornBadge.vue\";\nimport RebornImage from '@/components/reborn-image/RebornImage.vue'\nimport RebornText from '@/components/reborn-text/RebornText.vue'\nimport RebornLoadmore from '@/components/reborn-loadmore/RebornLoadmore.vue'\nimport RebornWaterfall from '@/components/reborn-waterfall/RebornWaterfall.vue'\nimport RebornBackTop from \"@/components/reborn-back-top/RebornBackTop.vue\";\n\nconst waterfallRef = ref<InstanceType<typeof RebornWaterfall> | null>(null);\nconst loading = shallowRef(false);\nconst state = shallowRef<'loading' | 'error' | 'finished'>('loading')\nconst page = shallowRef(1);\nconst pageSize = 4;\nconst isError = shallowRef(false);\nconst scrollTop = shallowRef(0);\n\nlet requestTimer: ReturnType<typeof setTimeout> | undefined\nonUnload(() => clearTimeout(requestTimer))\n\nconst fixedImages = [\n    { url: 'http://image.mall.leyifan.cn/mp/static/assets/cn1.jpg', ratio: 0.75 },\n    { url: 'http://image.mall.leyifan.cn/mp/static/assets/cn2.jpg', ratio: 1.25 },\n    { url: 'http://image.mall.leyifan.cn/mp/static/assets/cn3.jpg', ratio: 0.6 },\n    { url: 'http://image.mall.leyifan.cn/mp/static/assets/cn4.jpg', ratio: 1.5 },\n    { url: 'http://image.mall.leyifan.cn/mp/static/assets/cn5.jpg', ratio: 0.8 },\n    { url: 'http://image.mall.leyifan.cn/mp/static/assets/cn7.jpg', ratio: 1.1 },\n    { url: 'http://image.mall.leyifan.cn/mp/static/assets/cn8.jpg', ratio: 0.9 },\n    { url: 'http://image.mall.leyifan.cn/mp/static/assets/cn9.jpg', ratio: 1.33 }\n];\n\nconst getList = () => {\n    // 1. 拦截重复请求或已加载完成的状态\n    if (loading.value || state.value === 'finished' || state.value === 'error') return\n\n    loading.value = true\n    state.value = 'loading'\n\n    // 模拟网络请求延迟\n    requestTimer = setTimeout(() => {\n        // 失败时不写入瀑布流，只有明确重试才重新请求当前页。\n        if (page.value === 2 && !isError.value) {\n            isError.value = true\n            state.value = 'error'\n            loading.value = false\n            return\n        }\n        const start = (page.value - 1) * pageSize\n\n        // 使用取模运算循环利用固定的 8 张图片生成每一页的数据\n        const mappedData = Array.from({ length: pageSize }).map((_, index) => {\n            const globalIndex = start + index;\n            const imgData = fixedImages[globalIndex % fixedImages.length]!;\n            return {\n                id: globalIndex + 1,\n                title: `精选热门风景推荐 ${globalIndex + 1}`,\n                body: '远离城市的喧嚣，感受大自然最纯粹的呼吸与心跳。在这里将美好定格，把宁静永留心间。',\n                isAd: globalIndex === 3,\n                image: imgData.url,\n                ratio: imgData.ratio,\n                likes: random(10, 999)\n            }\n        })\n\n        waterfallRef.value?.append(mappedData)\n\n        if (page.value >= 25) {\n            state.value = 'finished'\n        } else {\n            state.value = 'loading'\n            page.value++\n        }\n        loading.value = false\n    }, 600)\n}\n\nfunction reload() {\n    if (state.value !== 'error' || loading.value) return\n    state.value = 'loading'\n    getList()\n}\n\nfunction random(min: number, max: number): number {\n    return Math.floor(Math.random() * (max - min + 1)) + min;\n}\nfunction del(id: unknown) {\n    if (typeof id === 'number') waterfallRef.value?.remove(id);\n}\nonPageScroll((e) => {\n    scrollTop.value = e.scrollTop;\n});\n\nonReachBottom(() => {\n    getList();\n});\n\nonMounted(() => {\n    getList();\n});\n</script>\n\n<template>\n    <RebornPage :ui=\"{ body: 'p-0' }\">\n        <view class=\"py-2\">\n            <RebornWaterfall ref=\"waterfallRef\" :column=\"2\">\n                <template #item=\"{ item }\">\n                    <view class=\"bg-white mb-2 rounded-xl dark:!bg-gray-8 relative shadow-sm overflow-hidden\">\n                        <view class=\"w-full relative overflow-hidden\" :style=\"{ aspectRatio: item['ratio'] || 1 }\">\n                            <RebornImage :src=\"item['image']\" mode=\"aspectFill\" width=\"100%\" height=\"100%\"\n                                :lazyLoad=\"true\" custom-class=\"absolute left-0 top-0 w-full h-full\">\n                            </RebornImage>\n                        </view>\n\n                        <view class=\"p-3\">\n                            <template v-if=\"item['isAd']\">\n                                <RebornBadge customClass=\"absolute left-1 top-1 scale-75\">\n                                    广告\n                                </RebornBadge>\n                                <view\n                                    class=\"absolute right-2 top-2 flex items-center justify-center bg-white rounded-full p-1\"\n                                    @tap=\"del(item['id'])\">\n                                    <view class=\"i-lucide-x h-3 w-3\"></view>\n                                </view>\n                            </template>\n                            <RebornText ellipsis :lines=\"2\" custom-class=\"mb-1 text-sm font-bold\">\n                                {{ item[\"title\"] }}\n                            </RebornText>\n                            <RebornText :size=\"24\" ellipsis color=\"secondary\" :lines=\"4\"\n                                custom-class=\"mb-2 leading-tight\">{{\n                                    item[\"body\"] }}</RebornText>\n                            <view class=\"mt-2 flex justify-between items-center\">\n                                <view class=\"flex items-center text-gray-400\">\n                                    <view class=\"i-lucide-user text-xs\"></view>\n                                    <RebornText :size=\"24\" custom-class=\"ml-1\">User {{ item[\"id\"] }}</RebornText>\n                                </view>\n                                <view class=\"flex items-center text-red-400\">\n                                    <view class=\"i-lucide-heart text-xs\"></view>\n                                    <RebornText :size=\"24\" custom-class=\"ml-1\">{{ item.likes }}</RebornText>\n                                </view>\n                            </view>\n                        </view>\n                    </view>\n                </template>\n            </RebornWaterfall>\n\n        </view>\n        <RebornLoadmore :state=\"state\" color=\"primary\" @reload=\"reload\"></RebornLoadmore>\n        <RebornBackTop :scroll-top=\"scrollTop\" :bottom=\"100\" :ui=\"{ wrapper: 'fixed right-5 z-50' }\">\n            <view\n                class=\"flex size-12 items-center justify-center rounded-full bg-success text-white shadow-lg border-2 border-white\">\n                <text class=\"text-xs font-bold leading-none\">TOP</text>\n            </view>\n        </RebornBackTop>\n    </RebornPage>\n</template>\n"
+    }
+  ],
+  "related": [],
+  "whenToUse": [
+    "商品、图片等不等高卡片的多列瀑布流展示（column 默认 2 列，gutter 控制列间距）。",
+    "需要增量维护数据的长列表：通过 exposes 的 append / remove / update / clear 操作条目。"
+  ],
+  "whenNotToUse": [
+    "web 端项目：platforms 仅 uniapp，无 web 实现。",
+    "等高条目的规则网格直接用普通 grid 布局即可。",
+    "Web 端一组图片的展开式画廊，改用 photo-gallery 或 expandable-gallery：本组件仅 UniApp。"
+  ],
+  "pitfalls": [
+    "platforms 仅 uniapp 端提供。",
+    "props 中没有数据字段，数据须通过 ref 调用 append 等实例方法写入，而非模板传入。",
+    "nodeKey 默认 'id'，条目须有唯一标识，否则 remove / update 无法定位。",
+    "gutter 单位为 px；组件无文档页，知识条目事实较少，细节以源码 RebornWaterfall.vue 为准。",
+    "连续append串行分列，Promise在本批分列后完成；clear和卸载使在途旧批次失效。"
+  ],
+  "dependencies": [
+    "@weapp-tailwindcss/merge-v3",
+    "@weapp-tailwindcss/variants-v3",
+    "clsx",
+    "tailwind-merge",
+    "tailwind-variants"
+  ],
+  "install": {
+    "cli": "npx reborn-ui@latest add reborn-waterfall"
+  },
+  "sourceRefs": {
+    "uniapp": [
+      "packages/uniapp-project/src/components/reborn-waterfall/RebornWaterfall.vue",
+      "packages/uniapp-project/src/components/reborn-waterfall/reborn-waterfall.config.ts"
+    ]
+  },
+  "docPath": "content/2.components/layout/reborn-waterfall.md",
+  "_meta": {
+    "contentHash": "f985a7394f364c203fe345bbb0807f67e92f3345",
+    "hasOverride": true,
+    "extractors": {
+      "web": "absent",
+      "uniapp": "ok",
+      "docs": "found"
+    }
+  }
+}

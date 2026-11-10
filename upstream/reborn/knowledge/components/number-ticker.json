@@ -9,6 +9,12 @@
     "tailwind",
     "magic-ui"
   ],
+  "aliases": [
+    "数字滚动",
+    "计数动画",
+    "count up",
+    "数字跳动"
+  ],
   "platforms": [
     "web"
   ],
@@ -81,7 +87,8 @@
   ],
   "whenNotToUse": [
     "需要环形进度可视化，改用 animated-circular-progressbar。",
-    "静态数字展示无需动画时，直接渲染文本即可。"
+    "静态数字展示无需动画时，直接渲染文本即可。",
+    "带标题、前后缀与精度控制的数字指标卡，改用 reborn-statistic。"
   ],
   "pitfalls": [
     "仅 web 端可用，依赖 @vueuse/core（过渡基于 useTransition）。",
@@ -103,7 +110,7 @@
   },
   "docPath": "content/2.components/text-animations/number-ticker.md",
   "_meta": {
-    "contentHash": "4fad1eccadf4487a8916c834602ffad61f67bb97",
+    "contentHash": "6d36715628690fc695612f93c80f28fdf60ddc5e",
     "hasOverride": true,
     "extractors": {
       "web": "ok",

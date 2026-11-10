@@ -9,6 +9,7 @@
     "tailwind",
     "magic-ui"
   ],
+  "aliases": [],
   "platforms": [
     "web"
   ],
@@ -95,7 +96,7 @@
   },
   "docPath": "content/2.components/text-animations/blur-reveal.md",
   "_meta": {
-    "contentHash": "3005a1a4f15435036f3da8f5bc9c844eec58818e",
+    "contentHash": "7b1d80a1955ec053df8c6b76c16cc71da4a45822",
     "hasOverride": true,
     "extractors": {
       "web": "ok",

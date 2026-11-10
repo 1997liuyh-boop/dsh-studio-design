@@ -10,6 +10,7 @@
     "button",
     "magic-ui"
   ],
+  "aliases": [],
   "platforms": [
     "web"
   ],
@@ -103,7 +104,7 @@
   },
   "docPath": "content/2.components/button/shimmer-button.md",
   "_meta": {
-    "contentHash": "2c0069ed9808e6bdc236116de98f55dcf3979164",
+    "contentHash": "d9d516391f4649d10818a38c2abc884ec4ad3035",
     "hasOverride": true,
     "extractors": {
       "web": "ok",

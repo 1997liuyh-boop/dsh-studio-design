@@ -1,0 +1,99 @@
+{
+  "$schema": "../schema/component.schema.json",
+  "id": "box-reveal",
+  "title": "盒子揭示",
+  "description": "用于内容被色块滑开后显现的揭示入场动画组件。",
+  "category": "effect",
+  "tags": [
+    "css",
+    "tailwind",
+    "magic-ui"
+  ],
+  "aliases": [],
+  "platforms": [
+    "web"
+  ],
+  "props": [
+    {
+      "name": "color",
+      "type": "string",
+      "required": false,
+      "description": "揭示盒子的背景色。",
+      "default": "\"#5046e6\""
+    },
+    {
+      "name": "duration",
+      "type": "number",
+      "required": false,
+      "description": "揭示动画的持续时间（秒）。",
+      "default": "0.5"
+    },
+    {
+      "name": "class",
+      "type": "HTMLAttributes[\"class\"]",
+      "required": false,
+      "description": "用于自定义样式的额外 CSS 类。",
+      "default": "\"\""
+    },
+    {
+      "name": "delay",
+      "type": "number",
+      "required": false,
+      "description": "动画开始前的延迟（秒）。",
+      "default": "0.25"
+    }
+  ],
+  "events": [],
+  "slots": [
+    {
+      "name": "default",
+      "description": ""
+    }
+  ],
+  "exposes": [],
+  "examples": [
+    {
+      "title": "Web 演示",
+      "path": "app/components/reborn/examples/box-reveal/BoxRevealDemo.vue",
+      "source": "demo",
+      "platform": "web",
+      "code": "<template>\n  <DemoSection title=\"基础用法\">\n    <div class=\"w-full overflow-hidden p-8\">\n      <BoxReveal color=\"#E1251B\">\n        <p class=\"text-highlighted text-[3.5rem] font-semibold\">\n          Reborn UI<span class=\"text-[#E1251B]\">.</span>\n        </p>\n      </BoxReveal>\n\n      <BoxReveal\n        color=\"#E1251B\"\n        :duration=\"0.8\"\n      >\n        <h2 class=\"text-muted mt-[.5rem] text-lg\">\n          为\n          <span class=\"text-[#E1251B]\">Vue &amp; Nuxt</span>\n          准备的精美组件。\n        </h2>\n      </BoxReveal>\n\n      <BoxReveal\n        color=\"#E1251B\"\n        :duration=\"1\"\n      >\n        <div class=\"text-muted mt-6\">\n          <p>\n            -&gt; 免费开源的动效组件，基于\n            <span class=\"font-semibold text-[#E1251B]\"> Vue/Nuxt</span>、\n            <span class=\"font-semibold text-[#E1251B]\"> TypeScript</span>、\n            <span class=\"font-semibold text-[#E1251B]\"> Tailwind CSS</span>\n            与\n            <span class=\"font-semibold text-[#E1251B]\"> motion-v</span>\n            构建。<br>\n            -&gt; 100% 开源，可按需定制。<br>\n          </p>\n        </div>\n      </BoxReveal>\n    </div>\n  </DemoSection>\n</template>\n"
+    }
+  ],
+  "related": [],
+  "whenToUse": [
+    "落地页标题、段落逐块揭示的首屏排版（可多个实例配不同 duration 形成节奏）。",
+    "需要自定义遮罩色块颜色（color）呼应品牌色的入场动画。"
+  ],
+  "whenNotToUse": [
+    "需要模糊淡入而非色块滑开的效果，改用 blur-reveal。",
+    "滚动驱动的整段文字揭示，改用 text-reveal。"
+  ],
+  "pitfalls": [
+    "仅 web 端可用，依赖 motion-v。",
+    "duration 与 delay 单位为秒（默认 0.5 和 0.25）。",
+    "color 是遮罩色块的背景色（默认 #5046e6），不是文字颜色。"
+  ],
+  "dependencies": [
+    "motion-v"
+  ],
+  "install": {
+    "cli": "npx reborn-ui@latest add box-reveal"
+  },
+  "sourceRefs": {
+    "web": [
+      "app/components/reborn/ui/box-reveal/BoxReveal.vue",
+      "app/components/reborn/ui/box-reveal/index.ts"
+    ]
+  },
+  "docPath": "content/2.components/text-animations/box-reveal.md",
+  "_meta": {
+    "contentHash": "05718fdbfecbb3e6a71e07be448924667bf3cdfc",
+    "hasOverride": true,
+    "extractors": {
+      "web": "ok",
+      "uniapp": "absent",
+      "docs": "found"
+    }
+  }
+}

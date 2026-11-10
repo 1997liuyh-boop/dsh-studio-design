@@ -11,6 +11,11 @@
     "avatar-group",
     "tooltip"
   ],
+  "aliases": [
+    "头像组",
+    "avatar group",
+    "头像叠放"
+  ],
   "platforms": [
     "web"
   ],
@@ -172,7 +177,7 @@
   },
   "docPath": "content/2.components/data/reborn-avatar-group.md",
   "_meta": {
-    "contentHash": "6f0414280373300c53327ff85a26f250f0d134fd",
+    "contentHash": "e135330976645b97e028e0f95132142d9d1b61c4",
     "hasOverride": true,
     "extractors": {
       "web": "ok",

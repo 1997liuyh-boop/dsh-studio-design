@@ -10,6 +10,7 @@
     "input",
     "aceternity-ui"
   ],
+  "aliases": [],
   "platforms": [
     "web"
   ],
@@ -93,7 +94,7 @@
   },
   "docPath": "content/2.components/input-and-forms/placeholders-and-vanish-input.md",
   "_meta": {
-    "contentHash": "5e97387c4235bd0faf1d44fa835e911ff91654e3",
+    "contentHash": "08872e844abc4af825def209b53e178b7dfe435b",
     "hasOverride": true,
     "extractors": {
       "web": "ok",

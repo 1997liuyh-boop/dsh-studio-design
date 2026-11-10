@@ -1,0 +1,275 @@
+{
+  "$schema": "../schema/component.schema.json",
+  "id": "reborn-text",
+  "title": "文本 Text",
+  "description": "用于展示文本并内置类型格式化、脱敏与多行省略的增强文本组件。",
+  "category": "misc",
+  "tags": [
+    "css",
+    "tailwind",
+    "text",
+    "format",
+    "mask",
+    "uniapp"
+  ],
+  "aliases": [
+    "text",
+    "文本",
+    "省略",
+    "脱敏",
+    "文字"
+  ],
+  "platforms": [
+    "web",
+    "uniapp"
+  ],
+  "props": [
+    {
+      "name": "ui",
+      "type": "{\n    base: string\n  }",
+      "required": false,
+      "description": "透传样式 可用键（从源码抽取，以此为准）——UniApp：base。",
+      "default": "() => ({\n    base: '',\n  })",
+      "platform": "uniapp"
+    },
+    {
+      "name": "customClass",
+      "type": "string",
+      "required": false,
+      "description": "追加到根节点的自定义类名（对应 Web 端 `class`）。",
+      "default": "''"
+    },
+    {
+      "name": "color",
+      "type": "'primary' | 'secondary' | 'success' | 'info' | 'warning' | 'error' | 'neutral'",
+      "required": false,
+      "description": "文本颜色",
+      "options": [
+        "primary",
+        "secondary",
+        "success",
+        "info",
+        "warning",
+        "error",
+        "neutral"
+      ]
+    },
+    {
+      "name": "size",
+      "type": "number",
+      "required": false,
+      "description": "字体大小"
+    },
+    {
+      "name": "value",
+      "type": "string | number | null",
+      "required": false,
+      "description": "显示的值",
+      "default": "null"
+    },
+    {
+      "name": "type",
+      "type": "string",
+      "required": false,
+      "description": "文本类型",
+      "default": "'default'"
+    },
+    {
+      "name": "mask",
+      "type": "boolean",
+      "required": false,
+      "description": "是否开启脱敏/加密",
+      "default": "false"
+    },
+    {
+      "name": "currency",
+      "type": "string",
+      "required": false,
+      "description": "金额货币符号",
+      "default": "'¥'"
+    },
+    {
+      "name": "precision",
+      "type": "number",
+      "required": false,
+      "description": "金额小数位数",
+      "default": "2"
+    },
+    {
+      "name": "maskStart",
+      "type": "number",
+      "required": false,
+      "description": "脱敏起始位置",
+      "default": "3"
+    },
+    {
+      "name": "maskEnd",
+      "type": "number",
+      "required": false,
+      "description": "脱敏结束位置",
+      "default": "4"
+    },
+    {
+      "name": "maskChar",
+      "type": "string",
+      "required": false,
+      "description": "脱敏替换字符",
+      "default": "'*'"
+    },
+    {
+      "name": "ellipsis",
+      "type": "boolean",
+      "required": false,
+      "description": "是否省略号",
+      "default": "false"
+    },
+    {
+      "name": "lines",
+      "type": "number",
+      "required": false,
+      "description": "最大行数，仅在ellipsis时生效",
+      "default": "1"
+    },
+    {
+      "name": "selectable",
+      "type": "boolean",
+      "required": false,
+      "description": "是否可选择",
+      "default": "false"
+    },
+    {
+      "name": "space",
+      "type": "string",
+      "required": false,
+      "description": "显示连续空格",
+      "default": "''"
+    },
+    {
+      "name": "decode",
+      "type": "boolean",
+      "required": false,
+      "description": "是否解码 (app平台如需解析字符实体，需要配置为 true)",
+      "default": "false"
+    },
+    {
+      "name": "preWrap",
+      "type": "boolean",
+      "required": false,
+      "description": "是否保留单词",
+      "default": "false"
+    },
+    {
+      "name": "currencyPosition",
+      "type": "\"before\" | \"after\"",
+      "required": false,
+      "description": "货币符号位置",
+      "default": "'before'"
+    },
+    {
+      "name": "ellipsisPosition",
+      "type": "\"start\" | \"middle\" | \"end\"",
+      "required": false,
+      "description": "省略号位置：end 尾部省略（保留开头）、start 头部省略（保留结尾）、middle 中间省略（保留首尾），仅 ellipsis 为 true 时生效",
+      "default": "\"end\""
+    },
+    {
+      "name": "tooltip",
+      "type": "boolean",
+      "required": false,
+      "description": "是否开启 Tooltip (自动检测省略并显示)",
+      "default": "false"
+    },
+    {
+      "name": "class",
+      "type": "any",
+      "required": false,
+      "description": "追加到根元素的自定义类名。"
+    },
+    {
+      "name": "thousandsIcon",
+      "type": "string",
+      "required": false,
+      "description": "是否开启千分位符"
+    },
+    {
+      "name": "ui",
+      "type": "Partial<{ base: ClassValue; currency: ClassValue }>",
+      "required": false,
+      "description": "细粒度样式覆盖，键位见「自定义样式（ui）」。 可用键（从源码抽取，以此为准）——Web：base、currency*。 带 * 的键对应插槽兜底节点：填了同名插槽，组件自带的节点被替换，这个键随之失效。",
+      "platform": "web"
+    }
+  ],
+  "events": [],
+  "slots": [
+    {
+      "name": "default",
+      "description": "替换整块文本内容（含货币符号节点）；`content` 为格式化后的值。"
+    }
+  ],
+  "exposes": [],
+  "examples": [
+    {
+      "title": "Web 演示",
+      "path": "app/components/reborn/examples/reborn-text/RebornTextDemo.vue",
+      "source": "demo",
+      "platform": "web",
+      "code": "<script setup lang=\"ts\">\nimport { shallowRef } from \"vue\";\nimport { textColors } from \"~/components/reborn/ui/reborn-text/reborn-text.config\";\n\n/** 演练场绑定值 */\nconst state = shallowRef<{ color: (typeof textColors)[number] }>({\n  color: \"primary\",\n});\n\n/** 演练场控制面板配置 */\nconst controls = [\n  {\n    title: \"外观\",\n    children: [\n      {\n        label: \"颜色\",\n        key: \"color\",\n        component: \"select\" as const,\n        defaultValue: \"primary\",\n        props: { options: textColors.map((c) => ({ label: c, value: c })) },\n      },\n    ],\n  },\n];\n</script>\n\n<template>\n  <div class=\"flex w-full min-w-0 flex-col\">\n    <Playground v-model=\"state\" :controls=\"controls\" component-name=\"RebornText\" title=\"交互演练场\"\n      description=\"切换语义色，下方格式化与省略示例同步变色。\">\n      <RebornText :color=\"state.color\">Reborn UI</RebornText>\n    </Playground>\n\n    <DemoSection title=\"语义色\">\n      <template #description>\n        <code>color</code> 与全站语义色板对齐；不传时继承父级文字颜色，便于嵌进已有排版。\n      </template>\n      <DemoBlock>\n        <RebornText v-for=\"c in textColors\" :key=\"c\" :color=\"c\">\n          {{ c }}\n        </RebornText>\n      </DemoBlock>\n    </DemoSection>\n\n    <DemoSection title=\"格式化与脱敏\">\n      <template #description>\n        <code>type</code> 决定按哪种规则格式化，<code>mask</code> 为 <code>true</code> 时手机号、姓名、银行卡、邮箱才会脱敏；金额只做数字格式化，与\n        <code>mask</code> 无关。\n      </template>\n      <DemoBlock layout=\"grid\" class=\"lg:grid-cols-2\">\n        <div class=\"flex flex-col gap-1\">\n          <span class=\"text-dimmed text-xs\">手机号脱敏</span>\n          <RebornText :color=\"state.color\" type=\"phone\" value=\"13812345678\" mask />\n        </div>\n        <div class=\"flex flex-col gap-1\">\n          <span class=\"text-dimmed text-xs\">姓名脱敏</span>\n          <RebornText :color=\"state.color\" type=\"name\" value=\"张三丰\" mask />\n        </div>\n        <div class=\"flex flex-col gap-1\">\n          <span class=\"text-dimmed text-xs\">金额</span>\n          <RebornText :color=\"state.color\" type=\"amount\" :value=\"12345.6\" />\n        </div>\n        <div class=\"flex flex-col gap-1\">\n          <span class=\"text-dimmed text-xs\">银行卡脱敏</span>\n          <RebornText :color=\"state.color\" type=\"card\" value=\"6222021234567890\" mask />\n        </div>\n        <div class=\"flex flex-col gap-1\">\n          <span class=\"text-dimmed text-xs\">邮箱脱敏</span>\n          <RebornText :color=\"state.color\" type=\"email\" value=\"hello@example.com\" mask />\n        </div>\n      </DemoBlock>\n    </DemoSection>\n\n    <DemoSection title=\"金额：货币符号、千分位与精度\">\n      <template #description>\n        Web 端 <code>currency</code> 默认为空、<code>thousandsIcon</code> 默认不加分隔符，需要显式传入；<code>currencyPosition</code>\n        控制符号在数字前后，<code>precision</code> 控制小数位。\n      </template>\n      <DemoBlock layout=\"grid\" class=\"lg:grid-cols-2\">\n        <div class=\"flex flex-col gap-1\">\n          <span class=\"text-dimmed text-xs\">默认：无货币符号、无千分位</span>\n          <RebornText type=\"amount\" :value=\"12345.6\" />\n        </div>\n        <div class=\"flex flex-col gap-1\">\n          <span class=\"text-dimmed text-xs\">currency=\"¥\" + thousandsIcon=\",\"</span>\n          <RebornText type=\"amount\" :value=\"12345.6\" currency=\"¥\" thousands-icon=\",\" />\n        </div>\n        <div class=\"flex flex-col gap-1\">\n          <span class=\"text-dimmed text-xs\">符号后置 + precision=0</span>\n          <RebornText type=\"amount\" :value=\"12345.6\" currency=\"元\" currency-position=\"after\" :precision=\"0\"\n            thousands-icon=\",\" />\n        </div>\n        <div class=\"flex flex-col gap-1\">\n          <span class=\"text-dimmed text-xs\">ui.currency 单独缩小符号</span>\n          <RebornText type=\"amount\" :value=\"12345.6\" currency=\"¥\" thousands-icon=\",\"\n            :ui=\"{ base: 'font-semibold text-error', currency: 'mr-0.5 text-xs' }\" />\n        </div>\n      </DemoBlock>\n    </DemoSection>\n\n    <DemoSection title=\"多行省略与气泡提示\">\n      <template #description>\n        <code>ellipsis</code> 开启省略，<code>lines</code> 指定最大行数；再开 <code>tooltip</code> 后仅在内容确实被截断时才弹出气泡，短文本不受影响。\n      </template>\n      <DemoBlock layout=\"stack\">\n        <div class=\"flex flex-col gap-1\">\n          <span class=\"text-dimmed text-xs\">单行省略 + Tooltip</span>\n          <RebornText :color=\"state.color\" ellipsis tooltip class=\"max-w-[100px]\">\n            这是一段很长的单行文本内容，超出会显示省略号和气泡\n          </RebornText>\n        </div>\n        <div class=\"flex flex-col gap-1\">\n          <span class=\"text-dimmed text-xs\">单行未省略（无 Tooltip）</span>\n          <RebornText :color=\"state.color\" ellipsis tooltip class=\"max-w-[200px]\">\n            短文本\n          </RebornText>\n        </div>\n        <div class=\"flex flex-col gap-1\">\n          <span class=\"text-dimmed text-xs\">多行省略 + Tooltip</span>\n          <RebornText :color=\"state.color\" ellipsis :lines=\"2\" tooltip class=\"max-w-xs\">\n            这是一段很长的文本内容，用于测试多行文本省略且显示 Tooltip 功能。当内容超出指定行数时，会显示省略号并显示 Tooltip。这是一段延伸内容，确保一定会超出两行显示。\n          </RebornText>\n        </div>\n      </DemoBlock>\n    </DemoSection>\n\n    <DemoSection title=\"省略位置\">\n      <template #description>\n        <code>ellipsis-position</code> 决定省略号出现在哪一端：<code>end</code> 保留开头，<code>start</code>\n        保留结尾，适合只关心末级目录的路径；<code>middle</code>\n        保留首尾，长文件名截断后扩展名仍可见。<code>start</code> 与 <code>middle</code> 按容器宽度逐字测量截断，容器变化时自动重算。\n      </template>\n      <DemoBlock layout=\"stack\" class=\"max-w-[360px]\">\n        <div class=\"flex flex-col gap-1\">\n          <span class=\"text-dimmed text-xs\">end（默认）：保留开头</span>\n          <RebornText ellipsis tooltip>\n            /workspace/reborn-ui/packages/components/date-picker/RebornDatePickerPanel.vue\n          </RebornText>\n        </div>\n        <div class=\"flex flex-col gap-1\">\n          <span class=\"text-dimmed text-xs\">start：保留结尾</span>\n          <RebornText ellipsis ellipsis-position=\"start\" tooltip>\n            /workspace/reborn-ui/packages/components/date-picker/RebornDatePickerPanel.vue\n          </RebornText>\n        </div>\n        <div class=\"flex flex-col gap-1\">\n          <span class=\"text-dimmed text-xs\">middle：保留首尾</span>\n          <RebornText ellipsis ellipsis-position=\"middle\" tooltip>\n            2026年第三季度经营数据汇总与各区域销售明细（终版）.xlsx\n          </RebornText>\n        </div>\n        <div class=\"flex flex-col gap-1\">\n          <span class=\"text-dimmed text-xs\">middle + lines=2：多行同样适用</span>\n          <RebornText ellipsis ellipsis-position=\"middle\" :lines=\"2\" tooltip>\n            这是一段很长的文本内容，用于演示多行中间省略。超出两行时从中间截断，开头与结尾都保留，悬停可在气泡里查看全文。这是一段延伸内容，确保一定会超出两行显示。\n          </RebornText>\n        </div>\n      </DemoBlock>\n    </DemoSection>\n  </div>\n</template>\n"
+    },
+    {
+      "title": "UniApp 演示",
+      "path": "packages/uniapp-project/src/pages/reborn-text/RebornTextDemo.vue",
+      "source": "demo",
+      "platform": "uniapp",
+      "code": "<script setup lang=\"ts\">\nimport RebornCard from '@/components/reborn-card/RebornCard.vue'\nimport RebornPage from '@/components/reborn-page/RebornPage.vue'\nimport { textColors } from '@/components/reborn-text/reborn-text.config'\nimport RebornText from '@/components/reborn-text/RebornText.vue'\n\nconst lines = [\n  '《游子吟》',\n  '慈母手中线，',\n  '游子身上衣。',\n  '临行密密缝，',\n  '意恐迟迟归。',\n  '谁言寸草心，',\n  '报得三春晖。',\n] as const\n</script>\n\n<template>\n  <RebornPage title=\"Text 文本\" description=\"文本组件，支持多种文本类型展示，包括手机号、金额、内容超出省略等功能，并提供数据脱敏能力\">\n    <RebornCard title=\"基本用法\" custom-class=\"space-y-4\">\n      <RebornText>\n        春江花月夜\n      </RebornText>\n    </RebornCard>\n\n    <RebornCard title=\"基本用法\" custom-class=\"space-y-4\">\n      <RebornText v-for=\"(item, index) in lines\" :key=\"item\" :ui=\"{ base: 'block' }\" :color=\"textColors[index]\">\n        {{ item }}\n      </RebornText>\n    </RebornCard>\n\n    <RebornCard title=\"省略号\" custom-class=\"space-y-4\">\n      <RebornText ellipsis>\n        夫以铜为镜，可以正衣冠；以史为镜，可以知兴替；以人为镜，可以明得失。朕尝保此三镜，以防己过。今魏徵殂逝，遂亡一镜矣\n      </RebornText>\n    </RebornCard>\n\n    <RebornCard title=\"多行省略号\" custom-class=\"space-y-4\">\n      <RebornText ellipsis :lines=\"2\">\n        夫以铜为镜，可以正衣冠；以史为镜，可以知兴替；以人为镜，可以明得失。朕尝保此三镜，以防己过。今魏徵殂逝，遂亡一镜矣\n      </RebornText>\n    </RebornCard>\n\n    <RebornCard title=\"金额\" custom-class=\"space-y-4\">\n      <RebornText :value=\"123456789.123456789\" :precision=\"2\" currency=\"¥\" type=\"amount\" />\n    </RebornCard>\n\n    <RebornCard title=\"手机号脱敏\" custom-class=\"space-y-4\">\n      <RebornText type=\"phone\" mask value=\"13800138000\" />\n    </RebornCard>\n\n    <RebornCard title=\"姓名脱敏\" custom-class=\"space-y-4\">\n      <RebornText type=\"name\" mask value=\"张三\" />\n    </RebornCard>\n\n    <RebornCard title=\"银行卡脱敏\" custom-class=\"space-y-4\">\n      <RebornText type=\"card\" mask value=\"6222021234567890123\" />\n    </RebornCard>\n\n    <RebornCard title=\"邮箱脱敏\" custom-class=\"space-y-4\">\n      <RebornText type=\"email\" mask value=\"example@example.com\" />\n    </RebornCard>\n\n    <RebornCard title=\"自定义脱敏字符\" custom-class=\"space-y-4\">\n      <RebornText type=\"phone\" value=\"13800138000\" mask mask-char=\"#\" />\n    </RebornCard>\n  </RebornPage>\n</template>\n\n<style lang=\"scss\" scoped></style>\n"
+    }
+  ],
+  "related": [
+    "reborn-tooltip"
+  ],
+  "whenToUse": [
+    "手机号、姓名、卡号、邮箱等敏感信息脱敏展示（type + mask，可配 maskStart / maskEnd / maskChar）。",
+    "金额格式化展示（type='amount'，currency 符号与 precision 小数位）。",
+    "长文本多行省略（ellipsis + lines）。"
+  ],
+  "whenNotToUse": [
+    "需要用户输入文本改用 reborn-input 或 reborn-textarea。",
+    "打字机等文字动画效果改用 reborn-typewriter（仅 web）。"
+  ],
+  "pitfalls": [
+    "web 与 uniapp 双端均可用。",
+    "脱敏与格式化基于 value prop 与 type（default / phone / name / amount / card / email），mask 默认 false 需显式开启。",
+    "ellipsis 生效时由 lines 控制最大行数，默认 1 行。",
+    "selectable / space / decode 等属性对应 uniapp text 原生能力。"
+  ],
+  "dependencies": [
+    "@weapp-tailwindcss/merge-v3",
+    "@weapp-tailwindcss/variants-v3",
+    "clsx",
+    "tailwind-merge",
+    "tailwind-variants"
+  ],
+  "install": {
+    "cli": "npx reborn-ui@latest add reborn-text"
+  },
+  "sourceRefs": {
+    "web": [
+      "app/components/reborn/ui/reborn-text/RebornText.vue",
+      "app/components/reborn/ui/reborn-text/index.ts",
+      "app/components/reborn/ui/reborn-text/reborn-text.config.ts"
+    ],
+    "uniapp": [
+      "packages/uniapp-project/src/components/reborn-text/RebornText.vue",
+      "packages/uniapp-project/src/components/reborn-text/reborn-text.config.ts"
+    ]
+  },
+  "docPath": "content/2.components/miscellaneous/reborn-text.md",
+  "_meta": {
+    "contentHash": "db7f0025bd3db82c41028b3b633b292f469cb0f5",
+    "hasOverride": true,
+    "extractors": {
+      "web": "ok",
+      "uniapp": "ok",
+      "docs": "found"
+    }
+  }
+}

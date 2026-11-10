@@ -1,0 +1,19 @@
+{
+  "name": "dsh-studio-design",
+  "version": "0.4.1",
+  "description": "MasterGo 设计稿 · Reborn 组件 · 项目配置与代码协作",
+  "entry": {
+    "name": "dsh-studio-design",
+    "inject": [
+      "studioProjects",
+      "tools",
+      "sessions",
+      "agents",
+      "sessionProjections",
+      "systemPrompt"
+    ]
+  },
+  "client": {
+    "platform": "web"
+  }
+}

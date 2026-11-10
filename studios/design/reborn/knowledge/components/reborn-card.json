@@ -1,0 +1,112 @@
+{
+  "$schema": "../schema/component.schema.json",
+  "id": "reborn-card",
+  "title": "卡片 Card",
+  "description": "用于分组展示内容区块的基础卡片容器组件，带可选标题，仅 uniapp 端。",
+  "category": "data-display",
+  "tags": [
+    "uniapp",
+    "card",
+    "container"
+  ],
+  "aliases": [
+    "card",
+    "卡片",
+    "容器卡片"
+  ],
+  "platforms": [
+    "uniapp"
+  ],
+  "props": [
+    {
+      "name": "title",
+      "type": "string",
+      "required": false,
+      "description": "卡片标题文本，未提供 `title` 插槽时渲染为默认标题",
+      "default": "—"
+    },
+    {
+      "name": "padding",
+      "type": "boolean",
+      "required": false,
+      "description": "内容体是否保留默认内边距，设为 `false` 可让内容通铺卡片",
+      "default": "true"
+    },
+    {
+      "name": "customClass",
+      "type": "string",
+      "required": false,
+      "description": "追加到内容体容器的自定义类名",
+      "default": "''"
+    },
+    {
+      "name": "overflowVisible",
+      "type": "boolean",
+      "required": false,
+      "description": "是否允许内容溢出卡片显示，默认裁剪超出部分",
+      "default": "false"
+    }
+  ],
+  "events": [],
+  "slots": [
+    {
+      "name": "title",
+      "description": "自定义标题区域，提供后完全替换 `title` 属性的默认标题渲染"
+    },
+    {
+      "name": "default",
+      "description": "卡片内容体"
+    }
+  ],
+  "exposes": [],
+  "examples": [
+    {
+      "title": "Web 演示",
+      "path": "app/components/reborn/examples/reborn-card/RebornCardDemo.vue",
+      "source": "demo",
+      "platform": "web",
+      "code": "<script setup lang=\"ts\">\nimport { DemoNote } from \"#components\";\n</script>\n\n<template>\n  <div class=\"border-default rounded-lg border border-dashed p-6 text-center\">\n    <DemoNote>Web 端暂未提供此组件，请在 UniApp 端查看。</DemoNote>\n  </div>\n</template>\n"
+    },
+    {
+      "title": "UniApp 演示",
+      "path": "packages/uniapp-project/src/pages/reborn-card/RebornCardDemo.vue",
+      "source": "demo",
+      "platform": "uniapp",
+      "code": "<script setup lang=\"ts\">\n// RebornCard 演示页：标题、标题插槽与内边距控制\nimport RebornCard from '@/components/reborn-card/RebornCard.vue'\nimport RebornPage from '@/components/reborn-page/RebornPage.vue'\n</script>\n\n<template>\n  <RebornPage title=\"Card 卡片\" description=\"用于分组展示内容区块的基础卡片容器，常与 Page 搭配组织页面。\">\n    <!-- 基础用法：通过 title 属性渲染标题，内容放默认插槽 -->\n    <RebornCard title=\"基础用法\">\n      <view\n        class=\"\n          text-[26rpx] text-slate-600\n          dark:text-slate-300\n        \"\n      >\n        卡片由标题与内容体两部分组成，内容体默认带圆角边框、白色背景与内边距。\n      </view>\n      <view class=\"rounded-lg bg-blue-1 p-3 text-[24rpx] text-slate-500\">\n        任意内容都可以放进默认插槽，多个子元素之间自动保持间距。\n      </view>\n    </RebornCard>\n\n    <!-- 标题插槽：使用 title 插槽完全接管标题区域 -->\n    <RebornCard>\n      <template #title>\n        <view class=\"flex items-center gap-2\">\n          <view class=\"i-lucide-sparkles size-[32rpx] text-amber-500\" />\n          <text\n            class=\"\n              font-medium text-[26rpx] text-slate-500\n              dark:text-slate-200\n            \"\n          >\n            标题插槽\n          </text>\n        </view>\n      </template>\n      <view\n        class=\"\n          text-[26rpx] text-slate-600\n          dark:text-slate-300\n        \"\n      >\n        需要图标、角标等富文本标题时，用 title 插槽替换默认标题渲染。\n      </view>\n    </RebornCard>\n\n    <!-- 无内边距：padding=false 时内容可通铺整个卡片 -->\n    <RebornCard title=\"无内边距\" :padding=\"false\">\n      <view\n        class=\"\n          flex h-[160rpx] items-center justify-center bg-gradient-to-r\n          from-indigo-500 to-purple-500\n        \"\n      >\n        <text class=\"text-[28rpx] text-white\">通铺内容（padding=false）</text>\n      </view>\n    </RebornCard>\n  </RebornPage>\n</template>\n"
+    }
+  ],
+  "related": [],
+  "whenToUse": [
+    "uniapp 页面中将内容按区块分组展示，常与 RebornPage 搭配组织演示/设置页。",
+    "需要统一的标题栏加内容体卡片样式时。"
+  ],
+  "whenNotToUse": [
+    "web 项目中不可用（仅 uniapp 端），web 端直接用样式容器或 reborn-container 布局。",
+    "以键值对形式展示详情数据，web 端改用 reborn-descriptions。"
+  ],
+  "pitfalls": [
+    "仅 uniapp 端可用，web 端无此组件。",
+    "padding 默认 true；内部有超出内容（如下拉浮层）被裁剪时需设置 overflowVisible。",
+    "标题可通过 title prop 或 title 插槽二选一提供。"
+  ],
+  "dependencies": [],
+  "install": {
+    "cli": "npx reborn-ui@latest add reborn-card"
+  },
+  "sourceRefs": {
+    "uniapp": [
+      "packages/uniapp-project/src/components/reborn-card/RebornCard.vue",
+      "packages/uniapp-project/src/components/reborn-card/index.ts"
+    ]
+  },
+  "docPath": "content/2.components/cards/reborn-card.md",
+  "_meta": {
+    "contentHash": "d83615d94fabfa88ea023964fcd87f2be890cf77",
+    "hasOverride": true,
+    "extractors": {
+      "web": "absent",
+      "uniapp": "ok",
+      "docs": "found"
+    }
+  }
+}

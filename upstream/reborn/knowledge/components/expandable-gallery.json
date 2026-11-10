@@ -9,6 +9,7 @@
     "tailwind",
     "gallery"
   ],
+  "aliases": [],
   "platforms": [
     "web"
   ],
@@ -66,7 +67,7 @@
   },
   "docPath": "content/2.components/miscellaneous/expandable-gallery.md",
   "_meta": {
-    "contentHash": "9956009aec88a2a877c6a685d88d95600ec39e9e",
+    "contentHash": "84a1188e950a39f3c10ab82b8822e9e648040057",
     "hasOverride": true,
     "extractors": {
       "web": "ok",

@@ -11,6 +11,11 @@
     "uniapp",
     "web"
   ],
+  "aliases": [
+    "qrcode",
+    "二维码",
+    "qr"
+  ],
   "platforms": [
     "web",
     "uniapp"
@@ -291,7 +296,7 @@
   },
   "docPath": "content/2.components/miscellaneous/reborn-qrcode.md",
   "_meta": {
-    "contentHash": "03de94737728ef66300910d12bcbfef10a2cf359",
+    "contentHash": "47326313e6ef6abe0fbeb41b104bfb0867617f22",
     "hasOverride": true,
     "extractors": {
       "web": "ok",

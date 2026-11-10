@@ -1,0 +1,204 @@
+{
+  "$schema": "../schema/component.schema.json",
+  "id": "reborn-timeline",
+  "title": "Timeline 时间线",
+  "description": "按时间顺序展示事件节点：支持竖向与横向、倒序、左右交替、自定义节点图标与时间戳落位。",
+  "category": "data-display",
+  "tags": [
+    "css",
+    "tailwind",
+    "timeline",
+    "data"
+  ],
+  "aliases": [
+    "timeline",
+    "时间线",
+    "时间轴",
+    "事件流",
+    "活动记录",
+    "操作记录",
+    "审批记录",
+    "日志"
+  ],
+  "platforms": [
+    "web"
+  ],
+  "props": [
+    {
+      "name": "items",
+      "type": "TimelineItemData[]",
+      "required": false,
+      "description": "节点数据，传入后由组件驱动渲染，无需再手写 RebornTimelineItem"
+    },
+    {
+      "name": "direction",
+      "type": "TimelineDirection",
+      "required": false,
+      "description": "时间轴方向",
+      "default": "'vertical'"
+    },
+    {
+      "name": "size",
+      "type": "'sm' | 'md' | 'lg'",
+      "required": false,
+      "description": "节点尺寸：sm 8px、md 12px、lg 16px，单个节点可覆盖",
+      "default": "'md'",
+      "options": [
+        "sm",
+        "md",
+        "lg"
+      ]
+    },
+    {
+      "name": "variant",
+      "type": "'solid' | 'outlined'",
+      "required": false,
+      "description": "节点样式：实心或空心，单个节点可覆盖",
+      "default": "'solid'",
+      "options": [
+        "solid",
+        "outlined"
+      ]
+    },
+    {
+      "name": "reverse",
+      "type": "boolean",
+      "required": false,
+      "description": "是否倒序排列节点",
+      "default": "false"
+    },
+    {
+      "name": "ui",
+      "type": "TimelineUI",
+      "required": false,
+      "description": "细粒度样式覆盖对象，会级联到所有节点 可用键（从源码抽取，以此为准）——Web：RebornTimeline → root；RebornTimelineItem → axis、body、content、dot、dotWrapper、icon*、item、line、opposite、root、timestamp。 带 * 的键对应插槽兜底节点：填了同名插槽，组件自带的节点被替换，这个键随之失效。",
+      "default": "() => ({})"
+    },
+    {
+      "name": "timestamp",
+      "type": "string",
+      "required": false,
+      "description": "时间戳文本"
+    },
+    {
+      "name": "color",
+      "type": "TimelinePresetColor | (string & {})",
+      "required": false,
+      "description": "节点颜色：primary / secondary / success / info / warning / error / neutral，或任意 CSS 色值",
+      "default": "'primary'"
+    },
+    {
+      "name": "content",
+      "type": "string",
+      "required": false,
+      "description": "节点内容，默认作为文本渲染；默认插槽或 content 插槽存在时忽略"
+    },
+    {
+      "name": "dangerouslyUseHTMLString",
+      "type": "boolean",
+      "required": false,
+      "description": "显式启用 HTML；仅传入已经清理过的可信内容",
+      "default": "false"
+    },
+    {
+      "name": "icon",
+      "type": "string | Component",
+      "required": false,
+      "description": "自定义节点图标：Iconify 名称或组件"
+    },
+    {
+      "name": "loading",
+      "type": "boolean",
+      "required": false,
+      "description": "是否为加载中节点，节点底圆内显示旋转的加载图标",
+      "default": "false"
+    },
+    {
+      "name": "labelPosition",
+      "type": "TimelineLabelPosition",
+      "required": false,
+      "description": "内容位于轴线的哪一侧，仅 vertical 方向生效",
+      "default": "'right'"
+    },
+    {
+      "name": "placement",
+      "type": "TimelinePlacement",
+      "required": false,
+      "description": "时间戳位置：top / bottom 堆叠在内容上下，left / right 放到轴线的对应一侧",
+      "default": "'bottom'"
+    }
+  ],
+  "events": [],
+  "slots": [
+    {
+      "name": "default",
+      "description": "书写 `RebornTimelineItem` 节点；传了非空 `items` 时不渲染。"
+    },
+    {
+      "name": "timestamp",
+      "description": "替换时间戳文本，落位仍由 `placement` 决定。"
+    },
+    {
+      "name": "icon",
+      "description": "替换节点内的图标，可绑定 `class` 继承尺寸；`sm` 不渲染此插槽。"
+    },
+    {
+      "name": "content",
+      "description": "替换整个内容区，优先级高于默认插槽。"
+    }
+  ],
+  "exposes": [],
+  "examples": [
+    {
+      "title": "Web 演示",
+      "path": "app/components/reborn/examples/reborn-timeline/RebornTimelineDemo.vue",
+      "source": "demo",
+      "platform": "web",
+      "code": "<script setup lang=\"ts\">\nimport type { TimelineItemData } from \"~/components/reborn/ui/reborn-timeline/reborn-timeline.config\"\nimport { DemoBlock, DemoNote, DemoSection, Icon, Playground } from \"#components\"\nimport { computed, ref, shallowRef } from \"vue\"\nimport RebornButton from \"~/components/reborn/ui/reborn-button/RebornButton.vue\"\nimport RebornCheckbox from \"~/components/reborn/ui/reborn-checkbox/RebornCheckbox.vue\"\nimport { TIMELINE_PRESET_COLORS, timelineSizes, timelineVariants } from \"~/components/reborn/ui/reborn-timeline/reborn-timeline.config\"\nimport RebornTimeline from \"~/components/reborn/ui/reborn-timeline/RebornTimeline.vue\"\nimport RebornTimelineItem from \"~/components/reborn/ui/reborn-timeline/RebornTimelineItem.vue\"\n\n/** 入职流程示例数据：默认插槽模式下用 v-for 书写节点 */\nconst activities: TimelineItemData[] = [\n  { content: '提交入职资料', timestamp: '2026-09-01', color: 'success', icon: 'lucide:check' },\n  { content: '完成背景调查', timestamp: '2026-09-03', color: 'success', icon: 'lucide:check' },\n  { content: '签署劳动合同', timestamp: '2026-09-05', color: 'error', icon: 'lucide:x' },\n  { content: '领取办公设备', timestamp: '2026-09-08', color: 'warning', icon: 'lucide:check' },\n]\n\nconst directionOptions = [\n  { label: '竖向 vertical', value: 'vertical' },\n  { label: '横向 horizontal', value: 'horizontal' },\n]\nconst sizeLabels = { sm: 'sm（8px）', md: 'md（12px）', lg: 'lg（16px）' }\nconst sizeOptions = timelineSizes.map(size => ({ label: sizeLabels[size], value: size }))\nconst variantOptions = timelineVariants.map(variant => ({ label: variant === 'solid' ? '实心 solid' : '空心 outlined', value: variant }))\nconst labelPositionOptions = [\n  { label: '右侧 right', value: 'right' },\n  { label: '左侧 left', value: 'left' },\n]\nconst placementOptions = [\n  { label: '下方 bottom', value: 'bottom' },\n  { label: '上方 top', value: 'top' },\n  { label: '左侧 left', value: 'left' },\n  { label: '右侧 right', value: 'right' },\n]\nconst colorOptions = [\n  ...Object.keys(TIMELINE_PRESET_COLORS).map(color => ({ label: color, value: color })),\n  { label: '自定义 #f59e0b', value: '#f59e0b' },\n]\n\n// ─── 交互演练场 ─────────────────────────────────────────────────\n\n/** 演练场默认状态 */\nconst defaultState: Record<string, any> = {\n  direction: 'vertical',\n  size: 'md',\n  variant: 'solid',\n  reverse: false,\n  labelPosition: 'right',\n  placement: 'bottom',\n  color: 'primary',\n  loading: false,\n}\n\nconst state = shallowRef<Record<string, any>>({ ...defaultState })\n\n/** 演练场节点列表：可追加节点，用来观察插槽模式下增删节点后的连接线、倒序与列轨道是否同步 */\nconst playgroundActivities = ref([...activities])\nconst MAX_ACTIVITIES = 8\n\nfunction appendActivity() {\n  const day = 8 + playgroundActivities.value.length - activities.length + 1\n  playgroundActivities.value.push({\n    content: `新增动态 ${playgroundActivities.value.length + 1}`,\n    timestamp: `2026-09-${String(day).padStart(2, '0')}`,\n    color: 'neutral',\n    icon: 'lucide:more-horizontal',\n  })\n}\n\n/** 重置演练场配置 */\nfunction resetState() {\n  state.value = { ...defaultState }\n  playgroundActivities.value = [...activities]\n}\n\n/** 演练场控制面板配置 */\nconst controls: any = [\n  {\n    title: '布局',\n    children: [\n      { label: '时间轴方向', key: 'direction', component: 'select' as const, defaultValue: 'vertical', props: { options: directionOptions } },\n      { label: '倒序排列', key: 'reverse', component: 'checkbox' as const, defaultValue: false },\n      {\n        label: '内容侧（仅竖向生效）',\n        key: 'labelPosition',\n        component: 'select' as const,\n        defaultValue: 'right',\n        props: { options: labelPositionOptions },\n      },\n    ],\n  },\n  {\n    title: '时间戳',\n    children: [\n      { label: '时间戳位置', key: 'placement', component: 'select' as const, defaultValue: 'bottom', props: { options: placementOptions } },\n    ],\n  },\n  {\n    title: '节点',\n    children: [\n      { label: '节点尺寸', key: 'size', component: 'select' as const, defaultValue: 'md', props: { options: sizeOptions } },\n      { label: '节点形态', key: 'variant', component: 'select' as const, defaultValue: 'solid', props: { options: variantOptions } },\n      { label: '节点颜色', key: 'color', component: 'select' as const, defaultValue: 'primary', props: { options: colorOptions } },\n      { label: '最后一个节点加载中', key: 'loading', component: 'checkbox' as const, defaultValue: false },\n    ],\n  },\n]\n\n/** 演练场右上角展示的传参明细（时间线无 v-model，需手动拼接）：完整列出当前所有参数（含默认值） */\nconst timelineCode = computed(() => {\n  const s = state.value\n  const itemProps: string[] = [\n    ':key=\"activity.timestamp\"',\n    ':timestamp=\"activity.timestamp\"',\n    ':icon=\"activity.icon\"',\n    `color=\"${s.color}\"`,\n    `label-position=\"${s.labelPosition}\"`,\n    `placement=\"${s.placement}\"`,\n    `:loading=\"${s.loading ? 'index === activities.length - 1' : 'false'}\"`,\n  ]\n  return [\n    '<RebornTimeline',\n    `  direction=\"${s.direction}\"`,\n    `  size=\"${s.size}\"`,\n    `  variant=\"${s.variant}\"`,\n    `  :reverse=\"${s.reverse}\"`,\n    '>',\n    '  <RebornTimelineItem',\n    '    v-for=\"(activity, index) in activities\"',\n    ...itemProps.map(p => `    ${p}`),\n    '  >',\n    '    {{ activity.content }}',\n    '  </RebornTimelineItem>',\n    '</RebornTimeline>',\n  ].join('\\n')\n})\n\n// ─── 场景演示状态 ───────────────────────────────────────────────\n\n/** 基础用法：用户示例中的倒序开关 */\nconst reverse = shallowRef(false)\n\n/** 数据驱动：content 默认按文本渲染，接口数据直接传入即可，不会被当作 HTML 解析 */\nconst releaseItems: TimelineItemData[] = [\n  { key: 'plan', timestamp: '2026-09-01', content: '确定 v1.2.0 发布范围', color: 'neutral' },\n  { key: 'dev', timestamp: '2026-09-10', content: '完成开发并合入 main 分支', color: 'success' },\n  { key: 'test', timestamp: '2026-09-18', content: '回归测试发现 2 个阻塞问题', color: 'error' },\n  { key: 'release', timestamp: '2026-09-25', content: '灰度发布中', loading: true },\n]\n\n/** 节点颜色：七个预设色跟随主题配置，另附一个自定义色值 */\nconst colorItems: TimelineItemData[] = [\n  { color: 'primary', content: 'primary：进行中的步骤，跟随主题主色' },\n  { color: 'secondary', content: 'secondary：辅助记录' },\n  { color: 'success', content: 'success：已完成' },\n  { color: 'info', content: 'info：信息提示' },\n  { color: 'warning', content: 'warning：需要关注' },\n  { color: 'error', content: 'error：失败或被驳回' },\n  { color: 'neutral', content: 'neutral：尚未开始' },\n  { color: '#f59e0b', content: '#f59e0b：任意 CSS 色值，走内联样式' },\n]\n\nconst placements = ['top', 'bottom', 'left', 'right'] as const\n\n/** 横向时间轴：阶段数量少、横向空间充足时使用 */\nconst stageItems: TimelineItemData[] = [\n  { key: 'draft', timestamp: '09-01', content: '起草', color: 'success' },\n  { key: 'review', timestamp: '09-05', content: '评审', color: 'success' },\n  { key: 'approve', timestamp: '09-12', content: '审批', loading: true },\n  { key: 'archive', timestamp: '09-20', content: '归档', color: 'neutral' },\n]\n</script>\n\n<template>\n  <div class=\"flex w-full flex-col\">\n    <Playground\n      v-model=\"state\" :controls=\"controls\" :code=\"timelineCode\" component-name=\"RebornTimeline\" title=\"交互演练场\"\n      description=\"调节上方参数，实时查看时间线的方向、排序与时间戳落位。\"\n    >\n      <template #tag>\n        <RebornButton size=\"sm\" variant=\"soft\" color=\"neutral\" @click=\"resetState\">\n          <template #leading>\n            <Icon name=\"lucide:rotate-ccw\" size=\"12\" />\n          </template>\n          重置配置\n        </RebornButton>\n      </template>\n\n      <div class=\"flex w-full flex-col items-center gap-6\">\n        <div :class=\"state.direction === 'horizontal' ? 'w-full' : 'w-full max-w-md'\">\n          <RebornTimeline :direction=\"state.direction\" :size=\"state.size\" :variant=\"state.variant\" :reverse=\"state.reverse\">\n            <RebornTimelineItem\n              v-for=\"(activity, index) in playgroundActivities\" :key=\"activity.timestamp\"\n              :timestamp=\"activity.timestamp\" :color=\"state.color\" :label-position=\"state.labelPosition\"\n              :placement=\"state.placement\" :loading=\"state.loading && index === playgroundActivities.length - 1\"\n              :icon=\"activity.icon\"\n            >\n              {{ activity.content }}\n            </RebornTimelineItem>\n          </RebornTimeline>\n        </div>\n\n        <RebornButton\n          size=\"sm\" variant=\"outlined\" :disabled=\"playgroundActivities.length >= MAX_ACTIVITIES\"\n          @click=\"appendActivity\"\n        >\n          <template #leading>\n            <Icon name=\"lucide:plus\" />\n          </template>\n          追加节点\n        </RebornButton>\n\n        <DemoNote tone=\"dimmed\" class=\"font-mono text-xs\">\n          Props: { direction: '{{ state.direction }}', size: '{{ state.size }}', variant: '{{ state.variant }}', reverse: {{ state.reverse }}, labelPosition: '{{\n            state.labelPosition\n          }}',\n          placement: '{{ state.placement }}', color: '{{ state.color }}', loading: {{ state.loading }} } · 节点数：{{\n            playgroundActivities.length }}\n        </DemoNote>\n      </div>\n    </Playground>\n\n    <DemoSection title=\"基础用法\">\n      <template #description>\n        在默认插槽里用 <code>v-for</code> 书写 <code>RebornTimelineItem</code>，<code>reverse</code>\n        翻转节点顺序。\n      </template>\n      <DemoBlock layout=\"stack\">\n        <RebornCheckbox v-model=\"reverse\" label=\"倒序排列\" />\n        <RebornTimeline class=\"mt-2\" :reverse=\"reverse\">\n          <RebornTimelineItem v-for=\"activity in activities\" :key=\"activity.timestamp\" :timestamp=\"activity.timestamp\">\n            {{ activity.content }}\n          </RebornTimelineItem>\n        </RebornTimeline>\n      </DemoBlock>\n      <DemoNote tone=\"dimmed\" class=\"font-mono text-xs\">reverse: {{ reverse }}</DemoNote>\n    </DemoSection>\n\n    <DemoSection title=\"数据驱动\">\n      <template #description>\n        传入 <code>items</code> 后由组件渲染节点，适合节点来自接口数据的场景；<code>content</code> 默认作为文本渲染，确需 HTML 时显式设置\n        <code>dangerouslyUseHTMLString: true</code>。\n      </template>\n      <DemoBlock layout=\"stack\">\n        <RebornTimeline :items=\"releaseItems\" />\n      </DemoBlock>\n      <DemoNote tone=\"dimmed\">\n        content 走文本插值，内容里的 HTML 标签按原文显示、不会生效；dangerouslyUseHTMLString 只把渲染方式切换为 v-html，不做任何清理，开启前须先清理内容。需要强调样式时优先用 #content 插槽。\n      </DemoNote>\n    </DemoSection>\n\n    <DemoSection title=\"节点颜色\">\n      <template #description><code>color</code> 接受 primary / secondary / success / info / warning / error / neutral 七个主题预设，或自定义 CSS 色值。</template>\n      <DemoBlock layout=\"stack\">\n        <RebornTimeline>\n          <RebornTimelineItem v-for=\"item in colorItems\" :key=\"item.color\" :color=\"item.color\">\n            {{ item.content }}\n          </RebornTimelineItem>\n        </RebornTimeline>\n      </DemoBlock>\n    </DemoSection>\n\n    <DemoSection title=\"节点尺寸与形态\">\n      <template #description>\n        <code>size</code> 控制 8px、12px、16px 节点，<code>variant</code> 切换实心与空心；单个节点可覆盖父级配置，<code>sm</code> 不显示图标。\n      </template>\n      <DemoBlock layout=\"grid\" :columns=\"3\">\n        <div v-for=\"size in timelineSizes\" :key=\"size\" class=\"flex flex-col gap-3\" :data-timeline-size=\"size\">\n          <p class=\"text-sm text-gray-7\">{{ sizeLabels[size] }}</p>\n          <RebornTimeline :size=\"size\">\n            <RebornTimelineItem>实心节点</RebornTimelineItem>\n            <RebornTimelineItem variant=\"outlined\">空心节点</RebornTimelineItem>\n            <RebornTimelineItem icon=\"lucide:check\">{{ size === 'sm' ? '小尺寸隐藏图标' : '带图标的实心节点' }}</RebornTimelineItem>\n            <RebornTimelineItem variant=\"outlined\" icon=\"lucide:check\">{{ size === 'sm' ? '小尺寸空心节点' : '带图标的空心节点' }}</RebornTimelineItem>\n          </RebornTimeline>\n        </div>\n      </DemoBlock>\n      <DemoBlock layout=\"stack\">\n        <RebornTimeline size=\"sm\" variant=\"outlined\">\n          <RebornTimelineItem>继承父级：8px 空心圆</RebornTimelineItem>\n          <RebornTimelineItem size=\"md\" icon=\"lucide:check\">单独覆盖：12px 空心圆，图标 6px</RebornTimelineItem>\n          <RebornTimelineItem size=\"lg\" variant=\"solid\" color=\"success\" icon=\"lucide:check\">单独覆盖：16px 实心圆，图标 8px</RebornTimelineItem>\n        </RebornTimeline>\n      </DemoBlock>\n      <DemoNote tone=\"dimmed\">空心圆内孔为外径的一半：4px、6px、8px。节点尺寸不改变正文或节点间距，混合尺寸仍共用同一条轴线。</DemoNote>\n    </DemoSection>\n\n    <DemoSection title=\"自定义图标与加载\">\n      <template #description>\n        设了 <code>icon</code>、<code>loading</code> 或 <code>#icon</code>\n        插槽时，图标尺寸随节点取 6px 或 8px，节点外径保持不变；<code>sm</code> 隐藏图标，<code>loading</code> 显示旋转图标。\n      </template>\n      <DemoBlock layout=\"stack\">\n        <RebornTimeline>\n          <RebornTimelineItem icon=\"lucide:git-commit-horizontal\" timestamp=\"2026-09-01 10:20\">\n            提交代码\n          </RebornTimelineItem>\n          <RebornTimelineItem color=\"success\" timestamp=\"2026-09-01 10:32\">\n            <template #icon=\"{ class: iconClass }\">\n              <Icon name=\"lucide:check\" :class=\"iconClass\" />\n            </template>\n            流水线通过\n          </RebornTimelineItem>\n          <RebornTimelineItem loading timestamp=\"2026-09-01 10:35\">\n            正在部署到预发环境\n          </RebornTimelineItem>\n        </RebornTimeline>\n      </DemoBlock>\n      <DemoNote>实心节点的图标为白色，空心节点的图标跟随 color；自定义图标插槽可使用作用域里的 class，继承当前尺寸。</DemoNote>\n    </DemoSection>\n\n    <DemoSection title=\"时间戳位置\">\n      <template #description><code>placement</code> 为 top / bottom 时时间戳堆叠在内容上下，为 left / right 时放到轴线的对应一侧。</template>\n      <DemoBlock layout=\"grid\" :columns=\"2\">\n        <div v-for=\"p in placements\" :key=\"p\" class=\"flex flex-col gap-3\">\n          <p class=\"text-dimmed text-xs italic\">placement=\"{{ p }}\"</p>\n          <RebornTimeline>\n            <RebornTimelineItem\n              v-for=\"activity in activities.slice(0, 3)\" :key=\"activity.timestamp\"\n              :timestamp=\"activity.timestamp\" :placement=\"p\"\n            >\n              {{ activity.content }}\n            </RebornTimelineItem>\n          </RebornTimeline>\n        </div>\n      </DemoBlock>\n      <DemoNote>内容在右侧时，placement=\"left\" 把时间戳越过轴线放到左列；placement=\"right\" 与内容同行，保留 12px 间距，整组贴近轴线。</DemoNote>\n    </DemoSection>\n\n    <DemoSection title=\"内容侧\">\n      <template #description><code>label-position</code> 决定内容位于轴线左侧还是右侧，逐个节点设置即可左右交替。</template>\n      <DemoBlock layout=\"grid\" :columns=\"2\">\n        <div class=\"flex flex-col gap-3\">\n          <p class=\"text-dimmed text-xs italic\">全部在左侧</p>\n          <RebornTimeline>\n            <RebornTimelineItem\n              v-for=\"activity in activities\" :key=\"activity.timestamp\" :timestamp=\"activity.timestamp\"\n              label-position=\"left\"\n            >\n              {{ activity.content }}\n            </RebornTimelineItem>\n          </RebornTimeline>\n        </div>\n        <div class=\"flex flex-col gap-3\">\n          <p class=\"text-dimmed text-xs italic\">左右交替，时间戳放到对侧</p>\n          <RebornTimeline>\n            <RebornTimelineItem\n              v-for=\"(activity, index) in activities\" :key=\"activity.timestamp\"\n              :timestamp=\"activity.timestamp\" :label-position=\"index % 2 === 0 ? 'right' : 'left'\"\n              :placement=\"index % 2 === 0 ? 'left' : 'right'\"\n            >\n              {{ activity.content }}\n            </RebornTimelineItem>\n          </RebornTimeline>\n        </div>\n      </DemoBlock>\n      <DemoNote>两侧都有内容时左右列等宽，轴线居中；单侧布局按内容宽度排布，不因内容在左侧而整体靠右。</DemoNote>\n    </DemoSection>\n\n    <DemoSection title=\"横向时间轴\">\n      <template #description><code>direction=\"horizontal\"</code> 让节点等分一行，适合阶段少、横向空间充足的流程。</template>\n      <DemoBlock layout=\"stack\" class=\"gap-8\">\n        <!-- DemoBlock 为 items-start，横向时间线需显式 w-full 才能撑满一行 -->\n        <RebornTimeline class=\"w-full\" direction=\"horizontal\" :items=\"stageItems\" />\n        <RebornTimeline class=\"w-full\" direction=\"horizontal\">\n          <RebornTimelineItem\n            v-for=\"item in stageItems\" :key=\"item.key\" :timestamp=\"item.timestamp\" :color=\"item.color\"\n            :loading=\"item.loading\" placement=\"top\"\n          >\n            {{ item.content }}\n          </RebornTimelineItem>\n        </RebornTimeline>\n      </DemoBlock>\n      <DemoNote>横向时 label-position 不生效；placement=\"top\" 把时间戳放到轴线上方。</DemoNote>\n    </DemoSection>\n\n    <DemoSection title=\"内容与时间戳插槽\">\n      <template #description><code>#content</code> 与 <code>#timestamp</code> 插槽替换对应区域，用于标题加描述、带图标的时间等结构化内容。</template>\n      <DemoBlock layout=\"stack\">\n        <RebornTimeline>\n          <RebornTimelineItem color=\"success\">\n            <template #content>\n              <div class=\"flex flex-col gap-0.5\">\n                <span class=\"font-medium\">合同审批通过</span>\n                <span class=\"text-sm text-gray-6\">法务部 · 审批人 张敏</span>\n              </div>\n            </template>\n            <template #timestamp>\n              <span class=\"inline-flex items-center gap-1\">\n                <Icon name=\"lucide:clock\" class=\"size-3\" />\n                2026-09-05 14:30\n              </span>\n            </template>\n          </RebornTimelineItem>\n          <RebornTimelineItem>\n            <template #content>\n              <div class=\"flex flex-col gap-0.5\">\n                <span class=\"font-medium\">等待财务付款</span>\n                <span class=\"text-sm text-gray-6\">预计 3 个工作日内完成</span>\n              </div>\n            </template>\n            <template #timestamp>\n              <span class=\"inline-flex items-center gap-1\">\n                <Icon name=\"lucide:clock\" class=\"size-3\" />\n                2026-09-06 09:00\n              </span>\n            </template>\n          </RebornTimelineItem>\n        </RebornTimeline>\n      </DemoBlock>\n      <DemoNote>#content 优先于默认插槽，二者都没有时才回退到 content 属性。</DemoNote>\n    </DemoSection>\n  </div>\n</template>\n"
+    }
+  ],
+  "related": [],
+  "whenToUse": [
+    "审批流、工单处理记录这类「谁在什么时候做了什么」的追溯信息：时间戳默认在内容下方。",
+    "发布、部署这类有先后且仍在推进的流程：用 color 区分已完成 / 失败 / 未开始，用 loading 标出进行中的节点。",
+    "需要左右交替、把时间与事件分列轴线两侧的展示页：逐个节点设置 labelPosition 与 placement。",
+    "阶段数量少（通常不超过 6 个）、横向空间充足的进度概览：用 direction=\"horizontal\"。"
+  ],
+  "whenNotToUse": [
+    "有明确当前步骤、需要用户逐步推进并可点击切换的流程，改用 reborn-steps。",
+    "随页面滚动逐段展开、带粘性标题与渐变动画的长篇叙事，改用 timeline（动效展示区块，不是数据列表）。",
+    "等待异步任务时按步骤提示加载进度，改用 multi-step-loader。",
+    "只需表达单个任务的完成百分比，改用 reborn-progress。"
+  ],
+  "pitfalls": [
+    "仅 Web 端，UniApp 无对应实现。",
+    "横向模式没有折行，节点超过 6 个会挤在一行，需要控制节点数或改回竖向。",
+    "同名动效组件 timeline（无 reborn- 前缀）是社区移植的滚动叙事区块，与本组件不是同一个东西。"
+  ],
+  "dependencies": [
+    "clsx",
+    "tailwind-merge",
+    "tailwind-variants"
+  ],
+  "install": {
+    "cli": "npx reborn-ui@latest add reborn-timeline"
+  },
+  "sourceRefs": {
+    "web": [
+      "app/components/reborn/ui/reborn-timeline/RebornTimeline.vue",
+      "app/components/reborn/ui/reborn-timeline/RebornTimelineItem.vue",
+      "app/components/reborn/ui/reborn-timeline/index.ts",
+      "app/components/reborn/ui/reborn-timeline/reborn-timeline.config.ts"
+    ]
+  },
+  "docPath": "content/2.components/data/reborn-timeline.md",
+  "_meta": {
+    "contentHash": "0c523bb8d28c5cf0be6845fa3efe047a2dff196f",
+    "hasOverride": true,
+    "extractors": {
+      "web": "ok",
+      "uniapp": "absent",
+      "docs": "found"
+    }
+  }
+}

@@ -10,6 +10,7 @@
     "device-mockup",
     "magic-ui"
   ],
+  "aliases": [],
   "platforms": [
     "web"
   ],
@@ -78,7 +79,7 @@
   },
   "docPath": "content/2.components/device-mocks/iphone-mockup.md",
   "_meta": {
-    "contentHash": "1916b917da017e7393340383a06feaa7ea899b6e",
+    "contentHash": "696b617973320f2984130bda110a3ef1d4f5fe37",
     "hasOverride": true,
     "extractors": {
       "web": "ok",

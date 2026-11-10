@@ -1,0 +1,105 @@
+{
+  "$schema": "../schema/component.schema.json",
+  "id": "neon-border",
+  "title": "霓虹边框",
+  "description": "用于给插槽内容包裹双色霓虹流转边框的装饰容器组件。",
+  "category": "effect",
+  "tags": [
+    "css",
+    "tailwind",
+    "border"
+  ],
+  "aliases": [],
+  "platforms": [
+    "web"
+  ],
+  "props": [
+    {
+      "name": "color1",
+      "type": "string",
+      "required": false,
+      "description": "霓虹边框的主色。",
+      "default": "\"#0496ff\""
+    },
+    {
+      "name": "color2",
+      "type": "string",
+      "required": false,
+      "description": "霓虹边框的辅色。",
+      "default": "\"#ff0a54\""
+    },
+    {
+      "name": "animationType",
+      "type": "\"none\" | \"half\" | \"full\"",
+      "required": false,
+      "description": "应用于边框的动画类型。",
+      "default": "\"half\""
+    },
+    {
+      "name": "duration",
+      "type": "number",
+      "required": false,
+      "description": "动画持续时间（秒）。",
+      "default": "6"
+    },
+    {
+      "name": "class",
+      "type": "HTMLAttributes[\"class\"]",
+      "required": false,
+      "description": "用于样式的额外 CSS 类。",
+      "default": "\"\""
+    }
+  ],
+  "events": [],
+  "slots": [
+    {
+      "name": "default",
+      "description": ""
+    }
+  ],
+  "exposes": [],
+  "examples": [
+    {
+      "title": "Web 演示",
+      "path": "app/components/reborn/examples/neon-border/NeonBorderDemo.vue",
+      "source": "demo",
+      "platform": "web",
+      "code": "<template>\n  <DemoSection\n    title=\"基础用法\"\n    description=\"三种描边动画；内部输入框是被包裹的主体，用 default 表面，不再写 bg-background。\"\n  >\n    <DemoBlock\n      layout=\"stack\"\n      align=\"center\"\n    >\n      <div class=\"flex w-full flex-col items-center justify-center gap-16 py-8\">\n        <NeonBorder animation-type=\"none\">\n          <input\n            type=\"text\"\n            class=\"bg-default size-full rounded-lg px-4 text-sm\"\n            placeholder=\"无动画\"\n          >\n        </NeonBorder>\n\n        <NeonBorder>\n          <input\n            type=\"text\"\n            class=\"bg-default size-full rounded-lg px-4 text-sm\"\n            placeholder=\"半圈描边动画\"\n          >\n        </NeonBorder>\n\n        <NeonBorder animation-type=\"full\">\n          <input\n            type=\"text\"\n            class=\"bg-default size-full rounded-lg px-4 text-sm\"\n            placeholder=\"全圈描边动画\"\n          >\n        </NeonBorder>\n      </div>\n    </DemoBlock>\n  </DemoSection>\n</template>\n"
+    }
+  ],
+  "related": [],
+  "whenToUse": [
+    "输入框、卡片等需要霓虹描边强调视觉焦点时。",
+    "需要可配置双色（color1/color2）与流转动画速度的发光边框。"
+  ],
+  "whenNotToUse": [
+    "需要玻璃折射质感的容器，改用 liquid-glass。",
+    "按钮自带流光效果，改用 shimmer-button。"
+  ],
+  "pitfalls": [
+    "仅 web 端可用。",
+    "animationType 可选 none/half/full（默认 half），none 为静态边框。",
+    "内容通过默认插槽传入，插槽元素常需自行铺满容器（示例中输入框用了 size-full）。",
+    "duration 单位为秒（默认 6）。"
+  ],
+  "dependencies": [],
+  "install": {
+    "cli": "npx reborn-ui@latest add neon-border"
+  },
+  "sourceRefs": {
+    "web": [
+      "app/components/reborn/ui/neon-border/NeonBorder.vue",
+      "app/components/reborn/ui/neon-border/index.ts"
+    ]
+  },
+  "docPath": "content/2.components/special-effects/neon-border.md",
+  "_meta": {
+    "contentHash": "7180503f1bf69ba044cae095ebf1d46ef0b4ecf1",
+    "hasOverride": true,
+    "extractors": {
+      "web": "ok",
+      "uniapp": "absent",
+      "docs": "found"
+    }
+  }
+}

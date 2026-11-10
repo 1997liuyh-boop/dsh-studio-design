@@ -9,6 +9,13 @@
     "tailwind",
     "magic-ui"
   ],
+  "aliases": [
+    "marquee",
+    "跑马灯",
+    "滚动字幕",
+    "无限滚动",
+    "ticker"
+  ],
   "platforms": [
     "web"
   ],
@@ -43,10 +50,14 @@
     },
     {
       "name": "orientation",
-      "type": "RebornMarqueeOrientation",
+      "type": "'horizontal' | 'vertical'",
       "required": false,
       "description": "设置滚动方向。",
-      "default": "'horizontal'"
+      "default": "'horizontal'",
+      "options": [
+        "horizontal",
+        "vertical"
+      ]
     },
     {
       "name": "repeat",
@@ -121,7 +132,7 @@
   },
   "docPath": "content/2.components/miscellaneous/reborn-marquee.md",
   "_meta": {
-    "contentHash": "5c2646d8da029b97f07c8de70dfcf2e554f3a0dc",
+    "contentHash": "3cab4bbd6eee8dd91d7ad3bece3b62212c3b5968",
     "hasOverride": true,
     "extractors": {
       "web": "ok",

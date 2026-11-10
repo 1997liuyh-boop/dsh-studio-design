@@ -1,0 +1,48 @@
+{
+  "schemaVersion": 1,
+  "id": "design",
+  "name": "设计工作室",
+  "icon": "✦",
+  "description": "MasterGo 设计稿 · Reborn 组件 · 项目配置与代码协作",
+  "order": 17,
+  "entry": "/studio-projects/design",
+  "capabilities": [
+    "project-inspection",
+    "component-mapping",
+    "mastergo-mcp",
+    "reborn-mcp",
+    "dsh-session",
+    "sandbox-preview"
+  ],
+  "compatibility": {
+    "host": "0.2.1-rc.2",
+    "runtime": "^0.5.0",
+    "worktable": "^0.6.0"
+  },
+  "tasks": [
+    {
+      "id": "generate",
+      "label": "实现设计稿",
+      "description": "读取指定节点或当前选区并实现页面",
+      "text": "通过 MCP 读取指定节点或当前选区并实现页面，使用原始素材与语义匹配的组件。"
+    },
+    {
+      "id": "read",
+      "label": "查看当前选区",
+      "description": "只读节点素材、组件变体与交互，不改代码",
+      "text": "通过 MCP 读取指定节点或当前选区，说明真实素材、组件变体与交互，暂不修改代码。"
+    },
+    {
+      "id": "rules",
+      "label": "生成设计规则",
+      "description": "按当前项目归纳设计规则，无需 MasterGo",
+      "text": "根据当前项目生成或更新设计规则，保留已有约束并标注文件依据。"
+    },
+    {
+      "id": "optimize",
+      "label": "优化对应节点",
+      "description": "重新读取节点并核对、修正已有实现",
+      "text": "优化指定节点或当前选区：先通过 MCP 重新读取节点原始素材、组件变体与布局，核对已有实现，修正图标、组件及交互，并实际测试和截图对照。"
+    }
+  ]
+}

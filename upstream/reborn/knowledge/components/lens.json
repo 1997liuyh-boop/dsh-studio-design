@@ -9,6 +9,10 @@
     "tailwind",
     "aceternity-ui"
   ],
+  "aliases": [
+    "放大镜",
+    "magnifier"
+  ],
   "platforms": [
     "web"
   ],
@@ -109,7 +113,7 @@
   },
   "docPath": "content/2.components/miscellaneous/lens.md",
   "_meta": {
-    "contentHash": "62ccfe3f760e3e77d870de4527659ff5230f4d26",
+    "contentHash": "4975efec8dcf58c92dbe3d3957dc640ceacf0c42",
     "hasOverride": true,
     "extractors": {
       "web": "ok",

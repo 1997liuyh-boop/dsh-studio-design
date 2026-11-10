@@ -1,0 +1,595 @@
+{
+  "$schema": "../schema/component.schema.json",
+  "id": "reborn-cascader",
+  "title": "Cascader 级联选择器",
+  "description": "多层级数据的逐级选择器：Web 端多列面板、父子关联勾选与搜索，UniApp 端底部弹窗。",
+  "category": "form",
+  "tags": [
+    "cascader",
+    "select",
+    "tree",
+    "form",
+    "uniapp"
+  ],
+  "aliases": [
+    "cascader",
+    "级联",
+    "级联选择",
+    "多级选择",
+    "省市区"
+  ],
+  "platforms": [
+    "web",
+    "uniapp"
+  ],
+  "props": [
+    {
+      "name": "options",
+      "type": "CascaderOption[]",
+      "required": false,
+      "description": "选项数据",
+      "default": "() => []"
+    },
+    {
+      "name": "title",
+      "type": "string",
+      "required": false,
+      "description": "标题",
+      "default": "'请选择'"
+    },
+    {
+      "name": "placeholder",
+      "type": "string",
+      "required": false,
+      "description": "占位提示",
+      "default": "'请选择'"
+    },
+    {
+      "name": "showTrigger",
+      "type": "boolean",
+      "required": false,
+      "description": "是否显示触发器",
+      "default": "true"
+    },
+    {
+      "name": "disabled",
+      "type": "boolean",
+      "required": false,
+      "description": "是否禁用",
+      "default": "false"
+    },
+    {
+      "name": "fieldNames",
+      "type": "CascaderFieldNames",
+      "required": false,
+      "description": "options 的字段别名配置"
+    },
+    {
+      "name": "textSeparator",
+      "type": "string",
+      "required": false,
+      "description": "分隔符",
+      "default": "' / '"
+    },
+    {
+      "name": "height",
+      "type": "number | string",
+      "required": false,
+      "description": "列表高度 (rpx)",
+      "default": "600"
+    },
+    {
+      "name": "size",
+      "type": "'sm' | 'md' | 'lg'",
+      "required": false,
+      "description": "尺寸",
+      "default": "'md'",
+      "options": [
+        "sm",
+        "md",
+        "lg"
+      ]
+    },
+    {
+      "name": "color",
+      "type": "'primary' | 'secondary' | 'success' | 'info' | 'warning' | 'error' | 'neutral'",
+      "required": false,
+      "description": "颜色",
+      "default": "'primary'",
+      "options": [
+        "primary",
+        "secondary",
+        "success",
+        "info",
+        "warning",
+        "error",
+        "neutral"
+      ]
+    },
+    {
+      "name": "customClass",
+      "type": "string",
+      "required": false,
+      "description": "自定义类名",
+      "default": "''"
+    },
+    {
+      "name": "customStyle",
+      "type": "string",
+      "required": false,
+      "description": "自定义样式",
+      "default": "''"
+    },
+    {
+      "name": "ui",
+      "type": "CascaderUI",
+      "required": false,
+      "description": "UI 覆盖 可用键（从源码抽取，以此为准）——UniApp：checkbox、column、columnScroll、footer、footerActions、footerText、item、itemActive、itemInner、itemText、itemTextActive、list、listInner、listScroll、loading、loadingText、nodeArrow、nodeLoading、popup、root、tab、tabs、tabsScroll。",
+      "default": "() => ({})",
+      "platform": "uniapp"
+    },
+    {
+      "name": "lazy",
+      "type": "boolean",
+      "required": false,
+      "description": "是否动态加载子节点",
+      "default": "false"
+    },
+    {
+      "name": "lazyLoad",
+      "type": "(node: CascaderOption, resolve: (children: CascaderOption[]) => void, reject: () => void) => void",
+      "required": false,
+      "description": "加载动态数据的方法"
+    },
+    {
+      "name": "leafLevel",
+      "type": "number",
+      "required": false,
+      "description": "查询次级菜单层级；为0时候查询所有",
+      "default": "0"
+    },
+    {
+      "name": "multiple",
+      "type": "boolean",
+      "required": false,
+      "description": "是否多选",
+      "default": "false"
+    },
+    {
+      "name": "checkStrictly",
+      "type": "boolean",
+      "required": false,
+      "description": "是否开启严格选择模式：单选时点击任意层级节点即可选中；多选时解除父子节点的勾选关联",
+      "default": "false"
+    },
+    {
+      "name": "ellipsis",
+      "type": "boolean",
+      "required": false,
+      "description": "是否显示省略号",
+      "default": "true"
+    },
+    {
+      "name": "lines",
+      "type": "number",
+      "required": false,
+      "description": "省略号行数",
+      "default": "1"
+    },
+    {
+      "name": "modelValue",
+      "type": "CascaderValue",
+      "required": false,
+      "description": "双向绑定值",
+      "vModel": true,
+      "default": "undefined"
+    },
+    {
+      "name": "pathMode",
+      "type": "boolean",
+      "required": false,
+      "description": "绑定值是否为路径：开启后单选绑定值数组、多选绑定值数组的数组",
+      "default": "false"
+    },
+    {
+      "name": "defaultValue",
+      "type": "CascaderValue",
+      "required": false,
+      "description": "默认值（非受控状态），仅在未绑定 v-model 时生效",
+      "default": "undefined"
+    },
+    {
+      "name": "error",
+      "type": "boolean",
+      "required": false,
+      "description": "是否为错误状态",
+      "default": "false"
+    },
+    {
+      "name": "allowSearch",
+      "type": "boolean",
+      "required": false,
+      "description": "是否允许搜索。不传时单选为 false、多选为 true",
+      "default": "undefined"
+    },
+    {
+      "name": "allowClear",
+      "type": "boolean",
+      "required": false,
+      "description": "是否允许清除",
+      "default": "false"
+    },
+    {
+      "name": "defaultInputValue",
+      "type": "string",
+      "required": false,
+      "description": "输入框的默认值（非受控状态）",
+      "default": "\"\""
+    },
+    {
+      "name": "expandTrigger",
+      "type": "\"click\" | \"hover\"",
+      "required": false,
+      "description": "展开下一级的触发方式",
+      "default": "\"click\""
+    },
+    {
+      "name": "defaultPopupVisible",
+      "type": "boolean",
+      "required": false,
+      "description": "是否默认显示下拉框（非受控状态）",
+      "default": "false"
+    },
+    {
+      "name": "filterOption",
+      "type": "(inputValue: string, option: CascaderOption) => boolean",
+      "required": false,
+      "description": "自定义选项过滤方法，返回 true 表示保留该选项"
+    },
+    {
+      "name": "popupContainer",
+      "type": "string | HTMLElement",
+      "required": false,
+      "description": "弹出框的挂载容器"
+    },
+    {
+      "name": "maxTagCount",
+      "type": "number",
+      "required": false,
+      "description": "多选模式下，最多显示的标签数量。0 表示不限制",
+      "default": "0"
+    },
+    {
+      "name": "formatLabel",
+      "type": "(options: CascaderOption[]) => string",
+      "required": false,
+      "description": "格式化展示内容，入参是从根到该选项的整条路径"
+    },
+    {
+      "name": "triggerProps",
+      "type": "CascaderTriggerProps",
+      "required": false,
+      "description": "下拉菜单的触发器属性"
+    },
+    {
+      "name": "loadMore",
+      "type": "(option: CascaderOption, done: (children?: CascaderOption[]) => void) => void",
+      "required": false,
+      "description": "数据懒加载函数，传入时开启懒加载功能"
+    },
+    {
+      "name": "loading",
+      "type": "boolean",
+      "required": false,
+      "description": "是否为加载中状态",
+      "default": "false"
+    },
+    {
+      "name": "searchOptionOnlyLabel",
+      "type": "boolean",
+      "required": false,
+      "description": "搜索下拉菜单中的选项是否仅展示标签（关闭时展示整条路径）",
+      "default": "false"
+    },
+    {
+      "name": "searchDelay",
+      "type": "number",
+      "required": false,
+      "description": "触发 search 事件的延迟时间（毫秒）",
+      "default": "500"
+    },
+    {
+      "name": "valueKey",
+      "type": "string",
+      "required": false,
+      "description": "用于确定选项键值的属性名",
+      "default": "\"value\""
+    },
+    {
+      "name": "fallback",
+      "type": "boolean | ((value: CascaderOptionValue | CascaderOptionValue[]) => string)",
+      "required": false,
+      "description": "自定义不存在选项的值的展示",
+      "default": "true"
+    },
+    {
+      "name": "expandChild",
+      "type": "boolean",
+      "required": false,
+      "description": "是否展开子菜单：激活某一项后沿它的第一个可用子项继续展开，直到叶子",
+      "default": "false"
+    },
+    {
+      "name": "virtualListProps",
+      "type": "VirtualListProps",
+      "required": false,
+      "description": "传递虚拟列表属性，传入此参数以开启虚拟滚动"
+    },
+    {
+      "name": "tagNowrap",
+      "type": "boolean",
+      "required": false,
+      "description": "标签内容不换行",
+      "default": "false"
+    },
+    {
+      "name": "variant",
+      "type": "(typeof cascaderVariants)[number]",
+      "required": false,
+      "description": "形态变体：描边 / 填充 / 无边框 / 下划线",
+      "default": "\"outlined\""
+    },
+    {
+      "name": "class",
+      "type": "any",
+      "required": false,
+      "description": "自定义类名"
+    },
+    {
+      "name": "triggerUi",
+      "type": "SelectTriggerProps[\"ui\"] & CascaderFieldUI",
+      "required": false,
+      "description": "触发器 UI 配置：触发器盒子与浮层的键混写在一起，组件内部自动拆分下发"
+    },
+    {
+      "name": "ui",
+      "type": "CascaderUI",
+      "required": false,
+      "description": "下拉面板与多选标签的 UI 微调配置 可用键（从源码抽取，以此为准）——Web：RebornCascader → collapseTag、dropdown、empty、loading、loadingIcon、option、optionActive、optionCheckbox*、optionContent*、optionLabel*、optionList、prefix、searchList、tag、tagClose、tagCloseIcon、tagLabel、tagList、tagSearch、tagSearchInput、tagSearchMirror；RebornCascaderPanel → column、columnDivider、empty、option、optionActive、optionArrow*、optionCheckbox*、optionContent*、optionHighlight、optionLabel*、optionList、optionLoading*、panel、virtualPhantom、virtualWindow。 带 * 的键对应插槽兜底节点：填了同名插槽，组件自带的节点被替换，这个键随之失效。",
+      "platform": "web"
+    },
+    {
+      "name": "inputValue",
+      "type": "string | undefined",
+      "required": false,
+      "description": "双向绑定值",
+      "vModel": true
+    },
+    {
+      "name": "popupVisible",
+      "type": "boolean | undefined",
+      "required": false,
+      "description": "双向绑定值",
+      "vModel": true
+    },
+    {
+      "name": "bordered",
+      "type": "boolean",
+      "required": false,
+      "description": "是否绘制面板外框。嵌进 RebornCascader 浮层时由浮层提供外框，需关掉",
+      "default": "true"
+    }
+  ],
+  "events": [
+    {
+      "name": "change",
+      "payload": "(e: 'change', value: (string | number)[] | (string | number)[][]): void",
+      "description": "选中值改变时触发"
+    },
+    {
+      "name": "update:modelValue",
+      "description": "modelValue 变化时触发（v-model 同步）",
+      "payload": "(value: (string | number)[] | (string | number)[][])"
+    },
+    {
+      "name": "input-value-change",
+      "payload": "(e: \"input-value-change\", value: string): void;",
+      "description": "输入值改变时触发"
+    },
+    {
+      "name": "clear",
+      "payload": "(e: \"clear\"): void;",
+      "description": "点击清除按钮时触发"
+    },
+    {
+      "name": "search",
+      "payload": "(e: \"search\", value: string): void;",
+      "description": "用户搜索时触发，按 search-delay 防抖"
+    },
+    {
+      "name": "popup-visible-change",
+      "payload": "(e: \"popup-visible-change\", visible: boolean): void;",
+      "description": "下拉框的显示状态改变时触发"
+    },
+    {
+      "name": "focus",
+      "payload": "(e: \"focus\", ev: FocusEvent): void;",
+      "description": "获得焦点时触发"
+    },
+    {
+      "name": "blur",
+      "payload": "(e: \"blur\", ev: FocusEvent): void;",
+      "description": "失去焦点时触发"
+    },
+    {
+      "name": "update:inputValue",
+      "description": "inputValue 变化时触发（v-model 同步）"
+    },
+    {
+      "name": "update:popupVisible",
+      "description": "popupVisible 变化时触发（v-model 同步）"
+    },
+    {
+      "name": "select",
+      "payload": "(e: \"select\", value: CascaderOptionValue | CascaderOptionValue[]): void;",
+      "description": "完成一次选中动作时触发，无论绑定值是否真的改变。 载荷是被点选项按 path-mode 折算出的值，RebornCascader 据此决定要不要收起浮层。"
+    }
+  ],
+  "slots": [
+    {
+      "name": "tabs",
+      "description": "顶部已选路径导航标签的内容"
+    },
+    {
+      "name": "item",
+      "description": "选项行的内容"
+    },
+    {
+      "name": "prefix",
+      "description": "前缀元素"
+    },
+    {
+      "name": "label",
+      "description": "选择框的显示内容；多选时逐个标签渲染，`data` 为该标签对应的选项（值不在选项里时为 `null`）"
+    },
+    {
+      "name": "loading-icon",
+      "description": "选择框的加载中图标，`loading` 为真时替换箭头"
+    },
+    {
+      "name": "search-icon",
+      "description": "选择框的搜索图标，搜索态下替换箭头"
+    },
+    {
+      "name": "arrow-icon",
+      "description": "选择框的箭头图标"
+    },
+    {
+      "name": "option",
+      "description": "选项内容，面板与搜索结果共用"
+    },
+    {
+      "name": "empty",
+      "description": "选项为空、或搜索无结果时的显示内容"
+    }
+  ],
+  "exposes": [
+    {
+      "name": "open",
+      "description": "打开底部弹出层（禁用状态下无效）；懒加载模式下首次打开会请求根级选项"
+    },
+    {
+      "name": "close",
+      "description": "关闭底部弹出层；关闭前未确认的浏览/勾选不会提交"
+    },
+    {
+      "name": "clear",
+      "description": "清空选中值与展开路径，并触发 update:modelValue 与 change 事件（空数组）"
+    },
+    {
+      "name": "focus",
+      "description": "让触发器获得焦点"
+    },
+    {
+      "name": "blur",
+      "description": "让触发器失去焦点"
+    },
+    {
+      "name": "syncActivePath",
+      "description": "把展开路径同步到当前选中项"
+    },
+    {
+      "name": "pick",
+      "description": "按节点 key 完成一次选中（多选为切换勾选）"
+    },
+    {
+      "name": "activeNodes",
+      "description": "当前展开路径上的节点，调试与外部联动用"
+    }
+  ],
+  "examples": [
+    {
+      "title": "Web 演示",
+      "path": "app/components/reborn/examples/reborn-cascader/RebornCascaderDemo.vue",
+      "source": "demo",
+      "platform": "web",
+      "code": "<script setup lang=\"ts\">\nimport type { CascaderOption } from \"~/components/reborn/ui/reborn-cascader/reborn-cascader.config\";\nimport { DemoBlock, DemoNote, DemoSection, Icon, Playground } from \"#components\";\nimport { computed, onBeforeUnmount, shallowRef, watch } from \"vue\";\nimport RebornButton from \"~/components/reborn/ui/reborn-button/RebornButton.vue\";\nimport { cascaderColors, cascaderSizes, cascaderVariants } from \"~/components/reborn/ui/reborn-cascader/reborn-cascader.config\";\nimport RebornCascader from \"~/components/reborn/ui/reborn-cascader/RebornCascader.vue\";\nimport RebornCascaderPanel from \"~/components/reborn/ui/reborn-cascader/RebornCascaderPanel.vue\";\nimport RebornRadio from \"~/components/reborn/ui/reborn-radio/RebornRadio.vue\";\nimport RebornRadioGroup from \"~/components/reborn/ui/reborn-radio/RebornRadioGroup.vue\";\n\n/** 三级地区数据，全部 demo 共用 */\nconst options: CascaderOption[] = [\n  {\n    label: \"浙江省\",\n    value: \"zhejiang\",\n    children: [\n      {\n        label: \"杭州市\",\n        value: \"hangzhou\",\n        children: [\n          { label: \"西湖区\", value: \"xihu\" },\n          { label: \"余杭区\", value: \"yuhang\" },\n          { label: \"滨江区\", value: \"binjiang\" },\n        ],\n      },\n      {\n        label: \"宁波市\",\n        value: \"ningbo\",\n        children: [\n          { label: \"海曙区\", value: \"haishu\" },\n          { label: \"江北区\", value: \"jiangbei\" },\n        ],\n      },\n      {\n        label: \"温州市\",\n        value: \"wenzhou\",\n        children: [\n          { label: \"鹿城区\", value: \"lucheng\" },\n          { label: \"瓯海区\", value: \"ouhai\", disabled: true },\n        ],\n      },\n    ],\n  },\n  {\n    label: \"江苏省\",\n    value: \"jiangsu\",\n    children: [\n      {\n        label: \"南京市\",\n        value: \"nanjing\",\n        children: [\n          { label: \"玄武区\", value: \"xuanwu\" },\n          { label: \"秦淮区\", value: \"qinhuai\" },\n        ],\n      },\n      {\n        label: \"苏州市\",\n        value: \"suzhou\",\n        children: [\n          { label: \"姑苏区\", value: \"gusu\" },\n          { label: \"吴中区\", value: \"wuzhong\" },\n        ],\n      },\n    ],\n  },\n  {\n    label: \"上海市\",\n    value: \"shanghai\",\n    children: [\n      { label: \"黄浦区\", value: \"huangpu\" },\n      { label: \"浦东新区\", value: \"pudong\" },\n      { label: \"徐汇区\", value: \"xuhui\" },\n    ],\n  },\n];\n\n// ─── 交互演练场 ─────────────────────────────────────────────────\n\n/** 演练场默认状态 */\nconst defaultState: Record<string, any> = {\n  multiple: false,\n  pathMode: false,\n  checkStrictly: false,\n  expandTrigger: \"click\",\n  expandChild: false,\n  allowSearch: false,\n  allowClear: true,\n  maxTagCount: 0,\n  placeholder: \"请选择地区\",\n  color: \"primary\",\n  size: \"md\",\n  variant: \"outlined\",\n  disabled: false,\n  error: false,\n  loading: false,\n};\n\nconst state = shallowRef<Record<string, any>>({ ...defaultState });\nconst playgroundValue = shallowRef<any>(undefined);\n\n// 值的形态由 multiple / path-mode 共同决定，切换后旧值必然对不上，直接清空\nwatch([() => state.value.multiple, () => state.value.pathMode], () => {\n  playgroundValue.value = state.value.multiple ? [] : undefined;\n});\n\nfunction resetState() {\n  state.value = { ...defaultState };\n  playgroundValue.value = undefined;\n}\n\n/** 演练场控制面板配置 */\nconst controls: any = [\n  {\n    title: \"选择模式\",\n    children: [\n      { label: \"多选（multiple）\", key: \"multiple\", component: \"checkbox\" as const, defaultValue: false },\n      { label: \"绑定值为路径（path-mode）\", key: \"pathMode\", component: \"checkbox\" as const, defaultValue: false },\n      {\n        label: \"严格选择（check-strictly）\",\n        key: \"checkStrictly\",\n        component: \"checkbox\" as const,\n        defaultValue: false,\n      },\n      {\n        label: \"展开方式（expand-trigger）\",\n        key: \"expandTrigger\",\n        component: \"select\" as const,\n        defaultValue: \"click\",\n        props: {\n          options: [\n            { label: \"点击 click\", value: \"click\" },\n            { label: \"悬停 hover\", value: \"hover\" },\n          ],\n        },\n      },\n      {\n        label: \"自动展开子菜单（expand-child）\",\n        key: \"expandChild\",\n        component: \"checkbox\" as const,\n        defaultValue: false,\n      },\n    ],\n  },\n  {\n    title: \"输入与标签\",\n    children: [\n      { label: \"允许搜索（allow-search）\", key: \"allowSearch\", component: \"checkbox\" as const, defaultValue: false },\n      { label: \"允许清除（allow-clear）\", key: \"allowClear\", component: \"checkbox\" as const, defaultValue: true },\n      {\n        label: \"最多显示标签数（max-tag-count，0 为不限制）\",\n        key: \"maxTagCount\",\n        component: \"input-number\" as const,\n        defaultValue: 0,\n        props: { min: 0, max: 6 },\n      },\n      { label: \"占位文字（placeholder）\", key: \"placeholder\", component: \"input\" as const, defaultValue: \"请选择地区\" },\n    ],\n  },\n  {\n    title: \"外观与状态\",\n    children: [\n      {\n        label: \"配色方案\",\n        key: \"color\",\n        component: \"select\" as const,\n        defaultValue: \"primary\",\n        props: { options: cascaderColors.map((c) => ({ label: c, value: c })) },\n      },\n      {\n        label: \"尺寸规格\",\n        key: \"size\",\n        component: \"select\" as const,\n        defaultValue: \"md\",\n        props: { options: cascaderSizes.map((s) => ({ label: s.toUpperCase(), value: s })) },\n      },\n      {\n        label: \"形态变体\",\n        key: \"variant\",\n        component: \"select\" as const,\n        defaultValue: \"outlined\",\n        props: { options: cascaderVariants.map((v) => ({ label: v, value: v })) },\n      },\n      { label: \"禁用状态\", key: \"disabled\", component: \"checkbox\" as const, defaultValue: false },\n      { label: \"错误状态\", key: \"error\", component: \"checkbox\" as const, defaultValue: false },\n      { label: \"加载状态\", key: \"loading\", component: \"checkbox\" as const, defaultValue: false },\n    ],\n  },\n];\n\n/** 演练场右上角的传参明细里补上 options（placeholder 已随控件自动生成） */\nconst codeExtras = [`  :options=\"options\"`];\n\n/** 演练场当前选中值的可读回显 */\nconst playgroundText = computed(() => {\n  const value = playgroundValue.value;\n  if (value === undefined || (Array.isArray(value) && value.length === 0)) return \"未选择\";\n  return JSON.stringify(value);\n});\n\n// ─── 场景演示状态 ───────────────────────────────────────────────\n\n/** 基础用法：值模式只存最末一级的值 */\nconst basicValue = shallowRef<any>(\"jiangbei\");\n/** 基础用法：路径模式存整条路径 */\nconst pathValue = shallowRef<any>([\"zhejiang\", \"ningbo\", \"jiangbei\"]);\n/** 最近一次 change 的回显 */\nconst lastChange = shallowRef(\"\");\n\n/** 展开方式：悬停展开 */\nconst hoverValue = shallowRef<any>(undefined);\n/** 自动展开到最深一级 */\nconst expandChildValue = shallowRef<any>(undefined);\n/** 可选任意层级 */\nconst strictValue = shallowRef<any>(\"hangzhou\");\n\n/** 多选：父子关联，绑定值落在叶子上 */\nconst multipleValue = shallowRef<any[]>([\"xihu\", \"yuhang\"]);\n/** 多选：父子不关联，各级独立勾选 */\nconst multipleStrictValue = shallowRef<any[]>([\"hangzhou\", \"xihu\"]);\n\n/** 自定义标签：单选触发器的回显内容 */\nconst labelValue = shallowRef<any>(\"xihu\");\n/** 自定义标签：多选的每个标签 */\nconst labelTagsValue = shallowRef<any[]>([\"xihu\", \"yuhang\"]);\n\n/** 搜索：整条路径参与匹配 */\nconst searchValue = shallowRef<any>(undefined);\n/** 搜索：只展示该级文本 */\nconst searchLabelOnlyValue = shallowRef<any>(undefined);\n/** 搜索关键词，受控展示 */\nconst keyword = shallowRef(\"\");\n\n/** 异步加载的数据源：done 回传的子节点由组件内部缓存，不改写这里的数据；替换这个数组会清空已加载的下级 */\nconst lazyOptions: CascaderOption[] = [\n  { label: \"浙江省\", value: \"zhejiang\", isLeaf: false },\n  { label: \"江苏省\", value: \"jiangsu\", isLeaf: false },\n];\nconst lazyValue = shallowRef<any>(undefined);\n\n/** 并发模拟请求各自保存句柄，卸载时统一取消。 */\nconst loadTimers = new Set<ReturnType<typeof setTimeout>>();\nonBeforeUnmount(() => {\n  loadTimers.forEach((timer) => clearTimeout(timer));\n  loadTimers.clear();\n});\n\n/** 模拟请求：第二级返回城市，第三级返回区县 */\nfunction loadMore(option: CascaderOption, done: (children?: CascaderOption[]) => void) {\n  const timer = setTimeout(() => {\n    loadTimers.delete(timer);\n    if (option.value === \"zhejiang\") {\n      done([\n        { label: \"杭州市\", value: \"hangzhou\", isLeaf: false },\n        { label: \"宁波市\", value: \"ningbo\", isLeaf: false },\n      ]);\n      return;\n    }\n    if (option.value === \"jiangsu\") {\n      done([{ label: \"南京市\", value: \"nanjing\", isLeaf: false }]);\n      return;\n    }\n    done([\n      { label: `${option.label}·城区`, value: `${option.value}-city`, isLeaf: true },\n      { label: `${option.label}·郊区`, value: `${option.value}-suburb`, isLeaf: true },\n    ]);\n  }, 600);\n  loadTimers.add(timer);\n}\n\n/** 尺寸、形态与状态：分段按钮选中的尺寸 */\nconst sectionSize = shallowRef<(typeof cascaderSizes)[number]>(\"md\");\n/** 尺寸、形态与状态：分段按钮选中的形态 */\nconst sectionVariant = shallowRef<(typeof cascaderVariants)[number]>(\"outlined\");\n\n/** 独立面板的绑定值 */\nconst panelValue = shallowRef<any>(\"xihu\");\n\nfunction onChange(value: any) {\n  lastChange.value = value === undefined ? \"未选择\" : JSON.stringify(value);\n}\n</script>\n\n<template>\n  <div class=\"flex w-full min-w-0 flex-col\">\n    <Playground\n      v-model=\"state\"\n      :controls=\"controls\"\n      :code-extras=\"codeExtras\"\n      component-name=\"RebornCascader\"\n      title=\"交互演练场\"\n      description=\"调节上方参数，实时查看级联选择器的表现。\"\n    >\n      <template #tag>\n        <RebornButton size=\"sm\" variant=\"soft\" color=\"neutral\" @click=\"resetState\">\n          <template #leading>\n            <Icon name=\"lucide:rotate-ccw\" size=\"12\" />\n          </template>\n          重置配置\n        </RebornButton>\n      </template>\n\n      <div class=\"flex w-full max-w-[360px] flex-col gap-3\">\n        <RebornCascader\n          v-model=\"playgroundValue\"\n          :options=\"options\"\n          :multiple=\"state.multiple\"\n          :path-mode=\"state.pathMode\"\n          :check-strictly=\"state.checkStrictly\"\n          :expand-trigger=\"state.expandTrigger\"\n          :expand-child=\"state.expandChild\"\n          :allow-search=\"state.allowSearch\"\n          :allow-clear=\"state.allowClear\"\n          :max-tag-count=\"state.maxTagCount\"\n          :color=\"state.color\"\n          :size=\"state.size\"\n          :variant=\"state.variant\"\n          :disabled=\"state.disabled\"\n          :error=\"state.error\"\n          :loading=\"state.loading\"\n          :placeholder=\"state.placeholder\"\n        />\n        <DemoNote tone=\"dimmed\">当前值：{{ playgroundText }}</DemoNote>\n      </div>\n    </Playground>\n\n    <DemoSection\n      title=\"基础用法\"\n      description=\"默认绑定最末一级选项的值；开启 path-mode 后绑定值变成从根到叶的整条路径。\"\n    >\n      <DemoBlock layout=\"stack\">\n        <RebornCascader\n          v-model=\"basicValue\"\n          :options=\"options\"\n          placeholder=\"请选择地区\"\n          allow-clear\n          @change=\"onChange\"\n        />\n        <RebornCascader v-model=\"pathValue\" :options=\"options\" path-mode placeholder=\"路径模式\" allow-clear />\n        <DemoNote tone=\"dimmed\">\n          值模式：{{ JSON.stringify(basicValue) }} · 路径模式：{{ JSON.stringify(pathValue) }}\n          {{ lastChange ? ` · 最近一次 change：${lastChange}` : \"\" }}\n        </DemoNote>\n      </DemoBlock>\n    </DemoSection>\n\n    <DemoSection\n      title=\"展开方式与可选层级\"\n      description=\"expand-trigger 决定下一级是点开还是悬停展开；check-strictly 放开「只能选叶子」的限制，非叶子节点点一下即选中、同时继续展开。\"\n    >\n      <DemoBlock layout=\"stack\">\n        <RebornCascader v-model=\"hoverValue\" :options=\"options\" expand-trigger=\"hover\" placeholder=\"悬停展开下一级\" />\n        <RebornCascader v-model=\"strictValue\" :options=\"options\" check-strictly placeholder=\"任意层级都可选中\" />\n        <RebornCascader v-model=\"expandChildValue\" :options=\"options\" expand-child placeholder=\"自动展开到最深一级\" />\n      </DemoBlock>\n    </DemoSection>\n\n    <DemoSection\n      title=\"多选与父子关联\"\n      description=\"多选在选项前渲染 RebornCheckbox。默认父子关联：勾父节点会写入它名下全部叶子，只勾一部分时父节点显示半选；开启 check-strictly 后各级独立勾选，也就不再有半选。\"\n    >\n      <DemoBlock layout=\"stack\">\n        <RebornCascader v-model=\"multipleValue\" :options=\"options\" multiple allow-clear placeholder=\"父子关联\" />\n        <RebornCascader\n          v-model=\"multipleStrictValue\"\n          :options=\"options\"\n          multiple\n          check-strictly\n          allow-clear\n          placeholder=\"父子不关联\"\n        />\n        <RebornCascader\n          v-model=\"multipleValue\"\n          :options=\"options\"\n          multiple\n          :max-tag-count=\"2\"\n          placeholder=\"最多显示 2 个标签\"\n        />\n        <DemoNote tone=\"dimmed\">\n          关联模式：{{ JSON.stringify(multipleValue) }} · 严格模式：{{ JSON.stringify(multipleStrictValue) }}\n        </DemoNote>\n      </DemoBlock>\n    </DemoSection>\n\n    <DemoSection\n      title=\"回显插槽：label\"\n      description=\"label 插槽接管触发器的回显内容：单选替换整段回显文本，多选逐个标签渲染。插槽参数 data 是命中的选项对象，值不在选项里（如懒加载未到达的层级）时为 null，自定义渲染要自己兜底。\"\n    >\n      <DemoBlock layout=\"stack\">\n        <!-- 单选：默认回显整条路径，插槽里只取该级文本并配图标 -->\n        <RebornCascader v-model=\"labelValue\" :options=\"options\" placeholder=\"自定义回显内容\">\n          <template #label=\"{ data }\">\n            <span class=\"flex items-center gap-1\">\n              <Icon name=\"lucide:map-pin\" size=\"14\" />\n              {{ data?.label ?? \"未知选项\" }}\n            </span>\n          </template>\n        </RebornCascader>\n        <!-- 多选：每个标签都会走一遍插槽 -->\n        <RebornCascader v-model=\"labelTagsValue\" :options=\"options\" multiple allow-clear placeholder=\"自定义多选标签\">\n          <template #label=\"{ data }\">\n            <span class=\"flex items-center gap-1\">\n              <Icon name=\"lucide:map-pin\" size=\"12\" />\n              {{ data?.label ?? \"未知选项\" }}\n            </span>\n          </template>\n        </RebornCascader>\n      </DemoBlock>\n    </DemoSection>\n\n    <DemoSection\n      title=\"搜索与结果展示\"\n      description=\"allow-search 把触发器变成输入框，命中的选项拍平成一列；多选默认已开启。search-option-only-label 只显示选项自身文本，不显示整条路径。\"\n    >\n      <DemoBlock layout=\"stack\">\n        <RebornCascader\n          v-model=\"searchValue\"\n          v-model:input-value=\"keyword\"\n          :options=\"options\"\n          allow-search\n          allow-clear\n          placeholder=\"输入区县名试试\"\n        >\n          <template #empty>\n            <span class=\"max-w-full break-words px-3 text-center\">未找到匹配地区，请更换关键词</span>\n          </template>\n        </RebornCascader>\n        <RebornCascader\n          v-model=\"searchLabelOnlyValue\"\n          :options=\"options\"\n          allow-search\n          search-option-only-label\n          placeholder=\"搜索结果只显示该级文本\"\n        />\n        <DemoNote tone=\"dimmed\">当前关键词：{{ keyword || \"（空）\" }}；无匹配结果时通过 <code>empty</code> 插槽自定义提示，面板与触发器等宽。</DemoNote>\n      </DemoBlock>\n    </DemoSection>\n\n    <DemoSection\n      title=\"异步加载：load-more\"\n      description=\"传入 load-more 即开启懒加载：展开非叶子节点时调用它，done 回传的子节点保存在组件内部，不会写回 options。数据未标 isLeaf 时组件无从判断能否继续展开，必须自己标。\"\n    >\n      <DemoBlock layout=\"stack\">\n        <RebornCascader\n          v-model=\"lazyValue\"\n          :options=\"lazyOptions\"\n          :load-more=\"loadMore\"\n          allow-clear\n          placeholder=\"展开后异步取下一级\"\n        />\n        <DemoNote tone=\"dimmed\">当前值：{{ lazyValue ?? \"未选择\" }}</DemoNote>\n      </DemoBlock>\n    </DemoSection>\n\n    <DemoSection\n      title=\"尺寸、形态与状态\"\n      description=\"尺寸与形态和 reborn-select 共用同一套档位；error 画红框，disabled 锁交互，loading 把箭头换成转圈并把面板改成加载态。\"\n    >\n      <DemoBlock layout=\"stack\" class=\"gap-4\">\n        <div class=\"flex flex-wrap items-center gap-3\">\n          <span class=\"text-dimmed w-8 shrink-0 text-xs\">尺寸</span>\n          <RebornRadioGroup v-model=\"sectionSize\" type=\"button\">\n            <RebornRadio v-for=\"s in cascaderSizes\" :key=\"s\" :value=\"s\">\n              {{ s }}\n            </RebornRadio>\n          </RebornRadioGroup>\n        </div>\n        <div class=\"flex flex-wrap items-center gap-3\">\n          <span class=\"text-dimmed w-8 shrink-0 text-xs\">形态</span>\n          <RebornRadioGroup v-model=\"sectionVariant\" type=\"button\">\n            <RebornRadio v-for=\"v in cascaderVariants\" :key=\"v\" :value=\"v\">\n              {{ v }}\n            </RebornRadio>\n          </RebornRadioGroup>\n        </div>\n        <div class=\"grid w-full grid-cols-1 gap-3 sm:grid-cols-2\">\n          <RebornCascader :options=\"options\" :size=\"sectionSize\" :variant=\"sectionVariant\" placeholder=\"默认状态\" />\n          <RebornCascader :options=\"options\" :size=\"sectionSize\" :variant=\"sectionVariant\" error placeholder=\"错误状态\" />\n          <RebornCascader :options=\"options\" :size=\"sectionSize\" :variant=\"sectionVariant\" disabled placeholder=\"禁用状态\" />\n          <RebornCascader :options=\"options\" :size=\"sectionSize\" :variant=\"sectionVariant\" loading placeholder=\"加载中\" />\n        </div>\n      </DemoBlock>\n    </DemoSection>\n\n    <DemoSection\n      title=\"独立面板：RebornCascaderPanel\"\n      description=\"RebornCascaderPanel 就是下拉里的那块面板，可以直接放进页面当常驻控件用；bordered 决定它自带不自带外框。\"\n    >\n      <DemoBlock layout=\"stack\">\n        <RebornCascaderPanel v-model=\"panelValue\" :options=\"options\" />\n        <DemoNote tone=\"dimmed\">当前值：{{ panelValue ?? \"未选择\" }}</DemoNote>\n      </DemoBlock>\n    </DemoSection>\n  </div>\n</template>\n"
+    },
+    {
+      "title": "UniApp 演示",
+      "path": "packages/uniapp-project/src/pages/reborn-cascader/RebornCascaderDemo.vue",
+      "source": "demo",
+      "platform": "uniapp",
+      "code": "<script setup lang=\"ts\">\nimport type { CascaderOption } from '@/components/reborn-cascader/reborn-cascader.config'\nimport { onUnload } from '@dcloudio/uni-app'\nimport { ref, shallowRef } from 'vue'\nimport RebornPage from '@/components/reborn-page/RebornPage.vue'\nimport RebornCard from '@/components/reborn-card/RebornCard.vue'\n\nimport RebornText from '@/components/reborn-text/RebornText.vue'\nimport RebornRadio from '@/components/reborn-radio/RebornRadio.vue'\nimport RebornRadioGroup from '@/components/reborn-radio/RebornRadioGroup.vue'\nimport RebornButton from '@/components/reborn-button/RebornButton.vue'\nimport RebornCascader from '@/components/reborn-cascader/RebornCascader.vue'\nimport { CascaderSizes, CascaderColors } from '@/components/reborn-cascader/reborn-cascader.config'\n\n\nconst currentSize = shallowRef(CascaderSizes[0])\nconst currentColor = shallowRef(CascaderColors[0])\n\nconst value1 = ref<any[]>([])\nconst value2 = ref<any[]>(['110000', '110101'])\nconst value3 = ref<any[]>([])\nconst heightValue = ref<(string | number)[]>([])\n\nconst options = [\n    {\n        label: '北京市',\n        value: '110000',\n        children: [\n            { label: '东城区', value: '110101' },\n            { label: '西城区', value: '110102' },\n            { label: '朝阳区', value: '110105' },\n            { label: '丰台区', value: '110106' },\n        ]\n    },\n    {\n        label: '上海市',\n        value: '310000',\n        children: [\n            { label: '黄浦区', value: '310101' },\n            { label: '徐汇区', value: '310104' },\n            { label: '长宁区', value: '310105' },\n        ]\n    },\n    {\n        label: '广东省',\n        value: '440000',\n        children: [\n            {\n                label: '广州市',\n                value: '440100',\n                children: [\n                    { label: '越秀区', value: '440104' },\n                    { label: '荔湾区', value: '440103' },\n                    { label: '天河区', value: '440106', children: [{ label: '街道', value: '4401061' }] },\n                ]\n            },\n            {\n                label: '深圳市',\n                value: '440300',\n                children: [\n                    { label: '罗湖区', value: '440303' },\n                    { label: '福田区', value: '440304' },\n                    { label: '南山区', value: '440305' },\n                ]\n            }\n        ]\n    }\n]\n\nconst cascaderRef = ref<InstanceType<typeof RebornCascader> | null>(null)\nconst openExternal = () => {\n    cascaderRef.value?.open()\n}\n\nconst onChange = (val: unknown) => {\n    uni.showToast({ title: `已选：${JSON.stringify(val)}`, icon: 'none' })\n}\n\nconst valueMultiple = ref<(string | number)[][]>([])\nconst valueLazy = ref<(string | number)[]>([])\nconst valueLeaf = ref<(string | number)[]>([])\n// 严格选择模式：单选可停在任意层级，多选父子勾选互不关联\nconst valueStrict = ref<(string | number)[]>([])\nconst valueStrictMultiple = ref<(string | number)[][]>([])\n\nconst loadTimers = new Set<ReturnType<typeof setTimeout>>()\nonUnload(() => loadTimers.forEach(timer => clearTimeout(timer)))\nconst lazyLoad = (node: CascaderOption, resolve: (children: CascaderOption[]) => void) => {\n    const { value, isRoot } = node\n    const timer = setTimeout(() => {\n        loadTimers.delete(timer)\n        if (isRoot) {\n            resolve([\n                { label: '北京市', value: '110000' },\n                { label: '上海市', value: '310000' },\n                { label: '广东省', value: '440000' },\n            ])\n            return\n        }\n        // 模拟接口用路径层级决定叶子，同一节点不受其他加载请求影响。\n        const leaf = String(value).split('-').length >= 2\n        const children = [\n            { label: `动态节点 ${value}-1`, value: `${value}-1`, leaf },\n            { label: `动态节点 ${value}-2`, value: `${value}-2`, leaf },\n        ]\n        resolve(children)\n    }, 1000)\n    loadTimers.add(timer)\n}\n</script>\n\n<template>\n    <RebornPage title=\"Cascader 级联选择器\" description=\"多层级的数据选择，通常用于省市区、分类导航等场景。\">\n        <RebornCard title=\"基础用法\">\n            <RebornCascader v-model=\"value1\" :options=\"options\" placeholder=\"请选择省市区\" @change=\"onChange\"\n                :size=\"currentSize\" :color=\"currentColor\">\n                <template #tabs=\"{ label, index, current }\">\n                    <view class=\"text-24\"\n                        :class=\"index === current ? 'text-primary relative after:absolute after:-bottom-2 after:left-0 after:w-full after:h-1 after:bg-primary' : 'text-gray-500'\">\n                        {{ label }}\n                    </view>\n                </template>\n            </RebornCascader>\n            <view class=\"mt-4 text-[24rpx] text-gray-500\">\n                当前选中值: {{ JSON.stringify(value1) }}\n            </view>\n        </RebornCard>\n\n        <RebornCard title=\"初始值\">\n            <RebornCascader v-model=\"value2\" :options=\"options\" :size=\"currentSize\" :color=\"currentColor\" />\n        </RebornCard>\n        <RebornCard title=\"配置\">\n            <RebornText color=\"neutral\">\n                尺寸：\n            </RebornText>\n            <RebornRadioGroup v-model=\"currentSize\">\n                <RebornRadio v-for=\"s in CascaderSizes\" :key=\"s\" :value=\"s\">\n                    {{ s }}\n                </RebornRadio>\n            </RebornRadioGroup>\n            <RebornText color=\"neutral\">\n                按钮颜色：\n            </RebornText>\n            <RebornRadioGroup v-model=\"currentColor\">\n                <RebornRadio v-for=\"item in CascaderColors\" :key=\"item\" :value=\"item\">\n                    <!-- radio 插槽完全接管渲染，做成纯色板选择 -->\n                    <template #radio=\"{ checked }\">\n                        <view class=\"relative flex size-[40rpx]\">\n                            <view v-if=\"checked\"\n                                class=\"absolute inline-flex h-full w-full animate-ping rounded-full opacity-75\"\n                                :class=\"`bg-${item}`\">\n                            </view>\n                            <view class=\"relative inline-flex size-[40rpx] rounded-full\" :class=\"`bg-${item}`\"></view>\n                        </view>\n                    </template>\n                </RebornRadio>\n            </RebornRadioGroup>\n        </RebornCard>\n\n\n        <RebornCard title=\"外部控制\">\n            <view class=\"flex flex-col gap-4\">\n                <RebornButton @click=\"openExternal\">手动打开</RebornButton>\n                <RebornCascader ref=\"cascaderRef\" v-model=\"value3\" :options=\"options\" :show-trigger=\"false\" />\n                <view class=\"text-[24rpx] text-gray-500\">\n                    通过 ref 调用 open() 方法控制。\n                </view>\n            </view>\n        </RebornCard>\n\n        <RebornCard title=\"多选模式\">\n            <RebornCascader v-model=\"valueMultiple\" :options=\"options\" multiple placeholder=\"支持多选\" />\n            <view class=\"mt-4 text-[24rpx] text-gray-500\">\n                已选路径数量: {{ valueMultiple.length }}\n            </view>\n        </RebornCard>\n\n        <RebornCard title=\"严格选择模式\">\n            <view class=\"flex flex-col gap-4\">\n                <RebornCascader v-model=\"valueStrict\" :options=\"options\" check-strictly placeholder=\"任意层级都可选中\" />\n                <RebornCascader v-model=\"valueStrictMultiple\" :options=\"options\" multiple check-strictly\n                    placeholder=\"父子勾选互不关联\" />\n                <view class=\"text-[24rpx] text-gray-500\">\n                    开启 check-strictly 后单选点任意节点即选中（叶子才收起弹窗）；多选各级独立勾选，勾父节点不再写入整棵子树的叶子。\n                    当前单选值: {{ JSON.stringify(valueStrict) }}\n                </view>\n            </view>\n        </RebornCard>\n\n        <RebornCard title=\"懒加载 (动态加载)\">\n            <RebornCascader v-model=\"valueLazy\" :lazy=\"true\" :lazy-load=\"lazyLoad\" placeholder=\"点击加载子节点\" />\n        </RebornCard>\n\n        <RebornCard title=\"层级限制 (leafLevel=2)\">\n            <RebornCascader v-model=\"valueLeaf\" :options=\"options\" :leafLevel=\"2\" placeholder=\"只能选到第二级\" />\n        </RebornCard>\n\n        <RebornCard title=\"自定义高度\">\n            <RebornCascader v-model=\"heightValue\" :options=\"options\" :height=\"400\" placeholder=\"较矮的选择页\" />\n        </RebornCard>\n    </RebornPage>\n</template>\n"
+    }
+  ],
+  "related": [
+    "reborn-badge",
+    "reborn-button",
+    "reborn-checkbox",
+    "reborn-loading",
+    "reborn-popup",
+    "reborn-select",
+    "reborn-select-trigger",
+    "reborn-text",
+    "reborn-tooltip"
+  ],
+  "whenToUse": [
+    "省市区、组织架构等多级联动选择，用 options 传树形数据。",
+    "需要一次选多个分支，且勾父节点等于勾下面全部叶子：开 multiple，保持 check-strictly 关闭。",
+    "需要允许选中中间层级（如「选到市即可」）：开 check-strictly。",
+    "层级深、用户更习惯搜索：开 allow-search，命中的选项拍平成一列。",
+    "下级数据按需请求：传 load-more，并在数据里标好 isLeaf。"
+  ],
+  "whenNotToUse": [
+    "单层扁平选项选择，改用 reborn-select。",
+    "需要展示整棵树并任意展开收起、跨层级勾选，改用 reborn-tree-select。",
+    "uniapp 端的滚动列选择交互，可改用 reborn-picker-view。"
+  ],
+  "pitfalls": [
+    "Web 与 UniApp 的 API 尚未对齐：Web 端已换成 path-mode / multiple / check-strictly / load-more 等新参数集，UniApp 端仍是 textSeparator / lazy / leafLevel 等旧参数集，同一份业务代码不能两端直接复用；字段映射两端都只认 fieldNames。",
+    "Web 端绑定值默认是选中那一项的 value，开 path-mode 才是整条路径；多选则是它们组成的数组。",
+    "值按「类型 + 值」严格比对，数字 1 匹配不上字符串 '1'；对象值只比对 value-key 指定的属性。匹配不上的值交给 fallback 兜底展示，不会消失。",
+    "多选且父子关联时，绑定值里只会出现叶子；需要拿到父节点本身请开 check-strictly。",
+    "子树里有禁用且未勾选的叶子时，父节点会一直停在半选——勾选联动只写未禁用的叶子。",
+    "懒加载必须标 isLeaf；done(children) 保存在内部缓存，不修改 options，冻结对象也可使用。替换 options 数组、改变 valueKey 或 fieldNames 的取值、开关懒加载才会清空缓存并使旧回调失效；fieldNames 按取值比较、loadMore 只看有无，内联写法下父级重渲染不会丢失已加载的下级。",
+    "RebornCascaderPanel 是浮层里那块面板的独立版本，可单独放进页面；它默认自带外框（bordered），被 RebornCascader 内嵌时会关掉。",
+    "virtual-list-props 要求每项等高，改了 ui.option 的字号或内边距必须同步改 height。",
+    "Web 端显式传入 undefined/null 会清空对应模型，不回落旧内部选择；三个模型受控时严格只认父值，只传值不接更新事件或拒收时交互只派发事件、显示保持父值；style/id/aria/data 属性透传到触发器根节点。",
+    "Web 搜索结果随关键词或 options 改变时，真实滚动位置与虚拟窗口一同回到顶部；虚拟行盒高为 virtualListProps.height，行间不另加间距。"
+  ],
+  "dependencies": [
+    "@weapp-tailwindcss/merge-v3",
+    "@weapp-tailwindcss/variants-v3",
+    "clsx",
+    "tailwind-merge",
+    "tailwind-variants"
+  ],
+  "install": {
+    "cli": "npx reborn-ui@latest add reborn-cascader"
+  },
+  "sourceRefs": {
+    "web": [
+      "app/components/reborn/ui/reborn-cascader/RebornCascader.vue",
+      "app/components/reborn/ui/reborn-cascader/RebornCascaderPanel.vue",
+      "app/components/reborn/ui/reborn-cascader/index.ts",
+      "app/components/reborn/ui/reborn-cascader/reborn-cascader.config.ts",
+      "app/components/reborn/ui/reborn-cascader/reborn-cascader.context.ts",
+      "app/components/reborn/ui/reborn-cascader/reborn-cascader.tree.ts"
+    ],
+    "uniapp": [
+      "packages/uniapp-project/src/components/reborn-cascader/RebornCascader.vue",
+      "packages/uniapp-project/src/components/reborn-cascader/reborn-cascader.config.ts"
+    ]
+  },
+  "docPath": "content/2.components/input-and-forms/reborn-cascader.md",
+  "_meta": {
+    "contentHash": "325abb58adae38abde06513b0a5b44e497145125",
+    "hasOverride": true,
+    "extractors": {
+      "web": "ok",
+      "uniapp": "ok",
+      "docs": "found"
+    }
+  }
+}

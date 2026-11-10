@@ -1,0 +1,154 @@
+{
+  "$schema": "../schema/component.schema.json",
+  "id": "color-picker",
+  "title": "ColorPicker 取色器",
+  "description": "用于弹层中选取颜色的取色器组件，支持 hex/hsl/rgb 等格式与预设色板。",
+  "category": "form",
+  "tags": [
+    "css",
+    "tailwind",
+    "input",
+    "color-picker",
+    "uplusion23"
+  ],
+  "aliases": [],
+  "platforms": [
+    "web"
+  ],
+  "props": [
+    {
+      "name": "value",
+      "type": "`#${string}` | HsvaColor | HslaColor | RgbaColor",
+      "required": false,
+      "description": "当前颜色值，支持多种格式。",
+      "default": "undefined"
+    },
+    {
+      "name": "type",
+      "type": "\"hsl\" | \"hsla\" | \"rgb\" | \"rgba\" | \"hex\"",
+      "required": false,
+      "description": "输入区显示的颜色格式；之后修改会同步到面板，用户仍可在面板内切换。",
+      "default": "\"hsl\""
+    },
+    {
+      "name": "swatches",
+      "type": "HexColor[]",
+      "required": false,
+      "description": "预设色板数组。",
+      "default": "() => []"
+    },
+    {
+      "name": "hideContrastRatio",
+      "type": "boolean",
+      "required": false,
+      "description": "隐藏无障碍对比度区域。",
+      "default": "false"
+    },
+    {
+      "name": "hideDefaultSwatches",
+      "type": "boolean",
+      "required": false,
+      "description": "隐藏默认色板，`swatches` 传入的自定义色板照常显示。",
+      "default": "false"
+    },
+    {
+      "name": "class",
+      "type": "string",
+      "required": false,
+      "description": "用于弹出内容的额外 CSS 类。",
+      "default": "\"\""
+    },
+    {
+      "name": "open",
+      "type": "boolean",
+      "required": false,
+      "description": "双向绑定值",
+      "vModel": true,
+      "default": "undefined"
+    },
+    {
+      "name": "color",
+      "type": "HsvaColor",
+      "required": true,
+      "description": "用于计算无障碍对比度的当前颜色（HSVA 对象），变化时自动重新计算 AA/AAA 达标状态",
+      "default": "必填"
+    },
+    {
+      "name": "label",
+      "type": "\"hsl\" | \"hsla\" | \"rgb\" | \"rgba\"",
+      "required": true,
+      "description": "数字输入组的颜色格式：hsl/hsla 显示 H/S/L 通道，rgb/rgba 显示 R/G/B 通道；带 a 的格式追加透明度输入（0-100）",
+      "default": "必填"
+    }
+  ],
+  "events": [
+    {
+      "name": "value-change",
+      "payload": "[value: ColorPickerValue]",
+      "description": "当所选颜色变化时触发；HEX 输入框只在凑够 6 / 8 位合法十六进制时触发。"
+    },
+    {
+      "name": "update:open",
+      "description": "open 变化时触发（v-model 同步）",
+      "payload": "(value: boolean) => void"
+    }
+  ],
+  "slots": [
+    {
+      "name": "default",
+      "description": "触发器内容（如一个按钮），点击后切换弹层开关；组件自身不渲染默认触发器，必须提供。"
+    }
+  ],
+  "exposes": [],
+  "examples": [
+    {
+      "title": "Web 演示",
+      "path": "app/components/reborn/examples/color-picker/ColorPickerDemo.vue",
+      "source": "demo",
+      "platform": "web",
+      "code": "<script setup lang=\"ts\">\nimport type { ColorPickerValue } from \"~/components/reborn/ui/color-picker\";\n\n/** 当前色值：组件同时输出 hex / hsl / hsla / rgb / rgba 五种格式 */\nconst color = shallowRef<ColorPickerValue>({\n  hex: \"#A35fFF\",\n  hsl: { h: 265.5, s: 100, l: 67, a: 1 },\n  hsla: { h: 265.5, s: 100, l: 67, a: 1 },\n  rgb: { r: 163, g: 95, b: 255, a: 1 },\n  rgba: { r: 163, g: 95, b: 255, a: 1 },\n});\n\nfunction setColor(newColor: ColorPickerValue) {\n  color.value = newColor;\n}\n\n/** 触发器上的实心色块背景 */\nconst swatchStyle = computed(() => ({\n  backgroundColor: `rgba(${color.value.rgb.r}, ${color.value.rgb.g}, ${color.value.rgb.b}, ${color.value.rgb.a})`,\n}));\n\n/** 便于阅读的取整输出 */\nconst readableValue = computed(() => {\n  const { hex, hsl, rgb } = color.value;\n\n  return {\n    hex,\n    hsl: { h: Math.round(hsl.h), s: Math.round(hsl.s), l: Math.round(hsl.l) },\n    hsla: { h: Math.round(hsl.h), s: Math.round(hsl.s), l: Math.round(hsl.l), a: hsl.a },\n    rgb: { r: Math.round(rgb.r), g: Math.round(rgb.g), b: Math.round(rgb.b) },\n    rgba: { r: Math.round(rgb.r), g: Math.round(rgb.g), b: Math.round(rgb.b), a: rgb.a },\n  };\n});\n</script>\n\n<template>\n  <div class=\"flex w-full min-w-0 flex-col\">\n    <DemoSection\n      title=\"基础用法\"\n      description=\"默认插槽即触发器，面板自带表面样式；swatches 提供一排快捷色，value-change 在拖拽过程中持续触发。\"\n    >\n      <DemoBlock\n        layout=\"row\"\n        align=\"center\"\n      >\n        <ColorPicker\n          value=\"#A35fFF\"\n          type=\"hsla\"\n          :swatches=\"['#AEDEAE', '#FFD3B6', '#FFB6B9', '#FFC0CB', '#FFD1DC']\"\n          @value-change=\"setColor\"\n        >\n          <RebornButton\n            variant=\"outlined\"\n            color=\"neutral\"\n            label=\"选择颜色\"\n          >\n            <template #leading>\n              <span\n                class=\"border-default rounded-sm size-4 border\"\n                :style=\"swatchStyle\"\n              />\n            </template>\n            <template #trailing>\n              <Icon name=\"lucide:chevron-down\" />\n            </template>\n          </RebornButton>\n        </ColorPicker>\n      </DemoBlock>\n    </DemoSection>\n\n    <DemoSection\n      title=\"输出格式\"\n      description=\"每次变更都会回传完整的色值对象，可按业务需要取用其中任意一种表示。\"\n    >\n      <pre class=\"border-default rounded-lg text-muted max-h-96 overflow-auto border p-4 font-mono text-xs leading-relaxed\">{{ JSON.stringify(readableValue, null, 2) }}</pre>\n    </DemoSection>\n  </div>\n</template>\n"
+    }
+  ],
+  "related": [
+    "reborn-badge"
+  ],
+  "whenToUse": [
+    "主题色、自定义外观等需要精确取色的设置项。",
+    "需要通过 swatches 提供品牌预设色板快速选色。",
+    "需要展示颜色对比度（无障碍）参考的取色场景。"
+  ],
+  "whenNotToUse": [
+    "uniapp 端项目，改用 reborn-color-picker。"
+  ],
+  "pitfalls": [
+    "仅 web 端可用，依赖 @uiw/color-convert。",
+    "默认插槽内容作为触发器（如按钮），弹层开关由 open prop 与 update:open 事件控制。",
+    "选中值通过 value-change 事件获取（payload 为 ColorPickerValue，含 hex/hsl/hsla/rgb/rgba），不是 v-model。",
+    "type prop 控制输入区显示的颜色格式，默认 \"hsl\"；hideContrastRatio / hideDefaultSwatches 可隐藏对应区域。"
+  ],
+  "dependencies": [
+    "@uiw/color-convert",
+    "@vueuse/core"
+  ],
+  "install": {
+    "cli": "npx reborn-ui@latest add color-picker"
+  },
+  "sourceRefs": {
+    "web": [
+      "app/components/reborn/ui/color-picker/ColorPicker.vue",
+      "app/components/reborn/ui/color-picker/ContrastRatio.vue",
+      "app/components/reborn/ui/color-picker/ObjectColorInput.vue",
+      "app/components/reborn/ui/color-picker/index.ts"
+    ]
+  },
+  "docPath": "content/2.components/input-and-forms/color-picker.md",
+  "_meta": {
+    "contentHash": "1669a518ba0ea326c9a10ed75bd31b787bb6d4f7",
+    "hasOverride": true,
+    "extractors": {
+      "web": "ok",
+      "uniapp": "absent",
+      "docs": "found"
+    }
+  }
+}

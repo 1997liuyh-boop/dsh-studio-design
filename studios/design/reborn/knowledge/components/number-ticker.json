@@ -1,0 +1,121 @@
+{
+  "$schema": "../schema/component.schema.json",
+  "id": "number-ticker",
+  "title": "数字滚动",
+  "description": "用于让数字从起点平滑滚动到目标值的数值动画组件。",
+  "category": "effect",
+  "tags": [
+    "css",
+    "tailwind",
+    "magic-ui"
+  ],
+  "aliases": [
+    "数字滚动",
+    "计数动画",
+    "count up",
+    "数字跳动"
+  ],
+  "platforms": [
+    "web"
+  ],
+  "props": [
+    {
+      "name": "value",
+      "type": "number",
+      "required": false,
+      "description": "需要滚动到的目标值。",
+      "default": "0"
+    },
+    {
+      "name": "direction",
+      "type": "\"up\" | \"down\"",
+      "required": false,
+      "description": "计数方向。",
+      "default": "\"up\""
+    },
+    {
+      "name": "duration",
+      "type": "number",
+      "required": false,
+      "description": "整个动画的持续时间（毫秒）。",
+      "default": "1000"
+    },
+    {
+      "name": "delay",
+      "type": "number",
+      "required": false,
+      "description": "开始计数前的延迟（毫秒）。",
+      "default": "0"
+    },
+    {
+      "name": "decimalPlaces",
+      "type": "number",
+      "required": false,
+      "description": "显示的小数位数。",
+      "default": "2"
+    },
+    {
+      "name": "class",
+      "type": "string",
+      "required": false,
+      "description": ""
+    },
+    {
+      "name": "transition",
+      "type": "TransitionsPresetsKeys",
+      "required": false,
+      "description": "过渡预设名称（https://vueuse.org/core/useTransition）。",
+      "default": "\"easeOutCubic\""
+    }
+  ],
+  "events": [],
+  "slots": [],
+  "exposes": [],
+  "examples": [
+    {
+      "title": "Web 演示",
+      "path": "app/components/reborn/examples/number-ticker/NumberTickerDemo.vue",
+      "source": "demo",
+      "platform": "web",
+      "code": "<template>\n  <DemoSection title=\"基础用法\">\n    <DemoBlock\n      layout=\"stack\"\n      align=\"center\"\n    >\n      <p class=\"text-highlighted text-8xl font-medium tracking-tighter whitespace-pre-wrap\">\n        <NumberTicker :value=\"100\" />\n      </p>\n    </DemoBlock>\n  </DemoSection>\n</template>\n"
+    }
+  ],
+  "related": [],
+  "whenToUse": [
+    "数据看板、落地页统计数字需要递增动画时。",
+    "指标数值变化时需要平滑过渡而非跳变。"
+  ],
+  "whenNotToUse": [
+    "需要环形进度可视化，改用 animated-circular-progressbar。",
+    "静态数字展示无需动画时，直接渲染文本即可。",
+    "带标题、前后缀与精度控制的数字指标卡，改用 reborn-statistic。"
+  ],
+  "pitfalls": [
+    "仅 web 端可用，依赖 @vueuse/core（过渡基于 useTransition）。",
+    "decimalPlaces 默认 2，展示整数时需显式传 0。",
+    "direction 可选 up/down（默认 up），控制数字递增或递减方向；duration/delay 单位为毫秒。",
+    "transition 接收 vueuse 的过渡预设名（默认 easeOutCubic）。"
+  ],
+  "dependencies": [
+    "@vueuse/core"
+  ],
+  "install": {
+    "cli": "npx reborn-ui@latest add number-ticker"
+  },
+  "sourceRefs": {
+    "web": [
+      "app/components/reborn/ui/number-ticker/NumberTicker.vue",
+      "app/components/reborn/ui/number-ticker/index.ts"
+    ]
+  },
+  "docPath": "content/2.components/text-animations/number-ticker.md",
+  "_meta": {
+    "contentHash": "6d36715628690fc695612f93c80f28fdf60ddc5e",
+    "hasOverride": true,
+    "extractors": {
+      "web": "ok",
+      "uniapp": "absent",
+      "docs": "found"
+    }
+  }
+}

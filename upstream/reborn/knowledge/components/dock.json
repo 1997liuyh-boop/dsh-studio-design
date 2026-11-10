@@ -8,6 +8,12 @@
     "css",
     "tailwind"
   ],
+  "aliases": [
+    "mac dock",
+    "程序坞",
+    "图标栏",
+    "放大图标栏"
+  ],
   "platforms": [
     "web"
   ],
@@ -95,7 +101,7 @@
   },
   "docPath": "content/2.components/miscellaneous/dock.md",
   "_meta": {
-    "contentHash": "ad499d7b3ceb6b476a94ae97658138d1d5513671",
+    "contentHash": "eec61c6b94b276b0a6056fb6b7dbeb4104c86e85",
     "hasOverride": true,
     "extractors": {
       "web": "ok",

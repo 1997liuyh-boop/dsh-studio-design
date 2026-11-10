@@ -10,6 +10,12 @@
     "splitter",
     "layout"
   ],
+  "aliases": [
+    "splitter",
+    "分隔面板",
+    "拖拽分栏",
+    "resizable panel"
+  ],
   "platforms": [
     "web"
   ],
@@ -191,7 +197,7 @@
   },
   "docPath": "content/2.components/layout/reborn-splitter.md",
   "_meta": {
-    "contentHash": "ab30fd532e2e20a1c821bb882dc7317fb7947d92",
+    "contentHash": "a346809ede742259782ed5bdf0cd3ef30d8d9bc1",
     "hasOverride": true,
     "extractors": {
       "web": "ok",

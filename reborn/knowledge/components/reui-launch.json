@@ -1,0 +1,113 @@
+{
+  "$schema": "../schema/component.schema.json",
+  "id": "reui-launch",
+  "title": "Launch 电脑动画",
+  "description": "可设置品牌文字和屏幕动效的复古电脑动画，支持悬停展开、点击固定与紧凑取景，仅 Web 端。",
+  "category": "effect",
+  "tags": [
+    "svg",
+    "animation",
+    "hover",
+    "text",
+    "reui-launch"
+  ],
+  "aliases": [
+    "launch",
+    "复古电脑",
+    "电脑动画",
+    "像素电脑",
+    "品牌动画",
+    "logo 动画",
+    "字标动画"
+  ],
+  "platforms": [
+    "web"
+  ],
+  "props": [
+    {
+      "name": "text",
+      "type": "string",
+      "required": false,
+      "description": "外侧文字：有空格时在首个空格处分组，否则按字素平分到电脑两侧。",
+      "default": "\"REUI\""
+    },
+    {
+      "name": "screenText",
+      "type": "string",
+      "required": false,
+      "description": "电脑屏幕文字，支持中文与英文。",
+      "default": "\"RE\""
+    },
+    {
+      "name": "screenEffect",
+      "type": "\"crt\" | \"blink\" | \"typewriter\" | \"none\"",
+      "required": false,
+      "description": "屏幕效果：CRT 扫描、文字闪烁、终端打字或静态显示。",
+      "default": "\"crt\""
+    },
+    {
+      "name": "expanded",
+      "type": "boolean",
+      "required": false,
+      "description": "固定展示展开状态，供预览页核对细节。",
+      "default": "false"
+    },
+    {
+      "name": "compact",
+      "type": "boolean",
+      "required": false,
+      "description": "裁去上下留白，适合标题位置。",
+      "default": "false"
+    }
+  ],
+  "events": [],
+  "slots": [],
+  "exposes": [],
+  "examples": [
+    {
+      "title": "Web 演示",
+      "path": "app/components/reborn/examples/reui-launch/ReuiLaunchDemo.vue",
+      "source": "demo",
+      "platform": "web",
+      "code": "<script setup lang=\"ts\">\nimport type { PlaygroundControlGroup } from \"~/components/common/play-ground/Playground.vue\";\nimport { DemoBlock, DemoNote, DemoSection, Playground } from \"#components\";\nimport { computed, shallowRef } from \"vue\";\nimport RebornButton from \"~/components/reborn/ui/reborn-button/RebornButton.vue\";\nimport { launchScreenEffects } from \"~/components/reborn/ui/reui-launch/reui-launch.config\";\nimport ReuiLaunchDoodle from \"~/components/reborn/ui/reui-launch/ReuiLaunchDoodle.vue\";\n\ntype ScreenEffect = (typeof launchScreenEffects)[number];\n\n/** 屏幕模式来自组件枚举，选项与对比卡片共用中文名称。 */\nconst screenEffectLabels: Record<ScreenEffect, string> = {\n  crt: \"CRT扫描\",\n  blink: \"文字闪烁\",\n  typewriter: \"终端打字\",\n  none: \"静态\",\n};\nconst screenEffectOptions = launchScreenEffects.map(value => ({ label: screenEffectLabels[value], value }));\n/** 对比卡片说明每种模式的实际表现。 */\nconst screenEffectDescriptions: Record<ScreenEffect, string> = {\n  crt: \"文字轻微明暗变化，扫描光带掠过屏幕，光标闪烁。\",\n  blink: \"屏幕文字低频明暗闪烁，保留闪烁光标。\",\n  typewriter: \"按完整字素逐字显现，完成后停留，再重新播放。\",\n  none: \"完整显示屏幕文字，关闭屏幕动效。\",\n};\n\n// ─── 交互演练场 ─────────────────────────────────────────────────\n/** 演练场覆盖组件的文字、屏幕动效、取景和展开状态。 */\nconst defaultState = { text: \"REUI\", screenText: \"RE\", screenEffect: \"crt\" as ScreenEffect, compact: false, expanded: false };\nconst state = shallowRef({ ...defaultState });\n/** 原生点击次数与重新挂载序号，重置时同时清除内部固定状态。 */\nconst clickCount = shallowRef(0);\nconst previewKey = shallowRef(0);\n\n/** 恢复默认参数和交互状态。 */\nfunction resetState() {\n  state.value = { ...defaultState };\n  clickCount.value = 0;\n  previewKey.value += 1;\n}\n\n/** 统计根按钮继承的原生点击，不依赖自定义事件。 */\nfunction onClick() {\n  clickCount.value += 1;\n}\n\n/** 转义静态属性，避免引号、标签或换行破坏复制代码。 */\nfunction escapeAttribute(value: string) {\n  return value.replace(/&/g, \"&amp;\").replace(/\"/g, \"&quot;\").replace(/</g, \"&lt;\").replace(/>/g, \"&gt;\").replace(/\\r/g, \"&#13;\").replace(/\\n/g, \"&#10;\");\n}\n\n/** 全量参数代码与预览使用同一份状态。 */\nconst launchCode = computed(() => `<ReuiLaunchDoodle\\n  text=\"${escapeAttribute(state.value.text)}\"\\n  screen-text=\"${escapeAttribute(state.value.screenText)}\"\\n  screen-effect=\"${state.value.screenEffect}\"\\n  :compact=\"${state.value.compact}\"\\n  :expanded=\"${state.value.expanded}\"\\n/>`);\n\n/** 控件只绑定组件已实现的参数。 */\nconst controls: PlaygroundControlGroup[] = [\n  {\n    title: \"文字与屏幕\",\n    children: [\n      { label: \"外侧文字\", key: \"text\", component: \"input\", defaultValue: \"REUI\" },\n      { label: \"屏幕文字\", key: \"screenText\", component: \"input\", defaultValue: \"RE\" },\n      { label: \"屏幕动效\", key: \"screenEffect\", component: \"select\", defaultValue: \"crt\", props: { options: screenEffectOptions } },\n    ],\n  },\n  {\n    title: \"布局与状态\",\n    children: [\n      { label: \"紧凑标题\", key: \"compact\", component: \"checkbox\", defaultValue: false },\n      { label: \"保持展开\", key: \"expanded\", component: \"checkbox\", defaultValue: false },\n    ],\n  },\n];\n\n// ─── 场景演示状态 ───────────────────────────────────────────────\n/** 保持展开示例可切回默认交互。 */\nconst expanded = shallowRef(true);\n</script>\n\n<template>\n  <div class=\"flex w-full min-w-0 flex-col\">\n    <Playground\n      v-model=\"state\" :controls=\"controls\" :code=\"launchCode\" component-name=\"ReuiLaunchDoodle\"\n      title=\"交互演练场\" description=\"编辑外侧与屏幕文字，切换屏幕动效、紧凑取景和保持展开，查看不同组合的表现。\"\n    >\n      <template #tag>\n        <RebornButton size=\"sm\" variant=\"soft\" color=\"neutral\" @click=\"resetState\">重置配置</RebornButton>\n      </template>\n      <div class=\"flex w-full min-w-0 flex-col items-center gap-4\">\n        <ReuiLaunchDoodle\n          :key=\"previewKey\" v-bind=\"state\" class=\"max-w-2xl\" @click=\"onClick\"\n        />\n        <DemoNote tone=\"dimmed\" aria-live=\"polite\">已点击 {{ clickCount }} 次；鼠标移入展开，点击固定，触屏轻点切换；键盘可用 Enter、空格和 Esc。</DemoNote>\n      </div>\n    </Playground>\n\n    <DemoSection title=\"文本演示\">\n      <template #description>\n        <code>text</code> 设置电脑两侧的文字，空格划分左右；<code>screenText</code> 独立设置屏幕文字。\n      </template>\n      <DemoBlock layout=\"stack\">\n        <ReuiLaunchDoodle text=\"Reborn UI\" screen-text=\"RE\" class=\"mx-auto w-full max-w-2xl\" />\n      </DemoBlock>\n      <DemoNote tone=\"dimmed\">没有空格时，<code>text</code> 按字素平分左右；短词更适合电脑两侧的有限空间。</DemoNote>\n    </DemoSection>\n\n    <DemoSection title=\"屏幕动效\">\n      <template #description>\n        <code>screenEffect</code> 默认使用 <code>crt</code>；屏幕动效独立于展开状态，无需悬停即可播放。\n      </template>\n      <DemoBlock layout=\"stack\">\n        <div class=\"grid w-full gap-4 md:grid-cols-2\">\n          <figure v-for=\"effect in screenEffectOptions\" :key=\"effect.value\" class=\"min-w-0\">\n            <ReuiLaunchDoodle text=\"REUI\" screen-text=\"READY\" :screen-effect=\"effect.value\" class=\"w-full\" />\n            <figcaption class=\"mt-3 text-base font-medium\">{{ effect.label }}</figcaption>\n            <p class=\"mt-1 text-sm text-gray-7\">{{ screenEffectDescriptions[effect.value] }}</p>\n          </figure>\n        </div>\n      </DemoBlock>\n      <DemoNote tone=\"dimmed\">离开视口或切到后台时暂停播放；系统开启减少动态效果时，所有模式均显示静态完整文字。</DemoNote>\n    </DemoSection>\n\n    <DemoSection title=\"紧凑标题\">\n      <template #description>\n        <code>compact</code> 收紧取景留白；通过根节点的文字色与透明背景，把动画放入页面标题区域。\n      </template>\n      <DemoBlock layout=\"stack\">\n        <div class=\"w-full rounded-2xl bg-gray-1 p-4 sm:p-6\">\n          <ReuiLaunchDoodle text=\"Reborn UI\" screen-text=\"RE\" compact class=\"mx-auto max-w-xl bg-transparent! text-gray-10!\" />\n        </div>\n      </DemoBlock>\n      <DemoNote tone=\"dimmed\">紧凑取景保留展开图形；宽度由外层布局决定，<code>compact</code> 不设置固定像素宽度。</DemoNote>\n    </DemoSection>\n\n    <DemoSection title=\"保持展开\">\n      <template #description>\n        <code>expanded</code> 强制展示展开构图，适合核对图形细节；关闭后恢复悬停和点击控制。\n      </template>\n      <DemoBlock layout=\"stack\">\n        <RebornButton\n          size=\"sm\" color=\"neutral\" variant=\"outlined\" :aria-pressed=\"expanded\" @click=\"expanded = !expanded\"\n        >\n          {{ expanded ? \"恢复交互\" : \"保持展开\" }}\n        </RebornButton>\n        <ReuiLaunchDoodle :expanded=\"expanded\" class=\"mx-auto w-full max-w-2xl\" />\n      </DemoBlock>\n      <DemoNote tone=\"dimmed\"><code>expanded</code> 为 true 时，点击与 Esc 不会收起图形；系统开启减少动态效果时，旋转动画停止。</DemoNote>\n    </DemoSection>\n  </div>\n</template>\n"
+    }
+  ],
+  "related": [],
+  "whenToUse": [
+    "品牌或产品标题需要可交互的视觉内容：text 设置两侧字标，screenText 设置屏幕短词。",
+    "需要电脑屏幕的扫描、闪烁或终端输入效果：screenEffect 切换模式，不必同时开启 expanded。",
+    "把电脑动画放进已有标题区域：compact 收紧取景，再通过 class 控制宽度。",
+    "展示展开后的图形或核对细节：expanded 固定展开状态。"
+  ],
+  "whenNotToUse": [
+    "提交表单、确认操作等任务入口，改用 reborn-button：本组件是装饰性动画，点击只固定或取消展开。",
+    "只需逐字播放长句、不需要电脑插画，改用 reborn-typewriter。",
+    "需要一整段标题的入场动画而不是一个品牌图形，改用 letter-pullup 或 text-generate-effect。"
+  ],
+  "pitfalls": [
+    "仅 Web 端，UniApp 无对应实现。",
+    "text 含空格时在首个空格处分成两组放在电脑两侧，不含空格时按字素平分；长词会按可用宽度缩小字号。",
+    "鼠标悬停展开、移出收起，点击切换固定；触屏没有悬停，只有点击固定一种交互。"
+  ],
+  "dependencies": [],
+  "install": {
+    "cli": "npx reborn-ui@latest add reui-launch"
+  },
+  "sourceRefs": {
+    "web": [
+      "app/components/reborn/ui/reui-launch/ReuiLaunchDoodle.vue",
+      "app/components/reborn/ui/reui-launch/index.ts",
+      "app/components/reborn/ui/reui-launch/reui-launch.config.ts"
+    ]
+  },
+  "docPath": "content/2.components/special-effects/reui-launch.md",
+  "_meta": {
+    "contentHash": "f8e70c7e9d622dcab9328e695c6bfecb61bc15bb",
+    "hasOverride": true,
+    "extractors": {
+      "web": "ok",
+      "uniapp": "absent",
+      "docs": "found"
+    }
+  }
+}

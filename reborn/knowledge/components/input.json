@@ -1,0 +1,98 @@
+{
+  "$schema": "../schema/component.schema.json",
+  "id": "input",
+  "title": "输入框",
+  "description": "用于带鼠标径向渐变悬停高亮效果的单行文本输入组件。",
+  "category": "form",
+  "tags": [
+    "css",
+    "tailwind",
+    "input",
+    "aceternity-ui"
+  ],
+  "aliases": [],
+  "platforms": [
+    "web"
+  ],
+  "props": [
+    {
+      "name": "defaultValue",
+      "type": "string | number",
+      "required": false,
+      "description": "非受控模式下的初始值，未绑定 v-model 时生效"
+    },
+    {
+      "name": "class",
+      "type": "HTMLAttributes[\"class\"]",
+      "required": false,
+      "description": "输入框本体的额外 CSS 类。"
+    },
+    {
+      "name": "containerClass",
+      "type": "HTMLAttributes[\"class\"]",
+      "required": false,
+      "description": "外层渐变容器的额外 CSS 类，宽度等布局类通常设在此。"
+    },
+    {
+      "name": "modelValue",
+      "type": "string | number | null",
+      "required": false,
+      "description": "双向绑定值",
+      "vModel": true
+    }
+  ],
+  "events": [
+    {
+      "name": "update:modelValue",
+      "description": "modelValue 变化时触发（v-model 同步）",
+      "payload": "(value: string | number | null | undefined)"
+    }
+  ],
+  "slots": [],
+  "exposes": [],
+  "examples": [
+    {
+      "title": "Web 演示",
+      "path": "app/components/reborn/examples/input/InputDemo.vue",
+      "source": "demo",
+      "platform": "web",
+      "code": "<template>\n  <div class=\"flex h-56 w-full flex-col items-center justify-center gap-2\">\n    <label\n      for=\"inputDemo\"\n      class=\"ml-4 w-full max-w-sm text-sm font-medium text-gray-700 dark:text-gray-200\"\n      >Hover over below input</label\n    >\n    <IInput\n      id=\"inputDemo\"\n      placeholder=\"Hover over me\"\n      container-class=\"w-full max-w-sm\"\n    />\n  </div>\n</template>\n"
+    }
+  ],
+  "related": [],
+  "whenToUse": [
+    "登录、注册等营销感较强的表单需要悬停高亮输入框时。",
+    "web 落地页表单想要跟随鼠标的径向边框效果时。"
+  ],
+  "whenNotToUse": [
+    "常规业务表单或跨端场景，改用 reborn-input。",
+    "需要占位文字消失动画的搜索框，改用 vanishing-input。",
+    "多行文本输入，改用 reborn-textarea。"
+  ],
+  "pitfalls": [
+    "仅 web 端可用。",
+    "组件名为 IInput（文件 IInput.vue），与 reborn-input 不是同一组件。",
+    "样式分两层：class 作用于输入框本体，containerClass 作用于外层容器（宽度通常设在 containerClass 上）。",
+    "Web 显式绑定 modelValue 为 undefined/null 时清空显示；仅未绑定时读写 defaultValue 起始的本地值。"
+  ],
+  "dependencies": [],
+  "install": {
+    "cli": "npx reborn-ui@latest add input"
+  },
+  "sourceRefs": {
+    "web": [
+      "app/components/reborn/ui/input/IInput.vue",
+      "app/components/reborn/ui/input/index.ts"
+    ]
+  },
+  "docPath": "content/2.components/input-and-forms/input.md",
+  "_meta": {
+    "contentHash": "018f2da25e2ef63df7934365974fb513bb0ec07f",
+    "hasOverride": true,
+    "extractors": {
+      "web": "ok",
+      "uniapp": "absent",
+      "docs": "found"
+    }
+  }
+}

@@ -1,0 +1,139 @@
+{
+  "$schema": "../schema/component.schema.json",
+  "id": "card-3d",
+  "title": "3D 卡片效果",
+  "description": "用于悬停时随鼠标产生透视倾斜、子元素分层浮起的 3D 卡片组件。",
+  "category": "data-display",
+  "tags": [
+    "css",
+    "tailwind",
+    "card",
+    "aceternity-ui"
+  ],
+  "aliases": [],
+  "platforms": [
+    "web"
+  ],
+  "props": [
+    {
+      "name": "class",
+      "type": "string",
+      "required": false,
+      "description": "用于内层容器的额外样式类。",
+      "default": "null"
+    },
+    {
+      "name": "containerClass",
+      "type": "string",
+      "required": false,
+      "description": "用于外层容器的额外样式类。",
+      "default": "null"
+    },
+    {
+      "name": "as",
+      "type": "string",
+      "required": false,
+      "description": "渲染该元素使用的 HTML 标签或组件。",
+      "default": "\"div\""
+    },
+    {
+      "name": "translateX",
+      "type": "number",
+      "required": false,
+      "description": "X 轴平移（像素）。",
+      "default": "0"
+    },
+    {
+      "name": "translateY",
+      "type": "number",
+      "required": false,
+      "description": "Y 轴平移（像素）。",
+      "default": "0"
+    },
+    {
+      "name": "translateZ",
+      "type": "number",
+      "required": false,
+      "description": "Z 轴平移（像素），用于控制纵深效果。",
+      "default": "0"
+    },
+    {
+      "name": "rotateX",
+      "type": "number",
+      "required": false,
+      "description": "绕 X 轴旋转角度（度）。",
+      "default": "0"
+    },
+    {
+      "name": "rotateY",
+      "type": "number",
+      "required": false,
+      "description": "绕 Y 轴旋转角度（度）。",
+      "default": "0"
+    },
+    {
+      "name": "rotateZ",
+      "type": "number",
+      "required": false,
+      "description": "绕 Z 轴旋转角度（度）。",
+      "default": "0"
+    }
+  ],
+  "events": [],
+  "slots": [
+    {
+      "name": "default",
+      "description": ""
+    }
+  ],
+  "exposes": [],
+  "examples": [
+    {
+      "title": "Web 演示",
+      "path": "app/components/reborn/examples/card-3d/CardDemo.vue",
+      "source": "demo",
+      "platform": "web",
+      "code": "<script setup lang=\"ts\">\nimport { CardBody, CardContainer, CardItem } from \"~/components/reborn/ui/card-3d\";\n\ninterface Props {\n  title?: {\n    translateX?: number;\n    translateY?: number;\n    translateZ?: number;\n    rotateX?: number;\n    rotateY?: number;\n    rotateZ?: number;\n  };\n  description?: {\n    translateX?: number;\n    translateY?: number;\n    translateZ?: number;\n    rotateX?: number;\n    rotateY?: number;\n    rotateZ?: number;\n  };\n  image?: {\n    translateX?: number;\n    translateY?: number;\n    translateZ?: number;\n    rotateX?: number;\n    rotateY?: number;\n    rotateZ?: number;\n  };\n  btnLeft?: {\n    translateX?: number;\n    translateY?: number;\n    translateZ?: number;\n    rotateX?: number;\n    rotateY?: number;\n    rotateZ?: number;\n  };\n  btnRight?: {\n    translateX?: number;\n    translateY?: number;\n    translateZ?: number;\n    rotateX?: number;\n    rotateY?: number;\n    rotateZ?: number;\n  };\n}\n\nconst props = withDefaults(defineProps<Props>(), {\n  title: () => ({\n    translateX: 0,\n    translateY: 0,\n    translateZ: 50,\n    rotateX: 0,\n    rotateY: 0,\n    rotateZ: 0,\n  }),\n  description: () => ({\n    translateX: 0,\n    translateY: 0,\n    translateZ: 60,\n    rotateX: 0,\n    rotateY: 0,\n    rotateZ: 0,\n  }),\n  image: () => ({\n    translateX: 0,\n    translateY: 0,\n    translateZ: 100,\n    rotateX: 0,\n    rotateY: 0,\n    rotateZ: 0,\n  }),\n  btnLeft: () => ({\n    translateX: 0,\n    translateY: 0,\n    translateZ: 20,\n    rotateX: 0,\n    rotateY: 0,\n    rotateZ: 0,\n  }),\n  btnRight: () => ({\n    translateX: 0,\n    translateY: 0,\n    translateZ: 20,\n    rotateX: 0,\n    rotateY: 0,\n    rotateZ: 0,\n  }),\n});\n</script>\n\n<template>\n  <!-- 卡片本身就是被演示的对象，其表面样式属于组件效果，不视为额外嵌套 -->\n  <CardContainer>\n    <CardBody\n      class=\"group/card border-default bg-elevated rounded-2xl relative h-auto w-fit border p-6 sm:w-[30rem]\">\n      <CardItem v-bind=\"props.title\" class=\"text-highlighted text-xl font-bold\">\n        让元素浮在空中\n      </CardItem>\n      <CardItem as=\"p\" v-bind=\"props.description\" class=\"text-muted mt-2 max-w-sm text-sm\">\n        把鼠标移到卡片上，感受 CSS 透视带来的立体效果\n      </CardItem>\n      <CardItem v-bind=\"props.image\" class=\"mt-4 w-full\">\n        <img\n          src=\"https://images.unsplash.com/photo-1441974231531-c6227db76b6e?q=80&w=2560&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D\"\n          height=\"1000\" width=\"1000\" class=\"rounded-xl h-60 w-full object-cover\" alt=\"示例图片\" />\n      </CardItem>\n      <div class=\"mt-12 flex items-center justify-between\">\n        <CardItem v-bind=\"props.btnLeft\" as=\"a\" href=\"https://rahulv.dev\" target=\"__blank\"\n          class=\"text-default rounded-xl px-4 py-2 text-xs font-normal\">\n          访问 →\n        </CardItem>\n        <CardItem v-bind=\"props.btnRight\" as=\"button\"\n          class=\"bg-inverted text-inverted rounded-xl px-4 py-2 text-xs font-bold\">\n          立即开始\n        </CardItem>\n      </div>\n    </CardBody>\n  </CardContainer>\n</template>\n"
+    }
+  ],
+  "related": [],
+  "whenToUse": [
+    "产品展示卡需要鼠标跟随的 3D 透视交互。",
+    "卡片内标题、图片、按钮需要不同 translateZ 纵深分层浮起的场景。",
+    "落地页需要强交互感的重点卡片。"
+  ],
+  "whenNotToUse": [
+    "只需悬停高光光泽，改用 glare-card。",
+    "需要正反面翻转展示内容，改用 flip-card。",
+    "根据鼠标进入方向显示覆盖层，改用 direction-aware-hover。"
+  ],
+  "pitfalls": [
+    "仅 web 端可用。",
+    "必须按 CardContainer > CardBody > CardItem 三层结构组合使用，单独使用无效。",
+    "translateX/Y/Z 与 rotateX/Y/Z 是 CardItem 的 props，控制该元素悬停时的位移与旋转；translateZ 越大浮起越明显。",
+    "CardItem 的 as prop 可改渲染标签（如 a、button、p），默认 div。"
+  ],
+  "dependencies": [],
+  "install": {
+    "cli": "npx reborn-ui@latest add card-3d"
+  },
+  "sourceRefs": {
+    "web": [
+      "app/components/reborn/ui/card-3d/CardBody.vue",
+      "app/components/reborn/ui/card-3d/CardContainer.vue",
+      "app/components/reborn/ui/card-3d/CardItem.vue",
+      "app/components/reborn/ui/card-3d/index.ts",
+      "app/components/reborn/ui/card-3d/useMouseState.ts"
+    ]
+  },
+  "docPath": "content/2.components/cards/3d-card.md",
+  "_meta": {
+    "contentHash": "2c7af5c92894db7d42a6b4cda3e152d56c1ac9e1",
+    "hasOverride": true,
+    "extractors": {
+      "web": "ok",
+      "uniapp": "absent",
+      "docs": "found"
+    }
+  }
+}

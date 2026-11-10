@@ -1,0 +1,253 @@
+{
+  "$schema": "../schema/component.schema.json",
+  "id": "reborn-breadcrumb",
+  "title": "Breadcrumb 面包屑",
+  "description": "用于展示当前页面层级路径并可逐级返回的面包屑导航组件，支持手写条目与 routes 数据驱动两种用法，双端可用。",
+  "category": "navigation",
+  "tags": [
+    "css",
+    "tailwind",
+    "navigation",
+    "breadcrumb",
+    "uniapp"
+  ],
+  "aliases": [
+    "breadcrumb",
+    "面包屑",
+    "路径导航"
+  ],
+  "platforms": [
+    "web",
+    "uniapp"
+  ],
+  "props": [
+    {
+      "name": "separator",
+      "type": "string | number",
+      "required": false,
+      "description": "分隔符文字",
+      "default": "'/'"
+    },
+    {
+      "name": "separatorIcon",
+      "type": "any",
+      "required": false,
+      "description": "图标分隔符（图标类名，如 i-lucide-chevron-right），优先级高于 separator",
+      "default": "—"
+    },
+    {
+      "name": "routes",
+      "type": "BreadcrumbRoute[]",
+      "required": false,
+      "description": "路径数据，传入后由组件驱动渲染，无需再手写子条目",
+      "default": "—"
+    },
+    {
+      "name": "maxCount",
+      "type": "number",
+      "required": false,
+      "description": "最多展示的面包屑数量，0 表示不限制，超出部分折叠为省略号",
+      "default": "0"
+    },
+    {
+      "name": "customUrl",
+      "type": "(paths: string[]) => string",
+      "required": false,
+      "description": "自定义链接地址，入参为当前条目及其祖先的 path 数组",
+      "default": "—"
+    },
+    {
+      "name": "customClass",
+      "type": "any",
+      "required": false,
+      "description": "追加到面包屑根节点的自定义类名",
+      "default": "—"
+    },
+    {
+      "name": "ui",
+      "type": "BreadcrumbUI",
+      "required": false,
+      "description": "细粒度样式覆盖对象，会级联到所有子条目 可用键（从源码抽取，以此为准）——UniApp：RebornBreadcrumb → item、more、moreIcon*、root、separator；RebornBreadcrumbItem → dropIcon、droplist、droplistItem、droplistMask、item、link、separator。 带 * 的键对应插槽兜底节点：填了同名插槽，组件自带的节点被替换，这个键随之失效。",
+      "default": "() => ({})",
+      "platform": "uniapp"
+    },
+    {
+      "name": "order",
+      "type": "number",
+      "required": false,
+      "description": "显式序位；小程序动态插槽的所有条目必须传入有限数值",
+      "default": "—"
+    },
+    {
+      "name": "to",
+      "type": "string | object",
+      "required": false,
+      "description": "跳转目标，字符串页面路径或含 path 字段的对象",
+      "default": "—"
+    },
+    {
+      "name": "replace",
+      "type": "'navigate' | 'redirect' | 'switchTab' | 'reLaunch'",
+      "required": false,
+      "description": "跳转方式，对应 uni 的四种路由 API 本条为 UniApp 端取值，另一端另有同名条目。",
+      "default": "'navigate'",
+      "platform": "uniapp"
+    },
+    {
+      "name": "target",
+      "type": "string",
+      "required": false,
+      "description": "预留的链接打开方式属性：uniapp 端跳转方式由 replace 决定，当前不参与跳转逻辑",
+      "default": "—"
+    },
+    {
+      "name": "droplist",
+      "type": "BreadcrumbDroplistItem[]",
+      "required": false,
+      "description": "下拉菜单数据",
+      "default": "—"
+    },
+    {
+      "name": "dropdownProps",
+      "type": "Record<string, any>",
+      "required": false,
+      "description": "下拉菜单属性，uniapp 端仅支持 hideOnClick",
+      "default": "—"
+    },
+    {
+      "name": "ui",
+      "type": "BreadcrumbUI",
+      "required": false,
+      "description": "细粒度样式覆盖对象，会级联到所有子条目 可用键（从源码抽取，以此为准）——Web：RebornBreadcrumb → item、more、moreIcon*、root、separator；RebornBreadcrumbItem → dropIcon、droplist、droplistDivider、droplistItem*、item、link、separator。 带 * 的键对应插槽兜底节点：填了同名插槽，组件自带的节点被替换，这个键随之失效。",
+      "default": "() => ({})",
+      "platform": "web"
+    },
+    {
+      "name": "replace",
+      "type": "'push' | 'replace' | 'blank'",
+      "required": false,
+      "description": "跳转方式：push 入栈 / replace 替换 / blank 新窗口 本条为 Web 端取值，另一端另有同名条目。",
+      "default": "'push'",
+      "platform": "web"
+    },
+    {
+      "name": "internalIndex",
+      "type": "number",
+      "required": false,
+      "description": "内部使用：条目在插槽里的序号，由 RebornBreadcrumb 渲染时写入，业务侧不要传"
+    },
+    {
+      "name": "internalCollapsed",
+      "type": "boolean",
+      "required": false,
+      "description": "内部使用：是否被 max-count 折叠，由 RebornBreadcrumb 渲染时写入，业务侧不要传"
+    }
+  ],
+  "events": [
+    {
+      "name": "select",
+      "payload": "(e: 'select', item: BreadcrumbDroplistItem, index: number): void",
+      "description": "routes 模式下点击下拉菜单项时触发"
+    }
+  ],
+  "slots": [
+    {
+      "name": "more-icon",
+      "description": "自定义折叠省略号内容"
+    },
+    {
+      "name": "separator",
+      "description": "自定义分隔符，`routes` 模式下级联到条目"
+    },
+    {
+      "name": "item-render",
+      "description": "routes` 设置时生效，自定义条目内容"
+    },
+    {
+      "name": "default",
+      "description": "手写条目，非空 `routes` 时不渲染"
+    },
+    {
+      "name": "droplist",
+      "description": "自定义下拉菜单"
+    }
+  ],
+  "exposes": [],
+  "examples": [
+    {
+      "title": "Web 演示",
+      "path": "app/components/reborn/examples/reborn-breadcrumb/RebornBreadcrumbDemo.vue",
+      "source": "demo",
+      "platform": "web",
+      "code": "<script setup lang=\"ts\">\n\nimport type { BreadcrumbRoute } from \"~/components/reborn/ui/reborn-breadcrumb/reborn-breadcrumb.config\";\nimport { DemoBlock, DemoItem, DemoNote, DemoSection, Icon, Playground } from \"#components\";\nimport { computed, shallowRef } from \"vue\";\nimport RebornBreadcrumb from \"~/components/reborn/ui/reborn-breadcrumb/RebornBreadcrumb.vue\";\nimport RebornBreadcrumbItem from \"~/components/reborn/ui/reborn-breadcrumb/RebornBreadcrumbItem.vue\";\nimport RebornButton from \"~/components/reborn/ui/reborn-button/RebornButton.vue\";\nimport RebornDoption from \"~/components/reborn/ui/reborn-dropdown/RebornDoption.vue\";\n\n/** 演练场默认状态 */\nconst defaultState = {\n  separator: \"/\",\n  separatorIcon: \"\",\n  maxCount: 0,\n};\n\n/** 演练场状态 */\nconst state = shallowRef({ ...defaultState });\n\n/** 重置演练场配置 */\nfunction resetState() {\n  state.value = { ...defaultState };\n}\n\n/** 演练场控制面板配置 */\nconst controls = [\n  {\n    title: \"分隔符\",\n    children: [\n      {\n        label: \"文本分隔符\",\n        key: \"separator\",\n        component: \"input\" as const,\n        defaultValue: \"/\",\n      },\n      {\n        label: \"图标分隔符（覆盖文本）\",\n        key: \"separatorIcon\",\n        component: \"input\" as const,\n        props: { placeholder: \"如：lucide:chevron-right\" },\n        defaultValue: \"\",\n      },\n    ],\n  },\n  {\n    title: \"折叠\",\n    children: [\n      {\n        label: \"最多展示数量（0 不限制）\",\n        key: \"maxCount\",\n        component: \"slider\" as const,\n        props: { min: 0, max: 6, step: 1 },\n        defaultValue: 0,\n      },\n    ],\n  },\n];\n\n/**\n * 演练场右上角展示的传参明细。\n * 面包屑没有 v-model，条目由默认插槽给出，因此不走 Playground 的自动生成，手工拼装完整片段。\n */\nconst breadcrumbCode = computed(() => {\n  const s = state.value;\n  const props = [\n    `separator=\"${s.separator}\"`,\n    `separator-icon=\"${s.separatorIcon}\"`,\n    `:max-count=\"${Number(s.maxCount)}\"`,\n  ];\n  const items = [\n    '  <RebornBreadcrumbItem to=\"/\">首页</RebornBreadcrumbItem>',\n    '  <RebornBreadcrumbItem to=\"/components\">组件库</RebornBreadcrumbItem>',\n    '  <RebornBreadcrumbItem to=\"/components/navigation\">导航组件</RebornBreadcrumbItem>',\n    '  <RebornBreadcrumbItem to=\"/components/navigation/reborn-breadcrumb\">面包屑</RebornBreadcrumbItem>',\n    \"  <RebornBreadcrumbItem>基础用法</RebornBreadcrumbItem>\",\n  ];\n\n  return `<RebornBreadcrumb\\n  ${props.join(\"\\n  \")}\\n>\\n${items.join(\"\\n\")}\\n</RebornBreadcrumb>`;\n});\n\n/** routes 模式的数据源，children 会渲染成条目上的下拉菜单 */\nconst routes: BreadcrumbRoute[] = [\n  { label: \"首页\", path: \"/\" },\n  {\n    label: \"组件库\",\n    path: \"/components\",\n    children: [\n      { label: \"按钮 Button\", path: \"/components/button/reborn-button\" },\n      { label: \"标签 Badge\", path: \"/components/data/reborn-badge\" },\n      { label: \"下拉菜单 Dropdown\", path: \"/components/navigation/reborn-dropdown\" },\n    ],\n  },\n  { label: \"导航组件\", path: \"/components/navigation\" },\n  { label: \"面包屑\", path: \"/components/navigation/reborn-breadcrumb\" },\n];\n\n/** 长路径，用于演示 max-count 折叠 */\nconst longRoutes: BreadcrumbRoute[] = [\n  { label: \"首页\", path: \"/\" },\n  { label: \"商品中心\", path: \"/goods\" },\n  { label: \"家用电器\", path: \"/goods/appliance\" },\n  { label: \"厨房电器\", path: \"/goods/appliance/kitchen\" },\n  { label: \"微波炉\", path: \"/goods/appliance/kitchen/microwave\" },\n  { label: \"商品详情\", path: \"/goods/appliance/kitchen/microwave/detail\" },\n];\n\n/** 下拉菜单数据，配合 breadcrumb-item 的 droplist 属性使用 */\nconst droplist = [\n  { label: \"活动列表\", path: \"/promotion/list\" },\n  { label: \"活动模板\", path: \"/promotion/template\" },\n  { label: \"活动数据\", path: \"/promotion/analysis\" },\n];\n\nconst lastSelected = shallowRef(\"\");\n</script>\n\n<template>\n  <div class=\"flex w-full min-w-0 flex-col\">\n    <Playground\n      v-model=\"state\"\n      :controls=\"controls\"\n      :code=\"breadcrumbCode\"\n      component-name=\"RebornBreadcrumb\"\n      title=\"交互演练场\"\n      description=\"切换分隔符样式、填入 Iconify 图标名替代文本分隔符，或调整最多展示数量观察折叠效果。\"\n    >\n      <template #tag>\n        <RebornButton size=\"sm\" variant=\"soft\" color=\"neutral\" @click=\"resetState\">\n          <template #leading>\n            <Icon name=\"lucide:rotate-ccw\" size=\"12\" />\n          </template>\n          重置配置\n        </RebornButton>\n      </template>\n\n      <RebornBreadcrumb\n        :separator=\"state.separator\"\n        :separator-icon=\"state.separatorIcon\"\n        :max-count=\"Number(state.maxCount)\"\n      >\n        <RebornBreadcrumbItem to=\"/\">首页</RebornBreadcrumbItem>\n        <RebornBreadcrumbItem to=\"/components\">组件库</RebornBreadcrumbItem>\n        <RebornBreadcrumbItem to=\"/components/navigation\">导航组件</RebornBreadcrumbItem>\n        <RebornBreadcrumbItem to=\"/components/navigation/reborn-breadcrumb\">面包屑</RebornBreadcrumbItem>\n        <RebornBreadcrumbItem>基础用法</RebornBreadcrumbItem>\n      </RebornBreadcrumb>\n    </Playground>\n\n    <DemoSection\n      title=\"基础用法\"\n      description=\"条目用 RebornBreadcrumbItem 包裹，末项自动识别为当前页，渲染为不可点击的文本。\"\n    >\n      <DemoBlock layout=\"stack\">\n        <RebornBreadcrumb>\n          <RebornBreadcrumbItem to=\"/\">首页</RebornBreadcrumbItem>\n          <RebornBreadcrumbItem to=\"/channel\">频道</RebornBreadcrumbItem>\n          <RebornBreadcrumbItem>新闻</RebornBreadcrumbItem>\n        </RebornBreadcrumb>\n      </DemoBlock>\n    </DemoSection>\n\n    <DemoSection\n      title=\"分隔符：文本、图标与插槽\"\n      description=\"separator 传文本、separator-icon 传图标；条目上的同名属性与 #separator 插槽优先级更高。\"\n    >\n      <DemoBlock layout=\"grid\" :columns=\"2\" align=\"start\">\n        <DemoItem>\n          <template #label>\n            容器文本 ·\n            <code>separator</code>\n          </template>\n          <RebornBreadcrumb separator=\">\">\n            <RebornBreadcrumbItem to=\"/\">首页</RebornBreadcrumbItem>\n            <RebornBreadcrumbItem to=\"/promotion\">活动管理</RebornBreadcrumbItem>\n            <RebornBreadcrumbItem>活动详情</RebornBreadcrumbItem>\n          </RebornBreadcrumb>\n        </DemoItem>\n\n        <DemoItem>\n          <template #label>\n            容器图标 ·\n            <code>separator-icon</code>\n          </template>\n          <RebornBreadcrumb separator-icon=\"lucide:arrow-right\">\n            <RebornBreadcrumbItem to=\"/\">首页</RebornBreadcrumbItem>\n            <RebornBreadcrumbItem to=\"/user\">用户中心</RebornBreadcrumbItem>\n            <RebornBreadcrumbItem>设置</RebornBreadcrumbItem>\n          </RebornBreadcrumb>\n        </DemoItem>\n\n        <DemoItem>\n          <template #label>\n            条目属性 ·\n            <code>separator</code>\n          </template>\n          <RebornBreadcrumb separator=\"/\">\n            <RebornBreadcrumbItem to=\"/\">首页</RebornBreadcrumbItem>\n            <RebornBreadcrumbItem to=\"/shop\" separator=\"→\">商城</RebornBreadcrumbItem>\n            <RebornBreadcrumbItem>购物车</RebornBreadcrumbItem>\n          </RebornBreadcrumb>\n        </DemoItem>\n\n        <DemoItem>\n          <template #label>\n            条目插槽 ·\n            <code>#separator</code>\n          </template>\n          <RebornBreadcrumb>\n            <RebornBreadcrumbItem to=\"/\">首页</RebornBreadcrumbItem>\n            <RebornBreadcrumbItem to=\"/shop\">\n              商城\n              <template #separator>\n                <span class=\"text-primary mx-1\">~</span>\n              </template>\n            </RebornBreadcrumbItem>\n            <RebornBreadcrumbItem>购物车</RebornBreadcrumbItem>\n          </RebornBreadcrumb>\n        </DemoItem>\n      </DemoBlock>\n    </DemoSection>\n\n    <DemoSection\n      title=\"自定义样式：ui 级联与覆盖\"\n      description=\"通过 ui 传入细粒度类名覆盖根节点与条目样式：父级 ui 会级联到所有子条目，条目级 ui 可给单项单独配色且优先级更高。\"\n    >\n      <DemoBlock layout=\"grid\" :columns=\"2\" align=\"start\">\n        <DemoItem label=\"缩小字号\" mono>\n          <RebornBreadcrumb :ui=\"{ root: 'text-xs', separator: 'text-2xs' }\">\n            <RebornBreadcrumbItem to=\"/\">小号</RebornBreadcrumbItem>\n            <RebornBreadcrumbItem to=\"/components\">组件库</RebornBreadcrumbItem>\n            <RebornBreadcrumbItem>面包屑</RebornBreadcrumbItem>\n          </RebornBreadcrumb>\n        </DemoItem>\n\n        <DemoItem label=\"放大字号 + 主色链接\" mono>\n          <RebornBreadcrumb :ui=\"{ root: 'text-base', link: 'text-primary/80', separator: 'text-primary/40' }\">\n            <RebornBreadcrumbItem to=\"/\">大号主色</RebornBreadcrumbItem>\n            <RebornBreadcrumbItem to=\"/components\">组件库</RebornBreadcrumbItem>\n            <RebornBreadcrumbItem>面包屑</RebornBreadcrumbItem>\n          </RebornBreadcrumb>\n        </DemoItem>\n\n        <DemoItem label=\"逐项配色\" mono>\n          <template #note>\n            条目级\n            <code>ui.link</code>\n            只作用于当前项；覆盖颜色时要连\n            <code>hover:</code>\n            一起写，否则悬停仍会被默认的\n            <code>hover:text-primary</code>\n            抢走。项目色阶没有 yellow，黄色取\n            <code>orange</code>（即 warning 色）。\n          </template>\n          <RebornBreadcrumb>\n            <RebornBreadcrumbItem to=\"/\" :ui=\"{ link: 'text-red-6 hover:text-red-5' }\">红色</RebornBreadcrumbItem>\n            <RebornBreadcrumbItem to=\"/components\" :ui=\"{ link: 'text-green-6 hover:text-green-5' }\">\n              绿色\n            </RebornBreadcrumbItem>\n            <RebornBreadcrumbItem :ui=\"{ link: 'text-orange-6' }\">黄色</RebornBreadcrumbItem>\n          </RebornBreadcrumb>\n        </DemoItem>\n\n        <DemoItem label=\"父级级联 + 条目覆盖\" mono>\n          <template #note>\n            容器\n            <code>ui.link</code>\n            把三项统一成绿色，中间一项用条目级\n            <code>ui</code>\n            改成红色——条目级优先。\n          </template>\n          <RebornBreadcrumb :ui=\"{ link: 'text-green-6 hover:text-green-5' }\">\n            <RebornBreadcrumbItem to=\"/\">绿色</RebornBreadcrumbItem>\n            <RebornBreadcrumbItem to=\"/components\" :ui=\"{ link: 'text-red-6 hover:text-red-5' }\">\n              红色（覆盖）\n            </RebornBreadcrumbItem>\n            <RebornBreadcrumbItem>绿色</RebornBreadcrumbItem>\n          </RebornBreadcrumb>\n        </DemoItem>\n      </DemoBlock>\n    </DemoSection>\n\n    <DemoSection\n      title=\"数据驱动：routes 与 item-render\"\n      description=\"传入 routes 后由组件渲染条目；item-render 插槽可接管单项内容，custom-url 可改写跳转地址。\"\n    >\n      <DemoBlock layout=\"grid\" :columns=\"2\" align=\"start\">\n        <DemoItem label=\"routes（默认渲染）\" mono>\n          <RebornBreadcrumb :routes=\"routes\" />\n        </DemoItem>\n\n        <DemoItem>\n          <template #label>\n            <code>#item-render</code>\n            接管单项\n          </template>\n          <template #note>\n            作用域参数包含\n            <code>route</code>、<code>routes</code>\n            与\n            <code>paths</code>。\n          </template>\n          <RebornBreadcrumb :routes=\"routes\">\n            <template #item-render=\"{ route, paths }\">\n              <span class=\"inline-flex items-center gap-1\">\n                <Icon name=\"lucide:folder\" class=\"size-3.5 opacity-60\" />\n                {{ route.label }}\n                <span class=\"text-dimmed text-2xs\">({{ paths.length }})</span>\n              </span>\n            </template>\n          </RebornBreadcrumb>\n        </DemoItem>\n      </DemoBlock>\n    </DemoSection>\n\n    <DemoSection\n      title=\"下拉菜单：droplist 与 children\"\n      description=\"routes 项的 children 或条目的 droplist 属性都会渲染成下拉菜单，也可用 #droplist 插槽完全自定义。\"\n    >\n      <DemoBlock layout=\"stack\" align=\"start\">\n        <DemoItem>\n          <template #label>\n            routes 项的\n            <code>children</code>\n          </template>\n          <RebornBreadcrumb :routes=\"routes\" @select=\"(item) => (lastSelected = item.label)\" />\n        </DemoItem>\n\n        <DemoItem>\n          <template #label>\n            条目的\n            <code>droplist</code>\n            属性\n          </template>\n          <RebornBreadcrumb>\n            <RebornBreadcrumbItem to=\"/\">首页</RebornBreadcrumbItem>\n            <RebornBreadcrumbItem :droplist=\"droplist\" @select=\"(item) => (lastSelected = item.label)\">\n              活动管理\n            </RebornBreadcrumbItem>\n            <RebornBreadcrumbItem>活动详情</RebornBreadcrumbItem>\n          </RebornBreadcrumb>\n        </DemoItem>\n\n        <DemoItem>\n          <template #label>\n            <code>#droplist</code>\n            插槽完全自定义\n          </template>\n          <RebornBreadcrumb>\n            <RebornBreadcrumbItem to=\"/\">首页</RebornBreadcrumbItem>\n            <RebornBreadcrumbItem>\n              频道\n              <template #droplist>\n                <RebornDoption value=\"a\">自定义项 1</RebornDoption>\n                <RebornDoption value=\"b\">自定义项 2</RebornDoption>\n                <RebornDoption value=\"c\">自定义项 3</RebornDoption>\n              </template>\n            </RebornBreadcrumbItem>\n            <RebornBreadcrumbItem>新闻</RebornBreadcrumbItem>\n          </RebornBreadcrumb>\n        </DemoItem>\n\n        <DemoNote tone=\"dimmed\">最近选择：{{ lastSelected || \"（尚未选择）\" }}</DemoNote>\n      </DemoBlock>\n    </DemoSection>\n\n    <DemoSection\n      title=\"超出折叠：max-count\"\n      description=\"max-count 指定最多展示的条目数量，超出部分折叠为省略号，始终保留首项与末尾若干项。\"\n    >\n      <DemoBlock layout=\"grid\" :columns=\"2\" align=\"start\">\n        <DemoItem label=\"max-count = 3\" mono note=\"原始 6 项，折叠后只留首项与末两项。\">\n          <RebornBreadcrumb :routes=\"longRoutes\" :max-count=\"3\" />\n        </DemoItem>\n\n        <DemoItem>\n          <template #label>\n            max-count = 4 ·\n            <code>#more-icon</code>\n          </template>\n          <template #note>\n            用\n            <code>#more-icon</code>\n            替换了默认的省略号图标。\n          </template>\n          <RebornBreadcrumb :routes=\"longRoutes\" :max-count=\"4\">\n            <template #more-icon>\n              <span class=\"text-primary text-xs font-semibold\">···</span>\n            </template>\n          </RebornBreadcrumb>\n        </DemoItem>\n      </DemoBlock>\n    </DemoSection>\n\n    <DemoSection\n      title=\"跳转方式：to 与 replace\"\n      description=\"每一项通过 to 指定跳转地址，replace 控制以 push / replace / blank 三种方式打开。\"\n    >\n      <DemoBlock layout=\"stack\">\n        <RebornBreadcrumb separator=\"/\">\n          <RebornBreadcrumbItem to=\"/\" class=\"text-red-5!\">首页</RebornBreadcrumbItem>\n          <RebornBreadcrumbItem to=\"/components\" replace=\"replace\">组件库（替换历史记录）</RebornBreadcrumbItem>\n          <RebornBreadcrumbItem to=\"https://github.com\" replace=\"blank\">GitHub（新窗口）</RebornBreadcrumbItem>\n          <RebornBreadcrumbItem>项目详情</RebornBreadcrumbItem>\n        </RebornBreadcrumb>\n        <DemoNote tone=\"dimmed\">\n          末项即使传了\n          <code>to</code>\n          也会渲染为纯文本，表示当前所在页，不可点击。\n        </DemoNote>\n      </DemoBlock>\n    </DemoSection>\n  </div>\n</template>\n"
+    },
+    {
+      "title": "UniApp 演示",
+      "path": "packages/uniapp-project/src/pages/reborn-breadcrumb/RebornBreadcrumbDemo.vue",
+      "source": "demo",
+      "platform": "uniapp",
+      "code": "<script setup lang=\"ts\">\nimport type { BreadcrumbDroplistItem, BreadcrumbRoute } from '@/components/reborn-breadcrumb'\nimport { computed, shallowRef } from 'vue'\nimport { RebornBreadcrumb, RebornBreadcrumbItem } from '@/components/reborn-breadcrumb'\nimport RebornButton from '@/components/reborn-button/RebornButton.vue'\nimport RebornCard from '@/components/reborn-card/RebornCard.vue'\nimport RebornPage from '@/components/reborn-page/RebornPage.vue'\nimport RebornSlider from '@/components/reborn-slider/RebornSlider.vue'\nimport RebornText from '@/components/reborn-text/RebornText.vue'\n\n/** 本页路径，用于演示会清空页面栈的跳转方式 */\nconst SELF_PATH = '/pages/reborn-breadcrumb/RebornBreadcrumbDemo'\n/** 首页路径，作为各段落的跳转目标 */\nconst HOME_PATH = '/pages/index/index'\n\nconst defaultState = {\n  separator: '/',\n  separatorIcon: '',\n  maxCount: 0,\n}\n\nconst separator = shallowRef(defaultState.separator)\nconst separatorIcon = shallowRef(defaultState.separatorIcon)\nconst maxCount = shallowRef(defaultState.maxCount)\n\n/** 可选文本分隔符 */\nconst separatorOptions = ['/', '>', '»', '·']\n\n/** 可选图标分隔符，空串表示不使用图标（回落到文本分隔符） */\nconst separatorIconOptions = [\n  { label: '不使用', value: '', icon: '' },\n  { label: 'chevron', value: 'i-lucide-chevron-right', icon: 'i-lucide-chevron-right' },\n  { label: 'arrow', value: 'i-lucide-arrow-right', icon: 'i-lucide-arrow-right' },\n  { label: 'slash', value: 'i-lucide-slash', icon: 'i-lucide-slash' },\n]\n\n/** 演练场当前配置摘要，方便对照预览区 */\nconst playgroundHint = computed(() => {\n  const icon = separatorIconOptions.find(item => item.value === separatorIcon.value)\n  const count = maxCount.value > 0 ? `最多 ${maxCount.value} 项` : '不折叠'\n  return `分隔符 ${separator.value}  ·  图标 ${icon?.label || '不使用'}  ·  ${count}`\n})\n\nfunction resetPlayground() {\n  separator.value = defaultState.separator\n  separatorIcon.value = defaultState.separatorIcon\n  maxCount.value = defaultState.maxCount\n}\n\n/** routes 模式数据源，children 会渲染成条目上的下拉菜单 */\nconst routes: BreadcrumbRoute[] = [\n  { label: '首页', path: HOME_PATH },\n  {\n    label: '组件库',\n    children: [\n      { label: '按钮 Button' },\n      { label: '标签 Badge' },\n      { label: '下拉选择 DropdownSelect' },\n    ],\n  },\n  { label: '导航' },\n  { label: '面包屑' },\n]\n\n/** 长路径，用于演示 max-count 折叠 */\nconst longRoutes: BreadcrumbRoute[] = [\n  { label: '首页', path: HOME_PATH },\n  { label: '商品中心' },\n  { label: '家电' },\n  { label: '厨房' },\n  { label: '微波炉' },\n  { label: '详情' },\n]\n\n/** 条目 droplist 属性的数据源 */\nconst droplist: BreadcrumbDroplistItem[] = [\n  { label: '活动列表' },\n  { label: '活动模板' },\n  { label: '活动数据' },\n]\n\nconst customDroplist = ['自定义项 1', '自定义项 2', '自定义项 3']\n\nconst lastSelected = shallowRef('')\n\nfunction onSelect(item: BreadcrumbDroplistItem) {\n  lastSelected.value = item.label\n}\n\n/** #droplist 自定义内容需要自行记录选择结果 */\nfunction onCustomSelect(label: string) {\n  lastSelected.value = label\n}\n</script>\n\n<template>\n  <RebornPage title=\"Breadcrumb 面包屑\" description=\"显示当前页面路径，快速回到之前的任意一级。\">\n    <!-- 交互演练场：预览台与控制区分开，避免控件把面包屑挤到角落 -->\n    <RebornCard title=\"交互演练场\" overflow-visible>\n      <RebornText color=\"neutral\">\n        切换分隔符或折叠数量，预览区会即时反映。\n      </RebornText>\n\n      <view class=\"relative overflow-hidden rounded-xl bg-gray-2 dark:bg-gray-9\">\n        <view class=\"absolute -right-16 -top-16 size-32 rounded-full bg-primary/15 blur-2xl\" />\n        <view class=\"absolute -bottom-16 -left-10 size-28 rounded-full bg-info/10 blur-2xl\" />\n        <view class=\"relative flex min-h-45 flex-col items-center justify-center gap-3 px-4 py-8\">\n          <RebornBreadcrumb :separator=\"separator\" :separator-icon=\"separatorIcon\" :max-count=\"maxCount\">\n            <RebornBreadcrumbItem :to=\"HOME_PATH\">\n              首页\n            </RebornBreadcrumbItem>\n            <RebornBreadcrumbItem>\n              组件库\n            </RebornBreadcrumbItem>\n            <RebornBreadcrumbItem>\n              导航\n            </RebornBreadcrumbItem>\n            <RebornBreadcrumbItem>\n              面包屑\n            </RebornBreadcrumbItem>\n            <RebornBreadcrumbItem>\n              基础\n            </RebornBreadcrumbItem>\n          </RebornBreadcrumb>\n          <text class=\"text-22 text-gray-5\">\n            {{ playgroundHint }}\n          </text>\n        </view>\n      </view>\n\n      <view class=\"flex flex-row items-center justify-between\">\n        <RebornText color=\"neutral\">\n          文本分隔符\n        </RebornText>\n        <RebornButton size=\"xs\" variant=\"text\" color=\"neutral\" @click=\"resetPlayground\">\n          重置\n        </RebornButton>\n      </view>\n      <view class=\"flex flex-row flex-wrap gap-2\">\n        <RebornButton\n          v-for=\"option in separatorOptions\"\n          :key=\"option\"\n          size=\"sm\"\n          variant=\"outlined\"\n          :color=\"separator === option ? 'primary' : 'neutral'\"\n          @click=\"separator = option\"\n        >\n          {{ option }}\n        </RebornButton>\n      </view>\n\n      <RebornText color=\"neutral\">\n        图标分隔符\n      </RebornText>\n      <view class=\"flex flex-row flex-wrap gap-2\">\n        <RebornButton\n          v-for=\"option in separatorIconOptions\"\n          :key=\"option.label\"\n          size=\"sm\"\n          variant=\"outlined\"\n          :color=\"separatorIcon === option.value ? 'primary' : 'neutral'\"\n          @click=\"separatorIcon = option.value\"\n        >\n          <view v-if=\"option.icon\" :class=\"option.icon\" class=\"mr-1 size-3.5\" />\n          {{ option.label }}\n        </RebornButton>\n      </view>\n\n      <RebornText color=\"neutral\">\n        最多展示数量（0 不限制）\n      </RebornText>\n      <RebornSlider v-model=\"maxCount\" :min=\"0\" :max=\"6\" :step=\"1\" show-value />\n    </RebornCard>\n\n    <RebornCard title=\"基础用法\">\n      <RebornText color=\"neutral\">\n        条目用 RebornBreadcrumbItem 包裹，末项自动识别为当前页。\n      </RebornText>\n      <view class=\"rounded-lg bg-gray-2 px-3 py-3 dark:bg-gray-9\">\n        <RebornBreadcrumb>\n          <RebornBreadcrumbItem :to=\"HOME_PATH\">\n            首页\n          </RebornBreadcrumbItem>\n          <RebornBreadcrumbItem>\n            频道\n          </RebornBreadcrumbItem>\n          <RebornBreadcrumbItem>\n            新闻\n          </RebornBreadcrumbItem>\n        </RebornBreadcrumb>\n      </view>\n    </RebornCard>\n\n    <RebornCard title=\"分隔符定制\">\n      <RebornText color=\"neutral\">\n        容器级 separator / separator-icon 可被条目属性或 #separator 插槽覆盖。\n      </RebornText>\n\n      <view class=\"flex flex-col gap-4\">\n        <view class=\"flex flex-col gap-2\">\n          <text class=\"text-22 font-medium text-gray-5\">\n            容器文本 · separator\n          </text>\n          <view class=\"rounded-lg bg-gray-2 px-3 py-3 dark:bg-gray-9\">\n            <RebornBreadcrumb separator=\">\">\n              <RebornBreadcrumbItem :to=\"HOME_PATH\">\n                首页\n              </RebornBreadcrumbItem>\n              <RebornBreadcrumbItem>\n                活动\n              </RebornBreadcrumbItem>\n              <RebornBreadcrumbItem>\n                详情\n              </RebornBreadcrumbItem>\n            </RebornBreadcrumb>\n          </view>\n        </view>\n\n        <view class=\"flex flex-col gap-2\">\n          <text class=\"text-22 font-medium text-gray-5\">\n            容器图标 · separator-icon\n          </text>\n          <view class=\"rounded-lg bg-gray-2 px-3 py-3 dark:bg-gray-9\">\n            <RebornBreadcrumb separator-icon=\"i-lucide-arrow-right\">\n              <RebornBreadcrumbItem :to=\"HOME_PATH\">\n                首页\n              </RebornBreadcrumbItem>\n              <RebornBreadcrumbItem>\n                用户\n              </RebornBreadcrumbItem>\n              <RebornBreadcrumbItem>\n                设置\n              </RebornBreadcrumbItem>\n            </RebornBreadcrumb>\n          </view>\n        </view>\n\n        <view class=\"flex flex-col gap-2\">\n          <text class=\"text-22 font-medium text-gray-5\">\n            条目属性 · separator\n          </text>\n          <view class=\"rounded-lg bg-gray-2 px-3 py-3 dark:bg-gray-9\">\n            <RebornBreadcrumb separator=\"/\">\n              <RebornBreadcrumbItem :to=\"HOME_PATH\">\n                首页\n              </RebornBreadcrumbItem>\n              <RebornBreadcrumbItem separator=\"→\">\n                商城\n              </RebornBreadcrumbItem>\n              <RebornBreadcrumbItem>\n                购物车\n              </RebornBreadcrumbItem>\n            </RebornBreadcrumb>\n          </view>\n        </view>\n\n        <view class=\"flex flex-col gap-2\">\n          <text class=\"text-22 font-medium text-gray-5\">\n            条目插槽 · #separator\n          </text>\n          <view class=\"rounded-lg bg-gray-2 px-3 py-3 dark:bg-gray-9\">\n            <RebornBreadcrumb>\n              <RebornBreadcrumbItem :to=\"HOME_PATH\">\n                首页\n              </RebornBreadcrumbItem>\n              <RebornBreadcrumbItem>\n                商城\n                <template #separator>\n                  <text class=\"text-primary mx-1\">\n                    ~\n                  </text>\n                </template>\n              </RebornBreadcrumbItem>\n              <RebornBreadcrumbItem>\n                购物车\n              </RebornBreadcrumbItem>\n            </RebornBreadcrumb>\n          </view>\n        </view>\n      </view>\n    </RebornCard>\n\n    <RebornCard title=\"尺寸与配色\">\n      <RebornText color=\"neutral\">\n        通过 ui 覆盖根节点与条目样式，父级 ui 会级联到所有子条目。\n      </RebornText>\n\n      <view class=\"flex flex-col gap-4\">\n        <view class=\"rounded-lg bg-gray-2 px-3 py-3 dark:bg-gray-9\">\n          <RebornBreadcrumb :ui=\"{ root: 'text-24', separator: 'text-20' }\">\n            <RebornBreadcrumbItem :to=\"HOME_PATH\">\n              小号\n            </RebornBreadcrumbItem>\n            <RebornBreadcrumbItem>\n              组件库\n            </RebornBreadcrumbItem>\n            <RebornBreadcrumbItem>\n              面包屑\n            </RebornBreadcrumbItem>\n          </RebornBreadcrumb>\n        </view>\n\n        <view class=\"rounded-lg bg-gray-2 px-3 py-3 dark:bg-gray-9\">\n          <RebornBreadcrumb :ui=\"{ root: 'text-32', link: 'text-primary/80', separator: 'text-primary/40' }\">\n            <RebornBreadcrumbItem :to=\"HOME_PATH\">\n              大号主色\n            </RebornBreadcrumbItem>\n            <RebornBreadcrumbItem>\n              组件库\n            </RebornBreadcrumbItem>\n            <RebornBreadcrumbItem>\n              面包屑\n            </RebornBreadcrumbItem>\n          </RebornBreadcrumb>\n        </view>\n      </view>\n    </RebornCard>\n\n    <RebornCard title=\"routes 数据驱动\" overflow-visible>\n      <RebornText color=\"neutral\">\n        传入 routes 后由组件渲染条目；#item-render 可接管单项内容。\n      </RebornText>\n\n      <view class=\"flex flex-col gap-4\">\n        <view class=\"overflow-visible rounded-lg bg-gray-2 px-3 py-3 dark:bg-gray-9\">\n          <RebornBreadcrumb :routes=\"routes\" @select=\"onSelect\" />\n        </view>\n\n        <view class=\"overflow-visible rounded-lg bg-gray-2 px-3 py-3 dark:bg-gray-9\">\n          <RebornBreadcrumb :routes=\"routes\">\n            <template #item-render=\"{ route, paths }\">\n              <view class=\"flex flex-row items-center gap-1\">\n                <view class=\"i-lucide-folder size-3.5 opacity-60\" />\n                <text>{{ route.label }}</text>\n                <text class=\"text-22 text-gray-5\">\n                  ({{ paths.length }})\n                </text>\n              </view>\n            </template>\n          </RebornBreadcrumb>\n        </view>\n      </view>\n\n      <text class=\"text-22 text-gray-5\">\n        第二组用 #item-render 自定义了每一项，作用域含 route、routes 与 paths。\n      </text>\n    </RebornCard>\n\n    <RebornCard title=\"下拉菜单\" overflow-visible>\n      <RebornText color=\"neutral\">\n        routes.children、droplist 属性或 #droplist 插槽都会展开下拉。\n      </RebornText>\n\n      <view class=\"flex flex-col gap-4\">\n        <view class=\"flex flex-col gap-2\">\n          <text class=\"text-22 font-medium text-gray-5\">\n            droplist 属性\n          </text>\n          <view class=\"overflow-visible rounded-lg bg-gray-2 px-3 py-3 dark:bg-gray-9\">\n            <RebornBreadcrumb>\n              <RebornBreadcrumbItem :to=\"HOME_PATH\">\n                首页\n              </RebornBreadcrumbItem>\n              <RebornBreadcrumbItem :droplist=\"droplist\" @select=\"onSelect\">\n                活动\n              </RebornBreadcrumbItem>\n              <RebornBreadcrumbItem>\n                详情\n              </RebornBreadcrumbItem>\n            </RebornBreadcrumb>\n          </view>\n        </view>\n\n        <view class=\"flex flex-col gap-2\">\n          <text class=\"text-22 font-medium text-gray-5\">\n            #droplist 插槽\n          </text>\n          <view class=\"overflow-visible rounded-lg bg-gray-2 px-3 py-3 dark:bg-gray-9\">\n            <RebornBreadcrumb>\n              <RebornBreadcrumbItem :to=\"HOME_PATH\">\n                首页\n              </RebornBreadcrumbItem>\n              <RebornBreadcrumbItem>\n                频道\n                <template #droplist>\n                  <view\n                    v-for=\"(label, index) in customDroplist\"\n                    :key=\"label\"\n                    class=\"px-3 py-2 text-28 leading-normal text-gray-8 dark:text-gray-2\"\n                    :class=\"index === customDroplist.length - 1 ? 'border-t border-gray-2 dark:border-gray-7' : ''\"\n                    @tap=\"onCustomSelect(label)\"\n                  >\n                    {{ label }}\n                  </view>\n                </template>\n              </RebornBreadcrumbItem>\n              <RebornBreadcrumbItem>\n                新闻\n              </RebornBreadcrumbItem>\n            </RebornBreadcrumb>\n          </view>\n        </view>\n      </view>\n\n      <view class=\"flex flex-row items-center gap-2 rounded-lg bg-gray-2 px-3 py-2 dark:bg-gray-9\">\n        <view class=\"i-lucide-mouse-pointer-click size-3.5 text-gray-5\" />\n        <text class=\"text-24 text-gray-6\">\n          最近选择：{{ lastSelected || '尚未选择' }}\n        </text>\n      </view>\n    </RebornCard>\n\n    <RebornCard title=\"超出折叠\">\n      <RebornText color=\"neutral\">\n        max-count 超出后折叠为省略号，始终保留首项与末尾若干项。\n      </RebornText>\n\n      <view class=\"flex flex-col gap-4\">\n        <view class=\"flex flex-col gap-2\">\n          <text class=\"text-22 font-medium text-gray-5\">\n            max-count = 3\n          </text>\n          <view class=\"rounded-lg bg-gray-2 px-3 py-3 dark:bg-gray-9\">\n            <RebornBreadcrumb :routes=\"longRoutes\" :max-count=\"3\" />\n          </view>\n        </view>\n\n        <view class=\"flex flex-col gap-2\">\n          <text class=\"text-22 font-medium text-gray-5\">\n            max-count = 4 · #more-icon\n          </text>\n          <view class=\"rounded-lg bg-gray-2 px-3 py-3 dark:bg-gray-9\">\n            <RebornBreadcrumb :routes=\"longRoutes\" :max-count=\"4\">\n              <template #more-icon>\n                <text class=\"text-primary text-24 font-semibold\">\n                  ···\n                </text>\n              </template>\n            </RebornBreadcrumb>\n          </view>\n        </view>\n      </view>\n    </RebornCard>\n\n    <RebornCard title=\"链接与跳转方式\">\n      <RebornText color=\"neutral\">\n        to 指定地址，replace 对应 uni 的四种路由 API。标签保持简短，避免小屏折行。\n      </RebornText>\n\n      <view class=\"flex flex-col gap-4\">\n        <view class=\"flex flex-col gap-2\">\n          <text class=\"text-22 font-medium text-gray-5\">\n            navigate · 入栈\n          </text>\n          <view class=\"rounded-lg bg-gray-2 px-3 py-3 dark:bg-gray-9\">\n            <RebornBreadcrumb>\n              <RebornBreadcrumbItem :to=\"HOME_PATH\">\n                首页\n              </RebornBreadcrumbItem>\n              <RebornBreadcrumbItem>\n                当前页\n              </RebornBreadcrumbItem>\n            </RebornBreadcrumb>\n          </view>\n        </view>\n\n        <view class=\"flex flex-col gap-2\">\n          <text class=\"text-22 font-medium text-gray-5\">\n            redirect · 替换当前页\n          </text>\n          <view class=\"rounded-lg bg-gray-2 px-3 py-3 dark:bg-gray-9\">\n            <RebornBreadcrumb>\n              <RebornBreadcrumbItem :to=\"HOME_PATH\" replace=\"redirect\">\n                首页\n              </RebornBreadcrumbItem>\n              <RebornBreadcrumbItem>\n                当前页\n              </RebornBreadcrumbItem>\n            </RebornBreadcrumb>\n          </view>\n        </view>\n\n        <view class=\"flex flex-col gap-2\">\n          <text class=\"text-22 font-medium text-gray-5\">\n            reLaunch · 清空页面栈\n          </text>\n          <view class=\"rounded-lg bg-gray-2 px-3 py-3 dark:bg-gray-9\">\n            <RebornBreadcrumb>\n              <RebornBreadcrumbItem :to=\"SELF_PATH\" replace=\"reLaunch\">\n                本页\n              </RebornBreadcrumbItem>\n              <RebornBreadcrumbItem>\n                当前页\n              </RebornBreadcrumbItem>\n            </RebornBreadcrumb>\n          </view>\n        </view>\n      </view>\n\n      <text class=\"text-22 text-gray-5\">\n        switchTab 仅对 tabBar 页面生效；末项不传 to，渲染为不可点击文本。\n      </text>\n    </RebornCard>\n  </RebornPage>\n</template>"
+    }
+  ],
+  "related": [
+    "reborn-dropdown",
+    "reborn-select-trigger"
+  ],
+  "whenToUse": [
+    "多层级页面结构中提示用户当前位置并支持返回上级。",
+    "后台管理、商城分类等需要层级导航的页面头部。",
+    "路径层级较深、需要用 max-count 折叠中间层级的导航场景。",
+    "需要在某一级展开同级页面下拉菜单（droplist）快速平移的场景。",
+    "需要自定义分隔符（文本、图标或每项独立分隔符插槽）的路径导航。"
+  ],
+  "whenNotToUse": [
+    "平级页签切换场景，改用 reborn-tabs。",
+    "分页浏览列表数据，改用 reborn-pagination。",
+    "路径较浅、只需要返回入口加页面标题，改用 reborn-page-header。"
+  ],
+  "pitfalls": [
+    "同名的自定义插槽优先级高于属性，条目级配置优先级高于容器级配置。",
+    "routes 模式不为末项生成链接；手写末项必须省略 to，否则仍按传入地址跳转。",
+    "非空 routes 替换默认插槽；空数组或未传时仍渲染手写条目，不能用空数组隐藏默认插槽。",
+    "Web 端整组 order 均为有限数值时优先按 order 排序，同值稳定；混传或无效时按插槽顺序编号并插入省略号（服务端首屏即折叠结果）。条目按「默认插槽里展开片段后的组件节点」识别，不比较组件身份：全局注册经运行时解析的异步包装也参与计数与折叠；普通元素与文本不计数、原位保留；自封装条目须单根且保留 inheritAttrs，序号与折叠属性才能透传到内部 RebornBreadcrumbItem；默认插槽里混放的其他组件会被当成一项。",
+    "UniApp 动态插槽须逐项传 order 下标；MP 按完整有限数值 order 排序，静态缺省保持登记次序，H5 缺省按 VNode。routes 内部传 index。混传或无效值忽略整组显式排序，同值保留相对次序。省略号靠 flex order 归位，ui.root 保留 flex。",
+    "web 与 uniapp 跳转模式取值不同：Web 为 push/replace/blank（新窗口），UniApp 为 navigate/redirect/switchTab/reLaunch。",
+    "下拉菜单靠点击开合而非悬停，关闭时机沿用 RebornSelectTrigger 的默认 closeOn: 'mousedown'（面板外按下任意鼠标键或滚动页面即收起，面板内滚动不收），需要点完才收可用 dropdown-props 传 closeOn: 'click'。",
+    "下拉菜单实现不同：Web 借 RebornSelectTrigger 做浮层容器（默认传送到 body，触发器仍是一枚普通面包屑条目、不套边框底色，dropdown-props 透传给它），UniApp 为内置绝对定位面板且仅支持 hideOnClick。",
+    "下拉面板的内边距必须留在 ui.droplist（内容区），不能挪到浮层外壳：外壳展开动画走 height 0 → scrollHeight，内边距会在收起时露出残留色块；菜单项字号也必须自带，浮层传送到 body 后拿不到面包屑根节点的 text-sm。"
+  ],
+  "dependencies": [
+    "@weapp-tailwindcss/merge-v3",
+    "@weapp-tailwindcss/variants-v3",
+    "clsx",
+    "tailwind-merge",
+    "tailwind-variants"
+  ],
+  "install": {
+    "cli": "npx reborn-ui@latest add reborn-breadcrumb"
+  },
+  "sourceRefs": {
+    "web": [
+      "app/components/reborn/ui/reborn-breadcrumb/RebornBreadcrumb.vue",
+      "app/components/reborn/ui/reborn-breadcrumb/RebornBreadcrumbItem.vue",
+      "app/components/reborn/ui/reborn-breadcrumb/index.ts",
+      "app/components/reborn/ui/reborn-breadcrumb/reborn-breadcrumb.config.ts"
+    ],
+    "uniapp": [
+      "packages/uniapp-project/src/components/reborn-breadcrumb/RebornBreadcrumb.vue",
+      "packages/uniapp-project/src/components/reborn-breadcrumb/RebornBreadcrumbItem.vue",
+      "packages/uniapp-project/src/components/reborn-breadcrumb/index.ts",
+      "packages/uniapp-project/src/components/reborn-breadcrumb/reborn-breadcrumb.config.ts"
+    ]
+  },
+  "docPath": "content/2.components/navigation/reborn-breadcrumb.md",
+  "_meta": {
+    "contentHash": "256910c9f02066ec115a36e2bcfcd41107f11d75",
+    "hasOverride": true,
+    "extractors": {
+      "web": "ok",
+      "uniapp": "ok",
+      "docs": "found"
+    }
+  }
+}

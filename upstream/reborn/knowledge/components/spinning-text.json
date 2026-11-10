@@ -9,6 +9,7 @@
     "tailwind",
     "magic-ui"
   ],
+  "aliases": [],
   "platforms": [
     "web"
   ],
@@ -103,7 +104,7 @@
   },
   "docPath": "content/2.components/text-animations/spinning-text.md",
   "_meta": {
-    "contentHash": "52a2d163abaa88f20ac5161fc9f09eb7f93c834a",
+    "contentHash": "40b016059eb2969f825276600de7f447d14fcd28",
     "hasOverride": true,
     "extractors": {
       "web": "ok",

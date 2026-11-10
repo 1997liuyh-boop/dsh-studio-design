@@ -1,0 +1,97 @@
+{
+  "$schema": "../schema/component.schema.json",
+  "id": "text-highlight",
+  "title": "文字高亮",
+  "description": "用于以背景填充动画突出句中重点文字的高亮组件。",
+  "category": "effect",
+  "tags": [
+    "css",
+    "tailwind",
+    "aceternity-ui"
+  ],
+  "aliases": [],
+  "platforms": [
+    "web"
+  ],
+  "props": [
+    {
+      "name": "delay",
+      "type": "number",
+      "required": false,
+      "description": "动画开始前的延迟（毫秒）。",
+      "default": "0"
+    },
+    {
+      "name": "duration",
+      "type": "number",
+      "required": false,
+      "description": "动画持续时间（毫秒）。",
+      "default": "2000"
+    },
+    {
+      "name": "class",
+      "type": "HTMLAttributes[\"class\"]",
+      "required": false,
+      "description": ""
+    },
+    {
+      "name": "textEndColor",
+      "type": "string",
+      "required": false,
+      "description": "动画结束时文字颜色，应符合 WCAG 推荐。",
+      "default": "\"inherit\""
+    }
+  ],
+  "events": [],
+  "slots": [
+    {
+      "name": "default",
+      "description": ""
+    }
+  ],
+  "exposes": [],
+  "examples": [
+    {
+      "title": "Web 演示",
+      "path": "app/components/reborn/examples/text-highlight/TextHighlightDemo.vue",
+      "source": "demo",
+      "platform": "web",
+      "code": "<template>\n  <DemoSection title=\"基础用法\">\n    <DemoBlock\n      layout=\"stack\"\n      align=\"center\"\n    >\n      <h1 class=\"text-highlighted text-center text-4xl font-bold text-balance\">\n        你是一位\n        <TextHighlight class=\"rounded-lg bg-linear-to-r from-indigo-300 to-purple-300\">\n          了不起的开发者\n        </TextHighlight>\n      </h1>\n    </DemoBlock>\n  </DemoSection>\n</template>\n"
+    }
+  ],
+  "related": [],
+  "whenToUse": [
+    "标题或段落中强调关键词，配合渐变背景类名使用。",
+    "页面进入后需要延迟（delay）再高亮的重点语句。"
+  ],
+  "whenNotToUse": [
+    "需要闪光点缀文字，改用 sparkles-text。",
+    "需要文字本身的高光扫过效果，改用 radiant-text。"
+  ],
+  "pitfalls": [
+    "仅 web 端可用。",
+    "高亮背景色不由 prop 控制，通过 class 传入（示例用 Tailwind 渐变类 bg-gradient-to-r）。",
+    "delay 与 duration 单位均为毫秒（duration 默认 2000）。",
+    "文字通过默认插槽传入，可选 textEndColor 设置结束时文字颜色。"
+  ],
+  "dependencies": [],
+  "install": {
+    "cli": "npx reborn-ui@latest add text-highlight"
+  },
+  "sourceRefs": {
+    "web": [
+      "app/components/reborn/ui/text-highlight/TextHighlight.vue",
+      "app/components/reborn/ui/text-highlight/index.ts"
+    ]
+  },
+  "docPath": "content/2.components/text-animations/text-highlight.md",
+  "_meta": {
+    "contentHash": "1bada4706afccd1c832c774ea8a11d3a3fad685e",
+    "hasOverride": true,
+    "extractors": {
+      "web": "ok",
+      "uniapp": "absent",
+      "docs": "found"
+    }
+  }
+}

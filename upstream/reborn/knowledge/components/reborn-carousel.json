@@ -11,6 +11,29 @@
     "slider",
     "motion"
   ],
+  "aliases": [
+    "carousel",
+    "轮播",
+    "轮播图",
+    "走马灯",
+    "swiper",
+    "banner 轮播",
+    "幻灯片",
+    "slideshow",
+    "图廊",
+    "商品图廊",
+    "画廊",
+    "gallery",
+    "缩略图",
+    "缩略图切换",
+    "主图",
+    "主图切换",
+    "thumbs",
+    "thumbnail",
+    "大图切换",
+    "图片切换",
+    "看图"
+  ],
   "platforms": [
     "web"
   ],
@@ -277,15 +300,22 @@
   "whenToUse": [
     "首页 banner、图片或卡片列表的自动轮播展示。",
     "需要一屏显示多项（slidesPerView）并按断点响应式调整的横向滑动列表。",
-    "需要缩略图联动（thumbs）、自定义箭头/指示器插槽的轮播场景。"
+    "需要缩略图联动（thumbs）、自定义箭头/指示器插槽的轮播场景。",
+    "商品详情页的图廊：设计稿里一列「缩略图」实例（变体 已选/未选）+ 一张主图 + 左右箭头，整组就是一个开了 thumbs 的 RebornCarousel，缩略图列由组件按 slide 克隆并与主图联动。"
   ],
   "whenNotToUse": [
     "uniapp 端不可用（仅 web），小程序轮播需另行实现。",
+    "只有一张图、不需要切换的展示，改用 reborn-image。",
+    "横向无限滚动的文字、logo 条（跑马灯），改用 reborn-marquee。",
     "苹果卡片风格的展示型轮播，改用 apple-card-carousel。",
-    "轮播用户评价文案，改用 testimonial-slider 或 animated-testimonials。"
+    "轮播用户评价文案，改用 testimonial-slider 或 animated-testimonials。",
+    "全屏背景图轮播并叠加文字内容，改用 images-slider。"
   ],
   "pitfalls": [
     "仅 web 端可用。",
+    "缩略图联动只需 :thumbs=\"{ position: 'left' | 'right' | 'top' | 'bottom', arrow: 'never' | 'hover' | 'always', loop }\"：组件把默认插槽里每张 slide 克隆成一张缩略图，点击即切换、与主图共用同一个索引，所以每张大图必须是默认插槽里独立的直接子节点；不要在组件外再写一列 RebornButton + img 自绘缩略图和 active 逻辑。选中描边改 ui.thumbActive，未选改 ui.thumbInactive，单张尺寸改 ui.thumb，列内间距改 ui.thumbsTrack，列与主图的间距改 ui.thumbsShell。",
+    "prev / next 插槽里的内容必须自带 pointer-events-auto：箭头组容器 ui.arrowGroup 是 pointer-events-none（避免整条横带挡住轨道拖拽），内置箭头按钮自己加了 pointer-events-auto，换成插槽内容后这一句要自己补，否则点击落到轨道上、箭头点不动。插槽作用域给出 prev / next 方法与 disabled。",
+    "稿面没有分页点时传 :pagination=\"null\"，否则默认会在主图底部渲染一排 line 指示器。",
     "modelValue 可 v-model 双向绑定当前索引；modelValue 为空时才使用 initialSlide。",
     "loop 与 autoplay 默认均为 false，需显式开启；arrow 默认 hover 显示。",
     "height 默认 \"auto\" 随内容自适应；组件对外暴露 next/prev/goTo/pause/resume 方法可编程控制。",
@@ -320,7 +350,7 @@
   },
   "docPath": "content/2.components/navigation/reborn-carousel.md",
   "_meta": {
-    "contentHash": "1397c8c6befa16c35cb7380b99626647fd813cd3",
+    "contentHash": "3c9a6acaf9e67580ad573fe61d75534be024cb3e",
     "hasOverride": true,
     "extractors": {
       "web": "ok",

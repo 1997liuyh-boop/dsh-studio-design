@@ -9,6 +9,7 @@
     "interactive",
     "tailwind"
   ],
+  "aliases": [],
   "platforms": [
     "web"
   ],
@@ -69,7 +70,7 @@
   },
   "docPath": "content/2.components/miscellaneous/icon-cloud.md",
   "_meta": {
-    "contentHash": "71f678640a6860652f2f253938929460b84050d3",
+    "contentHash": "5d554e36f8bb2814e81bd327ad7283347d0733f1",
     "hasOverride": true,
     "extractors": {
       "web": "ok",

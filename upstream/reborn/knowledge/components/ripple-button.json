@@ -10,6 +10,7 @@
     "button",
     "magic-ui"
   ],
+  "aliases": [],
   "platforms": [
     "web"
   ],
@@ -87,7 +88,7 @@
   },
   "docPath": "content/2.components/button/ripple-button.md",
   "_meta": {
-    "contentHash": "096723b2bea1204d89496f847cb047f8268aef8a",
+    "contentHash": "b70aac785e7531a8f56b89150033648eeff29590",
     "hasOverride": true,
     "extractors": {
       "web": "ok",

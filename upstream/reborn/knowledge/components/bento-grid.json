@@ -10,6 +10,11 @@
     "bento",
     "aceternity-ui"
   ],
+  "aliases": [
+    "bento",
+    "便当网格",
+    "功能网格"
+  ],
   "platforms": [
     "web"
   ],
@@ -118,7 +123,7 @@
   },
   "docPath": "content/2.components/miscellaneous/bento-grid.md",
   "_meta": {
-    "contentHash": "3c184eb52ddea270006d337ad7ca1c476641093d",
+    "contentHash": "87051c281085f851a50169ca87ab8cee60c99605",
     "hasOverride": true,
     "extractors": {
       "web": "ok",

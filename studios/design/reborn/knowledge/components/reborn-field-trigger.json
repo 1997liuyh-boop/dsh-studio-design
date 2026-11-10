@@ -1,0 +1,204 @@
+{
+  "$schema": "../schema/component.schema.json",
+  "id": "reborn-field-trigger",
+  "title": "reborn-field-trigger",
+  "description": "表单类下拉组件共用的触发器盒子内部基础组件，提供输入框式外观（边框、尺寸、占位符、清空按钮、箭头）。",
+  "category": "misc",
+  "tags": [],
+  "aliases": [],
+  "platforms": [
+    "web"
+  ],
+  "props": [
+    {
+      "name": "displayText",
+      "type": "string",
+      "required": false,
+      "description": "已选值的展示文案",
+      "default": "\"\""
+    },
+    {
+      "name": "placeholder",
+      "type": "string",
+      "required": false,
+      "description": "无选中值时的占位文案",
+      "default": "\"\""
+    },
+    {
+      "name": "isOpen",
+      "type": "boolean",
+      "required": false,
+      "description": "下拉是否处于展开态，用于 data-state 描边与箭头旋转",
+      "default": "false"
+    },
+    {
+      "name": "disabled",
+      "type": "boolean",
+      "required": false,
+      "description": "",
+      "default": "false"
+    },
+    {
+      "name": "clearable",
+      "type": "boolean",
+      "required": false,
+      "description": "是否显示清空按钮（悬停时盖在箭头之上，不额外占位）",
+      "default": "true"
+    },
+    {
+      "name": "size",
+      "type": "'sm' | 'md' | 'lg'",
+      "required": false,
+      "description": "",
+      "default": "\"md\"",
+      "options": [
+        "sm",
+        "md",
+        "lg"
+      ]
+    },
+    {
+      "name": "color",
+      "type": "'primary' | 'secondary' | 'success' | 'info' | 'warning' | 'error' | 'neutral'",
+      "required": false,
+      "description": "",
+      "default": "\"primary\"",
+      "options": [
+        "primary",
+        "secondary",
+        "success",
+        "info",
+        "warning",
+        "error",
+        "neutral"
+      ]
+    },
+    {
+      "name": "variant",
+      "type": "'outlined' | 'filled' | 'borderless' | 'underlined'",
+      "required": false,
+      "description": "形态变体：描边 / 填充 / 无边框 / 下划线",
+      "default": "\"outlined\"",
+      "options": [
+        "outlined",
+        "filled",
+        "borderless",
+        "underlined"
+      ]
+    },
+    {
+      "name": "icon",
+      "type": "string",
+      "required": false,
+      "description": "右侧图标名，默认向下箭头",
+      "default": "\"lucide:chevron-down\""
+    },
+    {
+      "name": "class",
+      "type": "any",
+      "required": false,
+      "description": ""
+    },
+    {
+      "name": "ui",
+      "type": "FieldTriggerUI",
+      "required": false,
+      "description": "可用键（从源码抽取，以此为准）——Web：arrow、clearBtn、placeholder*、trigger、triggerIconWrapper、triggerText*。 带 * 的键对应插槽兜底节点：填了同名插槽，组件自带的节点被替换，这个键随之失效。"
+    },
+    {
+      "name": "bordered",
+      "type": "boolean",
+      "required": false,
+      "description": "",
+      "default": "true"
+    },
+    {
+      "name": "showArrow",
+      "type": "boolean",
+      "required": false,
+      "description": "是否显示箭头",
+      "default": "true"
+    },
+    {
+      "name": "arrowAnimation",
+      "type": "boolean",
+      "required": false,
+      "description": "展开时箭头是否旋转",
+      "default": "true"
+    },
+    {
+      "name": "error",
+      "type": "boolean",
+      "required": false,
+      "description": "是否为错误态（红色描边）"
+    }
+  ],
+  "events": [
+    {
+      "name": "click",
+      "payload": "(e: \"click\", event: MouseEvent): void;",
+      "description": ""
+    },
+    {
+      "name": "clear",
+      "payload": "(e: \"clear\", event: Event): void;",
+      "description": ""
+    }
+  ],
+  "slots": [
+    {
+      "name": "cover",
+      "props": "(props: FieldTriggerSlotProps) => any",
+      "description": "整体接管触发器内容，连清空按钮与箭头一并交由调用方绘制"
+    },
+    {
+      "name": "default",
+      "props": "(props: FieldTriggerSlotProps) => any",
+      "description": "替换文案区域，保留清空按钮与箭头"
+    }
+  ],
+  "exposes": [],
+  "examples": [],
+  "related": [],
+  "whenToUse": [
+    "自研新的下拉类组件时，复用与 reborn-select 一致的触发器外观与尺寸体系。",
+    "需要与 reborn-input 保持同一套 h-6 / h-8 / h-10 高度、圆角与描边色时。"
+  ],
+  "whenNotToUse": [
+    "触发器不是输入框形态（例如 reborn-dropdown 的按钮 / 按钮组）时，直接在自己的模板里渲染即可。",
+    "业务中直接做数据选择时，改用成品组件 reborn-select、reborn-date-picker 或 reborn-time-picker。"
+  ],
+  "pitfalls": [
+    "仅 web 端存在，这是内部基础组件，无独立文档页与演示示例；uniapp 端触发器仍内置在 reborn-select-trigger 中。",
+    "本身不含定位能力，必须渲染在 reborn-select-trigger 的 trigger 插槽内，否则 group-focus 聚焦描边不生效。",
+    "自己不管理展开状态，isOpen 由外部传入；点击与清空分别通过 click / clear 事件上抛。",
+    "clearable 为 true 时清空按钮会顶替箭头显示，二者不会同时出现。",
+    "cover 插槽整体接管触发器内容（连清空按钮与箭头一并交给调用方绘制），default 插槽只替换文本区。"
+  ],
+  "dependencies": [
+    "clsx",
+    "tailwind-merge",
+    "tailwind-variants"
+  ],
+  "install": {
+    "cli": "npx reborn-ui@latest add reborn-field-trigger"
+  },
+  "sourceRefs": {
+    "web": [
+      "app/components/reborn/ui/reborn-field-trigger/RebornFieldTrigger.vue",
+      "app/components/reborn/ui/reborn-field-trigger/index.ts",
+      "app/components/reborn/ui/reborn-field-trigger/reborn-field-trigger.config.ts"
+    ]
+  },
+  "docPath": null,
+  "_meta": {
+    "contentHash": "2f6e8e924de56fdf3288b0ecb279650d6b7bcf4d",
+    "hasOverride": true,
+    "extractors": {
+      "web": "ok",
+      "uniapp": "absent",
+      "docs": "missing"
+    }
+  },
+  "internal": true
+}

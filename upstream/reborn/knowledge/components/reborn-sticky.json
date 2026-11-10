@@ -5,6 +5,12 @@
   "description": "用于页面滚动时将内容吸附在顶部或底部的吸顶组件。",
   "category": "navigation",
   "tags": [],
+  "aliases": [
+    "sticky",
+    "吸顶",
+    "固定顶部",
+    "吸底"
+  ],
   "platforms": [
     "web",
     "uniapp"
@@ -198,7 +204,7 @@
   },
   "docPath": "content/2.components/navigation/reborn-sticky.md",
   "_meta": {
-    "contentHash": "64183bfcd37bbe57e86f97081fc608235be17959",
+    "contentHash": "1ab028b8f53ca34c496d571e0c3b4201735a8c85",
     "hasOverride": true,
     "extractors": {
       "web": "ok",

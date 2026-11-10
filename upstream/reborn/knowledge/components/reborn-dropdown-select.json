@@ -10,6 +10,7 @@
     "select",
     "form"
   ],
+  "aliases": [],
   "platforms": [
     "uniapp"
   ],
@@ -37,17 +38,31 @@
     },
     {
       "name": "size",
-      "type": "typeof dropdownSelectSizes[number]",
+      "type": "'sm' | 'md' | 'lg'",
       "required": false,
       "description": "触发器与选项行的尺寸。放入 `RebornForm` 时表单的 `size` 优先。",
-      "default": "'md'"
+      "default": "'md'",
+      "options": [
+        "sm",
+        "md",
+        "lg"
+      ]
     },
     {
       "name": "color",
-      "type": "typeof dropdownSelectColors[number]",
+      "type": "'primary' | 'secondary' | 'success' | 'info' | 'warning' | 'error' | 'neutral'",
       "required": false,
       "description": "主题色，作用于选中项高亮与勾选图标。",
-      "default": "'primary'"
+      "default": "'primary'",
+      "options": [
+        "primary",
+        "secondary",
+        "success",
+        "info",
+        "warning",
+        "error",
+        "neutral"
+      ]
     },
     {
       "name": "clearable",
@@ -141,7 +156,7 @@
   },
   "docPath": "content/2.components/input-and-forms/reborn-dropdown-select.md",
   "_meta": {
-    "contentHash": "35ea1c4593dc941c65db5193bf6a02bae6d3f888",
+    "contentHash": "c8d8988cd450794b1c6bad1697ab596489996d3b",
     "hasOverride": true,
     "extractors": {
       "web": "absent",

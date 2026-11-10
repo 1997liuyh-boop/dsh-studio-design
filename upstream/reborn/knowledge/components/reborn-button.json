@@ -10,6 +10,17 @@
     "button",
     "uniapp"
   ],
+  "aliases": [
+    "button",
+    "按钮",
+    "btn",
+    "操作按钮",
+    "主按钮",
+    "次按钮",
+    "文字按钮",
+    "链接按钮",
+    "加载按钮"
+  ],
   "platforms": [
     "web",
     "uniapp"
@@ -51,13 +62,14 @@
         "text",
         "round",
         "circle"
-      ]
+      ],
+      "platform": "uniapp"
     },
     {
       "name": "size",
       "type": "'xs' | 'sm' | 'default' | 'md' | 'lg' | 'xl' | '2xl'",
       "required": false,
-      "description": "尺寸：xs/sm/default/md/lg/xl/2xl（default 与 md 等高），默认 md",
+      "description": "尺寸：xs/sm/default/md/lg/xl/2xl（default 与 md 等高），默认 md 本条为 UniApp 端取值，另一端另有同名条目。",
       "default": "'md'",
       "options": [
         "xs",
@@ -67,7 +79,8 @@
         "lg",
         "xl",
         "2xl"
-      ]
+      ],
+      "platform": "uniapp"
     },
     {
       "name": "loading",
@@ -228,6 +241,21 @@
       "description": "是否创建直播活动"
     },
     {
+      "name": "variant",
+      "type": "'filled' | 'outlined' | 'soft' | 'subtle' | 'text'",
+      "required": false,
+      "description": "视觉风格：filled / outlined / soft / subtle / text；旧 round / circle 仅保留兼容，新用法请使用同名布尔参数 本条为 Web 端取值，另一端另有同名条目。",
+      "default": "'filled'",
+      "options": [
+        "filled",
+        "outlined",
+        "soft",
+        "subtle",
+        "text"
+      ],
+      "platform": "web"
+    },
+    {
       "name": "round",
       "type": "boolean",
       "required": false,
@@ -242,11 +270,28 @@
       "default": "false"
     },
     {
+      "name": "size",
+      "type": "'sm' | 'md' | 'lg'",
+      "required": false,
+      "description": "尺寸，sm/md/lg 共 3 档，高度依次 24/32/40px，水平内边距统一 12px，默认 md；显式设置时优先于所在表单的 size，未设置时跟随表单 本条为 Web 端取值，另一端另有同名条目。",
+      "default": "'md'",
+      "options": [
+        "sm",
+        "md",
+        "lg"
+      ],
+      "platform": "web"
+    },
+    {
       "name": "borderStyle",
-      "type": "typeof buttonBorderStyles[number]",
+      "type": "'solid' | 'dashed'",
       "required": false,
       "description": "边框线型：solid 实线 / dashed 虚线，默认 solid；边框宽度固定 1px，对有边框的变体（outlined / subtle）生效",
-      "default": "'solid'"
+      "default": "'solid'",
+      "options": [
+        "solid",
+        "dashed"
+      ]
     },
     {
       "name": "class",
@@ -389,6 +434,9 @@
     "小程序开放能力场景（open-type 获取手机号、客服会话等）。"
   ],
   "whenNotToUse": [
+    "不可点击、只表示状态或分类的小标签（「已完成」「热门」「VIP」，即 Element / Ant 的 Tag），改用 reborn-badge：按钮会被读屏器报成可操作元素，视觉上也会引导用户去点。",
+    "图标、头像或按钮右上角的数字或红点（Element / Ant 的 Badge），改用 reborn-chip。",
+    "一组互斥切换项、选中块滑动（Ant 的 Segmented、Element 的 radio-button），改用 reborn-segmented 或 reborn-radio 的按钮形态。",
     "页面固定位置的悬浮操作入口，改用 reborn-fab。",
     "仅 web 的营销风格按钮特效，可改用 gradient-button、ripple-button 或 shimmer-button。",
     "纯跳转、无副作用的导航链接，优先使用链接语义元素而非按钮。"
@@ -427,7 +475,7 @@
   },
   "docPath": "content/2.components/button/reborn-button.md",
   "_meta": {
-    "contentHash": "b915108ecb3b215c1530b21ebaf164d64c46aec8",
+    "contentHash": "1afa7fe3a23ac752d66a3efd84abc037aabcdebc",
     "hasOverride": true,
     "extractors": {
       "web": "ok",

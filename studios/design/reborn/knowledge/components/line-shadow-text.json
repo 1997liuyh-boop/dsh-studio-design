@@ -1,0 +1,97 @@
+{
+  "$schema": "../schema/component.schema.json",
+  "id": "line-shadow-text",
+  "title": "线条阴影文字",
+  "description": "用于给插槽文字添加斜线条纹阴影装饰的静态文字效果组件。",
+  "category": "effect",
+  "tags": [
+    "css",
+    "tailwind",
+    "magic-ui"
+  ],
+  "aliases": [],
+  "platforms": [
+    "web"
+  ],
+  "props": [
+    {
+      "name": "shadowColor",
+      "type": "string",
+      "required": false,
+      "description": "阴影颜色。",
+      "default": "\"black\""
+    },
+    {
+      "name": "as",
+      "type": "keyof HTMLElement",
+      "required": false,
+      "description": "根元素标签。",
+      "default": "\"span\" as keyof HTMLElement"
+    },
+    {
+      "name": "class",
+      "type": "string",
+      "required": false,
+      "description": "根节点类名。"
+    },
+    {
+      "name": "text",
+      "type": "string",
+      "required": false,
+      "description": "文字内容，同时作为阴影层（data-text）的来源；不传时从默认插槽的纯文本中提取"
+    }
+  ],
+  "events": [],
+  "slots": [
+    {
+      "name": "default",
+      "props": "() => VNode[]",
+      "description": "正文，应为纯文本；不填时渲染 text"
+    }
+  ],
+  "exposes": [],
+  "examples": [
+    {
+      "title": "Web 演示",
+      "path": "app/components/reborn/examples/line-shadow-text/LineShadowTextDemo.vue",
+      "source": "demo",
+      "platform": "web",
+      "code": "<template>\n  <DemoSection title=\"基础用法\">\n    <DemoBlock\n      layout=\"stack\"\n      align=\"center\"\n    >\n      <h1 class=\"text-highlighted text-8xl leading-none font-extrabold tracking-tighter text-balance\">\n        快速\n        <LineShadowText\n          class=\"italic\"\n          shadow-color=\"var(--ui-text-highlighted)\"\n        >\n          上线\n        </LineShadowText>\n      </h1>\n    </DemoBlock>\n  </DemoSection>\n</template>\n"
+    }
+  ],
+  "related": [],
+  "whenToUse": [
+    "大号标题中需要突出个别单词的装饰效果时。",
+    "希望文字效果不含持续动画、渲染开销低的场景。"
+  ],
+  "whenNotToUse": [
+    "需要扫过式高光动画，改用 radiant-text。",
+    "需要闪烁粒子点缀文字，改用 sparkles-text。"
+  ],
+  "pitfalls": [
+    "仅 web 端可用。",
+    "shadowColor 默认 black，暗色模式下需切换为浅色（示例中根据 useColorMode 动态传入）。",
+    "默认渲染为 span，可用 as prop 改为其他 HTML 标签。",
+    "text 显式指定阴影文字；不传时在渲染期间提取默认插槽的文本，组件节点内部文字不参与提取，复杂正文应传 text。"
+  ],
+  "dependencies": [],
+  "install": {
+    "cli": "npx reborn-ui@latest add line-shadow-text"
+  },
+  "sourceRefs": {
+    "web": [
+      "app/components/reborn/ui/line-shadow-text/LineShadowText.vue",
+      "app/components/reborn/ui/line-shadow-text/index.ts"
+    ]
+  },
+  "docPath": "content/2.components/text-animations/line-shadow-text.md",
+  "_meta": {
+    "contentHash": "710b0d0bc0a43f170b766142b67f8cc038ce2e68",
+    "hasOverride": true,
+    "extractors": {
+      "web": "ok",
+      "uniapp": "absent",
+      "docs": "found"
+    }
+  }
+}

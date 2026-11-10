@@ -1,0 +1,436 @@
+{
+  "$schema": "../schema/component.schema.json",
+  "id": "reborn-tree",
+  "title": "Tree 树形控件",
+  "description": "层级数据展示：展开/点选/勾选三组受控 keys，支持父子联动、异步加载、拖拽与虚拟滚动。",
+  "category": "data-display",
+  "tags": [
+    "css",
+    "tailwind",
+    "tree",
+    "data"
+  ],
+  "aliases": [
+    "tree",
+    "树",
+    "树形",
+    "目录树"
+  ],
+  "platforms": [
+    "web"
+  ],
+  "props": [
+    {
+      "name": "treeData",
+      "type": "TreeDataNode[]",
+      "required": false,
+      "description": "treeNodes 数据（key 在整棵树范围内必须唯一）",
+      "default": "() => []"
+    },
+    {
+      "name": "fieldNames",
+      "type": "TreeFieldNames",
+      "required": false,
+      "description": "自定义节点 title、key、children 的字段名",
+      "default": "undefined"
+    },
+    {
+      "name": "color",
+      "type": "'primary' | 'secondary' | 'success' | 'info' | 'warning' | 'error' | 'neutral'",
+      "required": false,
+      "description": "主题色：统一控制选中背景/文字、筛选高亮、复选框与拖拽指示的用色",
+      "default": "\"primary\"",
+      "options": [
+        "primary",
+        "secondary",
+        "success",
+        "info",
+        "warning",
+        "error",
+        "neutral"
+      ]
+    },
+    {
+      "name": "allowDrop",
+      "type": "(info: TreeAllowDropInfo) => boolean",
+      "required": false,
+      "description": "拖拽时是否允许放置到目标位置，返回 false 则该位置不亮起指示并拒绝 drop",
+      "default": "undefined"
+    },
+    {
+      "name": "autoExpandParent",
+      "type": "boolean",
+      "required": false,
+      "description": "expandedKeys 由外部变更时，是否自动补全其父节点的展开态",
+      "default": "false"
+    },
+    {
+      "name": "blockNode",
+      "type": "boolean",
+      "required": false,
+      "description": "节点是否占据一行（点击区拉满剩余宽度）",
+      "default": "false"
+    },
+    {
+      "name": "checkable",
+      "type": "boolean",
+      "required": false,
+      "description": "节点前是否添加复选框",
+      "default": "false"
+    },
+    {
+      "name": "checkStrictly",
+      "type": "boolean",
+      "required": false,
+      "description": "checkable 状态下节点勾选完全受控（父子节点选中状态不再关联）",
+      "default": "false"
+    },
+    {
+      "name": "defaultCheckedKeys",
+      "type": "TreeKey[]",
+      "required": false,
+      "description": "默认勾选的节点 key（非受控）",
+      "default": "() => []"
+    },
+    {
+      "name": "defaultExpandAll",
+      "type": "boolean",
+      "required": false,
+      "description": "默认展开所有节点（非受控）",
+      "default": "false"
+    },
+    {
+      "name": "defaultExpandedKeys",
+      "type": "TreeKey[]",
+      "required": false,
+      "description": "默认展开的节点 key（非受控）",
+      "default": "() => []"
+    },
+    {
+      "name": "defaultExpandParent",
+      "type": "boolean",
+      "required": false,
+      "description": "初始化时是否自动展开「默认展开节点」的各级父节点",
+      "default": "true"
+    },
+    {
+      "name": "defaultSelectedKeys",
+      "type": "TreeKey[]",
+      "required": false,
+      "description": "默认选中的节点 key（非受控）",
+      "default": "() => []"
+    },
+    {
+      "name": "disabled",
+      "type": "boolean",
+      "required": false,
+      "description": "将整棵树禁用",
+      "default": "false"
+    },
+    {
+      "name": "draggable",
+      "type": "boolean | ((node: TreeDataNode) => boolean) | TreeDraggableConfig",
+      "required": false,
+      "description": "设置节点可拖拽： - true / false：整树开关 - 函数：按节点判定 - 对象：nodeDraggable 按节点判定，icon: false 隐藏拖拽手柄图标",
+      "default": "false"
+    },
+    {
+      "name": "filterTreeNode",
+      "type": "(node: TreeDataNode) => boolean",
+      "required": false,
+      "description": "按需筛选节点：返回 true 的节点标题高亮",
+      "default": "undefined"
+    },
+    {
+      "name": "height",
+      "type": "number",
+      "required": false,
+      "description": "滚动区最大高度（像素）：内容不足时按内容撑开，超出后在区内滚动； 设置后默认启用虚拟滚动，内部节点不再支持横向滚动",
+      "default": "undefined"
+    },
+    {
+      "name": "itemHeight",
+      "type": "number",
+      "required": false,
+      "description": "虚拟滚动的行高（像素）。Vue 适配新增：拍平定高渲染需要显式行高做滚动换算",
+      "default": "28"
+    },
+    {
+      "name": "loadData",
+      "type": "(node: TreeDataNode) => Promise<unknown>",
+      "required": false,
+      "description": "异步加载数据：返回的 Promise 内应自行把子节点写入 treeData",
+      "default": "undefined"
+    },
+    {
+      "name": "multiple",
+      "type": "boolean",
+      "required": false,
+      "description": "支持点选多个节点",
+      "default": "false"
+    },
+    {
+      "name": "selectable",
+      "type": "boolean",
+      "required": false,
+      "description": "节点是否可被点选",
+      "default": "false"
+    },
+    {
+      "name": "showIcon",
+      "type": "boolean",
+      "required": false,
+      "description": "是否展示节点图标（图标本身由节点 icon 字段或 icon 插槽给出，无默认样式）",
+      "default": "false"
+    },
+    {
+      "name": "showLine",
+      "type": "boolean | TreeShowLineConfig",
+      "required": false,
+      "description": "是否展示连接线；对象写法可配置叶子图标 showLeafIcon",
+      "default": "false"
+    },
+    {
+      "name": "switcherIcon",
+      "type": "string",
+      "required": false,
+      "description": "自定义展开/折叠图标名称（showLine 下不会自动旋转）；复杂内容请改用 switcherIcon 插槽",
+      "default": "undefined"
+    },
+    {
+      "name": "switcherLoadingIcon",
+      "type": "string",
+      "required": false,
+      "description": "自定义加载中图标名称",
+      "default": "undefined"
+    },
+    {
+      "name": "virtual",
+      "type": "boolean",
+      "required": false,
+      "description": "设为 false 时关闭虚拟滚动（height 仍生效，退化为普通滚动容器）",
+      "default": "true"
+    },
+    {
+      "name": "animated",
+      "type": "boolean",
+      "required": false,
+      "description": "展开/收起是否启用行级过渡动画（antd motion 参数的 Vue 化替代）： 新行淡入下滑、下方行 FLIP 位移让位。虚拟滚动生效时强制关闭—— 滚动过程中切片不断增删行，过渡会退化成滚动时的闪烁",
+      "default": "true"
+    },
+    {
+      "name": "class",
+      "type": "any",
+      "required": false,
+      "description": "自定义类名",
+      "default": "undefined"
+    },
+    {
+      "name": "ui",
+      "type": "TreeUI",
+      "required": false,
+      "description": "UI 局部重写配置 可用键（从源码抽取，以此为准）——Web：checkbox、content、dragHandle、dropIndicator、extra、iconEle、indentUnit、list、node、root、switcher、switcherIcon*、title。 带 * 的键对应插槽兜底节点：填了同名插槽，组件自带的节点被替换，这个键随之失效。",
+      "default": "() => ({})"
+    },
+    {
+      "name": "loadedKeys",
+      "type": "TreeKey[]",
+      "required": false,
+      "description": "双向绑定值",
+      "vModel": true
+    },
+    {
+      "name": "expandedKeys",
+      "type": "TreeKey[]",
+      "required": false,
+      "description": "双向绑定值",
+      "vModel": true
+    },
+    {
+      "name": "selectedKeys",
+      "type": "TreeKey[]",
+      "required": false,
+      "description": "双向绑定值",
+      "vModel": true
+    },
+    {
+      "name": "checkedKeys",
+      "type": "TreeCheckedKeys",
+      "required": false,
+      "description": "双向绑定值",
+      "vModel": true
+    }
+  ],
+  "events": [
+    {
+      "name": "check",
+      "payload": "(\n    e: \"check\",\n    checkedKeys: TreeCheckedKeys,\n    info: {\n      checked: boolean;\n      checkedNodes: TreeDataNode[];\n      node: TreeDataNode;\n      event: Event;\n      halfCheckedKeys: TreeKey[];\n    },\n  ): void;",
+      "description": "勾选复选框时触发；checkStrictly 下第一个参数为 {checked, halfChecked} 对象"
+    },
+    {
+      "name": "expand",
+      "payload": "(e: \"expand\", expandedKeys: TreeKey[], info: { expanded: boolean; node: TreeDataNode }): void;",
+      "description": "展开/收起节点时触发"
+    },
+    {
+      "name": "select",
+      "payload": "(\n    e: \"select\",\n    selectedKeys: TreeKey[],\n    info: { selected: boolean; selectedNodes: TreeDataNode[]; node: TreeDataNode; event: MouseEvent },\n  ): void;",
+      "description": "点选节点时触发"
+    },
+    {
+      "name": "load",
+      "payload": "(e: \"load\", loadedKeys: TreeKey[], info: { node: TreeDataNode }): void;",
+      "description": "节点异步加载完毕时触发"
+    },
+    {
+      "name": "dblclick",
+      "payload": "(e: \"dblclick\", event: MouseEvent, node: TreeDataNode): void;",
+      "description": "双击节点标题时触发"
+    },
+    {
+      "name": "rightClick",
+      "payload": "(e: \"rightClick\", info: { event: MouseEvent; node: TreeDataNode }): void;",
+      "description": "右键点击节点标题时触发；需要屏蔽系统菜单请在回调里自行 event.preventDefault()"
+    },
+    {
+      "name": "dragstart",
+      "payload": "(e: \"dragstart\", info: { event: DragEvent; node: TreeDataNode }): void;",
+      "description": "开始拖拽节点时触发"
+    },
+    {
+      "name": "dragenter",
+      "payload": "(e: \"dragenter\", info: { event: DragEvent; node: TreeDataNode; expandedKeys: TreeKey[] }): void;",
+      "description": "拖拽进入某节点时触发"
+    },
+    {
+      "name": "dragover",
+      "payload": "(e: \"dragover\", info: { event: DragEvent; node: TreeDataNode }): void;",
+      "description": "拖拽经过某节点时触发"
+    },
+    {
+      "name": "dragleave",
+      "payload": "(e: \"dragleave\", info: { event: DragEvent; node: TreeDataNode }): void;",
+      "description": "拖拽离开某节点时触发"
+    },
+    {
+      "name": "dragend",
+      "payload": "(e: \"dragend\", info: { event: DragEvent; node: TreeDataNode }): void;",
+      "description": "拖拽结束（无论是否放置成功）时触发"
+    },
+    {
+      "name": "drop",
+      "payload": "(\n    e: \"drop\",\n    info: {\n      event: DragEvent;\n      node: TreeDataNode;\n      dragNode: TreeDataNode;\n      dragNodesKeys: TreeKey[];\n      dropPosition: TreeDropPosition;\n      dropToGap: boolean;\n    },\n  ): void;",
+      "description": "放置节点时触发。组件不代改 treeData，请在回调里根据 dropPosition（-1 前 / 0 内 / 1 后）与 dropToGap 自行调整数据"
+    },
+    {
+      "name": "update:loadedKeys",
+      "description": "loadedKeys 变化时触发（v-model 同步）"
+    },
+    {
+      "name": "update:expandedKeys",
+      "description": "expandedKeys 变化时触发（v-model 同步）"
+    },
+    {
+      "name": "update:selectedKeys",
+      "description": "selectedKeys 变化时触发（v-model 同步）"
+    },
+    {
+      "name": "update:checkedKeys",
+      "description": "checkedKeys 变化时触发（v-model 同步）"
+    }
+  ],
+  "slots": [
+    {
+      "name": "switcherIcon",
+      "description": "整体替换展开/折叠图标；叶子（含 `showLine` 的 leaf 图标）与加载态由作用域的 `leaf` / `loading` 区分。"
+    },
+    {
+      "name": "dragHandle",
+      "description": "替换拖拽手柄图标，仅 `draggable` 且节点可拖拽时渲染。"
+    },
+    {
+      "name": "checkbox",
+      "description": "整体替换复选框；自定义控件在点击时调用 `toggle(event)` 即接入父子联动与事件派发。"
+    },
+    {
+      "name": "icon",
+      "description": "节点图标内容，需 `showIcon` 开启；缺省渲染节点 `icon` 字段指向的图标。"
+    },
+    {
+      "name": "title",
+      "description": "整体接管标题渲染（等价于 antd 的 `titleRender`），缺省渲染 `title` 字段文本。"
+    },
+    {
+      "name": "extra",
+      "description": "标题后的附加内容（徽标、行内操作按钮等）；容器自带 `@click.stop`，`blockNode` 下由 `ml-auto` 推到行尾。"
+    }
+  ],
+  "exposes": [
+    {
+      "name": "scrollTo",
+      "description": "滚动到指定 key 的节点"
+    }
+  ],
+  "examples": [
+    {
+      "title": "Web 演示",
+      "path": "app/components/reborn/examples/reborn-tree/RebornTreeDemo.vue",
+      "source": "demo",
+      "platform": "web",
+      "code": "<script setup lang=\"ts\">\nimport type {\n  TreeCheckedKeys,\n  TreeDataNode,\n  TreeKey,\n} from \"~/components/reborn/ui/reborn-tree/reborn-tree.config\";\nimport { computed, onBeforeUnmount, ref, shallowRef, useTemplateRef } from \"vue\";\nimport RebornButton from \"~/components/reborn/ui/reborn-button/RebornButton.vue\";\nimport RebornInput from \"~/components/reborn/ui/reborn-input/RebornInput.vue\";\nimport { treeColors } from \"~/components/reborn/ui/reborn-tree/reborn-tree.config\";\nimport RebornTree from \"~/components/reborn/ui/reborn-tree/RebornTree.vue\";\nimport { useTree } from \"~/components/reborn/ui/reborn-tree/useTree\";\n\n/** 生成一棵文件目录风格的演示树；每次调用返回全新副本，避免多个示例互相污染 */\nfunction makeTreeData(): TreeDataNode[] {\n  return [\n    {\n      key: \"engineering\",\n      title: \"工程效能\",\n      icon: \"lucide:folder\",\n      children: [\n        {\n          key: \"frontend\",\n          title: \"前端平台\",\n          icon: \"lucide:folder\",\n          children: [\n            { key: \"design-system\", title: \"设计系统\", icon: \"lucide:palette\" },\n            { key: \"playground\", title: \"在线演练场\", icon: \"lucide:flask-conical\" },\n          ],\n        },\n        {\n          key: \"backend\",\n          title: \"服务端\",\n          icon: \"lucide:folder\",\n          children: [\n            { key: \"payment-gateway\", title: \"支付网关\", icon: \"lucide:credit-card\" },\n            { key: \"message-queue\", title: \"消息队列\", icon: \"lucide:mails\" },\n          ],\n        },\n      ],\n    },\n    {\n      key: \"operation\",\n      title: \"运营支撑\",\n      icon: \"lucide:folder\",\n      children: [\n        { key: \"dashboard\", title: \"数据看板\", icon: \"lucide:chart-line\" },\n        { key: \"audit-log\", title: \"审计日志\", icon: \"lucide:scroll-text\" },\n      ],\n    },\n  ];\n}\n\n/** 主题色下拉选项 */\nconst colorOptions = treeColors.map((c) => ({\n  label: c.charAt(0).toUpperCase() + c.slice(1),\n  value: c,\n}));\n\n// ─── 交互演练场 ─────────────────────────────────────────────────\n\n/** 演练场默认状态 */\nconst defaultState: Record<string, any> = {\n  color: \"primary\",\n  checkable: false,\n  checkStrictly: false,\n  showLine: false,\n  showIcon: false,\n  blockNode: false,\n  multiple: false,\n  selectable: true,\n  draggable: false,\n  disabled: false,\n  animated: true,\n};\n\nconst state = shallowRef<Record<string, any>>({ ...defaultState });\n\n/** 演练场的树数据：末尾带一个 disabled 节点，方便观察禁用态对点选/勾选/拖拽的屏蔽 */\nfunction makePlayTreeData(): TreeDataNode[] {\n  return [...makeTreeData(), { key: \"archive\", title: \"历史归档（disabled）\", icon: \"lucide:archive\", disabled: true }];\n}\nconst playTreeData = ref<TreeDataNode[]>(makePlayTreeData());\n\n/** 最近一次事件回显，让预览区的交互「有回应」 */\nconst lastEvent = shallowRef(\"尚未交互\");\n\n/** 重置演练场配置 */\nfunction resetState() {\n  state.value = { ...defaultState };\n  playTreeData.value = makePlayTreeData();\n  lastEvent.value = \"尚未交互\";\n}\n\n/** 演练场控制面板配置 */\nconst controls: any = [\n  {\n    title: \"基础属性\",\n    children: [\n      { label: \"主题色\", key: \"color\", component: \"select\" as const, defaultValue: \"primary\", props: { options: colorOptions } },\n      { label: \"复选框\", key: \"checkable\", component: \"checkbox\" as const, defaultValue: false },\n      { label: \"连接线\", key: \"showLine\", component: \"checkbox\" as const, defaultValue: false },\n      { label: \"节点图标\", key: \"showIcon\", component: \"checkbox\" as const, defaultValue: false },\n      { label: \"节点占据一行\", key: \"blockNode\", component: \"checkbox\" as const, defaultValue: false },\n    ],\n  },\n  {\n    title: \"行为\",\n    children: [\n      { label: \"可点选\", key: \"selectable\", component: \"checkbox\" as const, defaultValue: true },\n      { label: \"多选\", key: \"multiple\", component: \"checkbox\" as const, defaultValue: false },\n      { label: \"父子勾选不关联\", key: \"checkStrictly\", component: \"checkbox\" as const, defaultValue: false },\n      { label: \"可拖拽\", key: \"draggable\", component: \"checkbox\" as const, defaultValue: false },\n      { label: \"展开动画\", key: \"animated\", component: \"checkbox\" as const, defaultValue: true },\n    ],\n  },\n  {\n    title: \"状态\",\n    children: [\n      { label: \"整树禁用\", key: \"disabled\", component: \"checkbox\" as const, defaultValue: false },\n    ],\n  },\n];\n\n/** 演练场右上角展示的传参明细：完整列出当前所有参数（含默认值） */\nconst treeCode = computed(() => {\n  const s = state.value;\n  const props: string[] = [\n    `:tree-data=\"treeData\"`,\n    `:default-expanded-keys=\"['engineering']\"`,\n    `:checkable=\"${s.checkable}\"`,\n    `:check-strictly=\"${s.checkStrictly}\"`,\n    `:show-line=\"${s.showLine}\"`,\n    `:show-icon=\"${s.showIcon}\"`,\n    `:block-node=\"${s.blockNode}\"`,\n    `:selectable=\"${s.selectable}\"`,\n    `:multiple=\"${s.multiple}\"`,\n    `:draggable=\"${s.draggable}\"`,\n    `:disabled=\"${s.disabled}\"`,\n    `:animated=\"${s.animated}\"`,\n    `color=\"${s.color}\"`,\n  ];\n  return `<RebornTree\\n  ${props.join(\"\\n  \")}\\n/>`;\n});\n\n/** 事件回显：点选 */\nfunction onPlaySelect(keys: TreeKey[]) {\n  lastEvent.value = `select → [${keys.join(\", \") || \"空\"}]`;\n}\n\n/** 事件回显：勾选（checkStrictly 下第一个参数是对象） */\nfunction onPlayCheck(keys: TreeCheckedKeys) {\n  const list = Array.isArray(keys) ? keys : keys.checked;\n  lastEvent.value = `check → [${list.join(\", \") || \"空\"}]`;\n}\n\n/** 事件回显：展开/收起 */\nfunction onPlayExpand(_keys: TreeKey[], info: { expanded: boolean; node: TreeDataNode }) {\n  lastEvent.value = `expand → ${info.node.title}（${info.expanded ? \"展开\" : \"收起\"}）`;\n}\n\n// ─── 场景演示状态 ───────────────────────────────────────────────\n\n/** 主题色示例的迷你数据：一父两子，预置一个选中与一个勾选，把各着色面撑出来 */\nfunction makeColorTreeData(): TreeDataNode[] {\n  return [\n    {\n      key: \"root\",\n      title: \"工程效能\",\n      children: [\n        { key: \"selected\", title: \"选中态\" },\n        { key: \"checked\", title: \"勾选态\" },\n      ],\n    },\n  ];\n}\n\n/** 受控展开：展开集合完全由外部持有 */\nconst controlledExpandedKeys = shallowRef<TreeKey[]>([\"engineering\"]);\nconst controlledTreeData = makeTreeData();\n/** 各演示只创建自己的数据一次，重渲染时保持引用稳定。 */\nconst basicTreeData = makeTreeData();\nconst singleSelectTreeData = makeTreeData();\nconst multiSelectTreeData = makeTreeData();\nconst iconTreeData = makeTreeData();\nconst blockTreeData = makeTreeData();\nconst disabledTreeData = makeTreeData();\nconst filterTreeData = makeTreeData();\nconst colorTreeData = Object.fromEntries(treeColors.map(color => [color, makeColorTreeData()]));\nconst { getPath } = useTree(() => controlledTreeData, {});\n\n/** 展开全部父节点 */\nfunction expandAll() {\n  const keys: TreeKey[] = [];\n  const walk = (nodes: TreeDataNode[]) => {\n    for (const node of nodes) {\n      if (node.children?.length) {\n        keys.push(node.key);\n        walk(node.children);\n      }\n    }\n  };\n  walk(controlledTreeData);\n  controlledExpandedKeys.value = keys;\n}\n\n/** 展开到「支付网关」：getPath 返回根到目标的实体路径，取路径上的 key 并入展开集合 */\nfunction expandToPayment() {\n  const pathKeys = getPath(\"payment-gateway\").map((node) => node.key);\n  controlledExpandedKeys.value = [...new Set([...controlledExpandedKeys.value, ...pathKeys])];\n}\n\n/** 点选与多选的选中回显 */\nconst singleSelectedKeys = shallowRef<TreeKey[]>([]);\nconst multiSelectedKeys = shallowRef<TreeKey[]>([]);\n\n/** 复选：父子联动模式的勾选集合 */\nconst conductCheckedKeys = shallowRef<TreeKey[]>([\"frontend\"]);\n/** 复选：checkStrictly 严格模式的勾选集合（对象形态） */\nconst strictCheckedKeys = shallowRef<TreeCheckedKeys>({ checked: [\"backend\"], halfChecked: [] });\n\n/** 联动示例数据：混入禁用节点与仅禁复选框的节点 */\nconst checkTreeData: TreeDataNode[] = [\n  {\n    key: \"engineering\",\n    title: \"工程效能\",\n    children: [\n      {\n        key: \"frontend\",\n        title: \"前端平台\",\n        children: [\n          { key: \"design-system\", title: \"设计系统\" },\n          { key: \"playground\", title: \"在线演练场（disableCheckbox）\", disableCheckbox: true },\n        ],\n      },\n      {\n        key: \"backend\",\n        title: \"服务端\",\n        children: [\n          { key: \"payment-gateway\", title: \"支付网关\" },\n          { key: \"message-queue\", title: \"消息队列（disabled）\", disabled: true },\n        ],\n      },\n    ],\n  },\n];\n\n/** 严格模式复选集合的文字回显 */\nconst strictCheckedText = computed(() => {\n  const value = strictCheckedKeys.value;\n  return Array.isArray(value) ? value.join(\", \") : value.checked.join(\", \");\n});\n\n/** 自定义标题：筛选关键字 */\nconst filterKeyword = shallowRef(\"\");\n\n/** 命中筛选关键字的节点标题高亮 */\nfunction filterByKeyword(node: TreeDataNode): boolean {\n  const keyword = filterKeyword.value.trim();\n  if (!keyword) return false;\n  return String(node.title ?? \"\").includes(keyword);\n}\n\n/** 统计子级数量，供 extra 插槽展示 */\nfunction childCount(node: TreeDataNode): number {\n  return node.children?.length ?? 0;\n}\n\n/** extra 插槽演示：收藏的节点集合 */\nconst starredKeys = shallowRef(new Set<TreeKey>());\n\n/** 切换收藏；extra 容器自带 click.stop，点星标不会触发点选 */\nfunction toggleStar(key: TreeKey) {\n  const next = new Set(starredKeys.value);\n  if (next.has(key)) next.delete(key);\n  else next.add(key);\n  starredKeys.value = next;\n}\n\n// ─── 异步加载 ───────────────────────────────────────────────────\n\n/** 异步树：初始只有两个未加载的父节点，isLeaf 未声明 + 无子级即视为待加载 */\nconst asyncTreeData = ref<TreeDataNode[]>([\n  { key: \"region-east\", title: \"华东节点\" },\n  { key: \"region-south\", title: \"华南节点\" },\n]);\n\n/** 在异步树里找到目标节点（loadData 的 Promise 内由使用方自行写回子级） */\nfunction findAsyncNode(list: TreeDataNode[], key: TreeKey): TreeDataNode | null {\n  for (const node of list) {\n    if (node.key === key) return node;\n    const found = node.children ? findAsyncNode(node.children, key) : null;\n    if (found) return found;\n  }\n  return null;\n}\n\n/** 保存异步任务，卸载时清定时器并完成 Promise。 */\nconst loadTasks = new Map<ReturnType<typeof setTimeout>, () => void>();\nonBeforeUnmount(() => {\n  for (const [timer, resolve] of loadTasks) { clearTimeout(timer); resolve(); }\n  loadTasks.clear();\n});\n\n/** 模拟接口：600ms 后为目标节点写入两个子级，第二层直接标记 isLeaf 终止加载链 */\nfunction loadChildren(node: TreeDataNode): Promise<void> {\n  return new Promise((resolve) => {\n    const timer = setTimeout(() => {\n      loadTasks.delete(timer);\n      const target = findAsyncNode(asyncTreeData.value, node.key);\n      if (target) {\n        target.children = [\n          { key: `${node.key}-a`, title: `${node.title} · 可用区 A`, isLeaf: true },\n          { key: `${node.key}-b`, title: `${node.title} · 可用区 B`, isLeaf: true },\n        ];\n      }\n      resolve();\n    }, 600);\n    loadTasks.set(timer, resolve);\n  });\n}\n\n// ─── 拖拽调整结构 ───────────────────────────────────────────────\n\n/** 拖拽树的数据：drop 事件不代改数据，由这里的处理函数落库 */\nconst dragTreeData = ref<TreeDataNode[]>(makeTreeData());\n/** 拖拽树的展开集合：放入内部后要把目标节点展开，让结果立刻可见 */\nconst dragExpandedKeys = shallowRef<TreeKey[]>([\"engineering\", \"frontend\", \"backend\", \"operation\"]);\n\n/** 从树里摘除指定 key 的节点并返回它 */\nfunction removeNode(list: TreeDataNode[], key: TreeKey): TreeDataNode | null {\n  for (let i = 0; i < list.length; i++) {\n    const node = list[i]!;\n    if (node.key === key) {\n      list.splice(i, 1);\n      return node;\n    }\n    if (node.children) {\n      const found = removeNode(node.children, key);\n      if (found) return found;\n    }\n  }\n  return null;\n}\n\n/** 定位指定 key 所在的兄弟列表与下标 */\nfunction locateNode(\n  list: TreeDataNode[],\n  key: TreeKey,\n): { siblings: TreeDataNode[]; index: number; node: TreeDataNode } | null {\n  for (let i = 0; i < list.length; i++) {\n    const node = list[i]!;\n    if (node.key === key) return { siblings: list, index: i, node };\n    if (node.children) {\n      const found = locateNode(node.children, key);\n      if (found) return found;\n    }\n  }\n  return null;\n}\n\n/** drop 事件的落库载荷（组件 drop 事件载荷的子集，够用即可） */\ninterface DropInfo {\n  node: TreeDataNode;\n  dragNode: TreeDataNode;\n  dropPosition: -1 | 0 | 1;\n}\n\n/**\n * 把一次 drop 应用到树数据上：先摘除拖拽源，再按 dropPosition（-1 前 / 0 内 / 1 后）插回。\n * 组件不代改 treeData，不做这一步的话拖完会弹回原状——演练场与拖拽示例共用这份实现\n */\nfunction applyDrop(data: TreeDataNode[], info: DropInfo): TreeDataNode | null {\n  const dragged = removeNode(data, info.dragNode.key);\n  if (!dragged) return null;\n  const target = locateNode(data, info.node.key);\n  if (!target) {\n    // 目标恰好是拖拽源的后代时已随源一起摘除，放回原层级兜底\n    data.push(dragged);\n    return null;\n  }\n  if (info.dropPosition === 0) {\n    (target.node.children ??= []).push(dragged);\n  } else {\n    target.siblings.splice(target.index + (info.dropPosition === 1 ? 1 : 0), 0, dragged);\n  }\n  return target.node;\n}\n\n/** 只允许把节点放进目录（有子级的节点）内部，放到任意节点前后不受限 */\nfunction allowDropIntoFolder(info: { dropNode: TreeDataNode; dropPosition: -1 | 0 | 1 }): boolean {\n  if (info.dropPosition !== 0) return true;\n  return (info.dropNode.children?.length ?? 0) > 0;\n}\n\n/** 拖拽示例的 drop 落库：放入内部后把目标节点展开，让结果立刻可见 */\nfunction handleDrop(info: DropInfo) {\n  const intoNode = applyDrop(dragTreeData.value, info);\n  if (info.dropPosition === 0 && intoNode && !dragExpandedKeys.value.includes(intoNode.key)) {\n    dragExpandedKeys.value = [...dragExpandedKeys.value, intoNode.key];\n  }\n}\n\n/** 演练场的 drop 落库与事件回显（勾选「可拖拽」后拖动即可看到数据实际移动） */\nfunction onPlayDrop(info: DropInfo) {\n  applyDrop(playTreeData.value, info);\n  const posText = info.dropPosition === 0 ? \"内部\" : info.dropPosition === -1 ? \"之前\" : \"之后\";\n  lastEvent.value = `drop → ${info.dragNode.title} 移到 ${info.node.title} ${posText}`;\n}\n\n// ─── 虚拟滚动 ───────────────────────────────────────────────────\n\n/** 生成 50 组 × 20 条共 1050 个节点的大数据树 */\nconst virtualTreeData: TreeDataNode[] = Array.from({ length: 50 }, (_, group) => ({\n  key: `group-${group}`,\n  title: `分组 ${group}`,\n  children: Array.from({ length: 20 }, (_, item) => ({\n    key: `group-${group}-item-${item}`,\n    title: `条目 ${group}-${item}`,\n  })),\n}));\n\n/** 虚拟滚动树的组件实例，用于调用 scrollTo */\nconst virtualTreeRef = useTemplateRef<InstanceType<typeof RebornTree>>(\"virtualTreeRef\");\n\n/** 滚动到第 25 组：autoExpand 先展开其父链（非受控模式下生效），behavior: \"smooth\" 走 rAF 平滑动画 */\nfunction scrollToGroup25() {\n  void virtualTreeRef.value?.scrollTo({\n    key: \"group-25\",\n    align: \"top\",\n    autoExpand: true,\n    behavior: \"smooth\",\n  });\n}\n</script>\n\n<template>\n  <div class=\"flex w-full flex-col\">\n    <Playground\n      v-model=\"state\" :controls=\"controls\" :code=\"treeCode\" component-name=\"RebornTree\"\n      title=\"交互演练场\" description=\"调节上方参数，实时查看树在勾选、点选、连接线与拖拽等模式下的表现。\"\n    >\n      <template #tag>\n        <RebornButton size=\"sm\" variant=\"soft\" color=\"neutral\" @click=\"resetState\">\n          <template #leading>\n            <Icon name=\"lucide:rotate-ccw\" size=\"12\" />\n          </template>\n          重置配置\n        </RebornButton>\n      </template>\n\n      <div class=\"flex w-full flex-col items-center gap-6\">\n        <RebornTree\n          class=\"w-full max-w-sm\"\n          :tree-data=\"playTreeData\"\n          :default-expanded-keys=\"['engineering']\"\n          :color=\"state.color\"\n          :checkable=\"state.checkable\"\n          :check-strictly=\"state.checkStrictly\"\n          :show-line=\"state.showLine\"\n          :show-icon=\"state.showIcon\"\n          :block-node=\"state.blockNode\"\n          :selectable=\"state.selectable\"\n          :multiple=\"state.multiple\"\n          :draggable=\"state.draggable\"\n          :disabled=\"state.disabled\"\n          :animated=\"state.animated\"\n          @select=\"onPlaySelect\"\n          @check=\"onPlayCheck\"\n          @expand=\"onPlayExpand\"\n          @drop=\"onPlayDrop\"\n        />\n\n        <DemoNote tone=\"dimmed\" class=\"font-mono text-xs\">\n          最近事件：{{ lastEvent }}\n        </DemoNote>\n      </div>\n    </Playground>\n\n    <DemoSection title=\"基础用法\">\n      <template #description>\n        <code>treeData</code> 一次性传入整棵树（<code>key</code> 在整树范围内必须唯一），\n        <code>defaultExpandedKeys</code> 指定初始展开的节点；点击箭头展开。点选默认关闭，\n        本例传了 <code>selectable</code>，点击标题即可选中。\n      </template>\n      <DemoBlock layout=\"stack\">\n        <RebornTree\n          class=\"w-full max-w-sm\"\n          :tree-data=\"basicTreeData\"\n          :default-expanded-keys=\"['engineering', 'frontend']\"\n          selectable\n        />\n      </DemoBlock>\n    </DemoSection>\n\n    <DemoSection title=\"主题色：color\">\n      <template #description>\n        <code>color</code> 统一控制选中背景/文字、筛选高亮、复选框与拖拽指示的用色：\n        选中填充取色阶 1 档、文字与描边取 6 档（neutral 例外：填充取 2 档避免与页面底色同色，文字取 9 档正文色），默认 primary。\n      </template>\n      <DemoBlock layout=\"grid\" :columns=\"4\">\n        <DemoItem\n          v-for=\"c in treeColors\"\n          :key=\"c\"\n          :label=\"c\"\n          mono\n        >\n          <RebornTree\n            :color=\"c\"\n            :tree-data=\"colorTreeData[c]\"\n            default-expand-all\n            checkable\n            :default-checked-keys=\"['checked']\"\n            :default-selected-keys=\"['selected']\"\n          />\n        </DemoItem>\n      </DemoBlock>\n    </DemoSection>\n\n    <DemoSection title=\"受控展开：定位到深层节点\">\n      <template #description>\n        <code>v-model:expanded-keys</code> 让展开集合由外部持有；配合 <code>useTree</code> 的\n        <code>getPath</code> 可以把任意深层节点的父链一次性并入展开集合。\n      </template>\n      <DemoBlock layout=\"stack\">\n        <div class=\"flex flex-wrap gap-2\">\n          <RebornButton size=\"sm\" variant=\"outlined\" @click=\"expandAll\">展开全部</RebornButton>\n          <RebornButton size=\"sm\" variant=\"outlined\" color=\"neutral\" @click=\"controlledExpandedKeys = []\">\n            全部收起\n          </RebornButton>\n          <RebornButton size=\"sm\" variant=\"soft\" color=\"secondary\" @click=\"expandToPayment\">\n            展开到「支付网关」\n          </RebornButton>\n        </div>\n        <RebornTree\n          v-model:expanded-keys=\"controlledExpandedKeys\"\n          class=\"w-full max-w-sm\"\n          :tree-data=\"controlledTreeData\"\n        />\n        <DemoNote tone=\"dimmed\" class=\"font-mono text-xs\">\n          expandedKeys: [{{ controlledExpandedKeys.join(\", \") }}]\n        </DemoNote>\n      </DemoBlock>\n    </DemoSection>\n\n    <DemoSection title=\"点选与多选：selectable / multiple\">\n      <template #description>\n        点选默认关闭，需传 <code>selectable</code> 开启；点击标题切换选中，<code>multiple</code> 让点选累加，<code>blockNode</code>\n        让点击区拉满整行（选中背景随之铺满）。再次点击已选节点会取消选中。\n        点选只存在于非 <code>checkable</code> 树——复选树的标题点击切换的是勾选。\n      </template>\n      <DemoBlock layout=\"grid\" :columns=\"2\">\n        <DemoItem label=\"selectable（单选）\" mono>\n          <RebornTree\n            v-model:selected-keys=\"singleSelectedKeys\"\n            class=\"w-full\"\n            :tree-data=\"singleSelectTreeData\"\n            :default-expanded-keys=\"['engineering']\"\n            selectable\n          />\n          <template #note>selectedKeys: [{{ singleSelectedKeys.join(\", \") }}]</template>\n        </DemoItem>\n        <DemoItem label=\"selectable + multiple + blockNode\" mono>\n          <RebornTree\n            v-model:selected-keys=\"multiSelectedKeys\"\n            class=\"w-full\"\n            :tree-data=\"multiSelectTreeData\"\n            :default-expanded-keys=\"['engineering']\"\n            selectable\n            multiple\n            block-node\n          />\n          <template #note>selectedKeys: [{{ multiSelectedKeys.join(\", \") }}]</template>\n        </DemoItem>\n      </DemoBlock>\n    </DemoSection>\n\n    <DemoSection title=\"复选与父子联动：checkable\">\n      <template #description>\n        <code>checkable</code> 在节点前渲染复选框，点击标题等同于点击复选框：默认父子联动（子级全选则父级全选、部分选中则父级半选），\n        <code>checkStrictly</code> 切断联动、逐节点独立勾选。禁用节点会阻断联动传导。\n      </template>\n      <DemoBlock layout=\"grid\" :columns=\"2\">\n        <DemoItem label=\"父子联动（默认）\" mono>\n          <RebornTree\n            v-model:checked-keys=\"conductCheckedKeys\"\n            class=\"w-full\"\n            :tree-data=\"checkTreeData\"\n            checkable\n            default-expand-all\n          />\n          <template #note>checkedKeys: [{{ Array.isArray(conductCheckedKeys) ? conductCheckedKeys.join(\", \") : \"\" }}]</template>\n        </DemoItem>\n        <DemoItem label=\"checkStrictly\" mono>\n          <RebornTree\n            v-model:checked-keys=\"strictCheckedKeys\"\n            class=\"w-full\"\n            :tree-data=\"checkTreeData\"\n            checkable\n            check-strictly\n            default-expand-all\n          />\n          <template #note>checked: [{{ strictCheckedText }}]</template>\n        </DemoItem>\n      </DemoBlock>\n      <DemoNote tone=\"dimmed\" class=\"mt-4\">\n        「消息队列」整节点禁用、「在线演练场」仅禁复选框：两者都不参与联动计算，\n        所以勾选各自的父级时它们保持原状，父级也不会因为它们未勾选而卡在半选。\n      </DemoNote>\n    </DemoSection>\n\n    <DemoSection title=\"连接线与图标\">\n      <template #description>\n        <code>showLine</code> 在缩进列画竖向连接线，展开图标换成加减号且不旋转；对象写法\n        <code>showLeafIcon</code> 可替换或关闭叶子图标。<code>showIcon</code> 渲染节点自带的\n        <code>icon</code> 字段，无默认样式。\n      </template>\n      <DemoBlock layout=\"grid\" :columns=\"3\">\n        <DemoItem label=\"showLine\" mono>\n          <RebornTree\n            class=\"w-full\"\n            :tree-data=\"iconTreeData\"\n            show-line\n            default-expand-all\n          />\n        </DemoItem>\n        <DemoItem label=\"showLeafIcon 自定义\" mono>\n          <RebornTree\n            class=\"w-full\"\n            :tree-data=\"blockTreeData\"\n            :show-line=\"{ showLeafIcon: 'lucide:file-text' }\"\n            default-expand-all\n          />\n        </DemoItem>\n        <DemoItem label=\"showIcon + switcherIcon\" mono>\n          <RebornTree\n            class=\"w-full\"\n            :tree-data=\"disabledTreeData\"\n            show-icon\n            switcher-icon=\"lucide:circle-chevron-right\"\n            default-expand-all\n          />\n        </DemoItem>\n      </DemoBlock>\n    </DemoSection>\n\n    <DemoSection title=\"自定义节点插槽与筛选高亮\">\n      <template #description>\n        <code>title</code> 插槽整体接管标题，<code>extra</code> 在标题后渲染徽标或行内操作\n        （容器自带 click.stop，点击不会误触点选/勾选，<code>blockNode</code> 下推到行尾）；\n        复选框、节点图标、展开图标、拖拽手柄同样开放同名插槽。<code>filterTreeNode</code>\n        返回 true 的节点标题高亮，常配合搜索框做「筛选定位」。\n      </template>\n      <DemoBlock layout=\"stack\">\n        <RebornInput\n          v-model=\"filterKeyword\"\n          class=\"max-w-sm\"\n          placeholder=\"输入关键字高亮命中节点，如「支付」\"\n        />\n        <RebornTree\n          class=\"w-full max-w-sm\"\n          :tree-data=\"filterTreeData\"\n          :filter-tree-node=\"filterByKeyword\"\n          default-expand-all\n          block-node\n          selectable\n        >\n          <template #title=\"{ node }\">{{ node.title }}</template>\n          <template #extra=\"{ node, leaf }\">\n            <span\n              v-if=\"!leaf\"\n              class=\"rounded-full bg-elevated px-1.5 text-xs text-dimmed\"\n            >\n              {{ childCount(node) }}\n            </span>\n            <button\n              class=\"flex size-5 items-center justify-center rounded-sm text-dimmed hover:bg-elevated hover:text-default\"\n              @click=\"toggleStar(node.key)\"\n            >\n              <Icon\n                :name=\"starredKeys.has(node.key) ? 'lucide:star' : 'lucide:star-off'\"\n                class=\"size-3.5\"\n                :class=\"starredKeys.has(node.key) ? 'text-warning' : ''\"\n              />\n            </button>\n          </template>\n        </RebornTree>\n        <DemoNote tone=\"dimmed\">\n          已收藏 {{ starredKeys.size }} 个节点；extra 容器点击不冒泡，点星标不会改变点选状态。\n        </DemoNote>\n      </DemoBlock>\n    </DemoSection>\n\n    <DemoSection title=\"异步加载：loadData\">\n      <template #description>\n        <code>loadData</code> 在展开未加载的父节点时被调用，Promise 内由使用方把子级写回\n        <code>treeData</code>；同一节点只请求一次（由 <code>loadedKeys</code> 记账），\n        子节点声明 <code>isLeaf: true</code> 即终止加载链。\n      </template>\n      <DemoBlock layout=\"stack\">\n        <RebornTree\n          class=\"w-full max-w-sm\"\n          :tree-data=\"asyncTreeData\"\n          :load-data=\"loadChildren\"\n        />\n        <DemoNote tone=\"dimmed\">\n          展开任一节点可看到 600ms 的加载图标；收起再展开不会重复请求。\n        </DemoNote>\n      </DemoBlock>\n    </DemoSection>\n\n    <DemoSection title=\"拖拽调整结构：draggable\">\n      <template #description>\n        <code>draggable</code> 开启拖拽后，节点前 1/4 高度落在目标之前、后 1/4 落在目标之后、\n        中间落入目标内部；<code>allowDrop</code> 拦截非法位置。<code>drop</code> 事件不代改数据，\n        需在回调里按 <code>dropPosition</code> 自行调整 <code>treeData</code>。\n      </template>\n      <DemoBlock layout=\"stack\">\n        <RebornTree\n          v-model:expanded-keys=\"dragExpandedKeys\"\n          class=\"w-full max-w-sm\"\n          :tree-data=\"dragTreeData\"\n          draggable\n          block-node\n          :allow-drop=\"allowDropIntoFolder\"\n          @drop=\"handleDrop\"\n        />\n        <DemoNote tone=\"dimmed\">\n          本例的 <code>allowDrop</code> 只放行「放进目录内部」，叶子节点内部不亮起指示；\n          悬停在收起的目录上约 700ms 会自动展开。\n        </DemoNote>\n      </DemoBlock>\n    </DemoSection>\n\n    <DemoSection title=\"虚拟滚动与按 key 定位\">\n      <template #description>\n        <code>height</code> 是滚动区的最大高度，节点超出后在区内滚动，设置后默认启用虚拟滚动，1000+ 节点也只渲染视口内的行；\n        行高由 <code>itemHeight</code>（默认 28px）参与换算，<code>scrollTo</code> 可按 key 定位，\n        传 <code>behavior: \"smooth\"</code> 走 rAF 平滑动画。\n      </template>\n      <DemoBlock layout=\"stack\">\n        <RebornButton size=\"sm\" variant=\"outlined\" class=\"self-start\" @click=\"scrollToGroup25\">\n          scrollTo「分组 25」\n        </RebornButton>\n        <RebornTree\n          ref=\"virtualTreeRef\"\n          class=\"w-full max-w-sm\"\n          :tree-data=\"virtualTreeData\"\n          :height=\"280\"\n        />\n        <DemoNote tone=\"dimmed\">\n          共 1050 个节点；滚动条长度随展开集合实时变化，展开越多可滚动区域越长。\n        </DemoNote>\n      </DemoBlock>\n    </DemoSection>\n  </div>\n</template>\n"
+    }
+  ],
+  "related": [],
+  "whenToUse": [
+    "文件目录、组织架构等层级数据的浏览与定位：treeData 一次传入，defaultExpandedKeys 控制初始视野。",
+    "权限点、分类勾选等「选父即选子」的批量选择：checkable 开启复选框，父子联动自动补全。",
+    "层级很深、子级按需请求的场景：loadData 异步加载，isLeaf 终止加载链。",
+    "需要用户手动调整层级结构（移动、归档、排序）：draggable + drop 回调落库。",
+    "上千节点的大数据树：设置 height 启用虚拟滚动，只渲染视口内的行。"
+  ],
+  "whenNotToUse": [
+    "表单里选一个层级路径（省市区、分类），改用 reborn-cascader，它自带触发器与浮层。",
+    "平铺的可折叠内容区块（FAQ、设置分组），改用 reborn-collapse，它是内容容器而非数据结构。",
+    "页面级导航目录，改用 reborn-menu，它带路由联动与浮层子菜单。"
+  ],
+  "pitfalls": [
+    "checkable 树的标题点击切换的是勾选而非点选（有意偏离 antd）：selectable / multiple 在复选树里停用，也不渲染点选高亮背景。",
+    "multiple 只作用于点选（selectedKeys 能否累加）；复选框勾选（checkedKeys）天生多选，不受 multiple 影响。",
+    "展开动画是行级过渡（TransitionGroup：新行淡入、下方行 FLIP 让位），不是容器高度过渡；animated 控制（默认开启），虚拟滚动生效时强制关闭，antd 的 motion 参数由它替代。",
+    "drop 事件不代改数据：组件只负责拖拽交互与位置判定，不在回调里按 dropPosition（-1 前 / 0 内 / 1 后）落库的话界面会弹回原状。",
+    "非 checkStrictly 下 checkedKeys 会被联动归一：传父节点 key 等于整枝勾选，取消一个子级会同时摘掉父链再重算，回写值是归一后的完整集合。",
+    "disabled / disableCheckbox 的节点阻断勾选联动传导；而节点级 checkable: false 只隐藏复选框、仍参与联动计算，两者语义不同。",
+    "虚拟滚动依赖定高行：滚动位置按 itemHeight（默认 28px）换算，用 ui 改了行高必须同步调整 itemHeight，否则切片与 scrollTo 落点漂移。",
+    "scrollTo 的 autoExpand 只在非受控展开下生效：受控（v-model:expanded-keys）时展开集合归外部所有，需先用 useTree 的 getPath 自行并入父链。",
+    "autoExpandParent 只响应外部写入 expandedKeys，组件内部的展开/收起不触发父链补全，否则刚收起的父级会被子级 key 立刻撑回。",
+    "itemHeight 是 Vue 适配新增 prop（antd 行高是内部常量），不用虚拟滚动时无需关心。",
+    "仅 Web 端组件，UniApp 端暂无对应实现；移动端层级选择可改用 reborn-cascader。"
+  ],
+  "dependencies": [
+    "clsx",
+    "motion-v",
+    "tailwind-merge",
+    "tailwind-variants"
+  ],
+  "install": {
+    "cli": "npx reborn-ui@latest add reborn-tree"
+  },
+  "sourceRefs": {
+    "web": [
+      "app/components/reborn/ui/reborn-tree/RebornTree.vue",
+      "app/components/reborn/ui/reborn-tree/index.ts",
+      "app/components/reborn/ui/reborn-tree/reborn-tree.config.ts",
+      "app/components/reborn/ui/reborn-tree/useTree.ts"
+    ]
+  },
+  "docPath": "content/2.components/data/reborn-tree.md",
+  "_meta": {
+    "contentHash": "3453d82ccc2475cb481c55b8086a3b81e3d00de1",
+    "hasOverride": true,
+    "extractors": {
+      "web": "ok",
+      "uniapp": "absent",
+      "docs": "found"
+    }
+  }
+}

@@ -9,6 +9,7 @@
     "tailwind",
     "magic-ui"
   ],
+  "aliases": [],
   "platforms": [
     "web"
   ],
@@ -74,7 +75,7 @@
   },
   "docPath": "content/2.components/text-animations/letter-pullup.md",
   "_meta": {
-    "contentHash": "124fd4c94166d6da99bd588f810a76ac279c065a",
+    "contentHash": "bb9ee4691602ef753833573f4e1cbcd9cac209b0",
     "hasOverride": true,
     "extractors": {
       "web": "ok",

@@ -10,6 +10,7 @@
     "input",
     "ui-verse"
   ],
+  "aliases": [],
   "platforms": [
     "web"
   ],
@@ -79,7 +80,7 @@
   },
   "docPath": "content/2.components/input-and-forms/halo-search.md",
   "_meta": {
-    "contentHash": "bc67ae266051ee73f955eb3ea47a33e8d6674c31",
+    "contentHash": "85e1b2f15e639d36faffd55cd3439cc0039c08c3",
     "hasOverride": true,
     "extractors": {
       "web": "ok",

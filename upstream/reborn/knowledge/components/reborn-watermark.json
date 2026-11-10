@@ -9,6 +9,10 @@
     "watermark",
     "uniapp"
   ],
+  "aliases": [
+    "watermark",
+    "水印"
+  ],
   "platforms": [
     "web",
     "uniapp"
@@ -154,7 +158,7 @@
   },
   "docPath": "content/2.components/data/reborn-watermark.md",
   "_meta": {
-    "contentHash": "184b3d10feaa52251da9a21cc83c2784c94ab0fc",
+    "contentHash": "6ba74220ee53696d5f7c16aad1858eb8769d10cc",
     "hasOverride": true,
     "extractors": {
       "web": "ok",

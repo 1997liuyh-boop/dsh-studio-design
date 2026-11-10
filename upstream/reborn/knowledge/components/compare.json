@@ -9,6 +9,11 @@
     "tailwind",
     "aceternity-ui"
   ],
+  "aliases": [
+    "对比",
+    "before after",
+    "图片对比"
+  ],
   "platforms": [
     "web"
   ],
@@ -213,7 +218,7 @@
   },
   "docPath": "content/2.components/miscellaneous/compare.md",
   "_meta": {
-    "contentHash": "24ec158b2c79ebaaf9183ae8b4135a10ade969f9",
+    "contentHash": "77f577d114fd131b912049362688f3989cb21b36",
     "hasOverride": true,
     "extractors": {
       "web": "ok",

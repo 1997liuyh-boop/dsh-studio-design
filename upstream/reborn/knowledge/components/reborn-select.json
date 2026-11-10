@@ -11,6 +11,15 @@
     "dropdown",
     "uniapp"
   ],
+  "aliases": [
+    "select",
+    "下拉选择",
+    "选择器",
+    "下拉框",
+    "单选下拉",
+    "多选下拉",
+    "combobox"
+  ],
   "platforms": [
     "web",
     "uniapp"
@@ -108,17 +117,31 @@
     },
     {
       "name": "color",
-      "type": "typeof selectColors[number]",
+      "type": "'primary' | 'secondary' | 'success' | 'info' | 'warning' | 'error' | 'neutral'",
       "required": false,
       "description": "颜色",
-      "default": "'primary'"
+      "default": "'primary'",
+      "options": [
+        "primary",
+        "secondary",
+        "success",
+        "info",
+        "warning",
+        "error",
+        "neutral"
+      ]
     },
     {
       "name": "size",
-      "type": "typeof selectSizes[number]",
+      "type": "'sm' | 'md' | 'lg'",
       "required": false,
       "description": "尺寸",
-      "default": "'lg'"
+      "default": "'lg'",
+      "options": [
+        "sm",
+        "md",
+        "lg"
+      ]
     },
     {
       "name": "ui",
@@ -232,10 +255,16 @@
     },
     {
       "name": "variant",
-      "type": "(typeof selectVariants)[number]",
+      "type": "'outlined' | 'filled' | 'borderless' | 'underlined'",
       "required": false,
       "description": "形态变体：描边 / 填充 / 无边框 / 下划线",
-      "default": "\"outlined\""
+      "default": "\"outlined\"",
+      "options": [
+        "outlined",
+        "filled",
+        "borderless",
+        "underlined"
+      ]
     },
     {
       "name": "class",
@@ -424,7 +453,9 @@
   "whenNotToUse": [
     "层级数据逐级选择改用 reborn-cascader。",
     "日期选择：改用 reborn-date-picker（web 端下拉日期面板，uniapp 端底部弹出滚轮）。",
-    "带输入联想、历史记录的搜索改用 reborn-search-box。"
+    "带输入联想、历史记录的搜索改用 reborn-search-box。",
+    "收纳操作命令、点选后执行动作而不是取一个值的下拉菜单，改用 reborn-dropdown。",
+    "选项有层级且要展示成树，改用 reborn-tree-select。"
   ],
   "pitfalls": [
     "web、uniapp 双端可用，交互形态不同：Web 为浮层选项列表，UniApp 为弹层 + RebornPickerView 滚动选择并需点确认。",
@@ -457,7 +488,7 @@
   },
   "docPath": "content/2.components/input-and-forms/reborn-select.md",
   "_meta": {
-    "contentHash": "a672b262edb81509577a4c1303ee8e8f74b01e79",
+    "contentHash": "bd91176e62dd0da7820dd3915d2c87ae31cb5d13",
     "hasOverride": true,
     "extractors": {
       "web": "ok",

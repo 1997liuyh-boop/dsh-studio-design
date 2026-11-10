@@ -10,6 +10,7 @@
     "card",
     "aceternity-ui"
   ],
+  "aliases": [],
   "platforms": [
     "web"
   ],
@@ -87,7 +88,7 @@
   },
   "docPath": "content/2.components/cards/direction-aware-hover.md",
   "_meta": {
-    "contentHash": "0fcf17b6cec3059a04aa1286a68ca4cd3a84ca65",
+    "contentHash": "17e8eac974fb60d4fd7f9391eddf8132cef46aeb",
     "hasOverride": true,
     "extractors": {
       "web": "ok",

@@ -1,0 +1,224 @@
+{
+  "$schema": "../schema/component.schema.json",
+  "id": "reborn-coupon",
+  "title": "卡券 Coupon",
+  "description": "用于渲染缺口、撕线、邮票等形态优惠券外观的卡券组件，仅 web 端。",
+  "category": "misc",
+  "tags": [
+    "vue",
+    "reborn-coupon"
+  ],
+  "aliases": [
+    "coupon",
+    "卡券",
+    "优惠券",
+    "券"
+  ],
+  "platforms": [
+    "web"
+  ],
+  "props": [
+    {
+      "name": "sm",
+      "type": "RebornCouponBaseProps",
+      "required": false,
+      "description": "小屏幕 (sm: 640px+) 响应式覆盖参数",
+      "default": "undefined"
+    },
+    {
+      "name": "md",
+      "type": "RebornCouponBaseProps",
+      "required": false,
+      "description": "中屏幕 (md: 768px+) 响应式覆盖参数",
+      "default": "undefined"
+    },
+    {
+      "name": "lg",
+      "type": "RebornCouponBaseProps",
+      "required": false,
+      "description": "大屏幕 (lg: 1024px+) 响应式覆盖参数",
+      "default": "undefined"
+    },
+    {
+      "name": "xl",
+      "type": "RebornCouponBaseProps",
+      "required": false,
+      "description": "特大屏幕 (xl: 1280px+) 响应式覆盖参数",
+      "default": "undefined"
+    },
+    {
+      "name": "xxl",
+      "type": "RebornCouponBaseProps",
+      "required": false,
+      "description": "2xl 屏幕 (1536px+) 响应式覆盖参数",
+      "default": "undefined"
+    },
+    {
+      "name": "type",
+      "type": "CouponType",
+      "required": false,
+      "description": "优惠券形态：<br>`notch` (单侧缺口)<br>`ticket` (四角缺口)<br>`stamp` (邮票锯齿)<br>`perforated` (单缺口+撕拉线)<br>`combined` (四角 + 单缺口)",
+      "default": "\"notch\""
+    },
+    {
+      "name": "width",
+      "type": "string | number",
+      "required": false,
+      "description": "宽度",
+      "default": "\"100%\""
+    },
+    {
+      "name": "height",
+      "type": "string | number",
+      "required": false,
+      "description": "高度",
+      "default": "\"auto\""
+    },
+    {
+      "name": "radius",
+      "type": "number",
+      "required": false,
+      "description": "缺口圆角半径大小 (适用于除 ticket 外的形态)",
+      "default": "10"
+    },
+    {
+      "name": "direction",
+      "type": "CouponDirection",
+      "required": false,
+      "description": "布局方向：`horizontal` (水平), `vertical` (垂直)",
+      "default": "\"horizontal\""
+    },
+    {
+      "name": "position",
+      "type": "CouponPosition",
+      "required": false,
+      "description": "缺口位置：`start` (顶部/左侧), `center` (居中), `end` (底部/右侧)",
+      "default": "\"start\""
+    },
+    {
+      "name": "offset",
+      "type": "number",
+      "required": false,
+      "description": "缺口相对起点偏移量 (position 不为 center 时生效)",
+      "default": "50"
+    },
+    {
+      "name": "corner",
+      "type": "number",
+      "required": false,
+      "description": "四个角的缺口直角半径大小 (对 ticket / combined 生效)",
+      "default": "20"
+    },
+    {
+      "name": "gap",
+      "type": "number",
+      "required": false,
+      "description": "连续半圆缺口/锯齿的间距 (对 stamp / combined 生效)",
+      "default": "14"
+    },
+    {
+      "name": "split",
+      "type": "CouponSplit",
+      "required": false,
+      "description": "撕拉线的类型：`dotted` (点状), `dashed` (虚线) (仅对 perforated 生效)",
+      "default": "\"dotted\""
+    },
+    {
+      "name": "size",
+      "type": "number | [number, number]",
+      "required": false,
+      "description": "撕拉线尺寸：为数字时表示孔洞直径 / 虚线粗细；为 `[宽, 高]` 数组时专供 dashed 模式精准控制虚线段的长宽 (仅对 perforated 生效)",
+      "default": "4"
+    },
+    {
+      "name": "splitColor",
+      "type": "string",
+      "required": false,
+      "description": "分割线颜色；不传时继承文字颜色",
+      "default": "undefined"
+    },
+    {
+      "name": "class",
+      "type": "any",
+      "required": false,
+      "description": "传递给根容器的额外类名",
+      "default": "\"\""
+    },
+    {
+      "name": "ui",
+      "type": "{\n        root?: any;\n        left?: any;\n        right?: any;\n        center?: any;\n    }",
+      "required": false,
+      "description": "深度定制各插槽容器的类名 (root, left, right, center) 可用键（从源码抽取，以此为准）——Web：center、left、right、root。",
+      "default": "() => ({})"
+    },
+    {
+      "name": "hoverable",
+      "type": "boolean",
+      "required": false,
+      "description": "开启悬停交互动画 (scale-101 + shadow-lg)",
+      "default": "false"
+    }
+  ],
+  "events": [],
+  "slots": [
+    {
+      "name": "left",
+      "description": "优惠券左侧/顶部内容插槽区"
+    },
+    {
+      "name": "right",
+      "description": "优惠券右侧/底部内容插槽区"
+    }
+  ],
+  "exposes": [],
+  "examples": [
+    {
+      "title": "Web 演示",
+      "path": "app/components/reborn/examples/reborn-coupon/RebornCouponDemo.vue",
+      "source": "demo",
+      "platform": "web",
+      "code": "<script setup lang=\"ts\">\nimport { DemoBlock, DemoSection, NuxtImg, Playground } from \"#components\";\nimport { computed, ref } from \"vue\";\nimport RebornButton from \"~/components/reborn/ui/reborn-button/RebornButton.vue\";\nimport RebornCoupon from \"~/components/reborn/ui/reborn-coupon/RebornCoupon.vue\";\n\nconst state = ref<Record<string, any>>({\n  type: \"perforated\",\n  width: 904,\n  height: 124,\n  radius: 12,\n  direction: \"vertical\",\n  position: \"start\",\n  offset: 120,\n  corner: 20,\n  gap: 2,\n  split: \"dotted\",\n  size: 2,\n  splitColor: \"#ffffff\",\n  lineWidth: 8,\n  lineHeight: 2,\n  background: \"linear-gradient(135deg, #ff7e5f, #feb47b)\",\n  hoverable: true,\n});\n\nconst validCornerTypes = [\"ticket\", \"combined\"] as const;\n\nconst showCornerControl = computed(() =>\n  validCornerTypes.includes(state.value.type as (typeof validCornerTypes)[number]),\n);\n\nconst showDashedLineSizeControls = computed(() => state.value.type === \"perforated\" && state.value.split === \"dashed\");\n\n/** 背景交给 style，虚线宽高合成 size，禁止向根节点透传演练场辅助字段。 */\nconst couponProps = computed(() => {\n  const { background, lineWidth, lineHeight, ...props } = state.value;\n  return {\n    ...props,\n    size: showDashedLineSizeControls.value ? [lineWidth, lineHeight] : props.size,\n  };\n});\n\nconst controls = computed(() => [\n  {\n    title: \"基础配置\",\n    children: [\n      {\n        label: \"组件类型\",\n        key: \"type\",\n        component: \"select\" as const,\n        defaultValue: \"perforated\",\n        props: {\n          options: [\n            { label: \"缺口 (Notch)\", value: \"notch\" },\n            { label: \"票据 (Ticket)\", value: \"ticket\" },\n            { label: \"邮票 (Stamp)\", value: \"stamp\" },\n            { label: \"虚线 (Perforated)\", value: \"perforated\" },\n            { label: \"组合 (Combined)\", value: \"combined\" },\n          ],\n        },\n      },\n      {\n        label: \"背景样式\",\n        key: \"background\",\n        component: \"select\" as const,\n        defaultValue: \"linear-gradient(135deg, #ff7e5f, #feb47b)\",\n        props: {\n          options: [\n            { label: \"落日余晖 (Amber)\", value: \"linear-gradient(135deg, #ff7e5f, #feb47b)\" },\n            { label: \"极光森林 (Green)\", value: \"linear-gradient(135deg, #43e97b, #38f9d7)\" },\n            { label: \"深海蓝调 (Blue)\", value: \"linear-gradient(135deg, #4facfe, #00f2fe)\" },\n            { label: \"优雅黑紫 (Purple)\", value: \"linear-gradient(135deg, #667eea, #764ba2)\" },\n            { label: \"暗夜刀锋 (Dark)\", value: \"linear-gradient(135deg, #232526, #414345)\" },\n            { label: \"极简白 (White)\", value: \"#f8fafc\" },\n          ],\n        },\n      },\n      {\n        label: \"宽度\",\n        key: \"width\",\n        component: \"slider\" as const,\n        defaultValue: 904,\n        props: {\n          min: 100,\n          max: 1200,\n          step: 1,\n        },\n      },\n      {\n        label: \"高度\",\n        key: \"height\",\n        component: \"slider\" as const,\n        defaultValue: 124,\n        props: {\n          min: 100,\n          max: 1200,\n          step: 1,\n        },\n      },\n    ],\n  },\n  {\n    title: \"布局与对齐\",\n    children: [\n      {\n        label: \"布局方向\",\n        key: \"direction\",\n        component: \"select\" as const,\n        defaultValue: \"vertical\",\n        props: {\n          options: [\n            { label: \"水平 (Horizontal)\", value: \"horizontal\" },\n            { label: \"垂直 (Vertical)\", value: \"vertical\" },\n          ],\n        },\n      },\n      {\n        label: \"位置策略\",\n        key: \"position\",\n        component: \"select\" as const,\n        defaultValue: \"start\",\n        props: {\n          options: [\n            { label: \"顶部/左侧 (Start)\", value: \"start\" },\n            { label: \"居中 (Center)\", value: \"center\" },\n            { label: \"底部/右侧 (End)\", value: \"end\" },\n          ],\n        },\n      },\n      {\n        label: \"对齐偏移 (px)\",\n        key: \"offset\",\n        component: \"slider\" as const,\n        defaultValue: 120,\n        props: { min: 0, max: 600 },\n      },\n    ],\n  },\n  {\n    title: \"装饰细节\",\n    children: [\n      {\n        label: \"缺口半径 (px)\",\n        key: \"radius\",\n        component: \"slider\" as const,\n        defaultValue: 12,\n        props: { min: 0, max: 30 },\n      },\n      ...(showCornerControl.value\n        ? [\n            {\n              label: \"切角大小 (px)\",\n              key: \"corner\",\n              component: \"slider\" as const,\n              defaultValue: 20,\n              props: { min: 0, max: 100 },\n            },\n          ]\n        : []),\n      {\n        label: \"间距/密度 (px)\",\n        key: \"gap\",\n        component: \"slider\" as const,\n        defaultValue: 2,\n        props: { min: 1, max: 60 },\n      },\n      ...(!showDashedLineSizeControls.value\n        ? [\n            {\n              label: \"点径/线粗 (px)\",\n              key: \"size\",\n              component: \"slider\" as const,\n              defaultValue: 2,\n              props: { min: 1, max: 20 },\n            },\n          ]\n        : []),\n      ...(showDashedLineSizeControls.value\n        ? [\n            {\n              label: \"线段宽度 (px)\",\n              key: \"lineWidth\",\n              component: \"slider\" as const,\n              defaultValue: 8,\n              props: { min: 2, max: 60 },\n            },\n            {\n              label: \"线段高度 (px)\",\n              key: \"lineHeight\",\n              component: \"slider\" as const,\n              defaultValue: 2,\n              props: { min: 1, max: 20 },\n            },\n          ]\n        : []),\n      {\n        label: \"分割线类型\",\n        key: \"split\",\n        component: \"select\" as const,\n        defaultValue: \"dotted\",\n        props: {\n          options: [\n            { label: \"点状 (Dotted)\", value: \"dotted\" },\n            { label: \"断续线 (Dashed)\", value: \"dashed\" },\n          ],\n        },\n      },\n      {\n        label: \"分割线颜色\",\n        key: \"splitColor\",\n        component: \"color-picker\" as const,\n        defaultValue: \"#ffffff\",\n        props: {\n          placeholder: \"#ffffff / rgba(255,255,255,.9)\",\n        },\n      },\n    ],\n  },\n]);\n\nconst activeCode = computed(() => {\n  const lines = [\n    \"<RebornCoupon\",\n    `  type=\"${state.value.type}\"`,\n    `  :width=\"${state.value.width}\"`,\n    `  :height=\"${state.value.height}\"`,\n    `  :radius=\"${state.value.radius}\"`,\n    `  direction=\"${state.value.direction}\"`,\n    `  position=\"${state.value.position}\"`,\n    `  :offset=\"${state.value.offset}\"`,\n    `  :gap=\"${state.value.gap}\"`,\n    `  split=\"${state.value.split}\"`,\n    state.value.splitColor ? `  split-color=\"${state.value.splitColor}\"` : null,\n    showCornerControl.value ? `  :corner=\"${state.value.corner}\"` : null,\n    showDashedLineSizeControls.value\n      ? `  :size=\"[${state.value.lineWidth}, ${state.value.lineHeight}]\"`\n      : `  :size=\"${state.value.size}\"`,\n    state.value.hoverable ? \"  hoverable\" : null,\n    \"/>\",\n  ].filter(Boolean);\n\n  return lines.join(\"\\n\");\n});\n</script>\n\n<template>\n  <div class=\"flex w-full min-w-0 flex-col\">\n    <Playground\n      v-model=\"state\"\n      :controls=\"controls\"\n      :code=\"activeCode\"\n      component-name=\"RebornCoupon\"\n      title=\"交互演练场\"\n      description=\"优惠券的裁切形态由 type 决定，缺口位置由 direction / position / offset 三者共同控制；背景通过内联样式直接传入，组件只负责裁形。\"\n    >\n      <!-- 优惠券本身即被演示的对象，其表面与背景属于组件效果，不视为额外嵌套 -->\n      <RebornCoupon\n        v-bind=\"couponProps\"\n        class=\"transition duration-300\"\n        :style=\"{\n          background: state.background,\n          color: state.background === '#f8fafc' ? '#1e293b' : 'white',\n        }\"\n      >\n        <template #left>\n          <div class=\"flex h-full flex-col items-center justify-center\">\n            <span class=\"text-4xl font-extrabold tracking-tighter\">¥100</span>\n            <span class=\"text-sm font-bold tracking-wider uppercase opacity-70\">满 ¥1000 可用</span>\n          </div>\n        </template>\n        <template #right>\n          <div class=\"flex h-full flex-col justify-center px-6 py-2\">\n            <div class=\"flex flex-wrap gap-2\">\n              <span class=\"rounded-sm border-current/40 border px-2 py-0.5 text-sm font-bold tracking-wider\">NEW</span>\n              <span class=\"rounded-sm border-current/40 border px-2 py-0.5 text-sm font-bold tracking-wider\">\n                新人专享\n              </span>\n            </div>\n            <div>\n              <h3 class=\"text-xl font-black\">全球时尚购物周礼券</h3>\n              <p class=\"text-xs font-medium opacity-80\">全平台自营品类通用，不包含电子产品</p>\n            </div>\n            <div class=\"mt-2 flex items-center justify-between\">\n              <span class=\"text-sm font-medium opacity-60\">有效期至：2026.12.31</span>\n              <button\n                class=\"border-current px-5 py-1.5 text-xs font-bold transition-transform rounded-full border hover:scale-105 active:scale-95\"\n              >\n                立即领取\n              </button>\n            </div>\n          </div>\n        </template>\n      </RebornCoupon>\n    </Playground>\n\n    <DemoSection\n      title=\"响应式尺寸\"\n      description=\"sm / md / lg / xl / xxl 五个断点各自接收一组 width、height、offset，组件会按当前视口宽度自动切换，无需手写媒体查询。\"\n    >\n      <DemoBlock layout=\"stack\">\n        <RebornCoupon\n          v-for=\"item in 2\"\n          :key=\"item\"\n          type=\"perforated\"\n          :radius=\"8\"\n          :size=\"[1, 4]\"\n          split=\"dashed\"\n          direction=\"vertical\"\n          :gap=\"4\"\n          split-color=\"#575859\"\n          :sm=\"{ width: 300, height: 74, offset: 178 }\"\n          :md=\"{ width: 400, height: 74, offset: 278 }\"\n          :lg=\"{ width: 400, height: 81, offset: 278 }\"\n          :xl=\"{ width: 500, height: 90, offset: 363 }\"\n          :xxl=\"{ width: 444, height: 90, offset: 307 }\"\n          :ui=\"{ right: 'flex items-center justify-center' }\"\n          class=\"bg-elevated rounded-lg\"\n        >\n          <template #left>\n            <div class=\"flex h-full items-center justify-center gap-x-5\">\n              <div class=\"flex flex-col items-center gap-y-2\">\n                <NuxtImg\n                  src=\"https://www.rakufun.com/images/sites/Mercari.png\"\n                  class=\"mobile:size-[24px] tablet:size-[32px]\"\n                />\n                <p class=\"text-default text-base\">Mercari</p>\n              </div>\n              <div>\n                <p>\n                  <b class=\"text-default tablet:text-[30px] text-xl leading-[30px]\">5000</b>\n                  <sub>日元</sub>\n                </p>\n                <p class=\"text-muted tablet:text-base text-sm\">滿 {{ 1000 * item }} 日圓可用</p>\n              </div>\n            </div>\n          </template>\n          <template #right>\n            <RebornButton label=\"立即领取\" />\n          </template>\n        </RebornCoupon>\n      </DemoBlock>\n    </DemoSection>\n  </div>\n</template>\n"
+    }
+  ],
+  "related": [],
+  "whenToUse": [
+    "营销页展示优惠券、兑换券等票券样式区块。",
+    "需要按 sm/md/lg/xl/xxl 断点分别覆盖券面参数的响应式卡券。"
+  ],
+  "whenNotToUse": [
+    "uniapp 端不可用（仅 web），小程序卡券需另行实现。",
+    "普通内容分组卡片，uniapp 端用 reborn-card 即可。"
+  ],
+  "pitfalls": [
+    "仅 web 端可用。",
+    "券面内容通过 left/right 两个插槽传入（分别对应左侧/顶部与右侧/底部区域）。",
+    "sm/md/lg/xl/xxl props 均为 RebornCouponBaseProps 类型的断点覆盖参数，用于在对应屏宽下覆盖基础配置。",
+    "断点覆盖项在组件挂载后才生效：挂载前只按基础 props 渲染，保证服务端渲染时水合首帧一致，宽屏下挂载后会切换一次尺寸。"
+  ],
+  "dependencies": [
+    "@vueuse/core",
+    "clsx",
+    "tailwind-merge",
+    "tailwind-variants"
+  ],
+  "install": {
+    "cli": "npx reborn-ui@latest add reborn-coupon"
+  },
+  "sourceRefs": {
+    "web": [
+      "app/components/reborn/ui/reborn-coupon/RebornCoupon.vue",
+      "app/components/reborn/ui/reborn-coupon/index.ts",
+      "app/components/reborn/ui/reborn-coupon/reborn-coupon.config.ts"
+    ]
+  },
+  "docPath": "content/2.components/miscellaneous/reborn-coupon.md",
+  "_meta": {
+    "contentHash": "304b3942bba570bf13e66877bcd3cb2a5db2e3aa",
+    "hasOverride": true,
+    "extractors": {
+      "web": "ok",
+      "uniapp": "absent",
+      "docs": "found"
+    }
+  }
+}

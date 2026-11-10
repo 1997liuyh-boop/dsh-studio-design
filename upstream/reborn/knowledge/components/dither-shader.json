@@ -10,6 +10,7 @@
     "card",
     "aceternity-ui"
   ],
+  "aliases": [],
   "platforms": [
     "web"
   ],
@@ -175,7 +176,7 @@
   },
   "docPath": "content/2.components/special-effects/dither-shader.md",
   "_meta": {
-    "contentHash": "b2f2b9c5593904ed8d170461f5327b64f47a1119",
+    "contentHash": "0c0929aa7de47b62bee12fc6357df20c07d6e960",
     "hasOverride": true,
     "extractors": {
       "web": "ok",

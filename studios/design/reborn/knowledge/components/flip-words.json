@@ -1,0 +1,95 @@
+{
+  "$schema": "../schema/component.schema.json",
+  "id": "flip-words",
+  "title": "翻转单词",
+  "description": "用于句子中一组单词循环翻转切换的内联文字动画组件。",
+  "category": "effect",
+  "tags": [
+    "css",
+    "tailwind",
+    "aceternity-ui"
+  ],
+  "aliases": [],
+  "platforms": [
+    "web"
+  ],
+  "props": [
+    {
+      "name": "words",
+      "type": "string[]",
+      "required": true,
+      "description": "要展示并动画的单词数组。"
+    },
+    {
+      "name": "duration",
+      "type": "number",
+      "required": false,
+      "description": "每个单词显示的时间（毫秒），之后翻转到下一个单词。",
+      "default": "3000"
+    },
+    {
+      "name": "class",
+      "type": "string",
+      "required": false,
+      "description": "应用于组件的额外 CSS 类。",
+      "default": "\"\""
+    }
+  ],
+  "events": [
+    {
+      "name": "animationStart",
+      "payload": "[]",
+      "description": "新单词进场动画结束时触发"
+    },
+    {
+      "name": "animationComplete",
+      "payload": "[]",
+      "description": "旧单词离场动画结束时触发"
+    }
+  ],
+  "slots": [],
+  "exposes": [],
+  "examples": [
+    {
+      "title": "Web 演示",
+      "path": "app/components/reborn/examples/flip-words/FlipWordsDemo.vue",
+      "source": "demo",
+      "platform": "web",
+      "code": "<template>\n  <div class=\"flex h-[40rem] items-center justify-center px-4\">\n    <div class=\"mx-auto text-4xl font-normal text-neutral-600 dark:text-neutral-400\">\n      Vuejs: The\n      <FlipWords\n        :words=\"['Progressive', 'Approachable', 'Performant', 'Versatile']\"\n        :duration=\"3000\"\n        class=\"!text-primary text-4xl\"\n      />\n      <div>\n        JavaScript Framework for building <br />\n        Modern Web Apps\n      </div>\n    </div>\n  </div>\n</template>\n"
+    }
+  ],
+  "related": [],
+  "whenToUse": [
+    "标题句式固定、仅关键词轮换的宣传文案（如框架特性词轮播）。",
+    "需要通过 animationStart / animationComplete 事件联动其他动画的场景。"
+  ],
+  "whenNotToUse": [
+    "需要容器宽度随词宽平滑过渡，改用 container-text-flip。",
+    "整段文字形变过渡，改用 morphing-text。"
+  ],
+  "pitfalls": [
+    "仅 web 端可用。",
+    "words 为必填的字符串数组。",
+    "duration 是每个单词的停留时间，单位毫秒（默认 3000），不是翻转动画时长。"
+  ],
+  "dependencies": [],
+  "install": {
+    "cli": "npx reborn-ui@latest add flip-words"
+  },
+  "sourceRefs": {
+    "web": [
+      "app/components/reborn/ui/flip-words/FlipWords.vue",
+      "app/components/reborn/ui/flip-words/index.ts"
+    ]
+  },
+  "docPath": "content/2.components/text-animations/flip-words.md",
+  "_meta": {
+    "contentHash": "f3cd57fbed858ad8df99417f1e11f004e8388b37",
+    "hasOverride": true,
+    "extractors": {
+      "web": "ok",
+      "uniapp": "absent",
+      "docs": "found"
+    }
+  }
+}

@@ -9,6 +9,7 @@
     "tailwind",
     "number-flow"
   ],
+  "aliases": [],
   "platforms": [
     "web"
   ],
@@ -84,7 +85,7 @@
   },
   "docPath": "content/2.components/miscellaneous/scroll-island.md",
   "_meta": {
-    "contentHash": "0068bd257637b51e99f81e65bc965d7c15cafdaa",
+    "contentHash": "efd472b0a2c77918368fe850c233b3b98870cf9e",
     "hasOverride": true,
     "extractors": {
       "web": "ok",

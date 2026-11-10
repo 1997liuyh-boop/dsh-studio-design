@@ -1,5 +1,5 @@
-import path from "node:path";
 import fs from "node:fs";
+import path from "node:path";
 import { fileURLToPath } from "node:url";
 
 // ===== 知识库数据类型（与 scripts/kb/schema.ts 生成的结构对应，此处只声明消费用字段） =====
@@ -11,6 +11,8 @@ export interface KbIndexEntry {
   category?: string;
   tags?: string[];
   platforms?: Array<"web" | "uniapp">;
+  /** 检索别名：其它组件库的叫法、中英文同义词、UI 稿上的外观描述；只用于检索打分 */
+  aliases?: string[];
 }
 
 export interface KbProp {
@@ -33,6 +35,28 @@ export interface KbExample {
   path?: string;
   source?: string;
   platform?: string;
+}
+
+/**
+ * 设计稿节点 → 组件的配方（knowledge/design-patterns.json 经 kb:build 并入 index.json）。
+ * match 为节点名 / 变体值 / 子节点名的匹配项：子串（不分大小写）或 /正则/i；按顺序取第一条命中。
+ */
+export interface KbDesignPattern {
+  id: string;
+  pattern: string;
+  match: string[];
+  component: string | null;
+  with?: string[];
+  ignore?: boolean;
+  custom?: boolean;
+  /** 排版容器：自身不是组件，传了 children 时改按子节点再匹配一次 */
+  container?: boolean;
+  confidence?: "high" | "low";
+  minCount?: number;
+  recipe?: string;
+  imports?: string[];
+  uses?: { props?: string[]; slots?: string[]; events?: string[]; ui?: string[] };
+  pitfalls?: string[];
 }
 
 export interface KbComponent extends KbIndexEntry {
@@ -114,6 +138,7 @@ function assertKbDir(dir: string, from: string): void {
 export class KnowledgeBase {
   private readonly dir: string;
   private readonly indexEntries: KbIndexEntry[];
+  private readonly patterns: KbDesignPattern[];
   private readonly componentCache = new Map<string, KbComponent>();
 
   constructor(dir: string) {
@@ -122,11 +147,18 @@ export class KnowledgeBase {
       fs.readFileSync(path.join(dir, "index.json"), "utf8"),
     );
     this.indexEntries = Array.isArray(raw) ? raw : raw.components;
+    // 旧版索引没有配方表：工具退化为纯检索映射，不报错
+    this.patterns = Array.isArray(raw?.designPatterns) ? raw.designPatterns : [];
   }
 
   /** 轻量索引全量列表 */
   list(): KbIndexEntry[] {
     return this.indexEntries;
+  }
+
+  /** 设计稿配方表（索引里没有时为空数组） */
+  designPatterns(): KbDesignPattern[] {
+    return this.patterns;
   }
 
   /** 全部分类及其组件数 */

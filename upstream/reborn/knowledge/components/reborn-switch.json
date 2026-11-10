@@ -10,6 +10,12 @@
     "switch",
     "uniapp"
   ],
+  "aliases": [
+    "switch",
+    "开关",
+    "toggle",
+    "切换开关"
+  ],
   "platforms": [
     "web",
     "uniapp"
@@ -84,10 +90,15 @@
     },
     {
       "name": "type",
-      "type": "typeof switchTypes[number]",
+      "type": "'circle' | 'round' | 'line'",
       "required": false,
       "description": "形态：circle 胶囊圆形（默认）/ round 圆角方形 / line 细线轨道 + 悬浮滑块",
-      "default": "'circle'"
+      "default": "'circle'",
+      "options": [
+        "circle",
+        "round",
+        "line"
+      ]
     },
     {
       "name": "borderColor",
@@ -97,17 +108,31 @@
     },
     {
       "name": "size",
-      "type": "typeof switchSizes[number]",
+      "type": "'sm' | 'md' | 'lg'",
       "required": false,
       "description": "尺寸，三档规格见「尺寸：size」；显式设置时优先于所在表单的 `size`，未设置时跟随表单。",
-      "default": "'md'"
+      "default": "'md'",
+      "options": [
+        "sm",
+        "md",
+        "lg"
+      ]
     },
     {
       "name": "color",
-      "type": "typeof switchColors[number]",
+      "type": "'primary' | 'secondary' | 'success' | 'info' | 'warning' | 'error' | 'neutral'",
       "required": false,
       "description": "语义色：开启态轨道与联动文案取该色。",
-      "default": "'primary'"
+      "default": "'primary'",
+      "options": [
+        "primary",
+        "secondary",
+        "success",
+        "info",
+        "warning",
+        "error",
+        "neutral"
+      ]
     },
     {
       "name": "beforeChange",
@@ -251,7 +276,7 @@
   },
   "docPath": "content/2.components/input-and-forms/reborn-switch.md",
   "_meta": {
-    "contentHash": "d4c162542f6cf2d0106c92708d6c84d84b545054",
+    "contentHash": "0c5e488a4d6c71325fb05d740a7a65dc70b901a6",
     "hasOverride": true,
     "extractors": {
       "web": "ok",

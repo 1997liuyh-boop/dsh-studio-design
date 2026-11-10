@@ -12,6 +12,13 @@
     "mask",
     "uniapp"
   ],
+  "aliases": [
+    "text",
+    "文本",
+    "省略",
+    "脱敏",
+    "文字"
+  ],
   "platforms": [
     "web",
     "uniapp"
@@ -257,7 +264,7 @@
   },
   "docPath": "content/2.components/miscellaneous/reborn-text.md",
   "_meta": {
-    "contentHash": "d8579829e663253e9bf31ec297b5a28eb0c85ed0",
+    "contentHash": "db7f0025bd3db82c41028b3b633b292f469cb0f5",
     "hasOverride": true,
     "extractors": {
       "web": "ok",
