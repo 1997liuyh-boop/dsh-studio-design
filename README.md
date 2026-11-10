@@ -2,7 +2,9 @@
 
 [简体中文](README.zh.md)
 
-**Repository name:** $n\n\n**Repository description:** MasterGo and Reborn UI design collaboration studio for reading design nodes, mapping real components, and checking implementation in a DSH project session.
+**Repository name:** `dsh-studio-design`
+
+**Repository description:** MasterGo and Reborn UI design collaboration studio for reading design nodes, mapping real components, and checking implementation in a DSH project session.
 
 `dsh-studio-design` is an independently installed DSH studio. It connects MasterGo Vibe MCP, the Reborn component knowledge base, project files, and the current DSH session. The worktable provides the studio container; it does not replace the project's own UI framework or silently edit files.
 

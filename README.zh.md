@@ -2,7 +2,9 @@
 
 [English](README.md)
 
-**仓库名称：** $n\n\n**仓库描述：**MasterGo 与 Reborn UI 设计协作工作室，用于读取设计节点、匹配真实组件，并在 DSH 项目会话中检查实现。
+**仓库名称：** `dsh-studio-design`
+
+**仓库描述：**MasterGo 与 Reborn UI 设计协作工作室，用于读取设计节点、匹配真实组件，并在 DSH 项目会话中检查实现。
 
 `dsh-studio-design` 是独立安装的 DSH 工作室，将 MasterGo Vibe MCP、Reborn 组件知识库、项目文件和当前 DSH 会话连接起来。工作台只提供工作室容器，不替换项目自身的 UI 框架，也不会静默修改文件。
 
