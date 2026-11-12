@@ -4,7 +4,7 @@ import { readFile, stat } from 'node:fs/promises'
 import { inside, object, readOptional, text } from './project.ts'
 import { imageSize, MANIFEST_PATH, type Manifest } from './reader.ts'
 import { INTERACTION_SPEC_PATH, interactionTemplateIssues, isPending, loadInteractions, type InteractionSpec } from './interactions.ts'
-import { mappingIssues, propIssues, unregisteredHits } from './installed.ts'
+import { boundDesignIds, mappingIssues, propIssues, unregisteredHits } from './installed.ts'
 import { readManifestForCompare, resolvePreviewUrl, runCompare, type CompareResult, type Measurer } from './compare.ts'
 import { INTERACTION_REPORT_PATH, runInteractions, type DriverFactory, type InteractResult } from './interact.ts'
 import { matchManifest, type ComponentRule } from './componentMap.ts'
@@ -320,7 +320,7 @@ export class Reviews {
     const { specs, issue: specIssue } = await readSpecs(root)
     if (specIssue) issues.push(specIssue)
     if (specs) {
-      const found = interactionTemplateIssues(specs, templates, await readOptional(root, INTERACTION_SPEC_PATH))
+      const found = interactionTemplateIssues(specs, templates, await readOptional(root, INTERACTION_SPEC_PATH), await boundDesignIds(root, templates.keys()))
       issues.push(...found.issues); warnings.push(...found.warnings)
     }
     if (issues.length === 0) this.checked.add(owner)

@@ -162,6 +162,59 @@ export async function propIssues(root: string, templates: Map<string, string>): 
   return { issues: [...issues], warnings: [...warnings] }
 }
 
+/** 模板里绑定写法的节点标记：:data-design="item.nodeId"（列表渲染时节点 ID 放在数据里）。 */
+export const boundDesignAttribute = /(?:^|[\s"'])(?::|v-bind:)data-design\s*=/
+
+const quotedNodeId = /["'`](\d+:\d+(?:\/\d+:\d+)*)["'`]/g
+const localImport = /(?:from|import)\s*\(?\s*["']((?:\.{1,2}|~~?|@)\/[^"']+)["']/g
+
+/**
+ * 列表渲染的节点标记：模板用 :data-design 绑定时，节点 ID 不在模板里，而在同文件脚本或它直接引入的本地数据模块里。
+ * 对每个带绑定写法的实现文件，收集这些位置出现的节点 ID 字面量，供映射核对与交互核对定位节点；
+ * 这样一列同名实例可以照常用 v-for 渲染，不必为了通过检查把每一项手写成字面量。
+ * @param files 已登记的实现文件（项目相对路径）。
+ * @returns 实现文件 → 它用绑定写法标记的节点 ID；没有绑定写法的文件不在结果里。
+ */
+export async function boundDesignIds(root: string, files: Iterable<string>): Promise<Map<string, Set<string>>> {
+  const result = new Map<string, Set<string>>()
+  for (const file of files) {
+    const source = await readOptional(root, file).catch(() => null)
+    if (source === null || !boundDesignAttribute.test(source)) continue
+    const ids = new Set<string>()
+    const collect = (text: string) => { for (const match of text.matchAll(quotedNodeId)) ids.add(match[1]!) }
+    collect(source)
+    const directory = file.includes('/') ? file.slice(0, file.lastIndexOf('/')) : ''
+    for (const match of source.matchAll(localImport)) {
+      const specifier = match[1]!
+      // 别名 ~ / @ 指向源码根：Nuxt 4 是 app/，其余常见布局是 src/ 或项目根。
+      const bases = specifier.startsWith('.') ? [normalizePath(directory + '/' + specifier)] : ['app', 'src', ''].map(base => normalizePath(base + '/' + specifier.replace(/^(?:~~?|@)\//, '')))
+      for (const base of bases) {
+        if (!base) continue
+        let found = false
+        for (const candidate of [base, base + '.ts', base + '.js', base + '.mjs', base + '.json', base + '/index.ts', base + '/index.js']) {
+          const content = await readOptional(root, candidate).catch(() => null)
+          if (content === null) continue
+          collect(content); found = true; break
+        }
+        if (found) break
+      }
+    }
+    result.set(file, ids)
+  }
+  return result
+}
+
+/** 折叠 ./ 与 ../，得到项目相对路径；越过项目根时返回空串。 */
+function normalizePath(path: string): string {
+  const parts: string[] = []
+  for (const part of path.replaceAll('\\', '/').split('/')) {
+    if (!part || part === '.') continue
+    if (part === '..') { if (!parts.length) return ''; parts.pop(); continue }
+    parts.push(part)
+  }
+  return parts.join('/')
+}
+
 function usesTag(template: string, component: string): boolean {
   const pascal = component.split('-').map(word => word[0]!.toUpperCase() + word.slice(1)).join('')
   return new RegExp('<(?:' + component + '|' + pascal + ')(?=[\\s/>])').test(template)
@@ -169,17 +222,19 @@ function usesTag(template: string, component: string): boolean {
 
 /**
  * 映射表命中的设计实例必须用对应组件实现：按 data-design 找到渲染该节点的实现文件，文件里必须有组件标签（含伴随组件）；
+ * 列表渲染时节点 ID 由 :data-design 绑定（ID 在脚本或数据模块里），同样算已标记；
  * 没有任何文件标记该节点时退回全文核对并提醒补 data-design。
  */
 export async function mappingIssues(root: string, manifest: BlocksWithComponents | null, templates: Map<string, string>): Promise<{ issues: string[]; warnings: string[] }> {
   if (!manifest) return { issues: [], warnings: [] }
   const map = await loadComponentMap(root)
   const all = [...templates.values()].join('\n')
+  const bound = await boundDesignIds(root, templates.keys())
   const issues: string[] = [], warnings: string[] = []
   for (const hit of matchManifest(map.rules, manifest).matched) {
     const required = [hit.rule.component, ...(hit.rule.with ?? [])]
     const where = '实例「' + hit.name + '」（' + hit.nodeIds.join('、') + '）应使用 ' + required.join(' + ') + '（规则「' + hit.rule.pattern + '」，' + map.path + '）'
-    const located = [...templates].filter(([, template]) => hit.nodeIds.some(id => template.includes('data-design="' + id + '"')))
+    const located = [...templates].filter(([file, template]) => hit.nodeIds.some(id => template.includes('data-design="' + id + '"') || bound.get(file)?.has(id)))
     if (located.length === 0) {
       warnings.push('映射命中的节点没有 data-design 标记，只能按全文核对：' + where)
       for (const component of required) if (!usesTag(all, component)) issues.push('映射命中未实现：' + where + '，已登记的实现文件里没有 ' + component + ' 标签')

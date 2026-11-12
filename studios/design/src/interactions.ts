@@ -368,7 +368,10 @@ export async function syncInteractions(root: string, manifest: Pick<Manifest, 'b
 }
 
 /** 模板里能证明交互已实现的绑定：事件处理、v-model、条件渲染或状态类 props。 */
-const bindingPattern = /(?:^|\s)(?:@[\w.:-]+|v-on:[\w.:-]+|v-model(?::[\w-]+)?(?:\.[\w-]+)*|v-if|v-else-if|v-show|:(?:disabled|active|loading|selected|checked|open|visible|model-value|modelValue|value|current|active-key|activeKey|index|class|style|variant|color|state|status))\s*=/
+const bindingPattern = /(?:^|\s)(?:@[\w.:-]+|v-on:[\w.:-]+|v-model(?::[\w-]+)?(?:\.[\w-]+)*|v-if|v-else-if|v-show|:(?:disabled|active|loading|selected|checked|open|visible|model-value|modelValue|value|current|active-key|activeKey|selected-keys|selectedKeys|open-keys|openKeys|index|class|style|ui|variant|color|state|status))\s*=/
+
+/** 带绑定写法节点标记的元素开标签：:data-design="item.nodeId"（列表渲染时节点 ID 放在数据里）。 */
+const boundElement = /<[A-Za-z][\w-]*\b([^>]*?)(?::|v-bind:)data-design\s*=\s*"[^"]*"([^>]*)>/
 
 function escape(value: string): string { return value.replace(/[.*+?^${}()|[\]\\]/g, '\\$&') }
 
@@ -377,8 +380,9 @@ function escape(value: string): string { return value.replace(/[.*+?^${}()|[\]\\
  * 交互本身由 design_review(stage=interact) 在宿主侧执行，不要求项目里有 Playwright 脚本；脚本存在时只提醒未覆盖的条目。
  * @param templates 实施文件 → 模板内容（已去注释）。
  * @param script 项目里已有的 Playwright 脚本内容；不存在为 null。
+ * @param bound 实现文件 → 它用 :data-design 绑定标记的节点 ID（见 installed.ts 的 boundDesignIds）；列表里的节点按它定位。
  */
-export function interactionTemplateIssues(specs: readonly InteractionSpec[], templates: ReadonlyMap<string, string>, script: string | null): { issues: string[]; warnings: string[] } {
+export function interactionTemplateIssues(specs: readonly InteractionSpec[], templates: ReadonlyMap<string, string>, script: string | null, bound: ReadonlyMap<string, ReadonlySet<string>> = new Map()): { issues: string[]; warnings: string[] } {
   const issues: string[] = [], warnings: string[] = []
   let filled = 0
   for (const spec of specs) {
@@ -389,6 +393,12 @@ export function interactionTemplateIssues(specs: readonly InteractionSpec[], tem
     const files = spec.file ? [[spec.file, templates.get(spec.file) ?? ''] as const] : [...templates.entries()]
     let found: { file: string; attributes: string } | undefined
     for (const [file, template] of files) { const match = pattern.exec(template); if (match) { found = { file, attributes: ' ' + match[1] + ' ' + match[2] }; break } }
+    // 列表渲染：节点 ID 在脚本或数据模块里，模板上是 :data-design 绑定；按该文件里带绑定写法的元素核对。
+    if (!found && spec.node) for (const [file, template] of files) {
+      if (!bound.get(file)?.has(spec.node)) continue
+      const match = boundElement.exec(template)
+      if (match) { found = { file, attributes: ' ' + match[1] + ' ' + match[2] }; break }
+    }
     if (!found) { issues.push('交互 ' + spec.id + '：实施文件中没有 data-design="' + spec.id + '" 的元素（也可用节点 ' + spec.node + '），请在对应节点根元素上标记'); continue }
     if (!bindingPattern.test(found.attributes)) issues.push('交互 ' + spec.id + '：' + found.file + ' 的 data-design 元素没有事件处理或状态绑定（需要 @事件、v-model、v-if / v-show 或 :disabled、:active、:loading 等）')
     if (script !== null && !script.includes('data-design="' + spec.id + '"') && !script.includes("data-design='" + spec.id + "'") && !script.includes('data-design="' + spec.node + '"')) warnings.push('交互 ' + spec.id + '：' + INTERACTION_SPEC_PATH + ' 没有覆盖该条目')

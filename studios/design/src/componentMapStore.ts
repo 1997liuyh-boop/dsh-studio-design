@@ -16,6 +16,24 @@ export interface LoadedComponentMap {
 }
 
 /**
+ * 把新增的默认规则并进项目表，保住它在默认表里的相对次序：插到「默认表中排在它后面、且项目表里也有」的第一条规则之前，
+ * 找不到这样的规则才补到末尾。按顺序取第一条命中，所以次序就是优先级——
+ * 一律补到末尾的话，新加的「导航菜单 → reborn-menu」会排在含「菜单」的下拉规则后面，永远轮不到。
+ * 项目自己写的规则不在默认表里，位置不受影响。
+ */
+export function inheritDefaults(own: readonly ComponentRule[], added: readonly ComponentRule[]): ComponentRule[] {
+  const order = new Map(defaultRules.map((rule, index) => [rule.pattern, index]))
+  const merged = [...own]
+  for (const rule of added) {
+    const position = order.get(rule.pattern) ?? Number.MAX_SAFE_INTEGER
+    const before = merged.findIndex(item => (order.get(item.pattern) ?? -1) > position)
+    if (before < 0) merged.push(rule)
+    else merged.splice(before, 0, rule)
+  }
+  return merged
+}
+
+/**
  * 读取项目映射表；不存在时用默认表，create 为真时同时写出骨架。
  * 文件损坏不抛错：本次退回默认表并在 warnings 里说明，避免卡住整个设计任务。
  * @param known 知识库中存在的组件标识，用于提醒规则里写错的组件名。
@@ -30,10 +48,10 @@ export async function loadComponentMap(root: string, options: { create?: boolean
     try {
       const raw = JSON.parse(content) as Record<string, unknown>
       const own = componentRules(raw)
-      // 由骨架生成（inheritDefaults 为真，或说明文字仍是骨架的）的表会继承新默认规则：按 pattern 补到末尾，项目规则仍在前、优先命中，预读时写回文件；完全手写的表保持原样。
+      // 由骨架生成（inheritDefaults 为真，或说明文字仍是骨架的）的表会继承新默认规则，预读时写回文件；完全手写的表保持原样。
       const inherits = raw.inheritDefaults === true || raw.description === (componentMapSkeleton() as { description: string }).description
       const added = inherits ? defaultRules.filter(rule => !own.some(item => item.pattern === rule.pattern)) : []
-      rules = added.length ? [...own, ...added] : own
+      rules = added.length ? inheritDefaults(own, added) : own
       source = 'project'
       if (added.length) {
         warnings.push('映射表补充了 ' + added.length + ' 条新默认规则：' + added.map(rule => rule.pattern).join('、'))
