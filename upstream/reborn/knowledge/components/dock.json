@@ -1,7 +1,7 @@
 {
   "$schema": "../schema/component.schema.json",
   "id": "dock",
-  "title": "Dock",
+  "title": "Dock 程序坞",
   "description": "用于悬停时邻近图标放大的 macOS 风格 Dock 图标栏组件。",
   "category": "misc",
   "tags": [
@@ -101,7 +101,7 @@
   },
   "docPath": "content/2.components/miscellaneous/dock.md",
   "_meta": {
-    "contentHash": "eec61c6b94b276b0a6056fb6b7dbeb4104c86e85",
+    "contentHash": "8c7f81cbc9566b374e5da84d314b5156ccce39eb",
     "hasOverride": true,
     "extractors": {
       "web": "ok",

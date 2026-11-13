@@ -1,7 +1,7 @@
 {
   "$schema": "../schema/component.schema.json",
   "id": "reborn-header",
-  "title": "标题",
+  "title": "Header 顶栏",
   "description": "用于站点顶部导航的响应式头部组件，移动端可切换为弹窗菜单。",
   "category": "navigation",
   "tags": [
@@ -214,7 +214,7 @@
   },
   "docPath": "content/2.components/navigation/reborn-header.md",
   "_meta": {
-    "contentHash": "44114c79ad87e572dc59496266abb69171259dc6",
+    "contentHash": "0b6922bfc71935a8ebbfae038ed1f2ed6220c8af",
     "hasOverride": true,
     "extractors": {
       "web": "ok",

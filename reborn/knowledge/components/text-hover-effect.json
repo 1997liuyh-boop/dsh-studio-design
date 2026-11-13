@@ -1,7 +1,7 @@
 {
   "$schema": "../schema/component.schema.json",
   "id": "text-hover-effect",
-  "title": "文字悬停效果",
+  "title": "TextHoverEffect 文字悬停效果",
   "description": "用于悬停时跟随鼠标以渐变描边揭示文字的悬停效果组件。",
   "category": "effect",
   "tags": [
@@ -82,7 +82,7 @@
   },
   "docPath": "content/2.components/text-animations/text-hover-effect.md",
   "_meta": {
-    "contentHash": "ed3a3c139baddef73a135d1e53f9cd335497ea7e",
+    "contentHash": "554ee9f79a2852c81d34ce0fb67eef8d92a21ab0",
     "hasOverride": true,
     "extractors": {
       "web": "ok",

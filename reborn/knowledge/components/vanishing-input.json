@@ -1,7 +1,7 @@
 {
   "$schema": "../schema/component.schema.json",
   "id": "vanishing-input",
-  "title": "占位符滚动与消失输入框",
+  "title": "VanishingInput 占位符滚动与消失输入框",
   "description": "用于占位符轮换滚动、提交时文字呈消失动画的单行输入组件。",
   "category": "form",
   "tags": [
@@ -94,7 +94,7 @@
   },
   "docPath": "content/2.components/input-and-forms/placeholders-and-vanish-input.md",
   "_meta": {
-    "contentHash": "08872e844abc4af825def209b53e178b7dfe435b",
+    "contentHash": "ef4882695d8f6fec83eecea75ad5374975b71800",
     "hasOverride": true,
     "extractors": {
       "web": "ok",

@@ -1,7 +1,7 @@
 {
   "$schema": "../schema/component.schema.json",
   "id": "dither-shader",
-  "title": "抖动着色器",
+  "title": "DitherShader 抖动着色器",
   "description": "用于对图片实时应用有序抖动与像素化处理的复古风着色器组件。",
   "category": "effect",
   "tags": [
@@ -176,7 +176,7 @@
   },
   "docPath": "content/2.components/special-effects/dither-shader.md",
   "_meta": {
-    "contentHash": "0c0929aa7de47b62bee12fc6357df20c07d6e960",
+    "contentHash": "106bef878a189dd6399b036fccd5e9676894b663",
     "hasOverride": true,
     "extractors": {
       "web": "ok",

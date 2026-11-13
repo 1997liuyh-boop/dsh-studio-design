@@ -1,7 +1,7 @@
 {
   "$schema": "../schema/component.schema.json",
   "id": "morphing-text",
-  "title": "文字变形",
+  "title": "MorphingText 文字变形",
   "description": "用于在一组文本间以模糊渐变变形循环切换的文字动画组件。",
   "category": "effect",
   "tags": [
@@ -81,7 +81,7 @@
   },
   "docPath": "content/2.components/text-animations/morphing-text.md",
   "_meta": {
-    "contentHash": "d1ea6d3fbb388d3ae73d60f36e5e21a390ea44d6",
+    "contentHash": "fc139712917f03aac92877159108a44c11a6d06c",
     "hasOverride": true,
     "extractors": {
       "web": "ok",

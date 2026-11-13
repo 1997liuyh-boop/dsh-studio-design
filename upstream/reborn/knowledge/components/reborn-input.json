@@ -1,7 +1,7 @@
 {
   "$schema": "../schema/component.schema.json",
   "id": "reborn-input",
-  "title": "input 输入框",
+  "title": "Input 输入框",
   "description": "用于文本录入的双端输入框组件，支持圆角胶囊样式、多尺寸、清除与密码态。",
   "category": "form",
   "tags": [
@@ -617,7 +617,7 @@
   },
   "docPath": "content/2.components/input-and-forms/reborn-input.md",
   "_meta": {
-    "contentHash": "317b6e0181a7b74e22a3ebc1762996a9604cc902",
+    "contentHash": "9e2326dc0df8a1dbea6f3d55d36919c25e93c280",
     "hasOverride": true,
     "extractors": {
       "web": "ok",

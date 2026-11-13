@@ -1,7 +1,7 @@
 {
   "$schema": "../schema/component.schema.json",
   "id": "iphone-mockup",
-  "title": "iPhone 模型",
+  "title": "iPhoneMockup iPhone 模型",
   "description": "用于以 iPhone SVG 外壳包裹展示截图的设备模型组件。",
   "category": "media",
   "tags": [
@@ -79,7 +79,7 @@
   },
   "docPath": "content/2.components/device-mocks/iphone-mockup.md",
   "_meta": {
-    "contentHash": "696b617973320f2984130bda110a3ef1d4f5fe37",
+    "contentHash": "1d732a7e15bea9392091329062eb2d740d6c930d",
     "hasOverride": true,
     "extractors": {
       "web": "ok",

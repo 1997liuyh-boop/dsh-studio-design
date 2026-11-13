@@ -1,7 +1,7 @@
 {
   "$schema": "../schema/component.schema.json",
   "id": "sparkles-text",
-  "title": "闪光文字",
+  "title": "SparklesText 闪光文字",
   "description": "用于在文字周围持续生成双色闪光点缀的标题装饰组件。",
   "category": "effect",
   "tags": [
@@ -82,7 +82,7 @@
   },
   "docPath": "content/2.components/text-animations/sparkles-text.md",
   "_meta": {
-    "contentHash": "4eddacf0fd84015f0fe47b8ca1c5bf7a814beabe",
+    "contentHash": "6c0f09b8ecf7a26e5980c289ff3bf68eda27e3dd",
     "hasOverride": true,
     "extractors": {
       "web": "ok",

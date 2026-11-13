@@ -1,7 +1,7 @@
 {
   "$schema": "../schema/component.schema.json",
   "id": "reborn-tree-select",
-  "title": "Tree Select 树选择器",
+  "title": "TreeSelect 树选择器",
   "description": "Web 层级选值：沿用 select 的三档尺寸与四种形态，下拉复用 tree，支持单选、父子联动或独立勾选的多选，以及清空。",
   "category": "form",
   "tags": [
@@ -352,7 +352,7 @@
   },
   "docPath": "content/2.components/input-and-forms/reborn-tree-select.md",
   "_meta": {
-    "contentHash": "5739de472e059db0ea8101c4e7fab90a709965bb",
+    "contentHash": "920b03e3bf8c14a9ca630e6217a082221e8931a3",
     "hasOverride": true,
     "extractors": {
       "web": "ok",

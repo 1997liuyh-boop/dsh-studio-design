@@ -1,7 +1,7 @@
 {
   "$schema": "../schema/component.schema.json",
   "id": "photo-gallery",
-  "title": "照片画廊",
+  "title": "PhotoGallery 照片画廊",
   "description": "用于以动画展开一组照片的画廊展示组件，图片经 items 传入。",
   "category": "misc",
   "tags": [
@@ -75,7 +75,7 @@
   },
   "docPath": "content/2.components/miscellaneous/photo-gallery.md",
   "_meta": {
-    "contentHash": "251e884a0b7802b1ec389d8d9b6f34fc6de4d23f",
+    "contentHash": "db5d968a405b40e1a1761384284434dfd0c490e4",
     "hasOverride": true,
     "extractors": {
       "web": "ok",

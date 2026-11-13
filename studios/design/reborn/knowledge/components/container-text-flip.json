@@ -1,7 +1,7 @@
 {
   "$schema": "../schema/component.schema.json",
   "id": "container-text-flip",
-  "title": "容器文字翻转",
+  "title": "ContainerTextFlip 容器文字翻转",
   "description": "用于循环翻转一组单词、容器宽度随词宽平滑过渡的文字组件。",
   "category": "effect",
   "tags": [
@@ -103,7 +103,7 @@
   },
   "docPath": "content/2.components/text-animations/container-text-flip.md",
   "_meta": {
-    "contentHash": "4de19c97ff7b51197c7e153faa5aa569c70b8e4d",
+    "contentHash": "564c46fd1d5ea5feb95fc365419a8cae2fd06128",
     "hasOverride": true,
     "extractors": {
       "web": "ok",

@@ -1,7 +1,7 @@
 {
   "$schema": "../schema/component.schema.json",
   "id": "reborn-textarea",
-  "title": "多行输入框",
+  "title": "Textarea 多行输入框",
   "description": "用于多行文本输入的输入框组件，支持自动增高、字数统计与键盘行为配置。",
   "category": "form",
   "tags": [
@@ -374,7 +374,7 @@
   },
   "docPath": "content/2.components/input-and-forms/reborn-textarea.md",
   "_meta": {
-    "contentHash": "b1e0851c2116984301ffd0767bf8045018990d62",
+    "contentHash": "3e723979e8dec2c11d451a4987a4b1d8bc21935b",
     "hasOverride": true,
     "extractors": {
       "web": "ok",

@@ -1,7 +1,7 @@
 {
   "$schema": "../schema/component.schema.json",
   "id": "animated-circular-progressbar",
-  "title": "动画圆形进度条",
+  "title": "AnimatedCircularProgressBar 动画圆形进度条",
   "description": "用于以圆形仪表盘动画展示当前数值百分比的进度条组件。",
   "category": "misc",
   "tags": [
@@ -121,7 +121,7 @@
   },
   "docPath": "content/2.components/miscellaneous/animated-circular-progressbar.md",
   "_meta": {
-    "contentHash": "da05928f630d52760f7ed9d6d8f19ccb40adb815",
+    "contentHash": "faa316531e19e8888871d0d6882ca494e72fcddc",
     "hasOverride": true,
     "extractors": {
       "web": "ok",

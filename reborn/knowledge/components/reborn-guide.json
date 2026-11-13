@@ -1,7 +1,7 @@
 {
   "$schema": "../schema/component.schema.json",
   "id": "reborn-guide",
-  "title": "引导 Guide",
+  "title": "Guide 引导",
   "description": "Web 分步引导：自动居中并锁定目标，支持父子步骤、数字或点状进度、封面与整步组件替换。",
   "category": "basic",
   "tags": [
@@ -268,7 +268,7 @@
   },
   "docPath": "content/2.components/button/reborn-guide.md",
   "_meta": {
-    "contentHash": "c65dd19260d80ebe3aa8b392aa4578175d235283",
+    "contentHash": "5408c4c53bd4c5b8da53a93fb66df944562d704a",
     "hasOverride": true,
     "extractors": {
       "web": "ok",

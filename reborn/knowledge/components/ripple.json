@@ -1,7 +1,7 @@
 {
   "$schema": "../schema/component.schema.json",
   "id": "ripple",
-  "title": "水波纹",
+  "title": "Ripple 水波纹",
   "description": "用于渲染多圈同心圆扩散水波背景的装饰效果组件。",
   "category": "effect",
   "tags": [
@@ -141,7 +141,7 @@
   },
   "docPath": "content/2.components/special-effects/ripple.md",
   "_meta": {
-    "contentHash": "91bf1995a95ae22c5185b47d606ba0a3c152b6fe",
+    "contentHash": "d5bf8a2b661dc179409c0a8e18509298d9fd0096",
     "hasOverride": true,
     "extractors": {
       "web": "partial",

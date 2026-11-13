@@ -1,7 +1,7 @@
 {
   "$schema": "../schema/component.schema.json",
   "id": "bento-grid",
-  "title": "Bento 网格",
+  "title": "BentoGrid Bento 网格",
   "description": "用于以不等宽卡片拼贴展示功能特性的 Bento 风格网格布局组件。",
   "category": "misc",
   "tags": [
@@ -123,7 +123,7 @@
   },
   "docPath": "content/2.components/miscellaneous/bento-grid.md",
   "_meta": {
-    "contentHash": "87051c281085f851a50169ca87ab8cee60c99605",
+    "contentHash": "9ce33bf206973d9807d8417ca16250bd7b83c2b7",
     "hasOverride": true,
     "extractors": {
       "web": "ok",

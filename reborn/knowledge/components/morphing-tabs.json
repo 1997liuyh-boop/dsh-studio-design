@@ -1,7 +1,7 @@
 {
   "$schema": "../schema/component.schema.json",
   "id": "morphing-tabs",
-  "title": "变形标签页",
+  "title": "MorphingTabs 变形标签页",
   "description": "用于在切换标签时呈现胶体粘连变形效果的字符串标签页组件。",
   "category": "misc",
   "tags": [
@@ -96,7 +96,7 @@
   },
   "docPath": "content/2.components/miscellaneous/morphing-tabs.md",
   "_meta": {
-    "contentHash": "48a946a1f5dd6ca14be2a8ea2cc425f62d9f2fda",
+    "contentHash": "e87879f6ecdddd5b2748b4efb737636761f8ee2c",
     "hasOverride": true,
     "extractors": {
       "web": "ok",

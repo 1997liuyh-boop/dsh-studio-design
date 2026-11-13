@@ -1,7 +1,7 @@
 {
   "$schema": "../schema/component.schema.json",
   "id": "reborn-coupon",
-  "title": "卡券 Coupon",
+  "title": "Coupon 卡券",
   "description": "用于渲染缺口、撕线、邮票等形态优惠券外观的卡券组件，仅 web 端。",
   "category": "misc",
   "tags": [
@@ -213,7 +213,7 @@
   },
   "docPath": "content/2.components/miscellaneous/reborn-coupon.md",
   "_meta": {
-    "contentHash": "304b3942bba570bf13e66877bcd3cb2a5db2e3aa",
+    "contentHash": "3030881a467c89dd22d4ed8d1aba05a29c42a987",
     "hasOverride": true,
     "extractors": {
       "web": "ok",

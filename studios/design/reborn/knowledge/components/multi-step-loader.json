@@ -1,7 +1,7 @@
 {
   "$schema": "../schema/component.schema.json",
   "id": "multi-step-loader",
-  "title": "多步加载器",
+  "title": "MultiStepLoader 多步加载器",
   "description": "用于按步骤序列展示加载进度、支持异步等待步骤的全屏加载组件。",
   "category": "misc",
   "tags": [
@@ -109,7 +109,7 @@
   },
   "docPath": "content/2.components/miscellaneous/multi-step-loader.md",
   "_meta": {
-    "contentHash": "4cc7a08bc5e196591048e622e8268203bc7f1d17",
+    "contentHash": "36acd92b8d58c073bf1f32eaaedbd457e64ef0a7",
     "hasOverride": true,
     "extractors": {
       "web": "ok",

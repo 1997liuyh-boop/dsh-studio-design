@@ -1,7 +1,7 @@
 {
   "$schema": "../schema/component.schema.json",
   "id": "timeline",
-  "title": "时间线",
+  "title": "Timeline 时间线",
   "description": "用于纵向展示条目、带粘性标签与滚动渐变动画的时间线组件。",
   "category": "misc",
   "tags": [
@@ -98,7 +98,7 @@
   },
   "docPath": "content/2.components/miscellaneous/timeline.md",
   "_meta": {
-    "contentHash": "bee925c905b9a236184428f54db27c82034fef84",
+    "contentHash": "d0a38eeb8df7836a0ed7b9bd9c6fe3213c9d65eb",
     "hasOverride": true,
     "extractors": {
       "web": "ok",

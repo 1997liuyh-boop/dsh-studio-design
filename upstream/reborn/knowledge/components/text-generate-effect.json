@@ -1,7 +1,7 @@
 {
   "$schema": "../schema/component.schema.json",
   "id": "text-generate-effect",
-  "title": "文字生成效果",
+  "title": "TextGenerateEffect 文字生成效果",
   "description": "用于让段落文字逐字渐显、可带模糊过渡的入场动画组件。",
   "category": "effect",
   "tags": [
@@ -90,7 +90,7 @@
   },
   "docPath": "content/2.components/text-animations/text-generate-effect.md",
   "_meta": {
-    "contentHash": "a1e98c9fbcb7c36cc337bdec9d47dae8749ad22e",
+    "contentHash": "043fe7ebe394037851b96af7bcf79ee4fc2226b7",
     "hasOverride": true,
     "extractors": {
       "web": "ok",

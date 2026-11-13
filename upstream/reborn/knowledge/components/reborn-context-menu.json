@@ -1,7 +1,7 @@
 {
   "$schema": "../schema/component.schema.json",
   "id": "reborn-context-menu",
-  "title": "Menu 右键菜单",
+  "title": "ContextMenu 右键菜单",
   "description": "用于在目标区域右键、点击、悬浮或划词后弹出操作面板的上下文菜单组件，仅 web 端。",
   "category": "navigation",
   "tags": [
@@ -216,7 +216,7 @@
   },
   "docPath": "content/2.components/navigation/reborn-context-menu.md",
   "_meta": {
-    "contentHash": "058619c2494b49f7cd5ef0a32bb38b5f005e2e90",
+    "contentHash": "2e0a7a8cc418b8fd985f16b0737873ba3ec5d932",
     "hasOverride": true,
     "extractors": {
       "web": "ok",

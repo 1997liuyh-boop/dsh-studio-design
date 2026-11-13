@@ -1,7 +1,7 @@
 {
   "$schema": "../schema/component.schema.json",
   "id": "container-scroll",
-  "title": "容器滚动",
+  "title": "ContainerScroll 容器滚动",
   "description": "用于随页面滚动对卡片内容做旋转缩放过渡的首屏展示组件。",
   "category": "misc",
   "tags": [
@@ -91,7 +91,7 @@
   },
   "docPath": "content/2.components/miscellaneous/container-scroll.md",
   "_meta": {
-    "contentHash": "7d449e6cba40064b9c78cbd7a34fac1cff857c68",
+    "contentHash": "fcd2ef5481f41384ab41a41dedee80f92090b4e6",
     "hasOverride": true,
     "extractors": {
       "web": "ok",

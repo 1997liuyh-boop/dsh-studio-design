@@ -1,7 +1,7 @@
 {
   "$schema": "../schema/component.schema.json",
   "id": "hyper-text",
-  "title": "超能文字",
+  "title": "HyperText 超能文字",
   "description": "用于文字以字符快速乱序滚动后定格显现的动画组件，悬停可重播。",
   "category": "effect",
   "tags": [
@@ -85,7 +85,7 @@
   },
   "docPath": "content/2.components/text-animations/hyper-text.md",
   "_meta": {
-    "contentHash": "7d674e53dda2aeeb4d5411f2e2e7ad42e4235aac",
+    "contentHash": "b2732395b917a13f491079dece30807c40bfa94f",
     "hasOverride": true,
     "extractors": {
       "web": "ok",

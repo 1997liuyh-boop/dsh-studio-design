@@ -1,7 +1,7 @@
 {
   "$schema": "../schema/component.schema.json",
   "id": "animated-tooltip",
-  "title": "动画提示",
+  "title": "AnimatedTooltip 动画提示",
   "description": "用于悬停头像时弹出姓名与职称气泡并跟随鼠标位置的提示组件。",
   "category": "misc",
   "tags": [
@@ -62,7 +62,7 @@
   },
   "docPath": "content/2.components/miscellaneous/animated-tooltip.md",
   "_meta": {
-    "contentHash": "6653f3249b1cb305e8fc6681bcb03f5f78103b77",
+    "contentHash": "2f9a4d638e0a0c7f04b1cebf1b198ca58a596e72",
     "hasOverride": true,
     "extractors": {
       "web": "ok",

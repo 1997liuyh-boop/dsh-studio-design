@@ -1,7 +1,7 @@
 {
   "$schema": "../schema/component.schema.json",
   "id": "icon-cloud",
-  "title": "图标云",
+  "title": "IconCloud 图标云",
   "description": "用于以可拖拽旋转的 Canvas 3D 球面展示一组图标的展示组件。",
   "category": "misc",
   "tags": [
@@ -70,7 +70,7 @@
   },
   "docPath": "content/2.components/miscellaneous/icon-cloud.md",
   "_meta": {
-    "contentHash": "5d554e36f8bb2814e81bd327ad7283347d0733f1",
+    "contentHash": "ae30abfe97ecc6451ed4f84b5fb9b779f15fd922",
     "hasOverride": true,
     "extractors": {
       "web": "ok",

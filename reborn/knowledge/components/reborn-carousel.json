@@ -23,7 +23,6 @@
     "图廊",
     "商品图廊",
     "画廊",
-    "gallery",
     "缩略图",
     "缩略图切换",
     "主图",
@@ -350,7 +349,7 @@
   },
   "docPath": "content/2.components/navigation/reborn-carousel.md",
   "_meta": {
-    "contentHash": "3c9a6acaf9e67580ad573fe61d75534be024cb3e",
+    "contentHash": "e882fbaa73551c866d1e4c5c67e2566d7ccd204f",
     "hasOverride": true,
     "extractors": {
       "web": "ok",

@@ -1,10 +1,10 @@
 {
   "schemaVersion": 1,
-  "generatedAt": "2026-11-09T10:36:13.022Z",
+  "generatedAt": "2026-11-12T10:38:41.782Z",
   "components": [
     {
       "id": "animate-grid",
-      "title": "动画网格",
+      "title": "AnimateGrid 动画网格",
       "description": "用于以 3D 倾斜透视和发光投影展示 logo 卡片阵列的网格组件。",
       "category": "misc",
       "tags": [
@@ -18,7 +18,7 @@
     },
     {
       "id": "animated-circular-progressbar",
-      "title": "动画圆形进度条",
+      "title": "AnimatedCircularProgressBar 动画圆形进度条",
       "description": "用于以圆形仪表盘动画展示当前数值百分比的进度条组件。",
       "category": "misc",
       "tags": [
@@ -38,7 +38,7 @@
     },
     {
       "id": "animated-list",
-      "title": "动画列表",
+      "title": "AnimatedList 动画列表",
       "description": "用于让列表项按固定延迟逐条进场的通知流列表组件。",
       "category": "misc",
       "tags": [
@@ -52,7 +52,7 @@
     },
     {
       "id": "animated-testimonials",
-      "title": "动态评价",
+      "title": "AnimatedTestimonials 动态评价",
       "description": "用于轮播展示用户评价（头像、姓名、职称、引言）并支持自动播放的组件。",
       "category": "misc",
       "tags": [
@@ -71,7 +71,7 @@
     },
     {
       "id": "animated-tooltip",
-      "title": "动画提示",
+      "title": "AnimatedTooltip 动画提示",
       "description": "用于悬停头像时弹出姓名与职称气泡并跟随鼠标位置的提示组件。",
       "category": "misc",
       "tags": [
@@ -85,7 +85,7 @@
     },
     {
       "id": "apple-card-carousel",
-      "title": "Apple 卡片轮播",
+      "title": "AppleCardCarousel 卡片轮播",
       "description": "用于以 Apple 官网风格横向滚动卡片、点击展开为模态详情的轮播组件。",
       "category": "data-display",
       "tags": [
@@ -100,7 +100,7 @@
     },
     {
       "id": "balance-slider",
-      "title": "平衡滑块",
+      "title": "BalanceSlider 平衡滑块",
       "description": "用于在左右两侧间拖动分配比例的双色平衡滑块展示组件。",
       "category": "form",
       "tags": [
@@ -114,7 +114,7 @@
     },
     {
       "id": "bento-grid",
-      "title": "Bento 网格",
+      "title": "BentoGrid Bento 网格",
       "description": "用于以不等宽卡片拼贴展示功能特性的 Bento 风格网格布局组件。",
       "category": "misc",
       "tags": [
@@ -134,7 +134,7 @@
     },
     {
       "id": "blur-reveal",
-      "title": "模糊揭示",
+      "title": "BlurReveal 模糊揭示",
       "description": "用于让子元素依次从模糊状态淡入上移进场的揭示动画组件。",
       "category": "effect",
       "tags": [
@@ -148,7 +148,7 @@
     },
     {
       "id": "book",
-      "title": "书本",
+      "title": "Book 书本",
       "description": "用于展示 3D 书本封面并在悬停时播放动画的展示组件。",
       "category": "misc",
       "tags": [
@@ -162,7 +162,7 @@
     },
     {
       "id": "box-reveal",
-      "title": "盒子揭示",
+      "title": "BoxReveal 盒子揭示",
       "description": "用于内容被色块滑开后显现的揭示入场动画组件。",
       "category": "effect",
       "tags": [
@@ -176,7 +176,7 @@
     },
     {
       "id": "card-3d",
-      "title": "3D 卡片效果",
+      "title": "Card3D 3D 卡片",
       "description": "用于悬停时随鼠标产生透视倾斜、子元素分层浮起的 3D 卡片组件。",
       "category": "data-display",
       "tags": [
@@ -207,7 +207,7 @@
     },
     {
       "id": "colourful-text",
-      "title": "彩色文字",
+      "title": "ColourfulText 彩色文字",
       "description": "用于让文字逐字符循环变换颜色并动画的标题点缀组件。",
       "category": "effect",
       "tags": [
@@ -221,7 +221,7 @@
     },
     {
       "id": "compare",
-      "title": "对比",
+      "title": "Compare 对比",
       "description": "用于以滑动分割线对比两张图片或两块自定义内容的对比组件。",
       "category": "misc",
       "tags": [
@@ -240,7 +240,7 @@
     },
     {
       "id": "container-scroll",
-      "title": "容器滚动",
+      "title": "ContainerScroll 容器滚动",
       "description": "用于随页面滚动对卡片内容做旋转缩放过渡的首屏展示组件。",
       "category": "misc",
       "tags": [
@@ -254,7 +254,7 @@
     },
     {
       "id": "container-text-flip",
-      "title": "容器文字翻转",
+      "title": "ContainerTextFlip 容器文字翻转",
       "description": "用于循环翻转一组单词、容器宽度随词宽平滑过渡的文字组件。",
       "category": "effect",
       "tags": [
@@ -268,7 +268,7 @@
     },
     {
       "id": "direction-aware-hover",
-      "title": "方向感知悬停卡片",
+      "title": "DirectionAwareHover 方向感知悬停卡片",
       "description": "用于根据鼠标进入方向滑入内容覆盖层的图片悬停卡片组件。",
       "category": "data-display",
       "tags": [
@@ -283,7 +283,7 @@
     },
     {
       "id": "dither-shader",
-      "title": "抖动着色器",
+      "title": "DitherShader 抖动着色器",
       "description": "用于对图片实时应用有序抖动与像素化处理的复古风着色器组件。",
       "category": "effect",
       "tags": [
@@ -298,7 +298,7 @@
     },
     {
       "id": "dock",
-      "title": "Dock",
+      "title": "Dock 程序坞",
       "description": "用于悬停时邻近图标放大的 macOS 风格 Dock 图标栏组件。",
       "category": "misc",
       "tags": [
@@ -317,7 +317,7 @@
     },
     {
       "id": "expandable-gallery",
-      "title": "可扩展画廊",
+      "title": "ExpandableGallery 可扩展画廊",
       "description": "用于一行图片悬停时放大当前项的可扩展横向画廊组件。",
       "category": "misc",
       "tags": [
@@ -331,7 +331,7 @@
     },
     {
       "id": "file-upload",
-      "title": "文件上传",
+      "title": "FileUpload 文件上传",
       "description": "用于拖放或点击选择文件、带动效展示区的文件上传入口组件。",
       "category": "form",
       "tags": [
@@ -351,7 +351,7 @@
     },
     {
       "id": "flip-card",
-      "title": "翻转卡片",
+      "title": "FlipCard 翻转卡片",
       "description": "用于沿 X 或 Y 轴 180 度翻转、展示正反两面内容的卡片组件。",
       "category": "data-display",
       "tags": [
@@ -365,7 +365,7 @@
     },
     {
       "id": "flip-words",
-      "title": "翻转单词",
+      "title": "FlipWords 翻转单词",
       "description": "用于句子中一组单词循环翻转切换的内联文字动画组件。",
       "category": "effect",
       "tags": [
@@ -379,7 +379,7 @@
     },
     {
       "id": "focus",
-      "title": "聚焦",
+      "title": "Focus 聚焦",
       "description": "用于句子逐词聚焦、其余单词模糊并带边框动画的文字强调组件。",
       "category": "effect",
       "tags": [
@@ -393,7 +393,7 @@
     },
     {
       "id": "glare-card",
-      "title": "高光卡片",
+      "title": "GlareCard 高光卡片",
       "description": "用于悬停时表面扫过高光光泽的展示卡片组件，风格源自 Linear。",
       "category": "data-display",
       "tags": [
@@ -408,7 +408,7 @@
     },
     {
       "id": "gradient-button",
-      "title": "渐变按钮",
+      "title": "GradientButton 渐变按钮",
       "description": "用于带旋转圆锥渐变发光边框的动效按钮组件。",
       "category": "basic",
       "tags": [
@@ -422,7 +422,7 @@
     },
     {
       "id": "halo-search",
-      "title": "光晕搜索框",
+      "title": "HaloSearch 光晕搜索框",
       "description": "发光光环搜索输入框：悬停与聚焦时光环旋转，支持 v-model 绑定关键词与回车 search 事件。",
       "category": "form",
       "tags": [
@@ -437,7 +437,7 @@
     },
     {
       "id": "hyper-text",
-      "title": "超能文字",
+      "title": "HyperText 超能文字",
       "description": "用于文字以字符快速乱序滚动后定格显现的动画组件，悬停可重播。",
       "category": "effect",
       "tags": [
@@ -451,7 +451,7 @@
     },
     {
       "id": "icon-cloud",
-      "title": "图标云",
+      "title": "IconCloud 图标云",
       "description": "用于以可拖拽旋转的 Canvas 3D 球面展示一组图标的展示组件。",
       "category": "misc",
       "tags": [
@@ -465,7 +465,7 @@
     },
     {
       "id": "images-slider",
-      "title": "图片滑块",
+      "title": "ImagesSlider 图片滑块",
       "description": "用于全屏轮播一组背景图并叠加覆盖层内容的图片滑块组件。",
       "category": "misc",
       "tags": [
@@ -485,7 +485,7 @@
     },
     {
       "id": "input",
-      "title": "输入框",
+      "title": "IInput 输入框",
       "description": "用于带鼠标径向渐变悬停高亮效果的单行文本输入组件。",
       "category": "form",
       "tags": [
@@ -500,7 +500,7 @@
     },
     {
       "id": "interactive-hover-button",
-      "title": "交互悬停按钮",
+      "title": "InteractiveHoverButton 交互悬停按钮",
       "description": "用于悬停时产生动态过渡效果的文字按钮组件，文字经 text prop 传入。",
       "category": "basic",
       "tags": [
@@ -515,7 +515,7 @@
     },
     {
       "id": "iphone-mockup",
-      "title": "iPhone 模型",
+      "title": "iPhoneMockup iPhone 模型",
       "description": "用于以 iPhone SVG 外壳包裹展示截图的设备模型组件。",
       "category": "media",
       "tags": [
@@ -530,7 +530,7 @@
     },
     {
       "id": "lens",
-      "title": "放大镜",
+      "title": "Lens 放大镜",
       "description": "用于在图片等插槽内容上叠加圆形放大镜的局部放大组件。",
       "category": "misc",
       "tags": [
@@ -548,7 +548,7 @@
     },
     {
       "id": "letter-pullup",
-      "title": "字符上提",
+      "title": "LetterPullup 字符上提",
       "description": "用于让一段文字逐字符错落上提进场的文字动画组件。",
       "category": "effect",
       "tags": [
@@ -562,7 +562,7 @@
     },
     {
       "id": "line-shadow-text",
-      "title": "线条阴影文字",
+      "title": "LineShadowText 线条阴影文字",
       "description": "用于给插槽文字添加斜线条纹阴影装饰的静态文字效果组件。",
       "category": "effect",
       "tags": [
@@ -576,7 +576,7 @@
     },
     {
       "id": "link-preview",
-      "title": "链接预览",
+      "title": "LinkPreview 链接预览",
       "description": "用于悬停链接文字时弹出目标网页预览图的行内链接组件。",
       "category": "misc",
       "tags": [
@@ -590,7 +590,7 @@
     },
     {
       "id": "liquid-glass",
-      "title": "液态玻璃",
+      "title": "LiquidGlass 液态玻璃",
       "description": "用于以 SVG 位移贴图与通道偏移模拟液态玻璃折射的容器组件。",
       "category": "effect",
       "tags": [
@@ -604,7 +604,7 @@
     },
     {
       "id": "meteors",
-      "title": "流星雨",
+      "title": "Meteors 流星雨",
       "description": "用于在卡片等容器内渲染划过的流星雨背景动画的装饰组件。",
       "category": "effect",
       "tags": [
@@ -618,7 +618,7 @@
     },
     {
       "id": "morphing-tabs",
-      "title": "变形标签页",
+      "title": "MorphingTabs 变形标签页",
       "description": "用于在切换标签时呈现胶体粘连变形效果的字符串标签页组件。",
       "category": "misc",
       "tags": [
@@ -635,7 +635,7 @@
     },
     {
       "id": "morphing-text",
-      "title": "文字变形",
+      "title": "MorphingText 文字变形",
       "description": "用于在一组文本间以模糊渐变变形循环切换的文字动画组件。",
       "category": "effect",
       "tags": [
@@ -649,7 +649,7 @@
     },
     {
       "id": "multi-step-loader",
-      "title": "多步加载器",
+      "title": "MultiStepLoader 多步加载器",
       "description": "用于按步骤序列展示加载进度、支持异步等待步骤的全屏加载组件。",
       "category": "misc",
       "tags": [
@@ -669,7 +669,7 @@
     },
     {
       "id": "neon-border",
-      "title": "霓虹边框",
+      "title": "NeonBorder 霓虹边框",
       "description": "用于给插槽内容包裹双色霓虹流转边框的装饰容器组件。",
       "category": "effect",
       "tags": [
@@ -683,7 +683,7 @@
     },
     {
       "id": "number-ticker",
-      "title": "数字滚动",
+      "title": "NumberTicker 数字滚动",
       "description": "用于让数字从起点平滑滚动到目标值的数值动画组件。",
       "category": "effect",
       "tags": [
@@ -703,7 +703,7 @@
     },
     {
       "id": "pattern-background",
-      "title": "图案背景",
+      "title": "PatternBackground 图案背景",
       "description": "用于为区块提供图案纹理背景的容器组件，内容经默认插槽传入。",
       "category": "effect",
       "tags": [
@@ -717,7 +717,7 @@
     },
     {
       "id": "photo-gallery",
-      "title": "照片画廊",
+      "title": "PhotoGallery 照片画廊",
       "description": "用于以动画展开一组照片的画廊展示组件，图片经 items 传入。",
       "category": "misc",
       "tags": [
@@ -731,7 +731,7 @@
     },
     {
       "id": "radiant-text",
-      "title": "光辉文字",
+      "title": "RadiantText 光辉文字",
       "description": "用于让高光沿插槽文字循环扫过的文字高亮动画组件。",
       "category": "effect",
       "tags": [
@@ -745,7 +745,7 @@
     },
     {
       "id": "rainbow-button",
-      "title": "彩虹按钮",
+      "title": "RainbowButton 彩虹按钮",
       "description": "用于呈现彩虹渐变流动发光效果的按钮组件，内容经默认插槽传入。",
       "category": "basic",
       "tags": [
@@ -992,7 +992,7 @@
     },
     {
       "id": "reborn-card",
-      "title": "卡片 Card",
+      "title": "Card 卡片",
       "description": "用于分组展示内容区块的基础卡片容器组件，带可选标题，仅 uniapp 端。",
       "category": "data-display",
       "tags": [
@@ -1036,7 +1036,6 @@
         "图廊",
         "商品图廊",
         "画廊",
-        "gallery",
         "缩略图",
         "缩略图切换",
         "主图",
@@ -1074,7 +1073,7 @@
     },
     {
       "id": "reborn-checkbox",
-      "title": "checkbox 多选框",
+      "title": "Checkbox 多选框",
       "description": "用于开关单项或组合多选的多选框组件，双端可用，支持布尔与数组两种绑定，并提供半选态与数据驱动的复选框组。",
       "category": "form",
       "tags": [
@@ -1158,7 +1157,7 @@
     },
     {
       "id": "reborn-color-picker",
-      "title": "取色器",
+      "title": "ColorPicker 取色器",
       "description": "用于弹出面板选取颜色并以 v-model 绑定色值字符串的取色器组件，双端可用。",
       "category": "form",
       "tags": [
@@ -1179,7 +1178,7 @@
     },
     {
       "id": "reborn-container",
-      "title": "容器",
+      "title": "Container 布局容器",
       "description": "用于将页面内容水平居中并按屏幕断点限制最大宽度的布局容器组件，仅 web 端。",
       "category": "navigation",
       "tags": [],
@@ -1194,7 +1193,7 @@
     },
     {
       "id": "reborn-context-menu",
-      "title": "Menu 右键菜单",
+      "title": "ContextMenu 右键菜单",
       "description": "用于在目标区域右键、点击、悬浮或划词后弹出操作面板的上下文菜单组件，仅 web 端。",
       "category": "navigation",
       "tags": [
@@ -1233,7 +1232,7 @@
     },
     {
       "id": "reborn-coupon",
-      "title": "卡券 Coupon",
+      "title": "Coupon 卡券",
       "description": "用于渲染缺口、撕线、邮票等形态优惠券外观的卡券组件，仅 web 端。",
       "category": "misc",
       "tags": [
@@ -1252,7 +1251,7 @@
     },
     {
       "id": "reborn-crowd",
-      "title": "人群漫步",
+      "title": "Crowd 人群漫步",
       "description": "把人物精灵图切格后在 2D 画布上左右随机走过，边走边颠、前后分层，可控人数与速度，用作页脚装饰。",
       "category": "effect",
       "tags": [
@@ -1306,7 +1305,7 @@
     },
     {
       "id": "reborn-depth-image",
-      "title": "深度视差图",
+      "title": "DepthImage 深度视差图",
       "description": "按深度图对透明背景图片做跟随指针的 2.5D 视差与补光，WebGL 渲染，失败时退回静态图。",
       "category": "effect",
       "tags": [
@@ -1465,7 +1464,7 @@
     },
     {
       "id": "reborn-fab",
-      "title": "悬浮按钮 (Fab)",
+      "title": "Fab 悬浮按钮",
       "description": "用于固定位置悬浮操作入口的按钮组件，支持拖拽吸边与展开动作面板，双端可用。",
       "category": "navigation",
       "tags": [
@@ -1498,7 +1497,7 @@
     },
     {
       "id": "reborn-fireworks",
-      "title": "礼花",
+      "title": "Fireworks 礼花",
       "description": "用于给容器内元素附加点击礼花/烟花粒子特效的组件，仅 web 端。",
       "category": "misc",
       "tags": [
@@ -1554,7 +1553,7 @@
     },
     {
       "id": "reborn-guide",
-      "title": "引导 Guide",
+      "title": "Guide 引导",
       "description": "Web 分步引导：自动居中并锁定目标，支持父子步骤、数字或点状进度、封面与整步组件替换。",
       "category": "basic",
       "tags": [
@@ -1576,7 +1575,7 @@
     },
     {
       "id": "reborn-header",
-      "title": "标题",
+      "title": "Header 顶栏",
       "description": "用于站点顶部导航的响应式头部组件，移动端可切换为弹窗菜单。",
       "category": "navigation",
       "tags": [
@@ -1596,7 +1595,7 @@
     },
     {
       "id": "reborn-image",
-      "title": "图片 Image",
+      "title": "Image 图片",
       "description": "用于展示图片并提供预览、加载/错误状态与多种裁剪模式的双端图片组件。",
       "category": "misc",
       "tags": [
@@ -1620,7 +1619,7 @@
     },
     {
       "id": "reborn-input",
-      "title": "input 输入框",
+      "title": "Input 输入框",
       "description": "用于文本录入的双端输入框组件，支持圆角胶囊样式、多尺寸、清除与密码态。",
       "category": "form",
       "tags": [
@@ -1666,7 +1665,7 @@
     },
     {
       "id": "reborn-input-otp",
-      "title": "验证码输入",
+      "title": "InputOtp 验证码输入",
       "description": "用于短信验证码、OTP 等固定位数分格输入的双端组件。",
       "category": "form",
       "tags": [
@@ -1731,7 +1730,7 @@
     },
     {
       "id": "reborn-loadmore",
-      "title": "加载更多",
+      "title": "Loadmore 加载更多",
       "description": "用于列表底部展示加载中、加载失败与没有更多状态的 uniapp 组件。",
       "category": "misc",
       "tags": [],
@@ -1746,7 +1745,7 @@
     },
     {
       "id": "reborn-main",
-      "title": "主体布局",
+      "title": "Main 主体布局",
       "description": "用于渲染语义化 main 页面主体区域、默认最小高度撑满一屏的布局组件，仅 web 端。",
       "category": "navigation",
       "tags": [],
@@ -1761,7 +1760,7 @@
     },
     {
       "id": "reborn-marquee",
-      "title": "跑马灯",
+      "title": "Marquee 跑马灯",
       "description": "用于横向或纵向无限循环滚动内容的跑马灯组件，支持悬停暂停与渐隐遮罩。",
       "category": "misc",
       "tags": [
@@ -1816,7 +1815,13 @@
         "侧边菜单",
         "侧栏",
         "sidebar",
-        "nav"
+        "nav",
+        "分类列表",
+        "分类导航",
+        "类目导航",
+        "侧边导航",
+        "导航列表",
+        "category list"
       ]
     },
     {
@@ -1879,7 +1884,7 @@
     },
     {
       "id": "reborn-page",
-      "title": "页面容器 Page",
+      "title": "Page 页面容器",
       "description": "用于 uniapp 页面最外层的页面容器组件，可配置页面标题与描述文案。",
       "category": "layout",
       "tags": [
@@ -2043,7 +2048,7 @@
     },
     {
       "id": "reborn-qrcode",
-      "title": "二维码 Qrcode",
+      "title": "Qrcode 二维码",
       "description": "用于生成二维码的双端组件，支持前景/背景色、码点样式、中央 Logo 与纠错级别。",
       "category": "misc",
       "tags": [
@@ -2265,7 +2270,7 @@
     },
     {
       "id": "reborn-sku",
-      "title": "商品规格 Sku",
+      "title": "Sku 商品规格",
       "description": "用于商品规格（SKU）选择的选项组件，按 options 渲染规格项并以对象形式双向绑定选中结果。",
       "category": "form",
       "tags": [
@@ -2285,7 +2290,7 @@
     },
     {
       "id": "reborn-slide-verify",
-      "title": "滑块验证",
+      "title": "SlideVerify 滑块验证",
       "description": "用于人机校验的滑块验证组件，向右拖动超过阈值即通过，支持失败回弹与自动重置。",
       "category": "misc",
       "tags": [
@@ -2415,7 +2420,7 @@
     },
     {
       "id": "reborn-swiper-action",
-      "title": "滑动操作",
+      "title": "SwiperAction 滑动操作",
       "description": "用于列表项左滑露出右侧操作按钮的滑动单元格组件，支持 push / overlay 模式与同组互斥。",
       "category": "misc",
       "tags": [
@@ -2531,7 +2536,7 @@
     },
     {
       "id": "reborn-text",
-      "title": "文本 Text",
+      "title": "Text 文本",
       "description": "用于展示文本并内置类型格式化、脱敏与多行省略的增强文本组件。",
       "category": "misc",
       "tags": [
@@ -2556,7 +2561,7 @@
     },
     {
       "id": "reborn-textarea",
-      "title": "多行输入框",
+      "title": "Textarea 多行输入框",
       "description": "用于多行文本输入的输入框组件，支持自动增高、字数统计与键盘行为配置。",
       "category": "form",
       "tags": [
@@ -2720,7 +2725,7 @@
     },
     {
       "id": "reborn-tree-select",
-      "title": "Tree Select 树选择器",
+      "title": "TreeSelect 树选择器",
       "description": "Web 层级选值：沿用 select 的三档尺寸与四种形态，下拉复用 tree，支持单选、父子联动或独立勾选的多选，以及清空。",
       "category": "form",
       "tags": [
@@ -2741,7 +2746,7 @@
     },
     {
       "id": "reborn-typewriter",
-      "title": "打字机效果",
+      "title": "Typewriter 打字机效果",
       "description": "用于让文本以打字机方式逐字输入与删除的文字动画组件。",
       "category": "effect",
       "tags": [
@@ -2802,7 +2807,7 @@
     },
     {
       "id": "reborn-watermark",
-      "title": "水印 Watermark",
+      "title": "Watermark 水印",
       "description": "用于在内容容器上平铺文本或图片水印的组件。",
       "category": "data-display",
       "tags": [
@@ -2846,7 +2851,7 @@
     },
     {
       "id": "ripple",
-      "title": "水波纹",
+      "title": "Ripple 水波纹",
       "description": "用于渲染多圈同心圆扩散水波背景的装饰效果组件。",
       "category": "effect",
       "tags": [
@@ -2860,7 +2865,7 @@
     },
     {
       "id": "ripple-button",
-      "title": "波纹按钮",
+      "title": "RippleButton 波纹按钮",
       "description": "用于点击时产生可自定义颜色与时长波纹反馈的按钮组件。",
       "category": "basic",
       "tags": [
@@ -2875,7 +2880,7 @@
     },
     {
       "id": "safari-mockup",
-      "title": "Safari 模型",
+      "title": "SafariMockup Safari 模型",
       "description": "用于以 Safari 浏览器外框展示产品截图的 SVG 设备模型组件。",
       "category": "media",
       "tags": [
@@ -2890,7 +2895,7 @@
     },
     {
       "id": "scratch-to-reveal",
-      "title": "刮刮乐揭示",
+      "title": "ScratchToReveal 刮刮乐揭示",
       "description": "用于刮开渐变涂层后显示隐藏内容的互动刮刮乐组件。",
       "category": "effect",
       "tags": [
@@ -2904,7 +2909,7 @@
     },
     {
       "id": "scroll-island",
-      "title": "滚动岛",
+      "title": "ScrollIsland 滚动岛",
       "description": "用于以灵动岛样式悬浮显示页面滚动进度并可展开附加内容的组件。",
       "category": "misc",
       "tags": [
@@ -2953,7 +2958,7 @@
     },
     {
       "id": "shimmer-button",
-      "title": "闪光按钮",
+      "title": "ShimmerButton 闪光按钮",
       "description": "用于呈现环绕闪光流动动画的按钮组件，闪光颜色、速度与背景可配置。",
       "category": "basic",
       "tags": [
@@ -2968,7 +2973,7 @@
     },
     {
       "id": "sparkles",
-      "title": "闪烁粒子",
+      "title": "Sparkles 闪烁粒子",
       "description": "用于渲染可配置密度、大小与颜色的闪烁粒子背景层组件。",
       "category": "effect",
       "tags": [
@@ -2982,7 +2987,7 @@
     },
     {
       "id": "sparkles-text",
-      "title": "闪光文字",
+      "title": "SparklesText 闪光文字",
       "description": "用于在文字周围持续生成双色闪光点缀的标题装饰组件。",
       "category": "effect",
       "tags": [
@@ -2996,7 +3001,7 @@
     },
     {
       "id": "spinning-text",
-      "title": "旋转文字",
+      "title": "SpinningText 旋转文字",
       "description": "用于让一段文字沿圆形路径持续环绕旋转的动画组件。",
       "category": "effect",
       "tags": [
@@ -3010,7 +3015,7 @@
     },
     {
       "id": "spring-calendar",
-      "title": "弹性日历",
+      "title": "SpringCalendar 弹性日历",
       "description": "用于横向选择日期并以弹簧动画展开当日事件的日历条组件。",
       "category": "effect",
       "tags": [
@@ -3024,7 +3029,7 @@
     },
     {
       "id": "svg-mask",
-      "title": "SVG 遮罩",
+      "title": "SVGMask SVG 遮罩",
       "description": "用于跟随鼠标以圆形遮罩在两层内容间切换揭示的 SVG 遮罩组件。",
       "category": "misc",
       "tags": [
@@ -3038,7 +3043,7 @@
     },
     {
       "id": "testimonial-slider",
-      "title": "评价滑块",
+      "title": "TestimonialSlider 评价滑块",
       "description": "用于轮播展示用户评价（头像、引言、姓名、职位）的轻量滑块组件。",
       "category": "misc",
       "tags": [
@@ -3056,7 +3061,7 @@
     },
     {
       "id": "text-3d",
-      "title": "3D 文字",
+      "title": "Text3D 3D 文字",
       "description": "用于以描边加双层阴影模拟 3D 立体字并可选晃动动画的文字组件。",
       "category": "effect",
       "tags": [
@@ -3070,7 +3075,7 @@
     },
     {
       "id": "text-generate-effect",
-      "title": "文字生成效果",
+      "title": "TextGenerateEffect 文字生成效果",
       "description": "用于让段落文字逐字渐显、可带模糊过渡的入场动画组件。",
       "category": "effect",
       "tags": [
@@ -3084,7 +3089,7 @@
     },
     {
       "id": "text-glitch",
-      "title": "文字故障",
+      "title": "TextGlitch 文字故障",
       "description": "用于给文字叠加彩色错位故障（glitch）动画的文字效果组件。",
       "category": "effect",
       "tags": [
@@ -3097,7 +3102,7 @@
     },
     {
       "id": "text-highlight",
-      "title": "文字高亮",
+      "title": "TextHighlight 文字高亮",
       "description": "用于以背景填充动画突出句中重点文字的高亮组件。",
       "category": "effect",
       "tags": [
@@ -3111,7 +3116,7 @@
     },
     {
       "id": "text-hover-effect",
-      "title": "文字悬停效果",
+      "title": "TextHoverEffect 文字悬停效果",
       "description": "用于悬停时跟随鼠标以渐变描边揭示文字的悬停效果组件。",
       "category": "effect",
       "tags": [
@@ -3124,7 +3129,7 @@
     },
     {
       "id": "text-reveal",
-      "title": "文字揭示",
+      "title": "TextReveal 文字揭示",
       "description": "用于基于 GSAP SplitText 将段落按行依次入场的文字动画组件。",
       "category": "effect",
       "tags": [
@@ -3138,7 +3143,7 @@
     },
     {
       "id": "text-reveal-card",
-      "title": "文字揭示卡片",
+      "title": "TextRevealCard 文字揭示卡片",
       "description": "用于鼠标滑过卡片时揭示另一段隐藏文字、带星星粒子的卡片组件。",
       "category": "effect",
       "tags": [
@@ -3152,7 +3157,7 @@
     },
     {
       "id": "text-scroll-reveal",
-      "title": "滚动文字揭示",
+      "title": "TextScrollReveal 滚动文字揭示",
       "description": "用于随页面滚动进度将一句话逐词由淡变实显现的文字组件。",
       "category": "effect",
       "tags": [
@@ -3166,7 +3171,7 @@
     },
     {
       "id": "timeline",
-      "title": "时间线",
+      "title": "Timeline 时间线",
       "description": "用于纵向展示条目、带粘性标签与滚动渐变动画的时间线组件。",
       "category": "misc",
       "tags": [
@@ -3186,7 +3191,7 @@
     },
     {
       "id": "tracing-beam",
-      "title": "跟踪光束",
+      "title": "TracingBeam 跟踪光束",
       "description": "用于在内容一侧渲染随滚动延伸的渐变光束装饰的容器组件。",
       "category": "misc",
       "tags": [
@@ -3200,7 +3205,7 @@
     },
     {
       "id": "vanishing-input",
-      "title": "占位符滚动与消失输入框",
+      "title": "VanishingInput 占位符滚动与消失输入框",
       "description": "用于占位符轮换滚动、提交时文字呈消失动画的单行输入组件。",
       "category": "form",
       "tags": [
@@ -4036,24 +4041,54 @@
     },
     {
       "id": "menu",
-      "pattern": "侧边导航菜单、多级导航",
+      "pattern": "侧边导航菜单、分类列表、多级导航：同一容器里排成一列（或一行）的多个同名实例，变体为 选中 / 未选中，点击切换当前项",
       "match": [
         "侧边菜单",
         "側邊菜單",
+        "侧边导航",
+        "側邊導航",
         "导航菜单",
         "導航菜單",
-        "sidebar menu",
-        "side menu",
+        "分类列表",
+        "分類列表",
+        "分类导航",
+        "分類導航",
+        "分类菜单",
+        "分類菜單",
+        "类目列表",
+        "類目列表",
         "多级菜单",
-        "多級菜單"
+        "多級菜單",
+        "/\\bside[ -]?(?:bar[ -]?)?(?:menu|nav)\\b/i",
+        "/\\bnav[ -]?(?:menu|list)\\b/i",
+        "/\\bcategory[ -]?(?:list|menu|nav)\\b/i"
       ],
       "component": "reborn-menu",
-      "recipe": "items 给层级数据，mode 取横纵，collapse 收起为图标栏；带子菜单的侧栏用它，而不是 reborn-tabs 或 reborn-dropdown。",
+      "recipe": "整组用一个 RebornMenu，不要把每一项写成原生 a / li / button 再自己管选中态：纵向列表 mode=\"vertical\"（顶部横排用 horizontal），color 按稿面取 neutral 或 primary，v-model:selected-keys 绑定当前项（值是从一级到选中项的 index 路径）。单层列表每个实例一个 RebornMenuItem（index 给唯一标识，#extra 放右侧箭头等稿面导出的图标，#icon 放左侧图标）；有下级时传 items 或用 RebornSubMenu，collapse 收起为图标栏；不折叠的列表传 :tooltip=\"false\"。面板底色 / 描边 / 圆角 / 内边距经 ui.root，条目间距经 ui.menu，行高 / 圆角 / 内边距经 ui.menuItem，字号字重经 ui.menuItemTitle，选中项底色用 RebornMenuItem 自己的 ui 按选中态给。条目渲染为没有 tabindex 的 li：需要键盘可聚焦或可新开的链接时，在默认插槽里放 a 并 @click.prevent，点击交给 select 事件或 v-model:selected-keys 接管；router 为真时点击按 index（或 RebornMenuItem 的 route）跳转。带子菜单的侧栏也用它，而不是 reborn-tabs 或 reborn-dropdown。",
       "uses": {
         "props": [
           "items",
           "mode",
-          "collapse"
+          "color",
+          "collapse",
+          "selectedKeys",
+          "tooltip",
+          "router"
+        ],
+        "slots": [
+          "default",
+          "icon",
+          "extra"
+        ],
+        "events": [
+          "select",
+          "update:selectedKeys"
+        ],
+        "ui": [
+          "root",
+          "menu",
+          "menuItem",
+          "menuItemTitle"
         ]
       },
       "pitfalls": [

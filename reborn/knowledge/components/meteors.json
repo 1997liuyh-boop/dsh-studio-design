@@ -1,7 +1,7 @@
 {
   "$schema": "../schema/component.schema.json",
   "id": "meteors",
-  "title": "流星雨",
+  "title": "Meteors 流星雨",
   "description": "用于在卡片等容器内渲染划过的流星雨背景动画的装饰组件。",
   "category": "effect",
   "tags": [
@@ -68,7 +68,7 @@
   },
   "docPath": "content/2.components/special-effects/meteors.md",
   "_meta": {
-    "contentHash": "c2c1116f2aca61b509916fae5df6ee3783e27b16",
+    "contentHash": "ac7cc66db15da55eb192b5379a39780a858477d1",
     "hasOverride": true,
     "extractors": {
       "web": "ok",

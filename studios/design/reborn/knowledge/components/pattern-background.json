@@ -1,7 +1,7 @@
 {
   "$schema": "../schema/component.schema.json",
   "id": "pattern-background",
-  "title": "图案背景",
+  "title": "PatternBackground 图案背景",
   "description": "用于为区块提供图案纹理背景的容器组件，内容经默认插槽传入。",
   "category": "effect",
   "tags": [
@@ -109,7 +109,7 @@
   },
   "docPath": "content/2.components/special-effects/pattern-background.md",
   "_meta": {
-    "contentHash": "34176274b1d8ed3f8aa0571d30dcd07ba828c986",
+    "contentHash": "cf5b237a124c8036d73da795ad2a47ef66b46562",
     "hasOverride": true,
     "extractors": {
       "web": "ok",

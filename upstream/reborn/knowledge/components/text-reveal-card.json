@@ -1,7 +1,7 @@
 {
   "$schema": "../schema/component.schema.json",
   "id": "text-reveal-card",
-  "title": "文字揭示卡片",
+  "title": "TextRevealCard 文字揭示卡片",
   "description": "用于鼠标滑过卡片时揭示另一段隐藏文字、带星星粒子的卡片组件。",
   "category": "effect",
   "tags": [
@@ -89,7 +89,7 @@
   },
   "docPath": "content/2.components/text-animations/text-reveal-card.md",
   "_meta": {
-    "contentHash": "4e73991253884848c1d5f2117cf496053908748d",
+    "contentHash": "56d6aadad50660c0620680d1bf0842dfcf551d73",
     "hasOverride": true,
     "extractors": {
       "web": "ok",

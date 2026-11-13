@@ -1,7 +1,7 @@
 {
   "$schema": "../schema/component.schema.json",
   "id": "text-3d",
-  "title": "3D 文字",
+  "title": "Text3D 3D 文字",
   "description": "用于以描边加双层阴影模拟 3D 立体字并可选晃动动画的文字组件。",
   "category": "effect",
   "tags": [
@@ -130,7 +130,7 @@
   },
   "docPath": "content/2.components/text-animations/3d-text.md",
   "_meta": {
-    "contentHash": "70be3d781913ec31b8704bd28e1c7b1f7a53cf65",
+    "contentHash": "88f8a221c8c589b3732c70d72c339b55fb67faa6",
     "hasOverride": true,
     "extractors": {
       "web": "ok",

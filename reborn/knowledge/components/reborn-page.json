@@ -1,7 +1,7 @@
 {
   "$schema": "../schema/component.schema.json",
   "id": "reborn-page",
-  "title": "页面容器 Page",
+  "title": "Page 页面容器",
   "description": "用于 uniapp 页面最外层的页面容器组件，可配置页面标题与描述文案。",
   "category": "layout",
   "tags": [
@@ -109,7 +109,7 @@
   },
   "docPath": "content/2.components/layout/reborn-page.md",
   "_meta": {
-    "contentHash": "3dc1c963a68f67de07a29e04f29bcbac2fbd2075",
+    "contentHash": "0eb02567ac5e03f88dbaba5f58f29c4b8a1c336e",
     "hasOverride": true,
     "extractors": {
       "web": "absent",

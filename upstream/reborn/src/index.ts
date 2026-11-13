@@ -30,6 +30,7 @@ const instructions = `Reborn-UI 组件库知识库服务。这是一个双端组
 还原设计稿（MasterGo / Figma 节点 → 页面）时，先把读到的节点名、变体值与子节点名整批传给 match_design_nodes，再按返回的 component / recipe / uses 逐个 get_component 核对，最后 get_component_example 取示例；不要只按节点名的字面意思去猜组件。设计稿里最常漏掉的几组：
 - 一列「缩略图」实例（变体 已选/未选）+ 一张主图 + 左右箭头 = 商品图廊 → 一个 reborn-carousel（thumbs 联动缩略图，#prev / #next 放箭头并加 pointer-events-auto），不是一列 RebornButton + img。
 - 一排页签 + 内容面板 → reborn-tabs + RebornTabPane（title 传稿面文案，选中态由组件按 type / color 管，不在 #title 插槽里手动切颜色；line 类型自带头部分隔线）。RebornTabPane 这类与目录不同名的子组件在 Nuxt pathPrefix: true 下自动导入会改名，须显式 import。
+- 同一容器里一列同名实例（如「分類列表」×9，变体 選中 / 未選中）= 一组互斥选择 → 纵向的分类列表、侧栏导航用一个 reborn-menu（每项一个 RebornMenuItem，v-model:selected-keys 管当前项，样式经 ui.root / ui.menu / ui.menuItem），不是九个手写的 a；名字没命中配方表时 match_design_nodes 会在 hints 里按结构提示，候选见该节点的 alternatives。
 - 搜索区（站点选择 + 输入 + 搜索键）→ reborn-search-box 的 #leading / #trailing 插槽；数量加减 → reborn-input-number；规格项 → reborn-sku；悬浮操作组 → reborn-fab；图标 / 分割线不是组件，用导出素材或 border。
 写完模板自查：不得残留原生 <button> / <input> / <select>，也不得用 Button + CSS 仿造上面这些复合组件；本库没有的（Web 页脚、卡片容器）才按稿面自写。
 
@@ -204,6 +205,8 @@ server.tool(
       command: `${runner[pm]} reborn-ui@latest add ${id}`,
       dependencies: component.dependencies ?? [],
       note: "首次使用需先执行 init 生成 components.json：`" + `${runner[pm]} reborn-ui@latest init` + "`",
+      // CLI 按 components.json 的 componentsDir 字面量落盘（默认 components）；Nuxt 4 的源码目录是 app/，不改目录会写到项目根、框架扫不到
+      layoutNote: `组件写入 components.json 的 componentsDir（默认 components，相对项目根）。Nuxt 4 项目的源码在 app/ 下时加上 --components-dir app/components --lib-dir app/lib，或把 components.json 的 componentsDir / libDir 改成 app/ 开头的路径；装完确认文件落在框架实际扫描的组件目录里。`,
     });
   },
 );
@@ -250,7 +253,7 @@ server.tool(
     return jsonResult({
       ...result,
       nextSteps:
-        "对每个 component（含 with 里的配套组件）调 get_component(id, platform) 核对 props / slots / ui 键，再 get_component_example 取示例；按 recipe 实现，uses 之外的 prop / 插槽 / ui 键一律以 get_component 返回为准。status=search 的候选要先读 whenToUse / whenNotToUse 再决定；ignore 的节点用导出素材；custom / unmapped 的按稿面自写并在实现清单里说明。",
+        "对每个 component（含 with 里的配套组件）调 get_component(id, platform) 核对 props / slots / ui 键，再 get_component_example 取示例；按 recipe 实现，uses 之外的 prop / 插槽 / ui 键一律以 get_component 返回为准。status=search 的候选要先读 whenToUse / whenNotToUse 再决定；带 selectionGroup 的节点是一组互斥选择，按 note 里的排布说明从 alternatives 里选一个组件整组实现；ignore 的节点用导出素材；custom / unmapped 的按稿面自写并在实现清单里说明。",
     });
   },
 );

@@ -11,7 +11,13 @@
     "侧边菜单",
     "侧栏",
     "sidebar",
-    "nav"
+    "nav",
+    "分类列表",
+    "分类导航",
+    "类目导航",
+    "侧边导航",
+    "导航列表",
+    "category list"
   ],
   "platforms": [
     "web"
@@ -456,6 +462,7 @@
   ],
   "whenToUse": [
     "后台管理系统侧边导航（mode=\"vertical\"，可配 collapse 折叠）。",
+    "商城 / 内容站左侧的分类列表：单层、没有子菜单也适用，每项一个 RebornMenuItem，v-model:selected-keys 管当前项，不必逐项手写 a 再自己切选中态。",
     "顶部水平导航栏（mode=\"horizontal\"，可配 ellipsis 折叠溢出条目）。",
     "启用 router 模式后点击菜单项以 index 作为 path 进行路由跳转。",
     "需要 v-model:selected-keys / v-model:open-keys 受控管理选中与展开状态时。",
@@ -476,7 +483,10 @@
     "选中态配色取 color 对应色阶的第 2 档（背景块）与第 6 档（文字），primary 落到 brand、neutral 的文字落到 gray-9；不需要色块时传 :show-active-background=\"false\"，投影会一并移除。",
     "旧版的 v-model:active / v-model:expanded 已更名为 v-model:selected-keys / v-model:open-keys，不保留别名；实例方法 updateActive 更名为 updateActiveIndex。",
     "openKeys 是唯一展开来源；受控父级拒收时维持父值，defaultOpeneds 仅初始化一次。",
-    "open(index)/close(index) 按完整祖先路径处理；items 可定位未挂载后代，纯插槽后代需已渲染登记。"
+    "open(index)/close(index) 按完整祖先路径处理；items 可定位未挂载后代，纯插槽后代需已渲染登记。",
+    "菜单项渲染为 li（role=\"menuitem\"），没有 tabindex 也不处理键盘事件：需要 Tab 聚焦、回车触发或右键新开时，在默认插槽里放 a（@click.prevent，点击交给 select 事件或 v-model:selected-keys）。",
+    "垂直模式下没有图标的一级条目会常驻一个宽度为 0 的首字替身（折叠成图标栏时用）；不折叠的菜单可用 ui.menuItemIconFallback 传 hidden 去掉它。",
+    "RebornMenuItem / RebornSubMenu / RebornMenuItemGroup / RebornMenuDivider 与目录不同名，Nuxt 在 pathPrefix: true 下自动导入会改名，使用方须显式 import。"
   ],
   "dependencies": [
     "@vueuse/core",
@@ -505,7 +515,7 @@
   },
   "docPath": "content/2.components/miscellaneous/reborn-menu.md",
   "_meta": {
-    "contentHash": "760e3d677296bc798ad462f65a9fa23f7a263f7f",
+    "contentHash": "6d40d43e82ad5e6eb11b1d4b3ca4fc2f3165fc9c",
     "hasOverride": true,
     "extractors": {
       "web": "ok",

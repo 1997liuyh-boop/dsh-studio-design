@@ -1,7 +1,7 @@
 {
   "$schema": "../schema/component.schema.json",
   "id": "lens",
-  "title": "放大镜",
+  "title": "Lens 放大镜",
   "description": "用于在图片等插槽内容上叠加圆形放大镜的局部放大组件。",
   "category": "misc",
   "tags": [
@@ -113,7 +113,7 @@
   },
   "docPath": "content/2.components/miscellaneous/lens.md",
   "_meta": {
-    "contentHash": "4975efec8dcf58c92dbe3d3957dc640ceacf0c42",
+    "contentHash": "c2984cc658d6a4f4c1a0c3f68ac076de91b04b6f",
     "hasOverride": true,
     "extractors": {
       "web": "ok",

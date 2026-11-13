@@ -1,7 +1,7 @@
 {
   "$schema": "../schema/component.schema.json",
   "id": "book",
-  "title": "书本",
+  "title": "Book 书本",
   "description": "用于展示 3D 书本封面并在悬停时播放动画的展示组件。",
   "category": "misc",
   "tags": [
@@ -110,7 +110,7 @@
   },
   "docPath": "content/2.components/miscellaneous/book.md",
   "_meta": {
-    "contentHash": "f65869d1ed8bc44cd3c4b6382e12eb6b20f54863",
+    "contentHash": "7b14f8a73ad7aeb2bf129866016a8bc812b2a8ce",
     "hasOverride": true,
     "extractors": {
       "web": "ok",

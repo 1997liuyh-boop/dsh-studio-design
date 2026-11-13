@@ -1,7 +1,7 @@
 {
   "$schema": "../schema/component.schema.json",
   "id": "safari-mockup",
-  "title": "Safari 模型",
+  "title": "SafariMockup Safari 模型",
   "description": "用于以 Safari 浏览器外框展示产品截图的 SVG 设备模型组件。",
   "category": "media",
   "tags": [
@@ -84,7 +84,7 @@
   },
   "docPath": "content/2.components/device-mocks/safari-mockup.md",
   "_meta": {
-    "contentHash": "9788790dfd7cb6fa4f149f2a2a3a87bdc520a01e",
+    "contentHash": "02de34abc23a45409c93362f6238ca8f08e0374a",
     "hasOverride": true,
     "extractors": {
       "web": "ok",

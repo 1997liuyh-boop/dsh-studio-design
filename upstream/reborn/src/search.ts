@@ -95,6 +95,8 @@ export interface DesignNodeMatch {
   subcomponents?: string[];
   imports?: string[];
   alternatives?: Array<{ id: string; title?: string; score: number }>;
+  /** 同区块同名实例的变体在「选中 / 未选中」间切换：整组是一个选择类组件，候选见 alternatives */
+  selectionGroup?: boolean;
   note?: string;
 }
 
@@ -136,6 +138,18 @@ export function subcomponentsOf(component: KbComponent | null | undefined, platf
 }
 
 const ARROW_LIKE = /箭头|箭頭|arrow|chevron|prev|next|翻页|翻頁/i;
+
+/** 变体值里表示「当前选中」与「未选中」的说法；两类同时出现在同名实例上，才算一组互斥选择 */
+const SELECTED_VALUE = /^(?:已?[选選]中?|激活|当前|當前|高亮|active|selected|current|checked|on)$/i;
+const UNSELECTED_VALUE = /^(?:未[选選]中?|未激活|默认|默認|常规|常規|正常|inactive|unselected|default|normal|off)$/i;
+
+/** 互斥选择组的候选组件，按稿面排布挑一个 */
+const SELECTION_GROUP_CANDIDATES: Array<{ id: string; when: string }> = [
+  { id: "reborn-menu", when: "纵向列表、侧栏分类、带下级的导航" },
+  { id: "reborn-tabs", when: "一排页签 + 下方随之切换的内容面板" },
+  { id: "reborn-segmented", when: "一条里滑动切换的短控件" },
+  { id: "reborn-radio", when: "表单里从几个选项中取一个值" },
+];
 
 /**
  * 把一批设计稿节点落到组件：先按配方表（具体规则在前）匹配节点名与变体值，
@@ -303,6 +317,46 @@ export function matchDesignNodes(
       "检测到商品图廊（缩略图 + 主图 + 箭头）：整组用一个 reborn-carousel（thumbs 联动缩略图，#prev / #next 放箭头），不要把缩略图做成一列 RebornButton + img",
     );
   }
+  // 整体提示：同一区块里多个同名实例、变体在「选中 / 未选中」之间切换 = 一组互斥选择。
+  // 设计师给这类实例起的名字五花八门（分類列表、筛选项、左侧栏目），配方表按名字认不全；
+  // 名字没命中时靠结构兜底，否则 AI 会把它们当成九个互不相干的链接逐个手写。
+  const selectionGroups = new Map<string, { names: Set<string>; selected: boolean; unselected: boolean; indexes: number[] }>();
+  nodes.forEach((node, i) => {
+    const match = matches[i];
+    if (match.status === "pattern" || match.status === "ignore") return;
+    const values = typeof node.variant === "string" ? [node.variant] : Object.values(node.variant ?? {}).map(String);
+    const selected = values.some((value) => SELECTED_VALUE.test(value.trim()));
+    const unselected = values.some((value) => UNSELECTED_VALUE.test(value.trim()));
+    if (!selected && !unselected) return;
+    const key = `${node.group ?? ""}\u0000${node.name.trim().toLowerCase()}`;
+    const entry = selectionGroups.get(key) ?? { names: new Set<string>(), selected: false, unselected: false, indexes: [] };
+    entry.names.add(node.name.trim());
+    entry.selected ||= selected;
+    entry.unselected ||= unselected;
+    entry.indexes.push(i);
+    selectionGroups.set(key, entry);
+  });
+  for (const entry of selectionGroups.values()) {
+    // 至少两个实例且两种状态都出现过：单个带「正常」变体的按钮不是选择组
+    if (entry.indexes.length < 2 || !entry.selected || !entry.unselected) continue;
+    const candidates = SELECTION_GROUP_CANDIDATES.filter(({ id }) => {
+      const candidate = entryById.get(id);
+      return candidate && (!options.platform || candidate.platforms?.includes(options.platform));
+    });
+    if (!candidates.length) continue;
+    const choices = candidates.map(({ id, when }) => `${when} → ${id}`).join("；");
+    const name = [...entry.names][0];
+    for (const index of entry.indexes) {
+      const match = matches[index];
+      match.selectionGroup = true;
+      match.alternatives = candidates.map(({ id }) => ({ id, title: entryById.get(id)?.title, score: 0 }));
+      match.note = `同一区块里 ${entry.indexes.length} 个同名实例、变体在 选中 / 未选中 之间切换，是一组互斥选择而不是 ${entry.indexes.length} 个独立元素：${choices}。按稿面排布选定后用 get_component 核对，选中态交给组件的 v-model，不要逐项手写 a / li / button 再自己切样式`;
+    }
+    hints.push(
+      `检测到互斥选择组「${name}」×${entry.indexes.length}（变体 选中 / 未选中）：整组用一个选择类组件实现（${choices}），并把「${name}」补进 knowledge/design-patterns.json 对应规则的 match，下次按名字直接命中`,
+    );
+  }
+
   const subcomponentNotes = new Set(matches.flatMap((m) => m.subcomponents ?? []));
   if (subcomponentNotes.size) {
     hints.push(`用到子组件 ${[...subcomponentNotes].join("、")}：显式 import 或把 components 配置改成 pathPrefix: false，否则 Nuxt 自动导入的名字带目录前缀`);

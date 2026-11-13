@@ -1,7 +1,7 @@
 {
   "$schema": "../schema/component.schema.json",
   "id": "reborn-image",
-  "title": "图片 Image",
+  "title": "Image 图片",
   "description": "用于展示图片并提供预览、加载/错误状态与多种裁剪模式的双端图片组件。",
   "category": "misc",
   "tags": [
@@ -298,7 +298,7 @@
   },
   "docPath": "content/2.components/miscellaneous/reborn-image.md",
   "_meta": {
-    "contentHash": "25d5703b8111f5e69513104e83d1eeeda08afd52",
+    "contentHash": "5fbf7a14db65a66d02bb9987269b52d2565bc9d1",
     "hasOverride": true,
     "extractors": {
       "web": "ok",

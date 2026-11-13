@@ -1,7 +1,7 @@
 {
   "$schema": "../schema/component.schema.json",
   "id": "rainbow-button",
-  "title": "彩虹按钮",
+  "title": "RainbowButton 彩虹按钮",
   "description": "用于呈现彩虹渐变流动发光效果的按钮组件，内容经默认插槽传入。",
   "category": "basic",
   "tags": [
@@ -81,7 +81,7 @@
   },
   "docPath": "content/2.components/button/rainbow-button.md",
   "_meta": {
-    "contentHash": "a566b4eb7cbfb084a65703a05d6403bfd4cc3812",
+    "contentHash": "a34089723ce39a27daa162c4e05fb8de3345fe04",
     "hasOverride": true,
     "extractors": {
       "web": "ok",

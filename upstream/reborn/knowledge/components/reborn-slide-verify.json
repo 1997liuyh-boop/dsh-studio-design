@@ -1,7 +1,7 @@
 {
   "$schema": "../schema/component.schema.json",
   "id": "reborn-slide-verify",
-  "title": "滑块验证",
+  "title": "SlideVerify 滑块验证",
   "description": "用于人机校验的滑块验证组件，向右拖动超过阈值即通过，支持失败回弹与自动重置。",
   "category": "misc",
   "tags": [
@@ -353,7 +353,7 @@
   },
   "docPath": "content/2.components/miscellaneous/reborn-slide-verify.md",
   "_meta": {
-    "contentHash": "ccc260ff19f49ca2cfc0692a10808f33dfe10dae",
+    "contentHash": "05d2b99b91ffa38526f1aaa0258fa058b8bdf653",
     "hasOverride": true,
     "extractors": {
       "web": "absent",

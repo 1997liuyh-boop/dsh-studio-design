@@ -1,7 +1,7 @@
 {
   "$schema": "../schema/component.schema.json",
   "id": "direction-aware-hover",
-  "title": "方向感知悬停卡片",
+  "title": "DirectionAwareHover 方向感知悬停卡片",
   "description": "用于根据鼠标进入方向滑入内容覆盖层的图片悬停卡片组件。",
   "category": "data-display",
   "tags": [
@@ -88,7 +88,7 @@
   },
   "docPath": "content/2.components/cards/direction-aware-hover.md",
   "_meta": {
-    "contentHash": "17e8eac974fb60d4fd7f9391eddf8132cef46aeb",
+    "contentHash": "507dcd9d9ae0c382e14de4ce6fe161bfc6b06b1e",
     "hasOverride": true,
     "extractors": {
       "web": "ok",

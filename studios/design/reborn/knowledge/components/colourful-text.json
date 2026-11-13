@@ -1,7 +1,7 @@
 {
   "$schema": "../schema/component.schema.json",
   "id": "colourful-text",
-  "title": "彩色文字",
+  "title": "ColourfulText 彩色文字",
   "description": "用于让文字逐字符循环变换颜色并动画的标题点缀组件。",
   "category": "effect",
   "tags": [
@@ -84,7 +84,7 @@
   },
   "docPath": "content/2.components/text-animations/colorful-text.md",
   "_meta": {
-    "contentHash": "ef6f80bdaa61515c74d92a2f43cb87152aef4945",
+    "contentHash": "d716b5b242ae2c2da2e43e518278e74c2e26789b",
     "hasOverride": true,
     "extractors": {
       "web": "ok",

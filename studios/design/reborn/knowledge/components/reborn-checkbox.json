@@ -1,7 +1,7 @@
 {
   "$schema": "../schema/component.schema.json",
   "id": "reborn-checkbox",
-  "title": "checkbox 多选框",
+  "title": "Checkbox 多选框",
   "description": "用于开关单项或组合多选的多选框组件，双端可用，支持布尔与数组两种绑定，并提供半选态与数据驱动的复选框组。",
   "category": "form",
   "tags": [
@@ -287,7 +287,7 @@
   },
   "docPath": "content/2.components/input-and-forms/reborn-checkbox.md",
   "_meta": {
-    "contentHash": "3e2533113d7de27a70fc37839786e128457f9fec",
+    "contentHash": "f7c236cd454572c63f58aec54e21553287e3aa32",
     "hasOverride": true,
     "extractors": {
       "web": "ok",

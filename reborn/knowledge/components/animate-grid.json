@@ -1,7 +1,7 @@
 {
   "$schema": "../schema/component.schema.json",
   "id": "animate-grid",
-  "title": "动画网格",
+  "title": "AnimateGrid 动画网格",
   "description": "用于以 3D 倾斜透视和发光投影展示 logo 卡片阵列的网格组件。",
   "category": "misc",
   "tags": [
@@ -109,7 +109,7 @@
   },
   "docPath": "content/2.components/miscellaneous/animate-grid.md",
   "_meta": {
-    "contentHash": "b0ed665014d37946762b6eed15e0936929055d06",
+    "contentHash": "c94798eb15f7b3467b4148d024700027749b7995",
     "hasOverride": true,
     "extractors": {
       "web": "ok",

@@ -1,7 +1,7 @@
 {
   "$schema": "../schema/component.schema.json",
   "id": "text-highlight",
-  "title": "文字高亮",
+  "title": "TextHighlight 文字高亮",
   "description": "用于以背景填充动画突出句中重点文字的高亮组件。",
   "category": "effect",
   "tags": [
@@ -86,7 +86,7 @@
   },
   "docPath": "content/2.components/text-animations/text-highlight.md",
   "_meta": {
-    "contentHash": "1bada4706afccd1c832c774ea8a11d3a3fad685e",
+    "contentHash": "590e9d2bffd3f826482ee186badd499e3dd1859e",
     "hasOverride": true,
     "extractors": {
       "web": "ok",

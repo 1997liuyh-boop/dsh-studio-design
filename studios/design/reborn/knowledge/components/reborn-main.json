@@ -1,7 +1,7 @@
 {
   "$schema": "../schema/component.schema.json",
   "id": "reborn-main",
-  "title": "主体布局",
+  "title": "Main 主体布局",
   "description": "用于渲染语义化 main 页面主体区域、默认最小高度撑满一屏的布局组件，仅 web 端。",
   "category": "navigation",
   "tags": [],
@@ -75,7 +75,7 @@
   },
   "docPath": "content/2.components/navigation/reborn-main.md",
   "_meta": {
-    "contentHash": "ac5c9fe891ea1c1efb1ea947ac0961688b90b89b",
+    "contentHash": "74f41f6959ceab631e50582dc81c65480fae0791",
     "hasOverride": true,
     "extractors": {
       "web": "ok",

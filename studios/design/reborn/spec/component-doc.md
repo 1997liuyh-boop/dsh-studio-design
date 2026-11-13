@@ -66,7 +66,7 @@ frontmatter（见 §2）
 
 ```yaml
 ---
-title: 按钮
+title: Button 按钮
 description: 双端基础按钮：7 种语义色 × 7 种变体，支持尺寸、形状、加载与禁用状态。
 category: 按钮
 platform: both
@@ -77,7 +77,7 @@ badge: New
 
 | 字段 | 必填 | 规则 |
 | --- | --- | --- |
-| `title` | 是 | 不带「组件」二字（写「按钮」不写「按钮组件」）。优先纯中文名（「按钮」「徽章」）；组件以英文名更为人知时写「English 中文」（「Form 表单」「PickerView 选择器视图」）。**不要只写英文**。 |
+| `title` | 是 | 一律写「English 中文」，英文在前、半角空格分隔（「Button 按钮」「PickerView 选择器视图」「GradientButton 渐变按钮」）。English 取组件名的 PascalCase：`reborn-` 系列去掉 `Reborn` 前缀（`RebornDatePicker` → `DatePicker`），社区组件取主组件名（`ShimmerButton`）——这样标题与开发者在模板里写的标签一一对应，搜英文名也能命中。中文部分不带「组件」二字（写「按钮」不写「按钮组件」）。**不要只写英文或只写中文**，也不要写成「中文 English」「中文 (English)」。 |
 | `description` | 是 | 一句话 ≤60 字。见下方专条。 |
 | `category` | 是 | 从固定分类表取值：`按钮` / `通用` / `布局` / `导航` / `表单与输入` / `数据展示` / `反馈` / `卡片` / `文字动画` / `特效` / `设备模型`（定义在 `app/utils/componentsCatalog.ts` 的 `CATEGORY_ORDER`）。侧栏与总览按「系列 → 分类」分组，**不再按目录**，目录只决定 URL；写了表外的名字会在两大区末尾单独成组，「杂项」「数据」「输入与表单」是已废弃的旧名。按用途归位：弹层 / 提示 / 加载归反馈，列表 / 展示类归数据展示，页面骨架与定位归布局。 |
 | `series` | 否 | 组件系列：`reborn` Reborn 自研 / `community` 社区移植。缺省按文档 slug 的 `reborn-` 前缀判定，只有自研却未带前缀的组件（如 `scrollbar`）才需要显式写 `series: reborn`。 |

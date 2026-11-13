@@ -1,7 +1,7 @@
 {
   "$schema": "../schema/component.schema.json",
   "id": "file-upload",
-  "title": "文件上传",
+  "title": "FileUpload 文件上传",
   "description": "用于拖放或点击选择文件、带动效展示区的文件上传入口组件。",
   "category": "form",
   "tags": [
@@ -78,7 +78,7 @@
   },
   "docPath": "content/2.components/input-and-forms/file-upload.md",
   "_meta": {
-    "contentHash": "48480625855376fbda987f3fb804268a8e98b45b",
+    "contentHash": "50fed595311765d5d507b046b1f91167e499fd25",
     "hasOverride": true,
     "extractors": {
       "web": "ok",

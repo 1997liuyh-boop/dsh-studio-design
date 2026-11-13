@@ -1,7 +1,7 @@
 {
   "$schema": "../schema/component.schema.json",
   "id": "halo-search",
-  "title": "光晕搜索框",
+  "title": "HaloSearch 光晕搜索框",
   "description": "发光光环搜索输入框：悬停与聚焦时光环旋转，支持 v-model 绑定关键词与回车 search 事件。",
   "category": "form",
   "tags": [
@@ -80,7 +80,7 @@
   },
   "docPath": "content/2.components/input-and-forms/halo-search.md",
   "_meta": {
-    "contentHash": "85e1b2f15e639d36faffd55cd3439cc0039c08c3",
+    "contentHash": "eadde1f517fb8979923f9cc6e63bc666c3d9c180",
     "hasOverride": true,
     "extractors": {
       "web": "ok",

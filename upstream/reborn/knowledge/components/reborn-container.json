@@ -1,7 +1,7 @@
 {
   "$schema": "../schema/component.schema.json",
   "id": "reborn-container",
-  "title": "容器",
+  "title": "Container 布局容器",
   "description": "用于将页面内容水平居中并按屏幕断点限制最大宽度的布局容器组件，仅 web 端。",
   "category": "navigation",
   "tags": [],
@@ -81,7 +81,7 @@
   },
   "docPath": "content/2.components/navigation/reborn-container.md",
   "_meta": {
-    "contentHash": "36a0cd6bfac60b744b269962c65a5696f033f422",
+    "contentHash": "7d54186a12f02ece31c6a2ed2cceb05c5664edb4",
     "hasOverride": true,
     "extractors": {
       "web": "ok",

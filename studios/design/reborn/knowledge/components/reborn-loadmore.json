@@ -1,7 +1,7 @@
 {
   "$schema": "../schema/component.schema.json",
   "id": "reborn-loadmore",
-  "title": "加载更多",
+  "title": "Loadmore 加载更多",
   "description": "用于列表底部展示加载中、加载失败与没有更多状态的 uniapp 组件。",
   "category": "misc",
   "tags": [],
@@ -151,7 +151,7 @@
   },
   "docPath": "content/2.components/miscellaneous/reborn-loadmore.md",
   "_meta": {
-    "contentHash": "e3aebeab8dbbfda58bd67bbb3b3468c8b7135212",
+    "contentHash": "5e33b17a486b5da57d1ba930d14f148d46e8134e",
     "hasOverride": true,
     "extractors": {
       "web": "absent",

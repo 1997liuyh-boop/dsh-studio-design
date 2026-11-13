@@ -1,7 +1,7 @@
 {
   "$schema": "../schema/component.schema.json",
   "id": "input",
-  "title": "输入框",
+  "title": "IInput 输入框",
   "description": "用于带鼠标径向渐变悬停高亮效果的单行文本输入组件。",
   "category": "form",
   "tags": [
@@ -87,7 +87,7 @@
   },
   "docPath": "content/2.components/input-and-forms/input.md",
   "_meta": {
-    "contentHash": "018f2da25e2ef63df7934365974fb513bb0ec07f",
+    "contentHash": "c388e17083d28618e6d9348823d41b30a66e2ff5",
     "hasOverride": true,
     "extractors": {
       "web": "ok",

@@ -1,7 +1,7 @@
 {
   "$schema": "../schema/component.schema.json",
   "id": "expandable-gallery",
-  "title": "可扩展画廊",
+  "title": "ExpandableGallery 可扩展画廊",
   "description": "用于一行图片悬停时放大当前项的可扩展横向画廊组件。",
   "category": "misc",
   "tags": [
@@ -67,7 +67,7 @@
   },
   "docPath": "content/2.components/miscellaneous/expandable-gallery.md",
   "_meta": {
-    "contentHash": "84a1188e950a39f3c10ab82b8822e9e648040057",
+    "contentHash": "e8d3d03d3662ff2639690fdc609ada00b38ad668",
     "hasOverride": true,
     "extractors": {
       "web": "ok",

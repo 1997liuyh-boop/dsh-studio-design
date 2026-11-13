@@ -1,7 +1,7 @@
 {
   "$schema": "../schema/component.schema.json",
   "id": "reborn-crowd",
-  "title": "人群漫步",
+  "title": "Crowd 人群漫步",
   "description": "把人物精灵图切格后在 2D 画布上左右随机走过，边走边颠、前后分层，可控人数与速度，用作页脚装饰。",
   "category": "effect",
   "tags": [
@@ -122,7 +122,7 @@
   },
   "docPath": "content/2.components/special-effects/reborn-crowd.md",
   "_meta": {
-    "contentHash": "1a213b1d461f1c9d6bf74878c4f643ff6c1e7484",
+    "contentHash": "254f58a9c0dca6a02eff6c4d45bd33c8eb1c07f0",
     "hasOverride": true,
     "extractors": {
       "web": "ok",

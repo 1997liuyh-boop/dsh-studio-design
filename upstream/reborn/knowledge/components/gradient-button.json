@@ -1,7 +1,7 @@
 {
   "$schema": "../schema/component.schema.json",
   "id": "gradient-button",
-  "title": "渐变按钮",
+  "title": "GradientButton 渐变按钮",
   "description": "用于带旋转圆锥渐变发光边框的动效按钮组件。",
   "category": "basic",
   "tags": [
@@ -108,7 +108,7 @@
   },
   "docPath": "content/2.components/button/gradient-button.md",
   "_meta": {
-    "contentHash": "74dcd3a1807b7418408771cd0c9fddcb2dee6754",
+    "contentHash": "0a7c066aecf36e1140f3495f3110f0748523b96f",
     "hasOverride": true,
     "extractors": {
       "web": "ok",

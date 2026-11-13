@@ -1,7 +1,7 @@
 {
   "$schema": "../schema/component.schema.json",
   "id": "flip-card",
-  "title": "翻转卡片",
+  "title": "FlipCard 翻转卡片",
   "description": "用于沿 X 或 Y 轴 180 度翻转、展示正反两面内容的卡片组件。",
   "category": "data-display",
   "tags": [
@@ -82,7 +82,7 @@
   },
   "docPath": "content/2.components/cards/flip-card.md",
   "_meta": {
-    "contentHash": "bb1a87ee869e8f3c6bf24e1a7eb676e28f2f0e49",
+    "contentHash": "70108e9fc23ada37d1d47064c380f4a48ebf5c7c",
     "hasOverride": true,
     "extractors": {
       "web": "ok",

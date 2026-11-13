@@ -1,7 +1,7 @@
 {
   "$schema": "../schema/component.schema.json",
   "id": "blur-reveal",
-  "title": "模糊揭示",
+  "title": "BlurReveal 模糊揭示",
   "description": "用于让子元素依次从模糊状态淡入上移进场的揭示动画组件。",
   "category": "effect",
   "tags": [
@@ -96,7 +96,7 @@
   },
   "docPath": "content/2.components/text-animations/blur-reveal.md",
   "_meta": {
-    "contentHash": "7b1d80a1955ec053df8c6b76c16cc71da4a45822",
+    "contentHash": "cb6d62a6305305e30106c5b7ab6e78378661a416",
     "hasOverride": true,
     "extractors": {
       "web": "ok",

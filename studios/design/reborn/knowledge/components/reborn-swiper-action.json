@@ -1,7 +1,7 @@
 {
   "$schema": "../schema/component.schema.json",
   "id": "reborn-swiper-action",
-  "title": "滑动操作",
+  "title": "SwiperAction 滑动操作",
   "description": "用于列表项左滑露出右侧操作按钮的滑动单元格组件，支持 push / overlay 模式与同组互斥。",
   "category": "misc",
   "tags": [
@@ -315,7 +315,7 @@
   },
   "docPath": "content/2.components/miscellaneous/reborn-swiper-action.md",
   "_meta": {
-    "contentHash": "73e927276ab9643f6a33200b269c73f3fb28b680",
+    "contentHash": "7d57d936a0e6ce6d2c279957df7069acba144b97",
     "hasOverride": true,
     "extractors": {
       "web": "absent",
