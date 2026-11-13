@@ -21,10 +21,30 @@ export function mastergoForm(spec: ConnectionSpec): { mode: 'visual' | 'custom';
   catch (error) { return fallback /* 不损坏无法由表单表示的配置。 */ }
 }
 
+/**
+ * 连接实际运行的官方适配器：不只认表单能表示的 `npx -y @mastergo/<服务>-mcp@<版本> --url=…`，
+ * 也认直接用 node 启动适配器入口文件的写法（`node …/@mastergo/vibe-mcp/dist/index.js --url=…`，
+ * 常见于为了跳过 npx 每次联网检查而改的配置）。只要命令行里出现适配器包名和合法的服务地址就算。
+ * 认不出时返回 null：那才是真正的自定义连接，工作室不替它探测画布，也不做预读。
+ */
+export function mastergoAdapter(spec: ConnectionSpec): { service: 'vibe' | 'magic'; address: string } | null {
+  const form = mastergoForm(spec)
+  if (form.mode === 'visual') return { service: form.service, address: form.address }
+  const words = [spec.command, ...spec.args]
+  const service = words.map(word => /@mastergo[\\/](vibe|magic)-mcp(?![\w-])/.exec(word)?.[1]).find(Boolean) as 'vibe' | 'magic' | undefined
+  if (!service) return null
+  // 地址写成 --url=<地址> 或 --url <地址>
+  const inline = spec.args.find(arg => arg.startsWith('--url='))?.slice(6)
+  const address = inline ?? spec.args[spec.args.indexOf('--url') + 1]
+  if (!address || (inline === undefined && !spec.args.includes('--url'))) return null
+  try { mastergoSpec(address, 'latest', service); return { service, address: new URL(address.trim()).origin } }
+  catch { return null }
+}
+
 /** 只读取本机状态中的画布标识，不向页面或模型暴露服务令牌。 */
 export async function mastergoCanvas(spec: ConnectionSpec): Promise<NonNullable<Snapshot['mastergoCanvas']>> {
-  const form = mastergoForm(spec)
-  if (form.mode === 'custom') return { state: 'unavailable', message: '自定义连接：请通过实际设计读取工具验证文档' }
+  const form = mastergoAdapter(spec)
+  if (!form) return { state: 'unavailable', message: '自定义连接：请通过实际设计读取工具验证文档' }
   if (form.service === 'magic') return { state: 'remote', message: 'Magic 读取远程团队文件，需要个人访问令牌和文件权限' }
   try {
     const response = await fetch(form.address + '/api/status', { signal: AbortSignal.timeout(2500), redirect: 'error' })
@@ -42,7 +62,10 @@ export function mastergoTarget(request: string): { fileId: string; pageId: strin
   const link = request.match(/https:\/\/mastergo\.com\/file\/\d+[^\s<>]*/)?.[0]
   if (!link) return null
   const url = new URL(link.replace(/&amp;/g, '&'))
-  return { fileId: url.pathname.split('/')[2], pageId: url.searchParams.get('page_id') || '', nodeId: url.searchParams.get('layer_id') || '' }
+  // page_id=M 是 MasterGo 链接里「文件默认页」的标记，不是页面的真实 ID：Vibe 适配器拿它与画布页面 ID 逐字比较，
+  // 会直接报 TargetNodePageMismatch。当作未指定页面，由节点 ID 定位。
+  const page = url.searchParams.get('page_id') || ''
+  return { fileId: url.pathname.split('/')[2], pageId: page === 'M' ? '' : page, nodeId: url.searchParams.get('layer_id') || '' }
 }
 
 /** 请求里的全部 MasterGo 链接（去重、保持顺序）：第一条是基础帧，其余是同一文件的状态画板。 */

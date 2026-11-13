@@ -29,6 +29,18 @@ export interface NodeSpec {
   radius?: [number, number, number, number]
   /** 描边宽度与颜色，只在 border-style 不为 none 时记录。 */
   border?: { width: number; color?: string }
+  /**
+   * 宽高的取值方式（取自导出 HTML 的自动布局）：hug = 由内容与内边距撑开（导出里不写宽 / 高），
+   * fixed = 稿面写死的尺寸，fill = 占满父容器（flex: 1 或 align-self: stretch）。
+   * hug 的节点（文字按钮、标签、胶囊）实现时不能写死 w-[…] / h-[…]，宽度随文字，由 padding 与 gap 决定。
+   */
+  sizing?: { width?: 'hug' | 'fixed' | 'fill'; height?: 'hug' | 'fixed' | 'fill' }
+  /** 内边距 [上, 右, 下, 左]（px），只在自动布局容器上记录。 */
+  padding?: [number, number, number, number]
+  /** 自动布局子项间距（px）：图标与文字、卡片之间的距离。 */
+  gap?: number
+  /** 位图：img = 图片节点，background = 带子元素的图片填充（导出为 background: url）。实现时都用 reborn-image。 */
+  bitmap?: 'img' | 'background'
 }
 
 /** 每个区块最多保留的规格节点数；超出的节点不参与比对。 */
@@ -90,6 +102,18 @@ export function parseWeight(value: string | undefined): number | undefined {
   return Number.isFinite(number) ? number : undefined
 }
 
+/** 位图文件扩展名；SVG 是矢量图标，不算位图。 */
+export const rasterFile = /\.(?:png|jpe?g|webp|gif|avif)(?:[?#)"']|$)/i
+
+/** 内边距 [上, 右, 下, 左]：先展开 padding 简写，再用单边属性覆盖；全为 0 时返回 undefined。 */
+export function paddingOf(style: string): [number, number, number, number] | undefined {
+  const shorthand = styleProperty(style, 'padding')?.split(/\s+/).map(pxValue)
+  const [a = 0, b = a, c = a, d = b] = shorthand && shorthand.every(value => value !== undefined) ? shorthand as number[] : []
+  const side = (name: string, fallback: number) => pxValue(styleProperty(style, 'padding-' + name)) ?? fallback
+  const padding: [number, number, number, number] = [side('top', a), side('right', b), side('bottom', c), side('left', d)]
+  return padding.some(value => value !== 0) ? padding : undefined
+}
+
 /** 从一个节点的内联样式与文字生成规格；返回 undefined 表示该节点不值得保留。 */
 export function nodeSpec(node: DesignNode, isRoot = false): NodeSpec | undefined {
   if (!node.id) return undefined
@@ -117,11 +141,33 @@ export function nodeSpec(node: DesignNode, isRoot = false): NodeSpec | undefined
     const color = normalizeColor(styleProperty(style, 'border-color')) ?? normalizeColor(/#[0-9a-f]{3,8}\b|rgba?\([^)]*\)/i.exec(shorthand ?? '')?.[0])
     if (width !== undefined) spec.border = color ? { width, color } : { width }
   }
+  const flex = /^(?:inline-)?flex$/.test(styleProperty(style, 'display') ?? '')
+  const flexValue = styleProperty(style, 'flex')
+  const fills = (axis: 'width' | 'height') => axis === 'width'
+    ? styleProperty(style, 'align-self') === 'stretch' || /^1(?:\s|$)/.test(flexValue ?? '')
+    : /^1(?:\s|$)/.test(flexValue ?? '')
+  const sizing = (axis: 'width' | 'height'): 'hug' | 'fixed' | 'fill' | undefined =>
+    pxValue(styleProperty(style, axis)) !== undefined ? 'fixed' : fills(axis) ? 'fill' : flex || spec.text ? 'hug' : undefined
+  if (flex || spec.text) {
+    const width = sizing('width'), height = sizing('height')
+    if (width || height) spec.sizing = { ...(width ? { width } : {}), ...(height ? { height } : {}) }
+  }
+  if (flex) spec.padding = paddingOf(style)
+  if (!spec.padding) delete spec.padding
+  if (flex) {
+    const gap = pxValue(styleProperty(style, 'gap')?.split(/\s+/)[0]) ?? pxValue(styleProperty(style, 'column-gap')) ?? pxValue(styleProperty(style, 'row-gap'))
+    if (gap) spec.gap = gap
+  }
+  if (node.tag === 'img' && node.src && rasterFile.test(node.src)) spec.bitmap = 'img'
+  else if (/url\(/.test(styleProperty(style, 'background') ?? styleProperty(style, 'background-image') ?? '') && rasterFile.test(style)) spec.bitmap = 'background'
   const positioned = spec.left !== undefined || spec.top !== undefined
-  const keep = isRoot || spec.text || spec.background || spec.border || spec.radius || node.tag === 'img' || positioned
+  const keep = isRoot || spec.text || spec.background || spec.border || spec.radius || node.tag === 'img' || positioned || spec.padding || spec.gap || spec.bitmap
   if (!keep) return undefined
   // 文字相关字段只对有文字的节点有意义，容器上的继承值不记录，减少噪音。
   if (!spec.text) { delete spec.fontSize; delete spec.lineHeight; delete spec.fontWeight; delete spec.fontFamily; delete spec.color }
+  // hug 的尺寸随内容（字体、文字长度）变化，不作为写死的取值记录，避免实现时照抄成 w-[…]。
+  if (spec.sizing?.width === 'hug') delete spec.width
+  if (spec.sizing?.height === 'hug') delete spec.height
   for (const key of Object.keys(spec) as (keyof NodeSpec)[]) if (spec[key] === undefined) delete spec[key]
   return spec
 }

@@ -40,6 +40,10 @@ export interface ComponentRule {
  */
 export const defaultRules: readonly ComponentRule[] = [
   { pattern: '图标实例', match: ['/^icon[\\/-]/i', '/^图标/', '/^圖標/'], component: '', ignore: true, notes: '下载并使用该节点导出的原始 SVG，不旋转、不从截图裁切，不用图标库的相似图标替换' },
+  // 设计库常把按钮类实例命名为 btn-<用途>：「btn-宣传banner」是 banner 里的按钮，「btn-首页站点标签」是一排可切换的页签，
+  // 放在 banner / 标签 等通用规则之前，避免按名字里的字样被认成轮播或徽标。
+  { pattern: '一排可切换的胶囊页签：同一容器里多个 btn-…标签 / tab 实例，变体在 选中 / 未选中 之间切换', match: ['/^btn[-_].*(?:标签|標籤|tab)/i'], component: 'reborn-tabs', props: 'type="text" color="neutral"，v-model:active-key 管当前项，每个实例一个 RebornTabPane（标题插槽写文案与 data-design）', ui: 'ui.list 写间距；ui.tab 写高度、内边距、圆角、描边与 aria-[selected=true] / aria-[selected=false] 两态颜色；ui.indicator 设 hidden', notes: '整组是互斥选择，不得逐个手写 button / a 再自己切选中样式' },
+  { pattern: '以 btn- 命名的按钮实例（宣传 banner 里的按钮、文字按钮、站点入口等）', match: ['/^btn[-_]/i'], component: 'reborn-button', props: 'round / circle / variant / color / size 按稿面取', notes: '名字里带 banner、站点、下拉等字样也是按钮本身，不是轮播或下拉；黑底胶囊用 round + variant="filled" color="neutral"；宽度由文字与内边距撑开，ui.base 只写高度与 px-[…]（取规格表 padding），不写 w-[…]' },
   { pattern: '签到入口（点击区 + 右上角角标）', match: ['签到', '簽到', 'check-in', 'checkin', 'sign-in'], component: 'reborn-button', with: ['reborn-chip'], deep: true, props: 'variant / color / size 按稿面取；40×40 粉底描边块用 ui.base 补尺寸与圆角', slots: '角标用 reborn-chip 的 text + inset 挂在按钮上', notes: '不得用 div / NuxtLink + span 自绘点击区与角标' },
   { pattern: '常见问题、可展开收起的问答或折叠列表', match: ['问题列表', '問題列表', '折叠', '折疊', '展开收起', '展開收起', '/\\bfaq\\b/i', 'collapse', 'accordion', '/[？?]\\s*$/'], component: 'reborn-collapse', deep: true, minPerBlock: 3, props: '每条问答一个 reborn-collapse，标题区放题号、题目与右侧箭头图标，内容区放答案', notes: '同一区块里至少三行以问号结尾的问题文字才视为问答列表；不得用静态列表或自写展开逻辑代替' },
   { pattern: '加载更多、查看更多', match: ['加载更多', '加載更多', '查看更多', '查看全部', 'load-more', 'loadmore', '/\\bmore\\b/i'], component: 'reborn-button', props: 'variant="soft" color="neutral"', slots: '#trailing 放对应节点导出的原始图标，不旋转导出图标' },
@@ -55,7 +59,7 @@ export const defaultRules: readonly ComponentRule[] = [
   { pattern: '优惠券、带缺口或撕线的卡券', match: ['优惠券', '優惠券', '卡券', 'coupon'], component: 'reborn-coupon', props: '缺口、分割线、方向与左右插槽按节点参数设置，如 type="perforated" direction="vertical"（vertical 即左右排布）position="start" :offset=缺口中心 x :radius=缺口半径（整数 ≥ 1，撕线带宽 = 2·radius）split="dashed" :size="[线宽, 段长]" :gap=段距 split-color', ui: 'ui.root 设底色与圆角', slots: '#left / #right 放票面内容', notes: '不要用 CSS 拼缺口' },
   { pattern: '轮播、跑马灯、banner 滑动', match: ['轮播', '輪播', 'banner', '跑马灯', '跑馬燈', 'carousel', 'swiper'], component: 'reborn-carousel', props: '轮播数量、间距、初始项、循环与指示器以设计和交互为准，如 slides-per-view="auto" centered-slides loop :initial-slide arrow="always" :pagination="{ type: \'dot\', indicatorBackground: false }"', ui: 'ui.slideInactive 设 opacity-100；箭头尺寸、底色与描边改 ui.arrow', slots: '箭头使用原素材，用 prev / next 插槽时按钮保证 pointer-events-auto' },
   { pattern: '头像', match: ['头像', '頭像', 'avatar'], component: 'reborn-avatar' },
-  { pattern: '商品图、头像外的图片', match: ['图片', '圖片', '海报', '海報', '商品图', '商品圖', 'image', '/\\bimg\\b/i'], component: 'reborn-image' },
+  { pattern: '商品图、头像外的图片', match: ['图片', '圖片', '海报', '海報', '商品图', '商品圖', 'image', '/\\bimg\\b/i'], component: 'reborn-image', props: ':width / :height 传稿面尺寸（不传按 120×120），mode="aspectFill" 对应 cover', notes: '图片填充节点不一定是组件实例（常见名字是「矩形 …」），以规格表 bitmap 为准：位图一律用 RebornImage，不用原生 img 或 CSS 背景图' },
   { pattern: '标签页、分段切换', match: ['标签页', '標籤頁', '分段', '/\\btabs?\\b/i', 'segmented'], component: 'reborn-tabs' },
   { pattern: '分页器', match: ['分页', '分頁', 'pagination', 'pager'], component: 'reborn-pagination' },
   { pattern: '步骤条', match: ['步骤条', '步驟條', 'steps', 'stepper'], component: 'reborn-steps' },
@@ -63,7 +67,7 @@ export const defaultRules: readonly ComponentRule[] = [
   { pattern: '树形层级', match: ['树形', '樹形', '/\\btree\\b/i'], component: 'reborn-tree' },
   { pattern: '日期选择', match: ['日期', 'date-picker', 'datepicker', '/\\bdate\\b/i'], component: 'reborn-date-picker' },
   { pattern: '表单校验', match: ['表单', '表單', '/\\bform\\b/i'], component: 'reborn-form' },
-  { pattern: '按钮、链接样式按钮、圆形图标按钮', match: ['按钮', '按鈕', '/\\bbtn\\b/i', 'button'], component: 'reborn-button', props: 'round / circle / variant / color / size', notes: '灰底无描边用 variant="soft" color="neutral"' },
+  { pattern: '按钮、链接样式按钮、圆形图标按钮', match: ['按钮', '按鈕', '/\\bbtn\\b/i', 'button'], component: 'reborn-button', props: 'round / circle / variant / color / size', notes: '灰底无描边用 variant="soft" color="neutral"；有文字的按钮不写死宽度，宽度由内容与 padding 撑开' },
   { pattern: '弹窗', match: ['弹窗', '彈窗', '对话框', '對話框', 'dialog', 'modal'], component: 'reborn-dialog' },
   { pattern: '抽屉', match: ['抽屉', '抽屜', 'drawer'], component: 'reborn-drawer' },
   { pattern: '气泡', match: ['气泡', '氣泡', 'popover', 'tooltip'], component: 'reborn-popover' },

@@ -88,9 +88,11 @@ function collect(input: { attribute: string; ids: string[] }): Record<string, Me
     out[id] = {
       rect: { x: rect.left + window.scrollX, y: rect.top + window.scrollY, width: rect.width, height: rect.height },
       scrollWidth: element.scrollWidth, scrollHeight: element.scrollHeight,
-      ...(element instanceof HTMLImageElement ? { image: { src: element.currentSrc || element.src, naturalWidth: element.naturalWidth, naturalHeight: element.naturalHeight, objectFit: style.objectFit } } : {}),
+      // RebornImage 的 data-design 落在根 div 上，真正的图片是它的直接子 img：一并取原图尺寸与 object-fit。
+      ...((() => { const image = element instanceof HTMLImageElement ? element : element.querySelector(':scope > img'); return image instanceof HTMLImageElement ? { image: { src: image.currentSrc || image.src, naturalWidth: image.naturalWidth, naturalHeight: image.naturalHeight, objectFit: getComputedStyle(image).objectFit } } : {} })()),
+      ...(element.tagName !== 'IMG' && element.querySelector(':scope > img.peer') ? { rebornImage: true } : {}),
       text: own.replace(/\s+/g, ' ').trim().slice(0, 200),
-      styles: { fontSize: style.fontSize, lineHeight: style.lineHeight, fontWeight: style.fontWeight, fontFamily: style.fontFamily, color: style.color, backgroundColor: style.backgroundColor, radius: [style.borderTopLeftRadius, style.borderTopRightRadius, style.borderBottomRightRadius, style.borderBottomLeftRadius], borderWidth: style.borderTopWidth, borderStyle: style.borderTopStyle, borderColor: style.borderTopColor },
+      styles: { fontSize: style.fontSize, lineHeight: style.lineHeight, fontWeight: style.fontWeight, fontFamily: style.fontFamily, color: style.color, backgroundColor: style.backgroundColor, radius: [style.borderTopLeftRadius, style.borderTopRightRadius, style.borderBottomRightRadius, style.borderBottomLeftRadius], borderWidth: style.borderTopWidth, borderStyle: style.borderTopStyle, borderColor: style.borderTopColor, padding: [style.paddingTop, style.paddingRight, style.paddingBottom, style.paddingLeft] },
     }
   }
   return out

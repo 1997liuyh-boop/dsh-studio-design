@@ -4,11 +4,12 @@ import { readFile, stat } from 'node:fs/promises'
 import { inside, object, readOptional, text } from './project.ts'
 import { imageSize, MANIFEST_PATH, type Manifest } from './reader.ts'
 import { INTERACTION_SPEC_PATH, interactionTemplateIssues, isPending, loadInteractions, type InteractionSpec } from './interactions.ts'
-import { boundDesignIds, mappingIssues, propIssues, unregisteredHits } from './installed.ts'
+import { boundDesignIds, mappingIssues, propIssues, templateUsages, unregisteredHits } from './installed.ts'
 import { readManifestForCompare, resolvePreviewUrl, runCompare, type CompareResult, type Measurer } from './compare.ts'
 import { INTERACTION_REPORT_PATH, runInteractions, type DriverFactory, type InteractResult } from './interact.ts'
 import { matchManifest, type ComponentRule } from './componentMap.ts'
 import { loadComponentMap } from './componentMapStore.ts'
+import { UNSEALED_MANIFEST } from './manifestSeal.ts'
 
 /** 需求里「允许自定义 <节点名>」声明的节点：只有这些节点可以把映射命中的实例登记为 custom。 */
 export function customAllowances(request: string): string[] {
@@ -86,10 +87,14 @@ function uses(template: string, component: string): boolean {
   return new RegExp('<(?:' + component + '|' + pascal + ')(?=[\\s/>])').test(template)
 }
 
-/** 工作室预读产物（可能不存在：Magic 读取或关闭预读时）。 */
-async function readManifest(root: string): Promise<Manifest | null> {
+/** 清单来源核对：由 design_workspace 注入工作室的凭据记录；单元测试不注入时不核对。 */
+export interface ManifestVerifier { verify(root: string, content: string): Promise<boolean> }
+
+/** 工作室预读产物（可能不存在：Magic 读取或关闭预读时）；存在但不是工作室写出的清单直接拒绝。 */
+async function readManifest(root: string, seals?: ManifestVerifier): Promise<Manifest | null> {
   const content = await readOptional(root, MANIFEST_PATH, 8_000_000)
   if (content === null) return null
+  if (seals && !(await seals.verify(root, content))) throw new Error(UNSEALED_MANIFEST)
   const value = JSON.parse(content) as Manifest
   if (value.schemaVersion !== 1 || !Array.isArray(value.blocks) || value.blocks.some(block => !Array.isArray(block.assets))) throw new Error('预读清单无效，请重新读取设计稿后登记计划')
   return value
@@ -109,12 +114,78 @@ export function templateIssues(file: string, template: string, clipped: string[]
     if (clipped.some(reference => src === reference) && /\bobject-cover\b/.test(attrs!)) issues.push(file + '：' + src + ' 只有画布可见的半幅，不能用 object-cover 放大；按稿面位置用 object-fit: none 与 object-position')
     else if (partial.some(reference => src === reference) && /\bobject-(?:cover|fill)\b|object-fit:\s*(?:cover|fill)/.test(attrs!)) issues.push(file + '：' + src + ' 的导出像素只有稿面盒子的一部分，不能用 object-cover / object-fill 拉伸；用预读补导出的全图（manifest 该素材的 fullImage），没有全图时按稿面位置用 object-fit: none')
   }
+  // RebornImage 默认 mode="aspectFill"（object-fit: cover）：裁切图 / 缩略图同样不能被它放大，要显式写 center、left、right 等不缩放的取值。
+  for (const [, attrs] of template.matchAll(/<(?:RebornImage|reborn-image)\b([^>]*)>/g)) {
+    const src = /(?:^|\s)src="([^"]*)"/.exec(attrs!)?.[1] ?? ''
+    const mode = /(?:^|\s)mode="([^"]*)"/.exec(attrs!)?.[1] ?? 'aspectFill'
+    if (clipped.includes(src) && mode === 'aspectFill') issues.push(file + '：' + src + ' 只有画布可见的半幅，RebornImage 默认 aspectFill（cover）会放大它；按稿面位置写 mode="left" / "right" 等不缩放的取值')
+    else if (partial.includes(src) && ['aspectFill', 'scaleToFill'].includes(mode)) issues.push(file + '：' + src + ' 的导出像素只有稿面盒子的一部分，RebornImage 的 ' + mode + ' 会把它拉伸；用预读补导出的全图（manifest 该素材的 fullImage），没有全图时写 mode="center" 并在清单「素材待补」说明')
+  }
   for (const [, attrs] of template.matchAll(/<Icon\b([^>]*)>/g)) if (/lucide:/.test(attrs!) && /(?:^|[\s"'])-?rotate-/.test(attrs!)) warnings.push(file + '：图标库图标被旋转，请核对稿面箭头方向')
   for (const [, slot, inner] of template.matchAll(/<template\s+#(prev|next)(?:="[^"]*")?\s*>([\s\S]*?)<\/template>/g)) {
     if (/<(?:button|RebornButton|reborn-button)\b/.test(inner!) && !/pointer-events-auto/.test(inner!)) issues.push(file + '：轮播 #' + slot + ' 插槽里的按钮缺少 pointer-events-auto，箭头组默认不接收点击')
   }
   for (const [, attrs] of template.matchAll(/<(?:RebornCarousel|reborn-carousel)\b([^>]*)>/g)) if (!/\bpagination\b/.test(attrs!)) warnings.push(file + '：轮播未配置 pagination；稿面有指示器时需 :pagination="{ type: \'dot\', indicatorBackground: false }"')
+  const more = bitmapAndButtonIssues(file, template)
+  return { issues: [...issues, ...more.issues], warnings: [...warnings, ...more.warnings] }
+}
+
+/** 位图扩展名：SVG 图标可以用 img，位图一律走 reborn-image。 */
+const rasterSource = /\.(?:png|jpe?g|webp|gif|avif)(?:[?#"'`)]|$)/i
+/** 写死宽度的类：w-[…]、min-w-[…]、size-[…]、w-数字（Tailwind 刻度）。 */
+const fixedWidthClass = /(?:^|[\s"'`!])(?:min-)?w-(?:\[\d[^\]]*\]|\d+(?:\.\d+)?)(?=[\s"'`!]|$)|(?:^|[\s"'`!])size-(?:\[\d[^\]]*\]|\d+(?:\.\d+)?)(?=[\s"'`!]|$)/
+
+/**
+ * 历次还原里反复出现的两类问题：
+ * 1. 位图用原生 img 或 CSS 背景图，没有用 reborn-image；RebornImage 不传宽高时按默认 120×120 渲染。
+ * 2. 文字按钮写死宽度（w-[140px]）：稿面按钮是「内容 + 内边距」撑开的，定宽后换字体或改文案就会截断或留白。
+ *    纯图标的圆形按钮（没有文字）本身就是定宽，不在此列。
+ */
+export function bitmapAndButtonIssues(file: string, template: string): { issues: string[]; warnings: string[] } {
+  const issues: string[] = [], warnings: string[] = []
+  for (const [, attrs] of template.matchAll(/<img\b([^>]*)>/g)) {
+    const src = /(?:^|\s)src="([^"]*)"/.exec(attrs!)?.[1] ?? ''
+    if (rasterSource.test(src)) issues.push(file + '：位图 ' + src + ' 用了原生 img，请改用 RebornImage（:width / :height 传稿面尺寸，mode="aspectFill" 对应 object-fit: cover）')
+  }
+  if (/background-image\s*:\s*url\(|\bbackgroundImage\b|\bbg-\[url\(/.test(template)) issues.push(file + '：用了 CSS 背景图显示图片；稿面的图片填充用 RebornImage，叠在图上的内容放进它的默认插槽（根节点已是 relative + overflow-hidden）')
+  for (const usage of templateUsages(template)) {
+    if (usage.component !== 'reborn-image') continue
+    const raw = tagAttributes(template, usage.tag, usage.props)
+    if (!/(?:^|\s)(?::|v-bind:)?width\s*=/.test(raw) || !/(?:^|\s)(?::|v-bind:)?height\s*=/.test(raw)) issues.push(file + '：RebornImage 没有同时传 width 与 height，组件会按默认 120×120 渲染；按稿面尺寸传入（占满父容器时传 "100%"）')
+  }
+  for (const match of template.matchAll(/<(RebornButton|reborn-button)(?=[\s/>])/g)) {
+    const start = match.index!, open = tagEnd(template, start)
+    const attrs = template.slice(start, open)
+    const selfClosing = /\/\s*$/.test(attrs)
+    const close = selfClosing ? open : template.indexOf('</' + match[1] + '>', open)
+    const inner = selfClosing || close < 0 ? '' : template.slice(open + 1, close)
+    const hasText = /(?:^|\s)(?::|v-bind:)?label\s*=/.test(attrs) || /\{\{|>[^<{}]*[A-Za-z\u4e00-\u9fff][^<]*</.test('>' + inner.replace(/<template\s+#(?:leading|trailing)[\s\S]*?<\/template>/g, '') + '<')
+    if (hasText && fixedWidthClass.test(attrs)) issues.push(file + '：文字按钮写死了宽度（' + (fixedWidthClass.exec(attrs)?.[0].trim() ?? 'w-[…]') + '）；稿面按钮宽度由文字与左右内边距撑开，去掉宽度，用 ui.base 的 px-[…]（取规格表 padding）与高度还原')
+  }
   return { issues, warnings }
+}
+
+/** 标签开头到属性区结束的 > 位置（引号内的 > 不算）。 */
+function tagEnd(template: string, start: number): number {
+  let i = start, quote = ''
+  while (i < template.length) {
+    const char = template[i]!
+    if (quote) { if (char === quote) quote = '' }
+    else if (char === '"' || char === "'") quote = char
+    else if (char === '>') return i
+    i += 1
+  }
+  return template.length
+}
+
+/** 取某个 Reborn 标签实例的原始属性文本（含绑定写法），按 props 找到对应的那一次出现。 */
+function tagAttributes(template: string, tag: string, props: Record<string, string>): string {
+  const marker = props.src ?? props.dataDesign ?? ''
+  for (const match of template.matchAll(new RegExp('<' + tag + '(?=[\\s/>])', 'g'))) {
+    const raw = template.slice(match.index!, tagEnd(template, match.index!))
+    if (!marker || raw.includes(marker)) return raw
+  }
+  return ''
 }
 
 /** 检查结果不代替视觉验收；截图只登记存在性，不虚构像素相似度。 */
@@ -172,6 +243,9 @@ export class Reviews {
   /** 本会话最近一次宿主侧交互执行结果；verify 直接采用它的结果与截图，不接受模型自报。 */
   private readonly interacts = new WeakMap<object, InteractResult>()
 
+  /** @param seals 清单来源核对；工作室运行时总是传入，审计不接受模型手写或改过的清单。 */
+  constructor(private readonly seals?: ManifestVerifier) {}
+
   /** @param owner 新任务所属 Agent；旧任务的登记不得用于新稿件。 */
   reset(owner: object): void { this.plans.delete(owner); this.checked.delete(owner); this.rounds.delete(owner); this.compares.delete(owner); this.interacts.delete(owner) }
 
@@ -187,7 +261,7 @@ export class Reviews {
    */
   async plan(owner: object, root: string, input: Record<string, unknown>): Promise<ReviewResult> {
     this.reset(owner)
-    const manifest = await readManifest(root)
+    const manifest = await readManifest(root, this.seals)
     const requirements: Requirement[] = rows(input.requirements, '组件', 100).map(row => {
       const component = text(row.component, 128), file = localPath(row.file)
       const source = row.source ?? 'reborn'
@@ -248,6 +322,9 @@ export class Reviews {
       const mentioned = requirements.map(item => item.node).join('\n')
       for (const block of manifest.blocks) if (block.status === 'ok' && !mentioned.includes(block.nodeId) && !mentioned.includes(block.name)) warnings.push('预读区块未登记映射：' + block.name + '（' + block.nodeId + '）')
       for (const path of manifestAssets(manifest)) if (!assets.some(item => item.exported === path)) issues.push('原始素材未登记使用：' + path + '；不得用相似图标或自绘图形替代')
+      // 稿面有位图（图片节点或图片填充）时，图片统一用 reborn-image：必须登记，工作室才会安装并在 check / compare 核对。
+      const bitmaps = manifest.blocks.flatMap(block => (block.spec ?? []).filter(node => node.bitmap).map(node => node.id))
+      if (bitmaps.length && !requirements.some(item => item.component === 'reborn-image')) issues.push('稿面有 ' + bitmaps.length + ' 个位图节点（如 ' + bitmaps.slice(0, 3).join('、') + '），需登记 reborn-image（node 填其中一个节点 ID，file 填使用它的组件）；位图不用原生 img 或 CSS 背景图')
       // 映射表命中的实例必须出现在登记里（缺失的组件由工作室安装），check 阶段再按模板标签硬性核对。
       issues.push(...await unregisteredHits(root, manifest, requirements.map(item => item.component), exempt))
     }
@@ -273,7 +350,7 @@ export class Reviews {
     const plan = this.plans.get(owner)
     if (!plan || plan.root !== root) throw new Error('请先在本会话调用 design_review(stage=plan) 登记当前工作区的还原计划')
     const issues: string[] = [], warnings: string[] = [], templates = new Map<string, string>(), sources: string[] = []
-    const manifest = await readManifest(root)
+    const manifest = await readManifest(root, this.seals)
     for (const path of manifestAssets(manifest)) if (!plan.assets.some(item => item.exported === path)) issues.push('预读素材未登记：' + path + '，请重新 plan')
     const clippedExports = new Set(manifest?.blocks.flatMap(block => block.assets.filter(asset => asset.clipped).map(asset => asset.path)) ?? [])
     const clippedReferences = plan.assets.filter(asset => clippedExports.has(asset.exported)).map(asset => asset.used.replace(/^public\//, '/').replaceAll('\\', '/'))
@@ -379,7 +456,7 @@ export class Reviews {
       for (const outcome of executed.results) if (outcome.status === 'unsupported' && !adopted.some(item => item.id === outcome.id)) issues.push('交互 ' + outcome.id + '（' + outcome.name + '）：' + outcome.actual)
     }
     // 几何与像素审计门禁：有规格表的项目必须跑过 compare；仍有失败或相似度不足 0.9 的区块，必须在清单「四、剩余差异」里写明。
-    const manifest = await readManifest(root)
+    const manifest = await readManifest(root, this.seals)
     if (manifest?.blocks.some(block => block.spec?.length)) {
       const last = this.compares.get(owner)
       if (!last) issues.push('尚未运行 design_review(stage=compare)：有规格表的页面必须先做几何与像素审计')
@@ -434,7 +511,7 @@ export class Reviews {
     if (!specs?.length) throw new Error('没有交互规范 docs/design/interactions.yaml，或其中没有条目；请先填写 trigger 与 response')
     if (!specs.some(spec => !isPending(spec))) throw new Error('docs/design/interactions.yaml 全部是待补条目：先填写 trigger（点击 / 悬停 / 输入「文字」/ 按 Enter / 滚动）与 response（出现 / 消失 / 文字 / aria 属性 / 跳转），稿面没有交互的写「无」')
     const url = await reachablePreview(root, input.url, options)
-    const manifest = await readManifest(root)
+    const manifest = await readManifest(root, this.seals)
     const width = manifest?.root.width ?? 1920, height = Math.min(Math.max(manifest?.root.height ?? 1080, 720), 4000)
     const result = await runInteractions({ root, specs, url, width, height, open: options.open, signal: options.signal })
     if (!manifest?.root.width) result.warnings.unshift('预读清单没有记录画布宽度，按 1920 执行')
@@ -454,6 +531,8 @@ export class Reviews {
     if (!this.checked.has(owner)) throw new Error('请先在本会话通过 design_review(stage=check)，再做几何与像素审计')
     const round = (this.rounds.get(owner) ?? 0) + 1
     if (round > MAX_COMPARE_ROUNDS) throw new Error('几何与像素审计已跑满 ' + MAX_COMPARE_ROUNDS + ' 轮。把仍未消除的差异逐条写进 docs/design/implementation-checklist.md「四、剩余差异」（节点、字段、设计值、实际值、原因），然后调用 design_review(stage=verify)；不要再调用 compare')
+    // compare 必须有清单；先按来源核对，再按格式读取
+    await readManifest(root, this.seals)
     const manifest = await readManifestForCompare(root)
     const url = await reachablePreview(root, input.url, options)
     if (input.blocks !== undefined && (!Array.isArray(input.blocks) || input.blocks.length > 100)) throw new Error('blocks 需要区块节点 ID 数组')

@@ -2,25 +2,29 @@ import type { ConnectionSpec, Project, Workspace } from './types.ts'
 import type { IncomingMessage, ServerResponse } from 'node:http'
 import { fileURLToPath } from 'node:url'
 import { join } from 'node:path'
-import { mastergoCanvas, mastergoForm, mastergoTarget, mastergoTargets } from './mastergo.ts'
+import { mastergoAdapter, mastergoCanvas, mastergoTarget, mastergoTargets } from './mastergo.ts'
 import { syncInteractions } from './interactions.ts'
 import { Store, settings } from './storage.ts'
-import { catalog, inspectProject, object, text } from './project.ts'
+import { catalog, inspectProject, object, readOptional, text } from './project.ts'
 import { Connections } from './connections.ts'
 import { AgentConnections } from './agentConnections.ts'
 import { participation } from './participation.ts'
 import { designPrompt, workspaceInstructions } from './prompt.ts'
 import { Reviews, customAllowances, reviewPatterns } from './review.ts'
+import { ManifestSeals } from './manifestSeal.ts'
 import { locatePlaywright, playwrightMeasurer } from './measure.ts'
 import { playwrightDriver } from './interact.ts'
 import { installComponents, locateRegistry, type InstallReport } from './install.ts'
-import { manifestSummary, preRead, reusableManifest } from './reader.ts'
+import { MANIFEST_PATH, manifestSummary, preRead, reusableManifest } from './reader.ts'
 import { matchManifest, type PromptMapping } from './componentMap.ts'
 import { loadComponentMap, recordUnmapped } from './componentMapStore.ts'
 import type { Host, DesignAgent, AgentContext } from './host.ts'
 import { nestedToolExecutor } from './toolExecution.ts'
 import { syncSource, locateSource } from './source.ts'
 import { Previews, type PreviewHost } from './preview.ts'
+
+/** 清单原文，供来源凭据核对；文件不存在时为空串（核对必然不通过）。 */
+const readManifestText = async (root: string): Promise<string> => (await readOptional(root, MANIFEST_PATH, 8_000_000)) ?? ''
 
 /** 插件注册名与安装包一致。 */
 export const name = 'dsh-studio-design'
@@ -32,7 +36,8 @@ declare const STUDIO_PROJECT: { name: string; icon: string; description: string;
 /** 注册工作区设计工具与页面；任务始终使用执行会话的目录。 */
 export async function apply(ctx: Host): Promise<void> {
   const store = new Store()
-  const reviews = new Reviews()
+  const seals = new ManifestSeals()
+  const reviews = new Reviews(seals)
   let config = await store.loadSettings(), closed = false
   const builtin = fileURLToPath(new URL('../reborn/', import.meta.url))
   // 几何与像素审计用的 Playwright 不随插件打包：从目标项目、插件目录、宿主工作目录或 DSH_HARNESS_ROOT 解析，找不到时审计阶段说明原因。
@@ -150,7 +155,7 @@ export async function apply(ctx: Host): Promise<void> {
             if (canvas?.state === 'offline') throw new Error(canvas.message)
             // 链接与激活画布不一致不再直接拒绝：Vibe 读取工具按链接里的 documentId 定位，目标文件在桌面端另一个标签页打开时同样能读；
             // 真正未打开时读取会返回 409 或超时，由预读或 instructions 要求模型停止并提示用户切换文件。
-            if (mastergoForm(config.mastergo).service === 'magic' && !config.mastergoToken) throw new Error('请在设计工作室设置中填写 MasterGo 个人访问令牌，并确认团队文件权限')
+            if (mastergoAdapter(config.mastergo)?.service === 'magic' && !config.mastergoToken) throw new Error('请在设计工作室设置中填写 MasterGo 个人访问令牌，并确认团队文件权限')
             await connectReborn()
             execution.signal.throwIfAborted()
             if (connection.snapshot().mastergo.state !== 'connected') await connection.connect('mastergo', { ...config.mastergo, env: config.mastergoToken ? { MG_MCP_TOKEN: config.mastergoToken } : {} }, project.root)
@@ -176,16 +181,18 @@ export async function apply(ctx: Host): Promise<void> {
       // 预读：Vibe 连接就绪且链接带 layer_id 时，由工作室按区块读取并落盘；模型随后只读本地文件。
       let manifest: object | undefined, reused = false, preReadIssue = '', mapping: PromptMapping | undefined, interactions: object | undefined, installation: InstallReport | undefined
       // 没有链接时读取画布当前选区（工作室首页按钮与「读取当前选区」提示词走这条路），根节点 ID 由返回头部给出。
-      const canPreRead = (task === 'generate' || task === 'optimize' || task === 'read') && args.preRead !== false && connection?.snapshot().mastergo.state === 'connected' && mastergoForm(config.mastergo).service === 'vibe' && canvas?.state === 'ready' && typeof ctx.tools.execute === 'function'
+      const canPreRead = (task === 'generate' || task === 'optimize' || task === 'read') && args.preRead !== false && connection?.snapshot().mastergo.state === 'connected' && mastergoAdapter(config.mastergo)?.service === 'vibe' && canvas?.state === 'ready' && typeof ctx.tools.execute === 'function'
       if (canPreRead) {
         const signal = AbortSignal.any([execution.signal, lifetime.signal])
         const source = { fileId: target?.fileId ?? canvas.documentId ?? '', pageId: target?.pageId ?? canvas.pageId ?? '', nodeId: target?.nodeId || undefined }
         const outcome = await serial(agent, async () => {
           const frames = frameTargets.map(frame => ({ pageId: frame.pageId || source.pageId, nodeId: frame.nodeId }))
           const previous = await reusableManifest(project.root, source.nodeId, task === 'optimize' ? '重新读取 ' + request : request, source, frames.map(frame => frame.nodeId))
-          if (previous) { reused = true; return previous }
+          // 只复用工作室自己写出的清单：模型手写或改过的清单内容与凭据对不上，直接重新预读覆盖它
+          if (previous && await seals.verify(project.root, await readManifestText(project.root))) { reused = true; return previous }
           const result = await preRead({ execute: await nestedToolExecutor(ctx, execution), agent, rootCallId: execution.rootCallId ?? execution.callId, parent: execution.token, signal }, { root: project.root, target: source, readVariables: !mismatch, frames })
           if (!result.ok) { preReadIssue = result.issue; return undefined }
+          await seals.seal(project.root)
           return result.manifest
         })
         execution.signal.throwIfAborted()

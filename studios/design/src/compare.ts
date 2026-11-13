@@ -25,6 +25,8 @@ export interface MeasuredStyles {
   borderWidth?: string
   borderStyle?: string
   borderColor?: string
+  /** 内边距 [上, 右, 下, 左]。 */
+  padding?: [string, string, string, string]
 }
 export interface MeasuredNode {
   rect: Rect
@@ -35,6 +37,8 @@ export interface MeasuredNode {
   scrollHeight?: number
   /** img 元素：实际加载的图片尺寸与 object-fit，用于判断小图被拉伸。 */
   image?: { src: string; naturalWidth: number; naturalHeight: number; objectFit: string }
+  /** 节点是 RebornImage 的根（直接子元素是组件内部带 peer 类的 img）。 */
+  rebornImage?: boolean
 }
 export interface MeasureBlock {
   nodeId: string
@@ -132,7 +136,7 @@ export const POSITION_TOLERANCE = 2
 /** 像素比对的颜色阈值（pixelmatch 同义，0–1）。 */
 export const PIXEL_THRESHOLD = 0.1
 const MAX_DIFFERENCES = 150
-const weights = { text: 100, radius: 150, border: 150, lineHeight: 200, fontWeight: 300, stretch: 350, fontSize: 400, color: 500, background: 500 }
+const weights = { bitmap: 330, coverage: 60, text: 100, radius: 150, border: 150, lineHeight: 200, fontWeight: 300, padding: 320, stretch: 350, fontSize: 400, color: 500, background: 500 }
 
 const loopback = /^https?:\/\/(?:localhost|127\.0\.0\.1|\[::1\])(?::\d{1,5})?(?:\/[^\s"'<>）)]*)?$/
 
@@ -237,6 +241,15 @@ export function compareNode(block: string, spec: NodeSpec, actual: MeasuredNode,
   if (image && image.naturalWidth > 0 && image.naturalHeight > 0 && !/\.svg(?:[?#]|$)/i.test(image.src) && !['none', 'scale-down'].includes(image.objectFit) && !options.designScaled?.has(imageName)) {
     const scale = Math.max(rect.width / image.naturalWidth, rect.height / image.naturalHeight)
     if (scale > 1.25) result.push({ ...base, field: 'stretch', expected: '原图 ' + image.naturalWidth + '×' + image.naturalHeight, actual: '渲染 ' + px(rect.width) + '×' + px(rect.height) + '（放大 ' + round1(scale) + ' 倍，object-fit: ' + image.objectFit + '）', delta: round1(scale), level: 'fail', weight: weights.stretch + scale * 10 })
+  }
+  // 稿面位图（图片节点或带子元素的图片填充）必须用 reborn-image：原生 img、CSS 背景图都不算。
+  if (spec.bitmap && !actual.rebornImage) result.push({ ...base, field: 'reborn-image', expected: spec.bitmap === 'background' ? '图片填充用 RebornImage，子元素放进它的默认插槽' : '位图用 RebornImage（传稿面 width / height，mode 对应 object-fit）', actual: actual.image ? '原生 img' : '不是 RebornImage（可能是 CSS 背景图）', level: 'fail', weight: weights.bitmap })
+  // 由内容撑开（hug）的节点：宽度随字体变化，真正决定外观的是内边距。按钮、胶囊、标签写死 w-[…] 时内边距通常被改掉，这里逐边核对。
+  if (spec.padding && styles.padding && (spec.sizing?.width === 'hug' || spec.sizing?.height === 'hug')) {
+    const sides = ['上', '右', '下', '左']
+    const actualPadding = styles.padding.map(value => pxValue(value) ?? 0)
+    const index = spec.padding.findIndex((value, side) => Math.abs(value - actualPadding[side]!) >= 1)
+    if (index >= 0) result.push({ ...base, field: 'padding', expected: spec.padding.join(' ') + 'px', actual: actualPadding.map(round1).join(' ') + 'px（' + sides[index] + '边不同）', delta: round1(Math.abs(spec.padding[index]! - actualPadding[index]!)), level: 'fail', weight: weights.padding + Math.abs(spec.padding[index]! - actualPadding[index]!) })
   }
   if (spec.border) {
     const width = styles.borderStyle === 'none' || styles.borderStyle === undefined && styles.borderWidth === undefined ? 0 : pxValue(styles.borderWidth)
@@ -446,6 +459,15 @@ export async function runCompare(input: CompareInput): Promise<CompareResult> {
       const found = compareNode(block.nodeId, spec, actual, actualRoot, result.design?.[spec.id], designRoot, { tolerance, designUnreliable: !!overflow, designScaled })
       for (const item of found) { if (item.level === 'fail') report.failures += 1; else report.hints += 1 }
       differences.push(...found)
+    }
+    // 文字、图标、位图和带内边距的节点必须能测到：字号、图标与文字的间距、图片尺寸都只能在这些节点上核对。
+    // 只标区块根会让这些差异全部漏掉，因此缺 data-design 本身算失败（列表项按节点 ID 逐项绑定）。
+    for (const id of unmeasured) {
+      const spec = block.spec.find(item => item.id === id)!
+      if (!(spec.text !== undefined || spec.tag === 'img' || spec.bitmap || spec.padding)) continue
+      const what = spec.text !== undefined ? '文字「' + spec.text.slice(0, 20) + '」' : spec.bitmap ? '图片' : spec.tag === 'img' ? '图标' : '带内边距的容器'
+      differences.push({ block: block.nodeId, node: id, name: spec.name, field: 'data-design', expected: what + '带 data-design="' + id + '"', actual: '页面上找不到', level: 'fail', weight: weights.coverage })
+      report.failures += 1
     }
     report.unmeasured = unmeasured.slice(0, 50)
     if (unmeasured.length > 50) report.unmeasured.push('…另 ' + (unmeasured.length - 50) + ' 个')
