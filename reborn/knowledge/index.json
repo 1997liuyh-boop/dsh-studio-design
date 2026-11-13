@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "generatedAt": "2026-11-12T10:38:41.782Z",
+  "generatedAt": "2026-11-13T08:38:02.493Z",
   "components": [
     {
       "id": "animate-grid",
@@ -3261,7 +3261,51 @@
       "component": null,
       "custom": true,
       "container": true,
-      "recipe": "排版容器用 div + Tailwind 自写，里面的实例按各自命中的组件实现（传 children 时会按子节点再匹配一次，整块是图廊 / 搜索区时会落到对应组件）；矩形、圆形、路径若是装饰或线条，用导出素材或 border / 背景色画，不要找组件。"
+      "recipe": "排版容器用 div + Tailwind 自写，里面的实例按各自命中的组件实现（传 children 时会按子节点再匹配一次，整块是图廊 / 搜索区时会落到对应组件）；填充是图片的矩形 / 容器是一张图，传 fill: \"image\" 会落到 reborn-image；矩形、圆形、路径若是装饰或线条，用导出素材或 border / 背景色画，不要找组件。"
+    },
+    {
+      "id": "btn-tabs",
+      "pattern": "以 btn- 命名的一排页签：同一容器里多个 btn-…标签 / tab 实例，变体在 选中 / 未选中 之间切换",
+      "match": [
+        "/^btn[-_ ].*(?:标签|標籤|页签|頁籤|tab)/i"
+      ],
+      "component": "reborn-tabs",
+      "recipe": "一个 RebornTabs（type=\"text\" color=\"neutral\"）+ 每个实例一个 RebornTabPane，v-model:active-key 管当前项；胶囊描边、高度、内边距与两态颜色经 ui.tab 的 aria-[selected=true] / aria-[selected=false] 写，ui.list 写间距，ui.indicator 设 hidden。不要逐个手写 button 再自己切选中样式。",
+      "uses": {
+        "props": [
+          "activeKey",
+          "type",
+          "color",
+          "ui"
+        ],
+        "ui": [
+          "list",
+          "tab",
+          "tabTitle",
+          "indicator",
+          "content"
+        ]
+      }
+    },
+    {
+      "id": "btn-prefixed",
+      "pattern": "以 btn- 命名的按钮实例（宣传 banner 里的按钮、文字按钮、站点入口等）：名字里的 banner、站点、下拉等字样不代表组件类型",
+      "match": [
+        "/^btn[-_ ]/i"
+      ],
+      "component": "reborn-button",
+      "recipe": "按钮本身用 RebornButton：黑底胶囊是 round + variant=\"filled\" color=\"neutral\"，文字链接样式是 variant=\"text\"；有文字的按钮宽度由文字与左右内边距撑开，ui.base 只写高度与 px-[…]（取稿面 padding），不写 w-[…]。",
+      "uses": {
+        "props": [
+          "variant",
+          "color",
+          "round",
+          "ui"
+        ],
+        "ui": [
+          "base"
+        ]
+      }
     },
     {
       "id": "product-gallery",
@@ -3896,25 +3940,28 @@
         "/\\bpic\\b/i"
       ],
       "component": "reborn-image",
-      "recipe": "src 用节点导出的原图（保留比例，按稿面取 mode 的裁剪方式），需要点开大图时 preview 与 previewList，圆角用 round；纯装饰图也可直接 <img>。",
+      "recipe": "稿面的位图一律用 RebornImage：src 用节点导出的原图；:width / :height 必须传稿面尺寸（数字即 px，占满父容器传 \"100%\"），不传时按默认 120×120 渲染；mode 对应 object-fit（aspectFill = cover，aspectFit = contain，scaleToFill = fill，center / left / top left 等 = 不缩放并按位置摆放）；圆角写在 class 上（根节点自带 overflow-hidden）；叠在图上的内容（点赞胶囊、来源图标、标签）放进默认插槽并 absolute 定位；静态展示图传 :show-loading=\"false\"；需要点开大图时用 preview 与 previewList。不要用原生 <img>、CSS background-image 或 bg-[url(…)] 显示位图；只有 SVG 图标用 <img> 引用导出原图。",
       "uses": {
         "props": [
           "src",
-          "mode",
-          "preview",
-          "previewList",
           "width",
           "height",
-          "round",
+          "mode",
+          "showLoading",
+          "preview",
+          "previewList",
           "lazyLoad"
         ],
         "slots": [
+          "default",
           "error",
           "loading"
         ]
       },
       "pitfalls": [
-        "导出的像素只有稿面盒子一部分的图不要用 object-fit: cover 放大，按稿面位置用 object-fit: none 摆放。"
+        "图片图层在设计稿里常是自动命名的「矩形 …」「容器 …」：按节点的填充判断（match_design_nodes 传 fill: \"image\"），不要按名字当成排版容器自写 div 加背景图。",
+        "width / height 默认 120，不传就会把图压成 120×120。",
+        "导出的像素只有稿面盒子一部分的图（裁切或缩略图）不要用默认的 aspectFill 放大：按稿面位置传 mode=\"center\" / \"left\" / \"right\" 等不缩放的取值。"
       ]
     },
     {
@@ -4998,7 +5045,7 @@
         "註冊"
       ],
       "component": "reborn-button",
-      "recipe": "variant 取 filled / outlined / soft / subtle / text，color 取语义色，size 按稿面高度取档，胶囊形用 round，圆形图标按钮用 circle，通栏用 block；灰底无描边是 variant=\"soft\" color=\"neutral\"；图标放 #leading / #trailing 插槽并使用稿面导出的原始 SVG；尺寸与圆角微调经 ui.base。",
+      "recipe": "variant 取 filled / outlined / soft / subtle / text，color 取语义色，胶囊形用 round，通栏用 block；灰底无描边是 variant=\"soft\" color=\"neutral\"；图标放 #leading / #trailing 插槽并使用稿面导出的原始 SVG。有文字的按钮宽度由文字与左右内边距撑开（稿面自动布局是「适应内容」）：不写 w-[…] / min-w-[…]，ui.base 只写高度（h-[…]）与内边距（px-[…]，取稿面 padding）；图标与文字间距不是 8px 时在 ui.base 里用 [&>div]:gap-[…]；按钮文字要逐字测量时写进默认插槽的 <span>，不要只用 label（label 自带 leading-none）。纯图标按钮：32px 用 circle，其他尺寸用 round + ui.base 写 size-[…]（circle 在 size md 时强制 h-8! w-8!）。",
       "uses": {
         "props": [
           "variant",
@@ -5020,7 +5067,12 @@
           "base",
           "label"
         ]
-      }
+      },
+      "pitfalls": [
+        "variant=\"text\" 强制 h-auto! px-0!：需要固定高度或内边距的按钮不要用 text 变体。",
+        "circle 在 size md 时强制 h-8! w-8!（32px），ui.base 的 size-[…] 改不动；非 32 的圆形图标按钮用 round。",
+        "写死宽度的文字按钮在字体回退或文案变化时会截断（「Shop N…」）或留白。"
+      ]
     }
   ]
 }

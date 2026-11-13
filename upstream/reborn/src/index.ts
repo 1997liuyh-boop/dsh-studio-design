@@ -235,6 +235,10 @@ server.tool(
           children: z.array(z.string()).optional().describe("直接子节点名；节点名本身没命中时才参与匹配"),
           group: z.string().optional().describe("所属区块名或 id；同区块的缩略图、主图、箭头会被合并成图廊提示"),
           count: z.number().int().min(1).optional().describe("同名实例个数，缺省按本次输入统计"),
+          fill: z
+            .literal("image")
+            .optional()
+            .describe("节点填充是图片（位图 / image fill）时传 image：自动命名的「矩形 58848」这类图片图层会按 reborn-image 处理"),
         }),
       )
       .min(1)

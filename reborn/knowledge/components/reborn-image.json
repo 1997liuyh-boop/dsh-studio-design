@@ -271,7 +271,10 @@
     "src 为必填项；width/height 默认均为 120，mode 默认 aspectFill。",
     "previewList 不传时默认仅预览当前 src。",
     "lazyLoad、webp、showMenuByLongpress 等属性对应 uniapp 原生 image 能力。",
-    "magnifier 默认关闭，magnifierZoom 默认 2、magnifierSize 默认 100。"
+    "magnifier 默认关闭，magnifierZoom 默认 2、magnifierSize 默认 100。",
+    "还原设计稿时位图一律用 RebornImage，width / height 必须传稿面尺寸（数字即 px，占满父容器传 \"100%\"）；圆角写在 class 上，叠在图上的内容放默认插槽并 absolute 定位。",
+    "Web 端 mode 映射 object-fit：aspectFill = cover（默认）、aspectFit = contain、scaleToFill = fill；center、left、top left 等方位值 = object-fit: none 并按方位摆放。",
+    "静态展示图传 :show-loading=\"false\"，避免首屏出现加载占位。"
   ],
   "dependencies": [
     "@vueuse/core",
@@ -298,7 +301,7 @@
   },
   "docPath": "content/2.components/miscellaneous/reborn-image.md",
   "_meta": {
-    "contentHash": "5fbf7a14db65a66d02bb9987269b52d2565bc9d1",
+    "contentHash": "b1a346ffaec4ffc62414a231a43d3495812743d0",
     "hasOverride": true,
     "extractors": {
       "web": "ok",

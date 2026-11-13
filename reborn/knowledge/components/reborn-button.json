@@ -449,7 +449,10 @@
     "open-type 系列 props（openType/sessionFrom/appParameter 等）与 getphonenumber、contact 等事件仅在小程序开放能力场景生效，H5/APP 端无效。",
     "两端尺寸档位不同：web 为 sm/md/lg（px），uniapp 为 xs~2xl 共 7 档（rpx），其中 default 与 md 等价。",
     "表单组禁用传导不同：uniapp 端 Form 的 disabled 会强制禁用组内按钮，web 端按钮禁用态只由自身 disabled/loading 决定。",
-    "uniapp 的 fluid 为预留 prop，尚未接入样式；需要等宽填充请改用 block 或外层 flex 布局。"
+    "uniapp 的 fluid 为预留 prop，尚未接入样式；需要等宽填充请改用 block 或外层 flex 布局。",
+    "有文字的按钮宽度由文字与左右内边距撑开：不要写 w-[…] / min-w-[…]，ui.base 只写高度与 px-[…]；label 自带 leading-none，行高要还原时把文字写进默认插槽的 <span>。",
+    "Web 的 circle 在 size md 时强制 h-8! w-8!（32px），variant=\"text\" 强制 h-auto! px-0!：非 32 的圆形图标按钮用 round + ui.base 写 size-[…]。",
+    "图标与文字间距默认 8px（内部容器 gap-2）；稿面不同时在 ui.base 里写 [&>div]:gap-[…]。"
   ],
   "dependencies": [
     "@weapp-tailwindcss/merge-v3",
@@ -475,7 +478,7 @@
   },
   "docPath": "content/2.components/button/reborn-button.md",
   "_meta": {
-    "contentHash": "1afa7fe3a23ac752d66a3efd84abc037aabcdebc",
+    "contentHash": "baacd9ac7ff24ec20de30f72f2a138d620dd8382",
     "hasOverride": true,
     "extractors": {
       "web": "ok",

@@ -74,6 +74,11 @@ export interface DesignNodeInput {
   group?: string;
   /** 同名实例个数；缺省按本次输入里同名同区块的节点数统计 */
   count?: number;
+  /**
+   * 节点的填充是图片（位图 / image fill）。设计稿里的图片图层多半是自动命名的「矩形 58848」「容器 129436」，
+   * 名字匹配不到图片规则，会被当成排版容器；标了 image 时，名字没命中组件规则（或只命中容器类规则）就按图片处理。
+   */
+  fill?: "image";
 }
 
 export type DesignMatchStatus = "pattern" | "search" | "ignore" | "custom" | "unmapped";
@@ -218,7 +223,10 @@ export function matchDesignNodes(
       (!own || own.container) && node.children?.length
         ? findPattern(node.children.join(" ").toLowerCase(), node.group, true)
         : null;
-    const pattern = byChildren ?? own;
+    // 图片填充优先于「排版容器」：自动命名的图片图层、带叠加内容（点赞胶囊、来源图标）的图片框都是一张图
+    const imagePattern =
+      node.fill === "image" && (!own || own.container || own.ignore) ? patterns.find((p) => p.id === "image") ?? null : null;
+    const pattern = imagePattern ?? byChildren ?? own;
 
     const base: DesignNodeMatch = { name, group: node.group, count, status: "unmapped", component: null, with: [] };
 
