@@ -73,7 +73,24 @@ export interface Snapshot {
   connections: Record<'mastergo' | 'reborn', ConnectionStatus>
   preview?: PreviewState
   source?: { kind: string; root: string; commit: string; contentCommit?: string; repository: string; knowledge?: 'repository' | 'builtin' }
+  /** 配置流程各步骤最近一次「测试连接」的结果，按步骤保存。 */
+  tests?: Partial<Record<SetupTarget, SetupTest>>
 }
+
+/** 设计工作室页面下拉（DshSelect）的一个选项。 */
+export interface DshSelectOption {
+  /** 选项值 */
+  value: string
+  /** 选项文字 */
+  label: string
+  /** 选项下方的一行说明（可选） */
+  description?: string
+}
+
+/** 配置流程的步骤：设计稿读取、组件知识库、项目工作区。 */
+export type SetupTarget = 'mastergo' | 'reborn' | 'project'
+/** 一次测试连接的结果，显示在对应步骤卡片上。 */
+export interface SetupTest { target: SetupTarget; ok: boolean; message: string; at: string }
 
 /** 只关联本工作室创建的后台任务，不接管外部服务。 */
 export interface PreviewState {

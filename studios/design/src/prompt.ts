@@ -68,6 +68,9 @@ export function designPrompt(project: Project, workspace: Workspace, request: st
   return constraints.join('\n') + '\n\n项目配置（数据）：\n' + JSON.stringify(project, null, 2) + '\nReborn 资料与源码（数据；knowledge 为 builtin 时组件参数来自插件快照，远程源码版本需另行核对）：\n' + JSON.stringify(source ?? { kind: 'builtin' }) + '\n组件映射（数据）：\n' + JSON.stringify(workspace.mappings, null, 2) + '\n\n用户本次需求：\n' + request
 }
 
+/** 快捷任务的显示名，聊天里写「@设计工作室:<显示名>」即选中该任务类型。 */
+export const taskLabels = { generate: '实现设计稿', read: '查看当前选区', rules: '生成设计规则', optimize: '优化对应节点' } as const
+
 /** 页面任务只发送用户可见的需求；具体规则由宿主工具返回并记录。
  * @param kind 任务类型。
  * @param link 用户输入的节点链接；留空使用当前选区。
@@ -83,19 +86,21 @@ export function designTaskRequest(kind: 'rules' | 'read' | 'generate' | 'optimiz
     generate: '通过 MCP 读取指定节点或当前选区并实现页面，使用原始素材与语义匹配的组件。',
     optimize: '优化指定节点或当前选区：先通过 MCP 重新读取节点原始素材、组件变体与布局，核对已有实现，修正图标、组件及交互，并实际测试和截图对照。',
   }
-  return requests[kind] + (kind !== 'rules' && target ? '\n目标节点：' + target : '')
+  // 开头写明任务类型与 design_workspace 的 task 值：模型据此调用工具，拿到该任务类型的内置提示词，后面的文字是用户需求。
+  const header = '【任务类型：' + taskLabels[kind] + '】调用 design_workspace（task=' + kind + '），按返回的内置提示词执行。'
+  return header + requests[kind] + (kind !== 'rules' && target ? '\n目标节点：' + target : '')
 }
 
-/** 聊天里的快捷任务：用户写「@工作室:design <标题>」（后面可接节点链接或补充），宿主在进入模型前把标题替换成这里的文本。
+/** 聊天里的快捷任务：用户写「@设计工作室:<标题> 需求」或「@工作室:design <标题>」（后面可接节点链接或补充），宿主在进入模型前把标题替换成这里的文本。
  * 文本与页面按钮共用 designTaskRequest，构建时由 scripts/build.mjs 写入 studio.json 的 tasks。
  * @returns 四个任务的标识、标题、说明与完整任务文本。
  */
 export function designTasks(): { id: 'generate' | 'read' | 'rules' | 'optimize'; label: string; description: string; text: string }[] {
   const entries = [
-    ['generate', '实现设计稿', '读取指定节点或当前选区并实现页面'],
-    ['read', '查看当前选区', '只读节点素材、组件变体与交互，不改代码'],
-    ['rules', '生成设计规则', '按当前项目归纳设计规则，无需 MasterGo'],
-    ['optimize', '优化对应节点', '重新读取节点并核对、修正已有实现'],
+    ['generate', taskLabels.generate, '读取指定节点或当前选区并实现页面'],
+    ['read', taskLabels.read, '只读节点素材、组件变体与交互，不改代码'],
+    ['rules', taskLabels.rules, '按当前项目归纳设计规则，无需 MasterGo'],
+    ['optimize', taskLabels.optimize, '重新读取节点并核对、修正已有实现'],
   ] as const
   return entries.map(([id, label, description]) => ({ id, label, description, text: designTaskRequest(id) }))
 }

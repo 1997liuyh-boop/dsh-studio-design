@@ -48,3 +48,13 @@ jobs:
             gh release create "$RELEASE_TAG" release/* --verify-tag --title "$RELEASE_TAG" \
               --notes "$GITHUB_REPOSITORY $RELEASE_TAG。附带工作室安装包与 manifest.json，供工作室库控制台检查更新与一键升级。"
           fi
+
+      # 设计工作室「组件知识库 → GitHub · 最新发布」默认读取本仓库的 knowledge 分支：每次发布把内置快照同步过去。
+      # 只在推送标签时执行；手动为旧标签补发 Release 时跳过，避免旧资料覆盖新资料。
+      - name: 同步完整知识库到 knowledge 分支
+        if: github.event_name == 'push'
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+        run: |
+          node scripts/export-knowledge.mjs
+          node scripts/publish-knowledge.mjs

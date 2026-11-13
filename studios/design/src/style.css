@@ -1,5 +1,5 @@
 @import "tailwindcss";
-@source "./App.vue";
+@source "./*.vue";
 
 @theme {
   --color-canvas: #f7f8fa;
@@ -9,3 +9,77 @@
   --color-line: #e2e6ed;
   --color-accent: #4465bf;
 }
+
+/* 表单输入框 */
+.field {
+  display: block; width: 100%; margin-top: 8px; padding: 8px 12px; border: 1px solid var(--color-line); border-radius: 8px;
+  background: var(--color-canvas); color: var(--color-ink); font-size: 13px; line-height: 20px;
+}
+.field:focus-visible { outline: 2px solid var(--color-accent); outline-offset: 0; }
+.field:disabled { opacity: 0.6; }
+
+/* 配置流程：顶部总览的节点与箭头，状态色 idle 灰 / running 蓝 / ok 绿 / fail 红 */
+.flow-node {
+  display: flex; align-items: center; gap: 10px; width: 100%; height: 100%; padding: 10px 12px; border: 1px solid var(--color-line);
+  border-radius: 10px; background: var(--color-panel); text-align: left; cursor: pointer; transition: border-color 0.15s, background-color 0.15s;
+}
+.flow-node:hover { border-color: var(--color-accent); }
+.flow-node[data-tone="ok"] { border-color: #a6dcb8; background: #f3fbf6; }
+.flow-node[data-tone="fail"] { border-color: #f3c4c4; background: #fff5f5; }
+.flow-node[data-tone="running"] { border-color: #b8c6ef; background: #f4f6fd; }
+.flow-index {
+  display: inline-flex; flex: none; align-items: center; justify-content: center; width: 24px; height: 24px; border-radius: 999px;
+  background: var(--color-canvas); border: 1px solid var(--color-line); color: var(--color-muted); font-size: 12px; font-weight: 600;
+}
+.flow-arrow { display: flex; align-items: center; color: var(--color-muted); font-size: 16px; }
+.flow-badge {
+  flex: none; padding: 1px 8px; border-radius: 999px; font-size: 11px; line-height: 18px; white-space: nowrap;
+  background: var(--color-canvas); color: var(--color-muted); border: 1px solid var(--color-line);
+}
+.flow-badge[data-tone="ok"] { background: #e8f6ed; color: #17723d; border-color: #a6dcb8; }
+.flow-badge[data-tone="fail"] { background: #fdecec; color: #b42318; border-color: #f3c4c4; }
+.flow-badge[data-tone="running"] { background: #eef1fb; color: #3651a3; border-color: #b8c6ef; }
+
+/* 配置流程：纵向时间线，每一步左侧是序号节点，节点之间有连接线 */
+.flow-steps { display: flex; flex-direction: column; gap: 16px; }
+.flow-step { position: relative; display: flex; gap: 14px; }
+.flow-step:not(:last-child)::before {
+  content: ""; position: absolute; left: 13px; top: 30px; bottom: -16px; width: 2px; background: var(--color-line);
+}
+.flow-step-index { position: relative; z-index: 1; width: 28px; height: 28px; margin-top: 18px; background: var(--color-panel); }
+.flow-step[data-tone="ok"] .flow-step-index { background: #17a34a; border-color: #17a34a; color: #ffffff; }
+.flow-step[data-tone="fail"] .flow-step-index { background: #d92d20; border-color: #d92d20; color: #ffffff; }
+.flow-step[data-tone="running"] .flow-step-index { background: var(--color-accent); border-color: var(--color-accent); color: #ffffff; }
+.flow-card { flex: 1; min-width: 0; padding: 20px; border: 1px solid var(--color-line); border-radius: 12px; background: var(--color-panel); }
+.flow-step[data-tone="ok"] .flow-card { border-color: #a6dcb8; }
+.flow-step[data-tone="fail"] .flow-card { border-color: #f3c4c4; }
+.flow-result { padding: 8px 12px; border-radius: 8px; font-size: 12px; line-height: 18px; word-break: break-all; }
+.flow-result[data-tone="ok"] { background: #e8f6ed; color: #17723d; }
+.flow-result[data-tone="fail"] { background: #fdecec; color: #b42318; }
+
+/* DshSelect：与 dsh「设置 → 通用设置 → 语言」下拉一致的触发按钮与浮层菜单。 */
+/* 尺寸与配色对照 dsh 的菜单原语：浮层 4px 内边距、选项 34px、13px 字、圆角 md、悬停底色、对勾 14px。 */
+.dsh-select-trigger {
+  display: inline-flex; align-items: center; gap: 6px; width: 100%; min-width: 220px; height: 34px; padding: 0 10px;
+  border: 0.5px solid var(--dsw-alias-border-l1, #d9dde4); border-radius: var(--dsw-radius-md, 8px);
+  background: var(--dsw-alias-bg-l1, #ffffff); color: var(--dsw-alias-label-primary, #222831);
+  font-size: 13px; line-height: 20px; cursor: pointer; transition: background-color 0.15s;
+}
+.dsh-select-trigger:hover:not(:disabled) { background: var(--dsw-alias-interactive-bg-hover, #f2f4f7); }
+.dsh-select-trigger:focus-visible { outline: 2px solid var(--dsw-alias-focus-ring, #4465bf); outline-offset: 1px; }
+.dsh-select-trigger:disabled { opacity: 0.4; cursor: not-allowed; }
+.dsh-select-chevron { flex: none; width: 14px; height: 14px; color: var(--dsw-alias-label-tertiary, #8a94a3); transition: transform 0.15s; }
+.dsh-select-list {
+  position: absolute; top: calc(100% + 4px); left: 0; z-index: 100; display: flex; flex-direction: column; box-sizing: border-box;
+  min-width: max(100%, 144px); max-width: 360px; max-height: 320px; overflow-y: auto; padding: 4px;
+  border-radius: calc(var(--dsw-radius-md, 8px) + 4px); background: var(--dsw-alias-bg-elevated, #ffffff);
+  box-shadow: var(--dsw-elevation-prominent, 0 0 0 0.5px rgba(15, 23, 42, 0.12), 0 8px 24px rgba(15, 23, 42, 0.14));
+}
+.dsh-select-item {
+  display: flex; align-items: center; gap: 6px; width: 100%; min-height: 34px; padding: 6px 8px; border: none;
+  border-radius: var(--dsw-radius-md, 8px); background: transparent; color: var(--dsw-alias-label-primary, #222831);
+  font-size: 13px; line-height: 20px; text-align: left; cursor: pointer;
+}
+.dsh-select-item[data-active="true"] { background: var(--dsw-alias-interactive-bg-hover, #f2f4f7); }
+.dsh-select-description { display: block; font-size: 11px; line-height: 15px; color: var(--dsw-alias-label-tertiary, #8a94a3); }
+.dsh-select-check { flex: none; width: 14px; height: 14px; color: var(--dsw-alias-label-primary, #222831); }

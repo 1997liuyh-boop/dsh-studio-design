@@ -1,4 +1,5 @@
-import type { ConnectionSpec, Project, Workspace } from './types.ts'
+import type { ConnectionSpec, Project, SetupTarget, SetupTest, Workspace } from './types.ts'
+import { runTest, testMastergo } from './setupTests.ts'
 import type { IncomingMessage, ServerResponse } from 'node:http'
 import { fileURLToPath } from 'node:url'
 import { join } from 'node:path'
@@ -101,6 +102,9 @@ export async function apply(ctx: Host): Promise<void> {
   try { if (!config.reborn.command) await connectReborn() }
   catch (error) { /* Connections 保留失败状态，设置页可重试。 */ }
 
+  /** 配置流程各步骤最近一次测试结果；设置变化后对应步骤的结果作废。 */
+  const tests = new Map<SetupTarget, SetupTest>()
+
   function context(sessionId: unknown) {
     if (sessionId === undefined || sessionId === '') return null
     const id = text(sessionId, 256)
@@ -121,7 +125,7 @@ export async function apply(ctx: Host): Promise<void> {
       workspace: project ? await store.workspace(project.root) : null,
       components: await catalog(join(sourceRoot() || builtin, 'knowledge')),
       connections: { ...connections.snapshot(), mastergo: selected?.agent ? scoped.peek(selected.agent)?.snapshot().mastergo ?? connections.snapshot().mastergo : connections.snapshot().mastergo },
-      preview: project ? await previews.snapshot(project.root) : undefined, source: source() }
+      preview: project ? await previews.snapshot(project.root) : undefined, source: source(), tests: Object.fromEntries(tests) }
   }
   ctx.effect(() => ctx.sessionProjections.register(participation), '设计工作室：会话参与投影')
   ctx.effect(() => ctx.systemPrompt.section({ name: 'studio-design-workspace', order: 920, interpolate: false,
@@ -284,8 +288,8 @@ export async function apply(ctx: Host): Promise<void> {
       const rebornChanged = JSON.stringify([next.reborn, next.rebornRoot, next.rebornSource]) !== JSON.stringify([config.reborn, config.rebornRoot, config.rebornSource])
       await store.saveSettings(next)
       config = next
-      if (mastergoChanged) await scoped.reset()
-      if (rebornChanged) await connections.disconnect('reborn')
+      if (mastergoChanged) { await scoped.reset(); tests.delete('mastergo') }
+      if (rebornChanged) { await connections.disconnect('reborn'); tests.delete('reborn') }
       if (!config.reborn.command) await connectReborn()
     } else if (input.action === 'sync-source') {
       if (config.rebornSource !== 'github') throw new Error('请先选择 GitHub 资料来源')
@@ -302,6 +306,37 @@ export async function apply(ctx: Host): Promise<void> {
       if (!selected.agent) return snapshot(input.sessionId)
       const spec: ConnectionSpec = { ...config.mastergo, env: config.mastergoToken ? { MG_MCP_TOKEN: config.mastergoToken } : {} }
       await scoped.get(selected.agent).connect('mastergo', spec, selected.root)
+    } else if (input.action === 'test') {
+      const target = input.target
+      if (target !== 'mastergo' && target !== 'reborn' && target !== 'project') throw new Error('未知测试步骤')
+      const selected = context(input.sessionId)
+      let result: SetupTest
+      if (target === 'mastergo') {
+        // 有项目会话时真正启动适配器（与任务开始时同一条连接），没有会话只做网络探测。
+        const connect = selected?.agent ? async () => {
+          const connection = scoped.get(selected.agent!)
+          await connection.connect('mastergo', { ...config.mastergo, env: config.mastergoToken ? { MG_MCP_TOKEN: config.mastergoToken } : {} }, selected.root)
+          return connection.snapshot().mastergo.tools ?? []
+        } : undefined
+        result = await testMastergo(config.mastergo, config.mastergoToken ?? '', connect)
+      } else if (target === 'reborn') {
+        result = await runTest('reborn', async () => {
+          if (config.rebornSource === 'github') await dispatch({ action: 'sync-source' })
+          else { await connections.disconnect('reborn'); await connectReborn() }
+          if (connections.snapshot().reborn.state !== 'connected') throw new Error(connections.snapshot().reborn.message || 'Reborn MCP 未连接')
+          const count = (await catalog(join(sourceRoot() || builtin, 'knowledge'))).length
+          const label = config.rebornSource === 'github' ? 'GitHub ' + (config.rebornRef || 'main') : config.rebornSource === 'local' ? '本地目录' : '内置'
+          return label + ' · ' + count + ' 个组件 · Reborn MCP 已连接' + (config.rebornCommit ? ' · ' + config.rebornCommit.slice(0, 7) : '')
+        })
+      } else {
+        result = await runTest('project', async () => {
+          if (!selected) throw new Error('还没有打开项目会话：在 dsh 左侧工作区打开项目后再测试')
+          const project = await inspectProject(selected.root)
+          if (project.platform !== 'web' || project.framework === '未知') throw new Error(project.name + '：只支持 Vue / Nuxt Web 项目（识别为 ' + project.framework + '）')
+          return project.name + ' · ' + project.framework + ' · ' + project.packageManager + ' · ' + project.components.length + ' 个已有组件'
+        })
+      }
+      tests.set(target, result)
     } else if (input.action === 'connect') {
       if (input.target !== 'reborn') throw new Error('MasterGo 会在当前会话发起设计任务时自动连接')
       await connections.disconnect('reborn'); await connectReborn()
