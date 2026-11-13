@@ -1,7 +1,7 @@
 {
   "$schema": "../schema/component.schema.json",
   "id": "liquid-glass",
-  "title": "液态玻璃",
+  "title": "LiquidGlass 液态玻璃",
   "description": "用于以 SVG 位移贴图与通道偏移模拟液态玻璃折射的容器组件。",
   "category": "effect",
   "tags": [
@@ -9,6 +9,7 @@
     "filter",
     "glassmorphism"
   ],
+  "aliases": [],
   "platforms": [
     "web"
   ],
@@ -179,7 +180,7 @@
   },
   "docPath": "content/2.components/special-effects/liquid-glass.md",
   "_meta": {
-    "contentHash": "355eb49af6694d1cc5cd465033b369cfed2efa55",
+    "contentHash": "8b2d6f1cb03ff8cd65acd7f963346d6944016310",
     "hasOverride": true,
     "extractors": {
       "web": "ok",

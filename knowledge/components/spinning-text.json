@@ -1,7 +1,7 @@
 {
   "$schema": "../schema/component.schema.json",
   "id": "spinning-text",
-  "title": "旋转文字",
+  "title": "SpinningText 旋转文字",
   "description": "用于让一段文字沿圆形路径持续环绕旋转的动画组件。",
   "category": "effect",
   "tags": [
@@ -9,6 +9,7 @@
     "tailwind",
     "magic-ui"
   ],
+  "aliases": [],
   "platforms": [
     "web"
   ],
@@ -103,7 +104,7 @@
   },
   "docPath": "content/2.components/text-animations/spinning-text.md",
   "_meta": {
-    "contentHash": "52a2d163abaa88f20ac5161fc9f09eb7f93c834a",
+    "contentHash": "1419748a827847c924e294778cd7b5886a682656",
     "hasOverride": true,
     "extractors": {
       "web": "ok",

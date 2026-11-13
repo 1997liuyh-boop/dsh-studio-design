@@ -11,6 +11,13 @@
     "accordion",
     "uniapp"
   ],
+  "aliases": [
+    "collapse",
+    "折叠面板",
+    "手风琴",
+    "accordion",
+    "展开收起"
+  ],
   "platforms": [
     "web",
     "uniapp"
@@ -126,7 +133,8 @@
     "需要程序化控制展开（暴露 show/hide/toggle/resize 方法）的折叠区域。"
   ],
   "whenNotToUse": [
-    "内容需要浮层覆盖页面而非推挤布局时，改用 reborn-drawer（Web）、reborn-popup（UniApp）或 reborn-dialog。"
+    "内容需要浮层覆盖页面而非推挤布局时，改用 reborn-drawer（Web）、reborn-popup（UniApp）或 reborn-dialog。",
+    "多块内容并列切换、同一时间只看一块，改用 reborn-tabs。"
   ],
   "pitfalls": [
     "web 与 uniapp 双端可用。",
@@ -161,7 +169,7 @@
   },
   "docPath": "content/2.components/miscellaneous/reborn-collapse.md",
   "_meta": {
-    "contentHash": "d66da735651135b1ba617f59b503e152f311616a",
+    "contentHash": "68f7fe8d4545c8de523bf3c178dd789ba1bf6813",
     "hasOverride": true,
     "extractors": {
       "web": "ok",

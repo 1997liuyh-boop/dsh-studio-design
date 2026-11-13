@@ -1,7 +1,7 @@
 {
   "$schema": "../schema/component.schema.json",
   "id": "reborn-depth-image",
-  "title": "深度视差图",
+  "title": "DepthImage 深度视差图",
   "description": "按深度图对透明背景图片做跟随指针的 2.5D 视差与补光，WebGL 渲染，失败时退回静态图。",
   "category": "effect",
   "tags": [
@@ -10,6 +10,7 @@
     "parallax",
     "image"
   ],
+  "aliases": [],
   "platforms": [
     "web"
   ],
@@ -155,7 +156,7 @@
   },
   "docPath": "content/2.components/special-effects/reborn-depth-image.md",
   "_meta": {
-    "contentHash": "0d4c6753402a6f9f285e5c3fae0314fe8ddceb50",
+    "contentHash": "03b6531cc2df741704db63f718b40dc1709db1e6",
     "hasOverride": true,
     "extractors": {
       "web": "ok",

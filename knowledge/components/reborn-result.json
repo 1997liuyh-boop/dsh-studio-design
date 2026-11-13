@@ -11,6 +11,15 @@
     "feedback",
     "uniapp"
   ],
+  "aliases": [
+    "result",
+    "结果页",
+    "成功页",
+    "失败页",
+    "404",
+    "状态页",
+    "操作结果"
+  ],
   "platforms": [
     "web",
     "uniapp"
@@ -145,7 +154,7 @@
   },
   "docPath": "content/2.components/miscellaneous/reborn-result.md",
   "_meta": {
-    "contentHash": "96aa9f4599aedb691fe87bebf4747b35a5476b85",
+    "contentHash": "c1da87e7520c9aa47212ea662eb071edff8826ba",
     "hasOverride": true,
     "extractors": {
       "web": "ok",

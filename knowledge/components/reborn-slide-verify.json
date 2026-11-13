@@ -1,13 +1,19 @@
 {
   "$schema": "../schema/component.schema.json",
   "id": "reborn-slide-verify",
-  "title": "滑块验证",
+  "title": "SlideVerify 滑块验证",
   "description": "用于人机校验的滑块验证组件，向右拖动超过阈值即通过，支持失败回弹与自动重置。",
   "category": "misc",
   "tags": [
     "uniapp",
     "form",
     "verification"
+  ],
+  "aliases": [
+    "slide verify",
+    "滑块验证",
+    "人机验证",
+    "滑动验证"
   ],
   "platforms": [
     "uniapp"
@@ -36,24 +42,42 @@
     },
     {
       "name": "size",
-      "type": "SlideVerifySize",
+      "type": "'sm' | 'md' | 'lg'",
       "required": false,
       "description": "尺寸",
-      "default": "'md'"
+      "default": "'md'",
+      "options": [
+        "sm",
+        "md",
+        "lg"
+      ]
     },
     {
       "name": "color",
-      "type": "SlideVerifyColor",
+      "type": "'primary' | 'secondary' | 'success' | 'info' | 'warning' | 'error' | 'neutral'",
       "required": false,
       "description": "主题色",
-      "default": "'primary'"
+      "default": "'primary'",
+      "options": [
+        "primary",
+        "secondary",
+        "success",
+        "info",
+        "warning",
+        "error",
+        "neutral"
+      ]
     },
     {
       "name": "shape",
-      "type": "SlideVerifyShape",
+      "type": "'pill' | 'square'",
       "required": false,
       "description": "滑动容器形态，pill 为胶囊形，square 为项目规范圆角的方形",
-      "default": "'pill'"
+      "default": "'pill'",
+      "options": [
+        "pill",
+        "square"
+      ]
     },
     {
       "name": "disabled",
@@ -329,7 +353,7 @@
   },
   "docPath": "content/2.components/miscellaneous/reborn-slide-verify.md",
   "_meta": {
-    "contentHash": "4602581491600d335e8f0dbd48a8876a46085954",
+    "contentHash": "05d2b99b91ffa38526f1aaa0258fa058b8bdf653",
     "hasOverride": true,
     "extractors": {
       "web": "absent",

@@ -10,6 +10,13 @@
     "overlay",
     "uniapp"
   ],
+  "aliases": [
+    "popover",
+    "气泡卡片",
+    "气泡",
+    "浮层",
+    "弹出卡片"
+  ],
   "platforms": [
     "web",
     "uniapp"
@@ -231,7 +238,8 @@
   "whenNotToUse": [
     "纯文字提示改用 reborn-tooltip（仅 web）。",
     "右键呼出的菜单改用 reborn-context-menu（仅 web）。",
-    "底部/侧边大面积面板Web 改用 reborn-drawer，UniApp 改用 reborn-popup。"
+    "底部/侧边大面积面板Web 改用 reborn-drawer，UniApp 改用 reborn-popup。",
+    "只需要「确认 / 取消」两个按钮的轻量确认，改用 reborn-popconfirm。"
   ],
   "pitfalls": [
     "web、uniapp 双端可用。",
@@ -274,7 +282,7 @@
   },
   "docPath": "content/2.components/navigation/reborn-popover.md",
   "_meta": {
-    "contentHash": "d8788952973073c45b6967c7b82f05a895977633",
+    "contentHash": "dbc41793c970194962e5bc0ba35afe2f3ab95dc5",
     "hasOverride": true,
     "extractors": {
       "web": "ok",

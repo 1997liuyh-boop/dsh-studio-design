@@ -10,6 +10,14 @@
     "radio",
     "uniapp"
   ],
+  "aliases": [
+    "radio",
+    "单选",
+    "单选框",
+    "单选按钮",
+    "radio button",
+    "radio group"
+  ],
   "platforms": [
     "web",
     "uniapp"
@@ -24,23 +32,41 @@
     },
     {
       "name": "type",
-      "type": "RadioType",
+      "type": "'radio' | 'button' | 'pure-button'",
       "required": false,
       "description": "单选的类型：radio 圆点 / button 分段按钮 / pure-button 实体按钮拼接；组内使用时以 Group 下发为准",
+      "options": [
+        "radio",
+        "button",
+        "pure-button"
+      ],
       "default": "\"radio\""
     },
     {
       "name": "color",
-      "type": "RadioColor",
+      "type": "'primary' | 'secondary' | 'success' | 'info' | 'warning' | 'error' | 'neutral'",
       "required": false,
       "description": "语义色；不传时取 Group 下发值，默认 primary",
+      "options": [
+        "primary",
+        "secondary",
+        "success",
+        "info",
+        "warning",
+        "error",
+        "neutral"
+      ],
       "default": "\"primary\""
     },
     {
       "name": "variant",
-      "type": "RadioVariant",
+      "type": "'filled' | 'outlined'",
       "required": false,
       "description": "样式变体：filled 实底（语义色背景 + 白色前景）/ outlined 描边（默认）；不传时取 Group 下发值",
+      "options": [
+        "filled",
+        "outlined"
+      ],
       "default": "-（组内跟随 Group，独立使用为 `radio`）"
     },
     {
@@ -84,9 +110,14 @@
     },
     {
       "name": "size",
-      "type": "RadioSize",
+      "type": "'sm' | 'md' | 'lg'",
       "required": false,
       "description": "单选框组的尺寸（受 Form / FormItem 尺寸继承）",
+      "options": [
+        "sm",
+        "md",
+        "lg"
+      ],
       "default": "\"md\""
     },
     {
@@ -103,16 +134,24 @@
     },
     {
       "name": "direction",
-      "type": "RadioDirection",
+      "type": "'horizontal' | 'vertical'",
       "required": false,
       "description": "单选框组的方向",
-      "default": "'horizontal'"
+      "default": "'horizontal'",
+      "options": [
+        "horizontal",
+        "vertical"
+      ]
     },
     {
       "name": "appearance",
-      "type": "RadioAppearance",
+      "type": "'filled' | 'outlined'",
       "required": false,
       "description": "选中态填充方式：outlined（默认）/ filled",
+      "options": [
+        "filled",
+        "outlined"
+      ],
       "default": "-（跟随 Group，最终回退 `outlined`）"
     },
     {
@@ -175,7 +214,8 @@
   "whenNotToUse": [
     "可同时选中多项改用 reborn-checkbox。",
     "布尔开关切换改用 reborn-switch。",
-    "选项很多时改用 reborn-select。"
+    "选项很多时改用 reborn-select。",
+    "一排带选中滑块、不带圆点的互斥切换，改用 reborn-segmented。"
   ],
   "pitfalls": [
     "绑定值与 value 严格相等；组级形态与尺寸优先，Web 单项 color/appearance 可覆盖组值。",
@@ -218,7 +258,7 @@
   },
   "docPath": "content/2.components/input-and-forms/reborn-radio.md",
   "_meta": {
-    "contentHash": "566040bce83ce4b19b2ef3e0260b6f2e512df031",
+    "contentHash": "3d655f8e9d5f40e9b47d1d4ea93d175333f86644",
     "hasOverride": true,
     "extractors": {
       "web": "ok",

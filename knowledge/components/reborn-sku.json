@@ -1,7 +1,7 @@
 {
   "$schema": "../schema/component.schema.json",
   "id": "reborn-sku",
-  "title": "商品规格 Sku",
+  "title": "Sku 商品规格",
   "description": "用于商品规格（SKU）选择的选项组件，按 options 渲染规格项并以对象形式双向绑定选中结果。",
   "category": "form",
   "tags": [
@@ -9,6 +9,11 @@
     "sku",
     "form",
     "select"
+  ],
+  "aliases": [
+    "sku",
+    "规格选择",
+    "商品规格"
   ],
   "platforms": [
     "web"
@@ -106,7 +111,7 @@
   },
   "docPath": "content/2.components/input-and-forms/reborn-sku.md",
   "_meta": {
-    "contentHash": "f08b6762cbd046b100338fc6914d5f71abe3d3e9",
+    "contentHash": "e2941ef4fdcd45bc0ea7f0e3f8e3a21c2f63f327",
     "hasOverride": true,
     "extractors": {
       "web": "ok",

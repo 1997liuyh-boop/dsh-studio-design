@@ -1,7 +1,7 @@
 {
   "$schema": "../schema/component.schema.json",
   "id": "reborn-input-otp",
-  "title": "验证码输入",
+  "title": "InputOtp 验证码输入",
   "description": "用于短信验证码、OTP 等固定位数分格输入的双端组件。",
   "category": "form",
   "tags": [
@@ -10,6 +10,13 @@
     "otp",
     "input",
     "uniapp"
+  ],
+  "aliases": [
+    "otp",
+    "验证码",
+    "验证码输入",
+    "pin 码",
+    "分格输入"
   ],
   "platforms": [
     "web",
@@ -54,22 +61,37 @@
       "name": "inputType",
       "type": "'text' | 'number' | 'digit'",
       "required": false,
-      "description": "输入类型；number 时自动过滤非数字字符。digit 仅 uniapp 端支持。",
-      "default": "'number'"
+      "description": "输入类型；number 时自动过滤非数字字符。digit 仅 uniapp 端支持。 本条为 UniApp 端取值，另一端另有同名条目。",
+      "default": "'number'",
+      "platform": "uniapp"
     },
     {
       "name": "size",
-      "type": "typeof inputOtpSizes[number]",
+      "type": "'sm' | 'md' | 'lg'",
       "required": false,
       "description": "尺寸大小。",
-      "default": "'md'"
+      "default": "'md'",
+      "options": [
+        "sm",
+        "md",
+        "lg"
+      ]
     },
     {
       "name": "color",
-      "type": "typeof inputOtpColors[number]",
+      "type": "'primary' | 'secondary' | 'success' | 'info' | 'warning' | 'error' | 'neutral'",
       "required": false,
       "description": "颜色主题。",
-      "default": "'primary'"
+      "default": "'primary'",
+      "options": [
+        "primary",
+        "secondary",
+        "success",
+        "info",
+        "warning",
+        "error",
+        "neutral"
+      ]
     },
     {
       "name": "modelValue",
@@ -78,6 +100,14 @@
       "description": "双向绑定值",
       "vModel": true,
       "default": "\"\""
+    },
+    {
+      "name": "inputType",
+      "type": "\"text\" | \"number\"",
+      "required": false,
+      "description": "输入类型；number 时自动过滤非数字字符。digit 仅 uniapp 端支持。 本条为 Web 端取值，另一端另有同名条目。",
+      "default": "\"number\"",
+      "platform": "web"
     },
     {
       "name": "class",
@@ -170,7 +200,7 @@
   },
   "docPath": "content/2.components/input-and-forms/reborn-input-otp.md",
   "_meta": {
-    "contentHash": "b70071e1c2308b27ff294537a5e34309c5b0967d",
+    "contentHash": "be0931ad63387aec45fb3d6b3b91548b292c3f22",
     "hasOverride": true,
     "extractors": {
       "web": "ok",

@@ -1,13 +1,20 @@
 {
   "$schema": "../schema/component.schema.json",
   "id": "reborn-fab",
-  "title": "悬浮按钮 (Fab)",
+  "title": "Fab 悬浮按钮",
   "description": "用于固定位置悬浮操作入口的按钮组件，支持拖拽吸边与展开动作面板，双端可用。",
   "category": "navigation",
   "tags": [
     "vue",
     "reborn-fab",
     "uniapp"
+  ],
+  "aliases": [
+    "fab",
+    "悬浮按钮",
+    "浮动按钮",
+    "floating action button",
+    "快捷入口"
   ],
   "platforms": [
     "web",
@@ -333,7 +340,7 @@
   },
   "docPath": "content/2.components/navigation/reborn-fab.md",
   "_meta": {
-    "contentHash": "2c337f0089cfe4dbe2d2c0798bd99029286d734a",
+    "contentHash": "21369cbcc026bb8222f3e1bf9fe3107a10694d44",
     "hasOverride": true,
     "extractors": {
       "web": "ok",

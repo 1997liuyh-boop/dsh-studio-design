@@ -1,12 +1,17 @@
 {
   "$schema": "../schema/component.schema.json",
   "id": "reborn-context-menu",
-  "title": "Menu 右键菜单",
+  "title": "ContextMenu 右键菜单",
   "description": "用于在目标区域右键、点击、悬浮或划词后弹出操作面板的上下文菜单组件，仅 web 端。",
   "category": "navigation",
   "tags": [
     "vue",
     "reborn-context-menu"
+  ],
+  "aliases": [
+    "context menu",
+    "右键菜单",
+    "上下文菜单"
   ],
   "platforms": [
     "web"
@@ -211,7 +216,7 @@
   },
   "docPath": "content/2.components/navigation/reborn-context-menu.md",
   "_meta": {
-    "contentHash": "967594c07d72df40783ca357d4d1ff50443e792d",
+    "contentHash": "2e0a7a8cc418b8fd985f16b0737873ba3ec5d932",
     "hasOverride": true,
     "extractors": {
       "web": "ok",

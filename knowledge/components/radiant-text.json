@@ -1,7 +1,7 @@
 {
   "$schema": "../schema/component.schema.json",
   "id": "radiant-text",
-  "title": "光辉文字",
+  "title": "RadiantText 光辉文字",
   "description": "用于让高光沿插槽文字循环扫过的文字高亮动画组件。",
   "category": "effect",
   "tags": [
@@ -9,6 +9,7 @@
     "tailwind",
     "magic-ui"
   ],
+  "aliases": [],
   "platforms": [
     "web"
   ],
@@ -77,7 +78,7 @@
   },
   "docPath": "content/2.components/text-animations/radiant-text.md",
   "_meta": {
-    "contentHash": "d633b7679a16e374268402f107b573e446a1e0d5",
+    "contentHash": "e85937a740355315ab43882097dd2ab64bc2d4e3",
     "hasOverride": true,
     "extractors": {
       "web": "ok",

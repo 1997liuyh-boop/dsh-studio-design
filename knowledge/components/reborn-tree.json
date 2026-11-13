@@ -10,6 +10,12 @@
     "tree",
     "data"
   ],
+  "aliases": [
+    "tree",
+    "树",
+    "树形",
+    "目录树"
+  ],
   "platforms": [
     "web"
   ],
@@ -30,10 +36,19 @@
     },
     {
       "name": "color",
-      "type": "TreeColor",
+      "type": "'primary' | 'secondary' | 'success' | 'info' | 'warning' | 'error' | 'neutral'",
       "required": false,
       "description": "主题色：统一控制选中背景/文字、筛选高亮、复选框与拖拽指示的用色",
-      "default": "\"primary\""
+      "default": "\"primary\"",
+      "options": [
+        "primary",
+        "secondary",
+        "success",
+        "info",
+        "warning",
+        "error",
+        "neutral"
+      ]
     },
     {
       "name": "allowDrop",
@@ -410,7 +425,7 @@
   },
   "docPath": "content/2.components/data/reborn-tree.md",
   "_meta": {
-    "contentHash": "5786d2589919e5f1bc168478d2708e24cd312c56",
+    "contentHash": "3453d82ccc2475cb481c55b8086a3b81e3d00de1",
     "hasOverride": true,
     "extractors": {
       "web": "ok",

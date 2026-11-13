@@ -1,7 +1,7 @@
 {
   "$schema": "../schema/component.schema.json",
   "id": "scratch-to-reveal",
-  "title": "刮刮乐揭示",
+  "title": "ScratchToReveal 刮刮乐揭示",
   "description": "用于刮开渐变涂层后显示隐藏内容的互动刮刮乐组件。",
   "category": "effect",
   "tags": [
@@ -9,6 +9,7 @@
     "tailwind",
     "magic-ui"
   ],
+  "aliases": [],
   "platforms": [
     "web"
   ],
@@ -102,7 +103,7 @@
   },
   "docPath": "content/2.components/special-effects/scratch-to-reveal.md",
   "_meta": {
-    "contentHash": "46fa7af8054cb3bb9a3819ed2546d02c354846ce",
+    "contentHash": "ab63ad50df8ba924ee2b218f6a653db2aa7de2d2",
     "hasOverride": true,
     "extractors": {
       "web": "ok",

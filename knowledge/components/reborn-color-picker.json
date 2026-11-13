@@ -1,13 +1,19 @@
 {
   "$schema": "../schema/component.schema.json",
   "id": "reborn-color-picker",
-  "title": "取色器",
+  "title": "ColorPicker 取色器",
   "description": "用于弹出面板选取颜色并以 v-model 绑定色值字符串的取色器组件，双端可用。",
   "category": "form",
   "tags": [
     "vue",
     "reborn-color-picker",
     "uniapp"
+  ],
+  "aliases": [
+    "color picker",
+    "取色",
+    "颜色选择",
+    "调色板"
   ],
   "platforms": [
     "web",
@@ -179,7 +185,7 @@
   },
   "docPath": "content/2.components/input-and-forms/reborn-color-picker.md",
   "_meta": {
-    "contentHash": "9fa16a23d5b290a506093be2096f2d7a60ad0d27",
+    "contentHash": "23e048b3ca2f49e7225968b3f626f9a04a18a39e",
     "hasOverride": true,
     "extractors": {
       "web": "ok",

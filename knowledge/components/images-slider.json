@@ -1,7 +1,7 @@
 {
   "$schema": "../schema/component.schema.json",
   "id": "images-slider",
-  "title": "图片滑块",
+  "title": "ImagesSlider 图片滑块",
   "description": "用于全屏轮播一组背景图并叠加覆盖层内容的图片滑块组件。",
   "category": "misc",
   "tags": [
@@ -9,6 +9,11 @@
     "tailwind",
     "images",
     "aceternity-ui"
+  ],
+  "aliases": [
+    "全屏轮播",
+    "背景轮播",
+    "图片轮播"
   ],
   "platforms": [
     "web"
@@ -146,7 +151,7 @@
   },
   "docPath": "content/2.components/miscellaneous/images-slider.md",
   "_meta": {
-    "contentHash": "7dbaac345520122e5d98dc181ac3a20939c5f746",
+    "contentHash": "fe7ffb5f7ebed0cc51f7d9b985290fddc70e8f73",
     "hasOverride": true,
     "extractors": {
       "web": "ok",

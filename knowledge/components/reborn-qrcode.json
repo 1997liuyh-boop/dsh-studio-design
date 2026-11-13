@@ -1,7 +1,7 @@
 {
   "$schema": "../schema/component.schema.json",
   "id": "reborn-qrcode",
-  "title": "二维码 Qrcode",
+  "title": "Qrcode 二维码",
   "description": "用于生成二维码的双端组件，支持前景/背景色、码点样式、中央 Logo 与纠错级别。",
   "category": "misc",
   "tags": [
@@ -10,6 +10,11 @@
     "svg",
     "uniapp",
     "web"
+  ],
+  "aliases": [
+    "qrcode",
+    "二维码",
+    "qr"
   ],
   "platforms": [
     "web",
@@ -291,7 +296,7 @@
   },
   "docPath": "content/2.components/miscellaneous/reborn-qrcode.md",
   "_meta": {
-    "contentHash": "03de94737728ef66300910d12bcbfef10a2cf359",
+    "contentHash": "264cca20398efd6437cbb03071fe939bca0a8690",
     "hasOverride": true,
     "extractors": {
       "web": "ok",

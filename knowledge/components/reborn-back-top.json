@@ -11,6 +11,11 @@
     "scroll",
     "uniapp"
   ],
+  "aliases": [
+    "back top",
+    "返回顶部",
+    "回到顶部"
+  ],
   "platforms": [
     "web",
     "uniapp"
@@ -60,17 +65,32 @@
     },
     {
       "name": "color",
-      "type": "typeof backTopColors[number]",
+      "type": "'primary' | 'secondary' | 'success' | 'info' | 'warning' | 'error' | 'neutral'",
       "required": false,
       "description": "按钮背景的语义色。",
-      "default": "'primary'"
+      "default": "'primary'",
+      "options": [
+        "primary",
+        "secondary",
+        "success",
+        "info",
+        "warning",
+        "error",
+        "neutral"
+      ]
     },
     {
       "name": "size",
-      "type": "typeof backTopSizes[number]",
+      "type": "'sm' | 'md' | 'lg'",
       "required": false,
-      "description": "边长 24 / 32 / 40 / 48px，进度线宽随之换算。",
-      "default": "'md'"
+      "description": "按钮尺寸，对应 `size-8` / `size-10` / `size-12`。 本条为 UniApp 端取值，另一端另有同名条目。",
+      "default": "'md'",
+      "options": [
+        "sm",
+        "md",
+        "lg"
+      ],
+      "platform": "uniapp"
     },
     {
       "name": "ui",
@@ -81,17 +101,25 @@
     },
     {
       "name": "direction",
-      "type": "typeof backTopDirections[number]",
+      "type": "'top' | 'bottom'",
       "required": false,
       "description": "滚动方向：top 回到顶部 / bottom 去底部。需要两个按钮时放两个实例，用 bottom 错开位置",
-      "default": "'top'"
+      "default": "'top'",
+      "options": [
+        "top",
+        "bottom"
+      ]
     },
     {
       "name": "shape",
-      "type": "typeof backTopShapes[number]",
+      "type": "'circle' | 'square'",
       "required": false,
       "description": "按钮形状：circle 圆形 / square 圆角方形；进度环随形状变成圆环或圆角方框",
-      "default": "'circle'"
+      "default": "'circle'",
+      "options": [
+        "circle",
+        "square"
+      ]
     },
     {
       "name": "icon",
@@ -111,6 +139,20 @@
       "type": "number",
       "required": false,
       "description": "可滚动总距离 (px)。外部接管 scrollTop 时用于换算百分比与去底部按钮的显隐；不传则按 document 实测"
+    },
+    {
+      "name": "size",
+      "type": "'xs' | 'sm' | 'md' | 'lg'",
+      "required": false,
+      "description": "边长 24 / 32 / 40 / 48px，进度线宽随之换算。 本条为 Web 端取值，另一端另有同名条目。",
+      "default": "'md'",
+      "options": [
+        "xs",
+        "sm",
+        "md",
+        "lg"
+      ],
+      "platform": "web"
     },
     {
       "name": "ui",
@@ -195,7 +237,7 @@
   },
   "docPath": "content/2.components/navigation/reborn-back-top.md",
   "_meta": {
-    "contentHash": "2c25fe85255d99cfe06b52835cf78dcc7fc17e7c",
+    "contentHash": "db13e521ae37b80bb6e8585ae2e082dafc2df4d9",
     "hasOverride": true,
     "extractors": {
       "web": "ok",

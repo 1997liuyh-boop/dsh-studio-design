@@ -2,7 +2,7 @@
   "$schema": "../schema/component.schema.json",
   "id": "reborn-badge",
   "title": "Badge 徽章",
-  "description": "双端状态标签：支持四种风格、胶囊、可关闭与可选中；Web 额外支持独立圆形参数。",
+  "description": "双端状态标签（即 Element / Ant 的 Tag、MUI 的 Chip）：四种风格、胶囊、可关闭与可选中；Web 另有圆形。",
   "category": "basic",
   "tags": [
     "css",
@@ -10,6 +10,21 @@
     "badge",
     "uniapp",
     "cross-platform"
+  ],
+  "aliases": [
+    "tag",
+    "标签",
+    "状态标签",
+    "胶囊标签",
+    "pill",
+    "label",
+    "chip",
+    "筛选标签",
+    "可关闭标签",
+    "element tag",
+    "ant tag",
+    "热门",
+    "VIP 标签"
   ],
   "platforms": [
     "web",
@@ -231,7 +246,8 @@
   ],
   "whenNotToUse": [
     "独立的按钮操作，改用 reborn-button。",
-    "仅需在角标位置挂小圆点/数字提示，改用 reborn-chip。"
+    "仅需在角标位置挂小圆点/数字提示，改用 reborn-chip。",
+    "一组互斥、同一时间只选一个的切换项，改用 reborn-segmented；可选中标签（check）允许多个同时选中。"
   ],
   "pitfalls": [
     "web 与 uniapp 双端可用；closeIcon 默认值双端不同（web 为 i-lucide-x，uniapp 为 i-mdi-close-circle）。",
@@ -268,7 +284,7 @@
   },
   "docPath": "content/2.components/button/reborn-badge.md",
   "_meta": {
-    "contentHash": "82fb774835f6ceb6ab38a94b02f1df2af539705c",
+    "contentHash": "5d5c131293d7a959503524c5b41c6aca44da7d49",
     "hasOverride": true,
     "extractors": {
       "web": "ok",

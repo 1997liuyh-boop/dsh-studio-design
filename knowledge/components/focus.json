@@ -1,7 +1,7 @@
 {
   "$schema": "../schema/component.schema.json",
   "id": "focus",
-  "title": "聚焦",
+  "title": "Focus 聚焦",
   "description": "用于句子逐词聚焦、其余单词模糊并带边框动画的文字强调组件。",
   "category": "effect",
   "tags": [
@@ -9,6 +9,7 @@
     "tailwind",
     "codepen"
   ],
+  "aliases": [],
   "platforms": [
     "web"
   ],
@@ -112,7 +113,7 @@
   },
   "docPath": "content/2.components/text-animations/focus.md",
   "_meta": {
-    "contentHash": "f2d7bc3e8143cfdfd084c23691e2bccebfac966e",
+    "contentHash": "f9132ff3b77ffd5b371b45c09eddbe1902f950ea",
     "hasOverride": true,
     "extractors": {
       "web": "ok",

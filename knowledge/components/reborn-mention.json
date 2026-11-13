@@ -10,6 +10,12 @@
     "autocomplete",
     "textarea"
   ],
+  "aliases": [
+    "mention",
+    "提及",
+    "@ 提及",
+    "at 某人"
+  ],
   "platforms": [
     "web"
   ],
@@ -51,10 +57,14 @@
     },
     {
       "name": "placement",
-      "type": "(typeof mentionPlacements)[number]",
+      "type": "'bottom' | 'top'",
       "required": false,
       "description": "下拉面板的展开方向，放不下时自动翻到另一侧 @defaultValue 'bottom'",
-      "default": "\"bottom\""
+      "default": "\"bottom\"",
+      "options": [
+        "bottom",
+        "top"
+      ]
     },
     {
       "name": "showArrow",
@@ -239,7 +249,7 @@
   },
   "docPath": "content/2.components/input-and-forms/reborn-mention.md",
   "_meta": {
-    "contentHash": "4a7f5374cf722a30fd34c525e23426c4f643e108",
+    "contentHash": "6a1a88b67fa99b582fc552df82ce43d065dd3567",
     "hasOverride": true,
     "extractors": {
       "web": "ok",

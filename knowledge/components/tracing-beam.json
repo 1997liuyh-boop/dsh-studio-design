@@ -1,7 +1,7 @@
 {
   "$schema": "../schema/component.schema.json",
   "id": "tracing-beam",
-  "title": "跟踪光束",
+  "title": "TracingBeam 跟踪光束",
   "description": "用于在内容一侧渲染随滚动延伸的渐变光束装饰的容器组件。",
   "category": "misc",
   "tags": [
@@ -9,6 +9,7 @@
     "tailwind",
     "aceternity-ui"
   ],
+  "aliases": [],
   "platforms": [
     "web"
   ],
@@ -68,7 +69,7 @@
   },
   "docPath": "content/2.components/miscellaneous/tracing-beam.md",
   "_meta": {
-    "contentHash": "454069ee1087d973c71238d6c15292537a60dcb3",
+    "contentHash": "f58b5d45e5b72a0cfebb1b1ce830f951b470a159",
     "hasOverride": true,
     "extractors": {
       "web": "ok",

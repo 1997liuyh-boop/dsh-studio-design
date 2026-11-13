@@ -9,6 +9,11 @@
     "reborn-form",
     "uniapp"
   ],
+  "aliases": [
+    "form",
+    "表单",
+    "表单校验"
+  ],
   "platforms": [
     "web",
     "uniapp"
@@ -258,7 +263,7 @@
   },
   "docPath": "content/2.components/input-and-forms/reborn-form.md",
   "_meta": {
-    "contentHash": "40ae1de89d55a266b8a6740b1453bd27352a23b8",
+    "contentHash": "161b53d45ad8777b965eab8a008263fbd1e03885",
     "hasOverride": true,
     "extractors": {
       "web": "ok",

@@ -1,7 +1,7 @@
 {
   "$schema": "../schema/component.schema.json",
   "id": "box-reveal",
-  "title": "盒子揭示",
+  "title": "BoxReveal 盒子揭示",
   "description": "用于内容被色块滑开后显现的揭示入场动画组件。",
   "category": "effect",
   "tags": [
@@ -9,6 +9,7 @@
     "tailwind",
     "magic-ui"
   ],
+  "aliases": [],
   "platforms": [
     "web"
   ],
@@ -87,7 +88,7 @@
   },
   "docPath": "content/2.components/text-animations/box-reveal.md",
   "_meta": {
-    "contentHash": "1d5ffde193efc384fced5321b8000c9679eafbe3",
+    "contentHash": "4c0153c6a112603c7caee872d5a1f643423bcf87",
     "hasOverride": true,
     "extractors": {
       "web": "ok",

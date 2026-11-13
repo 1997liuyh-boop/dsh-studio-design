@@ -11,6 +11,15 @@
     "text",
     "reui-launch"
   ],
+  "aliases": [
+    "launch",
+    "复古电脑",
+    "电脑动画",
+    "像素电脑",
+    "品牌动画",
+    "logo 动画",
+    "字标动画"
+  ],
   "platforms": [
     "web"
   ],
@@ -64,9 +73,22 @@
     }
   ],
   "related": [],
-  "whenToUse": [],
-  "whenNotToUse": [],
-  "pitfalls": [],
+  "whenToUse": [
+    "品牌或产品标题需要可交互的视觉内容：text 设置两侧字标，screenText 设置屏幕短词。",
+    "需要电脑屏幕的扫描、闪烁或终端输入效果：screenEffect 切换模式，不必同时开启 expanded。",
+    "把电脑动画放进已有标题区域：compact 收紧取景，再通过 class 控制宽度。",
+    "展示展开后的图形或核对细节：expanded 固定展开状态。"
+  ],
+  "whenNotToUse": [
+    "提交表单、确认操作等任务入口，改用 reborn-button：本组件是装饰性动画，点击只固定或取消展开。",
+    "只需逐字播放长句、不需要电脑插画，改用 reborn-typewriter。",
+    "需要一整段标题的入场动画而不是一个品牌图形，改用 letter-pullup 或 text-generate-effect。"
+  ],
+  "pitfalls": [
+    "仅 Web 端，UniApp 无对应实现。",
+    "text 含空格时在首个空格处分成两组放在电脑两侧，不含空格时按字素平分；长词会按可用宽度缩小字号。",
+    "鼠标悬停展开、移出收起，点击切换固定；触屏没有悬停，只有点击固定一种交互。"
+  ],
   "dependencies": [],
   "install": {
     "cli": "npx reborn-ui@latest add reui-launch"
@@ -80,8 +102,8 @@
   },
   "docPath": "content/2.components/special-effects/reui-launch.md",
   "_meta": {
-    "contentHash": "d2e40a16a3159c2a7cd6e8ec61aa498e6b592cc8",
-    "hasOverride": false,
+    "contentHash": "f8e70c7e9d622dcab9328e695c6bfecb61bc15bb",
+    "hasOverride": true,
     "extractors": {
       "web": "ok",
       "uniapp": "absent",

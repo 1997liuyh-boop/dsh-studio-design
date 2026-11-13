@@ -11,6 +11,13 @@
     "select",
     "uniapp"
   ],
+  "aliases": [
+    "date picker",
+    "日期选择",
+    "日期",
+    "日期范围",
+    "选日期"
+  ],
   "platforms": [
     "web",
     "uniapp"
@@ -179,7 +186,7 @@
       "name": "color",
       "type": "'primary' | 'success' | 'info' | 'warning' | 'error' | 'neutral'",
       "required": false,
-      "description": "〔共用〕触发器聚焦 / 展开描边色，同时下发给面板决定选中色。",
+      "description": "触发器聚焦色、滚轮指示与范围卡片的高亮色。 本条为 UniApp 端取值，另一端另有同名条目。",
       "default": "'primary'",
       "options": [
         "primary",
@@ -188,7 +195,8 @@
         "warning",
         "error",
         "neutral"
-      ]
+      ],
+      "platform": "uniapp"
     },
     {
       "name": "triggerUi",
@@ -349,11 +357,34 @@
       "default": "false"
     },
     {
+      "name": "color",
+      "type": "'primary' | 'secondary' | 'success' | 'info' | 'warning' | 'error' | 'neutral'",
+      "required": false,
+      "description": "颜色，决定触发器聚焦 / 展开描边色，同时下发给日期面板决定选中色 本条为 Web 端取值，另一端另有同名条目。",
+      "default": "\"primary\"",
+      "options": [
+        "primary",
+        "secondary",
+        "success",
+        "info",
+        "warning",
+        "error",
+        "neutral"
+      ],
+      "platform": "web"
+    },
+    {
       "name": "variant",
-      "type": "(typeof datePickerVariants)[number]",
+      "type": "'outlined' | 'filled' | 'borderless' | 'underlined'",
       "required": false,
       "description": "形态变体：描边 / 填充 / 无边框 / 下划线",
-      "default": "\"outlined\""
+      "default": "\"outlined\"",
+      "options": [
+        "outlined",
+        "filled",
+        "borderless",
+        "underlined"
+      ]
     },
     {
       "name": "class",
@@ -655,7 +686,7 @@
   },
   "docPath": "content/2.components/input-and-forms/reborn-date-picker.md",
   "_meta": {
-    "contentHash": "990567fba3ae7643cc4e81d31a6878ea4a2520b6",
+    "contentHash": "c88db787742754866f527663f0ccaa4dfc31dee7",
     "hasOverride": true,
     "extractors": {
       "web": "ok",

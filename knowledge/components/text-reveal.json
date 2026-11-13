@@ -1,7 +1,7 @@
 {
   "$schema": "../schema/component.schema.json",
   "id": "text-reveal",
-  "title": "文字揭示",
+  "title": "TextReveal 文字揭示",
   "description": "用于基于 GSAP SplitText 将段落按行依次入场的文字动画组件。",
   "category": "effect",
   "tags": [
@@ -9,6 +9,7 @@
     "tailwind",
     "gsap"
   ],
+  "aliases": [],
   "platforms": [
     "web"
   ],
@@ -97,7 +98,7 @@
   },
   "docPath": "content/2.components/text-animations/text-reveal.md",
   "_meta": {
-    "contentHash": "00d8894acc755f98ba0f86c912ff4ead3099f539",
+    "contentHash": "5589b5f63459ba4b55a6df581a32e1ec0613f309",
     "hasOverride": true,
     "extractors": {
       "web": "ok",

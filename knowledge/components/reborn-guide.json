@@ -1,7 +1,7 @@
 {
   "$schema": "../schema/component.schema.json",
   "id": "reborn-guide",
-  "title": "引导 Guide",
+  "title": "Guide 引导",
   "description": "Web 分步引导：自动居中并锁定目标，支持父子步骤、数字或点状进度、封面与整步组件替换。",
   "category": "basic",
   "tags": [
@@ -10,15 +10,31 @@
     "guide",
     "tour"
   ],
+  "aliases": [
+    "guide",
+    "引导",
+    "新手引导",
+    "tour",
+    "分步引导"
+  ],
   "platforms": [
     "web"
   ],
   "props": [
     {
       "name": "color",
-      "type": "(typeof guideColors)[number]",
+      "type": "'primary' | 'secondary' | 'success' | 'info' | 'warning' | 'error' | 'neutral'",
       "required": false,
-      "description": "可选语义色；省略时保留默认浅色面板。"
+      "description": "可选语义色；省略时保留默认浅色面板。",
+      "options": [
+        "primary",
+        "secondary",
+        "success",
+        "info",
+        "warning",
+        "error",
+        "neutral"
+      ]
     },
     {
       "name": "defaultCurrent",
@@ -252,7 +268,7 @@
   },
   "docPath": "content/2.components/button/reborn-guide.md",
   "_meta": {
-    "contentHash": "098d9ca4fba8d3bb43473740ac2eff7d52c87818",
+    "contentHash": "5408c4c53bd4c5b8da53a93fb66df944562d704a",
     "hasOverride": true,
     "extractors": {
       "web": "ok",

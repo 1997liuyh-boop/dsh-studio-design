@@ -11,6 +11,12 @@
     "search",
     "reborn"
   ],
+  "aliases": [
+    "search",
+    "搜索框",
+    "搜索",
+    "search bar"
+  ],
   "platforms": [
     "web",
     "uniapp"
@@ -32,17 +38,31 @@
     },
     {
       "name": "size",
-      "type": "SearchBoxSize",
+      "type": "'sm' | 'md' | 'lg'",
       "required": false,
       "description": "尺寸大小；高度由内部 `RebornInput` 承担，本组件另按尺寸给出输入框区的水平内边距。",
-      "default": "'sm'"
+      "default": "'sm'",
+      "options": [
+        "sm",
+        "md",
+        "lg"
+      ]
     },
     {
       "name": "color",
-      "type": "SearchBoxColor",
+      "type": "'primary' | 'secondary' | 'success' | 'info' | 'warning' | 'error' | 'neutral'",
       "required": false,
       "description": "主题颜色，作用于聚焦描边（取对应色族 5 阶）。",
-      "default": "'primary'"
+      "default": "'primary'",
+      "options": [
+        "primary",
+        "secondary",
+        "success",
+        "info",
+        "warning",
+        "error",
+        "neutral"
+      ]
     },
     {
       "name": "customClass",
@@ -277,7 +297,7 @@
   },
   "docPath": "content/2.components/input-and-forms/reborn-search-box.md",
   "_meta": {
-    "contentHash": "3eaa5108e88a8263804e4d873835ecfe56887a32",
+    "contentHash": "c5e11e3c7ce9c5a33df060d9389a80009b9c4602",
     "hasOverride": true,
     "extractors": {
       "web": "ok",

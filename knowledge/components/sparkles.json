@@ -1,7 +1,7 @@
 {
   "$schema": "../schema/component.schema.json",
   "id": "sparkles",
-  "title": "闪烁粒子",
+  "title": "Sparkles 闪烁粒子",
   "description": "用于渲染可配置密度、大小与颜色的闪烁粒子背景层组件。",
   "category": "effect",
   "tags": [
@@ -9,6 +9,7 @@
     "particles",
     "aceternity-ui"
   ],
+  "aliases": [],
   "platforms": [
     "web"
   ],
@@ -105,7 +106,7 @@
   },
   "docPath": "content/2.components/special-effects/sparkles.md",
   "_meta": {
-    "contentHash": "f4406025b7562401119f39c1a7f417126f11ff14",
+    "contentHash": "238e83bdcb298bdd75122c6db3bf7ae4ff18dd38",
     "hasOverride": true,
     "extractors": {
       "web": "ok",

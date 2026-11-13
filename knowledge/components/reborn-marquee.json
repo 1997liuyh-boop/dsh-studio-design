@@ -1,13 +1,20 @@
 {
   "$schema": "../schema/component.schema.json",
   "id": "reborn-marquee",
-  "title": "跑马灯",
+  "title": "Marquee 跑马灯",
   "description": "用于横向或纵向无限循环滚动内容的跑马灯组件，支持悬停暂停与渐隐遮罩。",
   "category": "misc",
   "tags": [
     "css",
     "tailwind",
     "magic-ui"
+  ],
+  "aliases": [
+    "marquee",
+    "跑马灯",
+    "滚动字幕",
+    "无限滚动",
+    "ticker"
   ],
   "platforms": [
     "web"
@@ -43,10 +50,14 @@
     },
     {
       "name": "orientation",
-      "type": "RebornMarqueeOrientation",
+      "type": "'horizontal' | 'vertical'",
       "required": false,
       "description": "设置滚动方向。",
-      "default": "'horizontal'"
+      "default": "'horizontal'",
+      "options": [
+        "horizontal",
+        "vertical"
+      ]
     },
     {
       "name": "repeat",
@@ -121,7 +132,7 @@
   },
   "docPath": "content/2.components/miscellaneous/reborn-marquee.md",
   "_meta": {
-    "contentHash": "5c2646d8da029b97f07c8de70dfcf2e554f3a0dc",
+    "contentHash": "cda4509b8dbd2e18b86b32a773ca6df44f546139",
     "hasOverride": true,
     "extractors": {
       "web": "ok",

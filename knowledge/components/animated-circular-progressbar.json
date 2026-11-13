@@ -1,7 +1,7 @@
 {
   "$schema": "../schema/component.schema.json",
   "id": "animated-circular-progressbar",
-  "title": "动画圆形进度条",
+  "title": "AnimatedCircularProgressBar 动画圆形进度条",
   "description": "用于以圆形仪表盘动画展示当前数值百分比的进度条组件。",
   "category": "misc",
   "tags": [
@@ -9,6 +9,11 @@
     "tailwind",
     "input",
     "magic-ui"
+  ],
+  "aliases": [
+    "圆形进度",
+    "环形进度动画",
+    "circular progress"
   ],
   "platforms": [
     "web"
@@ -97,7 +102,8 @@
   ],
   "whenNotToUse": [
     "需要用户拖动改变数值的输入场景，改用 balance-slider 等表单组件。",
-    "静态展示一个数字即可时，无需引入动画进度条。"
+    "静态展示一个数字即可时，无需引入动画进度条。",
+    "表单或任务进度等常规进度展示，改用 reborn-progress：本组件只做圆形仪表盘动画。"
   ],
   "pitfalls": [
     "仅 web 端可用。",
@@ -115,7 +121,7 @@
   },
   "docPath": "content/2.components/miscellaneous/animated-circular-progressbar.md",
   "_meta": {
-    "contentHash": "a27a070fc61e03f040fb652e2291abf5da23ca70",
+    "contentHash": "faa316531e19e8888871d0d6882ca494e72fcddc",
     "hasOverride": true,
     "extractors": {
       "web": "ok",

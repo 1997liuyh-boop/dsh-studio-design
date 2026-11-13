@@ -1,7 +1,7 @@
 {
   "$schema": "../schema/component.schema.json",
   "id": "line-shadow-text",
-  "title": "线条阴影文字",
+  "title": "LineShadowText 线条阴影文字",
   "description": "用于给插槽文字添加斜线条纹阴影装饰的静态文字效果组件。",
   "category": "effect",
   "tags": [
@@ -9,6 +9,7 @@
     "tailwind",
     "magic-ui"
   ],
+  "aliases": [],
   "platforms": [
     "web"
   ],
@@ -85,7 +86,7 @@
   },
   "docPath": "content/2.components/text-animations/line-shadow-text.md",
   "_meta": {
-    "contentHash": "96ac6cd0cc60e5bbc7f67d8fd7308e8182174ef9",
+    "contentHash": "50cfeac883e5c3b7c04036a706d8f8afcdd2803c",
     "hasOverride": true,
     "extractors": {
       "web": "ok",

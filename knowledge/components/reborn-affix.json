@@ -5,6 +5,12 @@
   "description": "用于固定悬浮元素并支持拖拽、自动吸附屏幕边缘的跨端悬浮组件。",
   "category": "navigation",
   "tags": [],
+  "aliases": [
+    "affix",
+    "悬浮",
+    "固钉",
+    "悬浮元素"
+  ],
   "platforms": [
     "web",
     "uniapp"
@@ -142,7 +148,7 @@
   },
   "docPath": "content/2.components/navigation/reborn-affix.md",
   "_meta": {
-    "contentHash": "21032c2be15e106fe904f00a70ac9e6720481522",
+    "contentHash": "b4582de67b4189243c5d0ebed15066de07392654",
     "hasOverride": true,
     "extractors": {
       "web": "ok",

@@ -1,7 +1,7 @@
 {
   "$schema": "../schema/component.schema.json",
   "id": "glare-card",
-  "title": "高光卡片",
+  "title": "GlareCard 高光卡片",
   "description": "用于悬停时表面扫过高光光泽的展示卡片组件，风格源自 Linear。",
   "category": "data-display",
   "tags": [
@@ -10,6 +10,7 @@
     "card",
     "aceternity-ui"
   ],
+  "aliases": [],
   "platforms": [
     "web"
   ],
@@ -73,7 +74,7 @@
   },
   "docPath": "content/2.components/cards/glare-card.md",
   "_meta": {
-    "contentHash": "e5894bc30abd82b3096c57db8a28b8dc98eb69c3",
+    "contentHash": "1d84cad603a36d5f3a048a52b1a24f4741a8b20e",
     "hasOverride": true,
     "extractors": {
       "web": "ok",

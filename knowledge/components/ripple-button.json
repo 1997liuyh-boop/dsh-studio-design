@@ -1,7 +1,7 @@
 {
   "$schema": "../schema/component.schema.json",
   "id": "ripple-button",
-  "title": "波纹按钮",
+  "title": "RippleButton 波纹按钮",
   "description": "用于点击时产生可自定义颜色与时长波纹反馈的按钮组件。",
   "category": "basic",
   "tags": [
@@ -10,6 +10,7 @@
     "button",
     "magic-ui"
   ],
+  "aliases": [],
   "platforms": [
     "web"
   ],
@@ -87,7 +88,7 @@
   },
   "docPath": "content/2.components/button/ripple-button.md",
   "_meta": {
-    "contentHash": "096723b2bea1204d89496f847cb047f8268aef8a",
+    "contentHash": "8e7fa1ad68f586ddb19218ed7c9c268af885bc1f",
     "hasOverride": true,
     "extractors": {
       "web": "ok",

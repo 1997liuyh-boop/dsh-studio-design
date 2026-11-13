@@ -1,7 +1,7 @@
 {
   "$schema": "../schema/component.schema.json",
   "id": "text-scroll-reveal",
-  "title": "滚动文字揭示",
+  "title": "TextScrollReveal 滚动文字揭示",
   "description": "用于随页面滚动进度将一句话逐词由淡变实显现的文字组件。",
   "category": "effect",
   "tags": [
@@ -9,6 +9,7 @@
     "tailwind",
     "magic-ui"
   ],
+  "aliases": [],
   "platforms": [
     "web"
   ],
@@ -87,7 +88,7 @@
   },
   "docPath": "content/2.components/text-animations/text-scroll-reveal.md",
   "_meta": {
-    "contentHash": "b40676c15e812803a5fdc5b126d34d3b6732b3fd",
+    "contentHash": "b29fbd47be052ef0c94a6ff2686ab3a107991fca",
     "hasOverride": true,
     "extractors": {
       "web": "ok",

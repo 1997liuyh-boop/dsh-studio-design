@@ -11,6 +11,15 @@
     "number",
     "animation"
   ],
+  "aliases": [
+    "statistic",
+    "统计",
+    "统计数值",
+    "指标",
+    "数据指标",
+    "数字卡片",
+    "kpi"
+  ],
   "platforms": [
     "web"
   ],
@@ -141,7 +150,8 @@
   "whenNotToUse": [
     "需要持续倒计时，改用 reborn-countdown。",
     "需要编辑数值，改用 reborn-input-number。",
-    "需要图形化进度，改用 reborn-progress。"
+    "需要图形化进度，改用 reborn-progress。",
+    "只要数字从起点滚动到目标值的动效、不需要标题前后缀，改用 number-ticker。"
   ],
   "pitfalls": [
     "formatter 优先于精度和分隔符，返回内容按文本渲染，并关闭计数动画。",
@@ -170,7 +180,7 @@
   },
   "docPath": "content/2.components/data/reborn-statistic.md",
   "_meta": {
-    "contentHash": "fe5f6331e36176b04740bef5e3396eec841000ff",
+    "contentHash": "27c34a5dd2c4d3db4eba309f9501e6497c1ecdd5",
     "hasOverride": true,
     "extractors": {
       "web": "ok",

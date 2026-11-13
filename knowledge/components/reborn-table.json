@@ -11,6 +11,13 @@
     "table",
     "data"
   ],
+  "aliases": [
+    "table",
+    "表格",
+    "数据表格",
+    "列表",
+    "data grid"
+  ],
   "platforms": [
     "web"
   ],
@@ -787,7 +794,7 @@
   },
   "docPath": "content/2.components/data/reborn-table.md",
   "_meta": {
-    "contentHash": "a1096db6afe0d86dabdaa3b34a188f56f5b3764a",
+    "contentHash": "1f71a52e2d68016a19aaf67c6ef8ab48d367b32e",
     "hasOverride": true,
     "extractors": {
       "web": "ok",

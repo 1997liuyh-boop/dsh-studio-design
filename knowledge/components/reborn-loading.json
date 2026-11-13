@@ -5,6 +5,14 @@
   "description": "用于给元素或整页添加加载遮罩的组件，提供 v-loading 指令与 showLoading 服务式调用。",
   "category": "misc",
   "tags": [],
+  "aliases": [
+    "loading",
+    "加载",
+    "加载中",
+    "spinner",
+    "转圈",
+    "加载遮罩"
+  ],
   "platforms": [
     "web",
     "uniapp"
@@ -142,7 +150,8 @@
   ],
   "whenNotToUse": [
     "uniapp 列表触底的加载状态提示改用 reborn-loadmore。",
-    "操作结果的短暂反馈改用 reborn-toast。"
+    "操作结果的短暂反馈改用 reborn-toast。",
+    "按步骤序列提示进度的全屏加载，改用 multi-step-loader。"
   ],
   "pitfalls": [
     "web、uniapp 双端可用。",
@@ -175,7 +184,7 @@
   },
   "docPath": "content/2.components/miscellaneous/reborn-loading.md",
   "_meta": {
-    "contentHash": "bb314e627d404642267201f724ff55e39326c6ac",
+    "contentHash": "61a464b454e4df300f3f55c41cb5814da58a67d5",
     "hasOverride": true,
     "extractors": {
       "web": "ok",

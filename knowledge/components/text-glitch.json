@@ -1,13 +1,14 @@
 {
   "$schema": "../schema/component.schema.json",
   "id": "text-glitch",
-  "title": "文字故障",
+  "title": "TextGlitch 文字故障",
   "description": "用于给文字叠加彩色错位故障（glitch）动画的文字效果组件。",
   "category": "effect",
   "tags": [
     "css",
     "tailwind"
   ],
+  "aliases": [],
   "platforms": [
     "web"
   ],
@@ -87,7 +88,7 @@
   },
   "docPath": "content/2.components/text-animations/text-glitch.md",
   "_meta": {
-    "contentHash": "7da66b738577e954e8ef70e0f51e86f25dd157d5",
+    "contentHash": "664cdb3eed555e96bbf3b2845e83c31ad9157291",
     "hasOverride": true,
     "extractors": {
       "web": "ok",

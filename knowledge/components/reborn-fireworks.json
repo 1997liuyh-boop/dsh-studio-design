@@ -1,13 +1,18 @@
 {
   "$schema": "../schema/component.schema.json",
   "id": "reborn-fireworks",
-  "title": "礼花",
+  "title": "Fireworks 礼花",
   "description": "用于给容器内元素附加点击礼花/烟花粒子特效的组件，仅 web 端。",
   "category": "misc",
   "tags": [
     "css",
     "tailwind",
     "canvas"
+  ],
+  "aliases": [
+    "fireworks",
+    "礼花",
+    "烟花"
   ],
   "platforms": [
     "web"
@@ -119,7 +124,7 @@
   },
   "docPath": "content/2.components/miscellaneous/reborn-fireworks.md",
   "_meta": {
-    "contentHash": "b2450c5aa942b605ad311c8243a8550aa9c6b837",
+    "contentHash": "1e046199da19d7641767ad2849edd0bfa5f98001",
     "hasOverride": true,
     "extractors": {
       "web": "ok",

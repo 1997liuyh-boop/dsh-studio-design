@@ -1,13 +1,17 @@
 {
   "$schema": "../schema/component.schema.json",
   "id": "reborn-watermark",
-  "title": "水印 Watermark",
+  "title": "Watermark 水印",
   "description": "用于在内容容器上平铺文本或图片水印的组件。",
   "category": "data-display",
   "tags": [
     "data",
     "watermark",
     "uniapp"
+  ],
+  "aliases": [
+    "watermark",
+    "水印"
   ],
   "platforms": [
     "web",
@@ -154,7 +158,7 @@
   },
   "docPath": "content/2.components/data/reborn-watermark.md",
   "_meta": {
-    "contentHash": "184b3d10feaa52251da9a21cc83c2784c94ab0fc",
+    "contentHash": "a9202acb482bb13fa79a20a9a83bc4a9dd88da3b",
     "hasOverride": true,
     "extractors": {
       "web": "ok",

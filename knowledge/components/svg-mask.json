@@ -1,7 +1,7 @@
 {
   "$schema": "../schema/component.schema.json",
   "id": "svg-mask",
-  "title": "SVG 遮罩",
+  "title": "SVGMask SVG 遮罩",
   "description": "用于跟随鼠标以圆形遮罩在两层内容间切换揭示的 SVG 遮罩组件。",
   "category": "misc",
   "tags": [
@@ -9,6 +9,7 @@
     "tailwind",
     "aceternity-ui"
   ],
+  "aliases": [],
   "platforms": [
     "web"
   ],
@@ -83,7 +84,7 @@
   },
   "docPath": "content/2.components/miscellaneous/svg-mask.md",
   "_meta": {
-    "contentHash": "02ea053ede0b95a54c07934f487ff8cfd14a92d7",
+    "contentHash": "4fce15f965bf34c2d84c844eb1e3b9d46b5663fa",
     "hasOverride": true,
     "extractors": {
       "web": "ok",

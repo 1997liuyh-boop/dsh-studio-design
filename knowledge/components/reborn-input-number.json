@@ -10,6 +10,13 @@
     "input-number",
     "uniapp"
   ],
+  "aliases": [
+    "number input",
+    "数字输入",
+    "数字输入框",
+    "计数器",
+    "加减输入"
+  ],
   "platforms": [
     "web",
     "uniapp"
@@ -52,31 +59,55 @@
     },
     {
       "name": "size",
-      "type": "typeof inputNumberSizes[number]",
+      "type": "'sm' | 'md' | 'lg'",
       "required": false,
       "description": "尺寸档位，对应高度 24 / 32 / 40px。",
-      "default": "'md'"
+      "default": "'md'",
+      "options": [
+        "sm",
+        "md",
+        "lg"
+      ]
     },
     {
       "name": "color",
-      "type": "typeof inputNumberColors[number]",
+      "type": "'primary' | 'secondary' | 'success' | 'info' | 'warning' | 'error' | 'neutral'",
       "required": false,
       "description": "聚焦环与按钮悬停的强调色。",
-      "default": "'primary'"
+      "default": "'primary'",
+      "options": [
+        "primary",
+        "secondary",
+        "success",
+        "info",
+        "warning",
+        "error",
+        "neutral"
+      ]
     },
     {
       "name": "shape",
-      "type": "typeof inputNumberShapes[number]",
+      "type": "'circle' | 'square'",
       "required": false,
       "description": "外形轮廓：circle 为胶囊圆角，square 为方角",
-      "default": "'circle'"
+      "default": "'circle'",
+      "options": [
+        "circle",
+        "square"
+      ]
     },
     {
       "name": "variant",
-      "type": "typeof inputNumberVariants[number]",
+      "type": "'outlined' | 'filled' | 'borderless' | 'underlined'",
       "required": false,
       "description": "形态变体： outlined 白底描边（默认）／filled 灰底填充／borderless 无边框／underlined 仅下划线。 underlined 会强制压平圆角，此时 shape 不再生效。",
-      "default": "'outlined'"
+      "default": "'outlined'",
+      "options": [
+        "outlined",
+        "filled",
+        "borderless",
+        "underlined"
+      ]
     },
     {
       "name": "precision",
@@ -221,10 +252,15 @@
     },
     {
       "name": "align",
-      "type": "(typeof inputNumberAligns)[number]",
+      "type": "'left' | 'center' | 'right'",
       "required": false,
       "description": "输入文本对齐",
-      "default": "\"center\""
+      "default": "\"center\"",
+      "options": [
+        "left",
+        "center",
+        "right"
+      ]
     },
     {
       "name": "disabledScientific",
@@ -405,7 +441,7 @@
   },
   "docPath": "content/2.components/input-and-forms/reborn-input-number.md",
   "_meta": {
-    "contentHash": "a42cebea6622efd25d24f176ec20df6e5a4b346c",
+    "contentHash": "24513901205711b2ffa9e51441fb2dd28c17d561",
     "hasOverride": true,
     "extractors": {
       "web": "ok",

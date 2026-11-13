@@ -1,10 +1,10 @@
 {
   "schemaVersion": 1,
-  "generatedAt": "2026-10-30T10:15:11.163Z",
+  "generatedAt": "2026-11-13T08:38:02.493Z",
   "components": [
     {
       "id": "animate-grid",
-      "title": "动画网格",
+      "title": "AnimateGrid 动画网格",
       "description": "用于以 3D 倾斜透视和发光投影展示 logo 卡片阵列的网格组件。",
       "category": "misc",
       "tags": [
@@ -18,7 +18,7 @@
     },
     {
       "id": "animated-circular-progressbar",
-      "title": "动画圆形进度条",
+      "title": "AnimatedCircularProgressBar 动画圆形进度条",
       "description": "用于以圆形仪表盘动画展示当前数值百分比的进度条组件。",
       "category": "misc",
       "tags": [
@@ -29,11 +29,16 @@
       ],
       "platforms": [
         "web"
+      ],
+      "aliases": [
+        "圆形进度",
+        "环形进度动画",
+        "circular progress"
       ]
     },
     {
       "id": "animated-list",
-      "title": "动画列表",
+      "title": "AnimatedList 动画列表",
       "description": "用于让列表项按固定延迟逐条进场的通知流列表组件。",
       "category": "misc",
       "tags": [
@@ -47,7 +52,7 @@
     },
     {
       "id": "animated-testimonials",
-      "title": "动态评价",
+      "title": "AnimatedTestimonials 动态评价",
       "description": "用于轮播展示用户评价（头像、姓名、职称、引言）并支持自动播放的组件。",
       "category": "misc",
       "tags": [
@@ -57,11 +62,16 @@
       ],
       "platforms": [
         "web"
+      ],
+      "aliases": [
+        "评价轮播",
+        "用户评价",
+        "testimonial"
       ]
     },
     {
       "id": "animated-tooltip",
-      "title": "动画提示",
+      "title": "AnimatedTooltip 动画提示",
       "description": "用于悬停头像时弹出姓名与职称气泡并跟随鼠标位置的提示组件。",
       "category": "misc",
       "tags": [
@@ -75,7 +85,7 @@
     },
     {
       "id": "apple-card-carousel",
-      "title": "Apple 卡片轮播",
+      "title": "AppleCardCarousel 卡片轮播",
       "description": "用于以 Apple 官网风格横向滚动卡片、点击展开为模态详情的轮播组件。",
       "category": "data-display",
       "tags": [
@@ -90,7 +100,7 @@
     },
     {
       "id": "balance-slider",
-      "title": "平衡滑块",
+      "title": "BalanceSlider 平衡滑块",
       "description": "用于在左右两侧间拖动分配比例的双色平衡滑块展示组件。",
       "category": "form",
       "tags": [
@@ -104,7 +114,7 @@
     },
     {
       "id": "bento-grid",
-      "title": "Bento 网格",
+      "title": "BentoGrid Bento 网格",
       "description": "用于以不等宽卡片拼贴展示功能特性的 Bento 风格网格布局组件。",
       "category": "misc",
       "tags": [
@@ -115,11 +125,16 @@
       ],
       "platforms": [
         "web"
+      ],
+      "aliases": [
+        "bento",
+        "便当网格",
+        "功能网格"
       ]
     },
     {
       "id": "blur-reveal",
-      "title": "模糊揭示",
+      "title": "BlurReveal 模糊揭示",
       "description": "用于让子元素依次从模糊状态淡入上移进场的揭示动画组件。",
       "category": "effect",
       "tags": [
@@ -133,7 +148,7 @@
     },
     {
       "id": "book",
-      "title": "书本",
+      "title": "Book 书本",
       "description": "用于展示 3D 书本封面并在悬停时播放动画的展示组件。",
       "category": "misc",
       "tags": [
@@ -147,7 +162,7 @@
     },
     {
       "id": "box-reveal",
-      "title": "盒子揭示",
+      "title": "BoxReveal 盒子揭示",
       "description": "用于内容被色块滑开后显现的揭示入场动画组件。",
       "category": "effect",
       "tags": [
@@ -161,7 +176,7 @@
     },
     {
       "id": "card-3d",
-      "title": "3D 卡片效果",
+      "title": "Card3D 3D 卡片",
       "description": "用于悬停时随鼠标产生透视倾斜、子元素分层浮起的 3D 卡片组件。",
       "category": "data-display",
       "tags": [
@@ -192,7 +207,7 @@
     },
     {
       "id": "colourful-text",
-      "title": "彩色文字",
+      "title": "ColourfulText 彩色文字",
       "description": "用于让文字逐字符循环变换颜色并动画的标题点缀组件。",
       "category": "effect",
       "tags": [
@@ -206,7 +221,7 @@
     },
     {
       "id": "compare",
-      "title": "对比",
+      "title": "Compare 对比",
       "description": "用于以滑动分割线对比两张图片或两块自定义内容的对比组件。",
       "category": "misc",
       "tags": [
@@ -216,11 +231,16 @@
       ],
       "platforms": [
         "web"
+      ],
+      "aliases": [
+        "对比",
+        "before after",
+        "图片对比"
       ]
     },
     {
       "id": "container-scroll",
-      "title": "容器滚动",
+      "title": "ContainerScroll 容器滚动",
       "description": "用于随页面滚动对卡片内容做旋转缩放过渡的首屏展示组件。",
       "category": "misc",
       "tags": [
@@ -234,7 +254,7 @@
     },
     {
       "id": "container-text-flip",
-      "title": "容器文字翻转",
+      "title": "ContainerTextFlip 容器文字翻转",
       "description": "用于循环翻转一组单词、容器宽度随词宽平滑过渡的文字组件。",
       "category": "effect",
       "tags": [
@@ -248,7 +268,7 @@
     },
     {
       "id": "direction-aware-hover",
-      "title": "方向感知悬停卡片",
+      "title": "DirectionAwareHover 方向感知悬停卡片",
       "description": "用于根据鼠标进入方向滑入内容覆盖层的图片悬停卡片组件。",
       "category": "data-display",
       "tags": [
@@ -263,7 +283,7 @@
     },
     {
       "id": "dither-shader",
-      "title": "抖动着色器",
+      "title": "DitherShader 抖动着色器",
       "description": "用于对图片实时应用有序抖动与像素化处理的复古风着色器组件。",
       "category": "effect",
       "tags": [
@@ -278,7 +298,7 @@
     },
     {
       "id": "dock",
-      "title": "Dock",
+      "title": "Dock 程序坞",
       "description": "用于悬停时邻近图标放大的 macOS 风格 Dock 图标栏组件。",
       "category": "misc",
       "tags": [
@@ -287,11 +307,17 @@
       ],
       "platforms": [
         "web"
+      ],
+      "aliases": [
+        "mac dock",
+        "程序坞",
+        "图标栏",
+        "放大图标栏"
       ]
     },
     {
       "id": "expandable-gallery",
-      "title": "可扩展画廊",
+      "title": "ExpandableGallery 可扩展画廊",
       "description": "用于一行图片悬停时放大当前项的可扩展横向画廊组件。",
       "category": "misc",
       "tags": [
@@ -305,7 +331,7 @@
     },
     {
       "id": "file-upload",
-      "title": "文件上传",
+      "title": "FileUpload 文件上传",
       "description": "用于拖放或点击选择文件、带动效展示区的文件上传入口组件。",
       "category": "form",
       "tags": [
@@ -316,11 +342,16 @@
       ],
       "platforms": [
         "web"
+      ],
+      "aliases": [
+        "拖放上传",
+        "上传动效",
+        "dropzone"
       ]
     },
     {
       "id": "flip-card",
-      "title": "翻转卡片",
+      "title": "FlipCard 翻转卡片",
       "description": "用于沿 X 或 Y 轴 180 度翻转、展示正反两面内容的卡片组件。",
       "category": "data-display",
       "tags": [
@@ -334,7 +365,7 @@
     },
     {
       "id": "flip-words",
-      "title": "翻转单词",
+      "title": "FlipWords 翻转单词",
       "description": "用于句子中一组单词循环翻转切换的内联文字动画组件。",
       "category": "effect",
       "tags": [
@@ -348,7 +379,7 @@
     },
     {
       "id": "focus",
-      "title": "聚焦",
+      "title": "Focus 聚焦",
       "description": "用于句子逐词聚焦、其余单词模糊并带边框动画的文字强调组件。",
       "category": "effect",
       "tags": [
@@ -362,7 +393,7 @@
     },
     {
       "id": "glare-card",
-      "title": "高光卡片",
+      "title": "GlareCard 高光卡片",
       "description": "用于悬停时表面扫过高光光泽的展示卡片组件，风格源自 Linear。",
       "category": "data-display",
       "tags": [
@@ -377,7 +408,7 @@
     },
     {
       "id": "gradient-button",
-      "title": "渐变按钮",
+      "title": "GradientButton 渐变按钮",
       "description": "用于带旋转圆锥渐变发光边框的动效按钮组件。",
       "category": "basic",
       "tags": [
@@ -391,7 +422,7 @@
     },
     {
       "id": "halo-search",
-      "title": "光晕搜索框",
+      "title": "HaloSearch 光晕搜索框",
       "description": "发光光环搜索输入框：悬停与聚焦时光环旋转，支持 v-model 绑定关键词与回车 search 事件。",
       "category": "form",
       "tags": [
@@ -406,7 +437,7 @@
     },
     {
       "id": "hyper-text",
-      "title": "超能文字",
+      "title": "HyperText 超能文字",
       "description": "用于文字以字符快速乱序滚动后定格显现的动画组件，悬停可重播。",
       "category": "effect",
       "tags": [
@@ -420,7 +451,7 @@
     },
     {
       "id": "icon-cloud",
-      "title": "图标云",
+      "title": "IconCloud 图标云",
       "description": "用于以可拖拽旋转的 Canvas 3D 球面展示一组图标的展示组件。",
       "category": "misc",
       "tags": [
@@ -434,7 +465,7 @@
     },
     {
       "id": "images-slider",
-      "title": "图片滑块",
+      "title": "ImagesSlider 图片滑块",
       "description": "用于全屏轮播一组背景图并叠加覆盖层内容的图片滑块组件。",
       "category": "misc",
       "tags": [
@@ -445,11 +476,16 @@
       ],
       "platforms": [
         "web"
+      ],
+      "aliases": [
+        "全屏轮播",
+        "背景轮播",
+        "图片轮播"
       ]
     },
     {
       "id": "input",
-      "title": "输入框",
+      "title": "IInput 输入框",
       "description": "用于带鼠标径向渐变悬停高亮效果的单行文本输入组件。",
       "category": "form",
       "tags": [
@@ -464,7 +500,7 @@
     },
     {
       "id": "interactive-hover-button",
-      "title": "交互悬停按钮",
+      "title": "InteractiveHoverButton 交互悬停按钮",
       "description": "用于悬停时产生动态过渡效果的文字按钮组件，文字经 text prop 传入。",
       "category": "basic",
       "tags": [
@@ -479,7 +515,7 @@
     },
     {
       "id": "iphone-mockup",
-      "title": "iPhone 模型",
+      "title": "iPhoneMockup iPhone 模型",
       "description": "用于以 iPhone SVG 外壳包裹展示截图的设备模型组件。",
       "category": "media",
       "tags": [
@@ -494,7 +530,7 @@
     },
     {
       "id": "lens",
-      "title": "放大镜",
+      "title": "Lens 放大镜",
       "description": "用于在图片等插槽内容上叠加圆形放大镜的局部放大组件。",
       "category": "misc",
       "tags": [
@@ -504,11 +540,15 @@
       ],
       "platforms": [
         "web"
+      ],
+      "aliases": [
+        "放大镜",
+        "magnifier"
       ]
     },
     {
       "id": "letter-pullup",
-      "title": "字符上提",
+      "title": "LetterPullup 字符上提",
       "description": "用于让一段文字逐字符错落上提进场的文字动画组件。",
       "category": "effect",
       "tags": [
@@ -522,7 +562,7 @@
     },
     {
       "id": "line-shadow-text",
-      "title": "线条阴影文字",
+      "title": "LineShadowText 线条阴影文字",
       "description": "用于给插槽文字添加斜线条纹阴影装饰的静态文字效果组件。",
       "category": "effect",
       "tags": [
@@ -536,7 +576,7 @@
     },
     {
       "id": "link-preview",
-      "title": "链接预览",
+      "title": "LinkPreview 链接预览",
       "description": "用于悬停链接文字时弹出目标网页预览图的行内链接组件。",
       "category": "misc",
       "tags": [
@@ -550,7 +590,7 @@
     },
     {
       "id": "liquid-glass",
-      "title": "液态玻璃",
+      "title": "LiquidGlass 液态玻璃",
       "description": "用于以 SVG 位移贴图与通道偏移模拟液态玻璃折射的容器组件。",
       "category": "effect",
       "tags": [
@@ -564,7 +604,7 @@
     },
     {
       "id": "meteors",
-      "title": "流星雨",
+      "title": "Meteors 流星雨",
       "description": "用于在卡片等容器内渲染划过的流星雨背景动画的装饰组件。",
       "category": "effect",
       "tags": [
@@ -578,7 +618,7 @@
     },
     {
       "id": "morphing-tabs",
-      "title": "变形标签页",
+      "title": "MorphingTabs 变形标签页",
       "description": "用于在切换标签时呈现胶体粘连变形效果的字符串标签页组件。",
       "category": "misc",
       "tags": [
@@ -587,11 +627,15 @@
       ],
       "platforms": [
         "web"
+      ],
+      "aliases": [
+        "变形标签页",
+        "粘连标签"
       ]
     },
     {
       "id": "morphing-text",
-      "title": "文字变形",
+      "title": "MorphingText 文字变形",
       "description": "用于在一组文本间以模糊渐变变形循环切换的文字动画组件。",
       "category": "effect",
       "tags": [
@@ -605,7 +649,7 @@
     },
     {
       "id": "multi-step-loader",
-      "title": "多步加载器",
+      "title": "MultiStepLoader 多步加载器",
       "description": "用于按步骤序列展示加载进度、支持异步等待步骤的全屏加载组件。",
       "category": "misc",
       "tags": [
@@ -615,11 +659,17 @@
       ],
       "platforms": [
         "web"
+      ],
+      "aliases": [
+        "多步加载",
+        "步骤加载",
+        "step loader",
+        "分步加载"
       ]
     },
     {
       "id": "neon-border",
-      "title": "霓虹边框",
+      "title": "NeonBorder 霓虹边框",
       "description": "用于给插槽内容包裹双色霓虹流转边框的装饰容器组件。",
       "category": "effect",
       "tags": [
@@ -633,7 +683,7 @@
     },
     {
       "id": "number-ticker",
-      "title": "数字滚动",
+      "title": "NumberTicker 数字滚动",
       "description": "用于让数字从起点平滑滚动到目标值的数值动画组件。",
       "category": "effect",
       "tags": [
@@ -643,11 +693,17 @@
       ],
       "platforms": [
         "web"
+      ],
+      "aliases": [
+        "数字滚动",
+        "计数动画",
+        "count up",
+        "数字跳动"
       ]
     },
     {
       "id": "pattern-background",
-      "title": "图案背景",
+      "title": "PatternBackground 图案背景",
       "description": "用于为区块提供图案纹理背景的容器组件，内容经默认插槽传入。",
       "category": "effect",
       "tags": [
@@ -661,7 +717,7 @@
     },
     {
       "id": "photo-gallery",
-      "title": "照片画廊",
+      "title": "PhotoGallery 照片画廊",
       "description": "用于以动画展开一组照片的画廊展示组件，图片经 items 传入。",
       "category": "misc",
       "tags": [
@@ -675,7 +731,7 @@
     },
     {
       "id": "radiant-text",
-      "title": "光辉文字",
+      "title": "RadiantText 光辉文字",
       "description": "用于让高光沿插槽文字循环扫过的文字高亮动画组件。",
       "category": "effect",
       "tags": [
@@ -689,7 +745,7 @@
     },
     {
       "id": "rainbow-button",
-      "title": "彩虹按钮",
+      "title": "RainbowButton 彩虹按钮",
       "description": "用于呈现彩虹渐变流动发光效果的按钮组件，内容经默认插槽传入。",
       "category": "basic",
       "tags": [
@@ -711,6 +767,12 @@
       "platforms": [
         "web",
         "uniapp"
+      ],
+      "aliases": [
+        "affix",
+        "悬浮",
+        "固钉",
+        "悬浮元素"
       ]
     },
     {
@@ -728,6 +790,17 @@
       "platforms": [
         "web",
         "uniapp"
+      ],
+      "aliases": [
+        "alert",
+        "警告",
+        "警告提示",
+        "提示条",
+        "横幅",
+        "banner",
+        "公告",
+        "告警",
+        "页内提示"
       ]
     },
     {
@@ -743,6 +816,13 @@
       ],
       "platforms": [
         "web"
+      ],
+      "aliases": [
+        "anchor",
+        "锚点",
+        "目录",
+        "toc",
+        "目录导航"
       ]
     },
     {
@@ -758,6 +838,10 @@
       ],
       "platforms": [
         "web"
+      ],
+      "aliases": [
+        "avatar",
+        "头像"
       ]
     },
     {
@@ -774,6 +858,11 @@
       ],
       "platforms": [
         "web"
+      ],
+      "aliases": [
+        "头像组",
+        "avatar group",
+        "头像叠放"
       ]
     },
     {
@@ -791,12 +880,17 @@
       "platforms": [
         "web",
         "uniapp"
+      ],
+      "aliases": [
+        "back top",
+        "返回顶部",
+        "回到顶部"
       ]
     },
     {
       "id": "reborn-badge",
       "title": "Badge 徽章",
-      "description": "双端状态标签：支持四种风格、胶囊、可关闭与可选中；Web 额外支持独立圆形参数。",
+      "description": "双端状态标签（即 Element / Ant 的 Tag、MUI 的 Chip）：四种风格、胶囊、可关闭与可选中；Web 另有圆形。",
       "category": "basic",
       "tags": [
         "css",
@@ -808,6 +902,21 @@
       "platforms": [
         "web",
         "uniapp"
+      ],
+      "aliases": [
+        "tag",
+        "标签",
+        "状态标签",
+        "胶囊标签",
+        "pill",
+        "label",
+        "chip",
+        "筛选标签",
+        "可关闭标签",
+        "element tag",
+        "ant tag",
+        "热门",
+        "VIP 标签"
       ]
     },
     {
@@ -825,6 +934,11 @@
       "platforms": [
         "web",
         "uniapp"
+      ],
+      "aliases": [
+        "breadcrumb",
+        "面包屑",
+        "路径导航"
       ]
     },
     {
@@ -841,6 +955,17 @@
       "platforms": [
         "web",
         "uniapp"
+      ],
+      "aliases": [
+        "button",
+        "按钮",
+        "btn",
+        "操作按钮",
+        "主按钮",
+        "次按钮",
+        "文字按钮",
+        "链接按钮",
+        "加载按钮"
       ]
     },
     {
@@ -857,11 +982,17 @@
       ],
       "platforms": [
         "web"
+      ],
+      "aliases": [
+        "calendar",
+        "日历",
+        "月历",
+        "日程"
       ]
     },
     {
       "id": "reborn-card",
-      "title": "卡片 Card",
+      "title": "Card 卡片",
       "description": "用于分组展示内容区块的基础卡片容器组件，带可选标题，仅 uniapp 端。",
       "category": "data-display",
       "tags": [
@@ -871,6 +1002,11 @@
       ],
       "platforms": [
         "uniapp"
+      ],
+      "aliases": [
+        "card",
+        "卡片",
+        "容器卡片"
       ]
     },
     {
@@ -887,6 +1023,28 @@
       ],
       "platforms": [
         "web"
+      ],
+      "aliases": [
+        "carousel",
+        "轮播",
+        "轮播图",
+        "走马灯",
+        "swiper",
+        "banner 轮播",
+        "幻灯片",
+        "slideshow",
+        "图廊",
+        "商品图廊",
+        "画廊",
+        "缩略图",
+        "缩略图切换",
+        "主图",
+        "主图切换",
+        "thumbs",
+        "thumbnail",
+        "大图切换",
+        "图片切换",
+        "看图"
       ]
     },
     {
@@ -904,11 +1062,18 @@
       "platforms": [
         "web",
         "uniapp"
+      ],
+      "aliases": [
+        "cascader",
+        "级联",
+        "级联选择",
+        "多级选择",
+        "省市区"
       ]
     },
     {
       "id": "reborn-checkbox",
-      "title": "checkbox 多选框",
+      "title": "Checkbox 多选框",
       "description": "用于开关单项或组合多选的多选框组件，双端可用，支持布尔与数组两种绑定，并提供半选态与数据驱动的复选框组。",
       "category": "form",
       "tags": [
@@ -920,12 +1085,19 @@
       "platforms": [
         "web",
         "uniapp"
+      ],
+      "aliases": [
+        "checkbox",
+        "多选",
+        "复选框",
+        "勾选",
+        "勾选框"
       ]
     },
     {
       "id": "reborn-chip",
       "title": "Chip 角标",
-      "description": "用于在元素角标位置显示提示点或数字标记的组件，双端可用。",
+      "description": "角标（即 Element / Ant / Vuetify 的 Badge）：挂在图标、头像右上角的红点或数字标记，双端可用。",
       "category": "basic",
       "tags": [
         "chip",
@@ -936,6 +1108,27 @@
       "platforms": [
         "web",
         "uniapp"
+      ],
+      "aliases": [
+        "badge",
+        "徽标",
+        "红点",
+        "小红点",
+        "未读",
+        "未读数",
+        "数字角标",
+        "消息数",
+        "sup",
+        "dot",
+        "corner badge",
+        "element badge",
+        "ant badge",
+        "角标数字",
+        "小圆点",
+        "圆点",
+        "提示点",
+        "右上角",
+        "右上角数字"
       ]
     },
     {
@@ -953,11 +1146,18 @@
       "platforms": [
         "web",
         "uniapp"
+      ],
+      "aliases": [
+        "collapse",
+        "折叠面板",
+        "手风琴",
+        "accordion",
+        "展开收起"
       ]
     },
     {
       "id": "reborn-color-picker",
-      "title": "取色器",
+      "title": "ColorPicker 取色器",
       "description": "用于弹出面板选取颜色并以 v-model 绑定色值字符串的取色器组件，双端可用。",
       "category": "form",
       "tags": [
@@ -968,21 +1168,32 @@
       "platforms": [
         "web",
         "uniapp"
+      ],
+      "aliases": [
+        "color picker",
+        "取色",
+        "颜色选择",
+        "调色板"
       ]
     },
     {
       "id": "reborn-container",
-      "title": "容器",
+      "title": "Container 布局容器",
       "description": "用于将页面内容水平居中并按屏幕断点限制最大宽度的布局容器组件，仅 web 端。",
       "category": "navigation",
       "tags": [],
       "platforms": [
         "web"
+      ],
+      "aliases": [
+        "container",
+        "容器",
+        "居中容器"
       ]
     },
     {
       "id": "reborn-context-menu",
-      "title": "Menu 右键菜单",
+      "title": "ContextMenu 右键菜单",
       "description": "用于在目标区域右键、点击、悬浮或划词后弹出操作面板的上下文菜单组件，仅 web 端。",
       "category": "navigation",
       "tags": [
@@ -991,6 +1202,11 @@
       ],
       "platforms": [
         "web"
+      ],
+      "aliases": [
+        "context menu",
+        "右键菜单",
+        "上下文菜单"
       ]
     },
     {
@@ -1007,11 +1223,16 @@
       ],
       "platforms": [
         "web"
+      ],
+      "aliases": [
+        "countdown",
+        "倒计时",
+        "计时器"
       ]
     },
     {
       "id": "reborn-coupon",
-      "title": "卡券 Coupon",
+      "title": "Coupon 卡券",
       "description": "用于渲染缺口、撕线、邮票等形态优惠券外观的卡券组件，仅 web 端。",
       "category": "misc",
       "tags": [
@@ -1020,11 +1241,17 @@
       ],
       "platforms": [
         "web"
+      ],
+      "aliases": [
+        "coupon",
+        "卡券",
+        "优惠券",
+        "券"
       ]
     },
     {
       "id": "reborn-crowd",
-      "title": "人群漫步",
+      "title": "Crowd 人群漫步",
       "description": "把人物精灵图切格后在 2D 画布上左右随机走过，边走边颠、前后分层，可控人数与速度，用作页脚装饰。",
       "category": "effect",
       "tags": [
@@ -1052,6 +1279,13 @@
       "platforms": [
         "web",
         "uniapp"
+      ],
+      "aliases": [
+        "date picker",
+        "日期选择",
+        "日期",
+        "日期范围",
+        "选日期"
       ]
     },
     {
@@ -1071,7 +1305,7 @@
     },
     {
       "id": "reborn-depth-image",
-      "title": "深度视差图",
+      "title": "DepthImage 深度视差图",
       "description": "按深度图对透明背景图片做跟随指针的 2.5D 视差与补光，WebGL 渲染，失败时退回静态图。",
       "category": "effect",
       "tags": [
@@ -1097,6 +1331,13 @@
       ],
       "platforms": [
         "web"
+      ],
+      "aliases": [
+        "descriptions",
+        "描述列表",
+        "详情",
+        "键值对",
+        "信息展示"
       ]
     },
     {
@@ -1107,6 +1348,15 @@
       "tags": [],
       "platforms": [
         "web"
+      ],
+      "aliases": [
+        "dialog",
+        "modal",
+        "对话框",
+        "弹窗",
+        "模态框",
+        "确认框",
+        "弹框"
       ]
     },
     {
@@ -1122,6 +1372,12 @@
       "platforms": [
         "web",
         "uniapp"
+      ],
+      "aliases": [
+        "draggable",
+        "拖拽排序",
+        "拖动排序",
+        "sortable"
       ]
     },
     {
@@ -1137,6 +1393,14 @@
       ],
       "platforms": [
         "web"
+      ],
+      "aliases": [
+        "drawer",
+        "抽屉",
+        "侧边栏",
+        "侧滑面板",
+        "侧边面板",
+        "side sheet"
       ]
     },
     {
@@ -1147,6 +1411,14 @@
       "tags": [],
       "platforms": [
         "web"
+      ],
+      "aliases": [
+        "dropdown",
+        "下拉菜单",
+        "操作菜单",
+        "更多操作",
+        "菜单",
+        "action menu"
       ]
     },
     {
@@ -1179,11 +1451,20 @@
       "platforms": [
         "web",
         "uniapp"
+      ],
+      "aliases": [
+        "empty",
+        "空状态",
+        "暂无数据",
+        "无数据",
+        "空页面",
+        "placeholder",
+        "占位"
       ]
     },
     {
       "id": "reborn-fab",
-      "title": "悬浮按钮 (Fab)",
+      "title": "Fab 悬浮按钮",
       "description": "用于固定位置悬浮操作入口的按钮组件，支持拖拽吸边与展开动作面板，双端可用。",
       "category": "navigation",
       "tags": [
@@ -1194,6 +1475,13 @@
       "platforms": [
         "web",
         "uniapp"
+      ],
+      "aliases": [
+        "fab",
+        "悬浮按钮",
+        "浮动按钮",
+        "floating action button",
+        "快捷入口"
       ]
     },
     {
@@ -1209,7 +1497,7 @@
     },
     {
       "id": "reborn-fireworks",
-      "title": "礼花",
+      "title": "Fireworks 礼花",
       "description": "用于给容器内元素附加点击礼花/烟花粒子特效的组件，仅 web 端。",
       "category": "misc",
       "tags": [
@@ -1219,6 +1507,11 @@
       ],
       "platforms": [
         "web"
+      ],
+      "aliases": [
+        "fireworks",
+        "礼花",
+        "烟花"
       ]
     },
     {
@@ -1230,6 +1523,12 @@
       "platforms": [
         "web",
         "uniapp"
+      ],
+      "aliases": [
+        "footer",
+        "底部栏",
+        "底部操作栏",
+        "底部按钮栏"
       ]
     },
     {
@@ -1245,11 +1544,16 @@
       "platforms": [
         "web",
         "uniapp"
+      ],
+      "aliases": [
+        "form",
+        "表单",
+        "表单校验"
       ]
     },
     {
       "id": "reborn-guide",
-      "title": "引导 Guide",
+      "title": "Guide 引导",
       "description": "Web 分步引导：自动居中并锁定目标，支持父子步骤、数字或点状进度、封面与整步组件替换。",
       "category": "basic",
       "tags": [
@@ -1260,11 +1564,18 @@
       ],
       "platforms": [
         "web"
+      ],
+      "aliases": [
+        "guide",
+        "引导",
+        "新手引导",
+        "tour",
+        "分步引导"
       ]
     },
     {
       "id": "reborn-header",
-      "title": "标题",
+      "title": "Header 顶栏",
       "description": "用于站点顶部导航的响应式头部组件，移动端可切换为弹窗菜单。",
       "category": "navigation",
       "tags": [
@@ -1273,11 +1584,18 @@
       ],
       "platforms": [
         "web"
+      ],
+      "aliases": [
+        "header",
+        "顶部导航",
+        "导航栏",
+        "navbar",
+        "页面顶栏"
       ]
     },
     {
       "id": "reborn-image",
-      "title": "图片 Image",
+      "title": "Image 图片",
       "description": "用于展示图片并提供预览、加载/错误状态与多种裁剪模式的双端图片组件。",
       "category": "misc",
       "tags": [
@@ -1291,11 +1609,17 @@
       "platforms": [
         "web",
         "uniapp"
+      ],
+      "aliases": [
+        "image",
+        "图片",
+        "图片预览",
+        "img"
       ]
     },
     {
       "id": "reborn-input",
-      "title": "input 输入框",
+      "title": "Input 输入框",
       "description": "用于文本录入的双端输入框组件，支持圆角胶囊样式、多尺寸、清除与密码态。",
       "category": "form",
       "tags": [
@@ -1307,6 +1631,13 @@
       "platforms": [
         "web",
         "uniapp"
+      ],
+      "aliases": [
+        "input",
+        "输入框",
+        "文本框",
+        "text field",
+        "单行输入"
       ]
     },
     {
@@ -1323,11 +1654,18 @@
       "platforms": [
         "web",
         "uniapp"
+      ],
+      "aliases": [
+        "number input",
+        "数字输入",
+        "数字输入框",
+        "计数器",
+        "加减输入"
       ]
     },
     {
       "id": "reborn-input-otp",
-      "title": "验证码输入",
+      "title": "InputOtp 验证码输入",
       "description": "用于短信验证码、OTP 等固定位数分格输入的双端组件。",
       "category": "form",
       "tags": [
@@ -1340,6 +1678,13 @@
       "platforms": [
         "web",
         "uniapp"
+      ],
+      "aliases": [
+        "otp",
+        "验证码",
+        "验证码输入",
+        "pin 码",
+        "分格输入"
       ]
     },
     {
@@ -1356,6 +1701,12 @@
       ],
       "platforms": [
         "web"
+      ],
+      "aliases": [
+        "layout",
+        "布局",
+        "后台布局",
+        "admin layout"
       ]
     },
     {
@@ -1367,31 +1718,49 @@
       "platforms": [
         "web",
         "uniapp"
+      ],
+      "aliases": [
+        "loading",
+        "加载",
+        "加载中",
+        "spinner",
+        "转圈",
+        "加载遮罩"
       ]
     },
     {
       "id": "reborn-loadmore",
-      "title": "加载更多",
+      "title": "Loadmore 加载更多",
       "description": "用于列表底部展示加载中、加载失败与没有更多状态的 uniapp 组件。",
       "category": "misc",
       "tags": [],
       "platforms": [
         "uniapp"
+      ],
+      "aliases": [
+        "load more",
+        "加载更多",
+        "上拉加载"
       ]
     },
     {
       "id": "reborn-main",
-      "title": "主体布局",
+      "title": "Main 主体布局",
       "description": "用于渲染语义化 main 页面主体区域、默认最小高度撑满一屏的布局组件，仅 web 端。",
       "category": "navigation",
       "tags": [],
       "platforms": [
         "web"
+      ],
+      "aliases": [
+        "main",
+        "主体",
+        "主区域"
       ]
     },
     {
       "id": "reborn-marquee",
-      "title": "跑马灯",
+      "title": "Marquee 跑马灯",
       "description": "用于横向或纵向无限循环滚动内容的跑马灯组件，支持悬停暂停与渐隐遮罩。",
       "category": "misc",
       "tags": [
@@ -1401,6 +1770,13 @@
       ],
       "platforms": [
         "web"
+      ],
+      "aliases": [
+        "marquee",
+        "跑马灯",
+        "滚动字幕",
+        "无限滚动",
+        "ticker"
       ]
     },
     {
@@ -1416,6 +1792,12 @@
       ],
       "platforms": [
         "web"
+      ],
+      "aliases": [
+        "mention",
+        "提及",
+        "@ 提及",
+        "at 某人"
       ]
     },
     {
@@ -1426,6 +1808,20 @@
       "tags": [],
       "platforms": [
         "web"
+      ],
+      "aliases": [
+        "menu",
+        "导航菜单",
+        "侧边菜单",
+        "侧栏",
+        "sidebar",
+        "nav",
+        "分类列表",
+        "分类导航",
+        "类目导航",
+        "侧边导航",
+        "导航列表",
+        "category list"
       ]
     },
     {
@@ -1437,6 +1833,13 @@
       "platforms": [
         "web",
         "uniapp"
+      ],
+      "aliases": [
+        "notice bar",
+        "通知栏",
+        "通告栏",
+        "公告栏",
+        "滚动公告"
       ]
     },
     {
@@ -1447,6 +1850,15 @@
       "tags": [],
       "platforms": [
         "web"
+      ],
+      "aliases": [
+        "notification",
+        "通知",
+        "系统通知",
+        "消息通知",
+        "右上角通知",
+        "notice",
+        "notify"
       ]
     },
     {
@@ -1462,11 +1874,17 @@
       "platforms": [
         "web",
         "uniapp"
+      ],
+      "aliases": [
+        "overlay",
+        "遮罩",
+        "mask",
+        "蒙层"
       ]
     },
     {
       "id": "reborn-page",
-      "title": "页面容器 Page",
+      "title": "Page 页面容器",
       "description": "用于 uniapp 页面最外层的页面容器组件，可配置页面标题与描述文案。",
       "category": "layout",
       "tags": [
@@ -1476,6 +1894,10 @@
       ],
       "platforms": [
         "uniapp"
+      ],
+      "aliases": [
+        "page",
+        "页面容器"
       ]
     },
     {
@@ -1491,6 +1913,12 @@
       ],
       "platforms": [
         "web"
+      ],
+      "aliases": [
+        "page header",
+        "页头",
+        "页面标题",
+        "返回标题栏"
       ]
     },
     {
@@ -1506,6 +1934,12 @@
       "platforms": [
         "web",
         "uniapp"
+      ],
+      "aliases": [
+        "pagination",
+        "分页",
+        "页码",
+        "翻页"
       ]
     },
     {
@@ -1536,6 +1970,13 @@
       ],
       "platforms": [
         "web"
+      ],
+      "aliases": [
+        "popconfirm",
+        "气泡确认",
+        "二次确认",
+        "确认气泡",
+        "删除确认"
       ]
     },
     {
@@ -1552,6 +1993,13 @@
       "platforms": [
         "web",
         "uniapp"
+      ],
+      "aliases": [
+        "popover",
+        "气泡卡片",
+        "气泡",
+        "浮层",
+        "弹出卡片"
       ]
     },
     {
@@ -1566,6 +2014,14 @@
       ],
       "platforms": [
         "uniapp"
+      ],
+      "aliases": [
+        "popup",
+        "弹出层",
+        "底部弹层",
+        "action sheet",
+        "bottom sheet",
+        "半屏弹窗"
       ]
     },
     {
@@ -1581,11 +2037,18 @@
       ],
       "platforms": [
         "web"
+      ],
+      "aliases": [
+        "progress",
+        "进度条",
+        "进度",
+        "环形进度",
+        "仪表盘"
       ]
     },
     {
       "id": "reborn-qrcode",
-      "title": "二维码 Qrcode",
+      "title": "Qrcode 二维码",
       "description": "用于生成二维码的双端组件，支持前景/背景色、码点样式、中央 Logo 与纠错级别。",
       "category": "misc",
       "tags": [
@@ -1598,6 +2061,11 @@
       "platforms": [
         "web",
         "uniapp"
+      ],
+      "aliases": [
+        "qrcode",
+        "二维码",
+        "qr"
       ]
     },
     {
@@ -1614,6 +2082,14 @@
       "platforms": [
         "web",
         "uniapp"
+      ],
+      "aliases": [
+        "radio",
+        "单选",
+        "单选框",
+        "单选按钮",
+        "radio button",
+        "radio group"
       ]
     },
     {
@@ -1632,6 +2108,13 @@
       "platforms": [
         "web",
         "uniapp"
+      ],
+      "aliases": [
+        "rate",
+        "评分",
+        "星级",
+        "star rating",
+        "打分"
       ]
     },
     {
@@ -1649,6 +2132,15 @@
       "platforms": [
         "web",
         "uniapp"
+      ],
+      "aliases": [
+        "result",
+        "结果页",
+        "成功页",
+        "失败页",
+        "404",
+        "状态页",
+        "操作结果"
       ]
     },
     {
@@ -1663,6 +2155,11 @@
       "platforms": [
         "web",
         "uniapp"
+      ],
+      "aliases": [
+        "portal",
+        "teleport",
+        "传送"
       ]
     },
     {
@@ -1680,6 +2177,12 @@
       "platforms": [
         "web",
         "uniapp"
+      ],
+      "aliases": [
+        "search",
+        "搜索框",
+        "搜索",
+        "search bar"
       ]
     },
     {
@@ -1695,6 +2198,15 @@
       ],
       "platforms": [
         "web"
+      ],
+      "aliases": [
+        "segmented",
+        "分段控制器",
+        "分段选择",
+        "segment control",
+        "切换器",
+        "toggle group",
+        "按钮组切换"
       ]
     },
     {
@@ -1712,6 +2224,15 @@
       "platforms": [
         "web",
         "uniapp"
+      ],
+      "aliases": [
+        "select",
+        "下拉选择",
+        "选择器",
+        "下拉框",
+        "单选下拉",
+        "多选下拉",
+        "combobox"
       ]
     },
     {
@@ -1739,11 +2260,17 @@
       ],
       "platforms": [
         "uniapp"
+      ],
+      "aliases": [
+        "signature",
+        "签名",
+        "手写签名",
+        "签字"
       ]
     },
     {
       "id": "reborn-sku",
-      "title": "商品规格 Sku",
+      "title": "Sku 商品规格",
       "description": "用于商品规格（SKU）选择的选项组件，按 options 渲染规格项并以对象形式双向绑定选中结果。",
       "category": "form",
       "tags": [
@@ -1754,11 +2281,16 @@
       ],
       "platforms": [
         "web"
+      ],
+      "aliases": [
+        "sku",
+        "规格选择",
+        "商品规格"
       ]
     },
     {
       "id": "reborn-slide-verify",
-      "title": "滑块验证",
+      "title": "SlideVerify 滑块验证",
       "description": "用于人机校验的滑块验证组件，向右拖动超过阈值即通过，支持失败回弹与自动重置。",
       "category": "misc",
       "tags": [
@@ -1768,6 +2300,12 @@
       ],
       "platforms": [
         "uniapp"
+      ],
+      "aliases": [
+        "slide verify",
+        "滑块验证",
+        "人机验证",
+        "滑动验证"
       ]
     },
     {
@@ -1785,6 +2323,12 @@
       "platforms": [
         "web",
         "uniapp"
+      ],
+      "aliases": [
+        "slider",
+        "滑块",
+        "滑动条",
+        "range"
       ]
     },
     {
@@ -1800,6 +2344,12 @@
       ],
       "platforms": [
         "web"
+      ],
+      "aliases": [
+        "splitter",
+        "分隔面板",
+        "拖拽分栏",
+        "resizable panel"
       ]
     },
     {
@@ -1816,6 +2366,15 @@
       ],
       "platforms": [
         "web"
+      ],
+      "aliases": [
+        "statistic",
+        "统计",
+        "统计数值",
+        "指标",
+        "数据指标",
+        "数字卡片",
+        "kpi"
       ]
     },
     {
@@ -1832,6 +2391,14 @@
       ],
       "platforms": [
         "web"
+      ],
+      "aliases": [
+        "steps",
+        "步骤条",
+        "步骤",
+        "stepper",
+        "流程步骤",
+        "进度步骤"
       ]
     },
     {
@@ -1843,11 +2410,17 @@
       "platforms": [
         "web",
         "uniapp"
+      ],
+      "aliases": [
+        "sticky",
+        "吸顶",
+        "固定顶部",
+        "吸底"
       ]
     },
     {
       "id": "reborn-swiper-action",
-      "title": "滑动操作",
+      "title": "SwiperAction 滑动操作",
       "description": "用于列表项左滑露出右侧操作按钮的滑动单元格组件，支持 push / overlay 模式与同组互斥。",
       "category": "misc",
       "tags": [
@@ -1858,6 +2431,12 @@
       ],
       "platforms": [
         "uniapp"
+      ],
+      "aliases": [
+        "swipe action",
+        "左滑",
+        "滑动删除",
+        "侧滑操作"
       ]
     },
     {
@@ -1874,6 +2453,12 @@
       "platforms": [
         "web",
         "uniapp"
+      ],
+      "aliases": [
+        "switch",
+        "开关",
+        "toggle",
+        "切换开关"
       ]
     },
     {
@@ -1888,6 +2473,12 @@
       ],
       "platforms": [
         "uniapp"
+      ],
+      "aliases": [
+        "tabbar",
+        "底部导航",
+        "底部标签栏",
+        "bottom navigation"
       ]
     },
     {
@@ -1904,6 +2495,13 @@
       ],
       "platforms": [
         "web"
+      ],
+      "aliases": [
+        "table",
+        "表格",
+        "数据表格",
+        "列表",
+        "data grid"
       ]
     },
     {
@@ -1920,11 +2518,25 @@
       "platforms": [
         "web",
         "uniapp"
+      ],
+      "aliases": [
+        "tabs",
+        "标签页",
+        "选项卡",
+        "页签",
+        "tab",
+        "tab 切换",
+        "选项卡切换",
+        "标签切换",
+        "内容切换",
+        "切换栏",
+        "详情切换",
+        "tab pane"
       ]
     },
     {
       "id": "reborn-text",
-      "title": "文本 Text",
+      "title": "Text 文本",
       "description": "用于展示文本并内置类型格式化、脱敏与多行省略的增强文本组件。",
       "category": "misc",
       "tags": [
@@ -1938,11 +2550,18 @@
       "platforms": [
         "web",
         "uniapp"
+      ],
+      "aliases": [
+        "text",
+        "文本",
+        "省略",
+        "脱敏",
+        "文字"
       ]
     },
     {
       "id": "reborn-textarea",
-      "title": "多行输入框",
+      "title": "Textarea 多行输入框",
       "description": "用于多行文本输入的输入框组件，支持自动增高、字数统计与键盘行为配置。",
       "category": "form",
       "tags": [
@@ -1954,6 +2573,12 @@
       "platforms": [
         "web",
         "uniapp"
+      ],
+      "aliases": [
+        "textarea",
+        "多行输入",
+        "文本域",
+        "多行文本"
       ]
     },
     {
@@ -1969,6 +2594,11 @@
       ],
       "platforms": [
         "web"
+      ],
+      "aliases": [
+        "time picker",
+        "时间选择",
+        "选时间"
       ]
     },
     {
@@ -1984,6 +2614,16 @@
       ],
       "platforms": [
         "web"
+      ],
+      "aliases": [
+        "timeline",
+        "时间线",
+        "时间轴",
+        "事件流",
+        "活动记录",
+        "操作记录",
+        "审批记录",
+        "日志"
       ]
     },
     {
@@ -1995,6 +2635,16 @@
       "platforms": [
         "web",
         "uniapp"
+      ],
+      "aliases": [
+        "toast",
+        "message",
+        "消息",
+        "消息提示",
+        "轻提示",
+        "全局提示",
+        "snackbar",
+        "操作反馈"
       ]
     },
     {
@@ -2009,6 +2659,13 @@
       ],
       "platforms": [
         "web"
+      ],
+      "aliases": [
+        "tooltip",
+        "文字提示",
+        "提示气泡",
+        "悬停提示",
+        "hover 提示"
       ]
     },
     {
@@ -2022,6 +2679,11 @@
       ],
       "platforms": [
         "web"
+      ],
+      "aliases": [
+        "transfer",
+        "穿梭框",
+        "双列选择"
       ]
     },
     {
@@ -2033,6 +2695,11 @@
       "platforms": [
         "web",
         "uniapp"
+      ],
+      "aliases": [
+        "transition",
+        "过渡",
+        "动画过渡"
       ]
     },
     {
@@ -2048,11 +2715,17 @@
       ],
       "platforms": [
         "web"
+      ],
+      "aliases": [
+        "tree",
+        "树",
+        "树形",
+        "目录树"
       ]
     },
     {
       "id": "reborn-tree-select",
-      "title": "Tree Select 树选择器",
+      "title": "TreeSelect 树选择器",
       "description": "Web 层级选值：沿用 select 的三档尺寸与四种形态，下拉复用 tree，支持单选、父子联动或独立勾选的多选，以及清空。",
       "category": "form",
       "tags": [
@@ -2064,11 +2737,16 @@
       ],
       "platforms": [
         "web"
+      ],
+      "aliases": [
+        "tree select",
+        "树选择",
+        "树形下拉"
       ]
     },
     {
       "id": "reborn-typewriter",
-      "title": "打字机效果",
+      "title": "Typewriter 打字机效果",
       "description": "用于让文本以打字机方式逐字输入与删除的文字动画组件。",
       "category": "effect",
       "tags": [
@@ -2078,6 +2756,11 @@
       ],
       "platforms": [
         "web"
+      ],
+      "aliases": [
+        "typewriter",
+        "打字机",
+        "打字效果"
       ]
     },
     {
@@ -2093,6 +2776,13 @@
       ],
       "platforms": [
         "web"
+      ],
+      "aliases": [
+        "upload",
+        "上传",
+        "文件上传",
+        "图片上传",
+        "附件"
       ]
     },
     {
@@ -2108,11 +2798,16 @@
       ],
       "platforms": [
         "uniapp"
+      ],
+      "aliases": [
+        "waterfall",
+        "瀑布流",
+        "masonry"
       ]
     },
     {
       "id": "reborn-watermark",
-      "title": "水印 Watermark",
+      "title": "Watermark 水印",
       "description": "用于在内容容器上平铺文本或图片水印的组件。",
       "category": "data-display",
       "tags": [
@@ -2123,6 +2818,10 @@
       "platforms": [
         "web",
         "uniapp"
+      ],
+      "aliases": [
+        "watermark",
+        "水印"
       ]
     },
     {
@@ -2139,11 +2838,20 @@
       ],
       "platforms": [
         "web"
+      ],
+      "aliases": [
+        "launch",
+        "复古电脑",
+        "电脑动画",
+        "像素电脑",
+        "品牌动画",
+        "logo 动画",
+        "字标动画"
       ]
     },
     {
       "id": "ripple",
-      "title": "水波纹",
+      "title": "Ripple 水波纹",
       "description": "用于渲染多圈同心圆扩散水波背景的装饰效果组件。",
       "category": "effect",
       "tags": [
@@ -2157,7 +2865,7 @@
     },
     {
       "id": "ripple-button",
-      "title": "波纹按钮",
+      "title": "RippleButton 波纹按钮",
       "description": "用于点击时产生可自定义颜色与时长波纹反馈的按钮组件。",
       "category": "basic",
       "tags": [
@@ -2172,7 +2880,7 @@
     },
     {
       "id": "safari-mockup",
-      "title": "Safari 模型",
+      "title": "SafariMockup Safari 模型",
       "description": "用于以 Safari 浏览器外框展示产品截图的 SVG 设备模型组件。",
       "category": "media",
       "tags": [
@@ -2187,7 +2895,7 @@
     },
     {
       "id": "scratch-to-reveal",
-      "title": "刮刮乐揭示",
+      "title": "ScratchToReveal 刮刮乐揭示",
       "description": "用于刮开渐变涂层后显示隐藏内容的互动刮刮乐组件。",
       "category": "effect",
       "tags": [
@@ -2201,7 +2909,7 @@
     },
     {
       "id": "scroll-island",
-      "title": "滚动岛",
+      "title": "ScrollIsland 滚动岛",
       "description": "用于以灵动岛样式悬浮显示页面滚动进度并可展开附加内容的组件。",
       "category": "misc",
       "tags": [
@@ -2226,6 +2934,10 @@
       ],
       "platforms": [
         "web"
+      ],
+      "aliases": [
+        "滚动条",
+        "自定义滚动条"
       ]
     },
     {
@@ -2246,7 +2958,7 @@
     },
     {
       "id": "shimmer-button",
-      "title": "闪光按钮",
+      "title": "ShimmerButton 闪光按钮",
       "description": "用于呈现环绕闪光流动动画的按钮组件，闪光颜色、速度与背景可配置。",
       "category": "basic",
       "tags": [
@@ -2261,7 +2973,7 @@
     },
     {
       "id": "sparkles",
-      "title": "闪烁粒子",
+      "title": "Sparkles 闪烁粒子",
       "description": "用于渲染可配置密度、大小与颜色的闪烁粒子背景层组件。",
       "category": "effect",
       "tags": [
@@ -2275,7 +2987,7 @@
     },
     {
       "id": "sparkles-text",
-      "title": "闪光文字",
+      "title": "SparklesText 闪光文字",
       "description": "用于在文字周围持续生成双色闪光点缀的标题装饰组件。",
       "category": "effect",
       "tags": [
@@ -2289,7 +3001,7 @@
     },
     {
       "id": "spinning-text",
-      "title": "旋转文字",
+      "title": "SpinningText 旋转文字",
       "description": "用于让一段文字沿圆形路径持续环绕旋转的动画组件。",
       "category": "effect",
       "tags": [
@@ -2303,7 +3015,7 @@
     },
     {
       "id": "spring-calendar",
-      "title": "弹性日历",
+      "title": "SpringCalendar 弹性日历",
       "description": "用于横向选择日期并以弹簧动画展开当日事件的日历条组件。",
       "category": "effect",
       "tags": [
@@ -2317,7 +3029,7 @@
     },
     {
       "id": "svg-mask",
-      "title": "SVG 遮罩",
+      "title": "SVGMask SVG 遮罩",
       "description": "用于跟随鼠标以圆形遮罩在两层内容间切换揭示的 SVG 遮罩组件。",
       "category": "misc",
       "tags": [
@@ -2331,7 +3043,7 @@
     },
     {
       "id": "testimonial-slider",
-      "title": "评价滑块",
+      "title": "TestimonialSlider 评价滑块",
       "description": "用于轮播展示用户评价（头像、引言、姓名、职位）的轻量滑块组件。",
       "category": "misc",
       "tags": [
@@ -2340,11 +3052,16 @@
       ],
       "platforms": [
         "web"
+      ],
+      "aliases": [
+        "评价轮播",
+        "用户评价",
+        "testimonial"
       ]
     },
     {
       "id": "text-3d",
-      "title": "3D 文字",
+      "title": "Text3D 3D 文字",
       "description": "用于以描边加双层阴影模拟 3D 立体字并可选晃动动画的文字组件。",
       "category": "effect",
       "tags": [
@@ -2358,7 +3075,7 @@
     },
     {
       "id": "text-generate-effect",
-      "title": "文字生成效果",
+      "title": "TextGenerateEffect 文字生成效果",
       "description": "用于让段落文字逐字渐显、可带模糊过渡的入场动画组件。",
       "category": "effect",
       "tags": [
@@ -2372,7 +3089,7 @@
     },
     {
       "id": "text-glitch",
-      "title": "文字故障",
+      "title": "TextGlitch 文字故障",
       "description": "用于给文字叠加彩色错位故障（glitch）动画的文字效果组件。",
       "category": "effect",
       "tags": [
@@ -2385,7 +3102,7 @@
     },
     {
       "id": "text-highlight",
-      "title": "文字高亮",
+      "title": "TextHighlight 文字高亮",
       "description": "用于以背景填充动画突出句中重点文字的高亮组件。",
       "category": "effect",
       "tags": [
@@ -2399,7 +3116,7 @@
     },
     {
       "id": "text-hover-effect",
-      "title": "文字悬停效果",
+      "title": "TextHoverEffect 文字悬停效果",
       "description": "用于悬停时跟随鼠标以渐变描边揭示文字的悬停效果组件。",
       "category": "effect",
       "tags": [
@@ -2412,7 +3129,7 @@
     },
     {
       "id": "text-reveal",
-      "title": "文字揭示",
+      "title": "TextReveal 文字揭示",
       "description": "用于基于 GSAP SplitText 将段落按行依次入场的文字动画组件。",
       "category": "effect",
       "tags": [
@@ -2426,7 +3143,7 @@
     },
     {
       "id": "text-reveal-card",
-      "title": "文字揭示卡片",
+      "title": "TextRevealCard 文字揭示卡片",
       "description": "用于鼠标滑过卡片时揭示另一段隐藏文字、带星星粒子的卡片组件。",
       "category": "effect",
       "tags": [
@@ -2440,7 +3157,7 @@
     },
     {
       "id": "text-scroll-reveal",
-      "title": "滚动文字揭示",
+      "title": "TextScrollReveal 滚动文字揭示",
       "description": "用于随页面滚动进度将一句话逐词由淡变实显现的文字组件。",
       "category": "effect",
       "tags": [
@@ -2454,7 +3171,7 @@
     },
     {
       "id": "timeline",
-      "title": "时间线",
+      "title": "Timeline 时间线",
       "description": "用于纵向展示条目、带粘性标签与滚动渐变动画的时间线组件。",
       "category": "misc",
       "tags": [
@@ -2464,11 +3181,17 @@
       ],
       "platforms": [
         "web"
+      ],
+      "aliases": [
+        "时间线动效",
+        "滚动时间线",
+        "sticky timeline",
+        "叙事时间线"
       ]
     },
     {
       "id": "tracing-beam",
-      "title": "跟踪光束",
+      "title": "TracingBeam 跟踪光束",
       "description": "用于在内容一侧渲染随滚动延伸的渐变光束装饰的容器组件。",
       "category": "misc",
       "tags": [
@@ -2482,7 +3205,7 @@
     },
     {
       "id": "vanishing-input",
-      "title": "占位符滚动与消失输入框",
+      "title": "VanishingInput 占位符滚动与消失输入框",
       "description": "用于占位符轮换滚动、提交时文字呈消失动画的单行输入组件。",
       "category": "form",
       "tags": [
@@ -2493,6 +3216,1862 @@
       ],
       "platforms": [
         "web"
+      ]
+    }
+  ],
+  "designPatterns": [
+    {
+      "id": "icon",
+      "pattern": "图标实例：不是组件，用节点导出的原始 SVG",
+      "match": [
+        "/^icon[\\/\\-_ ]/i",
+        "/^图标/",
+        "/^圖標/",
+        "/图标$/",
+        "/圖標$/",
+        "/^ic[\\/\\-_]/i",
+        "/\\bicon\\b/i"
+      ],
+      "component": null,
+      "ignore": true,
+      "recipe": "下载并引用该节点导出的原始 SVG，保持方向、线宽、viewBox 与尺寸；不用图标库的相似图标替换，不从截图裁切，不用文字箭头或 emoji 代替。"
+    },
+    {
+      "id": "divider",
+      "pattern": "分割线、分隔线：本库没有 divider 组件",
+      "match": [
+        "分割线",
+        "分割線",
+        "分隔线",
+        "分隔線",
+        "divider",
+        "separator",
+        "/^line[\\s\\d-]*$/i"
+      ],
+      "component": null,
+      "ignore": true,
+      "recipe": "用一条 border（border-t border-gray-3 这类）或导出的线条素材画；它若位于页签头部与内容之间，reborn-tabs 的 line 类型已自带这条分隔线（ui.nav），不要再叠一条。"
+    },
+    {
+      "id": "auto-named-layer",
+      "pattern": "MasterGo / Figma 自动命名的图层（容器 129642、矩形 59092、圆形 971、路径 123756、Frame 12）：本身不是组件",
+      "match": [
+        "/^(容器|矩形|圆形|圓形|椭圆|橢圓|路径|路徑|编组|編組|组|組|图层|圖層|frame|group|rectangle|rect|ellipse|vector|path|union|联集|聯集)\\s*[\\d-]*$/i"
+      ],
+      "component": null,
+      "custom": true,
+      "container": true,
+      "recipe": "排版容器用 div + Tailwind 自写，里面的实例按各自命中的组件实现（传 children 时会按子节点再匹配一次，整块是图廊 / 搜索区时会落到对应组件）；填充是图片的矩形 / 容器是一张图，传 fill: \"image\" 会落到 reborn-image；矩形、圆形、路径若是装饰或线条，用导出素材或 border / 背景色画，不要找组件。"
+    },
+    {
+      "id": "btn-tabs",
+      "pattern": "以 btn- 命名的一排页签：同一容器里多个 btn-…标签 / tab 实例，变体在 选中 / 未选中 之间切换",
+      "match": [
+        "/^btn[-_ ].*(?:标签|標籤|页签|頁籤|tab)/i"
+      ],
+      "component": "reborn-tabs",
+      "recipe": "一个 RebornTabs（type=\"text\" color=\"neutral\"）+ 每个实例一个 RebornTabPane，v-model:active-key 管当前项；胶囊描边、高度、内边距与两态颜色经 ui.tab 的 aria-[selected=true] / aria-[selected=false] 写，ui.list 写间距，ui.indicator 设 hidden。不要逐个手写 button 再自己切选中样式。",
+      "uses": {
+        "props": [
+          "activeKey",
+          "type",
+          "color",
+          "ui"
+        ],
+        "ui": [
+          "list",
+          "tab",
+          "tabTitle",
+          "indicator",
+          "content"
+        ]
+      }
+    },
+    {
+      "id": "btn-prefixed",
+      "pattern": "以 btn- 命名的按钮实例（宣传 banner 里的按钮、文字按钮、站点入口等）：名字里的 banner、站点、下拉等字样不代表组件类型",
+      "match": [
+        "/^btn[-_ ]/i"
+      ],
+      "component": "reborn-button",
+      "recipe": "按钮本身用 RebornButton：黑底胶囊是 round + variant=\"filled\" color=\"neutral\"，文字链接样式是 variant=\"text\"；有文字的按钮宽度由文字与左右内边距撑开，ui.base 只写高度与 px-[…]（取稿面 padding），不写 w-[…]。",
+      "uses": {
+        "props": [
+          "variant",
+          "color",
+          "round",
+          "ui"
+        ],
+        "ui": [
+          "base"
+        ]
+      }
+    },
+    {
+      "id": "product-gallery",
+      "pattern": "商品图廊：主图 + 一列缩略图（变体 已选/未选）+ 左右翻页箭头，整组是一个带缩略图联动的轮播",
+      "match": [
+        "缩略图",
+        "縮略圖",
+        "缩图",
+        "縮圖",
+        "thumbnail",
+        "/\\bthumbs?\\b/i",
+        "主图",
+        "主圖",
+        "图廊",
+        "圖廊",
+        "画廊",
+        "畫廊",
+        "gallery",
+        "大图切换",
+        "大圖切換",
+        "看图",
+        "看圖"
+      ],
+      "component": "reborn-carousel",
+      "recipe": "整组只用一个 RebornCarousel：默认插槽里每张大图一个子节点（<img> 用各缩略图实例的原图或导出的大图），:thumbs=\"{ position: 'left', arrow: 'never' }\" 让组件按同一组 slide 克隆出缩略图列并与主图联动（稿面缩略图在左就 left、在下就 bottom）；v-model 绑定当前索引，稿面「已选」的那张就是初始值。主图两侧的翻页箭头放 #prev / #next 插槽（作用域给出 prev / next 与 disabled），插槽里的按钮必须加 pointer-events-auto（箭头组容器是 pointer-events-none）。缩略图选中描边改 ui.thumbActive、未选改 ui.thumbInactive，缩略图尺寸改 ui.thumb，列内间距改 ui.thumbsTrack，列与主图的间距改 ui.thumbsShell。不要用一列 RebornButton + <img> 自绘缩略图，也不要自己维护 active 索引与切换逻辑。",
+      "uses": {
+        "props": [
+          "thumbs",
+          "modelValue",
+          "arrow",
+          "pagination",
+          "height",
+          "loop",
+          "ui"
+        ],
+        "slots": [
+          "default",
+          "prev",
+          "next"
+        ],
+        "ui": [
+          "thumb",
+          "thumbActive",
+          "thumbInactive",
+          "thumbsTrack",
+          "thumbsShell",
+          "arrow",
+          "arrowGroup"
+        ]
+      },
+      "pitfalls": [
+        "缩略图是组件从每张 slide 克隆出来的，所以每张大图必须是默认插槽里独立的直接子节点；稿面只导出了一张主图时，其余大图来自各缩略图实例的原图。",
+        "稿面没有指示器就传 :pagination=\"null\"，否则主图下方会多出一排分页点。",
+        "只有一张图、不需要切换的场景不是图廊，用 reborn-image。"
+      ]
+    },
+    {
+      "id": "carousel",
+      "pattern": "轮播、banner 滑动、走马灯",
+      "match": [
+        "轮播",
+        "輪播",
+        "banner",
+        "走马灯",
+        "走馬燈",
+        "carousel",
+        "swiper",
+        "幻灯片",
+        "幻燈片",
+        "slideshow",
+        "图片滑动",
+        "圖片滑動"
+      ],
+      "component": "reborn-carousel",
+      "recipe": "每张 banner 一个默认插槽子节点；首页多张并排露出两侧的用 slides-per-view=\"auto\" centered-slides loop，单张满宽的不传 slidesPerView；稿面有分页点就 :pagination=\"{ type: 'dot', indicatorBackground: false }\"，没有就 :pagination=\"null\"；箭头常显用 arrow=\"always\"，稿面导出的箭头素材放进 #prev / #next 插槽并给按钮加 pointer-events-auto；初始定位用 :initial-slide 或 v-model。箭头尺寸、底色与描边改 ui.arrow；两侧未选中项若不该变淡，ui.slideInactive 设 opacity-100。",
+      "uses": {
+        "props": [
+          "slidesPerView",
+          "centeredSlides",
+          "loop",
+          "autoplay",
+          "pagination",
+          "arrow",
+          "initialSlide",
+          "spaceBetween",
+          "height",
+          "modelValue",
+          "ui"
+        ],
+        "slots": [
+          "default",
+          "prev",
+          "next",
+          "indicators"
+        ],
+        "ui": [
+          "arrow",
+          "arrowGroup",
+          "slideInactive",
+          "indicators"
+        ]
+      },
+      "pitfalls": [
+        "仅 web；UniApp 端用 uni-app 自带的 swiper。",
+        "loop 与 autoplay 默认关闭，要循环或自动播放都得显式开。"
+      ]
+    },
+    {
+      "id": "marquee",
+      "pattern": "跑马灯、滚动字幕、无限横向滚动的文字或 logo 条",
+      "match": [
+        "跑马灯",
+        "跑馬燈",
+        "marquee",
+        "滚动字幕",
+        "滾動字幕",
+        "无限滚动",
+        "無限滾動",
+        "logo 墙",
+        "logo wall"
+      ],
+      "component": "reborn-marquee",
+      "recipe": "内容放默认插槽，pauseOnHover 决定悬停是否暂停，vertical 切纵向，repeat 控制复制份数，overlay 开两端渐隐。",
+      "uses": {
+        "props": [
+          "pauseOnHover",
+          "vertical",
+          "repeat",
+          "overlay"
+        ],
+        "slots": [
+          "default"
+        ]
+      }
+    },
+    {
+      "id": "tabbar",
+      "pattern": "UniApp 页面底部导航栏",
+      "match": [
+        "底部导航",
+        "底部導航",
+        "tabbar",
+        "tab bar",
+        "底部标签栏",
+        "底部標籤欄"
+      ],
+      "component": "reborn-tabbar",
+      "recipe": "仅 UniApp：RebornTabbar 配合 RebornTabbarTrigger 子项，v-model 绑定当前项；Web 页面底部的导航按稿面自写或用 reborn-footer 以外的布局。",
+      "pitfalls": [
+        "仅 uniapp 端可用，Web 端没有同名组件。"
+      ]
+    },
+    {
+      "id": "segmented",
+      "pattern": "分段控制器：一条里互斥切换、选中块滑动的短控件",
+      "match": [
+        "分段",
+        "segmented",
+        "segment control",
+        "切换器",
+        "toggle group",
+        "按钮组切换"
+      ],
+      "component": "reborn-segmented",
+      "recipe": "options 给选项数组，v-model 绑定选中值，block 撑满一行，size 按稿面高度取档；不要用一排 reborn-button 或 reborn-tabs 拼。",
+      "uses": {
+        "props": [
+          "options",
+          "modelValue",
+          "block",
+          "size",
+          "direction"
+        ],
+        "events": [
+          "change"
+        ]
+      }
+    },
+    {
+      "id": "tabs",
+      "pattern": "标签页 / 选项卡：一排页签 + 下方互斥切换的内容面板",
+      "match": [
+        "标签页",
+        "標籤頁",
+        "选项卡",
+        "選項卡",
+        "页签",
+        "頁籤",
+        "/\\btabs?\\b/i",
+        "tab 切换",
+        "tab切换",
+        "切换栏",
+        "切換欄"
+      ],
+      "component": "reborn-tabs",
+      "recipe": "一个 RebornTabs + 每个页签一个 RebornTabPane：pane-key 用稿面文案的语义 key（detail / spec / review），title 直接传稿面文案，v-model:active-key 绑定当前页签。选中态的文字色、字重和下划线由组件按 type=\"line\" 与 color 自己切换，不要在 #title 插槽里按 activeKey 手动改颜色或字重；页签字号改 ui.tabTitle，页签间距改 ui.list（line 类型默认间距 32px），下划线粗细与颜色改 ui.indicator，头部与内容之间的分隔线 line 类型自带（ui.nav），不要再叠加稿面导出的分割线素材。稿面里「Tab 2」「Tab 3」这类占位页签按原文案保留，面板内容留空或写占位说明，不要复制同一段正文充数；内容高度随面板自适应，外层不要写死高度。",
+      "uses": {
+        "props": [
+          "activeKey",
+          "type",
+          "color",
+          "size",
+          "paneKey",
+          "title",
+          "order",
+          "stretch",
+          "ui"
+        ],
+        "slots": [
+          "default",
+          "title",
+          "left-extra",
+          "right-extra"
+        ],
+        "events": [
+          "change"
+        ],
+        "ui": [
+          "tab",
+          "tabTitle",
+          "indicator",
+          "nav",
+          "list",
+          "content"
+        ]
+      },
+      "pitfalls": [
+        "RebornTabPane 是与目录不同名的子组件文件：Nuxt 自动导入在 pathPrefix: true（默认）下会给它加上目录前缀，模板里写 <RebornTabPane> 解析不到，页签头部为空；显式 import RebornTabPane from '<componentsDir>/reborn-tabs/RebornTabPane.vue'，或把该目录的 components 配置改成 pathPrefix: false。",
+        "#title 插槽只有 web 端支持，UniApp 端标题只能用 title prop。"
+      ]
+    },
+    {
+      "id": "search-box",
+      "pattern": "搜索框：输入框 + 搜索键，常带左侧站点 / 分类选择",
+      "match": [
+        "搜索",
+        "搜尋",
+        "search"
+      ],
+      "component": "reborn-search-box",
+      "with": [
+        "reborn-dropdown",
+        "reborn-button"
+      ],
+      "recipe": "整条用 RebornSearchBox，不自写 input：形状按稿面取 shape=\"circle\"（胶囊）或 square，不需要联想面板时 :show-dropdown=\"false\"；左侧站点 / 分类选择放 #leading（RebornDropdown 包一个 RebornButton variant=\"text\" 触发器，后接分割线），右侧搜索键放 #trailing=\"{ search }\"（RebornButton round color=\"primary\" 放稿面导出的放大镜图标，点击调 search）；高度经 ui.control，内边距经 ui.inputWrapper / ui.leadingWrapper / ui.trailingWrapper；搜索动作监听 search 事件。",
+      "uses": {
+        "props": [
+          "shape",
+          "showDropdown",
+          "placeholder",
+          "size",
+          "modelValue",
+          "ui"
+        ],
+        "slots": [
+          "leading",
+          "trailing",
+          "dropdown"
+        ],
+        "events": [
+          "search"
+        ],
+        "ui": [
+          "control",
+          "inputWrapper",
+          "leadingWrapper",
+          "trailingWrapper",
+          "dropdown"
+        ]
+      }
+    },
+    {
+      "id": "input-number",
+      "pattern": "计数器 / 数量加减：减号 + 数值 + 加号",
+      "match": [
+        "计数器",
+        "計數器",
+        "数量选择",
+        "數量選擇",
+        "数量加减",
+        "數量加減",
+        "counter",
+        "quantity",
+        "加减",
+        "加減",
+        "number input",
+        "input-number",
+        "inputnumber"
+      ],
+      "component": "reborn-input-number",
+      "recipe": "v-model 绑定数量，min / max / step 按库存与步进设置；胶囊外形取 shape=\"circle\"、灰底取 variant=\"filled\"，高度按 size 取档；稿面导出的加减图标放 #decrease-icon / #increase-icon 插槽；不可用态传 disabled；不要用两个 RebornButton 夹一个 input 拼。",
+      "uses": {
+        "props": [
+          "modelValue",
+          "min",
+          "max",
+          "step",
+          "disabled",
+          "shape",
+          "variant",
+          "size",
+          "controls",
+          "controlsPosition"
+        ],
+        "slots": [
+          "decrease-icon",
+          "increase-icon",
+          "prefix",
+          "suffix"
+        ],
+        "events": [
+          "change"
+        ]
+      }
+    },
+    {
+      "id": "sku",
+      "pattern": "商品规格选择：规格名 + 一排可选的规格项",
+      "match": [
+        "规格",
+        "規格",
+        "sku",
+        "款式",
+        "尺码",
+        "尺碼",
+        "颜色选择",
+        "顏色選擇",
+        "型号选择",
+        "型號選擇"
+      ],
+      "component": "reborn-sku",
+      "recipe": "options 按规格组给数据，v-model 绑定选中结果对象；规格项的外观经 ui.item、组标题经 ui.title 调整；只有一个「默认」项时仍用它，不要用 reborn-badge 或 reborn-button 冒充规格项。",
+      "uses": {
+        "props": [
+          "options",
+          "modelValue",
+          "ui"
+        ],
+        "slots": [
+          "item"
+        ],
+        "events": [
+          "change"
+        ],
+        "ui": [
+          "item",
+          "title",
+          "group",
+          "list"
+        ]
+      },
+      "pitfalls": [
+        "仅 web 端可用。"
+      ]
+    },
+    {
+      "id": "coupon",
+      "pattern": "优惠券、带缺口或撕线的卡券",
+      "match": [
+        "优惠券",
+        "優惠券",
+        "卡券",
+        "coupon",
+        "/券$/",
+        "领券",
+        "領券"
+      ],
+      "component": "reborn-coupon",
+      "recipe": "缺口、撕线、方向与左右两面按稿面参数给：type=\"perforated\"（单缺口 + 撕拉线）或 notch / ticket / stamp / combined，direction=\"vertical\" 即左右排布，position 取 start / center / end，:offset 为缺口中心位置、:radius 为缺口半径（撕线带宽 = 2 × radius），split=\"dashed\" 配 :size=\"[线宽, 段长]\" 与 :gap；票面内容放 #left / #right 插槽，底色与圆角经 ui.root。不要用 CSS 拼缺口。",
+      "uses": {
+        "props": [
+          "type",
+          "direction",
+          "position",
+          "offset",
+          "radius",
+          "split",
+          "size",
+          "gap",
+          "splitColor",
+          "width",
+          "height",
+          "ui"
+        ],
+        "slots": [
+          "left",
+          "right"
+        ],
+        "ui": [
+          "root",
+          "left",
+          "right",
+          "center"
+        ]
+      },
+      "pitfalls": [
+        "仅 web 端可用。"
+      ]
+    },
+    {
+      "id": "check-in",
+      "pattern": "签到入口：可点击区 + 右上角「签到」角标",
+      "match": [
+        "签到",
+        "簽到",
+        "check-in",
+        "checkin",
+        "sign-in",
+        "signin"
+      ],
+      "component": "reborn-button",
+      "with": [
+        "reborn-chip"
+      ],
+      "recipe": "点击区用 RebornButton（variant / color / size 按稿面取，方块尺寸与圆角经 ui.base 补），角标用 RebornChip 的 text + inset 挂在按钮上；Chip 本身只是角标，不能冒充整个签到按钮，也不得用 div / NuxtLink + span 自绘。",
+      "uses": {
+        "props": [
+          "variant",
+          "color",
+          "size",
+          "ui"
+        ],
+        "ui": [
+          "base"
+        ]
+      }
+    },
+    {
+      "id": "load-more",
+      "pattern": "加载更多、查看更多、查看全部",
+      "match": [
+        "加载更多",
+        "加載更多",
+        "查看更多",
+        "查看全部",
+        "load more",
+        "loadmore",
+        "load-more",
+        "/\\bmore\\b/i"
+      ],
+      "component": "reborn-button",
+      "recipe": "灰底无描边用 variant=\"soft\" color=\"neutral\"，右侧箭头放 #trailing 插槽并使用稿面导出的原始图标（不旋转）；UniApp 列表底部的「加载中 / 没有更多」状态改用 reborn-loadmore。",
+      "uses": {
+        "props": [
+          "variant",
+          "color",
+          "size",
+          "block"
+        ],
+        "slots": [
+          "trailing",
+          "leading"
+        ]
+      }
+    },
+    {
+      "id": "chip",
+      "pattern": "角标：挂在图标、头像或按钮右上角的红点或数字（Element / Ant 的 Badge）",
+      "match": [
+        "角标",
+        "角標",
+        "未读",
+        "未讀",
+        "红点",
+        "紅點",
+        "/\\bbadge\\b/i",
+        "消息数",
+        "消息數",
+        "数字角标",
+        "數字角標",
+        "chip"
+      ],
+      "component": "reborn-chip",
+      "recipe": "宿主放默认插槽，text 传数字或文字（不传即小红点），position 选吸附的角，inset 让角标落在宿主内部，v-model:show 控制显隐；圆角与尺寸只经 ui.base，字号经 ui.label。",
+      "uses": {
+        "props": [
+          "text",
+          "position",
+          "inset",
+          "color",
+          "size",
+          "variant",
+          "standalone",
+          "show",
+          "ui"
+        ],
+        "slots": [
+          "default"
+        ],
+        "ui": [
+          "base",
+          "label",
+          "root"
+        ]
+      },
+      "pitfalls": [
+        "独立展示的状态文字标签不是角标，用 reborn-badge。"
+      ]
+    },
+    {
+      "id": "badge",
+      "pattern": "状态标签、分类标签、不可点击的小标签（Element / Ant 的 Tag）",
+      "match": [
+        "标签",
+        "標籤",
+        "/\\btags?\\b/i",
+        "pill",
+        "徽章",
+        "状态标签",
+        "狀態標籤"
+      ],
+      "component": "reborn-badge",
+      "recipe": "文字放默认插槽，color 取语义色，variant 取 filled / outlined / soft / subtle，胶囊形用 round；不要用 reborn-button（会被读屏器报成可操作元素）。",
+      "uses": {
+        "props": [
+          "color",
+          "variant",
+          "round"
+        ]
+      },
+      "pitfalls": [
+        "右上角的红点或数字是角标，用 reborn-chip。"
+      ]
+    },
+    {
+      "id": "fab",
+      "pattern": "悬浮操作组：固定在页面一侧的购物车、客服、回到顶部等图标按钮组",
+      "match": [
+        "悬浮",
+        "懸浮",
+        "浮动",
+        "浮動",
+        "侧边栏",
+        "側邊欄",
+        "/\\bfab\\b/i",
+        "float",
+        "快捷入口",
+        "侧边操作"
+      ],
+      "component": "reborn-fab",
+      "with": [
+        "reborn-chip"
+      ],
+      "recipe": "Web 常用 variant=\"capsule\" :expandable=\"false\" 固定位置（position 预设或 top / right / bottom / left 具体值），纵向图标按钮放 #trigger 插槽，白底与阴影经 ui.capsuleWrapper；购物车数量用 RebornChip 的 text + inset 挂在按钮上。",
+      "uses": {
+        "props": [
+          "variant",
+          "expandable",
+          "position",
+          "top",
+          "right",
+          "bottom",
+          "left",
+          "draggable",
+          "ui"
+        ],
+        "slots": [
+          "trigger",
+          "default"
+        ],
+        "ui": [
+          "capsuleWrapper",
+          "capsuleInner",
+          "trigger",
+          "root"
+        ]
+      },
+      "pitfalls": [
+        "Web 端读实际 API：variant 取 float / capsule / circle，Web 没有 items 列表写法。"
+      ]
+    },
+    {
+      "id": "back-top",
+      "pattern": "返回顶部按钮",
+      "match": [
+        "返回顶部",
+        "返回頂部",
+        "回到顶部",
+        "回到頂部",
+        "back top",
+        "backtop",
+        "back-to-top",
+        "scroll to top"
+      ],
+      "component": "reborn-back-top",
+      "recipe": "threshold 控制滚动多少后出现，bottom 定位，shape 与 icon 按稿面取，showProgress 开滚动进度环（Web）。",
+      "uses": {
+        "props": [
+          "threshold",
+          "bottom",
+          "shape",
+          "icon",
+          "showProgress"
+        ]
+      }
+    },
+    {
+      "id": "avatar",
+      "pattern": "头像",
+      "match": [
+        "头像",
+        "頭像",
+        "avatar"
+      ],
+      "component": "reborn-avatar",
+      "recipe": "src 传图片，size 取档，shape 取圆或方，alt 给可访问名；多个重叠头像用 reborn-avatar-group。",
+      "uses": {
+        "props": [
+          "src",
+          "size",
+          "shape",
+          "alt"
+        ]
+      }
+    },
+    {
+      "id": "image",
+      "pattern": "商品图、海报、位图等单张图片",
+      "match": [
+        "图片",
+        "圖片",
+        "海报",
+        "海報",
+        "商品图",
+        "商品圖",
+        "位图",
+        "位圖",
+        "/\\bimage\\b/i",
+        "/\\bimg\\b/i",
+        "photo",
+        "picture",
+        "/\\bpic\\b/i"
+      ],
+      "component": "reborn-image",
+      "recipe": "稿面的位图一律用 RebornImage：src 用节点导出的原图；:width / :height 必须传稿面尺寸（数字即 px，占满父容器传 \"100%\"），不传时按默认 120×120 渲染；mode 对应 object-fit（aspectFill = cover，aspectFit = contain，scaleToFill = fill，center / left / top left 等 = 不缩放并按位置摆放）；圆角写在 class 上（根节点自带 overflow-hidden）；叠在图上的内容（点赞胶囊、来源图标、标签）放进默认插槽并 absolute 定位；静态展示图传 :show-loading=\"false\"；需要点开大图时用 preview 与 previewList。不要用原生 <img>、CSS background-image 或 bg-[url(…)] 显示位图；只有 SVG 图标用 <img> 引用导出原图。",
+      "uses": {
+        "props": [
+          "src",
+          "width",
+          "height",
+          "mode",
+          "showLoading",
+          "preview",
+          "previewList",
+          "lazyLoad"
+        ],
+        "slots": [
+          "default",
+          "error",
+          "loading"
+        ]
+      },
+      "pitfalls": [
+        "图片图层在设计稿里常是自动命名的「矩形 …」「容器 …」：按节点的填充判断（match_design_nodes 传 fill: \"image\"），不要按名字当成排版容器自写 div 加背景图。",
+        "width / height 默认 120，不传就会把图压成 120×120。",
+        "导出的像素只有稿面盒子一部分的图（裁切或缩略图）不要用默认的 aspectFill 放大：按稿面位置传 mode=\"center\" / \"left\" / \"right\" 等不缩放的取值。"
+      ]
+    },
+    {
+      "id": "pagination",
+      "pattern": "分页器、页码",
+      "match": [
+        "分页",
+        "分頁",
+        "pagination",
+        "pager",
+        "页码",
+        "頁碼"
+      ],
+      "component": "reborn-pagination",
+      "recipe": "total 与 v-model 绑定当前页，layout 决定显示哪些段，上一页 / 下一页按钮内容经 #prev / #next 插槽放稿面图标，background 决定页码是否带底色。",
+      "uses": {
+        "props": [
+          "total",
+          "pageSize",
+          "modelValue",
+          "layout",
+          "background",
+          "size"
+        ],
+        "slots": [
+          "prev",
+          "next"
+        ]
+      }
+    },
+    {
+      "id": "steps",
+      "pattern": "步骤条、流程步骤",
+      "match": [
+        "步骤",
+        "步驟",
+        "/\\bsteps?\\b/i",
+        "流程条",
+        "流程條",
+        "进度步骤",
+        "進度步驟"
+      ],
+      "component": "reborn-steps",
+      "recipe": "RebornSteps 包若干 RebornStep，active 指当前步，direction 取横纵，simple 为简洁样式；图标、标题、描述经同名插槽。",
+      "uses": {
+        "props": [
+          "active",
+          "direction",
+          "simple",
+          "type",
+          "size"
+        ],
+        "slots": [
+          "icon",
+          "title",
+          "description"
+        ]
+      },
+      "pitfalls": [
+        "仅 web 端可用。"
+      ]
+    },
+    {
+      "id": "faq",
+      "pattern": "常见问题列表：同一区块里至少三行以问号结尾的问题，可展开收起",
+      "match": [
+        "/[？?]\\s*$/"
+      ],
+      "component": "reborn-collapse",
+      "minCount": 3,
+      "recipe": "每条问答一个 RebornCollapse：默认插槽放触发区（题号、题目、右侧箭头图标），#content 放答案，v-model 控制展开；不要用静态列表或自写展开逻辑。",
+      "uses": {
+        "props": [
+          "modelValue",
+          "position",
+          "disabled"
+        ],
+        "slots": [
+          "default",
+          "content"
+        ],
+        "events": [
+          "toggle"
+        ],
+        "ui": [
+          "root",
+          "trigger",
+          "content"
+        ]
+      }
+    },
+    {
+      "id": "collapse",
+      "pattern": "折叠面板、展开收起、手风琴",
+      "match": [
+        "折叠",
+        "折疊",
+        "展开收起",
+        "展開收起",
+        "常见问题",
+        "常見問題",
+        "/\\bfaq\\b/i",
+        "collapse",
+        "accordion",
+        "手风琴",
+        "手風琴"
+      ],
+      "component": "reborn-collapse",
+      "recipe": "默认插槽放触发区，#content 放折叠内容，v-model 控制展开，position=\"top\" 时内容在触发区上方。",
+      "uses": {
+        "props": [
+          "modelValue",
+          "position",
+          "disabled"
+        ],
+        "slots": [
+          "default",
+          "content"
+        ],
+        "events": [
+          "toggle"
+        ]
+      }
+    },
+    {
+      "id": "menu",
+      "pattern": "侧边导航菜单、分类列表、多级导航：同一容器里排成一列（或一行）的多个同名实例，变体为 选中 / 未选中，点击切换当前项",
+      "match": [
+        "侧边菜单",
+        "側邊菜單",
+        "侧边导航",
+        "側邊導航",
+        "导航菜单",
+        "導航菜單",
+        "分类列表",
+        "分類列表",
+        "分类导航",
+        "分類導航",
+        "分类菜单",
+        "分類菜單",
+        "类目列表",
+        "類目列表",
+        "多级菜单",
+        "多級菜單",
+        "/\\bside[ -]?(?:bar[ -]?)?(?:menu|nav)\\b/i",
+        "/\\bnav[ -]?(?:menu|list)\\b/i",
+        "/\\bcategory[ -]?(?:list|menu|nav)\\b/i"
+      ],
+      "component": "reborn-menu",
+      "recipe": "整组用一个 RebornMenu，不要把每一项写成原生 a / li / button 再自己管选中态：纵向列表 mode=\"vertical\"（顶部横排用 horizontal），color 按稿面取 neutral 或 primary，v-model:selected-keys 绑定当前项（值是从一级到选中项的 index 路径）。单层列表每个实例一个 RebornMenuItem（index 给唯一标识，#extra 放右侧箭头等稿面导出的图标，#icon 放左侧图标）；有下级时传 items 或用 RebornSubMenu，collapse 收起为图标栏；不折叠的列表传 :tooltip=\"false\"。面板底色 / 描边 / 圆角 / 内边距经 ui.root，条目间距经 ui.menu，行高 / 圆角 / 内边距经 ui.menuItem，字号字重经 ui.menuItemTitle，选中项底色用 RebornMenuItem 自己的 ui 按选中态给。条目渲染为没有 tabindex 的 li：需要键盘可聚焦或可新开的链接时，在默认插槽里放 a 并 @click.prevent，点击交给 select 事件或 v-model:selected-keys 接管；router 为真时点击按 index（或 RebornMenuItem 的 route）跳转。带子菜单的侧栏也用它，而不是 reborn-tabs 或 reborn-dropdown。",
+      "uses": {
+        "props": [
+          "items",
+          "mode",
+          "color",
+          "collapse",
+          "selectedKeys",
+          "tooltip",
+          "router"
+        ],
+        "slots": [
+          "default",
+          "icon",
+          "extra"
+        ],
+        "events": [
+          "select",
+          "update:selectedKeys"
+        ],
+        "ui": [
+          "root",
+          "menu",
+          "menuItem",
+          "menuItemTitle"
+        ]
+      },
+      "pitfalls": [
+        "仅 web 端可用。"
+      ]
+    },
+    {
+      "id": "dropdown",
+      "pattern": "点击展开的菜单：语言 / 地区 / 站点 / 配送地切换、更多操作",
+      "match": [
+        "下拉",
+        "菜单",
+        "菜單",
+        "语言",
+        "語言",
+        "地区",
+        "地區",
+        "站点",
+        "站點",
+        "配送",
+        "dropdown",
+        "/\\bmenu\\b/i",
+        "更多操作"
+      ],
+      "component": "reborn-dropdown",
+      "with": [
+        "reborn-button"
+      ],
+      "recipe": "默认插槽放触发器（RebornButton variant=\"text\" 配稿面导出的下箭头图标），options 给菜单项，trigger 取 click / hover，placement 定位，监听 select 事件；自定义面板用 #content 插槽。从选项里取一个值回填表单的是 reborn-select，不要互换。",
+      "uses": {
+        "props": [
+          "options",
+          "trigger",
+          "placement"
+        ],
+        "slots": [
+          "default",
+          "content"
+        ],
+        "events": [
+          "select"
+        ]
+      }
+    },
+    {
+      "id": "select",
+      "pattern": "表单里的下拉选择器",
+      "match": [
+        "选择器",
+        "選擇器",
+        "/\\bselect\\b/i",
+        "下拉选择",
+        "下拉選擇",
+        "下拉框"
+      ],
+      "component": "reborn-select",
+      "recipe": "options 给选项，v-model 绑定值，placeholder 给占位，多选加 multiple；点选后执行动作而不是取值的用 reborn-dropdown。",
+      "uses": {
+        "props": [
+          "options",
+          "modelValue",
+          "placeholder",
+          "multiple"
+        ]
+      }
+    },
+    {
+      "id": "textarea",
+      "pattern": "多行输入、留言框",
+      "match": [
+        "多行输入",
+        "多行輸入",
+        "textarea",
+        "留言",
+        "评论框",
+        "評論框",
+        "文本域"
+      ],
+      "component": "reborn-textarea",
+      "recipe": "placeholder 给占位，maxlength 配 showWordLimit 显示字数。",
+      "uses": {
+        "props": [
+          "placeholder",
+          "maxlength",
+          "showWordLimit"
+        ]
+      }
+    },
+    {
+      "id": "input",
+      "pattern": "单行输入框、密码框",
+      "match": [
+        "输入框",
+        "輸入框",
+        "密码",
+        "密碼",
+        "/\\binput\\b/i",
+        "文本框",
+        "手机号",
+        "手機號",
+        "邮箱",
+        "郵箱"
+      ],
+      "component": "reborn-input",
+      "recipe": "placeholder、clearable、showPassword 按稿面取，前后图标走 prefixIcon / suffixIcon，胶囊形取 shape=\"circle\"，灰底取 variant=\"filled\"；带搜索键的整条搜索区改用 reborn-search-box。",
+      "uses": {
+        "props": [
+          "placeholder",
+          "type",
+          "clearable",
+          "showPassword",
+          "prefixIcon",
+          "suffixIcon",
+          "shape",
+          "variant",
+          "size"
+        ]
+      }
+    },
+    {
+      "id": "date-picker",
+      "pattern": "日期选择",
+      "match": [
+        "日期",
+        "date-picker",
+        "datepicker",
+        "/\\bdate\\b/i"
+      ],
+      "component": "reborn-date-picker",
+      "recipe": "type 取单日 / 范围等，format 与 placeholder 按稿面给，v-model 绑定值；整月日历视图用 reborn-calendar。",
+      "uses": {
+        "props": [
+          "type",
+          "format",
+          "placeholder",
+          "modelValue"
+        ]
+      }
+    },
+    {
+      "id": "calendar",
+      "pattern": "整月日历视图",
+      "match": [
+        "日历",
+        "日曆",
+        "calendar"
+      ],
+      "component": "reborn-calendar",
+      "recipe": "v-model 绑定日期，range 限制可选区间；表单里只是选一个日期的用 reborn-date-picker。",
+      "uses": {
+        "props": [
+          "modelValue",
+          "range"
+        ]
+      },
+      "pitfalls": [
+        "仅 web 端可用。"
+      ]
+    },
+    {
+      "id": "time-picker",
+      "pattern": "时间选择",
+      "match": [
+        "时间选择",
+        "時間選擇",
+        "time picker",
+        "timepicker",
+        "time-picker"
+      ],
+      "component": "reborn-time-picker",
+      "recipe": "format 定时间格式，isRange 选时间段。",
+      "uses": {
+        "props": [
+          "format",
+          "isRange"
+        ]
+      },
+      "pitfalls": [
+        "仅 web 端可用。"
+      ]
+    },
+    {
+      "id": "upload",
+      "pattern": "文件 / 图片上传",
+      "match": [
+        "上传",
+        "上傳",
+        "upload",
+        "附件"
+      ],
+      "component": "reborn-upload",
+      "recipe": "action 给接口，listType 取 text / picture / picture-card 与稿面列表形态对应，drag 开拖拽，multiple 允许多选。",
+      "uses": {
+        "props": [
+          "action",
+          "listType",
+          "drag",
+          "multiple"
+        ]
+      },
+      "pitfalls": [
+        "仅 web 端可用。"
+      ]
+    },
+    {
+      "id": "form",
+      "pattern": "表单",
+      "match": [
+        "表单",
+        "表單",
+        "/\\bform\\b/i"
+      ],
+      "component": "reborn-form",
+      "recipe": "RebornForm 包若干 RebornFormItem，modelValue 绑定表单对象，rules 给校验规则，labelPosition 按稿面取标签位置；各字段用对应的输入组件。",
+      "uses": {
+        "props": [
+          "modelValue",
+          "rules",
+          "labelPosition"
+        ]
+      }
+    },
+    {
+      "id": "table",
+      "pattern": "数据表格",
+      "match": [
+        "表格",
+        "/\\btable\\b/i",
+        "数据列表",
+        "數據列表"
+      ],
+      "component": "reborn-table",
+      "recipe": "columns 定义列，data 给行，border / stripe 按稿面取；不要用 Button 与 CSS 拼出完整表格。",
+      "uses": {
+        "props": [
+          "columns",
+          "data",
+          "border",
+          "stripe"
+        ]
+      },
+      "pitfalls": [
+        "仅 web 端可用。"
+      ]
+    },
+    {
+      "id": "tree",
+      "pattern": "树形层级",
+      "match": [
+        "树形",
+        "樹形",
+        "/\\btree\\b/i"
+      ],
+      "component": "reborn-tree",
+      "recipe": "treeData 给层级数据，checkable 显示复选框。",
+      "uses": {
+        "props": [
+          "treeData",
+          "checkable"
+        ]
+      },
+      "pitfalls": [
+        "仅 web 端可用。"
+      ]
+    },
+    {
+      "id": "dialog",
+      "pattern": "居中弹窗、对话框",
+      "match": [
+        "弹窗",
+        "彈窗",
+        "对话框",
+        "對話框",
+        "dialog",
+        "modal"
+      ],
+      "component": "reborn-dialog",
+      "recipe": "title 给标题，width 按稿面给，showClose 决定右上角关闭键，页脚按钮放 #footer 插槽；侧边滑入的面板用 reborn-drawer，UniApp 底部弹层用 reborn-popup。",
+      "uses": {
+        "props": [
+          "title",
+          "width",
+          "showClose"
+        ],
+        "slots": [
+          "default",
+          "footer",
+          "header"
+        ]
+      },
+      "pitfalls": [
+        "仅 web 端可用。"
+      ]
+    },
+    {
+      "id": "drawer",
+      "pattern": "抽屉、侧滑面板",
+      "match": [
+        "抽屉",
+        "抽屜",
+        "drawer",
+        "侧滑面板",
+        "側滑面板"
+      ],
+      "component": "reborn-drawer",
+      "recipe": "direction 取滑入方向，size 给宽或高，title 给标题，v-model 控制开关。",
+      "uses": {
+        "props": [
+          "direction",
+          "size",
+          "title",
+          "modelValue"
+        ],
+        "slots": [
+          "default",
+          "header",
+          "footer"
+        ]
+      },
+      "pitfalls": [
+        "仅 web 端可用。"
+      ]
+    },
+    {
+      "id": "popup",
+      "pattern": "UniApp 底部弹层、半屏弹窗、动作面板",
+      "match": [
+        "底部弹层",
+        "底部彈層",
+        "半屏",
+        "action sheet",
+        "bottom sheet",
+        "弹出层",
+        "彈出層"
+      ],
+      "component": "reborn-popup",
+      "recipe": "position 取弹出方向，title 与 showClose 给头部，内容放默认插槽。",
+      "uses": {
+        "props": [
+          "position",
+          "title",
+          "showClose"
+        ]
+      },
+      "pitfalls": [
+        "仅 uniapp 端可用，Web 端用 reborn-dialog 或 reborn-drawer。"
+      ]
+    },
+    {
+      "id": "tooltip",
+      "pattern": "文字提示气泡（悬停出现的纯文字）",
+      "match": [
+        "tooltip",
+        "文字提示",
+        "提示气泡",
+        "提示氣泡"
+      ],
+      "component": "reborn-tooltip",
+      "recipe": "content 给提示文字，placement 定方向，trigger 取 hover / click；带标题、富内容或操作的用 reborn-popover。",
+      "uses": {
+        "props": [
+          "content",
+          "placement",
+          "trigger"
+        ]
+      },
+      "pitfalls": [
+        "仅 web 端可用。"
+      ]
+    },
+    {
+      "id": "popover",
+      "pattern": "气泡卡片",
+      "match": [
+        "气泡",
+        "氣泡",
+        "popover",
+        "气泡卡片"
+      ],
+      "component": "reborn-popover",
+      "recipe": "触发器放默认插槽，#content 放卡片内容，placement 定方向，title 给标题。",
+      "uses": {
+        "props": [
+          "placement",
+          "title",
+          "content"
+        ],
+        "slots": [
+          "default",
+          "content"
+        ]
+      }
+    },
+    {
+      "id": "alert",
+      "pattern": "页内常驻提示条",
+      "match": [
+        "提示条",
+        "提示條",
+        "alert",
+        "警告条",
+        "警告條",
+        "警示条"
+      ],
+      "component": "reborn-alert",
+      "recipe": "type 取语义类型，title 给文案，closable 决定可关闭，showIcon 决定前置图标；多条轮播的用 messages。",
+      "uses": {
+        "props": [
+          "type",
+          "variant",
+          "title",
+          "closable",
+          "showIcon"
+        ]
+      }
+    },
+    {
+      "id": "notice-bar",
+      "pattern": "公告栏、通知栏：滚动播放的一行或多行通知",
+      "match": [
+        "公告",
+        "通知栏",
+        "通知欄",
+        "notice",
+        "滚动通知",
+        "滾動通知",
+        "重要通知"
+      ],
+      "component": "reborn-notice-bar",
+      "recipe": "text 给文案（数组即多条轮播），scrollable 决定横向滚动，direction 取水平或垂直，左侧图标走 leftIcon 或 #left-icon 插槽放稿面素材。",
+      "uses": {
+        "props": [
+          "text",
+          "scrollable",
+          "direction",
+          "color",
+          "background",
+          "leftIcon"
+        ],
+        "slots": [
+          "left-icon",
+          "right-icon"
+        ]
+      }
+    },
+    {
+      "id": "toast",
+      "pattern": "轻提示：一句话操作反馈",
+      "match": [
+        "toast",
+        "轻提示",
+        "輕提示",
+        "消息提示",
+        "操作反馈",
+        "操作反饋"
+      ],
+      "component": "reborn-toast",
+      "recipe": "通过 useToast / 方法调用显示，不在模板里摆放；屏幕角落带标题正文的异步通知用 reborn-notification，页内常驻的用 reborn-alert。"
+    },
+    {
+      "id": "notification",
+      "pattern": "屏幕角落的通知卡片",
+      "match": [
+        "通知卡片",
+        "通知卡",
+        "notification",
+        "系统通知",
+        "系統通知"
+      ],
+      "component": "reborn-notification",
+      "recipe": "通过方法调用显示，带标题与正文；单句反馈用 reborn-toast。",
+      "pitfalls": [
+        "仅 web 端可用。"
+      ]
+    },
+    {
+      "id": "empty",
+      "pattern": "空状态占位",
+      "match": [
+        "空状态",
+        "空狀態",
+        "暂无",
+        "暫無",
+        "/\\bempty\\b/i",
+        "无数据",
+        "無數據",
+        "没有数据",
+        "沒有數據"
+      ],
+      "component": "reborn-empty",
+      "recipe": "image 用稿面导出的插画，title 与 description 给文案，操作按钮放 #extra 插槽。",
+      "uses": {
+        "props": [
+          "image",
+          "title",
+          "description"
+        ],
+        "slots": [
+          "extra",
+          "image"
+        ]
+      }
+    },
+    {
+      "id": "result",
+      "pattern": "操作结果页、404 / 500 状态页",
+      "match": [
+        "结果页",
+        "結果頁",
+        "成功页",
+        "成功頁",
+        "失败页",
+        "失敗頁",
+        "/\\b(403|404|500)\\b/",
+        "/\\bresult\\b/i",
+        "状态页",
+        "狀態頁"
+      ],
+      "component": "reborn-result",
+      "recipe": "icon 取语义或状态码，title / subTitle 给文案，操作按钮放 #extra 插槽。",
+      "uses": {
+        "props": [
+          "title",
+          "subTitle",
+          "icon"
+        ],
+        "slots": [
+          "extra"
+        ]
+      }
+    },
+    {
+      "id": "switch",
+      "pattern": "开关",
+      "match": [
+        "开关",
+        "開關",
+        "switch",
+        "toggle"
+      ],
+      "component": "reborn-switch",
+      "recipe": "v-model 绑定布尔值，size 与 color 按稿面取，activeLabel / inactiveLabel 给内嵌文字。",
+      "uses": {
+        "props": [
+          "modelValue",
+          "size",
+          "color",
+          "activeLabel",
+          "inactiveLabel"
+        ]
+      }
+    },
+    {
+      "id": "radio",
+      "pattern": "单选",
+      "match": [
+        "单选",
+        "單選",
+        "radio"
+      ],
+      "component": "reborn-radio",
+      "recipe": "options 给选项或逐个写 RebornRadio，v-model 绑定值，type 取圆点或按钮样式。",
+      "uses": {
+        "props": [
+          "options",
+          "modelValue",
+          "type"
+        ]
+      }
+    },
+    {
+      "id": "checkbox",
+      "pattern": "多选、复选框",
+      "match": [
+        "多选",
+        "多選",
+        "复选",
+        "複選",
+        "checkbox",
+        "勾选",
+        "勾選"
+      ],
+      "component": "reborn-checkbox",
+      "recipe": "options 给选项或逐个写 RebornCheckbox，v-model 绑定数组。",
+      "uses": {
+        "props": [
+          "options",
+          "modelValue"
+        ]
+      }
+    },
+    {
+      "id": "rate",
+      "pattern": "评分、星级",
+      "match": [
+        "评分",
+        "評分",
+        "星级",
+        "星級",
+        "/\\brate\\b/i",
+        "rating",
+        "打分"
+      ],
+      "component": "reborn-rate",
+      "recipe": "v-model 绑定分值，count 给星数，allowHalf 允许半星，只展示不可改时加 readonly。",
+      "uses": {
+        "props": [
+          "modelValue",
+          "count",
+          "allowHalf",
+          "readonly"
+        ]
+      }
+    },
+    {
+      "id": "progress",
+      "pattern": "进度条、环形进度",
+      "match": [
+        "进度",
+        "進度",
+        "progress"
+      ],
+      "component": "reborn-progress",
+      "recipe": "percent 给百分比，type 取直线 / 圆环 / 仪表盘，strokeColor 给颜色或渐变，showText 决定是否显示文字。",
+      "uses": {
+        "props": [
+          "percent",
+          "type",
+          "strokeColor",
+          "showText"
+        ]
+      },
+      "pitfalls": [
+        "仅 web 端可用。"
+      ]
+    },
+    {
+      "id": "slider",
+      "pattern": "滑块、区间选择",
+      "match": [
+        "滑块",
+        "滑塊",
+        "/\\brange\\b/i",
+        "区间选择",
+        "區間選擇",
+        "滑动选择",
+        "滑動選擇"
+      ],
+      "component": "reborn-slider",
+      "recipe": "v-model 绑定数值或区间数组。"
+    },
+    {
+      "id": "statistic",
+      "pattern": "统计数值、指标卡",
+      "match": [
+        "统计",
+        "統計",
+        "指标",
+        "指標",
+        "/\\bkpi\\b/i",
+        "数据卡片",
+        "數據卡片",
+        "statistic"
+      ],
+      "component": "reborn-statistic",
+      "recipe": "value 给数值，title 给标题，prefix / suffix 给单位或货币符号，precision 控制小数位。",
+      "uses": {
+        "props": [
+          "value",
+          "title",
+          "prefix",
+          "suffix",
+          "precision"
+        ]
+      },
+      "pitfalls": [
+        "仅 web 端可用。"
+      ]
+    },
+    {
+      "id": "countdown",
+      "pattern": "倒计时",
+      "match": [
+        "倒计时",
+        "倒計時",
+        "countdown"
+      ],
+      "component": "reborn-countdown",
+      "recipe": "value 给目标时间，format 定显示格式。",
+      "uses": {
+        "props": [
+          "value",
+          "format"
+        ]
+      },
+      "pitfalls": [
+        "仅 web 端可用。"
+      ]
+    },
+    {
+      "id": "breadcrumb",
+      "pattern": "面包屑",
+      "match": [
+        "面包屑",
+        "麵包屑",
+        "breadcrumb"
+      ],
+      "component": "reborn-breadcrumb",
+      "recipe": "routes 给路径数据，separator 给分隔符。",
+      "uses": {
+        "props": [
+          "routes",
+          "separator"
+        ]
+      }
+    },
+    {
+      "id": "timeline",
+      "pattern": "时间线、时间轴",
+      "match": [
+        "时间线",
+        "時間線",
+        "时间轴",
+        "時間軸",
+        "timeline"
+      ],
+      "component": "reborn-timeline",
+      "recipe": "items 给节点数据或逐个写 RebornTimelineItem，direction 取横纵。",
+      "uses": {
+        "props": [
+          "items",
+          "direction"
+        ]
+      },
+      "pitfalls": [
+        "仅 web 端可用。"
+      ]
+    },
+    {
+      "id": "qrcode",
+      "pattern": "二维码",
+      "match": [
+        "二维码",
+        "二維碼",
+        "qrcode",
+        "qr code",
+        "/\\bqr\\b/i"
+      ],
+      "component": "reborn-qrcode",
+      "confidence": "low",
+      "recipe": "只有需要按内容动态生成时才用它（text 给内容，size 给边长）；稿面给了固定的二维码图片素材（如页脚的公众号码）时直接用导出的图片。",
+      "uses": {
+        "props": [
+          "text",
+          "size"
+        ]
+      }
+    },
+    {
+      "id": "watermark",
+      "pattern": "水印",
+      "match": [
+        "水印",
+        "watermark"
+      ],
+      "component": "reborn-watermark",
+      "recipe": "content 给文字或 image 给图片，包住需要加水印的内容。",
+      "uses": {
+        "props": [
+          "content",
+          "image"
+        ]
+      }
+    },
+    {
+      "id": "descriptions",
+      "pattern": "描述列表、键值对信息",
+      "match": [
+        "描述列表",
+        "键值对",
+        "鍵值對",
+        "descriptions",
+        "详情信息",
+        "詳情信息"
+      ],
+      "component": "reborn-descriptions",
+      "recipe": "items 给键值数据，column 定每行列数，bordered 决定边框。",
+      "uses": {
+        "props": [
+          "items",
+          "column",
+          "bordered"
+        ]
+      },
+      "pitfalls": [
+        "仅 web 端可用。"
+      ]
+    },
+    {
+      "id": "loading",
+      "pattern": "加载中、转圈",
+      "match": [
+        "加载中",
+        "加載中",
+        "loading",
+        "spinner",
+        "转圈",
+        "轉圈"
+      ],
+      "component": "reborn-loading",
+      "recipe": "type 取动画形态，text 给文案，visible 控制显示。",
+      "uses": {
+        "props": [
+          "type",
+          "text",
+          "visible"
+        ]
+      }
+    },
+    {
+      "id": "header",
+      "pattern": "站点顶部导航（logo + 导航链接 + 右侧操作）",
+      "match": [
+        "顶部导航",
+        "頂部導航",
+        "导航栏",
+        "導航欄",
+        "navbar",
+        "顶栏",
+        "頂欄",
+        "/\\bheader\\b/i",
+        "站点头部"
+      ],
+      "component": "reborn-header",
+      "confidence": "low",
+      "recipe": "只有结构是「logo + 导航链接 + 右侧操作」的站点导航才整体用 RebornHeader（title / sticky，左中右内容经 #left / #title / #right 插槽）；电商顶栏这类定制排版按稿面自写布局，但其中的搜索区、站点下拉、购物车角标仍必须用 reborn-search-box / reborn-dropdown / reborn-chip。",
+      "uses": {
+        "props": [
+          "title",
+          "sticky"
+        ],
+        "slots": [
+          "left",
+          "title",
+          "right"
+        ]
+      },
+      "pitfalls": [
+        "仅 web 端可用。"
+      ]
+    },
+    {
+      "id": "footer",
+      "pattern": "站点页脚：本库没有 Web 页脚组件",
+      "match": [
+        "页脚",
+        "頁腳",
+        "/\\bfooter\\b/i",
+        "底部版权",
+        "底部版權"
+      ],
+      "component": null,
+      "custom": true,
+      "recipe": "按稿面自写栏目布局；reborn-footer 是 UniApp 固定在页面底部的操作按钮栏，不是站点页脚。页脚里的二维码、社媒图标用导出素材，订阅输入用 reborn-input + reborn-button。"
+    },
+    {
+      "id": "card",
+      "pattern": "卡片容器",
+      "match": [
+        "卡片",
+        "/\\bcard\\b/i"
+      ],
+      "component": "reborn-card",
+      "confidence": "low",
+      "recipe": "仅 UniApp 有 RebornCard（title 给标题）；Web 端按稿面用 div + 圆角 / 阴影自写容器，卡片内的按钮、标签、角标仍用对应组件。",
+      "uses": {
+        "props": [
+          "title"
+        ]
+      },
+      "pitfalls": [
+        "仅 uniapp 端可用，Web 端无同名组件。"
+      ]
+    },
+    {
+      "id": "button",
+      "pattern": "按钮、链接样式按钮、圆形图标按钮",
+      "match": [
+        "按钮",
+        "按鈕",
+        "/\\bbtn\\b/i",
+        "/\\bbutton\\b/i",
+        "立即购买",
+        "立即購買",
+        "现在购买",
+        "現在購買",
+        "加入购物车",
+        "加入購物車",
+        "提交",
+        "确认",
+        "確認",
+        "取消",
+        "登录",
+        "登錄",
+        "登入",
+        "注册",
+        "註冊"
+      ],
+      "component": "reborn-button",
+      "recipe": "variant 取 filled / outlined / soft / subtle / text，color 取语义色，胶囊形用 round，通栏用 block；灰底无描边是 variant=\"soft\" color=\"neutral\"；图标放 #leading / #trailing 插槽并使用稿面导出的原始 SVG。有文字的按钮宽度由文字与左右内边距撑开（稿面自动布局是「适应内容」）：不写 w-[…] / min-w-[…]，ui.base 只写高度（h-[…]）与内边距（px-[…]，取稿面 padding）；图标与文字间距不是 8px 时在 ui.base 里用 [&>div]:gap-[…]；按钮文字要逐字测量时写进默认插槽的 <span>，不要只用 label（label 自带 leading-none）。纯图标按钮：32px 用 circle，其他尺寸用 round + ui.base 写 size-[…]（circle 在 size md 时强制 h-8! w-8!）。",
+      "uses": {
+        "props": [
+          "variant",
+          "color",
+          "size",
+          "round",
+          "circle",
+          "block",
+          "disabled",
+          "loading",
+          "ui"
+        ],
+        "slots": [
+          "leading",
+          "trailing",
+          "default"
+        ],
+        "ui": [
+          "base",
+          "label"
+        ]
+      },
+      "pitfalls": [
+        "variant=\"text\" 强制 h-auto! px-0!：需要固定高度或内边距的按钮不要用 text 变体。",
+        "circle 在 size md 时强制 h-8! w-8!（32px），ui.base 的 size-[…] 改不动；非 32 的圆形图标按钮用 round。",
+        "写死宽度的文字按钮在字体回退或文案变化时会截断（「Shop N…」）或留白。"
       ]
     }
   ]

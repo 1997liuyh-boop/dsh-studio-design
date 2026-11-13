@@ -9,6 +9,12 @@
     "tabbar",
     "navigation"
   ],
+  "aliases": [
+    "tabbar",
+    "底部导航",
+    "底部标签栏",
+    "bottom navigation"
+  ],
   "platforms": [
     "uniapp"
   ],
@@ -260,7 +266,7 @@
   },
   "docPath": "content/2.components/navigation/reborn-tabbar.md",
   "_meta": {
-    "contentHash": "3df85eb7277702c6bcb0bec70214c87919c4c3eb",
+    "contentHash": "1b020c637c15ea21501dcfa8c3c2011aaffda033",
     "hasOverride": true,
     "extractors": {
       "web": "absent",

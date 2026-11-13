@@ -1,7 +1,7 @@
 {
   "$schema": "../schema/component.schema.json",
   "id": "flip-words",
-  "title": "翻转单词",
+  "title": "FlipWords 翻转单词",
   "description": "用于句子中一组单词循环翻转切换的内联文字动画组件。",
   "category": "effect",
   "tags": [
@@ -9,6 +9,7 @@
     "tailwind",
     "aceternity-ui"
   ],
+  "aliases": [],
   "platforms": [
     "web"
   ],
@@ -83,7 +84,7 @@
   },
   "docPath": "content/2.components/text-animations/flip-words.md",
   "_meta": {
-    "contentHash": "5cbd21c6b570079f4456e8cfdd70ca0c30552f6f",
+    "contentHash": "0e40024d8884860201b558161ff2019cc42bd82a",
     "hasOverride": true,
     "extractors": {
       "web": "ok",

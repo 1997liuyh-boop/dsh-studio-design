@@ -1,7 +1,7 @@
 {
   "$schema": "../schema/component.schema.json",
   "id": "reborn-checkbox",
-  "title": "checkbox 多选框",
+  "title": "Checkbox 多选框",
   "description": "用于开关单项或组合多选的多选框组件，双端可用，支持布尔与数组两种绑定，并提供半选态与数据驱动的复选框组。",
   "category": "form",
   "tags": [
@@ -9,6 +9,13 @@
     "tailwind",
     "checkbox",
     "uniapp"
+  ],
+  "aliases": [
+    "checkbox",
+    "多选",
+    "复选框",
+    "勾选",
+    "勾选框"
   ],
   "platforms": [
     "web",
@@ -64,24 +71,43 @@
     },
     {
       "name": "size",
-      "type": "typeof checkboxSizes[number]",
+      "type": "'sm' | 'md' | 'lg'",
       "required": false,
       "description": "尺寸；组内以 Group 的 `size` 为准，单独使用时的回退顺序见「注意事项」。",
-      "default": "'md'"
+      "default": "'md'",
+      "options": [
+        "sm",
+        "md",
+        "lg"
+      ]
     },
     {
       "name": "color",
-      "type": "typeof checkboxColors[number]",
+      "type": "'primary' | 'secondary' | 'success' | 'info' | 'warning' | 'error' | 'neutral'",
       "required": false,
       "description": "语义色；组内以 Group 的 `color` 为准。",
-      "default": "'primary'"
+      "default": "'primary'",
+      "options": [
+        "primary",
+        "secondary",
+        "success",
+        "info",
+        "warning",
+        "error",
+        "neutral"
+      ]
     },
     {
       "name": "variant",
-      "type": "typeof checkboxVariants[number]",
+      "type": "'filled' | 'outlined'",
       "required": false,
-      "description": "样式变体 - filled：选中/半选填充配色，图标为白色 - outlined：选中只染边框与图标、不填充背景；半选保持灰色边框，中间显示同色实心小方块",
-      "default": "'filled'"
+      "description": "样式变体 - filled：选中/半选填充配色，图标为白色 - outlined：选中只染边框与图标、不填充背景；半选保持灰色边框，中间显示同色实心小方块 本条为 UniApp 端取值，另一端另有同名条目。",
+      "default": "'filled'",
+      "options": [
+        "filled",
+        "outlined"
+      ],
+      "platform": "uniapp"
     },
     {
       "name": "customClass",
@@ -122,10 +148,27 @@
     },
     {
       "name": "direction",
-      "type": "typeof checkboxDirections[number]",
+      "type": "'horizontal' | 'vertical'",
       "required": false,
       "description": "复选框的排列方向",
-      "default": "'horizontal'"
+      "default": "'horizontal'",
+      "options": [
+        "horizontal",
+        "vertical"
+      ]
+    },
+    {
+      "name": "variant",
+      "type": "'filled' | 'outlined' | 'shadow'",
+      "required": false,
+      "description": "样式变体 - filled：选中/半选填充配色，图标为白色 - outlined：选中只染边框与图标、不填充背景；半选保持灰色边框，中间显示同色实心小方块 - shadow：描边与图标同色，半选边框也染色；增加 2px 的整圈同色第 1 阶阴影环，不占布局高度 本条为 Web 端取值，另一端另有同名条目。",
+      "default": "\"filled\"",
+      "options": [
+        "filled",
+        "outlined",
+        "shadow"
+      ],
+      "platform": "web"
     },
     {
       "name": "trueValue",
@@ -244,7 +287,7 @@
   },
   "docPath": "content/2.components/input-and-forms/reborn-checkbox.md",
   "_meta": {
-    "contentHash": "8c2aa065ad50fc33de6df096336086a0183b0fb3",
+    "contentHash": "f7c236cd454572c63f58aec54e21553287e3aa32",
     "hasOverride": true,
     "extractors": {
       "web": "ok",

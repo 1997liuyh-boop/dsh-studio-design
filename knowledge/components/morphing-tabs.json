@@ -1,12 +1,16 @@
 {
   "$schema": "../schema/component.schema.json",
   "id": "morphing-tabs",
-  "title": "变形标签页",
+  "title": "MorphingTabs 变形标签页",
   "description": "用于在切换标签时呈现胶体粘连变形效果的字符串标签页组件。",
   "category": "misc",
   "tags": [
     "css",
     "tailwind"
+  ],
+  "aliases": [
+    "变形标签页",
+    "粘连标签"
   ],
   "platforms": [
     "web"
@@ -92,7 +96,7 @@
   },
   "docPath": "content/2.components/miscellaneous/morphing-tabs.md",
   "_meta": {
-    "contentHash": "6098aa7e95ad6be96f635e2004514251b65fc598",
+    "contentHash": "e87879f6ecdddd5b2748b4efb737636761f8ee2c",
     "hasOverride": true,
     "extractors": {
       "web": "ok",

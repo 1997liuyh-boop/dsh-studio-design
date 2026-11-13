@@ -10,6 +10,11 @@
     "layout",
     "list"
   ],
+  "aliases": [
+    "waterfall",
+    "瀑布流",
+    "masonry"
+  ],
   "platforms": [
     "uniapp"
   ],
@@ -98,7 +103,8 @@
   ],
   "whenNotToUse": [
     "web 端项目：platforms 仅 uniapp，无 web 实现。",
-    "等高条目的规则网格直接用普通 grid 布局即可。"
+    "等高条目的规则网格直接用普通 grid 布局即可。",
+    "Web 端一组图片的展开式画廊，改用 photo-gallery 或 expandable-gallery：本组件仅 UniApp。"
   ],
   "pitfalls": [
     "platforms 仅 uniapp 端提供。",
@@ -125,7 +131,7 @@
   },
   "docPath": "content/2.components/layout/reborn-waterfall.md",
   "_meta": {
-    "contentHash": "43821dbbb8fd25a2a9b054b86f7c45d9943ed922",
+    "contentHash": "f985a7394f364c203fe345bbb0807f67e92f3345",
     "hasOverride": true,
     "extractors": {
       "web": "absent",

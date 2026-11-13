@@ -1,7 +1,7 @@
 {
   "$schema": "../schema/component.schema.json",
   "id": "reborn-text",
-  "title": "文本 Text",
+  "title": "Text 文本",
   "description": "用于展示文本并内置类型格式化、脱敏与多行省略的增强文本组件。",
   "category": "misc",
   "tags": [
@@ -11,6 +11,13 @@
     "format",
     "mask",
     "uniapp"
+  ],
+  "aliases": [
+    "text",
+    "文本",
+    "省略",
+    "脱敏",
+    "文字"
   ],
   "platforms": [
     "web",
@@ -257,7 +264,7 @@
   },
   "docPath": "content/2.components/miscellaneous/reborn-text.md",
   "_meta": {
-    "contentHash": "d8579829e663253e9bf31ec297b5a28eb0c85ed0",
+    "contentHash": "4102fbcaeab5a45c1f553755e7eb4d7e15c3e9b4",
     "hasOverride": true,
     "extractors": {
       "web": "ok",

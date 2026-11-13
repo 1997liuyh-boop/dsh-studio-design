@@ -1,13 +1,18 @@
 {
   "$schema": "../schema/component.schema.json",
   "id": "reborn-typewriter",
-  "title": "打字机效果",
+  "title": "Typewriter 打字机效果",
   "description": "用于让文本以打字机方式逐字输入与删除的文字动画组件。",
   "category": "effect",
   "tags": [
     "css",
     "tailwind",
     "animation"
+  ],
+  "aliases": [
+    "typewriter",
+    "打字机",
+    "打字效果"
   ],
   "platforms": [
     "web"
@@ -165,7 +170,7 @@
   },
   "docPath": "content/2.components/text-animations/reborn-typewriter.md",
   "_meta": {
-    "contentHash": "740ebc4099448a9301c8d699c9234f47b541a4ef",
+    "contentHash": "e9a2f0d8d44f1afcbce44ee4930501646ca48060",
     "hasOverride": true,
     "extractors": {
       "web": "ok",

@@ -1,7 +1,7 @@
 {
   "$schema": "../schema/component.schema.json",
   "id": "letter-pullup",
-  "title": "字符上提",
+  "title": "LetterPullup 字符上提",
   "description": "用于让一段文字逐字符错落上提进场的文字动画组件。",
   "category": "effect",
   "tags": [
@@ -9,6 +9,7 @@
     "tailwind",
     "magic-ui"
   ],
+  "aliases": [],
   "platforms": [
     "web"
   ],
@@ -74,7 +75,7 @@
   },
   "docPath": "content/2.components/text-animations/letter-pullup.md",
   "_meta": {
-    "contentHash": "124fd4c94166d6da99bd588f810a76ac279c065a",
+    "contentHash": "06feb736c49778113c27ab6bbb0017fd1bd45829",
     "hasOverride": true,
     "extractors": {
       "web": "ok",

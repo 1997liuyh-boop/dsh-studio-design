@@ -1,7 +1,7 @@
 {
   "$schema": "../schema/component.schema.json",
   "id": "balance-slider",
-  "title": "平衡滑块",
+  "title": "BalanceSlider 平衡滑块",
   "description": "用于在左右两侧间拖动分配比例的双色平衡滑块展示组件。",
   "category": "form",
   "tags": [
@@ -9,6 +9,7 @@
     "tailwind",
     "input"
   ],
+  "aliases": [],
   "platforms": [
     "web"
   ],
@@ -129,7 +130,7 @@
   },
   "docPath": "content/2.components/input-and-forms/balance-slider.md",
   "_meta": {
-    "contentHash": "6c5166c8c52b69b1c8a20a57b8a31bddc4eaf0fb",
+    "contentHash": "76ada4912115e9696e6cfc181eaa640a6ee2a065",
     "hasOverride": true,
     "extractors": {
       "web": "ok",

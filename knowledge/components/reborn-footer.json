@@ -5,6 +5,12 @@
   "description": "用于固定在页面底部放置操作按钮的容器组件，自动占位并适配安全区，目前仅 uniapp 端实现。",
   "category": "navigation",
   "tags": [],
+  "aliases": [
+    "footer",
+    "底部栏",
+    "底部操作栏",
+    "底部按钮栏"
+  ],
   "platforms": [
     "web",
     "uniapp"
@@ -103,7 +109,7 @@
   },
   "docPath": "content/2.components/navigation/reborn-footer.md",
   "_meta": {
-    "contentHash": "7cd758d540bfbb65e7550f29519dfd5a39f63f21",
+    "contentHash": "aacd0ee04cb47aa4eff6d84034f4dabac96b9849",
     "hasOverride": true,
     "extractors": {
       "web": "partial",

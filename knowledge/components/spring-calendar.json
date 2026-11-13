@@ -1,7 +1,7 @@
 {
   "$schema": "../schema/component.schema.json",
   "id": "spring-calendar",
-  "title": "弹性日历",
+  "title": "SpringCalendar 弹性日历",
   "description": "用于横向选择日期并以弹簧动画展开当日事件的日历条组件。",
   "category": "effect",
   "tags": [
@@ -9,6 +9,7 @@
     "tailwind",
     "motion-v"
   ],
+  "aliases": [],
   "platforms": [
     "web"
   ],
@@ -110,7 +111,7 @@
   },
   "docPath": "content/2.components/special-effects/spring-calendar.md",
   "_meta": {
-    "contentHash": "bda07475cb0d0db9dc670632a0234481a77f8d66",
+    "contentHash": "1fca78326cec9b0d8287560414f6a408f7e8dc16",
     "hasOverride": true,
     "extractors": {
       "web": "ok",

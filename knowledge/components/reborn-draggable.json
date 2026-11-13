@@ -9,6 +9,12 @@
     "排序",
     "列表"
   ],
+  "aliases": [
+    "draggable",
+    "拖拽排序",
+    "拖动排序",
+    "sortable"
+  ],
   "platforms": [
     "web",
     "uniapp"
@@ -155,7 +161,7 @@
   },
   "docPath": "content/2.components/miscellaneous/reborn-draggable.md",
   "_meta": {
-    "contentHash": "7d6de744bf87361ab36e3c850fe5e1b45ee2bc7b",
+    "contentHash": "349b7f9543bfb62aa477c86e10bedbb1b52e21b5",
     "hasOverride": true,
     "extractors": {
       "web": "ok",

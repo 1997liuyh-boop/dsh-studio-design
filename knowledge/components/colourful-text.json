@@ -1,7 +1,7 @@
 {
   "$schema": "../schema/component.schema.json",
   "id": "colourful-text",
-  "title": "彩色文字",
+  "title": "ColourfulText 彩色文字",
   "description": "用于让文字逐字符循环变换颜色并动画的标题点缀组件。",
   "category": "effect",
   "tags": [
@@ -9,6 +9,7 @@
     "tailwind",
     "aceternity-ui"
   ],
+  "aliases": [],
   "platforms": [
     "web"
   ],
@@ -83,7 +84,7 @@
   },
   "docPath": "content/2.components/text-animations/colorful-text.md",
   "_meta": {
-    "contentHash": "99db5a38cbe67ce6bce8b0d29128e284c68ab27b",
+    "contentHash": "d716b5b242ae2c2da2e43e518278e74c2e26789b",
     "hasOverride": true,
     "extractors": {
       "web": "ok",

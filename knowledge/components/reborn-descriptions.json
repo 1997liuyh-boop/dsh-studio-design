@@ -10,6 +10,13 @@
     "descriptions",
     "detail"
   ],
+  "aliases": [
+    "descriptions",
+    "描述列表",
+    "详情",
+    "键值对",
+    "信息展示"
+  ],
   "platforms": [
     "web"
   ],
@@ -49,17 +56,26 @@
     },
     {
       "name": "layout",
-      "type": "DescriptionsLayout",
+      "type": "'horizontal' | 'vertical'",
       "required": false,
       "description": "描述布局",
-      "default": "\"horizontal\""
+      "default": "\"horizontal\"",
+      "options": [
+        "horizontal",
+        "vertical"
+      ]
     },
     {
       "name": "size",
-      "type": "DescriptionsSize",
+      "type": "'sm' | 'md' | 'lg'",
       "required": false,
       "description": "列表的大小，对应单元格行高 36 / 48 / 56px",
-      "default": "\"md\""
+      "default": "\"md\"",
+      "options": [
+        "sm",
+        "md",
+        "lg"
+      ]
     },
     {
       "name": "items",
@@ -75,17 +91,27 @@
     },
     {
       "name": "labelAlign",
-      "type": "DescriptionsAlign",
+      "type": "'left' | 'center' | 'right'",
       "required": false,
       "description": "标签水平对齐",
-      "default": "\"left\""
+      "default": "\"left\"",
+      "options": [
+        "left",
+        "center",
+        "right"
+      ]
     },
     {
       "name": "contentAlign",
-      "type": "DescriptionsAlign",
+      "type": "'left' | 'center' | 'right'",
       "required": false,
       "description": "内容水平对齐",
-      "default": "\"left\""
+      "default": "\"left\"",
+      "options": [
+        "left",
+        "center",
+        "right"
+      ]
     },
     {
       "name": "class",
@@ -211,7 +237,7 @@
   },
   "docPath": "content/2.components/miscellaneous/reborn-descriptions.md",
   "_meta": {
-    "contentHash": "ea54cce6035fbf3a3eb91545871bad63c09b33e4",
+    "contentHash": "0e37255c29b51af97025e5bb5879a4388b3e43ff",
     "hasOverride": true,
     "extractors": {
       "web": "ok",

@@ -11,6 +11,15 @@
     "placeholder",
     "uniapp"
   ],
+  "aliases": [
+    "empty",
+    "空状态",
+    "暂无数据",
+    "无数据",
+    "空页面",
+    "placeholder",
+    "占位"
+  ],
   "platforms": [
     "web",
     "uniapp"
@@ -153,7 +162,7 @@
   },
   "docPath": "content/2.components/miscellaneous/reborn-empty.md",
   "_meta": {
-    "contentHash": "3576dd58825ca4c7eb51f73cc252cf1f3991cffe",
+    "contentHash": "e1499f892ad4a476553421e9a1c6503673b1133e",
     "hasOverride": true,
     "extractors": {
       "web": "ok",

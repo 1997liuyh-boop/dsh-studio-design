@@ -10,6 +10,11 @@
     "time-picker",
     "input"
   ],
+  "aliases": [
+    "time picker",
+    "时间选择",
+    "选时间"
+  ],
   "platforms": [
     "web"
   ],
@@ -59,10 +64,14 @@
     },
     {
       "name": "interaction",
-      "type": "(typeof timePanelInteractions)[number]",
+      "type": "'scroll' | 'click'",
       "required": false,
       "description": "scroll：滚动停止后选中并居中；click：仅点击选中并置顶",
-      "default": "\"scroll\""
+      "default": "\"scroll\"",
+      "options": [
+        "scroll",
+        "click"
+      ]
     },
     {
       "name": "arrowControl",
@@ -80,17 +89,31 @@
     },
     {
       "name": "size",
-      "type": "(typeof timePickerSizes)[number]",
+      "type": "'sm' | 'md' | 'lg'",
       "required": false,
       "description": "触发器尺寸",
-      "default": "\"md\""
+      "default": "\"md\"",
+      "options": [
+        "sm",
+        "md",
+        "lg"
+      ]
     },
     {
       "name": "color",
-      "type": "(typeof timePickerColors)[number]",
+      "type": "'primary' | 'secondary' | 'success' | 'info' | 'warning' | 'error' | 'neutral'",
       "required": false,
       "description": "语义色",
-      "default": "\"primary\""
+      "default": "\"primary\"",
+      "options": [
+        "primary",
+        "secondary",
+        "success",
+        "info",
+        "warning",
+        "error",
+        "neutral"
+      ]
     },
     {
       "name": "class",
@@ -260,9 +283,15 @@
     },
     {
       "name": "unit",
-      "type": "TimeUnit",
+      "type": "'hour' | 'minute' | 'second' | 'millisecond'",
       "required": true,
-      "description": ""
+      "description": "",
+      "options": [
+        "hour",
+        "minute",
+        "second",
+        "millisecond"
+      ]
     },
     {
       "name": "max",
@@ -421,7 +450,7 @@
   },
   "docPath": "content/2.components/input-and-forms/reborn-time-picker.md",
   "_meta": {
-    "contentHash": "3a1e6521cdfe35520a71b992b0f8cf060d082f2b",
+    "contentHash": "c02fb636cb7aa4c41e39212f8a7229a193a5e4c8",
     "hasOverride": true,
     "extractors": {
       "web": "ok",

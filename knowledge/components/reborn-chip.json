@@ -2,13 +2,34 @@
   "$schema": "../schema/component.schema.json",
   "id": "reborn-chip",
   "title": "Chip 角标",
-  "description": "用于在元素角标位置显示提示点或数字标记的组件，双端可用。",
+  "description": "角标（即 Element / Ant / Vuetify 的 Badge）：挂在图标、头像右上角的红点或数字标记，双端可用。",
   "category": "basic",
   "tags": [
     "chip",
     "dot",
     "corner-mark",
     "uniapp"
+  ],
+  "aliases": [
+    "badge",
+    "徽标",
+    "红点",
+    "小红点",
+    "未读",
+    "未读数",
+    "数字角标",
+    "消息数",
+    "sup",
+    "dot",
+    "corner badge",
+    "element badge",
+    "ant badge",
+    "角标数字",
+    "小圆点",
+    "圆点",
+    "提示点",
+    "右上角",
+    "右上角数字"
   ],
   "platforms": [
     "web",
@@ -17,17 +38,31 @@
   "props": [
     {
       "name": "color",
-      "type": "typeof chipColors[number]",
+      "type": "'primary' | 'secondary' | 'success' | 'info' | 'warning' | 'error' | 'neutral'",
       "required": false,
       "description": "语义色：solid / textDot 用作底色，outline / textOutline 用作描边与文字色",
-      "default": "'primary'"
+      "default": "'primary'",
+      "options": [
+        "primary",
+        "secondary",
+        "success",
+        "info",
+        "warning",
+        "error",
+        "neutral"
+      ]
     },
     {
       "name": "size",
-      "type": "typeof chipSizes[number]",
+      "type": "'sm' | 'md' | 'lg'",
       "required": false,
       "description": "尺寸档位，各变体的具体尺寸不同：圆点 8~12rpx、圆环外径 16~32rpx、文字角标高 32~48rpx",
-      "default": "'md'"
+      "default": "'md'",
+      "options": [
+        "sm",
+        "md",
+        "lg"
+      ]
     },
     {
       "name": "variant",
@@ -43,10 +78,16 @@
     },
     {
       "name": "position",
-      "type": "typeof chipPositions[number]",
+      "type": "'top-right' | 'bottom-right' | 'top-left' | 'bottom-left'",
       "required": false,
       "description": "角标吸附在宿主的哪个角",
-      "default": "'top-right'"
+      "default": "'top-right'",
+      "options": [
+        "top-right",
+        "bottom-right",
+        "top-left",
+        "bottom-left"
+      ]
     },
     {
       "name": "inset",
@@ -160,7 +201,7 @@
   },
   "docPath": "content/2.components/button/reborn-chip.md",
   "_meta": {
-    "contentHash": "9148e4f07055105b7e51a2260d8be546909a9334",
+    "contentHash": "8b8abc8fe964cea5f8e51ffa29aaab1e961cd16a",
     "hasOverride": true,
     "extractors": {
       "web": "ok",

@@ -1,7 +1,7 @@
 {
   "$schema": "../schema/component.schema.json",
   "id": "blur-reveal",
-  "title": "模糊揭示",
+  "title": "BlurReveal 模糊揭示",
   "description": "用于让子元素依次从模糊状态淡入上移进场的揭示动画组件。",
   "category": "effect",
   "tags": [
@@ -9,6 +9,7 @@
     "tailwind",
     "magic-ui"
   ],
+  "aliases": [],
   "platforms": [
     "web"
   ],
@@ -95,7 +96,7 @@
   },
   "docPath": "content/2.components/text-animations/blur-reveal.md",
   "_meta": {
-    "contentHash": "3005a1a4f15435036f3da8f5bc9c844eec58818e",
+    "contentHash": "cb6d62a6305305e30106c5b7ab6e78378661a416",
     "hasOverride": true,
     "extractors": {
       "web": "ok",

@@ -1,7 +1,7 @@
 {
   "$schema": "../schema/component.schema.json",
   "id": "link-preview",
-  "title": "链接预览",
+  "title": "LinkPreview 链接预览",
   "description": "用于悬停链接文字时弹出目标网页预览图的行内链接组件。",
   "category": "misc",
   "tags": [
@@ -9,6 +9,7 @@
     "tailwind",
     "aceternity-ui"
   ],
+  "aliases": [],
   "platforms": [
     "web"
   ],
@@ -106,7 +107,7 @@
   },
   "docPath": "content/2.components/miscellaneous/link-preview.md",
   "_meta": {
-    "contentHash": "018747b38763a37c0511447272d9856fd5213f30",
+    "contentHash": "cd07d926067c5cf3859a6a59719b61f58c730c4b",
     "hasOverride": true,
     "extractors": {
       "web": "ok",

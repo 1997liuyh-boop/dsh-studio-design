@@ -1,7 +1,7 @@
 {
   "$schema": "../schema/component.schema.json",
   "id": "shimmer-button",
-  "title": "闪光按钮",
+  "title": "ShimmerButton 闪光按钮",
   "description": "用于呈现环绕闪光流动动画的按钮组件，闪光颜色、速度与背景可配置。",
   "category": "basic",
   "tags": [
@@ -10,6 +10,7 @@
     "button",
     "magic-ui"
   ],
+  "aliases": [],
   "platforms": [
     "web"
   ],
@@ -103,7 +104,7 @@
   },
   "docPath": "content/2.components/button/shimmer-button.md",
   "_meta": {
-    "contentHash": "2c0069ed9808e6bdc236116de98f55dcf3979164",
+    "contentHash": "e7d7032929c47dbe8075288e1c2920a650d0aa5a",
     "hasOverride": true,
     "extractors": {
       "web": "ok",

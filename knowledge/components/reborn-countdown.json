@@ -11,6 +11,11 @@
     "statistic",
     "dayjs"
   ],
+  "aliases": [
+    "countdown",
+    "倒计时",
+    "计时器"
+  ],
   "platforms": [
     "web"
   ],
@@ -146,7 +151,7 @@
   },
   "docPath": "content/2.components/data/reborn-countdown.md",
   "_meta": {
-    "contentHash": "813e5b36a023db55efeee866845351baaa09207f",
+    "contentHash": "1973667d56bf751abd09fac421a25d3b88e3d6b4",
     "hasOverride": true,
     "extractors": {
       "web": "ok",

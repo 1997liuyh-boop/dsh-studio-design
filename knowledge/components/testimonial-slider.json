@@ -1,12 +1,17 @@
 {
   "$schema": "../schema/component.schema.json",
   "id": "testimonial-slider",
-  "title": "评价滑块",
+  "title": "TestimonialSlider 评价滑块",
   "description": "用于轮播展示用户评价（头像、引言、姓名、职位）的轻量滑块组件。",
   "category": "misc",
   "tags": [
     "css",
     "tailwind"
+  ],
+  "aliases": [
+    "评价轮播",
+    "用户评价",
+    "testimonial"
   ],
   "platforms": [
     "web"
@@ -73,7 +78,7 @@
   },
   "docPath": "content/2.components/miscellaneous/testimonial-slider.md",
   "_meta": {
-    "contentHash": "bd6e7bcd7f2ef2db80a9fb96fd38683659005bcb",
+    "contentHash": "7114d7aa2fc7f5c9397b662945c3df2273f6fc3e",
     "hasOverride": true,
     "extractors": {
       "web": "ok",

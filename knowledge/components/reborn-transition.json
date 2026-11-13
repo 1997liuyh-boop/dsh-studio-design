@@ -5,6 +5,11 @@
   "description": "用于控制内容显隐过渡动画的容器组件，内置 fade、slide、zoom 等动画名称。",
   "category": "misc",
   "tags": [],
+  "aliases": [
+    "transition",
+    "过渡",
+    "动画过渡"
+  ],
   "platforms": [
     "web",
     "uniapp"
@@ -256,7 +261,7 @@
   },
   "docPath": "content/2.components/miscellaneous/reborn-transition.md",
   "_meta": {
-    "contentHash": "c44b0cca090e6e7c46d1d8dc58a1cedac0cc1ab2",
+    "contentHash": "fcbafac63115a9a8fe956a5ecf4e557cf8dde7c1",
     "hasOverride": true,
     "extractors": {
       "web": "ok",

@@ -1,7 +1,7 @@
 {
   "$schema": "../schema/component.schema.json",
   "id": "apple-card-carousel",
-  "title": "Apple 卡片轮播",
+  "title": "AppleCardCarousel 卡片轮播",
   "description": "用于以 Apple 官网风格横向滚动卡片、点击展开为模态详情的轮播组件。",
   "category": "data-display",
   "tags": [
@@ -10,6 +10,7 @@
     "card",
     "aceternity-ui"
   ],
+  "aliases": [],
   "platforms": [
     "web"
   ],
@@ -136,7 +137,7 @@
   },
   "docPath": "content/2.components/cards/apple-card-carousel.md",
   "_meta": {
-    "contentHash": "97ea0007cec9e4a6157bf2561a0edaae18374d98",
+    "contentHash": "a53c9c4138268156cbaa05950ae82450db23a022",
     "hasOverride": true,
     "extractors": {
       "web": "ok",

@@ -10,6 +10,15 @@
     "tabs",
     "form"
   ],
+  "aliases": [
+    "segmented",
+    "分段控制器",
+    "分段选择",
+    "segment control",
+    "切换器",
+    "toggle group",
+    "按钮组切换"
+  ],
   "platforms": [
     "web"
   ],
@@ -30,9 +39,14 @@
     },
     {
       "name": "size",
-      "type": "(typeof segmentedSizes)[number]",
+      "type": "'sm' | 'md' | 'lg'",
       "required": false,
-      "description": "尺寸；处于表单内时被表单的尺寸覆盖，都没有时为 md"
+      "description": "尺寸；处于表单内时被表单的尺寸覆盖，都没有时为 md",
+      "options": [
+        "sm",
+        "md",
+        "lg"
+      ]
     },
     {
       "name": "block",
@@ -75,10 +89,14 @@
     },
     {
       "name": "direction",
-      "type": "(typeof segmentedDirections)[number]",
+      "type": "'horizontal' | 'vertical'",
       "required": false,
       "description": "排列方向 @defaultValue 'horizontal'",
-      "default": "\"horizontal\""
+      "default": "\"horizontal\"",
+      "options": [
+        "horizontal",
+        "vertical"
+      ]
     },
     {
       "name": "class",
@@ -171,7 +189,7 @@
   },
   "docPath": "content/2.components/input-and-forms/reborn-segmented.md",
   "_meta": {
-    "contentHash": "e2143d7f831a9f35cfcfb5e22c8bf146b686a920",
+    "contentHash": "cbf4972493e357a859c7eb9b755f5788aee7640f",
     "hasOverride": true,
     "extractors": {
       "web": "ok",

@@ -1,13 +1,18 @@
 {
   "$schema": "../schema/component.schema.json",
   "id": "reborn-card",
-  "title": "卡片 Card",
+  "title": "Card 卡片",
   "description": "用于分组展示内容区块的基础卡片容器组件，带可选标题，仅 uniapp 端。",
   "category": "data-display",
   "tags": [
     "uniapp",
     "card",
     "container"
+  ],
+  "aliases": [
+    "card",
+    "卡片",
+    "容器卡片"
   ],
   "platforms": [
     "uniapp"
@@ -96,7 +101,7 @@
   },
   "docPath": "content/2.components/cards/reborn-card.md",
   "_meta": {
-    "contentHash": "621477158d7eef45c1b2a7ef2f08ab58f381773f",
+    "contentHash": "705c062736f25df50af2426806136bf0890aed77",
     "hasOverride": true,
     "extractors": {
       "web": "absent",

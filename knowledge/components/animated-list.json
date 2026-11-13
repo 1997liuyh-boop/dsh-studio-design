@@ -1,7 +1,7 @@
 {
   "$schema": "../schema/component.schema.json",
   "id": "animated-list",
-  "title": "动画列表",
+  "title": "AnimatedList 动画列表",
   "description": "用于让列表项按固定延迟逐条进场的通知流列表组件。",
   "category": "misc",
   "tags": [
@@ -9,6 +9,7 @@
     "tailwind",
     "magic-ui"
   ],
+  "aliases": [],
   "platforms": [
     "web"
   ],
@@ -119,7 +120,7 @@
   },
   "docPath": "content/2.components/miscellaneous/animated-list.md",
   "_meta": {
-    "contentHash": "4f64b34ffe186ffd7b803c67395b28b6a61614d2",
+    "contentHash": "a1376cabadcd7b854913e69be721b54cc4a5e5d5",
     "hasOverride": true,
     "extractors": {
       "web": "ok",

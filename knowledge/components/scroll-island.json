@@ -1,7 +1,7 @@
 {
   "$schema": "../schema/component.schema.json",
   "id": "scroll-island",
-  "title": "滚动岛",
+  "title": "ScrollIsland 滚动岛",
   "description": "用于以灵动岛样式悬浮显示页面滚动进度并可展开附加内容的组件。",
   "category": "misc",
   "tags": [
@@ -9,6 +9,7 @@
     "tailwind",
     "number-flow"
   ],
+  "aliases": [],
   "platforms": [
     "web"
   ],
@@ -84,7 +85,7 @@
   },
   "docPath": "content/2.components/miscellaneous/scroll-island.md",
   "_meta": {
-    "contentHash": "0068bd257637b51e99f81e65bc965d7c15cafdaa",
+    "contentHash": "cd6c90c8210f4db8d3fe51aa291c33cb43ab5841",
     "hasOverride": true,
     "extractors": {
       "web": "ok",

@@ -1,13 +1,18 @@
 {
   "$schema": "../schema/component.schema.json",
   "id": "animated-testimonials",
-  "title": "动态评价",
+  "title": "AnimatedTestimonials 动态评价",
   "description": "用于轮播展示用户评价（头像、姓名、职称、引言）并支持自动播放的组件。",
   "category": "misc",
   "tags": [
     "css",
     "tailwind",
     "aceternity-ui"
+  ],
+  "aliases": [
+    "评价轮播",
+    "用户评价",
+    "testimonial"
   ],
   "platforms": [
     "web"
@@ -77,7 +82,7 @@
   },
   "docPath": "content/2.components/miscellaneous/animated-testimonials.md",
   "_meta": {
-    "contentHash": "5461646bdfe1180961120d91129fdf09c2b18ded",
+    "contentHash": "25b4d06d18dc0ee8cb7ef291544296dbbd0dee02",
     "hasOverride": true,
     "extractors": {
       "web": "ok",

@@ -1,7 +1,7 @@
 {
   "$schema": "../schema/component.schema.json",
   "id": "neon-border",
-  "title": "霓虹边框",
+  "title": "NeonBorder 霓虹边框",
   "description": "用于给插槽内容包裹双色霓虹流转边框的装饰容器组件。",
   "category": "effect",
   "tags": [
@@ -9,6 +9,7 @@
     "tailwind",
     "border"
   ],
+  "aliases": [],
   "platforms": [
     "web"
   ],
@@ -93,7 +94,7 @@
   },
   "docPath": "content/2.components/special-effects/neon-border.md",
   "_meta": {
-    "contentHash": "ab491c0d52e51535ea871f73acd54eac03bae321",
+    "contentHash": "65a9b462b853c0c293eba1aef763ab1f07415e6e",
     "hasOverride": true,
     "extractors": {
       "web": "ok",

@@ -1,12 +1,18 @@
 {
   "$schema": "../schema/component.schema.json",
   "id": "dock",
-  "title": "Dock",
+  "title": "Dock 程序坞",
   "description": "用于悬停时邻近图标放大的 macOS 风格 Dock 图标栏组件。",
   "category": "misc",
   "tags": [
     "css",
     "tailwind"
+  ],
+  "aliases": [
+    "mac dock",
+    "程序坞",
+    "图标栏",
+    "放大图标栏"
   ],
   "platforms": [
     "web"
@@ -95,7 +101,7 @@
   },
   "docPath": "content/2.components/miscellaneous/dock.md",
   "_meta": {
-    "contentHash": "ad499d7b3ceb6b476a94ae97658138d1d5513671",
+    "contentHash": "8c7f81cbc9566b374e5da84d314b5156ccce39eb",
     "hasOverride": true,
     "extractors": {
       "web": "ok",

@@ -9,6 +9,12 @@
     "modal",
     "uniapp"
   ],
+  "aliases": [
+    "overlay",
+    "遮罩",
+    "mask",
+    "蒙层"
+  ],
   "platforms": [
     "web",
     "uniapp"
@@ -157,7 +163,7 @@
   },
   "docPath": "content/2.components/miscellaneous/reborn-overlay.md",
   "_meta": {
-    "contentHash": "01d380ebff9f82210fd41a9dddaa40bb5a588d3f",
+    "contentHash": "5f2b96950b9b6aa168f7a24c071099d6c55d00d7",
     "hasOverride": true,
     "extractors": {
       "web": "ok",

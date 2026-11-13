@@ -11,6 +11,11 @@
     "breadcrumb",
     "uniapp"
   ],
+  "aliases": [
+    "breadcrumb",
+    "面包屑",
+    "路径导航"
+  ],
   "platforms": [
     "web",
     "uniapp"
@@ -84,8 +89,9 @@
       "name": "replace",
       "type": "'navigate' | 'redirect' | 'switchTab' | 'reLaunch'",
       "required": false,
-      "description": "跳转方式，对应 uni 的四种路由 API",
-      "default": "'navigate'"
+      "description": "跳转方式，对应 uni 的四种路由 API 本条为 UniApp 端取值，另一端另有同名条目。",
+      "default": "'navigate'",
+      "platform": "uniapp"
     },
     {
       "name": "target",
@@ -114,6 +120,14 @@
       "required": false,
       "description": "细粒度样式覆盖对象，会级联到所有子条目 可用键（从源码抽取，以此为准）——Web：RebornBreadcrumb → item、more、moreIcon*、root、separator；RebornBreadcrumbItem → dropIcon、droplist、droplistDivider、droplistItem*、item、link、separator。 带 * 的键对应插槽兜底节点：填了同名插槽，组件自带的节点被替换，这个键随之失效。",
       "default": "() => ({})",
+      "platform": "web"
+    },
+    {
+      "name": "replace",
+      "type": "'push' | 'replace' | 'blank'",
+      "required": false,
+      "description": "跳转方式：push 入栈 / replace 替换 / blank 新窗口 本条为 Web 端取值，另一端另有同名条目。",
+      "default": "'push'",
       "platform": "web"
     },
     {
@@ -188,7 +202,8 @@
   ],
   "whenNotToUse": [
     "平级页签切换场景，改用 reborn-tabs。",
-    "分页浏览列表数据，改用 reborn-pagination。"
+    "分页浏览列表数据，改用 reborn-pagination。",
+    "路径较浅、只需要返回入口加页面标题，改用 reborn-page-header。"
   ],
   "pitfalls": [
     "同名的自定义插槽优先级高于属性，条目级配置优先级高于容器级配置。",
@@ -227,7 +242,7 @@
   },
   "docPath": "content/2.components/navigation/reborn-breadcrumb.md",
   "_meta": {
-    "contentHash": "9ce004f73fa31f10976c1d610e606d35c3ec4039",
+    "contentHash": "256910c9f02066ec115a36e2bcfcd41107f11d75",
     "hasOverride": true,
     "extractors": {
       "web": "ok",

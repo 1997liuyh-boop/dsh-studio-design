@@ -11,6 +11,17 @@
     "marquee",
     "uniapp"
   ],
+  "aliases": [
+    "alert",
+    "警告",
+    "警告提示",
+    "提示条",
+    "横幅",
+    "banner",
+    "公告",
+    "告警",
+    "页内提示"
+  ],
   "platforms": [
     "web",
     "uniapp"
@@ -18,23 +29,46 @@
   "props": [
     {
       "name": "type",
-      "type": "AlertType",
+      "type": "'info' | 'success' | 'warning' | 'error'",
       "required": false,
       "description": "警告提示的类型，决定默认图标与配色，默认 info",
-      "default": "'info'"
+      "default": "'info'",
+      "options": [
+        "info",
+        "success",
+        "warning",
+        "error"
+      ]
     },
     {
       "name": "variant",
-      "type": "AlertVariant",
+      "type": "'filled' | 'outlined' | 'soft' | 'subtle' | 'text' | 'round'",
       "required": false,
       "description": "视觉变体，对齐 reborn-button 的同名变体（不含 circle），默认 soft",
-      "default": "'soft'"
+      "default": "'soft'",
+      "options": [
+        "filled",
+        "outlined",
+        "soft",
+        "subtle",
+        "text",
+        "round"
+      ]
     },
     {
       "name": "color",
-      "type": "AlertColor",
+      "type": "'primary' | 'secondary' | 'success' | 'info' | 'warning' | 'error' | 'neutral'",
       "required": false,
-      "description": "配色覆盖；缺省时由 type 映射"
+      "description": "配色覆盖；缺省时由 type 映射",
+      "options": [
+        "primary",
+        "secondary",
+        "success",
+        "info",
+        "warning",
+        "error",
+        "neutral"
+      ]
     },
     {
       "name": "showIcon",
@@ -99,10 +133,14 @@
     },
     {
       "name": "direction",
-      "type": "AlertDirection",
+      "type": "'vertical' | 'horizontal'",
       "required": false,
       "description": "轮播方向：vertical 垂直切换，horizontal 全部消息拼成一行水平跑马灯滚动，默认 vertical",
-      "default": "'vertical'"
+      "default": "'vertical'",
+      "options": [
+        "vertical",
+        "horizontal"
+      ]
     },
     {
       "name": "speed",
@@ -231,7 +269,8 @@
   "whenNotToUse": [
     "操作后的短暂全局反馈，改用 reborn-toast（Message）。",
     "需要用户确认或承载复杂交互的通知，改用 reborn-dialog。",
-    "单条文本的横向滚动公告条（带左右图标、可点击），改用 reborn-notice-bar。"
+    "单条文本的横向滚动公告条（带左右图标、可点击），改用 reborn-notice-bar。",
+    "后台任务完成后弹在屏幕角落、会自动消失的异步通知，改用 reborn-notification。"
   ],
   "pitfalls": [
     "图标、action 插槽、关闭按钮以文字首行为中心对齐：有标题对齐标题、无标题对齐内容；action 里超过一行高的内容（如竖排多个按钮）会与标题顶部对齐并把盒子撑高。",
@@ -263,7 +302,7 @@
   },
   "docPath": "content/2.components/miscellaneous/reborn-alert.md",
   "_meta": {
-    "contentHash": "919597b2f5b0474a9f4f1aa406ffd54397eb2411",
+    "contentHash": "35952de6ba8fed3a03aa03f60fc4d57000b0522a",
     "hasOverride": true,
     "extractors": {
       "web": "ok",

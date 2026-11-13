@@ -1,12 +1,19 @@
 {
   "$schema": "../schema/component.schema.json",
   "id": "reborn-header",
-  "title": "标题",
+  "title": "Header 顶栏",
   "description": "用于站点顶部导航的响应式头部组件，移动端可切换为弹窗菜单。",
   "category": "navigation",
   "tags": [
     "vue",
     "reborn-header"
+  ],
+  "aliases": [
+    "header",
+    "顶部导航",
+    "导航栏",
+    "navbar",
+    "页面顶栏"
   ],
   "platforms": [
     "web"
@@ -207,7 +214,7 @@
   },
   "docPath": "content/2.components/navigation/reborn-header.md",
   "_meta": {
-    "contentHash": "cae47d96d1fa95b665a905da49679341812f6e21",
+    "contentHash": "0b6922bfc71935a8ebbfae038ed1f2ed6220c8af",
     "hasOverride": true,
     "extractors": {
       "web": "ok",

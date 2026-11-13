@@ -1,7 +1,7 @@
 {
   "$schema": "../schema/component.schema.json",
   "id": "photo-gallery",
-  "title": "照片画廊",
+  "title": "PhotoGallery 照片画廊",
   "description": "用于以动画展开一组照片的画廊展示组件，图片经 items 传入。",
   "category": "misc",
   "tags": [
@@ -9,6 +9,7 @@
     "tailwind",
     "gallery"
   ],
+  "aliases": [],
   "platforms": [
     "web"
   ],
@@ -74,7 +75,7 @@
   },
   "docPath": "content/2.components/miscellaneous/photo-gallery.md",
   "_meta": {
-    "contentHash": "7ed39dfe67b4af5f45e3f783c2bb11ad55f84d1b",
+    "contentHash": "db5d968a405b40e1a1761384284434dfd0c490e4",
     "hasOverride": true,
     "extractors": {
       "web": "ok",
