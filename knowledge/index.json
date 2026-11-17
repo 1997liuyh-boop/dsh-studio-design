@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "generatedAt": "2026-11-16T09:44:52.613Z",
+  "generatedAt": "2026-11-17T02:45:15.566Z",
   "components": [
     {
       "id": "animate-grid",
@@ -4065,9 +4065,6 @@
         "折疊",
         "展开收起",
         "展開收起",
-        "常见问题",
-        "常見問題",
-        "/\\bfaq\\b/i",
         "collapse",
         "accordion",
         "手风琴",
@@ -4075,6 +4072,32 @@
       ],
       "component": "reborn-collapse",
       "recipe": "默认插槽放触发区，#content 放折叠内容，v-model 控制展开，position=\"top\" 时内容在触发区上方。",
+      "uses": {
+        "props": [
+          "modelValue",
+          "position",
+          "disabled"
+        ],
+        "slots": [
+          "default",
+          "content"
+        ],
+        "events": [
+          "toggle"
+        ]
+      }
+    },
+    {
+      "id": "faq-topic",
+      "pattern": "名字里只有「常见问题 / FAQ」这个主题词：可能是问答列表，也可能只是分类卡片、标题、图标或入口链接",
+      "match": [
+        "常见问题",
+        "常見問題",
+        "/\\bfaq\\b/i"
+      ],
+      "component": "reborn-collapse",
+      "confidence": "low",
+      "recipe": "「常见问题 / FAQ」说的是内容主题，不是结构：帮助中心的分类卡片、区块标题、行尾的加减号图标、页脚链接都常叫这个名字。只有稿面上每条都能展开收起（每行标题 + 展开 / 收起图标，或至少三行以问号结尾的问题）才用 RebornCollapse，每条一个：默认插槽放触发区，#content 放答案，v-model 控制展开；否则按它实际的样子选型（卡片、链接、图标）。",
       "uses": {
         "props": [
           "modelValue",

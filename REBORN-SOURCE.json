@@ -1,6 +1,6 @@
 {
   "repository": "https://github.com/1997liuyh-boop/Reborn-UI",
-  "commit": "dfecdcf8a9dc707d17c032eaa06edd8ad509c205",
+  "commit": "4786395077d580539853d13c9fb2a9eee5eee26d",
   "files": [
     {
       "path": "LICENSE",
@@ -8,7 +8,7 @@
     },
     {
       "path": "knowledge/index.json",
-      "sha256": "5830befad386f55722c41ce67c4ff6897748458fe45fc2e7bd6fc4f6f64afc94"
+      "sha256": "8cadbc03bc21d7edf96b368c41eced3ecc77236e88e27d40243e544641c2ec2b"
     },
     {
       "path": "knowledge/components/animate-grid.json",
