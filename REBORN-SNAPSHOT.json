@@ -1,23 +1,27 @@
 {
   "repository": "https://github.com/1997liuyh-boop/Reborn-UI",
-  "commit": "5472eef069004bd8bc7fcc50ac7d2e8dc98598e6",
+  "commit": "dfecdcf8a9dc707d17c032eaa06edd8ad509c205",
   "knowledge": "由该检出的知识库生成，示例源码已内联；文本统一为 LF，摘要覆盖分发内容",
   "files": [
     {
       "path": "upstream/reborn/src/index.ts",
-      "sha256": "d07c26a524e6f4aed5dccdd698e7e8b7be10c178fc36856eb70e94daf8898b41"
+      "sha256": "905f26027f946f08c5ff913a5bb334cbf89be2f724c8e50e42bd300130d7964f"
     },
     {
       "path": "upstream/reborn/src/kb.ts",
-      "sha256": "40f400a940fa01c89bfdd1cd3a43725ccb2e0246029847cd9440d7c298c9fd14"
+      "sha256": "bfb464001fa11bbbb0e9c2531957b6726c2f02a94eb1cae0ffc3e6406db3967c"
     },
     {
       "path": "upstream/reborn/src/search.ts",
-      "sha256": "332a945b0008c54dd81d3fc38b68792cba1c51d94fc6988995cae94dbc67c291"
+      "sha256": "da33141301328c0d7addef28094a87f456884b5c08f51cb62d1b45abd1463d32"
     },
     {
       "path": "upstream/reborn/src/spec.ts",
       "sha256": "5f4f2e8accfb843bc440ceba2defcad5f824e911736726e409c75adba036688e"
+    },
+    {
+      "path": "upstream/reborn/src/usage.ts",
+      "sha256": "8170fdb6467cbbd595c87d3dc3317646ebff4a957c9d88c2185cb1cd3784aa79"
     },
     {
       "path": "upstream/reborn/LICENSE",
@@ -25,7 +29,7 @@
     },
     {
       "path": "upstream/reborn/knowledge/index.json",
-      "sha256": "397cd38cc72a636152aabd3495bded0d161f198519c9a3fd7b3b38f4367b78b0"
+      "sha256": "5830befad386f55722c41ce67c4ff6897748458fe45fc2e7bd6fc4f6f64afc94"
     },
     {
       "path": "upstream/reborn/knowledge/components/animate-grid.json",
@@ -445,7 +449,7 @@
     },
     {
       "path": "upstream/reborn/knowledge/components/reborn-pagination.json",
-      "sha256": "1b0c8e4e0539d70016dbfd93ccbac1ae1be4dd9cf8d7aa001d9ad4e33722b2fb"
+      "sha256": "1299c092cb9bcf048025e381d1089a1d55590b550de36270525e9d73ea458abb"
     },
     {
       "path": "upstream/reborn/knowledge/components/reborn-picker-view.json",
@@ -593,7 +597,7 @@
     },
     {
       "path": "upstream/reborn/knowledge/components/reborn-tree.json",
-      "sha256": "d1c97fbd453e358f2133a84351919512bdd2fc17fc0aeae4a23b453826f34168"
+      "sha256": "c782542b69468d5f2ed26c57382ba74cf681c9a752e117e25b7c0a27283cca2d"
     },
     {
       "path": "upstream/reborn/knowledge/components/reborn-typewriter.json",
@@ -621,7 +625,7 @@
     },
     {
       "path": "upstream/reborn/knowledge/components/ripple.json",
-      "sha256": "709e0372e47eed4116c48427614a4ac0c1cc41ae8303fb846be2e8144ba9ac43"
+      "sha256": "dffddd1d4f244e25f2271c60b280851fbdf2d6316b8b55a786ed9e94d0ee5c98"
     },
     {
       "path": "upstream/reborn/knowledge/components/safari-mockup.json",
@@ -633,7 +637,7 @@
     },
     {
       "path": "upstream/reborn/knowledge/components/scroll-island.json",
-      "sha256": "ae24b595325ef3e686c4df52d672ac95da39ac6a5c93e8026e25bce737e6ebbf"
+      "sha256": "a5eb831e5c58266f5bf49597fa4fd0a373eb4be357588d61e9a4cef0e53dbcf3"
     },
     {
       "path": "upstream/reborn/knowledge/components/scrollbar.json",

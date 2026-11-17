@@ -231,6 +231,7 @@
   ],
   "related": [
     "reborn-input",
+    "reborn-input-number",
     "reborn-select"
   ],
   "whenToUse": [
@@ -278,7 +279,7 @@
   },
   "docPath": "content/2.components/navigation/reborn-pagination.md",
   "_meta": {
-    "contentHash": "529898e799f1f4d2928671a67884e9cf5dbd0b7a",
+    "contentHash": "d48df0003c10a7cd9fc0e7f90b9b74f240f2a1ee",
     "hasOverride": true,
     "extractors": {
       "web": "ok",

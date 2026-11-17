@@ -53,7 +53,9 @@
       "code": "<template>\n  <div class=\"flex items-center justify-center p-8\">\n    <span class=\"text-primary text-lg\">\n      See the scroll island in action on the top of this page\n    </span>\n    <ScrollIsland title=\"Scroll Island\">\n      <div class=\"my-3 flex flex-col gap-2\">\n        <a href=\"#install-using-cli\"># Install using CLI</a>\n        <a href=\"#install-manually\"># Install Manually</a>\n        <a href=\"#api\"># API</a>\n        <a href=\"#features\"># Features</a>\n        <a href=\"#credits\"># Credits</a>\n      </div>\n    </ScrollIsland>\n  </div>\n</template>\n"
     }
   ],
-  "related": [],
+  "related": [
+    "animated-circular-progressbar"
+  ],
   "whenToUse": [
     "文章、文档页顶部需要显示阅读滚动进度百分比时。",
     "需要点击展开显示页内目录等附加导航内容。",
@@ -85,7 +87,7 @@
   },
   "docPath": "content/2.components/miscellaneous/scroll-island.md",
   "_meta": {
-    "contentHash": "cd6c90c8210f4db8d3fe51aa291c33cb43ab5841",
+    "contentHash": "b7aba2dd6e17a95af3d3947f5e2e25e5c94b4cd1",
     "hasOverride": true,
     "extractors": {
       "web": "ok",

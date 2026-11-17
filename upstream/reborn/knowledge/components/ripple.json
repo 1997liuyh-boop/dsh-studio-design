@@ -144,7 +144,7 @@
     "contentHash": "d5bf8a2b661dc179409c0a8e18509298d9fd0096",
     "hasOverride": true,
     "extractors": {
-      "web": "partial",
+      "web": "ok",
       "uniapp": "absent",
       "docs": "found"
     }
