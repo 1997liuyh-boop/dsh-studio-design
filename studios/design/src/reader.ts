@@ -9,6 +9,7 @@ import { dirname, isAbsolute, join, relative, resolve, sep } from 'node:path'
 import type { DesignAgent, ToolCallInput, ToolCallOutcome } from './host.ts'
 import { inside, readOptional } from './project.ts'
 import { blockSpec, type NodeSpec } from './spec.ts'
+import { assembleTree, detectSignals, type DesignSignal } from './signals.ts'
 
 /** 导出 HTML 中的一个元素：只保留还原需要的属性。 */
 export interface DesignNode {
@@ -113,6 +114,11 @@ export interface Manifest {
   frames?: FrameRecord[]
   /** 同名区块跨帧的差异，按状态实现时的依据。 */
   stateDeltas?: StateDelta[]
+  /**
+   * 结构信号：从导出结构的几何与样式认出的组件结构（下划线输入、角标、互斥选择组、展开收起列表、下拉触发器），
+   * 交给 Reborn 知识库判定组件后由 plan / check 核对。旧版 manifest 没有此字段，复用时会重新预读。
+   */
+  signals?: DesignSignal[]
 }
 
 /** 状态帧里选出的区块：只记录结构，不单独导出。 */
@@ -658,12 +664,14 @@ export async function preRead(host: ReaderHost, input: PreReadInput): Promise<Pr
     try { const text = await reader.call('get_variables', {}, 60_000); variables = { status: 'ok', summary: text.replace(/\s+/g, ' ').slice(0, 300) } }
     catch (error) { if (host.signal.aborted) throw error; variables = { status: isTimeout(error) ? 'timeout' : 'error', summary: error instanceof Error ? error.message.slice(0, 300) : undefined } }
   }
+  const signals = await readSignals(input.root, rootNode, records)
   const manifest: Manifest = {
     schemaVersion: 1, generatedAt: new Date().toISOString(), source,
     root: { nodeId: rootNode.id, name: rootNode.name ?? rootNode.tag, width: rootNode.width, height: rootNode.height, html: rootDir + '/root.html' },
     selection: { rule: 'leaf-or-small-subtree', maxBlocks: input.select?.maxBlocks ?? DEFAULT_MAX_BLOCKS }, blocks: records, variables, pending,
     timing: { startedAt, finishedAt: new Date().toISOString(), calls: reader.calls },
     ...(frames ? { frames: frames.records, stateDeltas: frames.deltas } : {}),
+    signals,
   }
   await writeJsonAtomic(input.root, MANIFEST_PATH, manifest)
   if (await readOptional(input.root, CHECKLIST_PATH) === null) {
@@ -714,6 +722,27 @@ async function recoverPartialAssets(reader: CanvasReader, host: ReaderHost, inpu
       asset.recovery = '补导出失败：' + (error instanceof Error ? error.message : String(error)).slice(0, 160)
     }
   }
+}
+
+/**
+ * 结构信号：把导出成功的区块的展开结构接回根节点结构，在整棵树上检测。
+ * 单个区块读不到或解析失败只是少了那一块的展开细节，不影响其余区块，也不让预读失败。
+ */
+export async function readSignals(root: string, rootNode: DesignNode, records: readonly BlockRecord[]): Promise<DesignSignal[]> {
+  const trees = new Map<string, DesignNode>(), owner = new Map<string, string>()
+  for (const record of records) {
+    if (record.status !== 'ok' || !record.html) continue
+    try {
+      const content = await readOptional(root, record.html, 4_000_000)
+      const tree = content === null ? undefined : designRoot(parseNodeTree(content))
+      if (!tree) continue
+      trees.set(record.nodeId, tree)
+      const collect = (node: DesignNode) => { if (node.id && !owner.has(node.id)) owner.set(node.id, record.nodeId); for (const child of node.children) collect(child) }
+      collect(tree)
+    } catch (error) { /* 该区块按根结构里的未展开节点参与检测 */ }
+  }
+  try { return detectSignals(assembleTree(rootNode, trees), id => owner.get(id)) }
+  catch (error) { return [] }
 }
 
 /** 读取区块导出 HTML 并抽取规格表；文件不存在时返回 undefined。 */
@@ -864,6 +893,8 @@ export async function reusableManifest(root: string, nodeId: string | undefined,
   try {
     const value = JSON.parse(content) as Manifest
     if (value.schemaVersion !== 1 || value.source?.nodeId !== nodeId || !Array.isArray(value.blocks)) return null
+    // 没有结构信号字段的是旧版预读写出的清单：重新预读一次，结构判定才有依据。
+    if (!Array.isArray(value.signals)) return null
     if (target && (value.source.fileId !== target.fileId || value.source.pageId !== target.pageId)) return null
     // 状态帧集合必须一致且全部读取成功，否则重新预读。
     if (JSON.stringify((value.frames ?? []).map(frame => frame.nodeId).sort()) !== JSON.stringify([...frameIds].sort())) return null
@@ -892,6 +923,8 @@ export function manifestSummary(manifest: Manifest, reused = false, mapping?: ob
     path: MANIFEST_PATH, reused, root: { nodeId: manifest.root.nodeId, name: manifest.root.name, width: manifest.root.width, height: manifest.root.height, html: manifest.root.html },
     blocks: manifest.blocks.map(block => ({ nodeId: block.nodeId, name: block.name, dir: block.dir, html: block.html, screenshot: block.screenshot?.path ?? block.screenshot?.source, status: block.status, assets: block.assets.length, clipped: block.assets.filter(asset => asset.clipped).map(asset => asset.path), partial: block.assets.filter(asset => asset.partial !== undefined).map(asset => ({ path: asset.path, ratio: asset.partial, fullImage: asset.fullImage })), spec: block.spec?.length ?? 0, components: (block.components ?? []).map(instance => ({ nodeId: instance.nodeId, name: instance.name })) })),
     pending: manifest.pending, variables: manifest.variables.status, calls: manifest.timing.calls, startedAt: manifest.timing.startedAt, finishedAt: manifest.timing.finishedAt,
+    // 结构信号：只给节点、文字与依据，样式与成员在 manifest 文件里。
+    signals: (manifest.signals ?? []).map(signal => ({ kind: signal.kind, nodeId: signal.nodeId, name: signal.name, block: signal.block, text: signal.text?.slice(0, 80), evidence: signal.evidence })),
     ...(mapping ? { mapping } : {}),
     // 状态帧与差异：差异最多列 200 项，其余在 manifest 文件里。
     ...(manifest.frames ? {

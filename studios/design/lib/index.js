@@ -130,7 +130,7 @@ async function runTest(target, action) {
 
 // studios/design/src/index.ts
 import { fileURLToPath } from "node:url";
-import { join as join11 } from "node:path";
+import { join as join12 } from "node:path";
 
 // studios/design/src/interactions.ts
 import { randomUUID } from "node:crypto";
@@ -5036,8 +5036,18 @@ function componentMapSkeleton() {
   };
 }
 function ruleRecipe(rule) {
-  const parts = [rule.props, rule.ui && "ui\uFF1A" + rule.ui, rule.slots && "\u63D2\u69FD\uFF1A" + rule.slots, rule.with?.length && "\u4F34\u968F\uFF1A" + rule.with.join(" + "), rule.notes && "\u6CE8\u610F\uFF1A" + rule.notes].filter(Boolean);
+  const parts = [rule.requires?.length && "\u6807\u7B7E\u4E0A\u5FC5\u987B\u5199 " + rule.requires.join(" "), rule.props, rule.ui && "ui\uFF1A" + rule.ui, rule.slots && "\u63D2\u69FD\uFF1A" + rule.slots, rule.with?.length && "\u4F34\u968F\uFF1A" + rule.with.join(" + "), rule.notes && "\u6CE8\u610F\uFF1A" + rule.notes].filter(Boolean);
   return rule.component + (parts.length ? "\uFF08" + parts.join("\uFF1B") + "\uFF09" : "");
+}
+function usageText(hit) {
+  const seen = /* @__PURE__ */ new Set(), parts = [];
+  for (const usage of hit.usage ?? []) {
+    const text2 = [usage.attrs.join(" "), usage.ui.length ? "ui " + usage.ui.join("\u3001") : "", usage.notes.join("\uFF1B")].filter(Boolean).join("\uFF1B");
+    if (!text2 || seen.has(text2)) continue;
+    seen.add(text2);
+    if (parts.length < 3) parts.push((hit.nodeIds.length > 1 ? usage.nodeId + "\uFF1A" : "") + text2);
+  }
+  return parts.join(" \uFF5C ");
 }
 function componentSection(map) {
   const table = map.rules.filter((rule) => !rule.ignore).map((rule) => rule.pattern + "\uFF08\u5B9E\u4F8B\u540D\u542B " + rule.match.join(" / ") + "\uFF09\u2192 " + ruleRecipe(rule)).join("\uFF1B");
@@ -5047,9 +5057,14 @@ function componentSection(map) {
   ];
   const result = map.result;
   if (result) {
-    const hits = result.matched.map((hit) => "\u300C" + hit.name + "\u300D\uFF08" + hit.nodeIds.join("\u3001") + "\uFF09\u2192 " + ruleRecipe(hit.rule));
+    const describe = (hit) => (hit.rule.origin === "signal" ? hit.name : "\u300C" + hit.name + "\u300D") + "\uFF08" + hit.nodeIds.join("\u3001") + "\uFF09" + (hit.evidence ? "\u3010" + hit.evidence + "\u3011" : "") + "\u2192 " + ruleRecipe(hit.rule) + (usageText(hit) ? "\u3014\u6309\u7A3F\u9762\u53D6\u503C\uFF1A" + usageText(hit) + "\u3015" : "");
+    const structural = result.matched.filter((hit) => hit.rule.origin === "signal");
+    if (structural.length) lines.push("\u7ED3\u6784\u5224\u5B9A\uFF08" + structural.length + " \u5904\uFF0C\u5DE5\u4F5C\u5BA4\u6309\u5BFC\u51FA\u7ED3\u6784\u7684\u51E0\u4F55\u4E0E\u6837\u5F0F\u8BC6\u522B\uFF0C\u518D\u4EA4\u7ED9 Reborn \u77E5\u8BC6\u5E93\u5B9A\u7EC4\u4EF6\uFF1B\u8282\u70B9\u540D\u770B\u4E0D\u51FA\u662F\u7EC4\u4EF6\uFF0C\u4F46\u7ED3\u6784\u786E\u51FF\uFF0C\u4F18\u5148\u4E8E\u6309\u540D\u5B57\u7684\u89C4\u5219\uFF09\uFF1A" + structural.map(describe).join("\uFF1B") + "\u3002\u8FD9\u4E9B\u8282\u70B9\u4E0E\u6620\u5C04\u547D\u4E2D\u540C\u6837\u5F3A\u5236\uFF1Aplan \u91CC\u6309\u6240\u5217\u7EC4\u4EF6\u767B\u8BB0\uFF08node \u5199\u4E0A\u5BF9\u5E94\u8282\u70B9 ID\uFF09\uFF0C\u300C\u6807\u7B7E\u4E0A\u5FC5\u987B\u5199\u300D\u7684\u5C5E\u6027\u539F\u6837\u5199\u5728\u7EC4\u4EF6\u6807\u7B7E\u4E0A\uFF0Cdata-design \u6807\u5728\u8BE5\u7EC4\u4EF6\u6807\u7B7E\u4E0A\uFF08\u5217\u51FA\u7684\u4EFB\u4E00\u8282\u70B9 ID \u5747\u53EF\uFF09\uFF1Bcheck \u4F1A\u6838\u5BF9\u7EC4\u4EF6\u6807\u7B7E\u4E0E\u8FD9\u4E9B\u5C5E\u6027\u3002");
+    const hits = result.matched.filter((hit) => hit.rule.origin !== "signal").map(describe);
     const pending = result.unmatched.map((group) => "\u300C" + group.name + "\u300D\uFF08" + group.nodeIds.join("\u3001") + "\uFF09");
-    lines.push("\u9884\u8BFB\u547D\u4E2D\uFF08" + result.matched.length + " \u79CD\u5B9E\u4F8B\uFF09\uFF1A" + (hits.length ? hits.join("\uFF1B") : "\u65E0") + "\u3002\u547D\u4E2D\u7684\u5B9E\u4F8B\u5FC5\u987B\u6309\u8868\u4E2D\u7684\u7EC4\u4EF6\u4E0E\u914D\u65B9\u5B9E\u73B0\uFF0C\u4E0D\u5F97\u6539\u7528\u5176\u4ED6\u7EC4\u4EF6\u6216\u81EA\u5199\uFF1Bdesign_review(stage=plan) \u5BF9\u547D\u4E2D\u5B9E\u4F8B\u4E0D\u63A5\u53D7 source=custom \u6216\u539F\u751F\u6807\u7B7E\uFF0C\u53EA\u6709\u7528\u6237\u5728\u9700\u6C42\u91CC\u5199\u300C\u5141\u8BB8\u81EA\u5B9A\u4E49 <\u8282\u70B9\u540D>\u300D\u624D\u653E\u884C\uFF0C\u7F3A\u5931\u7684\u7EC4\u4EF6\u7531\u5DE5\u4F5C\u5BA4\u5728\u5B9E\u73B0\u524D\u5B89\u88C5\uFF1B\u5E26\u300C\u4F34\u968F\u300D\u7684\u89C4\u5219\u8981\u6C42\u4F34\u968F\u7EC4\u4EF6\u4E5F\u51FA\u73B0\u5728\u540C\u4E00\u5B9E\u73B0\u6587\u4EF6\u91CC\u3002\u8868\u91CC\u7684 props \u914D\u65B9\u662F\u6700\u4F4E\u8981\u6C42\uFF0C\u5B9E\u9645\u53D6\u503C\u4ECD\u4EE5\u9879\u76EE\u5185\u5DF2\u5B89\u88C5\u7EC4\u4EF6\u7684 config \u4E3A\u51C6\uFF0Cdesign_review(stage=check) \u4F1A\u6309 data-design \u5B9A\u4F4D\u5230\u6E32\u67D3\u8BE5\u5B9E\u4F8B\u7684\u6587\u4EF6\u6838\u5BF9\u6807\u7B7E\u4E0E\u53D6\u503C\u3002\u5F85\u6620\u5C04\u5B9E\u4F8B\uFF08" + result.unmatched.length + " \u79CD\uFF0C\u672A\u547D\u4E2D\u6620\u5C04\u8868\uFF09\uFF1A" + (pending.length ? pending.join("\u3001") : "\u65E0") + "\u3002\u53EA\u6709\u8FD9\u4E9B\u5B9E\u4F8B\u624D\u5141\u8BB8\u6309\u4E0A\u9762\u7684\u901A\u7528\u89C4\u5219\u4E0E\u9879\u76EE\u5DF2\u6709\u7EC4\u4EF6\u9009\u578B\uFF1B\u9009\u5B9A\u540E\u5728\u5B9E\u73B0\u6E05\u5355\u300C\u5F85\u6620\u5C04\u7EC4\u4EF6\u300D\u5199\u660E\u6240\u9009\u7EC4\u4EF6\uFF0C\u5E76\u5EFA\u8BAE\u628A\u89C4\u5219\u8865\u8FDB " + map.path + " \u4F9B\u4E0B\u6B21\u590D\u7528\u3002" + (result.ignored.length ? "\u5DF2\u6309\u5FFD\u7565\u89C4\u5219\u8DF3\u8FC7\uFF1A" + result.ignored.map((group) => group.name).join("\u3001") + "\u3002" : ""));
+    lines.push("\u9884\u8BFB\u547D\u4E2D\uFF08" + hits.length + " \u79CD\u5B9E\u4F8B\uFF09\uFF1A" + (hits.length ? hits.join("\uFF1B") : "\u65E0") + "\u3002\u547D\u4E2D\u7684\u5B9E\u4F8B\u5FC5\u987B\u6309\u8868\u4E2D\u7684\u7EC4\u4EF6\u4E0E\u914D\u65B9\u5B9E\u73B0\uFF0C\u4E0D\u5F97\u6539\u7528\u5176\u4ED6\u7EC4\u4EF6\u6216\u81EA\u5199\uFF1Bdesign_review(stage=plan) \u5BF9\u547D\u4E2D\u5B9E\u4F8B\u4E0D\u63A5\u53D7 source=custom \u6216\u539F\u751F\u6807\u7B7E\uFF0C\u53EA\u6709\u7528\u6237\u5728\u9700\u6C42\u91CC\u5199\u300C\u5141\u8BB8\u81EA\u5B9A\u4E49 <\u8282\u70B9\u540D>\u300D\u624D\u653E\u884C\uFF0C\u7F3A\u5931\u7684\u7EC4\u4EF6\u7531\u5DE5\u4F5C\u5BA4\u5728\u5B9E\u73B0\u524D\u5B89\u88C5\uFF1B\u5E26\u300C\u4F34\u968F\u300D\u7684\u89C4\u5219\u8981\u6C42\u4F34\u968F\u7EC4\u4EF6\u4E5F\u51FA\u73B0\u5728\u540C\u4E00\u5B9E\u73B0\u6587\u4EF6\u91CC\u3002\u8868\u91CC\u7684 props \u914D\u65B9\u662F\u6700\u4F4E\u8981\u6C42\uFF0C\u5B9E\u9645\u53D6\u503C\u4ECD\u4EE5\u9879\u76EE\u5185\u5DF2\u5B89\u88C5\u7EC4\u4EF6\u7684 config \u4E3A\u51C6\uFF0Cdesign_review(stage=check) \u4F1A\u6309 data-design \u5B9A\u4F4D\u5230\u6E32\u67D3\u8BE5\u5B9E\u4F8B\u7684\u6587\u4EF6\u6838\u5BF9\u6807\u7B7E\u4E0E\u53D6\u503C\u3002\u5F85\u6620\u5C04\u5B9E\u4F8B\uFF08" + result.unmatched.length + " \u79CD\uFF0C\u672A\u547D\u4E2D\u6620\u5C04\u8868\uFF09\uFF1A" + (pending.length ? pending.join("\u3001") : "\u65E0") + "\u3002\u53EA\u6709\u8FD9\u4E9B\u5B9E\u4F8B\u624D\u5141\u8BB8\u6309\u4E0A\u9762\u7684\u901A\u7528\u89C4\u5219\u4E0E\u9879\u76EE\u5DF2\u6709\u7EC4\u4EF6\u9009\u578B\uFF1B\u9009\u5B9A\u540E\u5728\u5B9E\u73B0\u6E05\u5355\u300C\u5F85\u6620\u5C04\u7EC4\u4EF6\u300D\u5199\u660E\u6240\u9009\u7EC4\u4EF6\uFF0C\u5E76\u5EFA\u8BAE\u628A\u89C4\u5219\u8865\u8FDB " + map.path + " \u4F9B\u4E0B\u6B21\u590D\u7528\u3002" + (result.ignored.length ? "\u5DF2\u6309\u5FFD\u7565\u89C4\u5219\u8DF3\u8FC7\uFF1A" + result.ignored.map((group) => group.name).join("\u3001") + "\u3002" : ""));
+    if (result.suggested?.length) lines.push("\u77E5\u8BC6\u5E93\u5EFA\u8BAE\uFF08" + result.suggested.length + " \u79CD\u5B9E\u4F8B\uFF0C\u6620\u5C04\u8868\u6CA1\u6709\u8986\u76D6\uFF0CReborn \u77E5\u8BC6\u5E93\u6309\u5B9E\u4F8B\u540D\u4E0E\u53D8\u4F53\u7ED9\u51FA\u7EC4\u4EF6\uFF09\uFF1A" + result.suggested.map(describe).join("\uFF1B") + "\u3002plan \u91CC\u9010\u4E2A\u8868\u6001\uFF1A\u91C7\u7528\u5C31\u6309\u8BE5\u7EC4\u4EF6\u767B\u8BB0\uFF08node \u5199\u4E0A\u8282\u70B9 ID\uFF09\uFF1B\u4E0D\u91C7\u7528\u8981\u767B\u8BB0\u4E3A project\uFF08\u9644\u5DF2\u6709\u6E90\u7801\u8DEF\u5F84\uFF09\u6216 custom\uFF08\u5199\u660E\u77E5\u8BC6\u5E93\u5EFA\u8BAE\u7684\u7EC4\u4EF6\u4E3A\u4EC0\u4E48\u4E0D\u9002\u7528\uFF09\uFF0C\u4E0D\u80FD\u7565\u8FC7\u3002");
+    if (result.hints?.length) lines.push("\u9009\u578B\u63D0\u793A\uFF08\u4E0D\u5F3A\u5236\uFF0C\u6309\u7A3F\u9762\u786E\u8BA4\uFF09\uFF1A" + result.hints.join("\uFF1B") + "\u3002");
   }
   return lines.join("");
 }
@@ -5059,7 +5074,16 @@ function unmappedSection(result, path = COMPONENT_MAP_PATH) {
     lines.push("\u5F85\u6620\u5C04\uFF08\u5B9E\u73B0\u65F6\u586B\u5199\u6240\u9009\u7EC4\u4EF6\uFF0C\u5E76\u628A\u89C4\u5219\u8865\u8FDB\u6620\u5C04\u8868\uFF09\uFF1A");
     for (const group of result.unmatched) lines.push("- " + group.name + "\uFF08" + group.nodeIds.join("\u3001") + "\uFF09\uFF1A");
   } else lines.push("\u5168\u90E8\u5B9E\u4F8B\u540D\u5DF2\u547D\u4E2D\u6620\u5C04\u8868\u3002");
-  if (result.matched.length) lines.push("", "\u5DF2\u547D\u4E2D\uFF1A" + result.matched.map((hit) => hit.name + " \u2192 " + hit.rule.component).join("\uFF1B"));
+  const structural = result.matched.filter((hit) => hit.rule.origin === "signal"), mapped = result.matched.filter((hit) => hit.rule.origin !== "signal");
+  if (structural.length) {
+    lines.push("", "\u7ED3\u6784\u5224\u5B9A\uFF08\u6309\u5BFC\u51FA\u7ED3\u6784\u8BC6\u522B\uFF0C\u5FC5\u987B\u6309\u6240\u5217\u7EC4\u4EF6\u5B9E\u73B0\uFF09\uFF1A");
+    for (const hit of structural) lines.push("- " + hit.name + "\uFF08" + hit.nodeIds.slice(0, 4).join("\u3001") + (hit.nodeIds.length > 4 ? " \u7B49 " + hit.nodeIds.length + " \u4E2A\u8282\u70B9" : "") + "\uFF09\u2192 " + hit.rule.component + (hit.rule.requires?.length ? "\uFF0C\u6807\u7B7E\u4E0A\u5FC5\u987B\u5199 " + hit.rule.requires.join(" ") : "") + (hit.evidence ? "\uFF1B\u4F9D\u636E\uFF1A" + hit.evidence : ""));
+  }
+  if (result.suggested?.length) {
+    lines.push("", "\u77E5\u8BC6\u5E93\u5EFA\u8BAE\uFF08\u91C7\u7528\uFF0C\u6216\u767B\u8BB0 project / custom \u5E76\u8BF4\u660E\u4F9D\u636E\uFF09\uFF1A");
+    for (const hit of result.suggested) lines.push("- " + hit.name + "\uFF08" + hit.nodeIds.slice(0, 4).join("\u3001") + "\uFF09\u2192 " + hit.rule.component + "\uFF1A");
+  }
+  if (mapped.length) lines.push("", "\u5DF2\u547D\u4E2D\uFF1A" + mapped.map((hit) => hit.name + " \u2192 " + hit.rule.component).join("\uFF1B"));
   if (result.ignored.length) lines.push("", "\u5DF2\u5FFD\u7565\uFF08\u56FE\u6807 / \u7D20\u6750\uFF09\uFF1A" + result.ignored.map((hit) => hit.name).join("\u3001"));
   return lines.join("\n");
 }
@@ -5094,8 +5118,8 @@ function designPrompt(project, workspace, request, kind = "generate", source, ma
     // 素材：只用导出的原始素材，禁止从截图裁切。
     "\u3010\u7D20\u6750\u3011\u56FE\u7247\u3001SVG \u53EA\u6765\u81EA\u5BF9\u5E94 MasterGo \u8282\u70B9\u7684\u5BFC\u51FA\u7D20\u6750\u3002\u5DF2\u6709\u5207\u56FE\u3001image fill\u3001SVG \u6216\u8D44\u6E90\u94FE\u63A5\u65F6\uFF0C\u5FC5\u987B\u83B7\u53D6\u539F\u6587\u4EF6\u3001\u4FDD\u5B58\u5230\u9879\u76EE\u7D20\u6750\u76EE\u5F55\u5E76\u5B9E\u9645\u5F15\u7528\uFF1B\u5305\u62EC\u641C\u7D22\u3001\u5B9A\u4F4D\u3001\u4E0B\u62C9\u7BAD\u5934\u3001\u8D2D\u7269\u8F66\u3001\u65E5\u5386\u3001\u7FFB\u9875\u7BAD\u5934\u7B49\u7EBF\u6027\u56FE\u6807\uFF0C\u7981\u6B62\u7528 @nuxt/icon\u3001lucide \u7684\u76F8\u4F3C\u56FE\u6807\u6216 CSS/\u624B\u7ED8 SVG \u66FF\u6362\u3002get_frontend_code \u7684 asset/icons\u3001asset/images\u3001get_library_assets \u4E0E Magic \u7684\u539F\u59CB SVG \u662F\u6765\u6E90\uFF1B\u4E0B\u8F7D\u94FE\u63A5\u53EA\u6309 MCP \u5B9E\u9645\u8FD4\u56DE\u503C\u4F7F\u7528\uFF0C\u4E0D\u731C\u5730\u5740\u3002\u8282\u70B9\u6CA1\u6709\u539F\u7D20\u6750\u65F6\u8BB0\u5F55\u7F3A\u53E3\u5E76\u8865\u8BFB\uFF0C\u53EA\u6709\u7528\u6237\u660E\u786E\u540C\u610F\u66FF\u4EE3\u65F6\u624D\u7528\u56FE\u6807\u5E93\u3002\u9879\u76EE\u65E7\u89C4\u5219\u82E5\u8981\u6C42\u7EDF\u4E00\u66FF\u6362\u4E3A\u56FE\u6807\u5E93\uFF0C\u5E94\u4F9D\u636E\u7528\u6237\u672C\u6B21\u539F\u56FE\u8981\u6C42\u5B9A\u5411\u66F4\u65B0\u8BE5\u6761\uFF0C\u4FDD\u7559\u5176\u4ED6\u89C4\u5219\u3002\u54C1\u724C\u6807\u5FD7\u3001\u63D2\u753B\u3001\u5546\u54C1\u56FE\u3001\u6D77\u62A5\u590D\u5236\u539F\u6587\u4EF6\u5230 public\uFF0C\u4FDD\u7559\u65B9\u5411\u3001\u989C\u8272\u3001viewBox\u3001\u900F\u660E\u5EA6\u4E0E\u5C3A\u5BF8\u3002\u7981\u6B62\u4ECE\u6574\u9875\u622A\u56FE\u88C1\u5207\u56FE\u6807\u3001\u6309\u94AE\u3001logo \u6216\u6D77\u62A5\uFF0C\u4E5F\u4E0D\u5141\u8BB8\u4E34\u65F6\u622A\u56FE\u5207\u7247\uFF1B\u5BFC\u51FA\u5931\u8D25\u65F6\u4FDD\u7559\u7F3A\u5931\u72B6\u6001\u5E76\u505C\u6B62\u4F9D\u8D56\u7D20\u6750\u7684\u5B9E\u65BD\u3002\u8F6E\u64AD\u5DE6\u3001\u4E2D\u3001\u53F3\u56FE\u5FC5\u987B\u9010\u4E2A\u8BFB\u53D6\u5404\u81EA image fill\u3001\u539F\u56FE\u5C3A\u5BF8\u548C\u88C1\u526A\u77E9\u9635\uFF0C\u4E0D\u53EF\u7528\u4E00\u5F20\u5927\u56FE\u88C1\u51FA\u4E09\u5F20\u8FD1\u4F3C\u56FE\u7247\uFF1B\u5206\u522B\u767B\u8BB0\u539F\u6587\u4EF6\u4E0E\u5B9E\u9645\u5F15\u7528\uFF0C\u6309\u539F\u7A3F\u6BD4\u4F8B\u8BBE\u7F6E object-fit / object-position\u3002manifest \u6807 clipped \u7684\u56FE\u53EA\u6709\u753B\u5E03\u53EF\u89C1\u7684\u534A\u5E45\uFF08\u6587\u4EF6\u6BD4\u7A3F\u9762 CSS \u5C3A\u5BF8\u7A84\uFF09\uFF1A\u6309\u7A3F\u9762\u4F4D\u7F6E\u7528 object-fit: none \u4E0E object-position: left / right \u6446\u653E\uFF0C\u4E0D\u7528 cover \u653E\u5927\uFF0C\u5728\u5B9E\u73B0\u6E05\u5355\u300C\u7D20\u6750\u5F85\u8865\u300D\u5217\u51FA\uFF0C\u4E0D\u4F2A\u9020\u53E6\u4E00\u534A\u3002manifest \u6807 partial \u7684\u56FE\uFF08\u5BFC\u51FA\u50CF\u7D20\u53EA\u6709\u7A3F\u9762\u76D2\u5B50\u7684\u4E00\u90E8\u5206\uFF0C\u88AB\u7236\u5BB9\u5668\u88C1\u5207\u6216\u53EA\u662F\u7F29\u7565\u56FE\uFF09\uFF1A\u540C\u6761\u76EE\u6709 fullImage \u65F6\u5FC5\u987B\u590D\u5236\u5E76\u4F7F\u7528\u8FD9\u5F20\u8865\u5BFC\u51FA\u7684\u5168\u56FE\uFF1B\u6CA1\u6709 fullImage \u65F6\u6309\u7A3F\u9762\u4F4D\u7F6E\u7528 object-fit: none \u6446\u653E\u5E76\u5728\u6E05\u5355\u8BF4\u660E\uFF0C\u4EFB\u4F55\u60C5\u51B5\u4E0B\u90FD\u4E0D\u5F97\u7528 object-fit: cover / fill \u628A\u5C0F\u56FE\u62C9\u4F38\u5230\u7A3F\u9762\u5C3A\u5BF8\uFF0Ccheck \u4E0E compare \u90FD\u4F1A\u6309\u653E\u5927\u500D\u6570\u5224\u5931\u8D25\u3002",
     // 组件：固定映射表 + 真实参数核对。
-    componentSection(mapping ?? { path: COMPONENT_MAP_PATH, source: "default", rules: defaultRules }) + '\u5148\u4ECE MCP \u8282\u70B9\u8BFB\u53D6 component/instance\u3001\u53D8\u4F53\u3001\u9009\u4E2D/\u7981\u7528\u72B6\u6001\u3001\u7EC4\u4EF6\u6587\u6863\u94FE\u63A5\u4E0E\u4EA4\u4E92\u8BED\u4E49\uFF0C\u518D\u67E5\u8BE2\u7EC4\u4EF6\u5B8C\u6574 API\uFF1B\u6620\u5C04\u8981\u5BF9\u5E94\u5177\u4F53\u8282\u70B9\uFF0C\u4E0D\u80FD\u628A\u641C\u7D22\u3001\u4E0B\u62C9\u3001\u8868\u683C\u3001\u8868\u5355\u3001\u5206\u9875\u548C\u8F6E\u64AD\u90FD\u767B\u8BB0\u4E3A reborn-button\u3002\u7981\u6B62\u7528\u539F\u751F button\u3001input\u3001select\u3001a \u6216 Button \u52A0 CSS \u4EFF\u9020\u5DF2\u6709\u590D\u6742\u7EC4\u4EF6\uFF1B\u9879\u76EE\u5DF2\u9A8C\u8BC1\u7684\u4E1A\u52A1\u7EC4\u4EF6\u4F18\u5148\u4FDD\u7559\uFF0C\u767B\u8BB0 source=project \u548C\u6E90\u7801 evidence\uFF0C\u4E0D\u56E0\u5185\u90E8\u5305\u542B\u539F\u751F\u6807\u7B7E\u800C\u6574\u4F53\u66FF\u6362\u3002\u6CA1\u6709\u5339\u914D\u7EC4\u4EF6\u6216\u5B58\u5728\u660E\u786E\u517C\u5BB9\u51B2\u7A81\u65F6\u767B\u8BB0 source=custom \u548C\u539F\u56E0\uFF0C\u518D\u4F7F\u7528\u81EA\u5B9A\u4E49\u7EC4\u4EF6\u3002\u5E38\u89C1\u9057\u6F0F\uFF1A\u914D\u9001\u5730 / \u8BED\u8A00 / \u7AD9\u70B9\u9009\u62E9\u7B49\u4E0B\u62C9\u89E6\u53D1\u5668 = RebornDropdown \u5305 RebornButton variant="text"\uFF1B\u8F6E\u64AD\u4E0E\u7FFB\u9875\u7BAD\u5934 = RebornButton circle + color="neutral"\uFF0C\u653E\u8FDB RebornCarousel \u7684 prev / next \u63D2\u69FD\u65F6\u5FC5\u987B\u52A0 pointer-events-auto\uFF08\u7BAD\u5934\u7EC4\u9ED8\u8BA4 pointer-events-none\uFF0C\u5426\u5219\u70B9\u51FB\u843D\u5230\u8F68\u9053\u4E0A\uFF09\uFF1B\u8D2D\u7269\u8F66 / \u6D88\u606F\u6570\u91CF\u89D2\u6807 = RebornChip\uFF1B\u540C\u4E00\u533A\u5757\u91CC\u591A\u4E2A\u540C\u540D\u5B9E\u4F8B\u3001\u5C5E\u6027\u503C\u5728 \u9009\u4E2D / \u672A\u9009\u4E2D\uFF08\u5DF2\u9009 / \u672A\u9009\u3001active / default\uFF09\u4E4B\u95F4\u5207\u6362 = \u4E00\u7EC4\u4E92\u65A5\u9009\u62E9\uFF0C\u4E0D\u662F\u51E0\u4E2A\u72EC\u7ACB\u5143\u7D20\uFF1A\u7EB5\u5411\u7684\u5206\u7C7B\u5217\u8868\u3001\u4FA7\u680F\u5BFC\u822A = \u4E00\u4E2A RebornMenu\uFF08\u6BCF\u4E2A\u5B9E\u4F8B\u4E00\u4E2A RebornMenuItem\uFF0Cv-model:selected-keys \u7BA1\u5F53\u524D\u9879\uFF0C\u9762\u677F\u4E0E\u6761\u76EE\u6837\u5F0F\u7ECF ui.root / ui.menu / ui.menuItem\uFF09\uFF0C\u4E00\u6392\u9875\u7B7E\u5E26\u5185\u5BB9\u9762\u677F = RebornTabs\uFF0C\u77ED\u7684\u6ED1\u52A8\u5207\u6362 = RebornSegmented\uFF0C\u4E0D\u5F97\u9010\u9879\u624B\u5199 a / li / button \u518D\u81EA\u5DF1\u5207\u9009\u4E2D\u6837\u5F0F\u3002\u5F85\u6620\u5C04\u5B9E\u4F8B\u9009\u578B\u524D\uFF0C\u5148\u628A\u5B83\u4EEC\u7684\u5B9E\u4F8B\u540D\u3001\u5C5E\u6027\u503C\uFF08variant\uFF09\u3001\u5B50\u8282\u70B9\u540D\u548C\u6240\u5728\u533A\u5757\uFF08group\uFF09\u6574\u6279\u4F20\u7ED9 mcp__design_reborn__match_design_nodes\uFF08\u89C4\u683C\u8868 bitmap \u4E0D\u4E3A\u7A7A\u7684\u8282\u70B9\u52A0 fill: "image"\uFF0C\u81EA\u52A8\u547D\u540D\u7684\u300C\u77E9\u5F62 \u2026\u300D\u56FE\u7247\u56FE\u5C42\u624D\u4F1A\u843D\u5230 reborn-image\uFF09\uFF1A\u8FD4\u56DE component \u4E0E recipe \u7684\u6309\u914D\u65B9\u5B9E\u73B0\u5E76\u7528 get_component \u6838\u5BF9\uFF0C\u5E26 selectionGroup \u7684\u6309 note \u4ECE alternatives \u91CC\u9009\u4E00\u4E2A\u7EC4\u4EF6\u6574\u7EC4\u5B9E\u73B0\uFF0C\u53EA\u6709 custom / unmapped \u7684\u624D\u6309\u7A3F\u9762\u81EA\u5199\u3002\u5199\u5B8C\u6A21\u677F\u540E\u81EA\u67E5\uFF1A\u4E0D\u5F97\u6B8B\u7559\u539F\u751F <button>\u3001<input>\u3001<select> \u5145\u5F53\u672A\u767B\u8BB0\u7684\u66FF\u4EE3\u5B9E\u73B0\uFF0C\u6709\u8BC1\u636E\u7684\u9879\u76EE\u7EC4\u4EF6\u548C\u517C\u5BB9\u4F8B\u5916\u5199\u8FDB\u5B9E\u73B0\u6E05\u5355\u3002',
-    '\u4F7F\u7528\u524D\u8C03\u7528 mcp__design_reborn__match_design_nodes\uFF08\u7A3F\u9762\u8282\u70B9 \u2192 \u7EC4\u4EF6\u4E0E\u914D\u65B9\uFF09/ search_components / get_component\uFF08fields \u542B props\u3001slots\u3001ui\u3001pitfalls\uFF09/ get_component_example / get_install_command \u786E\u8BA4\u771F\u5B9E props\u3001events\u3001slots\u3001ui \u952E\u3001\u5E73\u53F0\u4E0E\u5B89\u88C5\u65B9\u5F0F\u3002\u77E5\u8BC6\u5E93\u5408\u5E76\u4E86 Web \u4E0E UniApp \u4E24\u7AEF\uFF08\u4E24\u7AEF\u53D6\u503C\u4E0D\u540C\u7684 prop \u6309\u5E73\u53F0\u5E76\u5B58\u4E24\u6761\u5E76\u5E26 platform \u5B57\u6BB5\uFF0Cget_component \u53EF\u4F20 platform="web" \u53EA\u770B\u672C\u7AEF\uFF09\uFF0Csize\u3001variant \u7B49\u53D6\u503C\u4EE5\u9879\u76EE\u4E2D\u5DF2\u5B89\u88C5\u7EC4\u4EF6\u7684 *.config.ts \u548C .vue \u6E90\u7801\u4E3A\u51C6\uFF0C\u4F7F\u7528\u524D\u5FC5\u987B\u8BFB\u53D6\u6838\u5BF9\uFF1Bdesign_review(stage=check) \u4F1A\u6309\u5DF2\u5B89\u88C5\u7EC4\u4EF6\u7684 *.config.ts \u6838\u5BF9\u6A21\u677F\u4E0A\u5199\u6B7B\u7684 size / variant / color \u7B49\u53D6\u503C\uFF0C\u5E76\u8981\u6C42\u6620\u5C04\u547D\u4E2D\u7684\u5B9E\u4F8B\u51FA\u73B0\u5BF9\u5E94\u7EC4\u4EF6\u6807\u7B7E\u3002\u6309\u9700\u5B89\u88C5\u7528 get_install_command \u8FD4\u56DE\u7684\u547D\u4EE4\uFF0C\u5148\u68C0\u67E5\u5B9E\u9645\u7248\u672C\u3001CLI \u53EF\u7528\u6027\u53CA components.json\uFF0C\u4E0D\u76F2\u76EE init \u6216\u8986\u76D6\u5DF2\u6709\u7EC4\u4EF6\u3002',
+    componentSection(mapping ?? { path: COMPONENT_MAP_PATH, source: "default", rules: defaultRules }) + '\u5148\u4ECE MCP \u8282\u70B9\u8BFB\u53D6 component/instance\u3001\u53D8\u4F53\u3001\u9009\u4E2D/\u7981\u7528\u72B6\u6001\u3001\u7EC4\u4EF6\u6587\u6863\u94FE\u63A5\u4E0E\u4EA4\u4E92\u8BED\u4E49\uFF0C\u518D\u67E5\u8BE2\u7EC4\u4EF6\u5B8C\u6574 API\uFF1B\u6620\u5C04\u8981\u5BF9\u5E94\u5177\u4F53\u8282\u70B9\uFF0C\u4E0D\u80FD\u628A\u641C\u7D22\u3001\u4E0B\u62C9\u3001\u8868\u683C\u3001\u8868\u5355\u3001\u5206\u9875\u548C\u8F6E\u64AD\u90FD\u767B\u8BB0\u4E3A reborn-button\u3002\u7981\u6B62\u7528\u539F\u751F button\u3001input\u3001select\u3001a \u6216 Button \u52A0 CSS \u4EFF\u9020\u5DF2\u6709\u590D\u6742\u7EC4\u4EF6\uFF1B\u9879\u76EE\u5DF2\u9A8C\u8BC1\u7684\u4E1A\u52A1\u7EC4\u4EF6\u4F18\u5148\u4FDD\u7559\uFF0C\u767B\u8BB0 source=project \u548C\u6E90\u7801 evidence\uFF0C\u4E0D\u56E0\u5185\u90E8\u5305\u542B\u539F\u751F\u6807\u7B7E\u800C\u6574\u4F53\u66FF\u6362\u3002\u6CA1\u6709\u5339\u914D\u7EC4\u4EF6\u6216\u5B58\u5728\u660E\u786E\u517C\u5BB9\u51B2\u7A81\u65F6\u767B\u8BB0 source=custom \u548C\u539F\u56E0\uFF0C\u518D\u4F7F\u7528\u81EA\u5B9A\u4E49\u7EC4\u4EF6\u3002\u5E38\u89C1\u9057\u6F0F\uFF1A\u914D\u9001\u5730 / \u8BED\u8A00 / \u7AD9\u70B9\u9009\u62E9\u7B49\u4E0B\u62C9\u89E6\u53D1\u5668 = RebornDropdown \u5305 RebornButton variant="text"\uFF1B\u8F6E\u64AD\u4E0E\u7FFB\u9875\u7BAD\u5934 = RebornButton circle + color="neutral"\uFF0C\u653E\u8FDB RebornCarousel \u7684 prev / next \u63D2\u69FD\u65F6\u5FC5\u987B\u52A0 pointer-events-auto\uFF08\u7BAD\u5934\u7EC4\u9ED8\u8BA4 pointer-events-none\uFF0C\u5426\u5219\u70B9\u51FB\u843D\u5230\u8F68\u9053\u4E0A\uFF09\uFF1B\u8D2D\u7269\u8F66 / \u6D88\u606F\u6570\u91CF\u89D2\u6807 = RebornChip\uFF1B\u540C\u4E00\u533A\u5757\u91CC\u591A\u4E2A\u540C\u540D\u5B9E\u4F8B\u3001\u5C5E\u6027\u503C\u5728 \u9009\u4E2D / \u672A\u9009\u4E2D\uFF08\u5DF2\u9009 / \u672A\u9009\u3001active / default\uFF09\u4E4B\u95F4\u5207\u6362 = \u4E00\u7EC4\u4E92\u65A5\u9009\u62E9\uFF0C\u4E0D\u662F\u51E0\u4E2A\u72EC\u7ACB\u5143\u7D20\uFF1A\u7EB5\u5411\u7684\u5206\u7C7B\u5217\u8868\u3001\u4FA7\u680F\u5BFC\u822A = \u4E00\u4E2A RebornMenu\uFF08\u6BCF\u4E2A\u5B9E\u4F8B\u4E00\u4E2A RebornMenuItem\uFF0Cv-model:selected-keys \u7BA1\u5F53\u524D\u9879\uFF0C\u9762\u677F\u4E0E\u6761\u76EE\u6837\u5F0F\u7ECF ui.root / ui.menu / ui.menuItem\uFF09\uFF0C\u4E00\u6392\u9875\u7B7E\u5E26\u5185\u5BB9\u9762\u677F = RebornTabs\uFF0C\u77ED\u7684\u6ED1\u52A8\u5207\u6362 = RebornSegmented\uFF0C\u4E0D\u5F97\u9010\u9879\u624B\u5199 a / li / button \u518D\u81EA\u5DF1\u5207\u9009\u4E2D\u6837\u5F0F\u3002\u6709\u9884\u8BFB\u65F6\uFF0C\u5DE5\u4F5C\u5BA4\u5DF2\u7ECF\u628A\u7EC4\u4EF6\u5B9E\u4F8B\u548C\u4ECE\u5BFC\u51FA\u7ED3\u6784\u8BC6\u522B\u51FA\u7684\u7ED3\u6784\u4FE1\u53F7\uFF08\u53EA\u6709\u5E95\u8FB9\u4E00\u6761\u7EBF\u7684\u8F93\u5165\u3001\u56FE\u6807\u6216\u5934\u50CF\u89D2\u4E0A\u7684\u6570\u5B57\u3001\u4E00\u5217\u540C\u6B3E\u9879\u91CC\u53EA\u6709\u4E00\u9879\u5E26\u5E95\u8272\u3001\u6BCF\u884C\u300C\u6807\u9898 + \u52A0\u51CF\u53F7\u300D\u7684\u5C55\u5F00\u6536\u8D77\u5217\u8868\u3001\u6587\u5B57 + \u4E0B\u62C9\u7BAD\u5934\u7684\u89E6\u53D1\u5668\uFF09\u4EA4\u7ED9 Reborn \u77E5\u8BC6\u5E93\u5224\u5B9A\u8FC7\u2014\u2014\u4E0E mcp__design_reborn__match_design_nodes \u662F\u540C\u4E00\u5957\u89C4\u5219\uFF0C\u7ED3\u8BBA\u5C31\u662F\u4E0A\u9762\u7684\u300C\u7ED3\u6784\u5224\u5B9A\u300D\u300C\u77E5\u8BC6\u5E93\u5EFA\u8BAE\u300D\u4E0E\u300C\u6309\u7A3F\u9762\u53D6\u503C\u300D\uFF0C\u4E0D\u5FC5\u5BF9\u8FD9\u4E9B\u8282\u70B9\u91CD\u590D\u8C03\u7528\uFF1B\u300C\u6309\u7A3F\u9762\u53D6\u503C\u300D\u662F\u6309\u7A3F\u9762\u9AD8\u5EA6\u3001\u5706\u89D2\u3001\u63CF\u8FB9\u89E3\u6790\u51FA\u7684 size / shape / variant \u4E0E ui \u8865\u5145\uFF0C\u7167\u5199\u540E\u518D\u7528 ui \u8865\u5176\u4F59\u5DEE\u5F02\uFF0C\u4E0D\u8981\u53E6\u884C\u4F30\u7B97\u3002\u4ECD\u5728\u300C\u5F85\u6620\u5C04\u300D\u91CC\u7684\u5B9E\u4F8B\u624D\u9700\u8981\u81EA\u5DF1\u9009\u578B\uFF1A\u628A\u5B9E\u4F8B\u540D\u3001\u5C5E\u6027\u503C\uFF08variant\uFF09\u3001\u5B50\u8282\u70B9\u540D\u548C\u6240\u5728\u533A\u5757\uFF08group\uFF09\u6574\u6279\u4F20\u7ED9 mcp__design_reborn__match_design_nodes\uFF08\u89C4\u683C\u8868 bitmap \u4E0D\u4E3A\u7A7A\u7684\u8282\u70B9\u52A0 fill: "image"\uFF1B\u80FD\u91CF\u5230\u5BBD\u9AD8\u3001\u5706\u89D2\u3001\u63CF\u8FB9\u65F6\u4E00\u5E76\u4F20 style\uFF09\uFF0C\u8FD4\u56DE component \u4E0E recipe \u7684\u6309\u914D\u65B9\u5B9E\u73B0\u5E76\u7528 get_component \u6838\u5BF9\uFF0C\u5E26 selectionGroup \u7684\u6309 note \u4ECE alternatives \u91CC\u9009\u4E00\u4E2A\u7EC4\u4EF6\u6574\u7EC4\u5B9E\u73B0\uFF0C\u53EA\u6709 custom / unmapped \u7684\u624D\u6309\u7A3F\u9762\u81EA\u5199\u3002\u7EC4\u4EF6\u6709\u73B0\u6210\u7684\u53D8\u4F53\u6216\u4E13\u95E8\u7EC4\u4EF6\u65F6\u4E0D\u5F97\u7528 ui \u8986\u76D6\u53BB\u4EFF\u9020\uFF1A\u53EA\u6709\u5E95\u7EBF\u7684\u8F93\u5165\u7528 RebornInput variant="underlined"\uFF08\u4E0D\u662F\u628A RebornSearchBox \u53BB\u6389\u5916\u6846\u518D\u53E6\u753B\u4E00\u6761\u7EBF\uFF09\uFF0C\u89D2\u6807\u7528 RebornChip\uFF08\u4E0D\u662F absolute \u7684 span \u52A0\u5BFC\u51FA\u7684\u788E\u56FE\uFF09\uFF0C\u5C55\u5F00\u6536\u8D77\u7528 RebornCollapse\uFF08\u4E0D\u662F RebornButton \u52A0 aria-expanded \u4E0E v-if\uFF09\u3002\u5199\u5B8C\u6A21\u677F\u540E\u81EA\u67E5\uFF1A\u4E0D\u5F97\u6B8B\u7559\u539F\u751F <button>\u3001<input>\u3001<select> \u5145\u5F53\u672A\u767B\u8BB0\u7684\u66FF\u4EE3\u5B9E\u73B0\uFF0C\u6709\u8BC1\u636E\u7684\u9879\u76EE\u7EC4\u4EF6\u548C\u517C\u5BB9\u4F8B\u5916\u5199\u8FDB\u5B9E\u73B0\u6E05\u5355\u3002',
+    '\u4F7F\u7528\u524D\u8C03\u7528 mcp__design_reborn__match_design_nodes\uFF08\u7A3F\u9762\u8282\u70B9 \u2192 \u7EC4\u4EF6\u4E0E\u914D\u65B9\uFF09/ search_components / get_component\uFF08fields \u542B props\u3001slots\u3001ui\u3001pitfalls\uFF09/ get_component_example / get_install_command \u786E\u8BA4\u771F\u5B9E props\u3001events\u3001slots\u3001ui \u952E\u3001\u5E73\u53F0\u4E0E\u5B89\u88C5\u65B9\u5F0F\uFF1B\u5199\u5B8C\u6216\u6539\u5B8C\u4E00\u4E2A\u7EC4\u4EF6\u6587\u4EF6\u540E\u8C03\u7528 mcp__design_reborn__check_usage\uFF08template \u4F20\u6574\u4EFD .vue\uFF09\u81EA\u67E5 ui \u952E\u4E0E\u7528\u6CD5\uFF0Cdesign_review(stage=check) \u4F1A\u5BF9\u5168\u90E8\u5B9E\u73B0\u6587\u4EF6\u6267\u884C\u540C\u4E00\u5957\u7528\u6CD5\u89C4\u5219\uFF0C\u5199\u4E86\u7EC4\u4EF6\u6CA1\u6709\u7684 ui \u952E\u3001\u7528 ui \u8986\u76D6\u4EFF\u9020\u5DF2\u6709\u53D8\u4F53\u90FD\u7B97\u95EE\u9898\u3002\u77E5\u8BC6\u5E93\u5408\u5E76\u4E86 Web \u4E0E UniApp \u4E24\u7AEF\uFF08\u4E24\u7AEF\u53D6\u503C\u4E0D\u540C\u7684 prop \u6309\u5E73\u53F0\u5E76\u5B58\u4E24\u6761\u5E76\u5E26 platform \u5B57\u6BB5\uFF0Cget_component \u53EF\u4F20 platform="web" \u53EA\u770B\u672C\u7AEF\uFF09\uFF0Csize\u3001variant \u7B49\u53D6\u503C\u4EE5\u9879\u76EE\u4E2D\u5DF2\u5B89\u88C5\u7EC4\u4EF6\u7684 *.config.ts \u548C .vue \u6E90\u7801\u4E3A\u51C6\uFF0C\u4F7F\u7528\u524D\u5FC5\u987B\u8BFB\u53D6\u6838\u5BF9\uFF1Bdesign_review(stage=check) \u4F1A\u6309\u5DF2\u5B89\u88C5\u7EC4\u4EF6\u7684 *.config.ts \u6838\u5BF9\u6A21\u677F\u4E0A\u5199\u6B7B\u7684 size / variant / color \u7B49\u53D6\u503C\uFF0C\u5E76\u8981\u6C42\u6620\u5C04\u547D\u4E2D\u7684\u5B9E\u4F8B\u51FA\u73B0\u5BF9\u5E94\u7EC4\u4EF6\u6807\u7B7E\u3002\u6309\u9700\u5B89\u88C5\u7528 get_install_command \u8FD4\u56DE\u7684\u547D\u4EE4\uFF0C\u5148\u68C0\u67E5\u5B9E\u9645\u7248\u672C\u3001CLI \u53EF\u7528\u6027\u53CA components.json\uFF0C\u4E0D\u76F2\u76EE init \u6216\u8986\u76D6\u5DF2\u6709\u7EC4\u4EF6\u3002',
     // 图片与尺寸：位图统一走 reborn-image；由内容撑开的节点不写死宽高。
     '\u3010\u56FE\u7247\u3011\u7A3F\u9762\u7684\u4F4D\u56FE\uFF08\u89C4\u683C\u8868 bitmap \u4E3A img \u7684\u56FE\u7247\u8282\u70B9\u3001bitmap \u4E3A background \u7684\u56FE\u7247\u586B\u5145\uFF0C\u4EE5\u53CA manifest \u91CC kind=image \u7684\u7D20\u6750\uFF09\u4E00\u5F8B\u7528 RebornImage\uFF0C\u4E0D\u7528\u539F\u751F <img>\u3001CSS background-image \u6216 bg-[url(\u2026)]\uFF1A:width / :height \u4F20\u7A3F\u9762\u5C3A\u5BF8\uFF08\u6570\u5B57\u5373 px\uFF0C\u5360\u6EE1\u7236\u5BB9\u5668\u4F20 "100%"\uFF0C\u4E0D\u4F20\u65F6\u7EC4\u4EF6\u6309\u9ED8\u8BA4 120\xD7120 \u6E32\u67D3\uFF09\uFF0Cmode \u5BF9\u5E94 object-fit\uFF08aspectFill=cover\u3001aspectFit=contain\u3001scaleToFill=fill\u3001center / top left \u7B49=none + \u4F4D\u7F6E\uFF09\uFF0C\u5706\u89D2\u5199\u5728 class \u4E0A\uFF08\u6839\u8282\u70B9\u81EA\u5E26 overflow-hidden\uFF09\uFF0C\u53E0\u5728\u56FE\u4E0A\u7684\u5185\u5BB9\uFF08\u70B9\u8D5E\u80F6\u56CA\u3001\u6765\u6E90\u56FE\u6807\uFF09\u653E\u8FDB\u9ED8\u8BA4\u63D2\u69FD\u5E76\u7528 absolute \u5B9A\u4F4D\uFF1B\u9759\u6001\u5C55\u793A\u56FE\u4F20 :show-loading="false" \u907F\u514D\u51FA\u73B0\u52A0\u8F7D\u5360\u4F4D\u3002data-design \u5199\u5728 RebornImage \u6807\u7B7E\u4E0A\uFF08\u900F\u4F20\u5230\u6839 div\uFF09\uFF0Ccompare \u4F1A\u6838\u5BF9\u8BE5\u8282\u70B9\u662F RebornImage\u3002SVG \u56FE\u6807\u4ECD\u7528 <img> \u5F15\u7528\u5BFC\u51FA\u539F\u56FE\u3002',
     '\u3010\u5C3A\u5BF8\u4E0E\u6309\u94AE\u3011\u89C4\u683C\u8868 sizing.width \u4E3A hug \u7684\u8282\u70B9\uFF08\u6587\u5B57\u6309\u94AE\u3001\u6807\u7B7E\u3001\u80F6\u56CA\u3001\u5E26\u56FE\u6807\u7684\u6587\u5B57\u94FE\u63A5\uFF09\u5BBD\u5EA6\u7531\u5185\u5BB9\u4E0E\u5185\u8FB9\u8DDD\u6491\u5F00\uFF0C\u4E0D\u5199 w-[\u2026]\u3001min-w-[\u2026]\u3001size-[\u2026]\uFF1A\u6309\u94AE\u7528 ui.base \u5199 h-[\u2026]\uFF08sizing.height \u4E3A fixed \u65F6\uFF09\u4E0E px-[\u2026] / py-[\u2026]\uFF08\u53D6 padding\uFF09\uFF0C\u56FE\u6807\u4E0E\u6587\u5B57\u7684\u95F4\u8DDD\u53D6 gap\uFF08RebornButton \u5185\u90E8\u9ED8\u8BA4 gap-2 = 8px\uFF0C\u7A3F\u9762\u4E0D\u662F 8 \u65F6\u5728 ui.base \u91CC\u7528 [&>div]:gap-[\u2026] \u6539\uFF0C\u6216\u628A\u56FE\u6807\u653E\u8FDB leading / trailing \u63D2\u69FD\u540E\u7528 ui.leadingIcon / ui.trailingIcon \u7684 margin \u8865\u9F50\uFF09\uFF1Bfill \u7684\u8282\u70B9\u7528 flex-1 / w-full\uFF1B\u53EA\u6709 fixed \u7684\u8282\u70B9\u624D\u5199\u6B7B\u5C3A\u5BF8\u3002\u6309\u94AE\u6587\u5B57\u5199\u8FDB\u9ED8\u8BA4\u63D2\u69FD\u7684 <span data-design="\u6587\u5B57\u8282\u70B9ID">\uFF0C\u4E0D\u8981\u53EA\u7528 label\uFF0C\u5426\u5219\u6587\u5B57\u8282\u70B9\u65E0\u6CD5\u6D4B\u91CF\u3002RebornButton \u7684 circle \u5728 size md \u65F6\u5F3A\u5236 h-8! w-8!\uFF0832px\uFF09\uFF0Cvariant="text" \u5F3A\u5236 h-auto! px-0!\uFF1A\u975E 32 \u7684\u7EAF\u56FE\u6807\u5706\u6309\u94AE\u7528 round + ui.base \u5199\u5C3A\u5BF8\uFF0C\u9700\u8981\u5185\u8FB9\u8DDD\u7684\u6587\u5B57\u6309\u94AE\u4E0D\u8981\u7528 text \u53D8\u4F53\u3002check \u4F1A\u62D2\u7EDD\u5199\u6B7B\u5BBD\u5EA6\u7684\u6587\u5B57\u6309\u94AE\uFF0Ccompare \u4F1A\u9010\u8FB9\u6838\u5BF9 hug \u8282\u70B9\u7684\u5185\u8FB9\u8DDD\u3002\u5B57\u53F7\u3001\u884C\u9AD8\u3001\u5B57\u91CD\u53EA\u7167\u89C4\u683C\u8868\u586B\u5199\uFF0C\u4E0D\u6309\u89C6\u89C9\u4F30\u7B97\uFF0C\u4E0D\u628A\u76F8\u90BB\u6587\u5B57\u7EDF\u4E00\u6210\u540C\u4E00\u5B57\u53F7\u3002',
@@ -5265,6 +5289,282 @@ function blockSpec(tree) {
   return result;
 }
 
+// studios/design/src/signals.ts
+var MAX_SIGNALS = 120;
+var css = (node, name2) => styleProperty(node.style ?? "", name2);
+var isFlex = (node) => /^(?:inline-)?flex$/.test(css(node, "display") ?? "");
+var isColumn = (node) => isFlex(node) && css(node, "flex-direction") === "column";
+function backgroundOf(node) {
+  const color = normalizeColor(css(node, "background-color") ?? css(node, "background"));
+  return color && !(color.length === 9 && color.endsWith("00")) ? color : void 0;
+}
+function textLeaves(node) {
+  const result = [];
+  const visit = (current) => {
+    if (current.text) result.push(current);
+    for (const child of current.children) visit(child);
+  };
+  visit(node);
+  return result;
+}
+function imageLeaves(node) {
+  const result = [];
+  const visit = (current) => {
+    if (current.tag === "img" || current.tag === "svg") result.push(current);
+    else for (const child of current.children) visit(child);
+  };
+  visit(node);
+  return result;
+}
+function isHairline(node) {
+  const height = node.height ?? pxValue(css(node, "height"));
+  return node.children.length === 0 && !node.text && height !== void 0 && height > 0 && height <= 2 && !!backgroundOf(node);
+}
+function lightness(color) {
+  const hex = normalizeColor(color)?.slice(1, 7);
+  if (!hex || hex.length !== 6) return void 0;
+  const [r, g, b] = [0, 2, 4].map((offset) => parseInt(hex.slice(offset, offset + 2), 16) / 255);
+  return (Math.max(r, g, b) + Math.min(r, g, b)) / 2;
+}
+function lengthValue(value, basis) {
+  if (!value) return void 0;
+  const text2 = value.trim();
+  const inner = /^calc\((.*)\)$/.exec(text2)?.[1] ?? text2;
+  let total = 0;
+  for (const term of inner.replace(/\s*([+-])\s+/g, " $1").trim().split(/\s+/)) {
+    const match = /^([+-]?)([+-]?[\d.]+)(px|%)?$/.exec(term);
+    if (!match) return void 0;
+    let amount = Number(match[2]);
+    if (!Number.isFinite(amount)) return void 0;
+    if (match[3] === "%") {
+      if (basis === void 0) return void 0;
+      amount = amount * basis / 100;
+    }
+    total += match[1] === "-" ? -amount : amount;
+  }
+  return total;
+}
+function signalStyle(node) {
+  const spec = nodeSpec(node, true);
+  const style = {};
+  const width = node.width ?? pxValue(css(node, "width")), height = node.height ?? pxValue(css(node, "height"));
+  if (width !== void 0) style.width = width;
+  if (height !== void 0) style.height = height;
+  const radius = parseRadius(css(node, "border-radius"));
+  if (radius) style.radius = Math.max(...radius);
+  const background = backgroundOf(node);
+  if (background) style.background = background;
+  const bottomOnly = !!css(node, "border-bottom") && !css(node, "border") && !css(node, "border-top") && !css(node, "border-left") && !css(node, "border-right");
+  style.border = bottomOnly ? "bottom" : spec?.border ? "all" : "none";
+  if (spec?.padding) style.padding = spec.padding;
+  if (spec?.gap) style.gap = spec.gap;
+  if (spec?.sizing) style.sizing = spec.sizing;
+  return style;
+}
+var inputWords = /搜索|搜尋|检索|檢索|查找|search|输入|輸入|input|请|請|enter|type here|keyword|关键|關鍵|邮箱|郵箱|email|手机|手機|phone|placeholder/i;
+function underlineField(node) {
+  if (!node.id || node.descendants > 8) return void 0;
+  const style = node.style ?? "";
+  const ownBottom = !!styleProperty(style, "border-bottom") && !styleProperty(style, "border");
+  const elements = node.children;
+  const line = !ownBottom && isColumn(node) && elements.length === 2 && isHairline(elements[1]) ? elements[1] : void 0;
+  if (!ownBottom && !line) return void 0;
+  const row = line ? elements[0] : node;
+  const texts = textLeaves(row), icons = imageLeaves(row);
+  if (texts.length !== 1 || icons.length > 2) return void 0;
+  if (icons.some((icon) => (icon.width ?? 0) > 32 || (icon.height ?? 0) > 32)) return void 0;
+  const text2 = texts[0], weight = Number(css(text2, "font-weight") ?? 400);
+  if (Number.isFinite(weight) && weight > 500) return void 0;
+  const light = lightness(css(text2, "color"));
+  const placeholderGray = light !== void 0 && light >= 0.6 && light < 0.95;
+  if (!placeholderGray && !inputWords.test((node.name ?? "") + " " + text2.text)) return void 0;
+  const measured = signalStyle(node);
+  const rowHeight = row.height ?? pxValue(css(row, "height")) ?? Math.max(0, ...icons.map((icon) => icon.height ?? 0), pxValue(css(text2, "line-height")) ?? 0);
+  const fontSize = pxValue(css(text2, "font-size"));
+  return {
+    kind: "underline-field",
+    nodeId: node.id,
+    name: node.name ?? node.tag,
+    text: text2.text,
+    members: [row.id, text2.id, ...icons.map((icon) => icon.id)].filter((id) => !!id && id !== node.id),
+    style: { ...measured, ...rowHeight ? { height: rowHeight } : {}, border: "bottom", ...fontSize ? { fontSize } : {} },
+    evidence: "\u4E00\u884C\u5360\u4F4D\u6587\u5B57\u300C" + text2.text.slice(0, 40) + "\u300D" + (icons.length ? " + " + icons.length + " \u4E2A\u5C0F\u56FE\u6807" : "") + "\uFF0C\u4E0B\u9762\u53EA\u6709\u4E00\u6761 " + (line ? (line.height ?? 1) + "px \u7684\u7EBF" : "\u5E95\u8FB9\u63CF\u8FB9") + "\uFF0C\u6CA1\u6709\u5916\u6846"
+  };
+}
+function cornerBadge(node, parent) {
+  if (!node.id || !parent?.id) return void 0;
+  const width = node.width, height = node.height;
+  if (!width || !height || height > 24 || width > 40) return void 0;
+  if (css(node, "position") !== "absolute" && css(parent, "position") !== "relative") return void 0;
+  const hostWidth = parent.width, hostHeight = parent.height;
+  if (!hostWidth || !hostHeight || hostWidth > 64 || hostHeight > 64 || hostWidth < width) return void 0;
+  const left = lengthValue(css(node, "left"), hostWidth) ?? (css(node, "right") !== void 0 ? hostWidth - width - (lengthValue(css(node, "right"), hostWidth) ?? 0) : void 0);
+  const top = lengthValue(css(node, "top"), hostHeight) ?? (css(node, "bottom") !== void 0 ? hostHeight - height - (lengthValue(css(node, "bottom"), hostHeight) ?? 0) : void 0);
+  if (left === void 0 || top === void 0) return void 0;
+  const dx = left + width / 2 - hostWidth / 2, dy = top + height / 2 - hostHeight / 2;
+  if (Math.abs(dx) < hostWidth * 0.2 || Math.abs(dy) < hostHeight * 0.2) return void 0;
+  const texts = textLeaves(node);
+  const digits = texts.length === 1 && /^\d{1,3}\+?$/.test(texts[0].text.trim()) ? texts[0].text.trim() : void 0;
+  const radius = parseRadius(css(node, "border-radius"));
+  const dot = texts.length === 0 && node.children.length === 0 && width <= 12 && height <= 12 && !!backgroundOf(node) && !!radius && Math.max(...radius) * 2 >= height;
+  if (!digits && !dot) return void 0;
+  const position = (dy < 0 ? "top" : "bottom") + "-" + (dx > 0 ? "right" : "left");
+  const inset = left >= 0 && top >= 0 && left + width <= hostWidth && top + height <= hostHeight;
+  return {
+    kind: "corner-badge",
+    nodeId: node.id,
+    name: node.name ?? node.tag,
+    ...digits ? { text: digits } : {},
+    facts: { position, inset, host: parent.id, ...dot ? { dot: true } : {} },
+    members: [parent.id],
+    style: { width, height, ...backgroundOf(node) ? { background: backgroundOf(node) } : {} },
+    evidence: (digits ? "\u6570\u5B57\u300C" + digits + "\u300D" : "\u5B9E\u5FC3\u5706\u70B9") + "\uFF08" + width + "\xD7" + height + "\uFF09\u538B\u5728 " + hostWidth + "\xD7" + hostHeight + " \u7684\u300C" + (parent.name ?? parent.tag) + "\u300D" + { "top-right": "\u53F3\u4E0A\u89D2", "top-left": "\u5DE6\u4E0A\u89D2", "bottom-right": "\u53F3\u4E0B\u89D2", "bottom-left": "\u5DE6\u4E0B\u89D2" }[position]
+  };
+}
+function simpleItem(node) {
+  if (!node.id || node.descendants > 6) return void 0;
+  const texts = textLeaves(node);
+  if (texts.length !== 1) return void 0;
+  return { text: texts[0], icons: imageLeaves(node) };
+}
+function selectionList(node) {
+  if (!node.id || !isFlex(node)) return void 0;
+  const items = node.children.filter((child) => !isHairline(child));
+  if (items.length < 3 || items.length > 30) return void 0;
+  const parsed = items.map((item) => ({ item, parts: simpleItem(item) }));
+  if (parsed.some((entry) => !entry.parts || (entry.item.height ?? 0) > 64)) return void 0;
+  const sameName = items.every((item) => item.name && item.name === items[0].name);
+  const sameShape = items.every((item) => item.tag === items[0].tag && item.children.length === items[0].children.length);
+  if (!sameName && !sameShape) return void 0;
+  const backgrounds = items.map((item) => backgroundOf(item) ?? "");
+  const counts = /* @__PURE__ */ new Map();
+  for (const value of backgrounds) counts.set(value, (counts.get(value) ?? 0) + 1);
+  if (counts.size !== 2) return void 0;
+  const [common] = [...counts].sort((a, b) => b[1] - a[1])[0];
+  const odd = backgrounds.map((value, index) => ({ value, index })).filter((entry) => entry.value !== common);
+  if (odd.length !== 1 || !odd[0].value) return void 0;
+  const selected = items[odd[0].index];
+  const orientation = isColumn(node) ? "vertical" : "horizontal";
+  return {
+    kind: "selection-list",
+    nodeId: node.id,
+    name: node.name ?? node.tag,
+    text: parsed.map((entry) => entry.parts.text.text).join(" / ").slice(0, 200),
+    facts: { orientation, members: items.length, selected: selected.id, selectedIndex: odd[0].index },
+    members: items.map((item) => item.id),
+    style: signalStyle(node),
+    evidence: (orientation === "vertical" ? "\u4E00\u5217 " : "\u4E00\u6392 ") + items.length + " \u4E2A\u540C\u6B3E\u9879" + (sameName ? "\u300C" + items[0].name + "\u300D" : "") + "\uFF0C\u53EA\u6709\u7B2C " + (odd[0].index + 1) + " \u9879\u300C" + parsed[odd[0].index].parts.text.text.slice(0, 30) + "\u300D\u5E26\u5E95\u8272 " + odd[0].value
+  };
+}
+function accordion(node) {
+  if (!node.id || !isColumn(node)) return void 0;
+  const children = node.children.filter((child) => !isHairline(child));
+  const flat = [];
+  for (const child of children) {
+    const inner = child.children.filter((item) => !isHairline(item));
+    if (isColumn(child) && inner.length === 2 && triggerRow(inner[0]) && isBody(inner[1])) flat.push(...inner);
+    else flat.push(child);
+  }
+  const rows2 = flat.map((child, index) => ({ child, index, row: triggerRow(child) })).filter((entry) => entry.row);
+  if (rows2.length < 3) return void 0;
+  const icons = /* @__PURE__ */ new Map();
+  for (const entry of rows2) icons.set(entry.row.icon, (icons.get(entry.row.icon) ?? 0) + 1);
+  if (icons.size !== 2) return void 0;
+  const [collapsedIcon] = [...icons].sort((a, b) => b[1] - a[1])[0];
+  const expanded = rows2.filter((entry) => entry.row.icon !== collapsedIcon);
+  if (expanded.length > rows2.length / 2) return void 0;
+  const withBody = expanded.filter((entry) => {
+    const next = flat[entry.index + 1];
+    return !!next && isBody(next);
+  });
+  if (!withBody.length) return void 0;
+  return {
+    kind: "accordion",
+    nodeId: node.id,
+    name: node.name ?? node.tag,
+    text: rows2.slice(0, 3).map((entry) => entry.row.title).join(" / ").slice(0, 200),
+    facts: { members: rows2.length, expanded: withBody[0].child.id ?? "", collapsedIcon, expandedIcon: withBody[0].row.icon },
+    members: rows2.map((entry) => entry.child.id).filter((id) => !!id),
+    style: signalStyle(node),
+    evidence: rows2.length + " \u884C\u300C\u6807\u9898 + \u56FE\u6807\u300D\uFF0C" + (rows2.length - expanded.length) + " \u884C\u7528\u540C\u4E00\u5F20\u56FE\u6807\uFF0C\u300C" + withBody[0].row.title.slice(0, 30) + "\u300D\u6362\u4E86\u53E6\u4E00\u5F20\u56FE\u6807\u5E76\u4E14\u4E0B\u9762\u5C55\u5F00\u7740\u6B63\u6587"
+  };
+}
+function triggerRow(node) {
+  if (node.descendants > 6 || isColumn(node)) return void 0;
+  const texts = textLeaves(node), icons = imageLeaves(node);
+  if (texts.length !== 1 || icons.length !== 1) return void 0;
+  const icon = icons[0];
+  if ((icon.width ?? 0) > 40 || (icon.height ?? 0) > 40 || !icon.src) return void 0;
+  return { title: texts[0].text, icon: icon.src.split("/").pop() };
+}
+function isBody(node) {
+  return textLeaves(node).length >= 1 && imageLeaves(node).length === 0 && !isHairline(node);
+}
+var arrowWords = /箭头|箭頭|arrow|chevron|caret|下拉|展开|展開|\bdown\b|dropdown/i;
+function selectTrigger(node) {
+  if (!node.id || !isFlex(node) || isColumn(node) || node.descendants > 4) return void 0;
+  const height = node.height ?? pxValue(css(node, "height"));
+  if (height !== void 0 && height > 56) return void 0;
+  const texts = textLeaves(node), icons = imageLeaves(node);
+  if (texts.length !== 1 || icons.length !== 1) return void 0;
+  const text2 = texts[0], icon = icons[0];
+  if ((text2.text ?? "").length > 24 || (icon.width ?? 99) > 16 || (icon.height ?? 99) > 16) return void 0;
+  if (!arrowWords.test((icon.name ?? "") + " " + (icon.src ?? ""))) return void 0;
+  const order = [];
+  const visit = (current) => {
+    order.push(current);
+    for (const child of current.children) visit(child);
+  };
+  visit(node);
+  if (order.indexOf(icon) < order.indexOf(text2)) return void 0;
+  const style = signalStyle(node);
+  return {
+    kind: "select-trigger",
+    nodeId: node.id,
+    name: node.name ?? node.tag,
+    text: text2.text,
+    members: [text2.id, icon.id].filter((id) => !!id),
+    style,
+    evidence: "\u6587\u5B57\u300C" + text2.text + "\u300D\u540E\u9762\u8DDF\u7740 " + (icon.width ?? "?") + "px \u7684\u300C" + (icon.name ?? "\u7BAD\u5934") + "\u300D" + (style.sizing?.width === "fixed" && style.width ? "\uFF0C\u7A3F\u9762\u5B9A\u5BBD " + style.width + "px" : "")
+  };
+}
+function detectSignals(root, blockOf) {
+  const signals = [];
+  const claimed = /* @__PURE__ */ new Set();
+  const visit = (node, parent) => {
+    if (signals.length >= MAX_SIGNALS) return;
+    if (node.id) {
+      const found = cornerBadge(node, parent) ?? underlineField(node) ?? accordion(node) ?? selectionList(node) ?? (claimed.has(node.id) ? void 0 : selectTrigger(node));
+      if (found) {
+        const block = blockOf?.(found.nodeId), covers = [];
+        const collect2 = (current) => {
+          for (const child of current.children) {
+            if (child.id && covers.length < 300) covers.push(child.id);
+            collect2(child);
+          }
+        };
+        collect2(node);
+        signals.push({ ...found, ...block ? { block } : {}, ...covers.length ? { covers } : {} });
+        if (found.kind === "accordion" || found.kind === "selection-list") for (const id of found.members ?? []) claimed.add(id);
+        if (found.kind === "corner-badge" || found.kind === "underline-field" || found.kind === "select-trigger") return;
+      }
+    }
+    for (const child of node.children) visit(child, node);
+  };
+  visit(root, void 0);
+  return signals;
+}
+function assembleTree(root, blocks) {
+  const replace = (node) => {
+    const exported = node.id ? blocks.get(node.id) : void 0;
+    if (exported) {
+      return { ...exported, width: exported.width ?? node.width, height: exported.height ?? node.height };
+    }
+    return { ...node, children: node.children.map(replace) };
+  };
+  return replace(root);
+}
+
 // studios/design/src/reader.ts
 var MANIFEST_PATH = "docs/design/mastergo-manifest.json";
 var CHECKLIST_PATH = "docs/design/implementation-checklist.md";
@@ -5303,8 +5603,8 @@ function parseNodeTree(html) {
       continue;
     }
     let j = open + 1;
-    const closing2 = html[j] === "/";
-    if (closing2) j += 1;
+    const closing3 = html[j] === "/";
+    if (closing3) j += 1;
     const nameStart = j;
     while (j < html.length && /[A-Za-z0-9:-]/.test(html[j])) j += 1;
     const tag = html.slice(nameStart, j).toLowerCase();
@@ -5332,7 +5632,7 @@ function parseNodeTree(html) {
       j += 1;
     }
     i = j + 1;
-    if (closing2) {
+    if (closing3) {
       for (let k = stack.length - 1; k > 0; k -= 1) if (stack[k].tag === tag) {
         stack.length = k;
         break;
@@ -5797,6 +6097,7 @@ async function preRead(host, input) {
       variables = { status: isTimeout(error) ? "timeout" : "error", summary: error instanceof Error ? error.message.slice(0, 300) : void 0 };
     }
   }
+  const signals = await readSignals(input.root, rootNode, records);
   const manifest = {
     schemaVersion: 1,
     generatedAt: (/* @__PURE__ */ new Date()).toISOString(),
@@ -5807,7 +6108,8 @@ async function preRead(host, input) {
     variables,
     pending,
     timing: { startedAt, finishedAt: (/* @__PURE__ */ new Date()).toISOString(), calls: reader.calls },
-    ...frames ? { frames: frames.records, stateDeltas: frames.deltas } : {}
+    ...frames ? { frames: frames.records, stateDeltas: frames.deltas } : {},
+    signals
   };
   await writeJsonAtomic(input.root, MANIFEST_PATH, manifest);
   if (await readOptional(input.root, CHECKLIST_PATH) === null) {
@@ -5864,6 +6166,29 @@ async function recoverPartialAssets(reader, host, input, record2, remainingBudge
       if (host.signal.aborted) throw error;
       asset.recovery = "\u8865\u5BFC\u51FA\u5931\u8D25\uFF1A" + (error instanceof Error ? error.message : String(error)).slice(0, 160);
     }
+  }
+}
+async function readSignals(root, rootNode, records) {
+  const trees = /* @__PURE__ */ new Map(), owner = /* @__PURE__ */ new Map();
+  for (const record2 of records) {
+    if (record2.status !== "ok" || !record2.html) continue;
+    try {
+      const content = await readOptional(root, record2.html, 4e6);
+      const tree = content === null ? void 0 : designRoot(parseNodeTree(content));
+      if (!tree) continue;
+      trees.set(record2.nodeId, tree);
+      const collect2 = (node) => {
+        if (node.id && !owner.has(node.id)) owner.set(node.id, record2.nodeId);
+        for (const child of node.children) collect2(child);
+      };
+      collect2(tree);
+    } catch (error) {
+    }
+  }
+  try {
+    return detectSignals(assembleTree(rootNode, trees), (id) => owner.get(id));
+  } catch (error) {
+    return [];
   }
 }
 async function readSpec(root, html) {
@@ -6029,6 +6354,7 @@ async function reusableManifest(root, nodeId2, request, target, frameIds = []) {
   try {
     const value = JSON.parse(content);
     if (value.schemaVersion !== 1 || value.source?.nodeId !== nodeId2 || !Array.isArray(value.blocks)) return null;
+    if (!Array.isArray(value.signals)) return null;
     if (target && (value.source.fileId !== target.fileId || value.source.pageId !== target.pageId)) return null;
     if (JSON.stringify((value.frames ?? []).map((frame) => frame.nodeId).sort()) !== JSON.stringify([...frameIds].sort())) return null;
     if (value.frames?.some((frame) => frame.status !== "ok" || frame.exports.some((item) => item.status !== "ok"))) return null;
@@ -6065,6 +6391,8 @@ function manifestSummary(manifest, reused = false, mapping) {
     calls: manifest.timing.calls,
     startedAt: manifest.timing.startedAt,
     finishedAt: manifest.timing.finishedAt,
+    // 结构信号：只给节点、文字与依据，样式与成员在 manifest 文件里。
+    signals: (manifest.signals ?? []).map((signal) => ({ kind: signal.kind, nodeId: signal.nodeId, name: signal.name, block: signal.block, text: signal.text?.slice(0, 80), evidence: signal.evidence })),
     ...mapping ? { mapping } : {},
     // 状态帧与差异：差异最多列 200 项，其余在 manifest 文件里。
     ...manifest.frames ? {
@@ -6348,18 +6676,19 @@ function normalizePath(path) {
   return parts.join("/");
 }
 function usesTag(template, component) {
-  const pascal = component.split("-").map((word) => word[0].toUpperCase() + word.slice(1)).join("");
-  return new RegExp("<(?:" + component + "|" + pascal + ")(?=[\\s/>])").test(template);
+  const pascal2 = component.split("-").map((word) => word[0].toUpperCase() + word.slice(1)).join("");
+  return new RegExp("<(?:" + component + "|" + pascal2 + ")(?=[\\s/>])").test(template);
 }
-async function mappingIssues(root, manifest, templates) {
+async function mappingIssues(root, manifest, templates, resolved) {
   if (!manifest) return { issues: [], warnings: [] };
   const map = await loadComponentMap(root);
   const all = [...templates.values()].join("\n");
   const bound = await boundDesignIds(root, templates.keys());
   const issues = [], warnings = [];
-  for (const hit of matchManifest(map.rules, manifest).matched) {
+  for (const hit of (resolved ?? matchManifest(map.rules, manifest)).matched) {
     const required = [hit.rule.component, ...hit.rule.with ?? []];
-    const where = "\u5B9E\u4F8B\u300C" + hit.name + "\u300D\uFF08" + hit.nodeIds.join("\u3001") + "\uFF09\u5E94\u4F7F\u7528 " + required.join(" + ") + "\uFF08\u89C4\u5219\u300C" + hit.rule.pattern + "\u300D\uFF0C" + map.path + "\uFF09";
+    const structural = hit.rule.origin === "signal";
+    const where = (structural ? hit.name + "\uFF08" : "\u5B9E\u4F8B\u300C" + hit.name + "\u300D\uFF08") + hit.nodeIds.join("\u3001") + "\uFF09\u5E94\u4F7F\u7528 " + required.join(" + ") + "\uFF08" + (structural ? hit.rule.pattern + (hit.evidence ? "\uFF0C\u4F9D\u636E\uFF1A" + hit.evidence : "") : "\u89C4\u5219\u300C" + hit.rule.pattern + "\u300D\uFF0C" + map.path) + "\uFF09";
     const located = [...templates].filter(([file, template]) => hit.nodeIds.some((id) => template.includes('data-design="' + id + '"') || bound.get(file)?.has(id)));
     if (located.length === 0) {
       warnings.push("\u6620\u5C04\u547D\u4E2D\u7684\u8282\u70B9\u6CA1\u6709 data-design \u6807\u8BB0\uFF0C\u53EA\u80FD\u6309\u5168\u6587\u6838\u5BF9\uFF1A" + where);
@@ -6367,16 +6696,54 @@ async function mappingIssues(root, manifest, templates) {
       continue;
     }
     for (const component of required) if (!located.some(([, template]) => usesTag(template, component))) issues.push("\u6620\u5C04\u547D\u4E2D\u672A\u5B9E\u73B0\uFF1A" + where + "\uFF0C\u6E32\u67D3\u5B83\u7684\u6587\u4EF6 " + located.map(([file]) => file).join("\u3001") + " \u91CC\u6CA1\u6709 " + component + " \u6807\u7B7E");
+    issues.push(...requiredAttributeIssues(hit, located));
   }
   return { issues, warnings };
 }
-async function unregisteredHits(root, manifest, components, exemptNodeIds = []) {
+function requiredAttributeIssues(hit, located) {
+  const requires = hit.rule.requires ?? [];
+  if (!requires.length || !hit.rule.component) return [];
+  const usages = located.flatMap(([file, template]) => templateUsages(template).filter((usage) => usage.component === hit.rule.component).map((usage) => ({ file, usage, raw: rawTag(template, usage) })));
+  if (!usages.length) return [];
+  const marked = usages.filter((entry) => entry.usage.props.dataDesign !== void 0 && hit.nodeIds.includes(entry.usage.props.dataDesign));
+  const candidates = marked.length ? marked : usages;
+  const issues = [];
+  for (const required of requires) {
+    const [name2, value] = required.split("=");
+    const key = name2.replace(/-([a-z])/g, (_, letter) => letter.toUpperCase()), expected = value?.replace(/^"|"$/g, "");
+    const satisfied = candidates.some((entry) => {
+      const actual = entry.usage.props[key];
+      if (expected === void 0) return new RegExp("(?:^|\\s)(?::|v-bind:)?" + name2 + "(?=[\\s=/>]|$)").test(entry.raw);
+      return actual === expected || actual === void 0 && new RegExp("(?:^|\\s)(?::|v-bind:)" + name2 + "\\s*=").test(entry.raw);
+    });
+    if (!satisfied) issues.push("\u7ED3\u6784\u5224\u5B9A\u672A\u843D\u5B9E\uFF1A" + hit.name + "\uFF08" + hit.nodeIds.join("\u3001") + "\uFF09\u7684 <" + candidates[0].usage.tag + "> \u5FC5\u987B\u5199 " + required + "\uFF08" + hit.rule.pattern + (hit.evidence ? "\uFF0C\u4F9D\u636E\uFF1A" + hit.evidence : "") + "\uFF09\uFF1B" + candidates[0].file + " \u91CC" + (marked.length ? "\u5E26\u8BE5\u8282\u70B9 data-design \u7684\u6807\u7B7E" : "\u8BE5\u7EC4\u4EF6\u7684\u6807\u7B7E") + "\u6CA1\u6709\u8FD9\u4E2A\u5199\u6CD5\uFF0C\u4E0D\u8981\u7528 ui \u8986\u76D6\u53BB\u4EFF\u9020\u5B83");
+  }
+  return issues;
+}
+function rawTag(template, usage) {
+  const marker = usage.props.dataDesign ?? usage.props.src ?? "";
+  for (const match of template.matchAll(new RegExp("<" + usage.tag + "(?=[\\s/>])", "g"))) {
+    let end = match.index + match[0].length, quote2 = "";
+    while (end < template.length) {
+      const char = template[end];
+      if (quote2) {
+        if (char === quote2) quote2 = "";
+      } else if (char === '"' || char === "'") quote2 = char;
+      else if (char === ">") break;
+      end += 1;
+    }
+    const raw = template.slice(match.index, end);
+    if (!marker || raw.includes(marker)) return raw;
+  }
+  return "";
+}
+async function unregisteredHits(root, manifest, components, exemptNodeIds = [], resolved) {
   if (!manifest) return [];
-  const map = await loadComponentMap(root);
   const messages = [];
-  for (const hit of matchManifest(map.rules, manifest).matched) {
+  for (const hit of (resolved ?? matchManifest((await loadComponentMap(root)).rules, manifest)).matched) {
     if (hit.nodeIds.some((id) => exemptNodeIds.includes(id))) continue;
-    for (const component of [hit.rule.component, ...hit.rule.with ?? []]) if (!components.includes(component)) messages.push("\u6620\u5C04\u547D\u4E2D\u672A\u767B\u8BB0\uFF1A\u5B9E\u4F8B\u300C" + hit.name + "\u300D\uFF08" + hit.nodeIds.join("\u3001") + "\uFF09\u5E94\u4F7F\u7528 " + component + "\uFF0Crequirements \u91CC\u6CA1\u6709\u8BE5\u7EC4\u4EF6");
+    const subject = hit.rule.origin === "signal" ? "\u7ED3\u6784\u5224\u5B9A\u672A\u767B\u8BB0\uFF1A" + hit.name : "\u6620\u5C04\u547D\u4E2D\u672A\u767B\u8BB0\uFF1A\u5B9E\u4F8B\u300C" + hit.name + "\u300D";
+    for (const component of [hit.rule.component, ...hit.rule.with ?? []]) if (!components.includes(component)) messages.push(subject + "\uFF08" + hit.nodeIds.join("\u3001") + "\uFF09\u5E94\u4F7F\u7528 " + component + "\uFF0Crequirements \u91CC\u6CA1\u6709\u8BE5\u7EC4\u4EF6" + (hit.rule.origin === "signal" && hit.evidence ? "\uFF08\u4F9D\u636E\uFF1A" + hit.evidence + "\uFF09" : ""));
   }
   return messages;
 }
@@ -7377,6 +7744,127 @@ function playwrightDriver(options) {
   };
 }
 
+// studios/design/src/knowledgeMapping.ts
+var signalLabels = { "underline-field": "\u4E0B\u5212\u7EBF\u8F93\u5165", "corner-badge": "\u89D2\u6807", "selection-list": "\u4E92\u65A5\u9009\u62E9\u7EC4", accordion: "\u5C55\u5F00\u6536\u8D77\u5217\u8868", "select-trigger": "\u4E0B\u62C9\u89E6\u53D1\u5668" };
+function specStyle(spec) {
+  if (!spec) return void 0;
+  const style = {};
+  if (spec.width !== void 0) style.width = spec.width;
+  if (spec.height !== void 0) style.height = spec.height;
+  if (spec.radius) style.radius = Math.max(...spec.radius);
+  if (spec.background && !(spec.background.length === 9 && spec.background.endsWith("00"))) style.background = spec.background;
+  if (spec.border) style.border = "all";
+  if (spec.padding) style.padding = spec.padding;
+  if (spec.gap) style.gap = spec.gap;
+  if (spec.fontSize) style.fontSize = spec.fontSize;
+  if (spec.sizing) style.sizing = spec.sizing;
+  return Object.keys(style).length ? style : void 0;
+}
+function ruleOf(match, origin) {
+  const recipe = match.recipe && match.recipe.length > 400 ? match.recipe.slice(0, 400) + "\u2026\uFF08\u5168\u6587\u89C1 get_component\uFF09" : match.recipe;
+  const notes = [match.note, ...(match.imports ?? []).slice(-1), ...(match.pitfalls ?? []).slice(0, 2)].filter(Boolean).join("\uFF1B");
+  return {
+    pattern: (origin === "signal" ? "\u7ED3\u6784\u5224\u5B9A\uFF1A" : "\u77E5\u8BC6\u5E93\uFF1A") + (match.pattern ?? match.name),
+    match: [],
+    component: match.component,
+    origin,
+    ...recipe ? { props: recipe } : {},
+    ...notes ? { notes } : {},
+    ...match.with.length ? { with: match.with } : {},
+    ...match.requires?.length ? { requires: match.requires } : {}
+  };
+}
+function without(groups, claimed) {
+  return groups.map((group) => ({ ...group, nodeIds: group.nodeIds.filter((id) => !claimed.has(id)) })).filter((group) => group.nodeIds.length > 0);
+}
+function resolveMapping(rules, manifest, knowledge) {
+  const base = matchManifest(rules, manifest);
+  if (!knowledge) return base;
+  const specs = /* @__PURE__ */ new Map(), blockNames = /* @__PURE__ */ new Map(), instances = /* @__PURE__ */ new Map();
+  for (const block of manifest.blocks) {
+    for (const spec of block.spec ?? []) if (!specs.has(spec.id)) specs.set(spec.id, spec);
+    for (const instance of block.components ?? []) {
+      instances.set(instance.nodeId, instance);
+      blockNames.set(instance.nodeId, block.name ?? block.nodeId ?? "");
+    }
+  }
+  const defaults2 = new Set(defaultRules.map((rule) => rule.pattern));
+  const userOwned = new Set(base.matched.filter((hit) => !defaults2.has(hit.rule.pattern)).flatMap((hit) => hit.nodeIds));
+  const hints = [], structural = [], claimed = /* @__PURE__ */ new Set();
+  const signals = knowledge.hasSignals ? [...manifest.signals ?? []] : [];
+  const verdicts = signals.length ? knowledge.match(signals.map((signal) => ({ id: signal.nodeId, name: signal.name, group: signal.block, signals: [signal.kind], facts: signal.facts, style: signal.style, text: signal.text }))).matches : [];
+  signals.forEach((signal, index) => {
+    const verdict = verdicts[index];
+    const label = signalLabels[signal.kind] + "\u300C" + signal.name + "\u300D\uFF08" + signal.nodeId + "\uFF09";
+    const usage = verdict.resolved;
+    if (verdict.source !== "signal" || !verdict.component || verdict.confidence === "low") {
+      const detail = [signal.evidence, verdict.component ? "\u5019\u9009 " + [verdict.component, ...(verdict.alternatives ?? []).map((item) => item.id)].join(" / ") : "", ...usage?.notes ?? []].filter(Boolean).join("\uFF0C");
+      hints.push(label + "\uFF1A" + detail);
+      return;
+    }
+    const ids = [signal.nodeId, ...signal.members ?? []];
+    if (ids.some((id) => userOwned.has(id))) {
+      hints.push(label + "\u7ED3\u6784\u4E0A\u662F\u300C" + verdict.pattern + "\u300D\uFF08" + verdict.component + "\uFF09\uFF0C\u4F46\u9879\u76EE\u6620\u5C04\u8868\u5DF2\u6709\u89C4\u5219\u8986\u76D6\u8FD9\u4E9B\u8282\u70B9\uFF0C\u6309\u6620\u5C04\u8868\u6267\u884C");
+      return;
+    }
+    structural.push({
+      name: signalLabels[signal.kind] + "\u300C" + signal.name + "\u300D",
+      nodeIds: [...new Set(ids)],
+      rule: ruleOf(verdict, "signal"),
+      evidence: signal.evidence,
+      ...usage ? { usage: [{ nodeId: signal.nodeId, attrs: usage.attrs, ui: usage.ui, notes: usage.notes }] } : {}
+    });
+    for (const id of [signal.nodeId, ...signal.members ?? [], ...signal.covers ?? []]) if (!userOwned.has(id)) claimed.add(id);
+  });
+  for (const signal of signals) if (signal.kind === "corner-badge") for (const id of signal.members ?? []) claimed.delete(id);
+  const matched = without(base.matched, claimed).filter((hit) => !(claimed.size && hit.name.startsWith("\u6DF1\u5339\u914D\uFF1A") && hit.rule.minPerBlock && hit.nodeIds.length < hit.rule.minPerBlock));
+  const ignored = without(base.ignored, claimed);
+  let unmatched = without(base.unmatched, claimed);
+  const suggested = [];
+  if (unmatched.length) {
+    const inputs = [], owners = [];
+    unmatched.forEach((group, index) => {
+      for (const nodeId2 of group.nodeIds) {
+        const instance = instances.get(nodeId2), spec = specs.get(nodeId2), style = specStyle(spec);
+        inputs.push({ id: nodeId2, name: instance?.name ?? group.name, group: blockNames.get(nodeId2), ...instance?.props ? { variant: instance.props } : {}, ...spec?.bitmap ? { fill: "image" } : {}, ...style ? { style } : {}, ...spec?.text ? { text: spec.text } : {} });
+        owners.push(index);
+      }
+    });
+    const result = knowledge.match(inputs);
+    const remaining = [];
+    unmatched.forEach((group, index) => {
+      const own = result.matches.filter((_, position) => owners[position] === index), first = own[0];
+      const agreed = !!first && own.every((match) => match.status === first.status && match.component === first.component);
+      if (agreed && first.status === "ignore") {
+        ignored.push({ ...group, rule: { pattern: "\u77E5\u8BC6\u5E93\uFF1A" + (first.pattern ?? "\u4E0D\u662F\u7EC4\u4EF6"), match: [], component: "", ignore: true, origin: "knowledge", ...first.recipe ? { notes: first.recipe } : {} } });
+        return;
+      }
+      if (agreed && first.status === "pattern" && first.component && first.confidence !== "low") {
+        const usage = own.filter((match) => match.resolved).map((match) => ({ nodeId: match.id, attrs: match.resolved.attrs, ui: match.resolved.ui, notes: match.resolved.notes }));
+        suggested.push({ ...group, rule: ruleOf(first, "knowledge"), ...usage.length ? { usage } : {} });
+        return;
+      }
+      remaining.push(group);
+      const candidates = first?.selectionGroup ? first.note : first?.component ? "\u5019\u9009 " + [first.component, ...(first.alternatives ?? []).map((item) => item.id)].filter((id, position, all) => all.indexOf(id) === position).join(" / ") + (first.confidence === "low" ? "\uFF08\u4F4E\u7F6E\u4FE1\uFF0C\u6309\u7A3F\u9762\u786E\u8BA4\u662F\u5426\u6574\u4F53\u91C7\u7528\uFF09" : "") : "";
+      if (candidates) hints.push("\u300C" + group.name + "\u300D\uFF08" + group.nodeIds.slice(0, 3).join("\u3001") + "\uFF09\uFF1A" + candidates);
+    });
+    unmatched = remaining;
+    for (const hint of result.hints) if (/互斥选择组|图廊/.test(hint) && !hints.includes(hint)) hints.push(hint);
+  }
+  for (const hit of matched) {
+    if (!hit.rule.component) continue;
+    const usage = [];
+    for (const nodeId2 of hit.nodeIds) {
+      const spec = specs.get(nodeId2), style = specStyle(spec);
+      if (!style) continue;
+      const resolved = knowledge.usage(hit.rule.component, { id: nodeId2, name: hit.name, style, ...spec?.text ? { text: spec.text } : {} });
+      if (resolved) usage.push({ nodeId: nodeId2, attrs: resolved.attrs, ui: resolved.ui, notes: resolved.notes });
+    }
+    if (usage.length) hit.usage = usage;
+  }
+  return { total: base.total + structural.length, matched: [...structural, ...matched], ignored, unmatched, ...suggested.length ? { suggested } : {}, ...hints.length ? { hints } : {} };
+}
+
 // studios/design/src/manifestSeal.ts
 import { createHash as createHash2, randomUUID as randomUUID4 } from "node:crypto";
 import { mkdir as mkdir6, readFile as readFile6, rename as rename4, writeFile as writeFile7 } from "node:fs/promises";
@@ -7485,8 +7973,8 @@ function markup(source) {
   return template.replace(/<!--[\s\S]*?-->/g, "");
 }
 function uses(template, component) {
-  const pascal = component.split("-").map((word) => word[0].toUpperCase() + word.slice(1)).join("");
-  return new RegExp("<(?:" + component + "|" + pascal + ")(?=[\\s/>])").test(template);
+  const pascal2 = component.split("-").map((word) => word[0].toUpperCase() + word.slice(1)).join("");
+  return new RegExp("<(?:" + component + "|" + pascal2 + ")(?=[\\s/>])").test(template);
 }
 async function readManifest(root, seals) {
   const content = await readOptional(root, MANIFEST_PATH, 8e6);
@@ -7598,11 +8086,17 @@ function specsSummary(specs, issue) {
   return { specs: { path: "docs/design/interactions.yaml", total: specs?.length ?? 0, pending: (specs ?? []).filter(isPending).map((spec) => spec.id), ...issue ? { issue } : {} } };
 }
 var Reviews = class {
-  /** @param seals 清单来源核对；工作室运行时总是传入，审计不接受模型手写或改过的清单。 */
-  constructor(seals) {
+  /**
+   * @param seals 清单来源核对；工作室运行时总是传入，审计不接受模型手写或改过的清单。
+   * @param knowledge 取当前生效的 Reborn 知识库；工作室运行时传入，plan / check 据此得到与 design_workspace 相同的判定，
+   *   并在 check 里执行知识库的模板用法规则。不传时只按映射表核对（单元测试与没有知识库的环境）。
+   */
+  constructor(seals, knowledge) {
     this.seals = seals;
+    this.knowledge = knowledge;
   }
   seals;
+  knowledge;
   plans = /* @__PURE__ */ new WeakMap();
   checked = /* @__PURE__ */ new WeakSet();
   /** 每个 Agent 已运行的几何与像素审计轮数，超过三轮后提示把剩余差异写进清单。 */
@@ -7613,6 +8107,11 @@ var Reviews = class {
   compares = /* @__PURE__ */ new WeakMap();
   /** 本会话最近一次宿主侧交互执行结果；verify 直接采用它的结果与截图，不接受模型自报。 */
   interacts = /* @__PURE__ */ new WeakMap();
+  /** 映射表 + 知识库的判定结果，与 design_workspace 交给模型的是同一份算法。 */
+  async mapping(root, manifest) {
+    if (!manifest) return void 0;
+    return resolveMapping((await loadComponentMap(root)).rules, manifest, await this.knowledge?.());
+  }
   /** @param owner 新任务所属 Agent；旧任务的登记不得用于新稿件。 */
   reset(owner) {
     this.plans.delete(owner);
@@ -7647,7 +8146,8 @@ var Reviews = class {
     if (requirements.length === 0) throw new Error("\u8BF7\u5148\u4ECE\u5B9E\u9645\u8BBE\u8BA1\u7A3F\u767B\u8BB0\u7EC4\u4EF6\u6620\u5C04");
     const issues = [], assets = [];
     const interactions = rows(input.interactions ?? [], "\u4EA4\u4E92", 100).map((row) => ({ node: requiredText(row.node), action: requiredText(row.action, 512), expected: requiredText(row.expected, 1024) }));
-    const hits = manifest ? matchManifest((await loadComponentMap(root)).rules, manifest).matched : [];
+    const resolved = await this.mapping(root, manifest);
+    const hits = resolved?.matched ?? [];
     const allowed = this.allowances.get(owner) ?? [];
     const registered = requirements.map((item) => item.component);
     const refersTo = (node, id) => new RegExp("(?:^|[^A-Za-z0-9:_/-])" + id.replace(/[.*+?^${}()|[\]\\]/g, "\\$&") + "(?:$|[^A-Za-z0-9:_/-])").test(node);
@@ -7661,8 +8161,9 @@ var Reviews = class {
         exempt.push(...hit.nodeIds);
         continue;
       }
-      if (item.source === "custom") issues.push(item.node + "\uFF1A\u547D\u4E2D\u6620\u5C04\u300C" + rule.pattern + "\u300D\uFF0C\u5E94\u4F7F\u7528 " + required.join(" + ") + "\uFF0C\u4E0D\u63A5\u53D7 custom \u6216\u539F\u751F\u6807\u7B7E\uFF1B\u53EA\u6709\u7528\u6237\u5728\u9700\u6C42\u91CC\u5199\u300C\u5141\u8BB8\u81EA\u5B9A\u4E49 " + item.node + "\u300D\u624D\u53EF\u4F8B\u5916");
-      else if (item.source === "reborn" && !required.includes(item.component)) issues.push(item.node + "\uFF1A\u547D\u4E2D\u6620\u5C04\u300C" + rule.pattern + "\u300D\u5E94\u4F7F\u7528 " + rule.component + "\uFF0C\u767B\u8BB0\u7684\u662F " + item.component);
+      const label = rule.origin === "signal" ? "\u547D\u4E2D" + rule.pattern + (hit.evidence ? "\uFF08" + hit.evidence + "\uFF09" : "") : "\u547D\u4E2D\u6620\u5C04\u300C" + rule.pattern + "\u300D";
+      if (item.source === "custom") issues.push(item.node + "\uFF1A" + label + "\uFF0C\u5E94\u4F7F\u7528 " + required.join(" + ") + "\uFF0C\u4E0D\u63A5\u53D7 custom \u6216\u539F\u751F\u6807\u7B7E\uFF1B\u53EA\u6709\u7528\u6237\u5728\u9700\u6C42\u91CC\u5199\u300C\u5141\u8BB8\u81EA\u5B9A\u4E49 " + item.node + "\u300D\u624D\u53EF\u4F8B\u5916");
+      else if (item.source === "reborn" && !required.includes(item.component)) issues.push(item.node + "\uFF1A" + label + "\u5E94\u4F7F\u7528 " + rule.component + "\uFF0C\u767B\u8BB0\u7684\u662F " + item.component);
       else if (item.source === "project" && item.evidence) {
         const source = await readOptional(root, localPath(item.evidence)).catch(() => null);
         if (source !== null && !uses(markup(source), rule.component)) issues.push(item.node + "\uFF1A\u9879\u76EE\u7EC4\u4EF6 " + item.evidence + " \u6CA1\u6709\u4F7F\u7528\u6620\u5C04\u8981\u6C42\u7684 " + rule.component + "\uFF0C\u4E0D\u80FD\u4EE3\u66FF");
@@ -7670,7 +8171,8 @@ var Reviews = class {
       for (const companion of rule.with ?? []) if (!registered.includes(companion)) issues.push(item.node + "\uFF1A\u547D\u4E2D\u6620\u5C04\u300C" + rule.pattern + "\u300D\u8FD8\u9700\u767B\u8BB0\u4F34\u968F\u7EC4\u4EF6 " + companion);
     }
     for (const item of requirements) {
-      const inferred = inferredPattern(nodeNames(manifest, item.node)), pattern = inferred ?? item.pattern;
+      const structural = hits.some((hit) => hit.rule.origin === "signal" && hit.nodeIds.some((id) => refersTo(item.node, id)) && [hit.rule.component, ...hit.rule.with ?? []].includes(item.component));
+      const inferred = structural ? void 0 : inferredPattern(nodeNames(manifest, item.node)), pattern = inferred ?? item.pattern;
       if (inferred && item.pattern && inferred !== item.pattern) issues.push(item.node + "\uFF1A\u767B\u8BB0\u7684 " + item.pattern + " \u4E0E\u8BBE\u8BA1\u8282\u70B9\u8BED\u4E49 " + inferred + " \u4E0D\u7B26");
       if (pattern && pattern !== "button" && /^(?:reborn-?button|button)$/i.test(item.component)) issues.push(item.node + "\uFF1A\u4E0D\u80FD\u7528\u901A\u7528\u6309\u94AE\u4EE3\u66FF\u5B8C\u6574\u7684 " + pattern + " \u7EC4\u4EF6");
       if (item.source === "reborn" && patternComponents[pattern] && !patternComponents[pattern].includes(item.component)) issues.push(item.node + "\uFF1A" + item.component + " \u4E0D\u5339\u914D " + pattern + "\uFF0C\u8BF7\u901A\u8FC7\u7EC4\u4EF6 MCP \u6838\u5BF9\u4E13\u7528\u7EC4\u4EF6");
@@ -7705,7 +8207,11 @@ var Reviews = class {
       for (const path of manifestAssets(manifest)) if (!assets.some((item) => item.exported === path)) issues.push("\u539F\u59CB\u7D20\u6750\u672A\u767B\u8BB0\u4F7F\u7528\uFF1A" + path + "\uFF1B\u4E0D\u5F97\u7528\u76F8\u4F3C\u56FE\u6807\u6216\u81EA\u7ED8\u56FE\u5F62\u66FF\u4EE3");
       const bitmaps = manifest.blocks.flatMap((block) => (block.spec ?? []).filter((node) => node.bitmap).map((node) => node.id));
       if (bitmaps.length && !requirements.some((item) => item.component === "reborn-image")) issues.push("\u7A3F\u9762\u6709 " + bitmaps.length + " \u4E2A\u4F4D\u56FE\u8282\u70B9\uFF08\u5982 " + bitmaps.slice(0, 3).join("\u3001") + "\uFF09\uFF0C\u9700\u767B\u8BB0 reborn-image\uFF08node \u586B\u5176\u4E2D\u4E00\u4E2A\u8282\u70B9 ID\uFF0Cfile \u586B\u4F7F\u7528\u5B83\u7684\u7EC4\u4EF6\uFF09\uFF1B\u4F4D\u56FE\u4E0D\u7528\u539F\u751F img \u6216 CSS \u80CC\u666F\u56FE");
-      issues.push(...await unregisteredHits(root, manifest, requirements.map((item) => item.component), exempt));
+      issues.push(...await unregisteredHits(root, manifest, requirements.map((item) => item.component), exempt, resolved));
+      for (const hit of resolved?.suggested ?? []) {
+        if (requirements.some((item) => hit.nodeIds.some((id) => refersTo(item.node, id)) || item.node.includes(hit.name))) continue;
+        issues.push("\u77E5\u8BC6\u5E93\u5EFA\u8BAE\u672A\u8868\u6001\uFF1A\u5B9E\u4F8B\u300C" + hit.name + "\u300D\uFF08" + hit.nodeIds.slice(0, 4).join("\u3001") + "\uFF09\u5EFA\u8BAE\u7528 " + [hit.rule.component, ...hit.rule.with ?? []].join(" + ") + "\uFF1B\u6309\u5B83\u767B\u8BB0\uFF08node \u5199\u4E0A\u8282\u70B9 ID\uFF09\uFF0C\u6216\u767B\u8BB0\u4E3A project / custom \u5E76\u5728 evidence \u5199\u660E\u4E0D\u91C7\u7528\u7684\u4F9D\u636E");
+      }
     }
     const { specs, issue: specIssue } = await readSpecs(root);
     if (specIssue) issues.push(specIssue);
@@ -7740,7 +8246,7 @@ var Reviews = class {
   async check(owner, root) {
     const plan = this.plans.get(owner);
     if (!plan || plan.root !== root) throw new Error("\u8BF7\u5148\u5728\u672C\u4F1A\u8BDD\u8C03\u7528 design_review(stage=plan) \u767B\u8BB0\u5F53\u524D\u5DE5\u4F5C\u533A\u7684\u8FD8\u539F\u8BA1\u5212");
-    const issues = [], warnings = [], templates = /* @__PURE__ */ new Map(), sources = [];
+    const issues = [], warnings = [], templates = /* @__PURE__ */ new Map(), sources = [], originals = /* @__PURE__ */ new Map();
     const manifest = await readManifest(root, this.seals);
     for (const path of manifestAssets(manifest)) if (!plan.assets.some((item) => item.exported === path)) issues.push("\u9884\u8BFB\u7D20\u6750\u672A\u767B\u8BB0\uFF1A" + path + "\uFF0C\u8BF7\u91CD\u65B0 plan");
     const clippedExports = new Set(manifest?.blocks.flatMap((block) => block.assets.filter((asset) => asset.clipped).map((asset) => asset.path)) ?? []);
@@ -7761,6 +8267,7 @@ var Reviews = class {
       const template = markup(source);
       sources.push(source.replace(/<!--[\s\S]*?-->|\/\*[\s\S]*?\*\//g, ""));
       templates.set(item.file, template);
+      originals.set(item.file, source);
       const native = [...new Set([...template.matchAll(/<(button|input|select)(?=[\s/>])/g)].map((match) => match[1]))];
       if (native.length && !plan.requirements.some((requirement) => requirement.file === item.file && requirement.evidence && (requirement.source === "project" || requirement.source === "custom" && requirement.allowed))) issues.push(item.file + "\uFF1A\u539F\u751F\u63A7\u4EF6\u9700\u66FF\u6362\u4E3A Reborn \u7EC4\u4EF6\uFF1A" + native.join("\u3001") + "\uFF08\u9879\u76EE\u4E1A\u52A1\u7EC4\u4EF6\u9700\u767B\u8BB0 source=project \u4E0E\u6E90\u7801\u4F9D\u636E\uFF1B\u81EA\u5B9A\u4E49\u9700\u7528\u6237\u5728\u9700\u6C42\u91CC\u5141\u8BB8\uFF09");
       const found = templateIssues(item.file, template, clippedReferences, partialReferences);
@@ -7776,9 +8283,24 @@ var Reviews = class {
     const props = await propIssues(root, templates);
     issues.push(...props.issues);
     warnings.push(...props.warnings);
-    const mapped = await mappingIssues(root, manifest, templates);
+    const mapped = await mappingIssues(root, manifest, templates, await this.mapping(root, manifest));
     issues.push(...mapped.issues);
     warnings.push(...mapped.warnings);
+    const knowledge = await this.knowledge?.();
+    if (knowledge?.hasLint) for (const [file, source] of originals) {
+      let findings = [];
+      try {
+        findings = knowledge.lint(source).findings;
+      } catch (error) {
+        warnings.push(file + "\uFF1A\u7528\u6CD5\u89C4\u5219\u68C0\u67E5\u5931\u8D25\uFF08" + (error instanceof Error ? error.message : String(error)) + "\uFF09\uFF0C\u5DF2\u8DF3\u8FC7");
+      }
+      for (const finding of findings) {
+        if (finding.rule === "prop-value") continue;
+        const message = file + ":" + finding.line + "\uFF1A" + finding.message + "\uFF08Reborn \u7528\u6CD5\u89C4\u5219 " + finding.rule + "\uFF09";
+        if (finding.level === "error") issues.push(message);
+        else warnings.push(message);
+      }
+    }
     for (const asset of plan.assets) {
       try {
         if (await digest(root, asset.exported) !== asset.digest) issues.push(asset.node + "\uFF1A\u5BFC\u51FA\u7D20\u6750\u5DF2\u53D8\u5316\uFF0C\u9700\u91CD\u65B0\u6838\u5BF9\u8BBE\u8BA1\u7A3F\u5E76\u767B\u8BB0\u8BA1\u5212");
@@ -8124,6 +8646,646 @@ async function installComponents(root, ids, options) {
   return report;
 }
 
+// studios/design/src/knowledge.ts
+import { readFile as readFile9 } from "node:fs/promises";
+import { existsSync, readFileSync } from "node:fs";
+import { join as join10 } from "node:path";
+
+// upstream/reborn/src/search.ts
+function searchComponents(entries, query) {
+  const phrase = query.trim().toLowerCase();
+  const terms = phrase.split(/\s+/).filter(Boolean);
+  if (!terms.length) return [];
+  const multiWord = terms.length > 1;
+  const scored = [];
+  for (const e of entries) {
+    const id = e.id.toLowerCase();
+    const title = (e.title ?? "").toLowerCase();
+    const aliases = (e.aliases ?? []).map((a) => a.toLowerCase());
+    const tags = (e.tags ?? []).map((t) => t.toLowerCase());
+    const description = (e.description ?? "").toLowerCase();
+    let score = multiWord ? aliasScore(aliases, phrase, 100) : 0;
+    for (const term of terms) {
+      if (id === term) score += 100;
+      else if (id.includes(term)) score += 40;
+      if (title === term) score += 60;
+      else if (title.includes(term)) score += 30;
+      score += aliasScore(aliases, term);
+      if (tags.includes(term)) score += 20;
+      else if (tags.some((t) => t.includes(term))) score += 10;
+      if (description.includes(term)) score += 8;
+    }
+    if (score > 0) scored.push({ ...e, score });
+  }
+  return scored.sort((a, b) => b.score - a.score);
+}
+function aliasScore(aliases, term, exact = 70) {
+  let best = 0;
+  for (const alias of aliases) {
+    if (alias === term) return exact;
+    if (alias.includes(term)) best = Math.max(best, 30);
+    else if (alias.length >= 2 && term.includes(alias)) best = Math.max(best, 25);
+  }
+  return best;
+}
+function compileMatcher(term) {
+  const regex = /^\/(.+)\/([a-z]*)$/.exec(term);
+  if (regex) {
+    const flags = regex[2].includes("i") ? regex[2] : `${regex[2]}i`;
+    const re = new RegExp(regex[1], flags);
+    return (text2) => re.test(text2);
+  }
+  const needle = term.toLowerCase();
+  return (text2) => text2.includes(needle);
+}
+function subcomponentsOf(component, platform = "web") {
+  if (!component) return [];
+  const main = component.id.replace(/(^|-)([a-z0-9])/g, (_m, _s, c) => c.toUpperCase());
+  const refs = component.sourceRefs?.[platform] ?? component.sourceRefs?.web ?? [];
+  const names = /* @__PURE__ */ new Set();
+  for (const ref of refs) {
+    const file = ref.split(/[\\/]/).pop() ?? "";
+    if (!file.endsWith(".vue")) continue;
+    const name2 = file.slice(0, -4);
+    if (name2 !== main && /^[A-Z]/.test(name2)) names.add(name2);
+  }
+  return [...names].sort();
+}
+var ARROW_LIKE = /箭头|箭頭|arrow|chevron|prev|next|翻页|翻頁/i;
+var SELECTED_VALUE = /^(?:已?[选選]中?|激活|当前|當前|高亮|active|selected|current|checked|on)$/i;
+var UNSELECTED_VALUE = /^(?:未[选選]中?|未激活|默认|默認|常规|常規|正常|inactive|unselected|default|normal|off)$/i;
+var SELECTION_GROUP_CANDIDATES = [
+  { id: "reborn-menu", when: "\u7EB5\u5411\u5217\u8868\u3001\u4FA7\u680F\u5206\u7C7B\u3001\u5E26\u4E0B\u7EA7\u7684\u5BFC\u822A" },
+  { id: "reborn-tabs", when: "\u4E00\u6392\u9875\u7B7E + \u4E0B\u65B9\u968F\u4E4B\u5207\u6362\u7684\u5185\u5BB9\u9762\u677F" },
+  { id: "reborn-segmented", when: "\u4E00\u6761\u91CC\u6ED1\u52A8\u5207\u6362\u7684\u77ED\u63A7\u4EF6" },
+  { id: "reborn-radio", when: "\u8868\u5355\u91CC\u4ECE\u51E0\u4E2A\u9009\u9879\u4E2D\u53D6\u4E00\u4E2A\u503C" }
+];
+function shapeOf(style) {
+  if (!style.height) return void 0;
+  if ((style.radius ?? 0) * 2 < style.height) return "square";
+  return style.width !== void 0 && Math.abs(style.width - style.height) <= 1 ? "circle" : "pill";
+}
+function traitMatches(when, node) {
+  const style = node.style ?? {};
+  const text2 = (node.text ?? "").trim();
+  if (when.border !== void 0 && style.border !== when.border) return false;
+  if (when.background !== void 0 && when.background !== !!style.background) return false;
+  if (when.shape !== void 0 && shapeOf(style) !== when.shape) return false;
+  if (when.width !== void 0 && style.sizing?.width !== when.width) return false;
+  if (when.text === "digits" && !/^\d{1,4}\+?$/.test(text2)) return false;
+  if (when.text === "none" && text2) return false;
+  if (when.text === "any" && !text2) return false;
+  if (when.signal !== void 0 && !node.signals?.includes(when.signal)) return false;
+  return true;
+}
+function resolveUsage(trait, node) {
+  const style = node.style ?? {};
+  const set = /* @__PURE__ */ new Map();
+  const ui = [];
+  const notes = [];
+  for (const rule of trait?.rules ?? []) {
+    if (!traitMatches(rule.when, node)) continue;
+    let applied = false;
+    for (const [key, value] of Object.entries(rule.set)) {
+      if (set.has(key)) continue;
+      const resolved = value === "$text" ? (node.text ?? "").trim() : value;
+      if (resolved === "" || resolved === false) continue;
+      set.set(key, resolved);
+      applied = true;
+    }
+    if (applied && rule.note) notes.push(rule.note);
+  }
+  const sizes = trait?.sizesWhen && !traitMatches(trait.sizesWhen, node) ? [] : Object.entries(trait?.sizes ?? {});
+  if (sizes.length && style.height && !set.has("size")) {
+    const exact = sizes.find(([, height]) => height === style.height);
+    if (exact) set.set("size", exact[0]);
+    else {
+      const [nearest] = [...sizes].sort((a, b) => Math.abs(a[1] - style.height) - Math.abs(b[1] - style.height))[0];
+      set.set("size", nearest);
+      const ladder = sizes.map(([name2, height]) => `${name2} ${height}`).join(" / ");
+      if (trait?.sizeKey) ui.push(`${trait.sizeKey}: h-[${style.height}px]`);
+      notes.push(`\u7A3F\u9762\u9AD8 ${style.height}px \u4E0D\u5728 size \u6863\u4F4D\uFF08${ladder}\uFF09\uFF1A\u53D6\u6700\u63A5\u8FD1\u7684 ${nearest}${trait?.sizeKey ? `\uFF0C\u9AD8\u5EA6\u7528 ui.${trait.sizeKey} \u5199 h-[${style.height}px]` : ""}\uFF0C\u4E0D\u8981\u53E6\u5957\u4E00\u5C42\u5BB9\u5668\u6491\u9AD8`);
+    }
+  }
+  if (style.sizing?.width === "fixed" && style.width) notes.push(`\u7A3F\u9762\u5B9A\u5BBD ${style.width}px\uFF1A\u5BBD\u5EA6\u5199\u6B7B w-[${style.width}px]\uFF0C\u6587\u5B57\u4E0E\u56FE\u6807\u6309\u7A3F\u9762\u7684\u5BF9\u9F50\u65B9\u5F0F\u6446\u653E\uFF0C\u4E0D\u8981\u6539\u6210\u968F\u5185\u5BB9\u6491\u5F00`);
+  else if (style.sizing?.width === "hug") notes.push("\u5BBD\u5EA6\u7531\u5185\u5BB9\u4E0E\u5185\u8FB9\u8DDD\u6491\u5F00\uFF1A\u4E0D\u5199 w-[\u2026] / min-w-[\u2026]");
+  else if (style.sizing?.width === "fill") notes.push("\u5BBD\u5EA6\u5360\u6EE1\u7236\u5BB9\u5668\uFF1A\u7528 w-full / flex-1\uFF0C\u4E0D\u5199\u6B7B\u50CF\u7D20\u503C");
+  const attrs = [...set].map(([key, value]) => value === true ? key : `${key}="${value}"`);
+  return attrs.length || ui.length || notes.length ? { attrs, ui, notes } : void 0;
+}
+function matchDesignNodes(patterns, entries, nodes, options = {}) {
+  const entryById = new Map(entries.map((e) => [e.id, e]));
+  const compiled = patterns.map((p) => ({ pattern: p, tests: p.match.map(compileMatcher) }));
+  const counts = /* @__PURE__ */ new Map();
+  for (const node of nodes) {
+    const key = `${node.group ?? ""}\0${node.name.trim().toLowerCase()}`;
+    counts.set(key, (counts.get(key) ?? 0) + (node.count ?? 1));
+  }
+  const ownTextOf = (node) => {
+    const variantValues = typeof node.variant === "string" ? [node.variant] : Object.values(node.variant ?? {}).map(String);
+    return [node.name.trim(), ...variantValues].join(" ").toLowerCase();
+  };
+  const hitCounts = /* @__PURE__ */ new Map();
+  const hitCountFor = (patternIndex, group) => {
+    const key = `${patternIndex}\0${group ?? ""}`;
+    const cached = hitCounts.get(key);
+    if (cached !== void 0) return cached;
+    const tests = compiled[patternIndex].tests;
+    let total = 0;
+    for (const other of nodes) {
+      if ((other.group ?? "") !== (group ?? "")) continue;
+      if (tests.some((test) => test(ownTextOf(other)))) total += other.count ?? 1;
+    }
+    hitCounts.set(key, total);
+    return total;
+  };
+  const findPattern = (text2, group, skipIgnore) => {
+    for (let i = 0; i < compiled.length; i++) {
+      const { pattern, tests } = compiled[i];
+      if (skipIgnore && pattern.ignore) continue;
+      if (!tests.some((test) => test(text2))) continue;
+      if (pattern.minCount && hitCountFor(i, group) < pattern.minCount) continue;
+      return pattern;
+    }
+    return null;
+  };
+  const patternById = new Map(patterns.map((p) => [p.id, p]));
+  const findSignal = (node) => {
+    for (const signal of node.signals ?? []) {
+      for (const rule of options.signals ?? []) {
+        if (rule.signal !== signal) continue;
+        const when = Object.entries(rule.when ?? {});
+        if (when.every(([key, value]) => node.facts?.[key] === value)) return { rule, signal };
+      }
+    }
+    return null;
+  };
+  const patternOfSignal = (rule) => {
+    const base = rule.use ? patternById.get(rule.use) : void 0;
+    return {
+      id: base?.id ?? rule.id,
+      pattern: rule.pattern,
+      match: [],
+      component: rule.component,
+      with: rule.with ?? base?.with,
+      confidence: rule.confidence ?? "high",
+      recipe: [rule.recipe, base?.recipe].filter(Boolean).join(" ") || void 0,
+      imports: [...rule.imports ?? [], ...base?.imports ?? []],
+      uses: rule.uses ?? base?.uses,
+      pitfalls: [...rule.pitfalls ?? [], ...base?.pitfalls ?? []]
+    };
+  };
+  const matchOne = (node) => {
+    const name2 = node.name.trim();
+    const count = counts.get(`${node.group ?? ""}\0${name2.toLowerCase()}`) ?? 1;
+    const own = findPattern(ownTextOf(node), node.group, false);
+    const byChildren = (!own || own.container) && node.children?.length ? findPattern(node.children.join(" ").toLowerCase(), node.group, true) : null;
+    const imagePattern = node.fill === "image" && (!own || own.container || own.ignore) ? patterns.find((p) => p.id === "image") ?? null : null;
+    const named = imagePattern ?? byChildren ?? own;
+    const signalHit = findSignal(node);
+    const namedComponent = named && !named.ignore && named.component ? named.component : null;
+    const bySignal = !!signalHit && (signalHit.rule.confidence !== "low" || !namedComponent);
+    const pattern = bySignal ? patternOfSignal(signalHit.rule) : named;
+    const base = { name: name2, group: node.group, count, status: "unmapped", component: null, with: [] };
+    if (node.id) base.id = node.id;
+    if (bySignal) {
+      base.source = "signal";
+      base.signal = signalHit.signal;
+      base.signalId = signalHit.rule.id;
+      if (signalHit.rule.requires?.length) base.requires = signalHit.rule.requires;
+      if (namedComponent && namedComponent !== signalHit.rule.component) {
+        base.note = `\u8282\u70B9\u540D\u300C${name2}\u300D\u6309\u540D\u5B57\u4F1A\u843D\u5230 ${namedComponent}\uFF0C\u4F46\u7A3F\u9762\u7ED3\u6784\u662F\u300C${signalHit.rule.pattern}\u300D\uFF0C\u6309\u7ED3\u6784\u7528 ${signalHit.rule.component}`;
+      }
+    } else if (named) {
+      base.source = imagePattern ? "image" : byChildren ? "children" : "name";
+    }
+    if (signalHit && !bySignal) {
+      const rule = signalHit.rule;
+      base.signal = signalHit.signal;
+      base.signalId = rule.id;
+      base.note = `\u7ED3\u6784\u4E0A\u50CF\u300C${rule.pattern}\u300D\uFF08\u5019\u9009 ${[rule.component, ...rule.alternatives ?? []].join(" / ")}\uFF09\uFF0C\u672C\u6B21\u6309\u8282\u70B9\u540D\u843D\u5230 ${namedComponent}${rule.recipe ? `\uFF1B${rule.recipe}` : ""}`;
+    }
+    if (pattern) {
+      const match = {
+        ...base,
+        patternId: pattern.id,
+        pattern: pattern.pattern,
+        confidence: pattern.confidence,
+        recipe: pattern.recipe,
+        pitfalls: pattern.pitfalls
+      };
+      if (pattern.ignore || !pattern.component) {
+        match.status = pattern.ignore ? "ignore" : "custom";
+        return match;
+      }
+      const entry = entryById.get(pattern.component);
+      if (options.platform && entry?.platforms && !entry.platforms.includes(options.platform)) {
+        const alternatives2 = searchComponents(entries, name2).filter((h) => h.id !== pattern.component && h.platforms?.includes(options.platform)).slice(0, 3).map(({ id, title, score }) => ({ id, title, score }));
+        return {
+          ...match,
+          status: "unmapped",
+          note: `${pattern.component} \u4EC5 ${entry.platforms.join(" / ")} \u7AEF\u53EF\u7528\uFF0C${options.platform} \u7AEF\u6CA1\u6709\u8FD9\u4E2A\u7EC4\u4EF6`,
+          alternatives: alternatives2
+        };
+      }
+      match.status = "pattern";
+      match.component = pattern.component;
+      match.with = pattern.with ?? [];
+      match.uses = pattern.uses;
+      const subcomponents = subcomponentsOf(options.getComponent?.(pattern.component), options.platform);
+      if (subcomponents.length) {
+        match.subcomponents = subcomponents;
+        match.imports = [
+          ...pattern.imports ?? [],
+          `${subcomponents.join(" / ")} \u662F\u4E0E\u4E3B\u7EC4\u4EF6\u4E0D\u540C\u540D\u7684\u5B50\u7EC4\u4EF6\u6587\u4EF6\uFF1ANuxt \u81EA\u52A8\u5BFC\u5165\u5728 pathPrefix: true\uFF08\u9ED8\u8BA4\uFF09\u4E0B\u4F1A\u7ED9\u5B83\u52A0\u4E0A\u76EE\u5F55\u524D\u7F00\uFF0C\u6A21\u677F\u91CC\u6309\u6587\u4EF6\u540D\u5199\u4F1A\u89E3\u6790\u4E0D\u5230\uFF1B\u663E\u5F0F import ${subcomponents[0]} from '<componentsDir>/${pattern.component}/${subcomponents[0]}.vue'\uFF0C\u6216\u628A\u8BE5\u76EE\u5F55\u7684 components \u914D\u7F6E\u6539\u6210 pathPrefix: false`
+        ];
+      } else if (pattern.imports?.length) {
+        match.imports = pattern.imports;
+      }
+      if (bySignal && signalHit.rule.alternatives?.length) {
+        match.alternatives = signalHit.rule.alternatives.filter((id) => entryById.has(id) && (!options.platform || entryById.get(id).platforms?.includes(options.platform))).map((id) => ({ id, title: entryById.get(id)?.title, score: 0 }));
+      }
+      return match;
+    }
+    let hits = searchComponents(entries, name2);
+    if (options.platform) hits = hits.filter((h) => h.platforms?.includes(options.platform));
+    const alternatives = hits.slice(0, 3).map(({ id, title, score }) => ({ id, title, score }));
+    const exact = (entry) => {
+      if (!entry) return false;
+      const key = name2.toLowerCase();
+      return entry.id.toLowerCase() === key || (entry.title ?? "").toLowerCase() === key || (entry.aliases ?? []).some((alias) => alias.toLowerCase() === key);
+    };
+    if (alternatives.length && exact(entryById.get(alternatives[0].id))) {
+      return {
+        ...base,
+        status: "search",
+        component: alternatives[0].id,
+        alternatives,
+        note: "\u914D\u65B9\u8868\u6CA1\u6709\u8986\u76D6\u8FD9\u4E2A\u8282\u70B9\u540D\uFF0C\u6309\u522B\u540D\u68C0\u7D22\u7ED9\u51FA\u5019\u9009\uFF1B\u7528 get_component \u6838\u5BF9 whenToUse / whenNotToUse \u540E\u518D\u5B9A\uFF0C\u4E0D\u786E\u5B9A\u5C31\u6309\u7A3F\u9762\u81EA\u5199\u5E76\u5728\u6E05\u5355\u91CC\u8BF4\u660E"
+      };
+    }
+    return {
+      ...base,
+      status: "unmapped",
+      alternatives,
+      note: "\u6CA1\u6709\u5BF9\u5E94\u7EC4\u4EF6\uFF1A\u7EAF\u6587\u5B57\u3001\u6392\u7248\u5BB9\u5668\u76F4\u63A5\u7528 Tailwind \u81EA\u5199\uFF1B\u82E5\u5B83\u5176\u5B9E\u662F\u67D0\u4E2A\u7EC4\u4EF6\uFF0C\u628A\u8282\u70B9\u540D\u8865\u8FDB knowledge/design-patterns.json \u7684 match"
+    };
+  };
+  const traitByComponent = new Map((options.traits ?? []).map((trait) => [trait.component, trait]));
+  const matches = nodes.map((node) => {
+    const match = matchOne(node);
+    if (match.component && node.style) {
+      const resolved = resolveUsage(traitByComponent.get(match.component), node);
+      if (resolved) match.resolved = resolved;
+    }
+    return match;
+  });
+  const hints = [];
+  const galleryGroups = new Set(matches.filter((m) => m.patternId === "product-gallery").map((m) => m.group ?? ""));
+  if (galleryGroups.size) {
+    const sameGroup = (m) => galleryGroups.has(m.group ?? "") || galleryGroups.has("");
+    for (const m of matches) {
+      if (m.patternId === "image" && sameGroup(m)) {
+        m.note = "\u4E0E\u300C\u7F29\u7565\u56FE\u300D\u540C\u5C5E\u4E00\u4E2A\u56FE\u5ECA\uFF1A\u8FD9\u5F20\u4E3B\u56FE\u4E0D\u662F\u72EC\u7ACB\u7684 reborn-image\uFF0C\u800C\u662F reborn-carousel \u9ED8\u8BA4\u63D2\u69FD\u91CC\u7684\u4E00\u5F20 slide";
+      }
+      if (m.status === "ignore" && m.patternId === "icon" && ARROW_LIKE.test(m.name) && sameGroup(m)) {
+        m.note = "\u56FE\u5ECA\u4E24\u4FA7\u7684\u7FFB\u9875\u7BAD\u5934\uFF1A\u653E\u8FDB reborn-carousel \u7684 #prev / #next \u63D2\u69FD\uFF0C\u6309\u94AE\u52A0 pointer-events-auto\uFF0C\u7D20\u6750\u4ECD\u7528\u5BFC\u51FA\u7684\u539F\u59CB SVG";
+      }
+    }
+    hints.push(
+      "\u68C0\u6D4B\u5230\u5546\u54C1\u56FE\u5ECA\uFF08\u7F29\u7565\u56FE + \u4E3B\u56FE + \u7BAD\u5934\uFF09\uFF1A\u6574\u7EC4\u7528\u4E00\u4E2A reborn-carousel\uFF08thumbs \u8054\u52A8\u7F29\u7565\u56FE\uFF0C#prev / #next \u653E\u7BAD\u5934\uFF09\uFF0C\u4E0D\u8981\u628A\u7F29\u7565\u56FE\u505A\u6210\u4E00\u5217 RebornButton + img"
+    );
+  }
+  const selectionGroups = /* @__PURE__ */ new Map();
+  nodes.forEach((node, i) => {
+    const match = matches[i];
+    if (match.status === "pattern" || match.status === "ignore") return;
+    const values = typeof node.variant === "string" ? [node.variant] : Object.values(node.variant ?? {}).map(String);
+    const selected = values.some((value) => SELECTED_VALUE.test(value.trim()));
+    const unselected = values.some((value) => UNSELECTED_VALUE.test(value.trim()));
+    if (!selected && !unselected) return;
+    const key = `${node.group ?? ""}\0${node.name.trim().toLowerCase()}`;
+    const entry = selectionGroups.get(key) ?? { names: /* @__PURE__ */ new Set(), selected: false, unselected: false, indexes: [] };
+    entry.names.add(node.name.trim());
+    entry.selected ||= selected;
+    entry.unselected ||= unselected;
+    entry.indexes.push(i);
+    selectionGroups.set(key, entry);
+  });
+  for (const entry of selectionGroups.values()) {
+    if (entry.indexes.length < 2 || !entry.selected || !entry.unselected) continue;
+    const candidates = SELECTION_GROUP_CANDIDATES.filter(({ id }) => {
+      const candidate = entryById.get(id);
+      return candidate && (!options.platform || candidate.platforms?.includes(options.platform));
+    });
+    if (!candidates.length) continue;
+    const choices = candidates.map(({ id, when }) => `${when} \u2192 ${id}`).join("\uFF1B");
+    const name2 = [...entry.names][0];
+    for (const index of entry.indexes) {
+      const match = matches[index];
+      match.selectionGroup = true;
+      match.alternatives = candidates.map(({ id }) => ({ id, title: entryById.get(id)?.title, score: 0 }));
+      match.note = `\u540C\u4E00\u533A\u5757\u91CC ${entry.indexes.length} \u4E2A\u540C\u540D\u5B9E\u4F8B\u3001\u53D8\u4F53\u5728 \u9009\u4E2D / \u672A\u9009\u4E2D \u4E4B\u95F4\u5207\u6362\uFF0C\u662F\u4E00\u7EC4\u4E92\u65A5\u9009\u62E9\u800C\u4E0D\u662F ${entry.indexes.length} \u4E2A\u72EC\u7ACB\u5143\u7D20\uFF1A${choices}\u3002\u6309\u7A3F\u9762\u6392\u5E03\u9009\u5B9A\u540E\u7528 get_component \u6838\u5BF9\uFF0C\u9009\u4E2D\u6001\u4EA4\u7ED9\u7EC4\u4EF6\u7684 v-model\uFF0C\u4E0D\u8981\u9010\u9879\u624B\u5199 a / li / button \u518D\u81EA\u5DF1\u5207\u6837\u5F0F`;
+    }
+    hints.push(
+      `\u68C0\u6D4B\u5230\u4E92\u65A5\u9009\u62E9\u7EC4\u300C${name2}\u300D\xD7${entry.indexes.length}\uFF08\u53D8\u4F53 \u9009\u4E2D / \u672A\u9009\u4E2D\uFF09\uFF1A\u6574\u7EC4\u7528\u4E00\u4E2A\u9009\u62E9\u7C7B\u7EC4\u4EF6\u5B9E\u73B0\uFF08${choices}\uFF09\uFF0C\u5E76\u628A\u300C${name2}\u300D\u8865\u8FDB knowledge/design-patterns.json \u5BF9\u5E94\u89C4\u5219\u7684 match\uFF0C\u4E0B\u6B21\u6309\u540D\u5B57\u76F4\u63A5\u547D\u4E2D`
+    );
+  }
+  for (const m of matches) {
+    if (m.signal && m.source !== "signal" && m.note) hints.push(`\u7ED3\u6784\u63D0\u793A\uFF1A${m.id ? `\u300C${m.name}\u300D\uFF08${m.id}\uFF09` : `\u300C${m.name}\u300D`}${m.note}`);
+    if (m.source !== "signal" || !m.component) continue;
+    const requires = m.requires?.length ? `\uFF0C\u6807\u7B7E\u4E0A\u5FC5\u987B\u5199 ${m.requires.join(" ")}` : "";
+    const label = m.id ? `\u300C${m.name}\u300D\uFF08${m.id}\uFF09` : `\u300C${m.name}\u300D`;
+    hints.push(
+      m.confidence === "low" ? `\u7ED3\u6784\u63D0\u793A\uFF1A${label}\u50CF\u662F\u300C${m.pattern}\u300D\uFF0C\u5019\u9009 ${[m.component, ...(m.alternatives ?? []).map((a) => a.id)].join(" / ")}\uFF0C\u6309\u7A3F\u9762\u6392\u5E03\u786E\u8BA4\u540E\u518D\u5B9A` : `\u7ED3\u6784\u5224\u5B9A\uFF1A${label}\u662F\u300C${m.pattern}\u300D\u2192 ${[m.component, ...m.with].join(" + ")}${requires}\uFF1B\u4E0D\u8981\u6309\u8282\u70B9\u540D\u5F53\u6210\u666E\u901A\u5BB9\u5668\u624B\u5199`
+    );
+  }
+  const subcomponentNotes = new Set(matches.flatMap((m) => m.subcomponents ?? []));
+  if (subcomponentNotes.size) {
+    hints.push(`\u7528\u5230\u5B50\u7EC4\u4EF6 ${[...subcomponentNotes].join("\u3001")}\uFF1A\u663E\u5F0F import \u6216\u628A components \u914D\u7F6E\u6539\u6210 pathPrefix: false\uFF0C\u5426\u5219 Nuxt \u81EA\u52A8\u5BFC\u5165\u7684\u540D\u5B57\u5E26\u76EE\u5F55\u524D\u7F00`);
+  }
+  const byStatus = { pattern: 0, search: 0, ignore: 0, custom: 0, unmapped: 0 };
+  for (const m of matches) byStatus[m.status]++;
+  return {
+    matches,
+    summary: {
+      total: matches.length,
+      byStatus,
+      unmapped: [...new Set(matches.filter((m) => m.status === "unmapped").map((m) => m.name))]
+    },
+    hints
+  };
+}
+
+// upstream/reborn/src/usage.ts
+function blankComments(source) {
+  return source.replace(/<!--[\s\S]*?-->/g, (text2) => text2.replace(/[^\n]/g, " "));
+}
+function closing2(source, open) {
+  let depth = 0;
+  let quote2 = "";
+  for (let i = open; i < source.length; i++) {
+    const char = source[i];
+    if (quote2) {
+      if (char === "\\") i++;
+      else if (char === quote2) quote2 = "";
+      continue;
+    }
+    if (char === '"' || char === "'" || char === "`") quote2 = char;
+    else if (char === "{" || char === "[" || char === "(") depth++;
+    else if (char === "}" || char === "]" || char === ")") {
+      depth--;
+      if (depth === 0) return i;
+    }
+  }
+  return -1;
+}
+function objectLiteralEntries(literal) {
+  const entries = /* @__PURE__ */ new Map();
+  const open = literal.indexOf("{");
+  const close = open < 0 ? -1 : closing2(literal, open);
+  if (open < 0 || close < 0) return entries;
+  const body = literal.slice(open + 1, close);
+  let depth = 0;
+  let quote2 = "";
+  let start = 0;
+  const push = (piece) => {
+    const match = /^\s*(?:"([^"]*)"|'([^']*)'|([A-Z_$][\w$]*))\s*:/i.exec(piece);
+    if (!match) {
+      const shorthand = /^\s*([A-Z_$][\w$]*)\s*$/i.exec(piece);
+      if (shorthand) entries.set(shorthand[1], void 0);
+      return;
+    }
+    const value = piece.slice(match[0].length).trim();
+    const text2 = /^(["'`])([\s\S]*)\1$/.exec(value);
+    entries.set(match[1] ?? match[2] ?? match[3], text2 && !text2[2].includes("${") ? text2[2] : void 0);
+  };
+  for (let i = 0; i < body.length; i++) {
+    const char = body[i];
+    if (quote2) {
+      if (char === "\\") i++;
+      else if (char === quote2) quote2 = "";
+      continue;
+    }
+    if (char === '"' || char === "'" || char === "`") quote2 = char;
+    else if (char === "{" || char === "[" || char === "(") depth++;
+    else if (char === "}" || char === "]" || char === ")") depth--;
+    else if (char === "," && depth === 0) {
+      push(body.slice(start, i));
+      start = i + 1;
+    }
+  }
+  push(body.slice(start));
+  return entries;
+}
+function parseAttrs(text2) {
+  const attrs = [];
+  let i = 0;
+  while (i < text2.length) {
+    while (i < text2.length && /[\s/]/.test(text2[i])) i++;
+    const start = i;
+    while (i < text2.length && !/[\s=/]/.test(text2[i])) i++;
+    const raw = text2.slice(start, i);
+    if (!raw) {
+      i++;
+      continue;
+    }
+    let value;
+    let next = i;
+    while (next < text2.length && /\s/.test(text2[next])) next++;
+    if (text2[next] === "=") {
+      next++;
+      while (next < text2.length && /\s/.test(text2[next])) next++;
+      const quote2 = text2[next];
+      if (quote2 === '"' || quote2 === "'") {
+        const close = text2.indexOf(quote2, next + 1);
+        value = text2.slice(next + 1, close < 0 ? text2.length : close);
+        i = close < 0 ? text2.length : close + 1;
+      } else {
+        const from = next;
+        while (next < text2.length && !/\s/.test(text2[next])) next++;
+        value = text2.slice(from, next);
+        i = next;
+      }
+    }
+    const bound = raw.startsWith(":") || raw.startsWith("v-bind:");
+    const name2 = raw.replace(/^(?::|v-bind:)/, "");
+    if (/^[A-Z_][\w.-]*$/i.test(name2) && !name2.startsWith("v-")) attrs.push({ name: name2, bound, value });
+  }
+  return attrs;
+}
+function scanTags(template) {
+  const uses2 = [];
+  for (const match of template.matchAll(/<(Reborn[A-Z][A-Za-z0-9]*|reborn-[a-z][a-z0-9-]*)(?=[\s/>])/g)) {
+    const from = match.index + match[0].length;
+    let end = from;
+    let quote2 = "";
+    while (end < template.length) {
+      const char = template[end];
+      if (quote2) {
+        if (char === quote2) quote2 = "";
+      } else if (char === '"' || char === "'") quote2 = char;
+      else if (char === ">") break;
+      end++;
+    }
+    uses2.push({ tag: match[1], offset: match.index, attrs: parseAttrs(template.slice(from, end)) });
+  }
+  return uses2;
+}
+var camel = (name2) => name2.replace(/-([a-z])/g, (_m, letter) => letter.toUpperCase());
+var kebab = (name2) => name2.replace(/[A-Z]/g, (letter, index) => (index ? "-" : "") + letter.toLowerCase());
+var pascal = (id) => id.replace(/(^|-)([a-z0-9])/g, (_m, _s, letter) => letter.toUpperCase());
+function uiKeysOf(component, platform) {
+  const keys = /* @__PURE__ */ new Set();
+  const label = platform === "web" ? "Web" : "UniApp";
+  for (const prop of component.props ?? []) {
+    if (prop.name !== "ui" || prop.platform && prop.platform !== platform) continue;
+    const text2 = prop.description ?? "";
+    const from = text2.indexOf("\u53EF\u7528\u952E");
+    if (from < 0) continue;
+    for (const section of text2.slice(from).matchAll(/(Web|UniApp|两端)：([^。]*)。/g)) {
+      if (section[1] !== "\u4E24\u7AEF" && section[1] !== label) continue;
+      for (const part of section[2].split("\uFF1B")) {
+        const list = part.includes("\u2192") ? part.slice(part.indexOf("\u2192") + 1) : part;
+        for (const key of list.split("\u3001")) {
+          const name2 = key.trim().replace(/\*$/, "");
+          if (/^[A-Z]\w*$/i.test(name2)) keys.add(name2);
+        }
+      }
+    }
+  }
+  return keys;
+}
+function lintTemplate(source, kb, options = {}) {
+  const platform = options.platform ?? "web";
+  const sfc = /<template(?:\s[^>]*)?>/.exec(source);
+  const templateEnd = sfc ? source.lastIndexOf("</template>") : -1;
+  const templateStart = sfc && templateEnd > sfc.index ? sfc.index + sfc[0].length : 0;
+  const template = blankComments(templateStart ? source.slice(templateStart, templateEnd) : source);
+  const script = templateStart ? source.slice(0, sfc.index) + source.slice(templateEnd) : "";
+  const lineOf = (offset) => source.slice(0, templateStart + offset).split("\n").length;
+  const entries = kb.list();
+  const ids = new Set(entries.map((entry) => entry.id));
+  let owners;
+  const componentOf = (tag) => {
+    const id = tag.startsWith("reborn-") ? tag : kebab(tag);
+    if (ids.has(id)) return kb.get(id);
+    if (!owners) {
+      owners = /* @__PURE__ */ new Map();
+      for (const entry of entries) {
+        if (!entry.id.startsWith("reborn-")) continue;
+        const refs = kb.get(entry.id)?.sourceRefs;
+        for (const ref of [...refs?.web ?? [], ...refs?.uniapp ?? []]) {
+          const file = ref.split(/[\\/]/).pop() ?? "";
+          if (file.endsWith(".vue")) owners.set(file.slice(0, -4), entry.id);
+        }
+      }
+    }
+    const owner = owners.get(tag.startsWith("reborn-") ? pascal(tag) : tag);
+    return owner ? kb.get(owner) : null;
+  };
+  const uiEntries = (attr) => {
+    if (!attr?.bound || !attr.value) return null;
+    const value = attr.value.trim();
+    if (value.startsWith("{")) return objectLiteralEntries(value);
+    if (!/^[A-Z_$][\w$]*$/i.test(value)) return null;
+    const declared = new RegExp(`\\bconst\\s+${value.replace(/\$/g, "\\$")}\\s*(?::[^=]+)?=\\s*\\{`).exec(script);
+    return declared ? objectLiteralEntries(script.slice(declared.index + declared[0].length - 1)) : null;
+  };
+  const staticValue = (attr) => {
+    if (!attr || attr.value === void 0) return void 0;
+    if (!attr.bound) return attr.value;
+    const literal = /^\s*(?:'([^']*)'|"([^"]*)")\s*$/.exec(attr.value);
+    return literal ? literal[1] ?? literal[2] : void 0;
+  };
+  const rules = kb.designLint();
+  const findings = [];
+  const tags = scanTags(template);
+  for (const use of tags) {
+    const component = componentOf(use.tag);
+    if (!component) continue;
+    const isMain = (use.tag.startsWith("reborn-") ? use.tag : kebab(use.tag)) === component.id;
+    const report = (level, rule, message) => findings.push({ component: component.id, tag: use.tag, line: lineOf(use.offset), level, rule, message });
+    const attr = (name2) => use.attrs.find((item) => camel(item.name) === camel(name2));
+    const ui = uiEntries(attr("ui"));
+    const allowed = uiKeysOf(component, platform);
+    if (ui && allowed.size) {
+      const unknown = [...ui.keys()].filter((key) => !allowed.has(key));
+      if (unknown.length) {
+        report("error", "ui-key", `<${use.tag}> \u7684 ui \u6CA1\u6709\u952E ${unknown.map((key) => `\u300C${key}\u300D`).join("\u3001")}\uFF1A\u8FD9\u4E9B\u952E\u4E0D\u4F1A\u62A5\u9519\uFF0C\u53EA\u662F\u9759\u9ED8\u65E0\u6548\u3002${platform === "web" ? "Web" : "UniApp"} \u7AEF\u53EF\u7528\u952E\uFF1A${[...allowed].sort().join("\u3001")}`);
+      }
+    }
+    if (isMain) {
+      for (const item of use.attrs) {
+        const value = staticValue(item);
+        if (value === void 0) continue;
+        const candidates = (component.props ?? []).filter((prop) => prop.name === camel(item.name) && (!prop.platform || prop.platform === platform));
+        const options2 = candidates.find((prop) => prop.options?.length)?.options;
+        if (options2 && !options2.includes(value)) {
+          report("error", "prop-value", `<${use.tag}> \u7684 ${item.name}="${value}" \u4E0D\u5728\u53EF\u9009\u503C\u91CC\uFF08${options2.join(" / ")}\uFF09`);
+        }
+      }
+    }
+    for (const rule of rules) {
+      if (rule.component !== component.id || !isMain) continue;
+      const when = rule.when;
+      if (when.attr && !attr(when.attr)) continue;
+      if (when.prop) {
+        const value = staticValue(attr(when.prop.name));
+        if (when.prop.in && (value === void 0 || !when.prop.in.includes(value))) continue;
+        if (when.prop.notIn && (attr(when.prop.name) && value === void 0 || value !== void 0 && when.prop.notIn.includes(value))) continue;
+      }
+      if (when.classAll?.length) {
+        if (!ui) continue;
+        const text2 = when.uiKey ? ui.get(when.uiKey) ?? "" : [...ui.values()].filter(Boolean).join(" ");
+        if (!text2 || !when.classAll.every((pattern) => new RegExp(pattern, "i").test(text2))) continue;
+      }
+      report(rule.level, rule.id, rule.message);
+    }
+  }
+  return { checked: tags.length, findings };
+}
+
+// studios/design/src/knowledge.ts
+async function loadKnowledge(dir) {
+  let raw;
+  try {
+    raw = JSON.parse(await readFile9(join10(dir, "index.json"), "utf8"));
+  } catch (error) {
+    return void 0;
+  }
+  const index = raw;
+  const entries = Array.isArray(index.components) ? index.components : [];
+  const patterns = Array.isArray(index.designPatterns) ? index.designPatterns : [];
+  if (!entries.length || !patterns.length) return void 0;
+  const signals = Array.isArray(index.designSignals) ? index.designSignals : [];
+  const traits = Array.isArray(index.designTraits) ? index.designTraits : [];
+  const lint = Array.isArray(index.designLint) ? index.designLint : [];
+  const cache = /* @__PURE__ */ new Map();
+  const get = (id) => {
+    if (cache.has(id)) return cache.get(id);
+    let component = null;
+    if (/^[a-zA-Z0-9][a-zA-Z0-9_-]*$/.test(id)) {
+      const file = join10(dir, "components", id + ".json");
+      try {
+        if (existsSync(file)) component = JSON.parse(readFileSync(file, "utf8"));
+      } catch (error) {
+        component = null;
+      }
+    }
+    cache.set(id, component);
+    return component;
+  };
+  const traitOf = new Map(traits.map((trait) => [trait.component, trait]));
+  return {
+    match: (nodes) => matchDesignNodes(patterns, entries, nodes, { platform: "web", getComponent: get, signals, traits }),
+    usage: (component, node) => resolveUsage(traitOf.get(component), node),
+    lint: (source) => lintTemplate(source, { list: () => entries, get, designLint: () => lint }, { platform: "web" }),
+    hasSignals: signals.length > 0,
+    hasLint: true
+  };
+}
+
 // studios/design/src/toolExecution.ts
 function admission(owner, name2) {
   const set = owner.toolSet;
@@ -8147,12 +9309,12 @@ async function nestedToolExecutor(ctx, owner) {
 // studios/design/src/source.ts
 import { execFile } from "node:child_process";
 import { mkdir as mkdir8, mkdtemp, rename as rename5, rm as rm4, realpath as realpath2, stat as stat5 } from "node:fs/promises";
-import { join as join10, relative as relative4, isAbsolute as isAbsolute3, basename as basename2, dirname as dirname4 } from "node:path";
+import { join as join11, relative as relative4, isAbsolute as isAbsolute3, basename as basename2, dirname as dirname4 } from "node:path";
 import { promisify } from "node:util";
 var execute = promisify(execFile);
 async function locateSource(input, allowUnbuilt = false) {
   const root = await realpath2(input);
-  const candidates = basename2(root) === "knowledge" ? [dirname4(root)] : [root, join10(root, "upstream/reborn"), join10(root, "packages/mcp")];
+  const candidates = basename2(root) === "knowledge" ? [dirname4(root)] : [root, join11(root, "upstream/reborn"), join11(root, "packages/mcp")];
   for (const candidate of candidates) {
     const difference = relative4(root, candidate);
     if (basename2(root) !== "knowledge" && (difference.startsWith("..") || isAbsolute3(difference))) throw new Error("\u77E5\u8BC6\u5E93\u76EE\u5F55\u8D8A\u754C");
@@ -8174,10 +9336,10 @@ async function locateSource(input, allowUnbuilt = false) {
 }
 async function validateSource(root, allowUnbuilt = false) {
   root = await realpath2(root);
-  const entries = await catalog(join10(root, "knowledge"));
+  const entries = await catalog(join11(root, "knowledge"));
   if (!entries.length) throw new Error("Reborn \u77E5\u8BC6\u5E93\u6CA1\u6709\u7EC4\u4EF6");
   try {
-    await stat5(join10(root, "knowledge/components"));
+    await stat5(join11(root, "knowledge/components"));
   } catch (error) {
     if (allowUnbuilt && error instanceof Error && "code" in error && error.code === "ENOENT") return false;
     throw new Error("Reborn \u4ED3\u5E93\u6CA1\u6709\u751F\u6210\u540E\u7684 knowledge/components\uFF0C\u8BF7\u4F7F\u7528\u5185\u7F6E\u8D44\u6599\u6216\u9009\u62E9\u5DF2\u751F\u6210\u77E5\u8BC6\u5E93\u7684\u672C\u5730\u76EE\u5F55", { cause: error });
@@ -8205,10 +9367,10 @@ async function syncSource(base, repository, ref, signal) {
   const deadline = AbortSignal.any([signal, AbortSignal.timeout(9e4)]);
   if (!/^[A-Za-z0-9][A-Za-z0-9._/-]{0,255}$/.test(ref) || ref.includes("..")) throw new Error("\u5206\u652F\u3001\u6807\u7B7E\u6216\u63D0\u4EA4\u683C\u5F0F\u65E0\u6548");
   await mkdir8(base, { recursive: true });
-  const temporary = await mkdtemp(join10(base, "fetch-"));
-  const hooks = join10(temporary, "disabled-hooks"), root = join10(temporary, "source");
+  const temporary = await mkdtemp(join11(base, "fetch-"));
+  const hooks = join11(temporary, "disabled-hooks"), root = join11(temporary, "source");
   await mkdir8(hooks);
-  const git = async (args, cwd = temporary) => execute("git", ["-c", "core.hooksPath=" + hooks, "-c", "core.symlinks=false", ...args], { cwd, signal: deadline, timeout: 9e4, maxBuffer: 1e6, windowsHide: true, env: { ...process.env, GIT_TERMINAL_PROMPT: "0", GIT_CONFIG_NOSYSTEM: "1", GIT_CONFIG_GLOBAL: join10(temporary, "no-global-config") } });
+  const git = async (args, cwd = temporary) => execute("git", ["-c", "core.hooksPath=" + hooks, "-c", "core.symlinks=false", ...args], { cwd, signal: deadline, timeout: 9e4, maxBuffer: 1e6, windowsHide: true, env: { ...process.env, GIT_TERMINAL_PROMPT: "0", GIT_CONFIG_NOSYSTEM: "1", GIT_CONFIG_GLOBAL: join11(temporary, "no-global-config") } });
   try {
     await git(["clone", "--no-checkout", "--depth=1", "--", url, root]);
     await git(["fetch", "--depth=1", "origin", ref], root);
@@ -8216,14 +9378,14 @@ async function syncSource(base, repository, ref, signal) {
     const commit = (await git(["rev-parse", "HEAD"], root)).stdout.trim();
     if (!/^[a-f0-9]{40,64}$/.test(commit)) throw new Error("\u65E0\u6CD5\u786E\u8BA4 Reborn \u7248\u672C");
     const source = await locateSource(root, true);
-    const target = join10(base, commit);
+    const target = join11(base, commit);
     try {
       await rename5(root, target);
     } catch (error) {
       if (!(error instanceof Error && "code" in error && ["EEXIST", "ENOTEMPTY", "EPERM"].includes(String(error.code)))) throw error;
       await locateSource(target, true);
     }
-    return { ...source, root: join10(target, relative4(root, source.root)), commit };
+    return { ...source, root: join11(target, relative4(root, source.root)), commit };
   } catch (error) {
     if (signal.aborted) throw new Error("\u8D44\u6599\u83B7\u53D6\u5DF2\u53D6\u6D88");
     throw new Error("\u65E0\u6CD5\u83B7\u53D6\u6216\u9A8C\u8BC1 GitHub \u77E5\u8BC6\u5E93\uFF0C\u8BF7\u68C0\u67E5\u7F51\u7EDC\u3001Git \u548C\u5206\u652F\uFF1B\u5F53\u524D\u8D44\u6599\u4FDD\u6301\u539F\u7248\u672C", { cause: error });
@@ -8319,7 +9481,7 @@ var inject = ["studioProjects", "tools", "sessions", "agents", "sessionProjectio
 async function apply(ctx) {
   const store = new Store();
   const seals = new ManifestSeals();
-  const reviews = new Reviews(seals);
+  const reviews = new Reviews(seals, () => loadKnowledge(knowledgeDir()));
   let config = await store.loadSettings(), closed = false;
   const builtin = fileURLToPath(new URL("../reborn/", import.meta.url));
   const startPreview = async (project, sessionId, signal) => {
@@ -8383,8 +9545,9 @@ async function apply(ctx) {
   }
   const codeRoot = () => config.rebornSource === "local" || config.rebornSource === "github" && config.rebornCommit ? config.rebornRoot : "";
   const sourceRoot = () => config.rebornSource === "github" && config.rebornKnowledge === false ? "" : codeRoot();
+  const knowledgeDir = () => join12(sourceRoot() || builtin, "knowledge");
   const source = () => ({ kind: codeRoot() ? config.rebornSource : "builtin", root: codeRoot() || builtin, knowledge: sourceRoot() ? "repository" : "builtin", commit: config.rebornCommit || "", contentCommit: config.rebornContentCommit || "", repository: config.rebornCachedRepository || config.rebornRepository || "" });
-  const builtinSpec = () => ({ command: process.execPath, args: [fileURLToPath(new URL("./reborn-mcp.js", import.meta.url)), "--kb-dir", join11(sourceRoot() || builtin, "knowledge"), "--spec-dir", join11(builtin, "spec")] });
+  const builtinSpec = () => ({ command: process.execPath, args: [fileURLToPath(new URL("./reborn-mcp.js", import.meta.url)), "--kb-dir", join12(sourceRoot() || builtin, "knowledge"), "--spec-dir", join12(builtin, "spec")] });
   const connectReborn = async () => {
     if (connections.snapshot().reborn.state === "connected") return;
     await connections.connect("reborn", config.reborn.command ? config.reborn : builtinSpec(), builtin);
@@ -8430,7 +9593,7 @@ async function apply(ctx) {
       project,
       projectError,
       workspace: project ? await store.workspace(project.root) : null,
-      components: await catalog(join11(sourceRoot() || builtin, "knowledge")),
+      components: await catalog(join12(sourceRoot() || builtin, "knowledge")),
       connections: { ...connections.snapshot(), mastergo: selected?.agent ? scoped.peek(selected.agent)?.snapshot().mastergo ?? connections.snapshot().mastergo : connections.snapshot().mastergo },
       preview: project ? await previews.snapshot(project.root) : void 0,
       source: source(),
@@ -8446,7 +9609,7 @@ async function apply(ctx) {
   }), "\u8BBE\u8BA1\u5DE5\u4F5C\u5BA4\uFF1A\u5DE5\u4F5C\u533A\u8C03\u7528\u6307\u5F15");
   ctx.effect(() => ctx.tools.register({
     name: "design_workspace",
-    description: "\u51C6\u5907\u5F53\u524D\u4F1A\u8BDD\u7684\u8BBE\u8BA1\u4EFB\u52A1\uFF0C\u8BFB\u53D6\u5B9E\u9645\u5DE5\u4F5C\u533A\u3001\u7EC4\u4EF6\u6620\u5C04\u5E76\u8FD4\u56DE\u5B9E\u65BD\u6307\u5F15\u3002rules \u5F52\u7EB3\u9879\u76EE\u8BBE\u8BA1\u89C4\u5219\uFF0C\u65E0\u9700 MasterGo\uFF1Bread \u53EA\u8BFB\u9009\u533A\uFF1Bgenerate \u5B9E\u73B0\u7528\u6237\u9700\u6C42\uFF08task \u7F3A\u7701\u5373 generate\uFF0Crequest \u53EA\u7ED9 MasterGo \u94FE\u63A5\u4E5F\u53EF\uFF09\uFF1Boptimize \u91CD\u65B0\u901A\u8FC7 MCP \u8BFB\u53D6\u6307\u5B9A\u8282\u70B9\u5E76\u4F18\u5316\u5DF2\u6709\u5B9E\u73B0\uFF1Bsync \u4EC5\u7528\u4E8E\u660E\u786E\u6388\u6743\u7684\u753B\u5E03\u540C\u6B65\u3002\u81EA\u52A8\u51C6\u5907\u5F53\u524D\u4F1A\u8BDD\u7684 MasterGo\uFF1B\u8BF7\u6C42\u542B layer_id \u94FE\u63A5\u65F6\u7531\u5DE5\u4F5C\u5BA4\u6309\u533A\u5757\u9884\u8BFB\u8BBE\u8BA1\u7A3F\u3001\u5BFC\u51FA\u7D20\u6750\u5E76\u5199\u5165 docs/design/mastergo-manifest.json\uFF0C\u518D\u628A\u6E05\u5355\u4EA4\u7ED9\u6A21\u578B\uFF1Brequest \u91CC\u53EF\u542B\u540C\u4E00\u6587\u4EF6\u7684\u591A\u6761\u753B\u677F\u94FE\u63A5\uFF0C\u7B2C\u4E00\u6761\u4E3A\u9ED8\u8BA4\u6001\uFF0C\u5176\u4F59\u4E3A\u72B6\u6001\u5E27\uFF0C\u5DEE\u5F02\u5199\u5165 manifest.stateDeltas\uFF0C\u4EA4\u4E92\u89C4\u8303\u540C\u6B65\u5230 docs/design/interactions.yaml\u3002",
+    description: "\u51C6\u5907\u5F53\u524D\u4F1A\u8BDD\u7684\u8BBE\u8BA1\u4EFB\u52A1\uFF0C\u8BFB\u53D6\u5B9E\u9645\u5DE5\u4F5C\u533A\u3001\u7EC4\u4EF6\u6620\u5C04\u5E76\u8FD4\u56DE\u5B9E\u65BD\u6307\u5F15\u3002rules \u5F52\u7EB3\u9879\u76EE\u8BBE\u8BA1\u89C4\u5219\uFF0C\u65E0\u9700 MasterGo\uFF1Bread \u53EA\u8BFB\u9009\u533A\uFF1Bgenerate \u5B9E\u73B0\u7528\u6237\u9700\u6C42\uFF08task \u7F3A\u7701\u5373 generate\uFF0Crequest \u53EA\u7ED9 MasterGo \u94FE\u63A5\u4E5F\u53EF\uFF09\uFF1Boptimize \u91CD\u65B0\u901A\u8FC7 MCP \u8BFB\u53D6\u6307\u5B9A\u8282\u70B9\u5E76\u4F18\u5316\u5DF2\u6709\u5B9E\u73B0\uFF1Bsync \u4EC5\u7528\u4E8E\u660E\u786E\u6388\u6743\u7684\u753B\u5E03\u540C\u6B65\u3002\u81EA\u52A8\u51C6\u5907\u5F53\u524D\u4F1A\u8BDD\u7684 MasterGo\uFF1B\u8BF7\u6C42\u542B layer_id \u94FE\u63A5\u65F6\u7531\u5DE5\u4F5C\u5BA4\u6309\u533A\u5757\u9884\u8BFB\u8BBE\u8BA1\u7A3F\u3001\u5BFC\u51FA\u7D20\u6750\u5E76\u5199\u5165 docs/design/mastergo-manifest.json\uFF0C\u5E76\u628A\u7EC4\u4EF6\u5B9E\u4F8B\u4E0E\u8BC6\u522B\u51FA\u7684\u7ED3\u6784\uFF08\u4E0B\u5212\u7EBF\u8F93\u5165\u3001\u89D2\u6807\u3001\u4E92\u65A5\u9009\u62E9\u7EC4\u3001\u5C55\u5F00\u6536\u8D77\u5217\u8868\uFF09\u4EA4\u7ED9 Reborn \u77E5\u8BC6\u5E93\u5224\u5B9A\u7EC4\u4EF6\u4E0E\u53D6\u503C\uFF0C\u518D\u628A\u6E05\u5355\u4E0E\u5224\u5B9A\u4EA4\u7ED9\u6A21\u578B\uFF1B\u9884\u8BFB\u6761\u4EF6\u4E0D\u6EE1\u8DB3\u65F6\u8FD4\u56DE preRead.reason \u8BF4\u660E\u539F\u56E0\uFF1Brequest \u91CC\u53EF\u542B\u540C\u4E00\u6587\u4EF6\u7684\u591A\u6761\u753B\u677F\u94FE\u63A5\uFF0C\u7B2C\u4E00\u6761\u4E3A\u9ED8\u8BA4\u6001\uFF0C\u5176\u4F59\u4E3A\u72B6\u6001\u5E27\uFF0C\u5DEE\u5F02\u5199\u5165 manifest.stateDeltas\uFF0C\u4EA4\u4E92\u89C4\u8303\u540C\u6B65\u5230 docs/design/interactions.yaml\u3002",
     parameters: { type: "object", properties: { task: { type: "string", enum: ["rules", "read", "generate", "optimize", "sync"] }, request: { type: "string", maxLength: 8e3, description: "\u7528\u6237\u9700\u6C42\u539F\u6587\uFF1B\u53EF\u542B\u591A\u6761 MasterGo \u94FE\u63A5\uFF08\u7B2C\u4E00\u6761\u9ED8\u8BA4\u6001\uFF0C\u5176\u4F59\u72B6\u6001\u753B\u677F\uFF09\u4E0E\u300C\u4EA4\u4E92 <\u8282\u70B9>\uFF1A<\u89E6\u53D1> \u2192 <\u54CD\u5E94>\u300D\u884C" }, preRead: { type: "boolean", description: "\u662F\u5426\u7531\u5DE5\u4F5C\u5BA4\u9884\u8BFB\u8BBE\u8BA1\u7A3F\uFF0C\u9ED8\u8BA4 true\uFF1B\u4F20 false \u65F6\u6A21\u578B\u81EA\u884C\u6309\u533A\u5757\u8BFB\u53D6" } }, required: ["request"], additionalProperties: false },
     output: { schema: { type: "string" }, render: (_args, value) => [{ type: "text", text: String(value) }] },
     async execute(input, execution) {
@@ -8494,10 +9657,13 @@ async function apply(ctx) {
       if ("blocked" in prepared) return prepared.blocked;
       const { agent, project, workspace, connection, canvas, mismatch, imageInput } = prepared;
       let manifest, reused = false, preReadIssue = "", mapping, interactions, installation;
-      const canPreRead = (task === "generate" || task === "optimize" || task === "read") && args.preRead !== false && connection?.snapshot().mastergo.state === "connected" && mastergoAdapter(config.mastergo)?.service === "vibe" && canvas?.state === "ready" && typeof ctx.tools.execute === "function";
+      const wantsPreRead = (task === "generate" || task === "optimize" || task === "read") && args.preRead !== false;
+      const adapter = mastergoAdapter(config.mastergo);
+      const preReadBlocked = !wantsPreRead ? "" : connection?.snapshot().mastergo.state !== "connected" ? "MasterGo \u8FDE\u63A5\u672A\u5C31\u7EEA" : !adapter ? "MasterGo \u7684\u8FDE\u63A5\u547D\u4EE4\u4E0D\u662F\u5DE5\u4F5C\u5BA4\u80FD\u8BC6\u522B\u7684\u9002\u914D\u5668\u5199\u6CD5\uFF08\u547D\u4EE4\u884C\u91CC\u9700\u8981\u51FA\u73B0 @mastergo/vibe-mcp \u4E0E --url=\u672C\u673A\u5730\u5740\uFF09\uFF0C\u5DE5\u4F5C\u5BA4\u65E0\u6CD5\u66FF\u5B83\u63A2\u6D4B\u753B\u5E03\u548C\u9884\u8BFB\uFF1B\u5728\u8BBE\u8BA1\u5DE5\u4F5C\u5BA4\u8BBE\u7F6E\u91CC\u6539\u7528\u8868\u5355\u914D\u7F6E\uFF0C\u6216\u628A\u547D\u4EE4\u6539\u6210\u76F4\u63A5\u542F\u52A8 @mastergo/vibe-mcp" : adapter.service !== "vibe" ? "\u5F53\u524D\u662F Magic \u9002\u914D\u5668\uFF08\u8BFB\u53D6\u8FDC\u7A0B\u56E2\u961F\u6587\u4EF6\uFF09\uFF0C\u5DE5\u4F5C\u5BA4\u7684\u6309\u533A\u5757\u9884\u8BFB\u53EA\u652F\u6301\u672C\u673A Vibe \u9002\u914D\u5668" : canvas?.state !== "ready" ? "\u753B\u5E03\u672A\u5C31\u7EEA\uFF1A" + (canvas?.message ?? "\u8BF7\u5728 MasterGo \u684C\u9762\u7AEF\u6253\u5F00\u8BBE\u8BA1\u6587\u4EF6\u5E76\u5F00\u542F MCP") : typeof ctx.tools.execute !== "function" ? "\u5F53\u524D\u5BBF\u4E3B\u7248\u672C\u4E0D\u652F\u6301\u5DE5\u5177\u5185\u5D4C\u8C03\u7528" : "";
+      const canPreRead = wantsPreRead && !preReadBlocked;
       if (canPreRead) {
         const signal = AbortSignal.any([execution.signal, lifetime.signal]);
-        const source2 = { fileId: target?.fileId ?? canvas.documentId ?? "", pageId: target?.pageId ?? canvas.pageId ?? "", nodeId: target?.nodeId || void 0 };
+        const source2 = { fileId: target?.fileId ?? canvas?.documentId ?? "", pageId: target?.pageId ?? canvas?.pageId ?? "", nodeId: target?.nodeId || void 0 };
         const outcome = await serial(agent, async () => {
           const frames = frameTargets.map((frame) => ({ pageId: frame.pageId || source2.pageId, nodeId: frame.nodeId }));
           const previous = await reusableManifest(project.root, source2.nodeId, task === "optimize" ? "\u91CD\u65B0\u8BFB\u53D6 " + request : request, source2, frames.map((frame) => frame.nodeId));
@@ -8515,27 +9681,40 @@ async function apply(ctx) {
         });
         execution.signal.throwIfAborted();
         if (outcome) {
-          const known = new Set((await catalog(join11(sourceRoot() || builtin, "knowledge"))).map((component) => component.id));
+          const known = new Set((await catalog(join12(sourceRoot() || builtin, "knowledge"))).map((component) => component.id));
           const map = await loadComponentMap(project.root, { create: true, known });
-          const result = matchManifest(map.rules, outcome);
+          const result = resolveMapping(map.rules, outcome, await loadKnowledge(knowledgeDir()));
           await recordUnmapped(project.root, result);
           mapping = { path: map.path, source: map.source, rules: map.rules, result };
           if (task === "generate" || task === "optimize") {
-            const required = [...new Set(result.matched.flatMap((hit) => [hit.rule.component, ...hit.rule.with ?? []]))].filter((id) => known.has(id));
+            const required = [...new Set([...result.matched, ...result.suggested ?? []].flatMap((hit) => [hit.rule.component, ...hit.rule.with ?? []]))].filter((id) => known.has(id));
             try {
               installation = await installComponents(project.root, required, { registry: await locateRegistry({ explicit: process.env.REBORN_REGISTRY_DIR || config.rebornRegistry, roots: [config.rebornRoot, builtin] }), cli: process.env.DSH_REBORN_CLI, signal: execution.signal });
             } catch (error) {
               installation = { installed: [], skipped: [], failed: required.map((id) => ({ id, reason: error instanceof Error ? error.message : String(error) })), npmDependencies: [], missingShared: [], method: "none" };
             }
           }
-          manifest = manifestSummary(outcome, reused, { path: map.path, source: map.source, created: map.created, warnings: map.warnings, total: result.total, matched: result.matched.map((hit) => ({ name: hit.name, nodeIds: hit.nodeIds, component: hit.rule.component })), unmatched: result.unmatched, ignored: result.ignored.map((hit) => hit.name) });
+          manifest = manifestSummary(outcome, reused, {
+            path: map.path,
+            source: map.source,
+            created: map.created,
+            warnings: map.warnings,
+            total: result.total,
+            matched: result.matched.filter((hit) => hit.rule.origin !== "signal").map((hit) => ({ name: hit.name, nodeIds: hit.nodeIds, component: hit.rule.component })),
+            structural: result.matched.filter((hit) => hit.rule.origin === "signal").map((hit) => ({ name: hit.name, nodeIds: hit.nodeIds, component: hit.rule.component, with: hit.rule.with, requires: hit.rule.requires, evidence: hit.evidence, usage: hit.usage })),
+            suggested: (result.suggested ?? []).map((hit) => ({ name: hit.name, nodeIds: hit.nodeIds, component: hit.rule.component, with: hit.rule.with })),
+            hints: result.hints,
+            unmatched: result.unmatched,
+            ignored: result.ignored.map((hit) => hit.name)
+          });
           if (task === "generate" || task === "optimize") interactions = await syncInteractions(project.root, outcome, request);
         }
       }
       if (!mapping && task !== "rules") mapping = await loadComponentMap(project.root);
       if (preReadIssue) return JSON.stringify({ ready: false, root: project.root, target, canvas, issue: preReadIssue, instructions: "\u8BBE\u8BA1\u7A3F\u672A\u8BFB\u5230\u3002\u505C\u6B62\u9875\u9762\u751F\u6210\u548C\u7D20\u6750\u66FF\u6362\uFF0C\u4FDD\u7559\u539F\u6587\u4EF6\uFF1B\u628A\u4E0A\u8FF0\u539F\u56E0\u544A\u8BC9\u7528\u6237\uFF0C\u5F85\u5176\u5728 MasterGo \u4E2D\u6253\u5F00\u76EE\u6807\u6587\u4EF6\u5E76\u9009\u4E2D\u56FE\u5C42\u540E\u91CD\u8BD5 design_workspace\u3002\u4E0D\u80FD\u7528\u60F3\u8C61\u6216\u65E7\u7A3F\u4EE3\u66FF\u3002" });
       const installNote = installation ? "\n\n\u3010\u7EC4\u4EF6\u5B89\u88C5\u3011\u5DE5\u4F5C\u5BA4\u5DF2\u6309\u6620\u5C04\u547D\u4E2D\u628A\u7F3A\u5931\u7684 Reborn \u7EC4\u4EF6\u88C5\u8FDB\u9879\u76EE\uFF08\u6570\u636E\uFF09\uFF1A" + JSON.stringify(installation) + "\u3002installed \u4E3A\u672C\u6B21\u5199\u5165\u3001skipped \u4E3A\u9879\u76EE\u5DF2\u6709\uFF1Bfailed \u7684\u7EC4\u4EF6\u6309 get_install_command \u7531\u7528\u6237\u5728\u6C99\u7BB1\u5916\u5B89\u88C5\uFF1BnpmDependencies \u5217\u51FA\u7EC4\u4EF6\u5F15\u7528\u4F46 package.json \u6CA1\u6709\u7684\u5305\uFF0C\u5148\u5728\u6E05\u5355\u300C\u5DF2\u77E5\u5DEE\u5F02\u300D\u8BB0\u5F55\u5E76\u63D0\u793A\u7528\u6237\u5B89\u88C5\uFF0C\u4E0D\u8981\u81EA\u5DF1\u8FD0\u884C\u5305\u7BA1\u7406\u5668\uFF1BmissingShared \u662F\u7EC4\u4EF6\u5F15\u7528\u7684\u5171\u4EAB\u6587\u4EF6\uFF08lib / composables\uFF09\uFF0C\u7F3A\u5931\u65F6\u6309 Reborn \u6587\u6863\u8865\u9F50\u3002" : "";
-      const instructions = designPrompt(project, workspace, request, task, source(), connection?.snapshot().mastergo.tools, imageInput, manifest, mapping, interactions) + installNote + (mismatch ? "\n\n\u753B\u5E03\u63D0\u793A\uFF1A" + mismatch : "");
+      const unreadNote = !manifest && preReadBlocked && task !== "read" ? "\n\n\u3010\u672A\u9884\u8BFB\u3011\u5DE5\u4F5C\u5BA4\u8FD9\u6B21\u6CA1\u6709\u9884\u8BFB\u8BBE\u8BA1\u7A3F\uFF0C\u539F\u56E0\uFF1A" + preReadBlocked + "\u3002\u6CA1\u6709\u9884\u8BFB\u5C31\u6CA1\u6709\u89C4\u683C\u8868\u3001\u7ED3\u6784\u5224\u5B9A\u548C\u77E5\u8BC6\u5E93\u5EFA\u8BAE\uFF0Cdesign_review(stage=compare) \u4E5F\u4E0D\u53EF\u7528\uFF0C\u7EC4\u4EF6\u9009\u578B\u53EA\u80FD\u9760\u4F60\u81EA\u5DF1\u628A\u5173\uFF1A\u8BFB\u5230\u8282\u70B9\u540E\uFF0C\u628A\u5B9E\u4F8B\u540D\u3001\u53D8\u4F53\u3001\u5B50\u8282\u70B9\u540D\uFF0C\u8FDE\u540C\u80FD\u4ECE\u7ED3\u6784\u91CC\u91CF\u51FA\u6765\u7684\u7279\u5F81\uFF08\u53EA\u6709\u5E95\u8FB9\u4E00\u6761\u7EBF\u7684\u8F93\u5165 = underline-field\u3001\u56FE\u6807\u6216\u5934\u50CF\u89D2\u4E0A\u7684\u6570\u5B57 = corner-badge\u3001\u4E00\u5217\u540C\u6B3E\u9879\u91CC\u53EA\u6709\u4E00\u9879\u5E26\u5E95\u8272 = selection-list\u3001\u6BCF\u884C\u300C\u6807\u9898 + \u52A0\u51CF\u53F7\u300D\u4E14\u6709\u4E00\u884C\u5C55\u5F00 = accordion\u3001\u6587\u5B57 + \u4E0B\u62C9\u7BAD\u5934 = select-trigger\uFF09\u4F5C\u4E3A signals\uFF0C\u7A3F\u9762\u7684\u5BBD\u9AD8\u3001\u5706\u89D2\u3001\u63CF\u8FB9\u4F5C\u4E3A style\uFF0C\u6574\u6279\u4F20\u7ED9 mcp__design_reborn__match_design_nodes\uFF0C\u6309\u8FD4\u56DE\u7684 component / requires / resolved \u5B9E\u73B0\uFF1B\u5199\u5B8C\u6A21\u677F\u8C03 mcp__design_reborn__check_usage \u81EA\u67E5\u3002\u62A5\u544A\u5F00\u5934\u5411\u7528\u6237\u8BF4\u660E\u672C\u6B21\u672A\u7ECF\u5DE5\u4F5C\u5BA4\u9884\u8BFB\u4E0E\u51E0\u4F55\u5BA1\u8BA1\u4EE5\u53CA\u4E0A\u8FF0\u539F\u56E0\uFF0C\u4E0D\u8981\u5F53\u6210\u6B63\u5E38\u6D41\u7A0B\u7565\u8FC7\u3002" : "";
+      const instructions = designPrompt(project, workspace, request, task, source(), connection?.snapshot().mastergo.tools, imageInput, manifest, mapping, interactions) + installNote + unreadNote + (mismatch ? "\n\n\u753B\u5E03\u63D0\u793A\uFF1A" + mismatch : "");
       execution.signal.throwIfAborted();
       return JSON.stringify({
         ready: true,
@@ -8544,6 +9723,7 @@ async function apply(ctx) {
         target,
         canvas,
         canvasMismatch: mismatch || void 0,
+        preRead: manifest ? { done: true } : { done: false, reason: preReadBlocked || (wantsPreRead ? "" : "\u672C\u6B21\u4EFB\u52A1\u4E0D\u9884\u8BFB") },
         imageInput,
         manifest,
         interactions,
@@ -8560,7 +9740,7 @@ async function apply(ctx) {
   }), "\u8BBE\u8BA1\u5DE5\u4F5C\u5BA4\uFF1A\u5F53\u524D\u4F1A\u8BDD\u4EFB\u52A1\u5DE5\u5177");
   ctx.effect(() => ctx.tools.register({
     name: "design_review",
-    description: "\u56FA\u5B9A\u8FD8\u539F\u6D41\u7A0B\u7684\u68C0\u67E5\uFF1Aplan \u767B\u8BB0\u8282\u70B9\u8BED\u4E49\u3001\u9879\u76EE\u6216 Reborn \u7EC4\u4EF6\u3001\u5168\u90E8\u5BFC\u51FA\u7D20\u6750\u548C\u5E94\u9A8C\u8BC1\u4EA4\u4E92\uFF1Bcheck \u6838\u5BF9\u5B9E\u9645\u7EC4\u4EF6\u4E0E\u539F\u56FE\uFF1Bcompare \u7528\u6D4F\u89C8\u5668\u5728\u8BBE\u8BA1\u7A3F\u57FA\u51C6\u5BBD\u5EA6\u5B9E\u6D4B\u6A21\u677F\u91CC data-design \u8282\u70B9\u7684\u4F4D\u7F6E\u3001\u5C3A\u5BF8\u3001\u5B57\u53F7\u3001\u989C\u8272\u3001\u5706\u89D2\u3001\u63CF\u8FB9\u5E76\u4E0E\u9884\u8BFB\u89C4\u683C\u8868\u6BD4\u5BF9\uFF0C\u518D\u628A\u533A\u5757\u622A\u56FE\u4E0E\u9884\u89C8\u56FE\u505A\u50CF\u7D20\u6BD4\u5BF9\uFF0C\u8F93\u51FA\u6309\u5DEE\u5F02\u6392\u5E8F\u7684\u6E05\u5355\uFF08\u4F4D\u7F6E\u5C3A\u5BF8\u5BB9\u5DEE 2px\uFF0C\u5176\u4F59\u7CBE\u786E\uFF0C\u5B57\u4F53\u65CF\u53EA\u63D0\u793A\uFF09\uFF1Binteract \u7531\u5DE5\u4F5C\u5BA4\u5728\u5BBF\u4E3B\u4FA7\u7528\u6D4F\u89C8\u5668\u6309 docs/design/interactions.yaml \u5DF2\u586B\u5199\u6761\u76EE\u6267\u884C\u4EA4\u4E92\uFF08trigger \u7FFB\u8BD1\u4E3A \u70B9\u51FB / \u60AC\u505C / \u8F93\u5165 / \u6309\u952E / \u6EDA\u52A8\uFF0Cresponse \u91CC\u7684 \u51FA\u73B0 / \u6D88\u5931 / \u6587\u5B57 / aria \u5C5E\u6027 / \u8DEF\u7531 \u4F5C\u65AD\u8A00\uFF09\uFF0C\u524D\u540E\u622A\u56FE\u5199\u5230 docs/design/screenshots/\uFF0C\u53E6\u622A 390 \u5BBD\u7A84\u5C4F\u6574\u9875\u56FE\uFF0C\u62A5\u544A\u5199 docs/design/interaction-report.json\uFF1Bverify \u767B\u8BB0\u8BC1\u636E\uFF0C\u6709 interact \u62A5\u544A\u65F6\u76F4\u63A5\u91C7\u7528\u5176\u7ED3\u679C\u4E0E\u622A\u56FE\u3002check \u4E0E verify \u4E0D\u4FEE\u6539\u9879\u76EE\uFF0Ccompare \u53EA\u628A\u62A5\u544A\u4E0E\u5DEE\u5F02\u56FE\u5199\u8FDB docs/design/compare\u3002",
+    description: "\u56FA\u5B9A\u8FD8\u539F\u6D41\u7A0B\u7684\u68C0\u67E5\uFF1Aplan \u767B\u8BB0\u8282\u70B9\u8BED\u4E49\u3001\u9879\u76EE\u6216 Reborn \u7EC4\u4EF6\u3001\u5168\u90E8\u5BFC\u51FA\u7D20\u6750\u548C\u5E94\u9A8C\u8BC1\u4EA4\u4E92\uFF1Bcheck \u6838\u5BF9\u5B9E\u9645\u7EC4\u4EF6\u4E0E\u539F\u56FE\uFF0C\u6309\u6620\u5C04\u8868\u4E0E Reborn \u77E5\u8BC6\u5E93\u7684\u7ED3\u6784\u5224\u5B9A\u6838\u5BF9\u7EC4\u4EF6\u6807\u7B7E\u53CA\u5FC5\u987B\u5199\u7684\u5C5E\u6027\uFF0C\u5E76\u6267\u884C\u77E5\u8BC6\u5E93\u7684\u6A21\u677F\u7528\u6CD5\u89C4\u5219\uFF08\u4E0D\u5B58\u5728\u7684 ui \u952E\u3001\u7528 ui \u8986\u76D6\u4EFF\u9020\u5DF2\u6709\u53D8\u4F53\uFF09\uFF1Bcompare \u7528\u6D4F\u89C8\u5668\u5728\u8BBE\u8BA1\u7A3F\u57FA\u51C6\u5BBD\u5EA6\u5B9E\u6D4B\u6A21\u677F\u91CC data-design \u8282\u70B9\u7684\u4F4D\u7F6E\u3001\u5C3A\u5BF8\u3001\u5B57\u53F7\u3001\u989C\u8272\u3001\u5706\u89D2\u3001\u63CF\u8FB9\u5E76\u4E0E\u9884\u8BFB\u89C4\u683C\u8868\u6BD4\u5BF9\uFF0C\u518D\u628A\u533A\u5757\u622A\u56FE\u4E0E\u9884\u89C8\u56FE\u505A\u50CF\u7D20\u6BD4\u5BF9\uFF0C\u8F93\u51FA\u6309\u5DEE\u5F02\u6392\u5E8F\u7684\u6E05\u5355\uFF08\u4F4D\u7F6E\u5C3A\u5BF8\u5BB9\u5DEE 2px\uFF0C\u5176\u4F59\u7CBE\u786E\uFF0C\u5B57\u4F53\u65CF\u53EA\u63D0\u793A\uFF09\uFF1Binteract \u7531\u5DE5\u4F5C\u5BA4\u5728\u5BBF\u4E3B\u4FA7\u7528\u6D4F\u89C8\u5668\u6309 docs/design/interactions.yaml \u5DF2\u586B\u5199\u6761\u76EE\u6267\u884C\u4EA4\u4E92\uFF08trigger \u7FFB\u8BD1\u4E3A \u70B9\u51FB / \u60AC\u505C / \u8F93\u5165 / \u6309\u952E / \u6EDA\u52A8\uFF0Cresponse \u91CC\u7684 \u51FA\u73B0 / \u6D88\u5931 / \u6587\u5B57 / aria \u5C5E\u6027 / \u8DEF\u7531 \u4F5C\u65AD\u8A00\uFF09\uFF0C\u524D\u540E\u622A\u56FE\u5199\u5230 docs/design/screenshots/\uFF0C\u53E6\u622A 390 \u5BBD\u7A84\u5C4F\u6574\u9875\u56FE\uFF0C\u62A5\u544A\u5199 docs/design/interaction-report.json\uFF1Bverify \u767B\u8BB0\u8BC1\u636E\uFF0C\u6709 interact \u62A5\u544A\u65F6\u76F4\u63A5\u91C7\u7528\u5176\u7ED3\u679C\u4E0E\u622A\u56FE\u3002check \u4E0E verify \u4E0D\u4FEE\u6539\u9879\u76EE\uFF0Ccompare \u53EA\u628A\u62A5\u544A\u4E0E\u5DEE\u5F02\u56FE\u5199\u8FDB docs/design/compare\u3002",
     parameters: { type: "object", properties: {
       stage: { type: "string", enum: ["plan", "check", "compare", "interact", "verify"] },
       url: { type: "string", maxLength: 512, description: "compare / interact\uFF1A\u9884\u89C8\u5730\u5740\uFF08\u672C\u673A\u56DE\u73AF\u5730\u5740\uFF09\uFF1B\u7F3A\u7701\u8BFB\u5B9E\u73B0\u6E05\u5355\u300C\u9884\u89C8\u5730\u5740\u300D\u884C\uFF0C\u518D\u56DE\u9000\u5230\u5DE5\u4F5C\u5BA4\u9884\u89C8\u8BBE\u7F6E" },
@@ -8577,7 +9757,7 @@ async function apply(ctx) {
       if (!agent?.session.header.cwd) throw new Error("\u8BF7\u5148\u5728\u5F53\u524D\u5DE5\u4F5C\u533A\u4F1A\u8BDD\u51C6\u5907\u8BBE\u8BA1\u4EFB\u52A1");
       const project = await inspectProject(agent.session.header.cwd), args = object(input);
       if (args.stage === "plan" && Array.isArray(args.requirements)) {
-        const known = new Set((await catalog(join11(sourceRoot() || builtin, "knowledge"))).map((component) => component.id));
+        const known = new Set((await catalog(join12(sourceRoot() || builtin, "knowledge"))).map((component) => component.id));
         for (const value of args.requirements) {
           const requirement = object(value);
           if ((requirement.source === void 0 || requirement.source === "reborn") && !known.has(String(requirement.component))) throw new Error("Reborn \u77E5\u8BC6\u5E93\u4E2D\u4E0D\u5B58\u5728\u7EC4\u4EF6\uFF1A" + String(requirement.component));
@@ -8628,7 +9808,7 @@ async function apply(ctx) {
       if (!config.reborn.command) await connectReborn();
     } else if (input.action === "sync-source") {
       if (config.rebornSource !== "github") throw new Error("\u8BF7\u5148\u9009\u62E9 GitHub \u8D44\u6599\u6765\u6E90");
-      const fetched = await syncSource(join11(store.dir, "sources"), config.rebornRepository || "", config.rebornRef || "main", lifetime.signal);
+      const fetched = await syncSource(join12(store.dir, "sources"), config.rebornRepository || "", config.rebornRef || "main", lifetime.signal);
       if (closed) throw new Error("\u5DE5\u4F5C\u5BA4\u5DF2\u5173\u95ED");
       const next = { ...config, rebornRoot: fetched.root, rebornCommit: fetched.commit, rebornContentCommit: fetched.contentCommit, rebornCachedRepository: config.rebornRepository, rebornKnowledge: fetched.knowledge };
       await store.saveSettings(next);
@@ -8661,7 +9841,7 @@ async function apply(ctx) {
             await connectReborn();
           }
           if (connections.snapshot().reborn.state !== "connected") throw new Error(connections.snapshot().reborn.message || "Reborn MCP \u672A\u8FDE\u63A5");
-          const count = (await catalog(join11(sourceRoot() || builtin, "knowledge"))).length;
+          const count = (await catalog(join12(sourceRoot() || builtin, "knowledge"))).length;
           const label = config.rebornSource === "github" ? "GitHub " + (config.rebornRef || "main") : config.rebornSource === "local" ? "\u672C\u5730\u76EE\u5F55" : "\u5185\u7F6E";
           return label + " \xB7 " + count + " \u4E2A\u7EC4\u4EF6 \xB7 Reborn MCP \u5DF2\u8FDE\u63A5" + (config.rebornCommit ? " \xB7 " + config.rebornCommit.slice(0, 7) : "");
         });

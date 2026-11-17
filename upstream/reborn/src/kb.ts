@@ -59,6 +59,94 @@ export interface KbDesignPattern {
   pitfalls?: string[];
 }
 
+/**
+ * 结构信号规则（design-patterns.json 的 signals，并入 index.json 的 designSignals）。
+ *
+ * 节点名是设计师随手起的（「左侧导航单元」「黄点提示」「按钮内容」），按名字认不全；
+ * 结构信号由读取设计稿的一方（设计工作室）从几何与样式里算出来——只有底边一条线的输入、
+ * 图标右上角压着一个数字、一列同款项里只有一个带底色——再按这张表落到组件。
+ * 命中 confidence 不为 low 的信号规则时，它优先于按名字命中的规则。
+ */
+export interface KbDesignSignal {
+  id: string;
+  /** 信号名：underline-field / corner-badge / selection-list / accordion / select-trigger */
+  signal: string;
+  pattern: string;
+  /** 进一步限定信号附带的事实（如 { orientation: "vertical" }），全部相等才命中 */
+  when?: Record<string, string | number | boolean>;
+  component: string;
+  with?: string[];
+  confidence?: "high" | "low";
+  /** 低置信时一并给出的其它候选组件 */
+  alternatives?: string[];
+  /** 复用哪条名字规则（patterns 里的 id）的 recipe / uses / pitfalls / imports，自身的 recipe 排在前面 */
+  use?: string;
+  /** 必须出现在组件标签上的写法（variant="underlined"），调用方可据此做硬性核对 */
+  requires?: string[];
+  recipe?: string;
+  imports?: string[];
+  uses?: KbDesignPattern["uses"];
+  pitfalls?: string[];
+}
+
+/** 稿面特征的判断条件：全部给出的键都满足才算命中 */
+export interface KbTraitCondition {
+  /** 描边位置：all 四边、bottom 只有底边、none 没有 */
+  border?: "all" | "bottom" | "none";
+  /** 有没有底色（透明不算） */
+  background?: boolean;
+  /** 外形：circle 宽高相等的正圆、pill 圆角不小于半高的胶囊、square 其余 */
+  shape?: "circle" | "pill" | "square";
+  /** 宽度的取值方式（自动布局）：hug 随内容、fixed 写死、fill 占满 */
+  width?: "hug" | "fixed" | "fill";
+  /** 自身文字：digits 纯数字（可带 +）、none 没有、any 有 */
+  text?: "digits" | "none" | "any";
+  /** 节点带有这个结构信号 */
+  signal?: string;
+}
+
+/**
+ * 稿面特征 → 组件取值（design-patterns.json 的 traits，并入 index.json 的 designTraits）。
+ * 组件有现成的变体却被 ui 覆盖硬改出来，是还原里最常见的偏差；这张表把「看到什么」对应到「写什么」。
+ */
+export interface KbDesignTrait {
+  component: string;
+  /** Web 端 size 档位 → 高度（px） */
+  sizes?: Record<string, number>;
+  /** 档位只在满足条件时适用（角标的高度档位只对文字角标成立，圆点另算） */
+  sizesWhen?: KbTraitCondition;
+  /** 稿面高度不在档位时，用哪个 ui 键补 h-[…] */
+  sizeKey?: string;
+  rules?: Array<{
+    id: string;
+    when: KbTraitCondition;
+    /** 要写的 props：true 为布尔属性；"$text" 取节点自身文字 */
+    set: Record<string, string | boolean>;
+    note?: string;
+  }>;
+}
+
+/**
+ * 模板用法规则（design-patterns.json 的 lint，并入 index.json 的 designLint）：
+ * 组件有专门的变体或专门的组件，模板却用 ui 覆盖 / 手写状态绕了过去。
+ */
+export interface KbDesignLint {
+  id: string;
+  component: string;
+  level: "error" | "warn";
+  when: {
+    /** 标签上有这个属性（静态或绑定都算），如 aria-expanded */
+    attr?: string;
+    /** 某个 prop 的静态取值在这些值里 */
+    prop?: { name: string; in?: string[]; notIn?: string[] };
+    /** 只看这个 ui 键的类名；缺省看全部 ui 键 */
+    uiKey?: string;
+    /** 类名里全部命中才算（正则源码，不分大小写） */
+    classAll?: string[];
+  };
+  message: string;
+}
+
 export interface KbComponent extends KbIndexEntry {
   props?: KbProp[];
   events?: Array<{ name: string; payload?: string; description?: string }>;
@@ -139,6 +227,9 @@ export class KnowledgeBase {
   private readonly dir: string;
   private readonly indexEntries: KbIndexEntry[];
   private readonly patterns: KbDesignPattern[];
+  private readonly signals: KbDesignSignal[];
+  private readonly traits: KbDesignTrait[];
+  private readonly lint: KbDesignLint[];
   private readonly componentCache = new Map<string, KbComponent>();
 
   constructor(dir: string) {
@@ -149,6 +240,10 @@ export class KnowledgeBase {
     this.indexEntries = Array.isArray(raw) ? raw : raw.components;
     // 旧版索引没有配方表：工具退化为纯检索映射，不报错
     this.patterns = Array.isArray(raw?.designPatterns) ? raw.designPatterns : [];
+    // 结构信号、特征取值与用法规则是后加的三张表，旧索引里没有时各自为空，相应能力不生效
+    this.signals = Array.isArray(raw?.designSignals) ? raw.designSignals : [];
+    this.traits = Array.isArray(raw?.designTraits) ? raw.designTraits : [];
+    this.lint = Array.isArray(raw?.designLint) ? raw.designLint : [];
   }
 
   /** 轻量索引全量列表 */
@@ -159,6 +254,21 @@ export class KnowledgeBase {
   /** 设计稿配方表（索引里没有时为空数组） */
   designPatterns(): KbDesignPattern[] {
     return this.patterns;
+  }
+
+  /** 结构信号规则（索引里没有时为空数组） */
+  designSignals(): KbDesignSignal[] {
+    return this.signals;
+  }
+
+  /** 稿面特征 → 组件取值（索引里没有时为空数组） */
+  designTraits(): KbDesignTrait[] {
+    return this.traits;
+  }
+
+  /** 模板用法规则（索引里没有时为空数组） */
+  designLint(): KbDesignLint[] {
+    return this.lint;
   }
 
   /** 全部分类及其组件数 */

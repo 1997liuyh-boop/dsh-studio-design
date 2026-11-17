@@ -7,8 +7,10 @@ import { INTERACTION_SPEC_PATH, interactionTemplateIssues, isPending, loadIntera
 import { boundDesignIds, mappingIssues, propIssues, templateUsages, unregisteredHits } from './installed.ts'
 import { readManifestForCompare, resolvePreviewUrl, runCompare, type CompareResult, type Measurer } from './compare.ts'
 import { INTERACTION_REPORT_PATH, runInteractions, type DriverFactory, type InteractResult } from './interact.ts'
-import { matchManifest, type ComponentRule } from './componentMap.ts'
+import { type ComponentRule, type MappingResult } from './componentMap.ts'
 import { loadComponentMap } from './componentMapStore.ts'
+import { resolveMapping } from './knowledgeMapping.ts'
+import type { Knowledge } from './knowledge.ts'
 import { UNSEALED_MANIFEST } from './manifestSeal.ts'
 
 /** 需求里「允许自定义 <节点名>」声明的节点：只有这些节点可以把映射命中的实例登记为 custom。 */
@@ -243,8 +245,18 @@ export class Reviews {
   /** 本会话最近一次宿主侧交互执行结果；verify 直接采用它的结果与截图，不接受模型自报。 */
   private readonly interacts = new WeakMap<object, InteractResult>()
 
-  /** @param seals 清单来源核对；工作室运行时总是传入，审计不接受模型手写或改过的清单。 */
-  constructor(private readonly seals?: ManifestVerifier) {}
+  /**
+   * @param seals 清单来源核对；工作室运行时总是传入，审计不接受模型手写或改过的清单。
+   * @param knowledge 取当前生效的 Reborn 知识库；工作室运行时传入，plan / check 据此得到与 design_workspace 相同的判定，
+   *   并在 check 里执行知识库的模板用法规则。不传时只按映射表核对（单元测试与没有知识库的环境）。
+   */
+  constructor(private readonly seals?: ManifestVerifier, private readonly knowledge?: () => Promise<Knowledge | undefined>) {}
+
+  /** 映射表 + 知识库的判定结果，与 design_workspace 交给模型的是同一份算法。 */
+  private async mapping(root: string, manifest: Manifest | null): Promise<MappingResult | undefined> {
+    if (!manifest) return undefined
+    return resolveMapping((await loadComponentMap(root)).rules, manifest, await this.knowledge?.())
+  }
 
   /** @param owner 新任务所属 Agent；旧任务的登记不得用于新稿件。 */
   reset(owner: object): void { this.plans.delete(owner); this.checked.delete(owner); this.rounds.delete(owner); this.compares.delete(owner); this.interacts.delete(owner) }
@@ -275,7 +287,8 @@ export class Reviews {
     const issues: string[] = [], assets: Asset[] = []
     const interactions = rows(input.interactions ?? [], '交互', 100).map(row => ({ node: requiredText(row.node), action: requiredText(row.action, 512), expected: requiredText(row.expected, 1024) }))
     // 映射表命中的节点不接受 custom / 原生替代：只有用户需求里「允许自定义 <节点>」的例外；project 组件源码必须含映射组件标签；伴随组件也要登记。
-    const hits = manifest ? matchManifest((await loadComponentMap(root)).rules, manifest).matched : []
+    const resolved = await this.mapping(root, manifest)
+    const hits = resolved?.matched ?? []
     const allowed = this.allowances.get(owner) ?? []
     const registered = requirements.map(item => item.component)
     const refersTo = (node: string, id: string) => new RegExp('(?:^|[^A-Za-z0-9:_/-])' + id.replace(/[.*+?^${}()|[\]\\]/g, '\\$&') + '(?:$|[^A-Za-z0-9:_/-])').test(node)
@@ -287,8 +300,10 @@ export class Reviews {
       if (!hit) continue
       const rule: ComponentRule = hit.rule, required = [rule.component, ...(rule.with ?? [])]
       if (item.source === 'custom' && item.allowed) { exempt.push(...hit.nodeIds); continue }
-      if (item.source === 'custom') issues.push(item.node + '：命中映射「' + rule.pattern + '」，应使用 ' + required.join(' + ') + '，不接受 custom 或原生标签；只有用户在需求里写「允许自定义 ' + item.node + '」才可例外')
-      else if (item.source === 'reborn' && !required.includes(item.component)) issues.push(item.node + '：命中映射「' + rule.pattern + '」应使用 ' + rule.component + '，登记的是 ' + item.component)
+      // 结构判定的规则名已含「结构判定：」，并附上依据，说明为什么名字不像组件的节点也必须用组件。
+      const label = rule.origin === 'signal' ? '命中' + rule.pattern + (hit.evidence ? '（' + hit.evidence + '）' : '') : '命中映射「' + rule.pattern + '」'
+      if (item.source === 'custom') issues.push(item.node + '：' + label + '，应使用 ' + required.join(' + ') + '，不接受 custom 或原生标签；只有用户在需求里写「允许自定义 ' + item.node + '」才可例外')
+      else if (item.source === 'reborn' && !required.includes(item.component)) issues.push(item.node + '：' + label + '应使用 ' + rule.component + '，登记的是 ' + item.component)
       else if (item.source === 'project' && item.evidence) {
         const source = await readOptional(root, localPath(item.evidence)).catch(() => null)
         if (source !== null && !uses(markup(source), rule.component)) issues.push(item.node + '：项目组件 ' + item.evidence + ' 没有使用映射要求的 ' + rule.component + '，不能代替')
@@ -296,7 +311,9 @@ export class Reviews {
       for (const companion of rule.with ?? []) if (!registered.includes(companion)) issues.push(item.node + '：命中映射「' + rule.pattern + '」还需登记伴随组件 ' + companion)
     }
     for (const item of requirements) {
-      const inferred = inferredPattern(nodeNames(manifest, item.node)), pattern = inferred ?? item.pattern
+      // 结构判定覆盖的节点以结构为准：名字叫「搜索框」但结构是下划线输入时，不再按名字推断它必须是搜索组件。
+      const structural = hits.some(hit => hit.rule.origin === 'signal' && hit.nodeIds.some(id => refersTo(item.node, id)) && [hit.rule.component, ...(hit.rule.with ?? [])].includes(item.component))
+      const inferred = structural ? undefined : inferredPattern(nodeNames(manifest, item.node)), pattern = inferred ?? item.pattern
       if (inferred && item.pattern && inferred !== item.pattern) issues.push(item.node + '：登记的 ' + item.pattern + ' 与设计节点语义 ' + inferred + ' 不符')
       if (pattern && pattern !== 'button' && /^(?:reborn-?button|button)$/i.test(item.component)) issues.push(item.node + '：不能用通用按钮代替完整的 ' + pattern + ' 组件')
       if (item.source === 'reborn' && patternComponents[pattern!] && !patternComponents[pattern!]!.includes(item.component)) issues.push(item.node + '：' + item.component + ' 不匹配 ' + pattern + '，请通过组件 MCP 核对专用组件')
@@ -326,7 +343,12 @@ export class Reviews {
       const bitmaps = manifest.blocks.flatMap(block => (block.spec ?? []).filter(node => node.bitmap).map(node => node.id))
       if (bitmaps.length && !requirements.some(item => item.component === 'reborn-image')) issues.push('稿面有 ' + bitmaps.length + ' 个位图节点（如 ' + bitmaps.slice(0, 3).join('、') + '），需登记 reborn-image（node 填其中一个节点 ID，file 填使用它的组件）；位图不用原生 img 或 CSS 背景图')
       // 映射表命中的实例必须出现在登记里（缺失的组件由工作室安装），check 阶段再按模板标签硬性核对。
-      issues.push(...await unregisteredHits(root, manifest, requirements.map(item => item.component), exempt))
+      issues.push(...await unregisteredHits(root, manifest, requirements.map(item => item.component), exempt, resolved))
+      // 知识库建议：不强制用哪个组件，但每一种都要有登记项提到它的节点（采用，或 project / custom 并写明依据），不能略过不管。
+      for (const hit of resolved?.suggested ?? []) {
+        if (requirements.some(item => hit.nodeIds.some(id => refersTo(item.node, id)) || item.node.includes(hit.name))) continue
+        issues.push('知识库建议未表态：实例「' + hit.name + '」（' + hit.nodeIds.slice(0, 4).join('、') + '）建议用 ' + [hit.rule.component, ...(hit.rule.with ?? [])].join(' + ') + '；按它登记（node 写上节点 ID），或登记为 project / custom 并在 evidence 写明不采用的依据')
+      }
     }
     // 交互规范：待补条目提醒；已填写的条目必须登记为断言（node 填规范 id 或节点），否则 verify 无法覆盖。
     const { specs, issue: specIssue } = await readSpecs(root)
@@ -349,7 +371,7 @@ export class Reviews {
   async check(owner: object, root: string): Promise<ReviewResult> {
     const plan = this.plans.get(owner)
     if (!plan || plan.root !== root) throw new Error('请先在本会话调用 design_review(stage=plan) 登记当前工作区的还原计划')
-    const issues: string[] = [], warnings: string[] = [], templates = new Map<string, string>(), sources: string[] = []
+    const issues: string[] = [], warnings: string[] = [], templates = new Map<string, string>(), sources: string[] = [], originals = new Map<string, string>()
     const manifest = await readManifest(root, this.seals)
     for (const path of manifestAssets(manifest)) if (!plan.assets.some(item => item.exported === path)) issues.push('预读素材未登记：' + path + '，请重新 plan')
     const clippedExports = new Set(manifest?.blocks.flatMap(block => block.assets.filter(asset => asset.clipped).map(asset => asset.path)) ?? [])
@@ -367,6 +389,7 @@ export class Reviews {
       const template = markup(source)
       sources.push(source.replace(/<!--[\s\S]*?-->|\/\*[\s\S]*?\*\//g, ''))
       templates.set(item.file, template)
+      originals.set(item.file, source)
       const native = [...new Set([...template.matchAll(/<(button|input|select)(?=[\s/>])/g)].map(match => match[1]))]
       // 原生控件只在两种情况下放行：有源码依据的项目业务组件，或用户明确允许自定义的节点。
       if (native.length && !plan.requirements.some(requirement => requirement.file === item.file && requirement.evidence && (requirement.source === 'project' || (requirement.source === 'custom' && requirement.allowed)))) issues.push(item.file + '：原生控件需替换为 Reborn 组件：' + native.join('、') + '（项目业务组件需登记 source=project 与源码依据；自定义需用户在需求里允许）')
@@ -383,8 +406,22 @@ export class Reviews {
     // 取值以项目内已安装的 *.config.ts 为准；映射表命中的实例必须有对应标签。
     const props = await propIssues(root, templates)
     issues.push(...props.issues); warnings.push(...props.warnings)
-    const mapped = await mappingIssues(root, manifest, templates)
+    const mapped = await mappingIssues(root, manifest, templates, await this.mapping(root, manifest))
     issues.push(...mapped.issues); warnings.push(...mapped.warnings)
+    // Reborn 知识库的模板用法规则（与 MCP 的 check_usage 同一实现）：不存在的 ui 键、不合法的枚举取值算问题，
+    // 「组件有现成变体却用 ui 覆盖硬改」按规则级别算问题或提醒。取值是否合法已由上面的已安装配置核对过，这里不重复报。
+    const knowledge = await this.knowledge?.()
+    if (knowledge?.hasLint) for (const [file, source] of originals) {
+      let findings: ReturnType<Knowledge['lint']>['findings'] = []
+      try { findings = knowledge.lint(source).findings }
+      catch (error) { warnings.push(file + '：用法规则检查失败（' + (error instanceof Error ? error.message : String(error)) + '），已跳过') }
+      for (const finding of findings) {
+        if (finding.rule === 'prop-value') continue
+        const message = file + ':' + finding.line + '：' + finding.message + '（Reborn 用法规则 ' + finding.rule + '）'
+        if (finding.level === 'error') issues.push(message)
+        else warnings.push(message)
+      }
+    }
     for (const asset of plan.assets) {
       try {
         if (await digest(root, asset.exported) !== asset.digest) issues.push(asset.node + '：导出素材已变化，需重新核对设计稿并登记计划')

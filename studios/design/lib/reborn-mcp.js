@@ -7384,6 +7384,9 @@ var KnowledgeBase = class {
   dir;
   indexEntries;
   patterns;
+  signals;
+  traits;
+  lint;
   componentCache = /* @__PURE__ */ new Map();
   constructor(dir) {
     this.dir = dir;
@@ -7392,6 +7395,9 @@ var KnowledgeBase = class {
     );
     this.indexEntries = Array.isArray(raw) ? raw : raw.components;
     this.patterns = Array.isArray(raw?.designPatterns) ? raw.designPatterns : [];
+    this.signals = Array.isArray(raw?.designSignals) ? raw.designSignals : [];
+    this.traits = Array.isArray(raw?.designTraits) ? raw.designTraits : [];
+    this.lint = Array.isArray(raw?.designLint) ? raw.designLint : [];
   }
   /** 轻量索引全量列表 */
   list() {
@@ -7400,6 +7406,18 @@ var KnowledgeBase = class {
   /** 设计稿配方表（索引里没有时为空数组） */
   designPatterns() {
     return this.patterns;
+  }
+  /** 结构信号规则（索引里没有时为空数组） */
+  designSignals() {
+    return this.signals;
+  }
+  /** 稿面特征 → 组件取值（索引里没有时为空数组） */
+  designTraits() {
+    return this.traits;
+  }
+  /** 模板用法规则（索引里没有时为空数组） */
+  designLint() {
+    return this.lint;
   }
   /** 全部分类及其组件数 */
   categories() {
@@ -7509,6 +7527,59 @@ var SELECTION_GROUP_CANDIDATES = [
   { id: "reborn-segmented", when: "\u4E00\u6761\u91CC\u6ED1\u52A8\u5207\u6362\u7684\u77ED\u63A7\u4EF6" },
   { id: "reborn-radio", when: "\u8868\u5355\u91CC\u4ECE\u51E0\u4E2A\u9009\u9879\u4E2D\u53D6\u4E00\u4E2A\u503C" }
 ];
+function shapeOf(style) {
+  if (!style.height) return void 0;
+  if ((style.radius ?? 0) * 2 < style.height) return "square";
+  return style.width !== void 0 && Math.abs(style.width - style.height) <= 1 ? "circle" : "pill";
+}
+function traitMatches(when, node) {
+  const style = node.style ?? {};
+  const text = (node.text ?? "").trim();
+  if (when.border !== void 0 && style.border !== when.border) return false;
+  if (when.background !== void 0 && when.background !== !!style.background) return false;
+  if (when.shape !== void 0 && shapeOf(style) !== when.shape) return false;
+  if (when.width !== void 0 && style.sizing?.width !== when.width) return false;
+  if (when.text === "digits" && !/^\d{1,4}\+?$/.test(text)) return false;
+  if (when.text === "none" && text) return false;
+  if (when.text === "any" && !text) return false;
+  if (when.signal !== void 0 && !node.signals?.includes(when.signal)) return false;
+  return true;
+}
+function resolveUsage(trait, node) {
+  const style = node.style ?? {};
+  const set = /* @__PURE__ */ new Map();
+  const ui = [];
+  const notes = [];
+  for (const rule of trait?.rules ?? []) {
+    if (!traitMatches(rule.when, node)) continue;
+    let applied = false;
+    for (const [key, value] of Object.entries(rule.set)) {
+      if (set.has(key)) continue;
+      const resolved = value === "$text" ? (node.text ?? "").trim() : value;
+      if (resolved === "" || resolved === false) continue;
+      set.set(key, resolved);
+      applied = true;
+    }
+    if (applied && rule.note) notes.push(rule.note);
+  }
+  const sizes = trait?.sizesWhen && !traitMatches(trait.sizesWhen, node) ? [] : Object.entries(trait?.sizes ?? {});
+  if (sizes.length && style.height && !set.has("size")) {
+    const exact = sizes.find(([, height]) => height === style.height);
+    if (exact) set.set("size", exact[0]);
+    else {
+      const [nearest] = [...sizes].sort((a, b) => Math.abs(a[1] - style.height) - Math.abs(b[1] - style.height))[0];
+      set.set("size", nearest);
+      const ladder = sizes.map(([name, height]) => `${name} ${height}`).join(" / ");
+      if (trait?.sizeKey) ui.push(`${trait.sizeKey}: h-[${style.height}px]`);
+      notes.push(`\u7A3F\u9762\u9AD8 ${style.height}px \u4E0D\u5728 size \u6863\u4F4D\uFF08${ladder}\uFF09\uFF1A\u53D6\u6700\u63A5\u8FD1\u7684 ${nearest}${trait?.sizeKey ? `\uFF0C\u9AD8\u5EA6\u7528 ui.${trait.sizeKey} \u5199 h-[${style.height}px]` : ""}\uFF0C\u4E0D\u8981\u53E6\u5957\u4E00\u5C42\u5BB9\u5668\u6491\u9AD8`);
+    }
+  }
+  if (style.sizing?.width === "fixed" && style.width) notes.push(`\u7A3F\u9762\u5B9A\u5BBD ${style.width}px\uFF1A\u5BBD\u5EA6\u5199\u6B7B w-[${style.width}px]\uFF0C\u6587\u5B57\u4E0E\u56FE\u6807\u6309\u7A3F\u9762\u7684\u5BF9\u9F50\u65B9\u5F0F\u6446\u653E\uFF0C\u4E0D\u8981\u6539\u6210\u968F\u5185\u5BB9\u6491\u5F00`);
+  else if (style.sizing?.width === "hug") notes.push("\u5BBD\u5EA6\u7531\u5185\u5BB9\u4E0E\u5185\u8FB9\u8DDD\u6491\u5F00\uFF1A\u4E0D\u5199 w-[\u2026] / min-w-[\u2026]");
+  else if (style.sizing?.width === "fill") notes.push("\u5BBD\u5EA6\u5360\u6EE1\u7236\u5BB9\u5668\uFF1A\u7528 w-full / flex-1\uFF0C\u4E0D\u5199\u6B7B\u50CF\u7D20\u503C");
+  const attrs = [...set].map(([key, value]) => value === true ? key : `${key}="${value}"`);
+  return attrs.length || ui.length || notes.length ? { attrs, ui, notes } : void 0;
+}
 function matchDesignNodes(patterns, entries, nodes, options = {}) {
   const entryById = new Map(entries.map((e) => [e.id, e]));
   const compiled = patterns.map((p) => ({ pattern: p, tests: p.match.map(compileMatcher) }));
@@ -7545,15 +7616,62 @@ function matchDesignNodes(patterns, entries, nodes, options = {}) {
     }
     return null;
   };
-  const matches = [];
-  for (const node of nodes) {
+  const patternById = new Map(patterns.map((p) => [p.id, p]));
+  const findSignal = (node) => {
+    for (const signal of node.signals ?? []) {
+      for (const rule of options.signals ?? []) {
+        if (rule.signal !== signal) continue;
+        const when = Object.entries(rule.when ?? {});
+        if (when.every(([key, value]) => node.facts?.[key] === value)) return { rule, signal };
+      }
+    }
+    return null;
+  };
+  const patternOfSignal = (rule) => {
+    const base = rule.use ? patternById.get(rule.use) : void 0;
+    return {
+      id: base?.id ?? rule.id,
+      pattern: rule.pattern,
+      match: [],
+      component: rule.component,
+      with: rule.with ?? base?.with,
+      confidence: rule.confidence ?? "high",
+      recipe: [rule.recipe, base?.recipe].filter(Boolean).join(" ") || void 0,
+      imports: [...rule.imports ?? [], ...base?.imports ?? []],
+      uses: rule.uses ?? base?.uses,
+      pitfalls: [...rule.pitfalls ?? [], ...base?.pitfalls ?? []]
+    };
+  };
+  const matchOne = (node) => {
     const name = node.name.trim();
     const count = counts.get(`${node.group ?? ""}\0${name.toLowerCase()}`) ?? 1;
     const own = findPattern(ownTextOf(node), node.group, false);
     const byChildren = (!own || own.container) && node.children?.length ? findPattern(node.children.join(" ").toLowerCase(), node.group, true) : null;
     const imagePattern = node.fill === "image" && (!own || own.container || own.ignore) ? patterns.find((p) => p.id === "image") ?? null : null;
-    const pattern = imagePattern ?? byChildren ?? own;
+    const named = imagePattern ?? byChildren ?? own;
+    const signalHit = findSignal(node);
+    const namedComponent = named && !named.ignore && named.component ? named.component : null;
+    const bySignal = !!signalHit && (signalHit.rule.confidence !== "low" || !namedComponent);
+    const pattern = bySignal ? patternOfSignal(signalHit.rule) : named;
     const base = { name, group: node.group, count, status: "unmapped", component: null, with: [] };
+    if (node.id) base.id = node.id;
+    if (bySignal) {
+      base.source = "signal";
+      base.signal = signalHit.signal;
+      base.signalId = signalHit.rule.id;
+      if (signalHit.rule.requires?.length) base.requires = signalHit.rule.requires;
+      if (namedComponent && namedComponent !== signalHit.rule.component) {
+        base.note = `\u8282\u70B9\u540D\u300C${name}\u300D\u6309\u540D\u5B57\u4F1A\u843D\u5230 ${namedComponent}\uFF0C\u4F46\u7A3F\u9762\u7ED3\u6784\u662F\u300C${signalHit.rule.pattern}\u300D\uFF0C\u6309\u7ED3\u6784\u7528 ${signalHit.rule.component}`;
+      }
+    } else if (named) {
+      base.source = imagePattern ? "image" : byChildren ? "children" : "name";
+    }
+    if (signalHit && !bySignal) {
+      const rule = signalHit.rule;
+      base.signal = signalHit.signal;
+      base.signalId = rule.id;
+      base.note = `\u7ED3\u6784\u4E0A\u50CF\u300C${rule.pattern}\u300D\uFF08\u5019\u9009 ${[rule.component, ...rule.alternatives ?? []].join(" / ")}\uFF09\uFF0C\u672C\u6B21\u6309\u8282\u70B9\u540D\u843D\u5230 ${namedComponent}${rule.recipe ? `\uFF1B${rule.recipe}` : ""}`;
+    }
     if (pattern) {
       const match = {
         ...base,
@@ -7565,19 +7683,17 @@ function matchDesignNodes(patterns, entries, nodes, options = {}) {
       };
       if (pattern.ignore || !pattern.component) {
         match.status = pattern.ignore ? "ignore" : "custom";
-        matches.push(match);
-        continue;
+        return match;
       }
       const entry = entryById.get(pattern.component);
       if (options.platform && entry?.platforms && !entry.platforms.includes(options.platform)) {
         const alternatives2 = searchComponents(entries, name).filter((h) => h.id !== pattern.component && h.platforms?.includes(options.platform)).slice(0, 3).map(({ id, title, score }) => ({ id, title, score }));
-        matches.push({
+        return {
           ...match,
           status: "unmapped",
           note: `${pattern.component} \u4EC5 ${entry.platforms.join(" / ")} \u7AEF\u53EF\u7528\uFF0C${options.platform} \u7AEF\u6CA1\u6709\u8FD9\u4E2A\u7EC4\u4EF6`,
           alternatives: alternatives2
-        });
-        continue;
+        };
       }
       match.status = "pattern";
       match.component = pattern.component;
@@ -7593,8 +7709,10 @@ function matchDesignNodes(patterns, entries, nodes, options = {}) {
       } else if (pattern.imports?.length) {
         match.imports = pattern.imports;
       }
-      matches.push(match);
-      continue;
+      if (bySignal && signalHit.rule.alternatives?.length) {
+        match.alternatives = signalHit.rule.alternatives.filter((id) => entryById.has(id) && (!options.platform || entryById.get(id).platforms?.includes(options.platform))).map((id) => ({ id, title: entryById.get(id)?.title, score: 0 }));
+      }
+      return match;
     }
     let hits = searchComponents(entries, name);
     if (options.platform) hits = hits.filter((h) => h.platforms?.includes(options.platform));
@@ -7605,22 +7723,30 @@ function matchDesignNodes(patterns, entries, nodes, options = {}) {
       return entry.id.toLowerCase() === key || (entry.title ?? "").toLowerCase() === key || (entry.aliases ?? []).some((alias) => alias.toLowerCase() === key);
     };
     if (alternatives.length && exact(entryById.get(alternatives[0].id))) {
-      matches.push({
+      return {
         ...base,
         status: "search",
         component: alternatives[0].id,
         alternatives,
         note: "\u914D\u65B9\u8868\u6CA1\u6709\u8986\u76D6\u8FD9\u4E2A\u8282\u70B9\u540D\uFF0C\u6309\u522B\u540D\u68C0\u7D22\u7ED9\u51FA\u5019\u9009\uFF1B\u7528 get_component \u6838\u5BF9 whenToUse / whenNotToUse \u540E\u518D\u5B9A\uFF0C\u4E0D\u786E\u5B9A\u5C31\u6309\u7A3F\u9762\u81EA\u5199\u5E76\u5728\u6E05\u5355\u91CC\u8BF4\u660E"
-      });
-    } else {
-      matches.push({
-        ...base,
-        status: "unmapped",
-        alternatives,
-        note: "\u6CA1\u6709\u5BF9\u5E94\u7EC4\u4EF6\uFF1A\u7EAF\u6587\u5B57\u3001\u6392\u7248\u5BB9\u5668\u76F4\u63A5\u7528 Tailwind \u81EA\u5199\uFF1B\u82E5\u5B83\u5176\u5B9E\u662F\u67D0\u4E2A\u7EC4\u4EF6\uFF0C\u628A\u8282\u70B9\u540D\u8865\u8FDB knowledge/design-patterns.json \u7684 match"
-      });
+      };
     }
-  }
+    return {
+      ...base,
+      status: "unmapped",
+      alternatives,
+      note: "\u6CA1\u6709\u5BF9\u5E94\u7EC4\u4EF6\uFF1A\u7EAF\u6587\u5B57\u3001\u6392\u7248\u5BB9\u5668\u76F4\u63A5\u7528 Tailwind \u81EA\u5199\uFF1B\u82E5\u5B83\u5176\u5B9E\u662F\u67D0\u4E2A\u7EC4\u4EF6\uFF0C\u628A\u8282\u70B9\u540D\u8865\u8FDB knowledge/design-patterns.json \u7684 match"
+    };
+  };
+  const traitByComponent = new Map((options.traits ?? []).map((trait) => [trait.component, trait]));
+  const matches = nodes.map((node) => {
+    const match = matchOne(node);
+    if (match.component && node.style) {
+      const resolved = resolveUsage(traitByComponent.get(match.component), node);
+      if (resolved) match.resolved = resolved;
+    }
+    return match;
+  });
   const hints = [];
   const galleryGroups = new Set(matches.filter((m) => m.patternId === "product-gallery").map((m) => m.group ?? ""));
   if (galleryGroups.size) {
@@ -7670,6 +7796,15 @@ function matchDesignNodes(patterns, entries, nodes, options = {}) {
     }
     hints.push(
       `\u68C0\u6D4B\u5230\u4E92\u65A5\u9009\u62E9\u7EC4\u300C${name}\u300D\xD7${entry.indexes.length}\uFF08\u53D8\u4F53 \u9009\u4E2D / \u672A\u9009\u4E2D\uFF09\uFF1A\u6574\u7EC4\u7528\u4E00\u4E2A\u9009\u62E9\u7C7B\u7EC4\u4EF6\u5B9E\u73B0\uFF08${choices}\uFF09\uFF0C\u5E76\u628A\u300C${name}\u300D\u8865\u8FDB knowledge/design-patterns.json \u5BF9\u5E94\u89C4\u5219\u7684 match\uFF0C\u4E0B\u6B21\u6309\u540D\u5B57\u76F4\u63A5\u547D\u4E2D`
+    );
+  }
+  for (const m of matches) {
+    if (m.signal && m.source !== "signal" && m.note) hints.push(`\u7ED3\u6784\u63D0\u793A\uFF1A${m.id ? `\u300C${m.name}\u300D\uFF08${m.id}\uFF09` : `\u300C${m.name}\u300D`}${m.note}`);
+    if (m.source !== "signal" || !m.component) continue;
+    const requires = m.requires?.length ? `\uFF0C\u6807\u7B7E\u4E0A\u5FC5\u987B\u5199 ${m.requires.join(" ")}` : "";
+    const label = m.id ? `\u300C${m.name}\u300D\uFF08${m.id}\uFF09` : `\u300C${m.name}\u300D`;
+    hints.push(
+      m.confidence === "low" ? `\u7ED3\u6784\u63D0\u793A\uFF1A${label}\u50CF\u662F\u300C${m.pattern}\u300D\uFF0C\u5019\u9009 ${[m.component, ...(m.alternatives ?? []).map((a) => a.id)].join(" / ")}\uFF0C\u6309\u7A3F\u9762\u6392\u5E03\u786E\u8BA4\u540E\u518D\u5B9A` : `\u7ED3\u6784\u5224\u5B9A\uFF1A${label}\u662F\u300C${m.pattern}\u300D\u2192 ${[m.component, ...m.with].join(" + ")}${requires}\uFF1B\u4E0D\u8981\u6309\u8282\u70B9\u540D\u5F53\u6210\u666E\u901A\u5BB9\u5668\u624B\u5199`
     );
   }
   const subcomponentNotes = new Set(matches.flatMap((m) => m.subcomponents ?? []));
@@ -7802,6 +7937,235 @@ function readSpec(kind, options = {}) {
   return payload;
 }
 
+// upstream/reborn/src/usage.ts
+function blankComments(source) {
+  return source.replace(/<!--[\s\S]*?-->/g, (text) => text.replace(/[^\n]/g, " "));
+}
+function closing(source, open) {
+  let depth = 0;
+  let quote = "";
+  for (let i = open; i < source.length; i++) {
+    const char = source[i];
+    if (quote) {
+      if (char === "\\") i++;
+      else if (char === quote) quote = "";
+      continue;
+    }
+    if (char === '"' || char === "'" || char === "`") quote = char;
+    else if (char === "{" || char === "[" || char === "(") depth++;
+    else if (char === "}" || char === "]" || char === ")") {
+      depth--;
+      if (depth === 0) return i;
+    }
+  }
+  return -1;
+}
+function objectLiteralEntries(literal) {
+  const entries = /* @__PURE__ */ new Map();
+  const open = literal.indexOf("{");
+  const close = open < 0 ? -1 : closing(literal, open);
+  if (open < 0 || close < 0) return entries;
+  const body = literal.slice(open + 1, close);
+  let depth = 0;
+  let quote = "";
+  let start = 0;
+  const push = (piece) => {
+    const match = /^\s*(?:"([^"]*)"|'([^']*)'|([A-Z_$][\w$]*))\s*:/i.exec(piece);
+    if (!match) {
+      const shorthand = /^\s*([A-Z_$][\w$]*)\s*$/i.exec(piece);
+      if (shorthand) entries.set(shorthand[1], void 0);
+      return;
+    }
+    const value = piece.slice(match[0].length).trim();
+    const text = /^(["'`])([\s\S]*)\1$/.exec(value);
+    entries.set(match[1] ?? match[2] ?? match[3], text && !text[2].includes("${") ? text[2] : void 0);
+  };
+  for (let i = 0; i < body.length; i++) {
+    const char = body[i];
+    if (quote) {
+      if (char === "\\") i++;
+      else if (char === quote) quote = "";
+      continue;
+    }
+    if (char === '"' || char === "'" || char === "`") quote = char;
+    else if (char === "{" || char === "[" || char === "(") depth++;
+    else if (char === "}" || char === "]" || char === ")") depth--;
+    else if (char === "," && depth === 0) {
+      push(body.slice(start, i));
+      start = i + 1;
+    }
+  }
+  push(body.slice(start));
+  return entries;
+}
+function parseAttrs(text) {
+  const attrs = [];
+  let i = 0;
+  while (i < text.length) {
+    while (i < text.length && /[\s/]/.test(text[i])) i++;
+    const start = i;
+    while (i < text.length && !/[\s=/]/.test(text[i])) i++;
+    const raw = text.slice(start, i);
+    if (!raw) {
+      i++;
+      continue;
+    }
+    let value;
+    let next = i;
+    while (next < text.length && /\s/.test(text[next])) next++;
+    if (text[next] === "=") {
+      next++;
+      while (next < text.length && /\s/.test(text[next])) next++;
+      const quote = text[next];
+      if (quote === '"' || quote === "'") {
+        const close = text.indexOf(quote, next + 1);
+        value = text.slice(next + 1, close < 0 ? text.length : close);
+        i = close < 0 ? text.length : close + 1;
+      } else {
+        const from = next;
+        while (next < text.length && !/\s/.test(text[next])) next++;
+        value = text.slice(from, next);
+        i = next;
+      }
+    }
+    const bound = raw.startsWith(":") || raw.startsWith("v-bind:");
+    const name = raw.replace(/^(?::|v-bind:)/, "");
+    if (/^[A-Z_][\w.-]*$/i.test(name) && !name.startsWith("v-")) attrs.push({ name, bound, value });
+  }
+  return attrs;
+}
+function scanTags(template) {
+  const uses = [];
+  for (const match of template.matchAll(/<(Reborn[A-Z][A-Za-z0-9]*|reborn-[a-z][a-z0-9-]*)(?=[\s/>])/g)) {
+    const from = match.index + match[0].length;
+    let end = from;
+    let quote = "";
+    while (end < template.length) {
+      const char = template[end];
+      if (quote) {
+        if (char === quote) quote = "";
+      } else if (char === '"' || char === "'") quote = char;
+      else if (char === ">") break;
+      end++;
+    }
+    uses.push({ tag: match[1], offset: match.index, attrs: parseAttrs(template.slice(from, end)) });
+  }
+  return uses;
+}
+var camel = (name) => name.replace(/-([a-z])/g, (_m, letter) => letter.toUpperCase());
+var kebab = (name) => name.replace(/[A-Z]/g, (letter, index) => (index ? "-" : "") + letter.toLowerCase());
+var pascal = (id) => id.replace(/(^|-)([a-z0-9])/g, (_m, _s, letter) => letter.toUpperCase());
+function uiKeysOf(component, platform) {
+  const keys = /* @__PURE__ */ new Set();
+  const label = platform === "web" ? "Web" : "UniApp";
+  for (const prop of component.props ?? []) {
+    if (prop.name !== "ui" || prop.platform && prop.platform !== platform) continue;
+    const text = prop.description ?? "";
+    const from = text.indexOf("\u53EF\u7528\u952E");
+    if (from < 0) continue;
+    for (const section of text.slice(from).matchAll(/(Web|UniApp|两端)：([^。]*)。/g)) {
+      if (section[1] !== "\u4E24\u7AEF" && section[1] !== label) continue;
+      for (const part of section[2].split("\uFF1B")) {
+        const list = part.includes("\u2192") ? part.slice(part.indexOf("\u2192") + 1) : part;
+        for (const key of list.split("\u3001")) {
+          const name = key.trim().replace(/\*$/, "");
+          if (/^[A-Z]\w*$/i.test(name)) keys.add(name);
+        }
+      }
+    }
+  }
+  return keys;
+}
+function lintTemplate(source, kb2, options = {}) {
+  const platform = options.platform ?? "web";
+  const sfc = /<template(?:\s[^>]*)?>/.exec(source);
+  const templateEnd = sfc ? source.lastIndexOf("</template>") : -1;
+  const templateStart = sfc && templateEnd > sfc.index ? sfc.index + sfc[0].length : 0;
+  const template = blankComments(templateStart ? source.slice(templateStart, templateEnd) : source);
+  const script = templateStart ? source.slice(0, sfc.index) + source.slice(templateEnd) : "";
+  const lineOf = (offset) => source.slice(0, templateStart + offset).split("\n").length;
+  const entries = kb2.list();
+  const ids = new Set(entries.map((entry) => entry.id));
+  let owners;
+  const componentOf = (tag) => {
+    const id = tag.startsWith("reborn-") ? tag : kebab(tag);
+    if (ids.has(id)) return kb2.get(id);
+    if (!owners) {
+      owners = /* @__PURE__ */ new Map();
+      for (const entry of entries) {
+        if (!entry.id.startsWith("reborn-")) continue;
+        const refs = kb2.get(entry.id)?.sourceRefs;
+        for (const ref of [...refs?.web ?? [], ...refs?.uniapp ?? []]) {
+          const file = ref.split(/[\\/]/).pop() ?? "";
+          if (file.endsWith(".vue")) owners.set(file.slice(0, -4), entry.id);
+        }
+      }
+    }
+    const owner = owners.get(tag.startsWith("reborn-") ? pascal(tag) : tag);
+    return owner ? kb2.get(owner) : null;
+  };
+  const uiEntries = (attr) => {
+    if (!attr?.bound || !attr.value) return null;
+    const value = attr.value.trim();
+    if (value.startsWith("{")) return objectLiteralEntries(value);
+    if (!/^[A-Z_$][\w$]*$/i.test(value)) return null;
+    const declared = new RegExp(`\\bconst\\s+${value.replace(/\$/g, "\\$")}\\s*(?::[^=]+)?=\\s*\\{`).exec(script);
+    return declared ? objectLiteralEntries(script.slice(declared.index + declared[0].length - 1)) : null;
+  };
+  const staticValue = (attr) => {
+    if (!attr || attr.value === void 0) return void 0;
+    if (!attr.bound) return attr.value;
+    const literal = /^\s*(?:'([^']*)'|"([^"]*)")\s*$/.exec(attr.value);
+    return literal ? literal[1] ?? literal[2] : void 0;
+  };
+  const rules = kb2.designLint();
+  const findings = [];
+  const tags = scanTags(template);
+  for (const use of tags) {
+    const component = componentOf(use.tag);
+    if (!component) continue;
+    const isMain = (use.tag.startsWith("reborn-") ? use.tag : kebab(use.tag)) === component.id;
+    const report = (level, rule, message) => findings.push({ component: component.id, tag: use.tag, line: lineOf(use.offset), level, rule, message });
+    const attr = (name) => use.attrs.find((item) => camel(item.name) === camel(name));
+    const ui = uiEntries(attr("ui"));
+    const allowed = uiKeysOf(component, platform);
+    if (ui && allowed.size) {
+      const unknown = [...ui.keys()].filter((key) => !allowed.has(key));
+      if (unknown.length) {
+        report("error", "ui-key", `<${use.tag}> \u7684 ui \u6CA1\u6709\u952E ${unknown.map((key) => `\u300C${key}\u300D`).join("\u3001")}\uFF1A\u8FD9\u4E9B\u952E\u4E0D\u4F1A\u62A5\u9519\uFF0C\u53EA\u662F\u9759\u9ED8\u65E0\u6548\u3002${platform === "web" ? "Web" : "UniApp"} \u7AEF\u53EF\u7528\u952E\uFF1A${[...allowed].sort().join("\u3001")}`);
+      }
+    }
+    if (isMain) {
+      for (const item of use.attrs) {
+        const value = staticValue(item);
+        if (value === void 0) continue;
+        const candidates = (component.props ?? []).filter((prop) => prop.name === camel(item.name) && (!prop.platform || prop.platform === platform));
+        const options2 = candidates.find((prop) => prop.options?.length)?.options;
+        if (options2 && !options2.includes(value)) {
+          report("error", "prop-value", `<${use.tag}> \u7684 ${item.name}="${value}" \u4E0D\u5728\u53EF\u9009\u503C\u91CC\uFF08${options2.join(" / ")}\uFF09`);
+        }
+      }
+    }
+    for (const rule of rules) {
+      if (rule.component !== component.id || !isMain) continue;
+      const when = rule.when;
+      if (when.attr && !attr(when.attr)) continue;
+      if (when.prop) {
+        const value = staticValue(attr(when.prop.name));
+        if (when.prop.in && (value === void 0 || !when.prop.in.includes(value))) continue;
+        if (when.prop.notIn && (attr(when.prop.name) && value === void 0 || value !== void 0 && when.prop.notIn.includes(value))) continue;
+      }
+      if (when.classAll?.length) {
+        if (!ui) continue;
+        const text = when.uiKey ? ui.get(when.uiKey) ?? "" : [...ui.values()].filter(Boolean).join(" ");
+        if (!text || !when.classAll.every((pattern) => new RegExp(pattern, "i").test(text))) continue;
+      }
+      report(rule.level, rule.id, rule.message);
+    }
+  }
+  return { checked: tags.length, findings };
+}
+
 // upstream/reborn/src/index.ts
 var kb = new KnowledgeBase(resolveKbDir());
 var instructions = `Reborn-UI \u7EC4\u4EF6\u5E93\u77E5\u8BC6\u5E93\u670D\u52A1\u3002\u8FD9\u662F\u4E00\u4E2A\u53CC\u7AEF\u7EC4\u4EF6\u5E93\uFF1AWeb\uFF08Nuxt/Vue\uFF09\u4E0E UniApp \u4E24\u7AEF\u540C\u540D\u540C\u6784\u3002
@@ -7823,7 +8187,8 @@ var instructions = `Reborn-UI \u7EC4\u4EF6\u5E93\u77E5\u8BC6\u5E93\u670D\u52A1\u
 - \u4E00\u6392\u9875\u7B7E + \u5185\u5BB9\u9762\u677F \u2192 reborn-tabs + RebornTabPane\uFF08title \u4F20\u7A3F\u9762\u6587\u6848\uFF0C\u9009\u4E2D\u6001\u7531\u7EC4\u4EF6\u6309 type / color \u7BA1\uFF0C\u4E0D\u5728 #title \u63D2\u69FD\u91CC\u624B\u52A8\u5207\u989C\u8272\uFF1Bline \u7C7B\u578B\u81EA\u5E26\u5934\u90E8\u5206\u9694\u7EBF\uFF09\u3002RebornTabPane \u8FD9\u7C7B\u4E0E\u76EE\u5F55\u4E0D\u540C\u540D\u7684\u5B50\u7EC4\u4EF6\u5728 Nuxt pathPrefix: true \u4E0B\u81EA\u52A8\u5BFC\u5165\u4F1A\u6539\u540D\uFF0C\u987B\u663E\u5F0F import\u3002
 - \u540C\u4E00\u5BB9\u5668\u91CC\u4E00\u5217\u540C\u540D\u5B9E\u4F8B\uFF08\u5982\u300C\u5206\u985E\u5217\u8868\u300D\xD79\uFF0C\u53D8\u4F53 \u9078\u4E2D / \u672A\u9078\u4E2D\uFF09= \u4E00\u7EC4\u4E92\u65A5\u9009\u62E9 \u2192 \u7EB5\u5411\u7684\u5206\u7C7B\u5217\u8868\u3001\u4FA7\u680F\u5BFC\u822A\u7528\u4E00\u4E2A reborn-menu\uFF08\u6BCF\u9879\u4E00\u4E2A RebornMenuItem\uFF0Cv-model:selected-keys \u7BA1\u5F53\u524D\u9879\uFF0C\u6837\u5F0F\u7ECF ui.root / ui.menu / ui.menuItem\uFF09\uFF0C\u4E0D\u662F\u4E5D\u4E2A\u624B\u5199\u7684 a\uFF1B\u540D\u5B57\u6CA1\u547D\u4E2D\u914D\u65B9\u8868\u65F6 match_design_nodes \u4F1A\u5728 hints \u91CC\u6309\u7ED3\u6784\u63D0\u793A\uFF0C\u5019\u9009\u89C1\u8BE5\u8282\u70B9\u7684 alternatives\u3002
 - \u641C\u7D22\u533A\uFF08\u7AD9\u70B9\u9009\u62E9 + \u8F93\u5165 + \u641C\u7D22\u952E\uFF09\u2192 reborn-search-box \u7684 #leading / #trailing \u63D2\u69FD\uFF1B\u6570\u91CF\u52A0\u51CF \u2192 reborn-input-number\uFF1B\u89C4\u683C\u9879 \u2192 reborn-sku\uFF1B\u60AC\u6D6E\u64CD\u4F5C\u7EC4 \u2192 reborn-fab\uFF1B\u56FE\u6807 / \u5206\u5272\u7EBF\u4E0D\u662F\u7EC4\u4EF6\uFF0C\u7528\u5BFC\u51FA\u7D20\u6750\u6216 border\u3002
-\u5199\u5B8C\u6A21\u677F\u81EA\u67E5\uFF1A\u4E0D\u5F97\u6B8B\u7559\u539F\u751F <button> / <input> / <select>\uFF0C\u4E5F\u4E0D\u5F97\u7528 Button + CSS \u4EFF\u9020\u4E0A\u9762\u8FD9\u4E9B\u590D\u5408\u7EC4\u4EF6\uFF1B\u672C\u5E93\u6CA1\u6709\u7684\uFF08Web \u9875\u811A\u3001\u5361\u7247\u5BB9\u5668\uFF09\u624D\u6309\u7A3F\u9762\u81EA\u5199\u3002
+- \u8282\u70B9\u540D\u770B\u4E0D\u51FA\u662F\u7EC4\u4EF6\u3001\u8981\u9760\u7ED3\u6784\u8BA4\u7684\u51E0\u79CD\uFF1A\u53EA\u6709\u5E95\u8FB9\u4E00\u6761\u7EBF\u7684\u8F93\u5165\uFF08\u5360\u4F4D\u6587\u5B57 + \u4E00\u6761 1px \u7EBF\uFF09\u2192 reborn-input variant="underlined"\uFF0C\u4E0D\u662F\u628A reborn-search-box \u53BB\u6389\u5916\u6846\u518D\u53E6\u753B\u4E00\u6761\u7EBF\uFF1B\u56FE\u6807\u6216\u5934\u50CF\u53F3\u4E0A\u89D2\u538B\u7740\u7684\u6570\u5B57 / \u5706\u70B9 \u2192 reborn-chip\uFF08\u9ED8\u8BA4\u63D2\u69FD\u5305\u4F4F\u5BBF\u4E3B\uFF0Ctext \u4F20\u6570\u5B57\uFF09\uFF1B\u4E00\u5217\u540C\u6B3E\u9879\u91CC\u53EA\u6709\u4E00\u9879\u5E26\u5E95\u8272 \u2192 reborn-menu\uFF1B\u6BCF\u884C\u300C\u6807\u9898 + \u52A0\u51CF\u53F7\u300D\u4E14\u6709\u4E00\u884C\u5C55\u5F00\u7740\u6B63\u6587 \u2192 \u6BCF\u884C\u4E00\u4E2A reborn-collapse\u3002\u8C03\u7528\u65B9\u91CF\u5F97\u5230\u51E0\u4F55\u65F6\uFF0C\u628A\u8FD9\u4E9B\u7ED3\u6784\u4F5C\u4E3A signals \u8FDE\u540C\u7A3F\u9762\u6837\u5F0F style \u4E00\u8D77\u4F20\u7ED9 match_design_nodes\uFF1A\u8FD4\u56DE\u7684 requires \u662F\u5FC5\u987B\u5199\u5728\u6807\u7B7E\u4E0A\u7684\u5C5E\u6027\uFF0Cresolved \u662F\u6309\u7A3F\u9762\u9AD8\u5EA6\u3001\u5706\u89D2\u3001\u63CF\u8FB9\u89E3\u6790\u51FA\u7684 size / shape / variant \u4E0E ui \u8865\u5145\u3002
+\u5199\u5B8C\u6A21\u677F\u81EA\u67E5\uFF1A\u4E0D\u5F97\u6B8B\u7559\u539F\u751F <button> / <input> / <select>\uFF0C\u4E5F\u4E0D\u5F97\u7528 Button + CSS \u4EFF\u9020\u4E0A\u9762\u8FD9\u4E9B\u590D\u5408\u7EC4\u4EF6\uFF1B\u672C\u5E93\u6CA1\u6709\u7684\uFF08Web \u9875\u811A\u3001\u5361\u7247\u5BB9\u5668\uFF09\u624D\u6309\u7A3F\u9762\u81EA\u5199\u3002\u5199\u5B8C\u540E\u628A\u6A21\u677F\u4F20\u7ED9 check_usage\uFF1A\u5B83\u6838\u5BF9 ui \u952E\u662F\u5426\u771F\u5B9E\u5B58\u5728\u3001\u679A\u4E3E\u53D6\u503C\u662F\u5426\u5408\u6CD5\uFF0C\u5E76\u6307\u51FA\u300C\u7EC4\u4EF6\u6709\u73B0\u6210\u53D8\u4F53\u5374\u7528 ui \u8986\u76D6\u786C\u6539\u300D\u7684\u5199\u6CD5\u3002
 
 \u6539\u7EC4\u4EF6\u6837\u5F0F\uFF08\u989C\u8272\u3001\u80CC\u666F\u3001\u8FB9\u6846\u3001\u5706\u89D2\u3001\u5C3A\u5BF8\u3001\u95F4\u8DDD\u3001\u5B57\u4F53\u3001\u9634\u5F71\u3001hover \u6001\u3001\u67D0\u4E2A\u5185\u90E8\u90E8\u4EF6\u7684\u5916\u89C2\uFF09\u4F9D\u6B21\u8D70\uFF1A\u2460 \u5DF2\u6709 prop \u53D6\u503C\u80FD\u8868\u8FBE\u7684\u76F4\u63A5\u7528 prop\uFF08\u5982 Badge \u7684\u80F6\u56CA\u5F62\u7528 round\uFF0C\u4E0D\u5199 rounded-full\uFF09\uFF1B\u2461 \u5176\u4F59\u4E00\u5F8B\u7528\u7EC4\u4EF6\u7684 ui \u5BF9\u8C61 :ui="{ \u952E: '\u7C7B\u540D' }"\uFF0C\u6700\u5916\u5C42\u5143\u7D20\u4E5F\u7528 ui \u91CC\u7684 root / base \u952E\u800C\u4E0D\u662F\u88F8 class\uFF1B\u2462 \u53EA\u6709 ui \u91CC\u6CA1\u6709\u5BF9\u5E94\u90E8\u4EF6\u7684\u952E\u65F6\uFF0C\u624D\u9000\u56DE\u63D2\u69FD + \u5DE5\u5177\u7C7B\uFF0C\u5E76\u8BF4\u660E\u8BE5\u7EC4\u4EF6\u6CA1\u6709\u66B4\u9732\u8FD9\u4E2A\u952E\u3002\u53EF\u7528\u952E\u770B get_component \u8FD4\u56DE\u7684 ui \u6761\u76EE\u63CF\u8FF0\uFF08\u300C\u53EF\u7528\u952E\uFF08\u4ECE\u6E90\u7801\u62BD\u53D6\uFF0C\u4EE5\u6B64\u4E3A\u51C6\uFF09\u300D\uFF0C\u6309 Web / UniApp \u5206\u7AEF\uFF0C\u4E24\u7AEF\u4E0D\u901A\u7528\uFF1B\u5E26 * \u7684\u952E\u5728\u586B\u4E86\u540C\u540D\u63D2\u69FD\u540E\u5931\u6548\uFF09\uFF0C\u53EA\u80FD\u7528\u5217\u51FA\u7684\u952E\uFF0C\u731C\u7684\u952E\u9759\u9ED8\u65E0\u6548\u3002\u4E0D\u8981\u7528\u5957\u4E00\u5C42 div/span\u3001:deep()\u3001\u6539\u7EC4\u4EF6\u5185\u90E8\u7C7B\u540D\u7684\u5199\u6CD5\u6539\u6837\u5F0F\u2014\u2014\u8FD9\u4E9B\u7ED5\u5F00\u4E86\u7EC4\u4EF6\u7684\u6837\u5F0F\u63A5\u53E3\uFF0C\u7EC4\u4EF6\u5347\u7EA7\u5C31\u4F1A\u5931\u6548\u3002
 
@@ -8000,7 +8365,27 @@ server.tool(
         children: external_exports.array(external_exports.string()).optional().describe("\u76F4\u63A5\u5B50\u8282\u70B9\u540D\uFF1B\u8282\u70B9\u540D\u672C\u8EAB\u6CA1\u547D\u4E2D\u65F6\u624D\u53C2\u4E0E\u5339\u914D"),
         group: external_exports.string().optional().describe("\u6240\u5C5E\u533A\u5757\u540D\u6216 id\uFF1B\u540C\u533A\u5757\u7684\u7F29\u7565\u56FE\u3001\u4E3B\u56FE\u3001\u7BAD\u5934\u4F1A\u88AB\u5408\u5E76\u6210\u56FE\u5ECA\u63D0\u793A"),
         count: external_exports.number().int().min(1).optional().describe("\u540C\u540D\u5B9E\u4F8B\u4E2A\u6570\uFF0C\u7F3A\u7701\u6309\u672C\u6B21\u8F93\u5165\u7EDF\u8BA1"),
-        fill: external_exports.literal("image").optional().describe("\u8282\u70B9\u586B\u5145\u662F\u56FE\u7247\uFF08\u4F4D\u56FE / image fill\uFF09\u65F6\u4F20 image\uFF1A\u81EA\u52A8\u547D\u540D\u7684\u300C\u77E9\u5F62 58848\u300D\u8FD9\u7C7B\u56FE\u7247\u56FE\u5C42\u4F1A\u6309 reborn-image \u5904\u7406")
+        fill: external_exports.literal("image").optional().describe("\u8282\u70B9\u586B\u5145\u662F\u56FE\u7247\uFF08\u4F4D\u56FE / image fill\uFF09\u65F6\u4F20 image\uFF1A\u81EA\u52A8\u547D\u540D\u7684\u300C\u77E9\u5F62 58848\u300D\u8FD9\u7C7B\u56FE\u7247\u56FE\u5C42\u4F1A\u6309 reborn-image \u5904\u7406"),
+        id: external_exports.string().optional().describe("\u8282\u70B9 ID\uFF0C\u539F\u6837\u5E26\u56DE\u7ED3\u679C\u91CC\uFF0C\u65B9\u4FBF\u628A\u5224\u5B9A\u5BF9\u56DE\u8282\u70B9"),
+        signals: external_exports.array(external_exports.string()).optional().describe(
+          "\u7ED3\u6784\u4FE1\u53F7\uFF0C\u4ECE\u8282\u70B9\u7684\u51E0\u4F55\u4E0E\u6837\u5F0F\u5224\u65AD\u5F97\u51FA\uFF1Aunderline-field \u53EA\u6709\u5E95\u8FB9\u4E00\u6761\u7EBF\u7684\u8F93\u5165\uFF1Bcorner-badge \u56FE\u6807 / \u5934\u50CF\u89D2\u4E0A\u7684\u6570\u5B57\u6216\u5706\u70B9\uFF1Bselection-list \u4E00\u7EC4\u540C\u6B3E\u9879\u91CC\u53EA\u6709\u4E00\u9879\u5E26\u9009\u4E2D\u6837\u5F0F\uFF08facts.orientation \u4F20 vertical / horizontal\uFF09\uFF1Baccordion \u6BCF\u884C\u6807\u9898 + \u5C55\u5F00\u6536\u8D77\u56FE\u6807\u7684\u5217\u8868\uFF1Bselect-trigger \u6587\u5B57 + \u4E0B\u62C9\u7BAD\u5934\u7684\u89E6\u53D1\u5668\u3002\u547D\u4E2D\u4FE1\u53F7\u89C4\u5219\u65F6\u4F18\u5148\u4E8E\u8282\u70B9\u540D"
+        ),
+        facts: external_exports.record(external_exports.union([external_exports.string(), external_exports.number(), external_exports.boolean()])).optional().describe('\u4FE1\u53F7\u9644\u5E26\u7684\u4E8B\u5B9E\uFF0C\u5982 {"orientation": "vertical", "members": 5}'),
+        style: external_exports.object({
+          width: external_exports.number().optional(),
+          height: external_exports.number().optional(),
+          radius: external_exports.number().optional().describe("\u6700\u5927\u7684\u4E00\u4E2A\u5706\u89D2\uFF08px\uFF09"),
+          background: external_exports.string().optional().describe("\u5E95\u8272 #rrggbb\uFF1B\u900F\u660E\u6216\u6CA1\u6709\u65F6\u4E0D\u4F20"),
+          border: external_exports.enum(["all", "bottom", "none"]).optional().describe("\u63CF\u8FB9\u4F4D\u7F6E\uFF1A\u56DB\u8FB9 / \u53EA\u6709\u5E95\u8FB9 / \u6CA1\u6709"),
+          padding: external_exports.tuple([external_exports.number(), external_exports.number(), external_exports.number(), external_exports.number()]).optional().describe("\u5185\u8FB9\u8DDD [\u4E0A, \u53F3, \u4E0B, \u5DE6]"),
+          gap: external_exports.number().optional(),
+          fontSize: external_exports.number().optional(),
+          sizing: external_exports.object({
+            width: external_exports.enum(["hug", "fixed", "fill"]).optional(),
+            height: external_exports.enum(["hug", "fixed", "fill"]).optional()
+          }).optional().describe("\u81EA\u52A8\u5E03\u5C40\u7684\u5BBD\u9AD8\u53D6\u503C\u65B9\u5F0F\uFF1Ahug \u968F\u5185\u5BB9\u3001fixed \u5199\u6B7B\u3001fill \u5360\u6EE1")
+        }).optional().describe("\u7A3F\u9762\u5B9E\u6D4B\u6837\u5F0F\uFF08px\uFF09\u3002\u4F20\u4E86\u5C31\u4F1A\u5728\u7ED3\u679C\u7684 resolved \u91CC\u7ED9\u51FA\u6309\u6837\u5F0F\u89E3\u6790\u7684 size / shape / variant \u4E0E ui \u8865\u5145\u5199\u6CD5"),
+        text: external_exports.string().optional().describe("\u8282\u70B9\u81EA\u8EAB\u7684\u6587\u5B57\uFF0C\u5982\u89D2\u6807\u4E0A\u7684\u6570\u5B57\u3001\u8F93\u5165\u6846\u7684\u5360\u4F4D\u6587\u6848")
       })
     ).min(1).max(500).describe("\u4E00\u6279\u8282\u70B9\uFF0C\u5EFA\u8BAE\u6574\u9875\u6216\u6574\u5757\u4E00\u6B21\u4F20\u5165\uFF0C\u56FE\u5ECA\u8FD9\u7C7B\u6574\u4F53\u5173\u7CFB\u624D\u5224\u65AD\u5F97\u51FA\u6765"),
     platform: external_exports.enum(["web", "uniapp"]).optional().describe("\u76EE\u6807\u7AEF\uFF1B\u4F20\u4E86\u4F1A\u628A\u4EC5\u53E6\u4E00\u7AEF\u53EF\u7528\u7684\u7EC4\u4EF6\u6807\u4E3A\u4E0D\u53EF\u7528\u5E76\u7ED9\u66FF\u4EE3\u5019\u9009")
@@ -8008,11 +8393,32 @@ server.tool(
   async ({ nodes, platform }) => {
     const result = matchDesignNodes(kb.designPatterns(), kb.list(), nodes, {
       platform,
-      getComponent: (id) => kb.get(id)
+      getComponent: (id) => kb.get(id),
+      signals: kb.designSignals(),
+      traits: kb.designTraits()
     });
     return jsonResult({
       ...result,
-      nextSteps: "\u5BF9\u6BCF\u4E2A component\uFF08\u542B with \u91CC\u7684\u914D\u5957\u7EC4\u4EF6\uFF09\u8C03 get_component(id, platform) \u6838\u5BF9 props / slots / ui \u952E\uFF0C\u518D get_component_example \u53D6\u793A\u4F8B\uFF1B\u6309 recipe \u5B9E\u73B0\uFF0Cuses \u4E4B\u5916\u7684 prop / \u63D2\u69FD / ui \u952E\u4E00\u5F8B\u4EE5 get_component \u8FD4\u56DE\u4E3A\u51C6\u3002status=search \u7684\u5019\u9009\u8981\u5148\u8BFB whenToUse / whenNotToUse \u518D\u51B3\u5B9A\uFF1B\u5E26 selectionGroup \u7684\u8282\u70B9\u662F\u4E00\u7EC4\u4E92\u65A5\u9009\u62E9\uFF0C\u6309 note \u91CC\u7684\u6392\u5E03\u8BF4\u660E\u4ECE alternatives \u91CC\u9009\u4E00\u4E2A\u7EC4\u4EF6\u6574\u7EC4\u5B9E\u73B0\uFF1Bignore \u7684\u8282\u70B9\u7528\u5BFC\u51FA\u7D20\u6750\uFF1Bcustom / unmapped \u7684\u6309\u7A3F\u9762\u81EA\u5199\u5E76\u5728\u5B9E\u73B0\u6E05\u5355\u91CC\u8BF4\u660E\u3002"
+      nextSteps: "\u5BF9\u6BCF\u4E2A component\uFF08\u542B with \u91CC\u7684\u914D\u5957\u7EC4\u4EF6\uFF09\u8C03 get_component(id, platform) \u6838\u5BF9 props / slots / ui \u952E\uFF0C\u518D get_component_example \u53D6\u793A\u4F8B\uFF1B\u6309 recipe \u5B9E\u73B0\uFF0Cuses \u4E4B\u5916\u7684 prop / \u63D2\u69FD / ui \u952E\u4E00\u5F8B\u4EE5 get_component \u8FD4\u56DE\u4E3A\u51C6\u3002source=signal \u7684\u8282\u70B9\u662F\u6309\u7A3F\u9762\u7ED3\u6784\u5224\u5B9A\u7684\uFF0C\u4F18\u5148\u4E8E\u8282\u70B9\u540D\uFF1Brequires \u91CC\u7684\u5C5E\u6027\u5FC5\u987B\u539F\u6837\u5199\u5728\u7EC4\u4EF6\u6807\u7B7E\u4E0A\uFF1Bresolved.attrs / resolved.ui \u662F\u6309\u7A3F\u9762\u9AD8\u5EA6\u3001\u5706\u89D2\u3001\u63CF\u8FB9\u89E3\u6790\u51FA\u7684\u53D6\u503C\uFF0C\u7167\u5199\u540E\u518D\u7528 ui \u8865\u5176\u4F59\u5DEE\u5F02\uFF0C\u5199\u5B8C\u6A21\u677F\u8C03 check_usage \u81EA\u67E5\u3002status=search \u7684\u5019\u9009\u8981\u5148\u8BFB whenToUse / whenNotToUse \u518D\u51B3\u5B9A\uFF1B\u5E26 selectionGroup \u7684\u8282\u70B9\u662F\u4E00\u7EC4\u4E92\u65A5\u9009\u62E9\uFF0C\u6309 note \u91CC\u7684\u6392\u5E03\u8BF4\u660E\u4ECE alternatives \u91CC\u9009\u4E00\u4E2A\u7EC4\u4EF6\u6574\u7EC4\u5B9E\u73B0\uFF1Bignore \u7684\u8282\u70B9\u7528\u5BFC\u51FA\u7D20\u6750\uFF1Bcustom / unmapped \u7684\u6309\u7A3F\u9762\u81EA\u5199\u5E76\u5728\u5B9E\u73B0\u6E05\u5355\u91CC\u8BF4\u660E\u3002"
+    });
+  }
+);
+server.tool(
+  "check_usage",
+  "\u68C0\u67E5\u4E00\u6BB5 Vue \u6A21\u677F\uFF08\u6216\u6574\u4EFD .vue\uFF09\u91CC Reborn \u7EC4\u4EF6\u7684\u7528\u6CD5\uFF1Aui \u5BF9\u8C61\u91CC\u7684\u952E\u662F\u5426\u662F\u7EC4\u4EF6\u771F\u5B9E\u6D88\u8D39\u7684\u952E\uFF08\u5199\u9519\u7684\u952E\u9759\u9ED8\u65E0\u6548\uFF09\u3001\u5199\u6B7B\u7684\u679A\u4E3E\u53D6\u503C\u662F\u5426\u5408\u6CD5\uFF0C\u4EE5\u53CA\u77E5\u8BC6\u5E93\u767B\u8BB0\u7684\u7ED5\u884C\u5199\u6CD5\u2014\u2014\u7EC4\u4EF6\u6709\u73B0\u6210\u7684\u53D8\u4F53\u6216\u53E6\u6709\u4E13\u95E8\u7EC4\u4EF6\uFF0C\u5374\u7528 ui \u8986\u76D6\u3001\u624B\u5199\u72B6\u6001\u786C\u62FC\uFF08\u53BB\u6389\u641C\u7D22\u6846\u5916\u6846\u518D\u53E6\u753B\u5E95\u7EBF\u3001\u6309\u94AE + aria-expanded \u5145\u5F53\u6298\u53E0\u9762\u677F\uFF09\u3002\u5199\u5B8C\u6216\u6539\u5B8C\u6A21\u677F\u540E\u8C03\u7528\uFF0Cerror \u5FC5\u987B\u4FEE\uFF0Cwarn \u9700\u786E\u8BA4\u3002",
+  {
+    template: external_exports.string().min(1).max(4e5).describe("\u6A21\u677F\u7247\u6BB5\u6216\u6574\u4EFD .vue \u6E90\u7801\uFF1B\u4F20\u6574\u4EFD\u65F6\u4F1A\u5230 <script> \u91CC\u89E3\u6790 :ui \u7ED1\u5B9A\u7684\u5BF9\u8C61\u5E38\u91CF"),
+    platform: external_exports.enum(["web", "uniapp"]).optional().describe("\u76EE\u6807\u7AEF\uFF0C\u9ED8\u8BA4 web\uFF1B\u4E24\u7AEF\u7684 ui \u952E\u4E0E\u679A\u4E3E\u53D6\u503C\u4E0D\u540C")
+  },
+  async ({ template, platform }) => {
+    const report = lintTemplate(template, kb, { platform });
+    return jsonResult({
+      ...report,
+      summary: {
+        error: report.findings.filter((f) => f.level === "error").length,
+        warn: report.findings.filter((f) => f.level === "warn").length
+      },
+      nextSteps: report.findings.length ? "\u9010\u6761\u4FEE\u6B63\uFF1Aui-key \u6362\u6210 get_component \u8FD4\u56DE\u7684\u771F\u5B9E\u952E\uFF1Bprop-value \u6362\u6210\u53EF\u9009\u503C\uFF1B\u5176\u4F59\u89C4\u5219\u6309 message \u6539\u7528\u5BF9\u5E94\u7684\u53D8\u4F53\u6216\u7EC4\u4EF6\uFF0C\u6539\u5B8C\u91CD\u65B0\u68C0\u67E5\u3002" : "\u6CA1\u6709\u53D1\u73B0\u7528\u6CD5\u95EE\u9898\u3002\u9759\u6001\u68C0\u67E5\u53EA\u8986\u76D6\u5199\u6B7B\u7684\u53D6\u503C\u4E0E ui \u5B57\u9762\u91CF\uFF0C\u7ED1\u5B9A\u5230\u53D8\u91CF\u7684\u90E8\u5206\u4ECD\u9700\u81EA\u884C\u6838\u5BF9\u3002"
     });
   }
 );

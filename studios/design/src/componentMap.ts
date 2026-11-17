@@ -32,6 +32,10 @@ export interface ComponentRule {
   deep?: boolean
   /** 深匹配时同一区块里至少要有这么多节点命中才算（如问答列表要有多行问题），避免页脚里的「常見問題」链接之类单个文字误命中。 */
   minPerBlock?: number
+  /** 必须出现在组件标签上的写法（如 variant="underlined"）；来自知识库的结构判定，check 逐项核对。项目映射表文件里不写这个字段。 */
+  requires?: string[]
+  /** 规则来源：signal = 知识库按稿面结构判定，knowledge = 知识库按实例名给出的建议；缺省是映射表里的规则。 */
+  origin?: 'signal' | 'knowledge'
 }
 
 /**
@@ -126,14 +130,27 @@ export function matchInstance(rules: readonly ComponentRule[], name: string): Co
 }
 
 export interface MappingGroup { name: string; nodeIds: string[] }
-export interface MappingHit extends MappingGroup { rule: ComponentRule }
+/** 按稿面样式解析出的组件取值：写在标签上的属性、ui 键的补充与说明。 */
+export interface MappingUsage { nodeId: string; attrs: string[]; ui: string[]; notes: string[] }
+export interface MappingHit extends MappingGroup {
+  rule: ComponentRule
+  /** 结构判定的依据（如「一列 5 个同款项，只有第 1 项带底色」）。 */
+  evidence?: string
+  /** 命中节点按稿面高度、圆角、描边解析出的取值，最多列几种不同的结果。 */
+  usage?: MappingUsage[]
+}
 /** 预读实例与映射表的匹配结果：同名实例合并，保留全部节点 ID。 */
 export interface MappingResult {
   /** 去重后的实例数。 */
   total: number
+  /** 必须按规则实现的命中：映射表规则，以及知识库的结构判定（rule.origin 为 signal）。 */
   matched: MappingHit[]
   ignored: MappingHit[]
   unmatched: MappingGroup[]
+  /** 知识库按实例名给出的建议：不强制用哪个组件，但 plan 里必须逐个表态（采用，或登记 project / custom 并说明依据）。 */
+  suggested?: MappingHit[]
+  /** 不强制的结构提示与选型提示（低置信的结构、互斥选择组的候选等）。 */
+  hints?: string[]
 }
 
 /** 只需区块里的组件实例：manifest、预读选出的区块或测试构造的对象都能传。 */
@@ -197,8 +214,20 @@ export function componentMapSkeleton(): object {
 
 /** 一条规则的配方文字：组件（props 写法；ui 键；插槽；注意事项）。 */
 export function ruleRecipe(rule: ComponentRule): string {
-  const parts = [rule.props, rule.ui && 'ui：' + rule.ui, rule.slots && '插槽：' + rule.slots, rule.with?.length && '伴随：' + rule.with.join(' + '), rule.notes && '注意：' + rule.notes].filter(Boolean)
+  const parts = [rule.requires?.length && '标签上必须写 ' + rule.requires.join(' '), rule.props, rule.ui && 'ui：' + rule.ui, rule.slots && '插槽：' + rule.slots, rule.with?.length && '伴随：' + rule.with.join(' + '), rule.notes && '注意：' + rule.notes].filter(Boolean)
   return rule.component + (parts.length ? '（' + parts.join('；') + '）' : '')
+}
+
+/** 一处命中里「按稿面解析的取值」的文字：同样的结果只写一次，最多三种。 */
+export function usageText(hit: MappingHit): string {
+  const seen = new Set<string>(), parts: string[] = []
+  for (const usage of hit.usage ?? []) {
+    const text = [usage.attrs.join(' '), usage.ui.length ? 'ui ' + usage.ui.join('、') : '', usage.notes.join('；')].filter(Boolean).join('；')
+    if (!text || seen.has(text)) continue
+    seen.add(text)
+    if (parts.length < 3) parts.push((hit.nodeIds.length > 1 ? usage.nodeId + '：' : '') + text)
+  }
+  return parts.join(' ｜ ')
 }
 
 /** 提示词【组件】段的映射部分：映射表全文、本次命中与待映射实例；原生控件禁令等通用要求由提示词自身接在后面。 */
@@ -210,11 +239,16 @@ export function componentSection(map: PromptMapping): string {
   ]
   const result = map.result
   if (result) {
-    const hits = result.matched.map(hit => '「' + hit.name + '」（' + hit.nodeIds.join('、') + '）→ ' + ruleRecipe(hit.rule))
+    const describe = (hit: MappingHit) => (hit.rule.origin === 'signal' ? hit.name : '「' + hit.name + '」') + '（' + hit.nodeIds.join('、') + '）' + (hit.evidence ? '【' + hit.evidence + '】' : '') + '→ ' + ruleRecipe(hit.rule) + (usageText(hit) ? '〔按稿面取值：' + usageText(hit) + '〕' : '')
+    const structural = result.matched.filter(hit => hit.rule.origin === 'signal')
+    if (structural.length) lines.push('结构判定（' + structural.length + ' 处，工作室按导出结构的几何与样式识别，再交给 Reborn 知识库定组件；节点名看不出是组件，但结构确凿，优先于按名字的规则）：' + structural.map(describe).join('；') + '。这些节点与映射命中同样强制：plan 里按所列组件登记（node 写上对应节点 ID），「标签上必须写」的属性原样写在组件标签上，data-design 标在该组件标签上（列出的任一节点 ID 均可）；check 会核对组件标签与这些属性。')
+    const hits = result.matched.filter(hit => hit.rule.origin !== 'signal').map(describe)
     const pending = result.unmatched.map(group => '「' + group.name + '」（' + group.nodeIds.join('、') + '）')
-    lines.push('预读命中（' + result.matched.length + ' 种实例）：' + (hits.length ? hits.join('；') : '无') + '。命中的实例必须按表中的组件与配方实现，不得改用其他组件或自写；design_review(stage=plan) 对命中实例不接受 source=custom 或原生标签，只有用户在需求里写「允许自定义 <节点名>」才放行，缺失的组件由工作室在实现前安装；带「伴随」的规则要求伴随组件也出现在同一实现文件里。表里的 props 配方是最低要求，实际取值仍以项目内已安装组件的 config 为准，design_review(stage=check) 会按 data-design 定位到渲染该实例的文件核对标签与取值。'
+    lines.push('预读命中（' + hits.length + ' 种实例）：' + (hits.length ? hits.join('；') : '无') + '。命中的实例必须按表中的组件与配方实现，不得改用其他组件或自写；design_review(stage=plan) 对命中实例不接受 source=custom 或原生标签，只有用户在需求里写「允许自定义 <节点名>」才放行，缺失的组件由工作室在实现前安装；带「伴随」的规则要求伴随组件也出现在同一实现文件里。表里的 props 配方是最低要求，实际取值仍以项目内已安装组件的 config 为准，design_review(stage=check) 会按 data-design 定位到渲染该实例的文件核对标签与取值。'
       + '待映射实例（' + result.unmatched.length + ' 种，未命中映射表）：' + (pending.length ? pending.join('、') : '无') + '。只有这些实例才允许按上面的通用规则与项目已有组件选型；选定后在实现清单「待映射组件」写明所选组件，并建议把规则补进 ' + map.path + ' 供下次复用。'
       + (result.ignored.length ? '已按忽略规则跳过：' + result.ignored.map(group => group.name).join('、') + '。' : ''))
+    if (result.suggested?.length) lines.push('知识库建议（' + result.suggested.length + ' 种实例，映射表没有覆盖，Reborn 知识库按实例名与变体给出组件）：' + result.suggested.map(describe).join('；') + '。plan 里逐个表态：采用就按该组件登记（node 写上节点 ID）；不采用要登记为 project（附已有源码路径）或 custom（写明知识库建议的组件为什么不适用），不能略过。')
+    if (result.hints?.length) lines.push('选型提示（不强制，按稿面确认）：' + result.hints.join('；') + '。')
   }
   return lines.join('')
 }
@@ -226,7 +260,16 @@ export function unmappedSection(result: MappingResult, path = COMPONENT_MAP_PATH
     lines.push('待映射（实现时填写所选组件，并把规则补进映射表）：')
     for (const group of result.unmatched) lines.push('- ' + group.name + '（' + group.nodeIds.join('、') + '）：')
   } else lines.push('全部实例名已命中映射表。')
-  if (result.matched.length) lines.push('', '已命中：' + result.matched.map(hit => hit.name + ' → ' + hit.rule.component).join('；'))
+  const structural = result.matched.filter(hit => hit.rule.origin === 'signal'), mapped = result.matched.filter(hit => hit.rule.origin !== 'signal')
+  if (structural.length) {
+    lines.push('', '结构判定（按导出结构识别，必须按所列组件实现）：')
+    for (const hit of structural) lines.push('- ' + hit.name + '（' + hit.nodeIds.slice(0, 4).join('、') + (hit.nodeIds.length > 4 ? ' 等 ' + hit.nodeIds.length + ' 个节点' : '') + '）→ ' + hit.rule.component + (hit.rule.requires?.length ? '，标签上必须写 ' + hit.rule.requires.join(' ') : '') + (hit.evidence ? '；依据：' + hit.evidence : ''))
+  }
+  if (result.suggested?.length) {
+    lines.push('', '知识库建议（采用，或登记 project / custom 并说明依据）：')
+    for (const hit of result.suggested) lines.push('- ' + hit.name + '（' + hit.nodeIds.slice(0, 4).join('、') + '）→ ' + hit.rule.component + '：')
+  }
+  if (mapped.length) lines.push('', '已命中：' + mapped.map(hit => hit.name + ' → ' + hit.rule.component).join('；'))
   if (result.ignored.length) lines.push('', '已忽略（图标 / 素材）：' + result.ignored.map(hit => hit.name).join('、'))
   return lines.join('\n')
 }

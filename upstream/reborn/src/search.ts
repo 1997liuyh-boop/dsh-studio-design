@@ -1,4 +1,4 @@
-import type { KbComponent, KbDesignPattern, KbIndexEntry } from "./kb.js";
+import type { KbComponent, KbDesignPattern, KbDesignSignal, KbDesignTrait, KbIndexEntry, KbTraitCondition } from "./kb.js";
 
 /**
  * 组件加权检索：id 精确 > title 精确 > 别名精确 > id 包含 > title 包含 > 别名包含 > tags > description。
@@ -79,6 +79,45 @@ export interface DesignNodeInput {
    * 名字匹配不到图片规则，会被当成排版容器；标了 image 时，名字没命中组件规则（或只命中容器类规则）就按图片处理。
    */
   fill?: "image";
+  /** 节点 ID，原样带回结果，方便调用方把判定对回节点 */
+  id?: string;
+  /**
+   * 结构信号：读取设计稿的一方从几何与样式里算出来的结构特征
+   * （underline-field / corner-badge / selection-list / accordion / select-trigger）。
+   * 命中信号规则且不是低置信时优先于节点名——名字是设计师随手起的，结构不会骗人。
+   */
+  signals?: string[];
+  /** 信号附带的事实（orientation: "vertical"、members: 5），供信号规则的 when 进一步限定 */
+  facts?: Record<string, string | number | boolean>;
+  /** 稿面实测样式，用来把「看到的样子」解析成组件取值（variant / shape / size） */
+  style?: DesignNodeStyle;
+  /** 节点自身的文字（角标数字、占位文案） */
+  text?: string;
+}
+
+/** 稿面实测样式：单位 px，颜色 #rrggbb；只传量得到的字段 */
+export interface DesignNodeStyle {
+  width?: number;
+  height?: number;
+  /** 最大的一个圆角 */
+  radius?: number;
+  /** 底色；透明或没有底色时不传 */
+  background?: string;
+  /** 描边位置：all 四边、bottom 只有底边（含紧贴其下的一条 1px 线）、none 没有 */
+  border?: "all" | "bottom" | "none";
+  padding?: [number, number, number, number];
+  gap?: number;
+  fontSize?: number;
+  sizing?: { width?: "hug" | "fixed" | "fill"; height?: "hug" | "fixed" | "fill" };
+}
+
+/** 稿面样式解析出的组件写法 */
+export interface ResolvedUsage {
+  /** 直接写在标签上的属性，如 variant="underlined"、round */
+  attrs: string[];
+  /** ui 键的补充写法，如 group: h-[44px] */
+  ui: string[];
+  notes: string[];
 }
 
 export type DesignMatchStatus = "pattern" | "search" | "ignore" | "custom" | "unmapped";
@@ -103,6 +142,17 @@ export interface DesignNodeMatch {
   /** 同区块同名实例的变体在「选中 / 未选中」间切换：整组是一个选择类组件，候选见 alternatives */
   selectionGroup?: boolean;
   note?: string;
+  /** 输入里的节点 ID，原样带回 */
+  id?: string;
+  /** 判定依据：signal 按结构、name 按节点名与变体、children 按子节点名、image 按图片填充 */
+  source?: "signal" | "name" | "children" | "image";
+  /** 命中的结构信号与信号规则 */
+  signal?: string;
+  signalId?: string;
+  /** 必须出现在组件标签上的写法（variant="underlined"），可用于硬性核对 */
+  requires?: string[];
+  /** 按稿面样式解析出的取值：属性、ui 补充与说明 */
+  resolved?: ResolvedUsage;
 }
 
 export interface DesignMatchResult {
@@ -156,16 +206,90 @@ const SELECTION_GROUP_CANDIDATES: Array<{ id: string; when: string }> = [
   { id: "reborn-radio", when: "表单里从几个选项中取一个值" },
 ];
 
+/** 节点的外形：正圆、胶囊或其余；量不到高度时无法判断，返回 undefined */
+function shapeOf(style: DesignNodeStyle): "circle" | "pill" | "square" | undefined {
+  if (!style.height) return undefined;
+  if ((style.radius ?? 0) * 2 < style.height) return "square";
+  return style.width !== undefined && Math.abs(style.width - style.height) <= 1 ? "circle" : "pill";
+}
+
+/** 一条特征条件是否成立：条件里给出的键全部满足；节点没量到对应字段的键一律算不满足 */
+export function traitMatches(when: KbTraitCondition, node: DesignNodeInput): boolean {
+  const style = node.style ?? {};
+  const text = (node.text ?? "").trim();
+  if (when.border !== undefined && style.border !== when.border) return false;
+  if (when.background !== undefined && when.background !== !!style.background) return false;
+  if (when.shape !== undefined && shapeOf(style) !== when.shape) return false;
+  if (when.width !== undefined && style.sizing?.width !== when.width) return false;
+  if (when.text === "digits" && !/^\d{1,4}\+?$/.test(text)) return false;
+  if (when.text === "none" && text) return false;
+  if (when.text === "any" && !text) return false;
+  if (when.signal !== undefined && !node.signals?.includes(when.signal)) return false;
+  return true;
+}
+
 /**
- * 把一批设计稿节点落到组件：先按配方表（具体规则在前）匹配节点名与变体值，
- * 没命中再用子节点名试一次，仍没命中退回别名检索，最后标为 unmapped。
+ * 把稿面样式解析成组件写法：先按特征规则定 variant / shape 等取值（先命中的规则先占住同名属性），
+ * 再按高度选 size——高度不在档位时取最接近的一档，并用 sizeKey 指定的 ui 键补 h-[…]；
+ * 最后按自动布局的取值方式说明宽度该不该写死。没有任何可说的内容时返回 undefined。
+ */
+export function resolveUsage(trait: KbDesignTrait | undefined, node: DesignNodeInput): ResolvedUsage | undefined {
+  const style = node.style ?? {};
+  const set = new Map<string, string | boolean>();
+  const ui: string[] = [];
+  const notes: string[] = [];
+  for (const rule of trait?.rules ?? []) {
+    if (!traitMatches(rule.when, node)) continue;
+    let applied = false;
+    for (const [key, value] of Object.entries(rule.set)) {
+      if (set.has(key)) continue;
+      const resolved = value === "$text" ? (node.text ?? "").trim() : value;
+      if (resolved === "" || resolved === false) continue;
+      set.set(key, resolved);
+      applied = true;
+    }
+    if (applied && rule.note) notes.push(rule.note);
+  }
+  const sizes = trait?.sizesWhen && !traitMatches(trait.sizesWhen, node) ? [] : Object.entries(trait?.sizes ?? {});
+  if (sizes.length && style.height && !set.has("size")) {
+    const exact = sizes.find(([, height]) => height === style.height);
+    if (exact) set.set("size", exact[0]);
+    else {
+      const [nearest] = [...sizes].sort((a, b) => Math.abs(a[1] - style.height!) - Math.abs(b[1] - style.height!))[0];
+      set.set("size", nearest);
+      const ladder = sizes.map(([name, height]) => `${name} ${height}`).join(" / ");
+      if (trait?.sizeKey) ui.push(`${trait.sizeKey}: h-[${style.height}px]`);
+      notes.push(`稿面高 ${style.height}px 不在 size 档位（${ladder}）：取最接近的 ${nearest}${trait?.sizeKey ? `，高度用 ui.${trait.sizeKey} 写 h-[${style.height}px]` : ""}，不要另套一层容器撑高`);
+    }
+  }
+  if (style.sizing?.width === "fixed" && style.width) notes.push(`稿面定宽 ${style.width}px：宽度写死 w-[${style.width}px]，文字与图标按稿面的对齐方式摆放，不要改成随内容撑开`);
+  else if (style.sizing?.width === "hug") notes.push("宽度由内容与内边距撑开：不写 w-[…] / min-w-[…]");
+  else if (style.sizing?.width === "fill") notes.push("宽度占满父容器：用 w-full / flex-1，不写死像素值");
+  const attrs = [...set].map(([key, value]) => (value === true ? key : `${key}="${value}"`));
+  return attrs.length || ui.length || notes.length ? { attrs, ui, notes } : undefined;
+}
+
+/** matchDesignNodes 的可选输入：目标端、组件详情读取，以及结构信号规则与特征取值表 */
+export interface DesignMatchOptions {
+  platform?: "web" | "uniapp";
+  getComponent?: (id: string) => KbComponent | null;
+  /** 结构信号规则（index.json 的 designSignals）；不传则节点上的 signals 不参与判定 */
+  signals?: KbDesignSignal[];
+  /** 稿面特征 → 组件取值（index.json 的 designTraits）；不传则不解析 resolved */
+  traits?: KbDesignTrait[];
+}
+
+/**
+ * 把一批设计稿节点落到组件：节点带结构信号且命中信号规则（非低置信）时按结构判定；
+ * 否则按配方表（具体规则在前）匹配节点名与变体值，没命中再用子节点名试一次，
+ * 仍没命中退回别名检索，最后标为 unmapped。节点带了稿面样式时，再把样式解析成组件取值（resolved）。
  * 图廊、主图、箭头这组关系在节点级别看不出来，命中图廊规则后再做一次整体提示。
  */
 export function matchDesignNodes(
   patterns: KbDesignPattern[],
   entries: KbIndexEntry[],
   nodes: DesignNodeInput[],
-  options: { platform?: "web" | "uniapp"; getComponent?: (id: string) => KbComponent | null } = {},
+  options: DesignMatchOptions = {},
 ): DesignMatchResult {
   const entryById = new Map(entries.map((e) => [e.id, e]));
   const compiled = patterns.map((p) => ({ pattern: p, tests: p.match.map(compileMatcher) }));
@@ -213,8 +337,38 @@ export function matchDesignNodes(
     return null;
   };
 
-  const matches: DesignNodeMatch[] = [];
-  for (const node of nodes) {
+  const patternById = new Map(patterns.map((p) => [p.id, p]));
+
+  /** 节点的结构信号命中的第一条信号规则：按节点上信号的先后、再按规则表的先后 */
+  const findSignal = (node: DesignNodeInput): { rule: KbDesignSignal; signal: string } | null => {
+    for (const signal of node.signals ?? []) {
+      for (const rule of options.signals ?? []) {
+        if (rule.signal !== signal) continue;
+        const when = Object.entries(rule.when ?? {});
+        if (when.every(([key, value]) => node.facts?.[key] === value)) return { rule, signal };
+      }
+    }
+    return null;
+  };
+
+  /** 信号规则可以借用一条名字规则的 recipe / uses / pitfalls（use），自己的说明排在前面 */
+  const patternOfSignal = (rule: KbDesignSignal): KbDesignPattern => {
+    const base = rule.use ? patternById.get(rule.use) : undefined;
+    return {
+      id: base?.id ?? rule.id,
+      pattern: rule.pattern,
+      match: [],
+      component: rule.component,
+      with: rule.with ?? base?.with,
+      confidence: rule.confidence ?? "high",
+      recipe: [rule.recipe, base?.recipe].filter(Boolean).join(" ") || undefined,
+      imports: [...(rule.imports ?? []), ...(base?.imports ?? [])],
+      uses: rule.uses ?? base?.uses,
+      pitfalls: [...(rule.pitfalls ?? []), ...(base?.pitfalls ?? [])],
+    };
+  };
+
+  const matchOne = (node: DesignNodeInput): DesignNodeMatch => {
     const name = node.name.trim();
     const count = counts.get(`${node.group ?? ""}\u0000${name.toLowerCase()}`) ?? 1;
     const own = findPattern(ownTextOf(node), node.group, false);
@@ -226,9 +380,33 @@ export function matchDesignNodes(
     // 图片填充优先于「排版容器」：自动命名的图片图层、带叠加内容（点赞胶囊、来源图标）的图片框都是一张图
     const imagePattern =
       node.fill === "image" && (!own || own.container || own.ignore) ? patterns.find((p) => p.id === "image") ?? null : null;
-    const pattern = imagePattern ?? byChildren ?? own;
+    const named = imagePattern ?? byChildren ?? own;
+    // 结构信号：高置信的直接取代按名字的判定；低置信的只在名字没有落到任何组件时才采用
+    const signalHit = findSignal(node);
+    const namedComponent = named && !named.ignore && named.component ? named.component : null;
+    const bySignal = !!signalHit && (signalHit.rule.confidence !== "low" || !namedComponent);
+    const pattern = bySignal ? patternOfSignal(signalHit!.rule) : named;
 
     const base: DesignNodeMatch = { name, group: node.group, count, status: "unmapped", component: null, with: [] };
+    if (node.id) base.id = node.id;
+    if (bySignal) {
+      base.source = "signal";
+      base.signal = signalHit!.signal;
+      base.signalId = signalHit!.rule.id;
+      if (signalHit!.rule.requires?.length) base.requires = signalHit!.rule.requires;
+      if (namedComponent && namedComponent !== signalHit!.rule.component) {
+        base.note = `节点名「${name}」按名字会落到 ${namedComponent}，但稿面结构是「${signalHit!.rule.pattern}」，按结构用 ${signalHit!.rule.component}`;
+      }
+    } else if (named) {
+      base.source = imagePattern ? "image" : byChildren ? "children" : "name";
+    }
+    // 低置信的信号让位给名字规则时，结构上的提示仍然带回去（下拉触发器的定宽说明就在信号规则的配方里）
+    if (signalHit && !bySignal) {
+      const rule = signalHit.rule;
+      base.signal = signalHit.signal;
+      base.signalId = rule.id;
+      base.note = `结构上像「${rule.pattern}」（候选 ${[rule.component, ...(rule.alternatives ?? [])].join(" / ")}），本次按节点名落到 ${namedComponent}${rule.recipe ? `；${rule.recipe}` : ""}`;
+    }
 
     if (pattern) {
       const match: DesignNodeMatch = {
@@ -241,8 +419,7 @@ export function matchDesignNodes(
       };
       if (pattern.ignore || !pattern.component) {
         match.status = pattern.ignore ? "ignore" : "custom";
-        matches.push(match);
-        continue;
+        return match;
       }
       const entry = entryById.get(pattern.component);
       if (options.platform && entry?.platforms && !entry.platforms.includes(options.platform)) {
@@ -251,13 +428,12 @@ export function matchDesignNodes(
           .filter((h) => h.id !== pattern.component && h.platforms?.includes(options.platform!))
           .slice(0, 3)
           .map(({ id, title, score }) => ({ id, title, score }));
-        matches.push({
+        return {
           ...match,
           status: "unmapped",
           note: `${pattern.component} 仅 ${entry.platforms.join(" / ")} 端可用，${options.platform} 端没有这个组件`,
           alternatives,
-        });
-        continue;
+        };
       }
       match.status = "pattern";
       match.component = pattern.component;
@@ -273,8 +449,13 @@ export function matchDesignNodes(
       } else if (pattern.imports?.length) {
         match.imports = pattern.imports;
       }
-      matches.push(match);
-      continue;
+      // 低置信的结构判定把其它候选一并列出，由调用方按稿面排布确认
+      if (bySignal && signalHit!.rule.alternatives?.length) {
+        match.alternatives = signalHit!.rule.alternatives
+          .filter((id) => entryById.has(id) && (!options.platform || entryById.get(id)!.platforms?.includes(options.platform)))
+          .map((id) => ({ id, title: entryById.get(id)?.title, score: 0 }));
+      }
+      return match;
     }
 
     // 配方表没覆盖：退回别名检索，给出候选但不下结论
@@ -291,22 +472,32 @@ export function matchDesignNodes(
         || (entry.aliases ?? []).some((alias) => alias.toLowerCase() === key);
     };
     if (alternatives.length && exact(entryById.get(alternatives[0].id))) {
-      matches.push({
+      return {
         ...base,
         status: "search",
         component: alternatives[0].id,
         alternatives,
         note: "配方表没有覆盖这个节点名，按别名检索给出候选；用 get_component 核对 whenToUse / whenNotToUse 后再定，不确定就按稿面自写并在清单里说明",
-      });
-    } else {
-      matches.push({
-        ...base,
-        status: "unmapped",
-        alternatives,
-        note: "没有对应组件：纯文字、排版容器直接用 Tailwind 自写；若它其实是某个组件，把节点名补进 knowledge/design-patterns.json 的 match",
-      });
+      };
     }
-  }
+    return {
+      ...base,
+      status: "unmapped",
+      alternatives,
+      note: "没有对应组件：纯文字、排版容器直接用 Tailwind 自写；若它其实是某个组件，把节点名补进 knowledge/design-patterns.json 的 match",
+    };
+  };
+
+  const traitByComponent = new Map((options.traits ?? []).map((trait) => [trait.component, trait]));
+  const matches: DesignNodeMatch[] = nodes.map((node) => {
+    const match = matchOne(node);
+    // 稿面样式 → 组件取值：只对已经落到组件的节点解析
+    if (match.component && node.style) {
+      const resolved = resolveUsage(traitByComponent.get(match.component), node);
+      if (resolved) match.resolved = resolved;
+    }
+    return match;
+  });
 
   // 整体提示：图廊 = 主图 + 缩略图 + 箭头，节点各自命中的规则拼不出这个整体
   const hints: string[] = [];
@@ -362,6 +553,19 @@ export function matchDesignNodes(
     }
     hints.push(
       `检测到互斥选择组「${name}」×${entry.indexes.length}（变体 选中 / 未选中）：整组用一个选择类组件实现（${choices}），并把「${name}」补进 knowledge/design-patterns.json 对应规则的 match，下次按名字直接命中`,
+    );
+  }
+
+  // 整体提示：按结构判定的节点单独列出来——它们的名字往往看不出是组件，最容易被当成普通容器手写
+  for (const m of matches) {
+    if (m.signal && m.source !== "signal" && m.note) hints.push(`结构提示：${m.id ? `「${m.name}」（${m.id}）` : `「${m.name}」`}${m.note}`);
+    if (m.source !== "signal" || !m.component) continue;
+    const requires = m.requires?.length ? `，标签上必须写 ${m.requires.join(" ")}` : "";
+    const label = m.id ? `「${m.name}」（${m.id}）` : `「${m.name}」`;
+    hints.push(
+      m.confidence === "low"
+        ? `结构提示：${label}像是「${m.pattern}」，候选 ${[m.component, ...(m.alternatives ?? []).map((a) => a.id)].join(" / ")}，按稿面排布确认后再定`
+        : `结构判定：${label}是「${m.pattern}」→ ${[m.component, ...m.with].join(" + ")}${requires}；不要按节点名当成普通容器手写`,
     );
   }
 

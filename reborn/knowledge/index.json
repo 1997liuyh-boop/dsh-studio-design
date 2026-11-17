@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "generatedAt": "2026-11-13T08:38:02.493Z",
+  "generatedAt": "2026-11-16T09:44:52.613Z",
   "components": [
     {
       "id": "animate-grid",
@@ -3771,6 +3771,10 @@
         "未讀",
         "红点",
         "紅點",
+        "黄点",
+        "黃點",
+        "提示点",
+        "提示點",
         "/\\bbadge\\b/i",
         "消息数",
         "消息數",
@@ -4094,6 +4098,10 @@
         "側邊菜單",
         "侧边导航",
         "側邊導航",
+        "左侧导航",
+        "左側導航",
+        "导航单元",
+        "導航單元",
         "导航菜单",
         "導航菜單",
         "分类列表",
@@ -5073,6 +5081,321 @@
         "circle 在 size md 时强制 h-8! w-8!（32px），ui.base 的 size-[…] 改不动；非 32 的圆形图标按钮用 round。",
         "写死宽度的文字按钮在字体回退或文案变化时会截断（「Shop N…」）或留白。"
       ]
+    }
+  ],
+  "designSignals": [
+    {
+      "id": "underline-field",
+      "signal": "underline-field",
+      "pattern": "下划线输入：占位文字（常带右侧图标），整条只有底边一条线",
+      "component": "reborn-input",
+      "requires": [
+        "variant=\"underlined\""
+      ],
+      "recipe": "用 RebornInput variant=\"underlined\"：底线、聚焦高亮与零圆角都由这个变体给出，稿面那条 1px 线不要再单独画；不要把输入框改成 borderless，也不要把 RebornSearchBox 的外框去掉后另画一条线——RebornSearchBox 的内部输入框恒为 borderless，没有下划线形态。占位文案传 placeholder，v-model 绑定输入值；右侧的放大镜等图标放 #suffix 插槽，用稿面导出的原图，需要可点击时在插槽里放 RebornButton；回车提交在 Web 端监听 keydown。高度按稿面取 size，不在档位时用 ui.group 写 h-[…]；字号与占位文字颜色经 ui.input。",
+      "uses": {
+        "props": [
+          "variant",
+          "placeholder",
+          "size",
+          "modelValue",
+          "ui"
+        ],
+        "slots": [
+          "suffix",
+          "prefix"
+        ],
+        "events": [
+          "keydown"
+        ],
+        "ui": [
+          "group",
+          "input",
+          "wrapper",
+          "suffix"
+        ]
+      },
+      "pitfalls": [
+        "underlined 变体圆角强制为 0，shape 不再生效。",
+        "节点名带「搜索」不代表要用 reborn-search-box：只有一条底线、没有外框和站点选择的搜索行就是一个下划线输入。"
+      ]
+    },
+    {
+      "id": "corner-badge",
+      "signal": "corner-badge",
+      "pattern": "角标：图标或头像角上压着的数字或圆点",
+      "component": "reborn-chip",
+      "use": "chip",
+      "recipe": "用 RebornChip 包住宿主：图标或头像放默认插槽，数字传 text（纯圆点不传），不要用 absolute 定位的 span、导出的角标底图或背景色块自己拼。",
+      "pitfalls": [
+        "稿面的角标常由圆形、矩形等多个图层叠成，导出后是几张碎图：它们合起来就是一个角标，不要逐张摆放。"
+      ]
+    },
+    {
+      "id": "selection-list-vertical",
+      "signal": "selection-list",
+      "pattern": "纵向互斥选择：一列同款项里只有一项带选中样式（侧栏导航、分类列表）",
+      "when": {
+        "orientation": "vertical"
+      },
+      "component": "reborn-menu",
+      "use": "menu"
+    },
+    {
+      "id": "selection-list-horizontal",
+      "signal": "selection-list",
+      "pattern": "横向互斥选择：一排同款项里只有一项带选中样式",
+      "when": {
+        "orientation": "horizontal"
+      },
+      "component": "reborn-tabs",
+      "confidence": "low",
+      "alternatives": [
+        "reborn-segmented",
+        "reborn-menu"
+      ],
+      "use": "tabs",
+      "recipe": "先按稿面确认是哪一种：下方有随之切换的内容面板用 reborn-tabs；一条里滑动切换的短控件用 reborn-segmented；顶部横排导航用 reborn-menu mode=\"horizontal\"。"
+    },
+    {
+      "id": "accordion",
+      "signal": "accordion",
+      "pattern": "展开收起列表：每行标题 + 展开 / 收起图标，其中一行展开着正文",
+      "component": "reborn-collapse",
+      "use": "faq",
+      "recipe": "收起行与展开行的图标不同（加号 / 减号、上下箭头）说明每行都能展开：按 open 状态在触发区里切换两张稿面导出的图标；行与行之间的分隔线写在行容器的 border 上。「全部展开」这类总开关改的是各行 v-model 的值，不要另写一套展开状态。",
+      "pitfalls": [
+        "不要用 RebornButton + aria-expanded + v-if 自己拼展开收起：那是在手写折叠面板，高度过渡与无障碍状态都要重做。"
+      ]
+    },
+    {
+      "id": "select-trigger",
+      "signal": "select-trigger",
+      "pattern": "下拉触发器：一段文字 + 下拉箭头",
+      "component": "reborn-dropdown",
+      "confidence": "low",
+      "alternatives": [
+        "reborn-select"
+      ],
+      "use": "dropdown",
+      "recipe": "触发器的宽度照稿面的取值方式：稿面定宽（如搜索框左侧 144px 的站点选择）就把触发器写死同样的宽度，文字左对齐占满、箭头靠右，不要做成随文字撑开再用相邻元素的内边距去凑位置；稿面随内容撑开的才不写宽度。点选后回填一个值到表单的是 reborn-select。"
+    }
+  ],
+  "designTraits": [
+    {
+      "component": "reborn-input",
+      "sizes": {
+        "sm": 24,
+        "md": 32,
+        "lg": 40
+      },
+      "sizeKey": "group",
+      "rules": [
+        {
+          "id": "input-underlined",
+          "when": {
+            "border": "bottom"
+          },
+          "set": {
+            "variant": "underlined"
+          },
+          "note": "只有底边一条线 = underlined 变体：底线由组件给出，稿面那条 1px 线不要另画"
+        },
+        {
+          "id": "input-outlined",
+          "when": {
+            "border": "all"
+          },
+          "set": {
+            "variant": "outlined"
+          }
+        },
+        {
+          "id": "input-filled",
+          "when": {
+            "border": "none",
+            "background": true
+          },
+          "set": {
+            "variant": "filled"
+          }
+        },
+        {
+          "id": "input-borderless",
+          "when": {
+            "border": "none",
+            "background": false
+          },
+          "set": {
+            "variant": "borderless"
+          }
+        },
+        {
+          "id": "input-circle",
+          "when": {
+            "shape": "pill"
+          },
+          "set": {
+            "shape": "circle"
+          }
+        }
+      ]
+    },
+    {
+      "component": "reborn-search-box",
+      "sizes": {
+        "sm": 24,
+        "md": 32,
+        "lg": 40
+      },
+      "sizeKey": "control",
+      "rules": [
+        {
+          "id": "search-box-circle",
+          "when": {
+            "shape": "pill"
+          },
+          "set": {
+            "shape": "circle"
+          }
+        }
+      ]
+    },
+    {
+      "component": "reborn-button",
+      "sizes": {
+        "sm": 24,
+        "md": 32,
+        "lg": 40
+      },
+      "sizeKey": "base",
+      "rules": [
+        {
+          "id": "button-circle",
+          "when": {
+            "shape": "circle",
+            "text": "none"
+          },
+          "set": {
+            "circle": true
+          },
+          "note": "circle 按 size 固定等宽高（24 / 32 / 40）：稿面是别的尺寸时改用 round，并在 ui.base 里写 size-[…]"
+        },
+        {
+          "id": "button-round",
+          "when": {
+            "shape": "pill"
+          },
+          "set": {
+            "round": true
+          }
+        },
+        {
+          "id": "button-outlined",
+          "when": {
+            "border": "all",
+            "background": false
+          },
+          "set": {
+            "variant": "outlined"
+          }
+        },
+        {
+          "id": "button-text",
+          "when": {
+            "border": "none",
+            "background": false,
+            "text": "any"
+          },
+          "set": {
+            "variant": "text"
+          },
+          "note": "text 变体强制 h-auto! px-0!：稿面有固定高度或内边距时改用 soft / subtle，再经 ui.base 调整"
+        }
+      ]
+    },
+    {
+      "component": "reborn-chip",
+      "sizes": {
+        "sm": 16,
+        "md": 20,
+        "lg": 24
+      },
+      "sizesWhen": {
+        "text": "any"
+      },
+      "sizeKey": "base",
+      "rules": [
+        {
+          "id": "chip-text",
+          "when": {
+            "text": "digits"
+          },
+          "set": {
+            "text": "$text"
+          }
+        }
+      ]
+    }
+  ],
+  "designLint": [
+    {
+      "id": "search-box-as-underline",
+      "component": "reborn-search-box",
+      "level": "error",
+      "when": {
+        "uiKey": "control",
+        "classAll": [
+          "\\bborder-(?:0|none)\\b",
+          "\\b(?:rounded-none|bg-transparent)\\b"
+        ]
+      },
+      "message": "把 RebornSearchBox 的外框、圆角或底色去掉，是在仿造下划线输入：它的内部输入框恒为 borderless，没有下划线形态。稿面只有一条底线时改用 RebornInput variant=\"underlined\"，图标放 #suffix 插槽，不要另画一条 1px 的线。"
+    },
+    {
+      "id": "input-variant-bypass",
+      "component": "reborn-input",
+      "level": "error",
+      "when": {
+        "prop": {
+          "name": "variant",
+          "notIn": [
+            "borderless",
+            "underlined"
+          ]
+        },
+        "classAll": [
+          "\\bborder-(?:0|none)\\b"
+        ]
+      },
+      "message": "用 ui 把 RebornInput 的描边去掉：无边框用 variant=\"borderless\"，只留底线用 variant=\"underlined\"，不要用类名覆盖变体自带的描边。"
+    },
+    {
+      "id": "button-text-box",
+      "component": "reborn-button",
+      "level": "warn",
+      "when": {
+        "prop": {
+          "name": "variant",
+          "in": [
+            "text"
+          ]
+        },
+        "uiKey": "base",
+        "classAll": [
+          "(?:^|\\s)(?:h|px|py)-\\[?[1-9]"
+        ]
+      },
+      "message": "variant=\"text\" 强制 h-auto! px-0!，ui.base 里写的高度与内边距不会生效：需要固定高度或内边距的按钮换 soft / subtle / outlined 变体。"
+    },
+    {
+      "id": "button-as-collapse",
+      "component": "reborn-button",
+      "level": "warn",
+      "when": {
+        "attr": "aria-expanded"
+      },
+      "message": "在 RebornButton 上自己维护 aria-expanded、再用 v-if / v-show 切换下面的内容，是在手写折叠面板：展开收起的内容块用 RebornCollapse（默认插槽放触发区，#content 放内容，v-model 控制展开），问答列表每条一个。它只是下拉菜单的触发器时可以忽略。"
     }
   ]
 }

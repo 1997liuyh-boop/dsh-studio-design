@@ -5,6 +5,7 @@ import { z } from "zod";
 import { KnowledgeBase, resolveKbDir } from "./kb.js";
 import { matchDesignNodes, searchComponents } from "./search.js";
 import { readSpec } from "./spec.js";
+import { lintTemplate } from "./usage.js";
 
 const kb = new KnowledgeBase(resolveKbDir());
 
@@ -32,7 +33,8 @@ const instructions = `Reborn-UI 组件库知识库服务。这是一个双端组
 - 一排页签 + 内容面板 → reborn-tabs + RebornTabPane（title 传稿面文案，选中态由组件按 type / color 管，不在 #title 插槽里手动切颜色；line 类型自带头部分隔线）。RebornTabPane 这类与目录不同名的子组件在 Nuxt pathPrefix: true 下自动导入会改名，须显式 import。
 - 同一容器里一列同名实例（如「分類列表」×9，变体 選中 / 未選中）= 一组互斥选择 → 纵向的分类列表、侧栏导航用一个 reborn-menu（每项一个 RebornMenuItem，v-model:selected-keys 管当前项，样式经 ui.root / ui.menu / ui.menuItem），不是九个手写的 a；名字没命中配方表时 match_design_nodes 会在 hints 里按结构提示，候选见该节点的 alternatives。
 - 搜索区（站点选择 + 输入 + 搜索键）→ reborn-search-box 的 #leading / #trailing 插槽；数量加减 → reborn-input-number；规格项 → reborn-sku；悬浮操作组 → reborn-fab；图标 / 分割线不是组件，用导出素材或 border。
-写完模板自查：不得残留原生 <button> / <input> / <select>，也不得用 Button + CSS 仿造上面这些复合组件；本库没有的（Web 页脚、卡片容器）才按稿面自写。
+- 节点名看不出是组件、要靠结构认的几种：只有底边一条线的输入（占位文字 + 一条 1px 线）→ reborn-input variant="underlined"，不是把 reborn-search-box 去掉外框再另画一条线；图标或头像右上角压着的数字 / 圆点 → reborn-chip（默认插槽包住宿主，text 传数字）；一列同款项里只有一项带底色 → reborn-menu；每行「标题 + 加减号」且有一行展开着正文 → 每行一个 reborn-collapse。调用方量得到几何时，把这些结构作为 signals 连同稿面样式 style 一起传给 match_design_nodes：返回的 requires 是必须写在标签上的属性，resolved 是按稿面高度、圆角、描边解析出的 size / shape / variant 与 ui 补充。
+写完模板自查：不得残留原生 <button> / <input> / <select>，也不得用 Button + CSS 仿造上面这些复合组件；本库没有的（Web 页脚、卡片容器）才按稿面自写。写完后把模板传给 check_usage：它核对 ui 键是否真实存在、枚举取值是否合法，并指出「组件有现成变体却用 ui 覆盖硬改」的写法。
 
 改组件样式（颜色、背景、边框、圆角、尺寸、间距、字体、阴影、hover 态、某个内部部件的外观）依次走：① 已有 prop 取值能表达的直接用 prop（如 Badge 的胶囊形用 round，不写 rounded-full）；② 其余一律用组件的 ui 对象 :ui="{ 键: '类名' }"，最外层元素也用 ui 里的 root / base 键而不是裸 class；③ 只有 ui 里没有对应部件的键时，才退回插槽 + 工具类，并说明该组件没有暴露这个键。可用键看 get_component 返回的 ui 条目描述（「可用键（从源码抽取，以此为准）」，按 Web / UniApp 分端，两端不通用；带 * 的键在填了同名插槽后失效），只能用列出的键，猜的键静默无效。不要用套一层 div/span、:deep()、改组件内部类名的写法改样式——这些绕开了组件的样式接口，组件升级就会失效。
 
@@ -239,6 +241,38 @@ server.tool(
             .literal("image")
             .optional()
             .describe("节点填充是图片（位图 / image fill）时传 image：自动命名的「矩形 58848」这类图片图层会按 reborn-image 处理"),
+          id: z.string().optional().describe("节点 ID，原样带回结果里，方便把判定对回节点"),
+          signals: z
+            .array(z.string())
+            .optional()
+            .describe(
+              "结构信号，从节点的几何与样式判断得出：underline-field 只有底边一条线的输入；corner-badge 图标 / 头像角上的数字或圆点；selection-list 一组同款项里只有一项带选中样式（facts.orientation 传 vertical / horizontal）；accordion 每行标题 + 展开收起图标的列表；select-trigger 文字 + 下拉箭头的触发器。命中信号规则时优先于节点名",
+            ),
+          facts: z
+            .record(z.union([z.string(), z.number(), z.boolean()]))
+            .optional()
+            .describe("信号附带的事实，如 {\"orientation\": \"vertical\", \"members\": 5}"),
+          style: z
+            .object({
+              width: z.number().optional(),
+              height: z.number().optional(),
+              radius: z.number().optional().describe("最大的一个圆角（px）"),
+              background: z.string().optional().describe("底色 #rrggbb；透明或没有时不传"),
+              border: z.enum(["all", "bottom", "none"]).optional().describe("描边位置：四边 / 只有底边 / 没有"),
+              padding: z.tuple([z.number(), z.number(), z.number(), z.number()]).optional().describe("内边距 [上, 右, 下, 左]"),
+              gap: z.number().optional(),
+              fontSize: z.number().optional(),
+              sizing: z
+                .object({
+                  width: z.enum(["hug", "fixed", "fill"]).optional(),
+                  height: z.enum(["hug", "fixed", "fill"]).optional(),
+                })
+                .optional()
+                .describe("自动布局的宽高取值方式：hug 随内容、fixed 写死、fill 占满"),
+            })
+            .optional()
+            .describe("稿面实测样式（px）。传了就会在结果的 resolved 里给出按样式解析的 size / shape / variant 与 ui 补充写法"),
+          text: z.string().optional().describe("节点自身的文字，如角标上的数字、输入框的占位文案"),
         }),
       )
       .min(1)
@@ -253,11 +287,35 @@ server.tool(
     const result = matchDesignNodes(kb.designPatterns(), kb.list(), nodes, {
       platform,
       getComponent: (id) => kb.get(id),
+      signals: kb.designSignals(),
+      traits: kb.designTraits(),
     });
     return jsonResult({
       ...result,
       nextSteps:
-        "对每个 component（含 with 里的配套组件）调 get_component(id, platform) 核对 props / slots / ui 键，再 get_component_example 取示例；按 recipe 实现，uses 之外的 prop / 插槽 / ui 键一律以 get_component 返回为准。status=search 的候选要先读 whenToUse / whenNotToUse 再决定；带 selectionGroup 的节点是一组互斥选择，按 note 里的排布说明从 alternatives 里选一个组件整组实现；ignore 的节点用导出素材；custom / unmapped 的按稿面自写并在实现清单里说明。",
+        "对每个 component（含 with 里的配套组件）调 get_component(id, platform) 核对 props / slots / ui 键，再 get_component_example 取示例；按 recipe 实现，uses 之外的 prop / 插槽 / ui 键一律以 get_component 返回为准。source=signal 的节点是按稿面结构判定的，优先于节点名；requires 里的属性必须原样写在组件标签上；resolved.attrs / resolved.ui 是按稿面高度、圆角、描边解析出的取值，照写后再用 ui 补其余差异，写完模板调 check_usage 自查。status=search 的候选要先读 whenToUse / whenNotToUse 再决定；带 selectionGroup 的节点是一组互斥选择，按 note 里的排布说明从 alternatives 里选一个组件整组实现；ignore 的节点用导出素材；custom / unmapped 的按稿面自写并在实现清单里说明。",
+    });
+  },
+);
+
+server.tool(
+  "check_usage",
+  "检查一段 Vue 模板（或整份 .vue）里 Reborn 组件的用法：ui 对象里的键是否是组件真实消费的键（写错的键静默无效）、写死的枚举取值是否合法，以及知识库登记的绕行写法——组件有现成的变体或另有专门组件，却用 ui 覆盖、手写状态硬拼（去掉搜索框外框再另画底线、按钮 + aria-expanded 充当折叠面板）。写完或改完模板后调用，error 必须修，warn 需确认。",
+  {
+    template: z.string().min(1).max(400_000).describe("模板片段或整份 .vue 源码；传整份时会到 <script> 里解析 :ui 绑定的对象常量"),
+    platform: z.enum(["web", "uniapp"]).optional().describe("目标端，默认 web；两端的 ui 键与枚举取值不同"),
+  },
+  async ({ template, platform }) => {
+    const report = lintTemplate(template, kb, { platform });
+    return jsonResult({
+      ...report,
+      summary: {
+        error: report.findings.filter((f) => f.level === "error").length,
+        warn: report.findings.filter((f) => f.level === "warn").length,
+      },
+      nextSteps: report.findings.length
+        ? "逐条修正：ui-key 换成 get_component 返回的真实键；prop-value 换成可选值；其余规则按 message 改用对应的变体或组件，改完重新检查。"
+        : "没有发现用法问题。静态检查只覆盖写死的取值与 ui 字面量，绑定到变量的部分仍需自行核对。",
     });
   },
 );

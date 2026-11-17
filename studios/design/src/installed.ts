@@ -4,7 +4,7 @@
  * 另外按映射表核对：命中的设计实例必须在已登记的实现文件里出现对应组件标签。
  */
 import { object, readOptional } from './project.ts'
-import { matchManifest, type BlocksWithComponents } from './componentMap.ts'
+import { matchManifest, type BlocksWithComponents, type MappingHit, type MappingResult } from './componentMap.ts'
 import { loadComponentMap } from './componentMapStore.ts'
 
 /** 一个组件的配置枚举：prop 名 → 可用取值。 */
@@ -225,15 +225,16 @@ function usesTag(template: string, component: string): boolean {
  * 列表渲染时节点 ID 由 :data-design 绑定（ID 在脚本或数据模块里），同样算已标记；
  * 没有任何文件标记该节点时退回全文核对并提醒补 data-design。
  */
-export async function mappingIssues(root: string, manifest: BlocksWithComponents | null, templates: Map<string, string>): Promise<{ issues: string[]; warnings: string[] }> {
+export async function mappingIssues(root: string, manifest: BlocksWithComponents | null, templates: Map<string, string>, resolved?: MappingResult): Promise<{ issues: string[]; warnings: string[] }> {
   if (!manifest) return { issues: [], warnings: [] }
   const map = await loadComponentMap(root)
   const all = [...templates.values()].join('\n')
   const bound = await boundDesignIds(root, templates.keys())
   const issues: string[] = [], warnings: string[] = []
-  for (const hit of matchManifest(map.rules, manifest).matched) {
+  for (const hit of (resolved ?? matchManifest(map.rules, manifest)).matched) {
     const required = [hit.rule.component, ...(hit.rule.with ?? [])]
-    const where = '实例「' + hit.name + '」（' + hit.nodeIds.join('、') + '）应使用 ' + required.join(' + ') + '（规则「' + hit.rule.pattern + '」，' + map.path + '）'
+    const structural = hit.rule.origin === 'signal'
+    const where = (structural ? hit.name + '（' : '实例「' + hit.name + '」（') + hit.nodeIds.join('、') + '）应使用 ' + required.join(' + ') + '（' + (structural ? hit.rule.pattern + (hit.evidence ? '，依据：' + hit.evidence : '') : '规则「' + hit.rule.pattern + '」，' + map.path) + '）'
     const located = [...templates].filter(([file, template]) => hit.nodeIds.some(id => template.includes('data-design="' + id + '"') || bound.get(file)?.has(id)))
     if (located.length === 0) {
       warnings.push('映射命中的节点没有 data-design 标记，只能按全文核对：' + where)
@@ -241,18 +242,63 @@ export async function mappingIssues(root: string, manifest: BlocksWithComponents
       continue
     }
     for (const component of required) if (!located.some(([, template]) => usesTag(template, component))) issues.push('映射命中未实现：' + where + '，渲染它的文件 ' + located.map(([file]) => file).join('、') + ' 里没有 ' + component + ' 标签')
+    issues.push(...requiredAttributeIssues(hit, located))
   }
   return { issues, warnings }
 }
 
+/**
+ * 结构判定要求写在组件标签上的属性（如 variant="underlined"）：优先核对带该节点 data-design 的那个组件标签，
+ * 标签上没有标记时退回同文件里该组件的任一处使用。属性绑定到变量、无法静态判断时不报。
+ */
+export function requiredAttributeIssues(hit: MappingHit, located: readonly (readonly [string, string])[]): string[] {
+  const requires = hit.rule.requires ?? []
+  if (!requires.length || !hit.rule.component) return []
+  const usages = located.flatMap(([file, template]) => templateUsages(template).filter(usage => usage.component === hit.rule.component).map(usage => ({ file, usage, raw: rawTag(template, usage) })))
+  if (!usages.length) return []
+  const marked = usages.filter(entry => entry.usage.props.dataDesign !== undefined && hit.nodeIds.includes(entry.usage.props.dataDesign))
+  const candidates = marked.length ? marked : usages
+  const issues: string[] = []
+  for (const required of requires) {
+    const [name, value] = required.split('=') as [string, string | undefined]
+    const key = name.replace(/-([a-z])/g, (_, letter: string) => letter.toUpperCase()), expected = value?.replace(/^"|"$/g, '')
+    const satisfied = candidates.some(entry => {
+      const actual = entry.usage.props[key]
+      if (expected === undefined) return new RegExp('(?:^|\\s)(?::|v-bind:)?' + name + '(?=[\\s=/>]|$)').test(entry.raw)
+      // 绑定到变量的取值读不出来：标签上有这个属性就不报，交给视觉与交互验收。
+      return actual === expected || (actual === undefined && new RegExp('(?:^|\\s)(?::|v-bind:)' + name + '\\s*=').test(entry.raw))
+    })
+    if (!satisfied) issues.push('结构判定未落实：' + hit.name + '（' + hit.nodeIds.join('、') + '）的 <' + candidates[0]!.usage.tag + '> 必须写 ' + required + '（' + hit.rule.pattern + (hit.evidence ? '，依据：' + hit.evidence : '') + '）；' + candidates[0]!.file + ' 里' + (marked.length ? '带该节点 data-design 的标签' : '该组件的标签') + '没有这个写法，不要用 ui 覆盖去仿造它')
+  }
+  return issues
+}
+
+/** 某次组件使用在模板里的原始标签文本（到属性区结束的 > 为止）；按 data-design 或 src 定位到同一次出现。 */
+function rawTag(template: string, usage: TemplateUsage): string {
+  const marker = usage.props.dataDesign ?? usage.props.src ?? ''
+  for (const match of template.matchAll(new RegExp('<' + usage.tag + '(?=[\\s/>])', 'g'))) {
+    let end = match.index! + match[0].length, quote = ''
+    while (end < template.length) {
+      const char = template[end]!
+      if (quote) { if (char === quote) quote = '' }
+      else if (char === '"' || char === "'") quote = char
+      else if (char === '>') break
+      end += 1
+    }
+    const raw = template.slice(match.index!, end)
+    if (!marker || raw.includes(marker)) return raw
+  }
+  return ''
+}
+
 /** plan 阶段：映射命中的组件（含伴随组件）没有出现在 requirements 里；用户明确允许自定义的节点除外。 */
-export async function unregisteredHits(root: string, manifest: BlocksWithComponents | null, components: readonly string[], exemptNodeIds: readonly string[] = []): Promise<string[]> {
+export async function unregisteredHits(root: string, manifest: BlocksWithComponents | null, components: readonly string[], exemptNodeIds: readonly string[] = [], resolved?: MappingResult): Promise<string[]> {
   if (!manifest) return []
-  const map = await loadComponentMap(root)
   const messages: string[] = []
-  for (const hit of matchManifest(map.rules, manifest).matched) {
+  for (const hit of (resolved ?? matchManifest((await loadComponentMap(root)).rules, manifest)).matched) {
     if (hit.nodeIds.some(id => exemptNodeIds.includes(id))) continue
-    for (const component of [hit.rule.component, ...(hit.rule.with ?? [])]) if (!components.includes(component)) messages.push('映射命中未登记：实例「' + hit.name + '」（' + hit.nodeIds.join('、') + '）应使用 ' + component + '，requirements 里没有该组件')
+    const subject = hit.rule.origin === 'signal' ? '结构判定未登记：' + hit.name : '映射命中未登记：实例「' + hit.name + '」'
+    for (const component of [hit.rule.component, ...(hit.rule.with ?? [])]) if (!components.includes(component)) messages.push(subject + '（' + hit.nodeIds.join('、') + '）应使用 ' + component + '，requirements 里没有该组件' + (hit.rule.origin === 'signal' && hit.evidence ? '（依据：' + hit.evidence + '）' : ''))
   }
   return messages
 }

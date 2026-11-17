@@ -17,7 +17,9 @@ import { locatePlaywright, playwrightMeasurer } from './measure.ts'
 import { playwrightDriver } from './interact.ts'
 import { installComponents, locateRegistry, type InstallReport } from './install.ts'
 import { MANIFEST_PATH, manifestSummary, preRead, reusableManifest } from './reader.ts'
-import { matchManifest, type PromptMapping } from './componentMap.ts'
+import type { PromptMapping } from './componentMap.ts'
+import { loadKnowledge } from './knowledge.ts'
+import { resolveMapping } from './knowledgeMapping.ts'
 import { loadComponentMap, recordUnmapped } from './componentMapStore.ts'
 import type { Host, DesignAgent, AgentContext } from './host.ts'
 import { nestedToolExecutor } from './toolExecution.ts'
@@ -38,7 +40,8 @@ declare const STUDIO_PROJECT: { name: string; icon: string; description: string;
 export async function apply(ctx: Host): Promise<void> {
   const store = new Store()
   const seals = new ManifestSeals()
-  const reviews = new Reviews(seals)
+  // plan / check 与 design_workspace 用同一份知识库判定：每次按当前生效的知识库目录读取（内置快照、本地目录或 GitHub 同步的版本）。
+  const reviews = new Reviews(seals, () => loadKnowledge(knowledgeDir()))
   let config = await store.loadSettings(), closed = false
   const builtin = fileURLToPath(new URL('../reborn/', import.meta.url))
   // 几何与像素审计用的 Playwright 不随插件打包：从目标项目、插件目录、宿主工作目录或 DSH_HARNESS_ROOT 解析，找不到时审计阶段说明原因。
@@ -92,6 +95,7 @@ export async function apply(ctx: Host): Promise<void> {
   }
   const codeRoot = () => config.rebornSource === 'local' || config.rebornSource === 'github' && config.rebornCommit ? config.rebornRoot : ''
   const sourceRoot = () => config.rebornSource === 'github' && config.rebornKnowledge === false ? '' : codeRoot()
+  const knowledgeDir = () => join(sourceRoot() || builtin, 'knowledge')
   const source = () => ({ kind: codeRoot() ? config.rebornSource! : 'builtin', root: codeRoot() || builtin, knowledge: sourceRoot() ? 'repository' as const : 'builtin' as const, commit: config.rebornCommit || '', contentCommit: config.rebornContentCommit || '', repository: config.rebornCachedRepository || config.rebornRepository || '' })
   const builtinSpec = () => ({ command: process.execPath, args: [fileURLToPath(new URL('./reborn-mcp.js', import.meta.url)), '--kb-dir', join(sourceRoot() || builtin, 'knowledge'), '--spec-dir', join(builtin, 'spec')] })
   const connectReborn = async () => {
@@ -131,7 +135,7 @@ export async function apply(ctx: Host): Promise<void> {
   ctx.effect(() => ctx.systemPrompt.section({ name: 'studio-design-workspace', order: 920, interpolate: false,
     text: workspaceInstructions }), '设计工作室：工作区调用指引')
   ctx.effect(() => ctx.tools.register({
-    name: 'design_workspace', description: '准备当前会话的设计任务，读取实际工作区、组件映射并返回实施指引。rules 归纳项目设计规则，无需 MasterGo；read 只读选区；generate 实现用户需求（task 缺省即 generate，request 只给 MasterGo 链接也可）；optimize 重新通过 MCP 读取指定节点并优化已有实现；sync 仅用于明确授权的画布同步。自动准备当前会话的 MasterGo；请求含 layer_id 链接时由工作室按区块预读设计稿、导出素材并写入 docs/design/mastergo-manifest.json，再把清单交给模型；request 里可含同一文件的多条画板链接，第一条为默认态，其余为状态帧，差异写入 manifest.stateDeltas，交互规范同步到 docs/design/interactions.yaml。',
+    name: 'design_workspace', description: '准备当前会话的设计任务，读取实际工作区、组件映射并返回实施指引。rules 归纳项目设计规则，无需 MasterGo；read 只读选区；generate 实现用户需求（task 缺省即 generate，request 只给 MasterGo 链接也可）；optimize 重新通过 MCP 读取指定节点并优化已有实现；sync 仅用于明确授权的画布同步。自动准备当前会话的 MasterGo；请求含 layer_id 链接时由工作室按区块预读设计稿、导出素材并写入 docs/design/mastergo-manifest.json，并把组件实例与识别出的结构（下划线输入、角标、互斥选择组、展开收起列表）交给 Reborn 知识库判定组件与取值，再把清单与判定交给模型；预读条件不满足时返回 preRead.reason 说明原因；request 里可含同一文件的多条画板链接，第一条为默认态，其余为状态帧，差异写入 manifest.stateDeltas，交互规范同步到 docs/design/interactions.yaml。',
     parameters: { type: 'object', properties: { task: { type: 'string', enum: ['rules', 'read', 'generate', 'optimize', 'sync'] }, request: { type: 'string', maxLength: 8000, description: '用户需求原文；可含多条 MasterGo 链接（第一条默认态，其余状态画板）与「交互 <节点>：<触发> → <响应>」行' }, preRead: { type: 'boolean', description: '是否由工作室预读设计稿，默认 true；传 false 时模型自行按区块读取' } }, required: ['request'], additionalProperties: false },
     output: { schema: { type: 'string' }, render: (_args, value) => [{ type: 'text', text: String(value) }] },
     async execute(input, execution) {
@@ -185,10 +189,19 @@ export async function apply(ctx: Host): Promise<void> {
       // 预读：Vibe 连接就绪且链接带 layer_id 时，由工作室按区块读取并落盘；模型随后只读本地文件。
       let manifest: object | undefined, reused = false, preReadIssue = '', mapping: PromptMapping | undefined, interactions: object | undefined, installation: InstallReport | undefined
       // 没有链接时读取画布当前选区（工作室首页按钮与「读取当前选区」提示词走这条路），根节点 ID 由返回头部给出。
-      const canPreRead = (task === 'generate' || task === 'optimize' || task === 'read') && args.preRead !== false && connection?.snapshot().mastergo.state === 'connected' && mastergoAdapter(config.mastergo)?.service === 'vibe' && canvas?.state === 'ready' && typeof ctx.tools.execute === 'function'
+      // 预读条件不满足时记下原因：以前这里静默退回「模型自行读取」，模型和用户都不知道规格表、结构判定与几何审计为什么全没了。
+      const wantsPreRead = (task === 'generate' || task === 'optimize' || task === 'read') && args.preRead !== false
+      const adapter = mastergoAdapter(config.mastergo)
+      const preReadBlocked = !wantsPreRead ? ''
+        : connection?.snapshot().mastergo.state !== 'connected' ? 'MasterGo 连接未就绪'
+        : !adapter ? 'MasterGo 的连接命令不是工作室能识别的适配器写法（命令行里需要出现 @mastergo/vibe-mcp 与 --url=本机地址），工作室无法替它探测画布和预读；在设计工作室设置里改用表单配置，或把命令改成直接启动 @mastergo/vibe-mcp'
+        : adapter.service !== 'vibe' ? '当前是 Magic 适配器（读取远程团队文件），工作室的按区块预读只支持本机 Vibe 适配器'
+        : canvas?.state !== 'ready' ? '画布未就绪：' + (canvas?.message ?? '请在 MasterGo 桌面端打开设计文件并开启 MCP')
+        : typeof ctx.tools.execute !== 'function' ? '当前宿主版本不支持工具内嵌调用' : ''
+      const canPreRead = wantsPreRead && !preReadBlocked
       if (canPreRead) {
         const signal = AbortSignal.any([execution.signal, lifetime.signal])
-        const source = { fileId: target?.fileId ?? canvas.documentId ?? '', pageId: target?.pageId ?? canvas.pageId ?? '', nodeId: target?.nodeId || undefined }
+        const source = { fileId: target?.fileId ?? canvas?.documentId ?? '', pageId: target?.pageId ?? canvas?.pageId ?? '', nodeId: target?.nodeId || undefined }
         const outcome = await serial(agent, async () => {
           const frames = frameTargets.map(frame => ({ pageId: frame.pageId || source.pageId, nodeId: frame.nodeId }))
           const previous = await reusableManifest(project.root, source.nodeId, task === 'optimize' ? '重新读取 ' + request : request, source, frames.map(frame => frame.nodeId))
@@ -204,16 +217,22 @@ export async function apply(ctx: Host): Promise<void> {
           // 映射表：实例名与项目 docs/design/component-map.json 匹配，未命中的登记到实现清单；项目没有映射表时写出默认骨架。
           const known = new Set((await catalog(join(sourceRoot() || builtin, 'knowledge'))).map(component => component.id))
           const map = await loadComponentMap(project.root, { create: true, known })
-          const result = matchManifest(map.rules, outcome)
+          // 判定 = 映射表 + Reborn 知识库：结构信号交给知识库的信号规则（强制），映射表没覆盖的实例交给配方表（建议）。
+          const result = resolveMapping(map.rules, outcome, await loadKnowledge(knowledgeDir()))
           await recordUnmapped(project.root, result)
           mapping = { path: map.path, source: map.source, rules: map.rules, result }
           // 映射命中的组件（含伴随组件）由工作室在实现前装进项目，模型不再在沙箱里跑包管理器。
           if (task === 'generate' || task === 'optimize') {
-            const required = [...new Set(result.matched.flatMap(hit => [hit.rule.component, ...(hit.rule.with ?? [])]))].filter(id => known.has(id))
+            // 强制的命中与知识库建议的组件都提前装好：建议的组件装不上，模型就只能退回自写。
+            const required = [...new Set([...result.matched, ...(result.suggested ?? [])].flatMap(hit => [hit.rule.component, ...(hit.rule.with ?? [])]))].filter(id => known.has(id))
             try { installation = await installComponents(project.root, required, { registry: await locateRegistry({ explicit: process.env.REBORN_REGISTRY_DIR || config.rebornRegistry, roots: [config.rebornRoot, builtin] }), cli: process.env.DSH_REBORN_CLI, signal: execution.signal }) }
             catch (error) { installation = { installed: [], skipped: [], failed: required.map(id => ({ id, reason: error instanceof Error ? error.message : String(error) })), npmDependencies: [], missingShared: [], method: 'none' } }
           }
-          manifest = manifestSummary(outcome, reused, { path: map.path, source: map.source, created: map.created, warnings: map.warnings, total: result.total, matched: result.matched.map(hit => ({ name: hit.name, nodeIds: hit.nodeIds, component: hit.rule.component })), unmatched: result.unmatched, ignored: result.ignored.map(hit => hit.name) })
+          manifest = manifestSummary(outcome, reused, { path: map.path, source: map.source, created: map.created, warnings: map.warnings, total: result.total,
+            matched: result.matched.filter(hit => hit.rule.origin !== 'signal').map(hit => ({ name: hit.name, nodeIds: hit.nodeIds, component: hit.rule.component })),
+            structural: result.matched.filter(hit => hit.rule.origin === 'signal').map(hit => ({ name: hit.name, nodeIds: hit.nodeIds, component: hit.rule.component, with: hit.rule.with, requires: hit.rule.requires, evidence: hit.evidence, usage: hit.usage })),
+            suggested: (result.suggested ?? []).map(hit => ({ name: hit.name, nodeIds: hit.nodeIds, component: hit.rule.component, with: hit.rule.with })),
+            hints: result.hints, unmatched: result.unmatched, ignored: result.ignored.map(hit => hit.name) })
           // 交互规范：按区块、实例与状态帧补骨架，并把需求里的「交互 …：… → …」写回 docs/design/interactions.yaml。
           if (task === 'generate' || task === 'optimize') interactions = await syncInteractions(project.root, outcome, request)
         }
@@ -222,9 +241,11 @@ export async function apply(ctx: Host): Promise<void> {
       if (!mapping && task !== 'rules') mapping = await loadComponentMap(project.root)
       if (preReadIssue) return JSON.stringify({ ready: false, root: project.root, target, canvas, issue: preReadIssue, instructions: '设计稿未读到。停止页面生成和素材替换，保留原文件；把上述原因告诉用户，待其在 MasterGo 中打开目标文件并选中图层后重试 design_workspace。不能用想象或旧稿代替。' })
       const installNote = installation ? '\n\n【组件安装】工作室已按映射命中把缺失的 Reborn 组件装进项目（数据）：' + JSON.stringify(installation) + '。installed 为本次写入、skipped 为项目已有；failed 的组件按 get_install_command 由用户在沙箱外安装；npmDependencies 列出组件引用但 package.json 没有的包，先在清单「已知差异」记录并提示用户安装，不要自己运行包管理器；missingShared 是组件引用的共享文件（lib / composables），缺失时按 Reborn 文档补齐。' : ''
-      const instructions = designPrompt(project, workspace, request, task, source(), connection?.snapshot().mastergo.tools, imageInput, manifest, mapping, interactions) + installNote + (mismatch ? '\n\n画布提示：' + mismatch : '')
+      const unreadNote = !manifest && preReadBlocked && task !== 'read' ? '\n\n【未预读】工作室这次没有预读设计稿，原因：' + preReadBlocked + '。没有预读就没有规格表、结构判定和知识库建议，design_review(stage=compare) 也不可用，组件选型只能靠你自己把关：读到节点后，把实例名、变体、子节点名，连同能从结构里量出来的特征（只有底边一条线的输入 = underline-field、图标或头像角上的数字 = corner-badge、一列同款项里只有一项带底色 = selection-list、每行「标题 + 加减号」且有一行展开 = accordion、文字 + 下拉箭头 = select-trigger）作为 signals，稿面的宽高、圆角、描边作为 style，整批传给 mcp__design_reborn__match_design_nodes，按返回的 component / requires / resolved 实现；写完模板调 mcp__design_reborn__check_usage 自查。报告开头向用户说明本次未经工作室预读与几何审计以及上述原因，不要当成正常流程略过。' : ''
+      const instructions = designPrompt(project, workspace, request, task, source(), connection?.snapshot().mastergo.tools, imageInput, manifest, mapping, interactions) + installNote + unreadNote + (mismatch ? '\n\n画布提示：' + mismatch : '')
       execution.signal.throwIfAborted()
       return JSON.stringify({ ready: true, sessionId: agent.session.id, root: project.root, target, canvas, canvasMismatch: mismatch || undefined,
+        preRead: manifest ? { done: true } : { done: false, reason: preReadBlocked || (wantsPreRead ? '' : '本次任务不预读') },
         imageInput, manifest, interactions, installation, workflow: task === 'generate' || task === 'optimize' ? { version: 3, preset: 'mastergo-reborn', phases: [manifest ? 'manifest-ready' : 'read-design', ...(interactions ? ['interactions-spec'] : []), 'design_review:plan', 'implement', 'design_review:check', 'design_review:compare', 'design_review:interact', 'design_review:verify'] } : undefined, instructions })
     },
     presentCall(input) { const args = object(input); const labels: Record<string, string> = { rules: '生成设计规则', read: '读取设计稿', generate: '实现页面', optimize: '优化节点', sync: '同步画布' }; return { card: 'generic', title: '设计工作室 · ' + (labels[String(args.task)] ?? '准备工作区'), kind: 'read', rawInput: input } },
@@ -232,7 +253,7 @@ export async function apply(ctx: Host): Promise<void> {
 
   ctx.effect(() => ctx.tools.register({
     name: 'design_review',
-    description: '固定还原流程的检查：plan 登记节点语义、项目或 Reborn 组件、全部导出素材和应验证交互；check 核对实际组件与原图；compare 用浏览器在设计稿基准宽度实测模板里 data-design 节点的位置、尺寸、字号、颜色、圆角、描边并与预读规格表比对，再把区块截图与预览图做像素比对，输出按差异排序的清单（位置尺寸容差 2px，其余精确，字体族只提示）；interact 由工作室在宿主侧用浏览器按 docs/design/interactions.yaml 已填写条目执行交互（trigger 翻译为 点击 / 悬停 / 输入 / 按键 / 滚动，response 里的 出现 / 消失 / 文字 / aria 属性 / 路由 作断言），前后截图写到 docs/design/screenshots/，另截 390 宽窄屏整页图，报告写 docs/design/interaction-report.json；verify 登记证据，有 interact 报告时直接采用其结果与截图。check 与 verify 不修改项目，compare 只把报告与差异图写进 docs/design/compare。',
+    description: '固定还原流程的检查：plan 登记节点语义、项目或 Reborn 组件、全部导出素材和应验证交互；check 核对实际组件与原图，按映射表与 Reborn 知识库的结构判定核对组件标签及必须写的属性，并执行知识库的模板用法规则（不存在的 ui 键、用 ui 覆盖仿造已有变体）；compare 用浏览器在设计稿基准宽度实测模板里 data-design 节点的位置、尺寸、字号、颜色、圆角、描边并与预读规格表比对，再把区块截图与预览图做像素比对，输出按差异排序的清单（位置尺寸容差 2px，其余精确，字体族只提示）；interact 由工作室在宿主侧用浏览器按 docs/design/interactions.yaml 已填写条目执行交互（trigger 翻译为 点击 / 悬停 / 输入 / 按键 / 滚动，response 里的 出现 / 消失 / 文字 / aria 属性 / 路由 作断言），前后截图写到 docs/design/screenshots/，另截 390 宽窄屏整页图，报告写 docs/design/interaction-report.json；verify 登记证据，有 interact 报告时直接采用其结果与截图。check 与 verify 不修改项目，compare 只把报告与差异图写进 docs/design/compare。',
     parameters: { type: 'object', properties: {
       stage: { type: 'string', enum: ['plan', 'check', 'compare', 'interact', 'verify'] },
       url: { type: 'string', maxLength: 512, description: 'compare / interact：预览地址（本机回环地址）；缺省读实现清单「预览地址」行，再回退到工作室预览设置' },
