@@ -49,7 +49,7 @@ export const defaultRules: readonly ComponentRule[] = [
   { pattern: '一排可切换的胶囊页签：同一容器里多个 btn-…标签 / tab 实例，变体在 选中 / 未选中 之间切换', match: ['/^btn[-_].*(?:标签|標籤|tab)/i'], component: 'reborn-tabs', props: 'type="text" color="neutral"，v-model:active-key 管当前项，每个实例一个 RebornTabPane（标题插槽写文案与 data-design）', ui: 'ui.list 写间距；ui.tab 写高度、内边距、圆角、描边与 aria-[selected=true] / aria-[selected=false] 两态颜色；ui.indicator 设 hidden', notes: '整组是互斥选择，不得逐个手写 button / a 再自己切选中样式' },
   { pattern: '以 btn- 命名的按钮实例（宣传 banner 里的按钮、文字按钮、站点入口等）', match: ['/^btn[-_]/i'], component: 'reborn-button', props: 'round / circle / variant / color / size 按稿面取', notes: '名字里带 banner、站点、下拉等字样也是按钮本身，不是轮播或下拉；黑底胶囊用 round + variant="filled" color="neutral"；宽度由文字与内边距撑开，ui.base 只写高度与 px-[…]（取规格表 padding），不写 w-[…]' },
   { pattern: '签到入口（点击区 + 右上角角标）', match: ['签到', '簽到', 'check-in', 'checkin', 'sign-in'], component: 'reborn-button', with: ['reborn-chip'], deep: true, props: 'variant / color / size 按稿面取；40×40 粉底描边块用 ui.base 补尺寸与圆角', slots: '角标用 reborn-chip 的 text + inset 挂在按钮上', notes: '不得用 div / NuxtLink + span 自绘点击区与角标' },
-  { pattern: '常见问题、可展开收起的问答或折叠列表', match: ['问题列表', '問題列表', '折叠', '折疊', '展开收起', '展開收起', '/\\bfaq\\b/i', 'collapse', 'accordion', '/[？?]\\s*$/'], component: 'reborn-collapse', deep: true, minPerBlock: 3, props: '每条问答一个 reborn-collapse，标题区放题号、题目与右侧箭头图标，内容区放答案', notes: '同一区块里至少三行以问号结尾的问题文字才视为问答列表；不得用静态列表或自写展开逻辑代替' },
+  { pattern: '常见问题、可展开收起的问答或折叠列表', match: ['问题列表', '問題列表', '折叠', '折疊', '展开收起', '展開收起', 'collapse', 'accordion', '/[？?]\\s*$/'], component: 'reborn-collapse', deep: true, minPerBlock: 3, props: '每条问答一个 reborn-collapse，标题区放题号、题目与右侧箭头图标，内容区放答案', notes: '同一区块里至少三行以问号结尾的问题文字才视为问答列表；不得用静态列表或自写展开逻辑代替。名字里只有「faq / 常见问题」这个主题词的实例（分类卡片、标题、图标）不按名字强制，由结构判定或知识库提示决定' },
   { pattern: '加载更多、查看更多', match: ['加载更多', '加載更多', '查看更多', '查看全部', 'load-more', 'loadmore', '/\\bmore\\b/i'], component: 'reborn-button', props: 'variant="soft" color="neutral"', slots: '#trailing 放对应节点导出的原始图标，不旋转导出图标' },
   { pattern: '带站点或分类选择与搜索键的搜索框', match: ['搜索', '搜尋', 'search'], component: 'reborn-search-box', props: '站点选择组合 Dropdown，确认 search 事件与插槽；形状、尺寸和是否显示下拉由节点决定，如 shape="circle" :show-dropdown="false"', ui: '高度经 ui.control，内边距经 ui.inputWrapper / leadingWrapper / trailingWrapper', slots: '#leading 放 RebornDropdown 触发器与分割线，#trailing="{ search }" 放 RebornButton round color="primary"', notes: '不自写 input' },
   { pattern: '单行输入框、密码框', match: ['输入框', '輸入框', '密码', '密碼', 'input'], component: 'reborn-input' },
@@ -78,6 +78,17 @@ export const defaultRules: readonly ComponentRule[] = [
   { pattern: '提示条', match: ['提示条', '提示條', 'alert'], component: 'reborn-alert' },
   { pattern: '公告栏、通知栏', match: ['公告', '通知栏', '通知欄', 'notice'], component: 'reborn-notice-bar' },
 ]
+
+/**
+ * 默认表撤回的匹配项：规则说明（pattern）→ 曾经在默认表里、后来证明会误判而去掉的 match。
+ * 由骨架生成的项目映射表保存着当时的默认规则，载入时按这张表把同名规则里的这些匹配项一并去掉；
+ * 项目自己另写的规则（pattern 不同）不受影响，确实需要时可以自己加一条。
+ * - faq：帮助中心页的五张分类卡片实例就叫「faq」，按名字被强制成折叠面板。它说的是内容主题而不是结构，
+ *   问答列表改由结构判定（每行标题 + 展开收起图标）与「三行以问号结尾」认出。
+ */
+export const retiredMatches: Readonly<Record<string, readonly string[]>> = {
+  '常见问题、可展开收起的问答或折叠列表': ['/\\bfaq\\b/i'],
+}
 
 const componentId = /^reborn-[a-z]+(?:-[a-z]+)*$/
 const regexForm = /^\/(.+)\/([a-z]*)$/

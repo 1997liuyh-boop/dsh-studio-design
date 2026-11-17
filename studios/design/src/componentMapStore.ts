@@ -3,7 +3,7 @@ import { readFile, writeFile } from 'node:fs/promises'
 import { join } from 'node:path'
 import { readOptional } from './project.ts'
 import { CHECKLIST_PATH, writeJsonAtomic } from './reader.ts'
-import { COMPONENT_MAP_PATH, componentMapSkeleton, componentRules, defaultRules, unmappedSection, type ComponentRule, type MappingResult } from './componentMap.ts'
+import { COMPONENT_MAP_PATH, componentMapSkeleton, componentRules, defaultRules, retiredMatches, unmappedSection, type ComponentRule, type MappingResult } from './componentMap.ts'
 
 /** 已载入的映射表：来源为项目文件或默认表。 */
 export interface LoadedComponentMap {
@@ -51,12 +51,19 @@ export async function loadComponentMap(root: string, options: { create?: boolean
       // 由骨架生成（inheritDefaults 为真，或说明文字仍是骨架的）的表会继承新默认规则，预读时写回文件；完全手写的表保持原样。
       const inherits = raw.inheritDefaults === true || raw.description === (componentMapSkeleton() as { description: string }).description
       const added = inherits ? defaultRules.filter(rule => !own.some(item => item.pattern === rule.pattern)) : []
-      rules = added.length ? inheritDefaults(own, added) : own
+      // 默认表撤回的匹配项：由骨架生成的表里同名规则跟着去掉（去掉后没有匹配项的规则保持原样，不留空规则）。
+      const retired: string[] = []
+      const current = !inherits ? own : own.map(rule => {
+        const drop = retiredMatches[rule.pattern]?.filter(entry => rule.match.includes(entry)) ?? []
+        if (!drop.length || drop.length === rule.match.length) return rule
+        retired.push(rule.pattern + '（' + drop.join('、') + '）')
+        return { ...rule, match: rule.match.filter(entry => !drop.includes(entry)) }
+      })
+      rules = added.length ? inheritDefaults(current, added) : current
       source = 'project'
-      if (added.length) {
-        warnings.push('映射表补充了 ' + added.length + ' 条新默认规则：' + added.map(rule => rule.pattern).join('、'))
-        if (options.create) await writeJsonAtomic(root, COMPONENT_MAP_PATH, { ...raw, inheritDefaults: true, rules })
-      }
+      if (added.length) warnings.push('映射表补充了 ' + added.length + ' 条新默认规则：' + added.map(rule => rule.pattern).join('、'))
+      if (retired.length) warnings.push('映射表去掉了默认表已撤回的匹配项：' + retired.join('、'))
+      if ((added.length || retired.length) && options.create) await writeJsonAtomic(root, COMPONENT_MAP_PATH, { ...raw, inheritDefaults: true, rules })
     }
     catch (error) { warnings.push('映射表 ' + COMPONENT_MAP_PATH + ' 无法解析：' + (error instanceof Error ? error.message : String(error)) + '，本次使用默认表') }
   } else if (options.create) {

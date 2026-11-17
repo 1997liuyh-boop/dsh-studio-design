@@ -4906,7 +4906,7 @@ var defaultRules = [
   { pattern: "\u4E00\u6392\u53EF\u5207\u6362\u7684\u80F6\u56CA\u9875\u7B7E\uFF1A\u540C\u4E00\u5BB9\u5668\u91CC\u591A\u4E2A btn-\u2026\u6807\u7B7E / tab \u5B9E\u4F8B\uFF0C\u53D8\u4F53\u5728 \u9009\u4E2D / \u672A\u9009\u4E2D \u4E4B\u95F4\u5207\u6362", match: ["/^btn[-_].*(?:\u6807\u7B7E|\u6A19\u7C64|tab)/i"], component: "reborn-tabs", props: 'type="text" color="neutral"\uFF0Cv-model:active-key \u7BA1\u5F53\u524D\u9879\uFF0C\u6BCF\u4E2A\u5B9E\u4F8B\u4E00\u4E2A RebornTabPane\uFF08\u6807\u9898\u63D2\u69FD\u5199\u6587\u6848\u4E0E data-design\uFF09', ui: "ui.list \u5199\u95F4\u8DDD\uFF1Bui.tab \u5199\u9AD8\u5EA6\u3001\u5185\u8FB9\u8DDD\u3001\u5706\u89D2\u3001\u63CF\u8FB9\u4E0E aria-[selected=true] / aria-[selected=false] \u4E24\u6001\u989C\u8272\uFF1Bui.indicator \u8BBE hidden", notes: "\u6574\u7EC4\u662F\u4E92\u65A5\u9009\u62E9\uFF0C\u4E0D\u5F97\u9010\u4E2A\u624B\u5199 button / a \u518D\u81EA\u5DF1\u5207\u9009\u4E2D\u6837\u5F0F" },
   { pattern: "\u4EE5 btn- \u547D\u540D\u7684\u6309\u94AE\u5B9E\u4F8B\uFF08\u5BA3\u4F20 banner \u91CC\u7684\u6309\u94AE\u3001\u6587\u5B57\u6309\u94AE\u3001\u7AD9\u70B9\u5165\u53E3\u7B49\uFF09", match: ["/^btn[-_]/i"], component: "reborn-button", props: "round / circle / variant / color / size \u6309\u7A3F\u9762\u53D6", notes: '\u540D\u5B57\u91CC\u5E26 banner\u3001\u7AD9\u70B9\u3001\u4E0B\u62C9\u7B49\u5B57\u6837\u4E5F\u662F\u6309\u94AE\u672C\u8EAB\uFF0C\u4E0D\u662F\u8F6E\u64AD\u6216\u4E0B\u62C9\uFF1B\u9ED1\u5E95\u80F6\u56CA\u7528 round + variant="filled" color="neutral"\uFF1B\u5BBD\u5EA6\u7531\u6587\u5B57\u4E0E\u5185\u8FB9\u8DDD\u6491\u5F00\uFF0Cui.base \u53EA\u5199\u9AD8\u5EA6\u4E0E px-[\u2026]\uFF08\u53D6\u89C4\u683C\u8868 padding\uFF09\uFF0C\u4E0D\u5199 w-[\u2026]' },
   { pattern: "\u7B7E\u5230\u5165\u53E3\uFF08\u70B9\u51FB\u533A + \u53F3\u4E0A\u89D2\u89D2\u6807\uFF09", match: ["\u7B7E\u5230", "\u7C3D\u5230", "check-in", "checkin", "sign-in"], component: "reborn-button", with: ["reborn-chip"], deep: true, props: "variant / color / size \u6309\u7A3F\u9762\u53D6\uFF1B40\xD740 \u7C89\u5E95\u63CF\u8FB9\u5757\u7528 ui.base \u8865\u5C3A\u5BF8\u4E0E\u5706\u89D2", slots: "\u89D2\u6807\u7528 reborn-chip \u7684 text + inset \u6302\u5728\u6309\u94AE\u4E0A", notes: "\u4E0D\u5F97\u7528 div / NuxtLink + span \u81EA\u7ED8\u70B9\u51FB\u533A\u4E0E\u89D2\u6807" },
-  { pattern: "\u5E38\u89C1\u95EE\u9898\u3001\u53EF\u5C55\u5F00\u6536\u8D77\u7684\u95EE\u7B54\u6216\u6298\u53E0\u5217\u8868", match: ["\u95EE\u9898\u5217\u8868", "\u554F\u984C\u5217\u8868", "\u6298\u53E0", "\u6298\u758A", "\u5C55\u5F00\u6536\u8D77", "\u5C55\u958B\u6536\u8D77", "/\\bfaq\\b/i", "collapse", "accordion", "/[\uFF1F?]\\s*$/"], component: "reborn-collapse", deep: true, minPerBlock: 3, props: "\u6BCF\u6761\u95EE\u7B54\u4E00\u4E2A reborn-collapse\uFF0C\u6807\u9898\u533A\u653E\u9898\u53F7\u3001\u9898\u76EE\u4E0E\u53F3\u4FA7\u7BAD\u5934\u56FE\u6807\uFF0C\u5185\u5BB9\u533A\u653E\u7B54\u6848", notes: "\u540C\u4E00\u533A\u5757\u91CC\u81F3\u5C11\u4E09\u884C\u4EE5\u95EE\u53F7\u7ED3\u5C3E\u7684\u95EE\u9898\u6587\u5B57\u624D\u89C6\u4E3A\u95EE\u7B54\u5217\u8868\uFF1B\u4E0D\u5F97\u7528\u9759\u6001\u5217\u8868\u6216\u81EA\u5199\u5C55\u5F00\u903B\u8F91\u4EE3\u66FF" },
+  { pattern: "\u5E38\u89C1\u95EE\u9898\u3001\u53EF\u5C55\u5F00\u6536\u8D77\u7684\u95EE\u7B54\u6216\u6298\u53E0\u5217\u8868", match: ["\u95EE\u9898\u5217\u8868", "\u554F\u984C\u5217\u8868", "\u6298\u53E0", "\u6298\u758A", "\u5C55\u5F00\u6536\u8D77", "\u5C55\u958B\u6536\u8D77", "collapse", "accordion", "/[\uFF1F?]\\s*$/"], component: "reborn-collapse", deep: true, minPerBlock: 3, props: "\u6BCF\u6761\u95EE\u7B54\u4E00\u4E2A reborn-collapse\uFF0C\u6807\u9898\u533A\u653E\u9898\u53F7\u3001\u9898\u76EE\u4E0E\u53F3\u4FA7\u7BAD\u5934\u56FE\u6807\uFF0C\u5185\u5BB9\u533A\u653E\u7B54\u6848", notes: "\u540C\u4E00\u533A\u5757\u91CC\u81F3\u5C11\u4E09\u884C\u4EE5\u95EE\u53F7\u7ED3\u5C3E\u7684\u95EE\u9898\u6587\u5B57\u624D\u89C6\u4E3A\u95EE\u7B54\u5217\u8868\uFF1B\u4E0D\u5F97\u7528\u9759\u6001\u5217\u8868\u6216\u81EA\u5199\u5C55\u5F00\u903B\u8F91\u4EE3\u66FF\u3002\u540D\u5B57\u91CC\u53EA\u6709\u300Cfaq / \u5E38\u89C1\u95EE\u9898\u300D\u8FD9\u4E2A\u4E3B\u9898\u8BCD\u7684\u5B9E\u4F8B\uFF08\u5206\u7C7B\u5361\u7247\u3001\u6807\u9898\u3001\u56FE\u6807\uFF09\u4E0D\u6309\u540D\u5B57\u5F3A\u5236\uFF0C\u7531\u7ED3\u6784\u5224\u5B9A\u6216\u77E5\u8BC6\u5E93\u63D0\u793A\u51B3\u5B9A" },
   { pattern: "\u52A0\u8F7D\u66F4\u591A\u3001\u67E5\u770B\u66F4\u591A", match: ["\u52A0\u8F7D\u66F4\u591A", "\u52A0\u8F09\u66F4\u591A", "\u67E5\u770B\u66F4\u591A", "\u67E5\u770B\u5168\u90E8", "load-more", "loadmore", "/\\bmore\\b/i"], component: "reborn-button", props: 'variant="soft" color="neutral"', slots: "#trailing \u653E\u5BF9\u5E94\u8282\u70B9\u5BFC\u51FA\u7684\u539F\u59CB\u56FE\u6807\uFF0C\u4E0D\u65CB\u8F6C\u5BFC\u51FA\u56FE\u6807" },
   { pattern: "\u5E26\u7AD9\u70B9\u6216\u5206\u7C7B\u9009\u62E9\u4E0E\u641C\u7D22\u952E\u7684\u641C\u7D22\u6846", match: ["\u641C\u7D22", "\u641C\u5C0B", "search"], component: "reborn-search-box", props: '\u7AD9\u70B9\u9009\u62E9\u7EC4\u5408 Dropdown\uFF0C\u786E\u8BA4 search \u4E8B\u4EF6\u4E0E\u63D2\u69FD\uFF1B\u5F62\u72B6\u3001\u5C3A\u5BF8\u548C\u662F\u5426\u663E\u793A\u4E0B\u62C9\u7531\u8282\u70B9\u51B3\u5B9A\uFF0C\u5982 shape="circle" :show-dropdown="false"', ui: "\u9AD8\u5EA6\u7ECF ui.control\uFF0C\u5185\u8FB9\u8DDD\u7ECF ui.inputWrapper / leadingWrapper / trailingWrapper", slots: '#leading \u653E RebornDropdown \u89E6\u53D1\u5668\u4E0E\u5206\u5272\u7EBF\uFF0C#trailing="{ search }" \u653E RebornButton round color="primary"', notes: "\u4E0D\u81EA\u5199 input" },
   { pattern: "\u5355\u884C\u8F93\u5165\u6846\u3001\u5BC6\u7801\u6846", match: ["\u8F93\u5165\u6846", "\u8F38\u5165\u6846", "\u5BC6\u7801", "\u5BC6\u78BC", "input"], component: "reborn-input" },
@@ -4935,6 +4935,9 @@ var defaultRules = [
   { pattern: "\u63D0\u793A\u6761", match: ["\u63D0\u793A\u6761", "\u63D0\u793A\u689D", "alert"], component: "reborn-alert" },
   { pattern: "\u516C\u544A\u680F\u3001\u901A\u77E5\u680F", match: ["\u516C\u544A", "\u901A\u77E5\u680F", "\u901A\u77E5\u6B04", "notice"], component: "reborn-notice-bar" }
 ];
+var retiredMatches = {
+  "\u5E38\u89C1\u95EE\u9898\u3001\u53EF\u5C55\u5F00\u6536\u8D77\u7684\u95EE\u7B54\u6216\u6298\u53E0\u5217\u8868": ["/\\bfaq\\b/i"]
+};
 var componentId = /^reborn-[a-z]+(?:-[a-z]+)*$/;
 var regexForm = /^\/(.+)\/([a-z]*)$/;
 function record(value, where) {
@@ -6432,12 +6435,18 @@ async function loadComponentMap(root, options = {}) {
       const own = componentRules(raw);
       const inherits = raw.inheritDefaults === true || raw.description === componentMapSkeleton().description;
       const added = inherits ? defaultRules.filter((rule) => !own.some((item) => item.pattern === rule.pattern)) : [];
-      rules = added.length ? inheritDefaults(own, added) : own;
+      const retired = [];
+      const current = !inherits ? own : own.map((rule) => {
+        const drop = retiredMatches[rule.pattern]?.filter((entry) => rule.match.includes(entry)) ?? [];
+        if (!drop.length || drop.length === rule.match.length) return rule;
+        retired.push(rule.pattern + "\uFF08" + drop.join("\u3001") + "\uFF09");
+        return { ...rule, match: rule.match.filter((entry) => !drop.includes(entry)) };
+      });
+      rules = added.length ? inheritDefaults(current, added) : current;
       source = "project";
-      if (added.length) {
-        warnings.push("\u6620\u5C04\u8868\u8865\u5145\u4E86 " + added.length + " \u6761\u65B0\u9ED8\u8BA4\u89C4\u5219\uFF1A" + added.map((rule) => rule.pattern).join("\u3001"));
-        if (options.create) await writeJsonAtomic(root, COMPONENT_MAP_PATH, { ...raw, inheritDefaults: true, rules });
-      }
+      if (added.length) warnings.push("\u6620\u5C04\u8868\u8865\u5145\u4E86 " + added.length + " \u6761\u65B0\u9ED8\u8BA4\u89C4\u5219\uFF1A" + added.map((rule) => rule.pattern).join("\u3001"));
+      if (retired.length) warnings.push("\u6620\u5C04\u8868\u53BB\u6389\u4E86\u9ED8\u8BA4\u8868\u5DF2\u64A4\u56DE\u7684\u5339\u914D\u9879\uFF1A" + retired.join("\u3001"));
+      if ((added.length || retired.length) && options.create) await writeJsonAtomic(root, COMPONENT_MAP_PATH, { ...raw, inheritDefaults: true, rules });
     } catch (error) {
       warnings.push("\u6620\u5C04\u8868 " + COMPONENT_MAP_PATH + " \u65E0\u6CD5\u89E3\u6790\uFF1A" + (error instanceof Error ? error.message : String(error)) + "\uFF0C\u672C\u6B21\u4F7F\u7528\u9ED8\u8BA4\u8868");
     }
