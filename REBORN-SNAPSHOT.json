@@ -1,6 +1,6 @@
 {
   "repository": "https://github.com/1997liuyh-boop/Reborn-UI",
-  "commit": "dfecdcf8a9dc707d17c032eaa06edd8ad509c205",
+  "commit": "4786395077d580539853d13c9fb2a9eee5eee26d",
   "knowledge": "由该检出的知识库生成，示例源码已内联；文本统一为 LF，摘要覆盖分发内容",
   "files": [
     {
@@ -29,7 +29,7 @@
     },
     {
       "path": "upstream/reborn/knowledge/index.json",
-      "sha256": "5830befad386f55722c41ce67c4ff6897748458fe45fc2e7bd6fc4f6f64afc94"
+      "sha256": "8cadbc03bc21d7edf96b368c41eced3ecc77236e88e27d40243e544641c2ec2b"
     },
     {
       "path": "upstream/reborn/knowledge/components/animate-grid.json",
